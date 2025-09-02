@@ -1,0 +1,165 @@
+---
+description: Do not run `python` or `python3` in this project.  Use `uv run python`.
+alwaysApply: true
+---
+# Python Execution Enforcement Rule
+
+## 🚨 **CRITICAL: ALWAYS Use UV Run for Python Execution**
+
+**NEVER use direct `python` or `python3` commands. ALWAYS use `uv run python` or Make targets.**
+
+## ❌ **FORBIDDEN Commands**
+
+### **Direct Python Execution (BLOCKED)**
+```bash
+# ❌ NEVER DO THIS
+python script.py
+python3 script.py
+python -c "import sys; print(sys.version)"
+python -m pytest tests/
+```
+
+### **Direct Python in Scripts (BLOCKED)**
+```python
+# ❌ NEVER DO THIS
+import subprocess
+subprocess.run(["python", "script.py"])  # BLOCKED
+subprocess.run(["python3", "script.py"]) # BLOCKED
+```
+
+## ✅ **REQUIRED Commands**
+
+### **UV Run Python (REQUIRED)**
+```bash
+# ✅ ALWAYS DO THIS
+uv run python script.py
+uv run python -c "import sys; print(sys.version)"
+uv run python -m pytest tests/
+uv run python src/module/script.py
+```
+
+### **Make Targets (PREFERRED)**
+```bash
+# ✅ BEST APPROACH
+make test              # Runs tests via Make
+make lint              # Runs linting via Make
+make format            # Runs formatting via Make
+make ghostbusters      # Runs Ghostbusters via Make
+```
+
+### **UV Run with Scripts (ALLOWED)**
+```python
+# ✅ ALLOWED
+import subprocess
+subprocess.run(["uv", "run", "python", "script.py"])  # ALLOWED
+subprocess.run(["uv", "run", "pytest", "tests/"])     # ALLOWED
+```
+
+## 🔧 **Enforcement Implementation**
+
+### **Automatic Blocking**
+This rule automatically blocks:
+- `python` commands in any context
+- `python3` commands in any context
+- Direct Python execution without `uv run`
+
+### **Automatic Correction**
+When blocked commands are detected, the system will:
+1. **Block execution** of the command
+2. **Suggest correction** using `uv run python`
+3. **Provide Make target alternatives** when available
+
+## 📋 **Common Use Cases**
+
+### **Running Scripts**
+```bash
+# ❌ WRONG
+python src/ghostbusters/ghostbusters_orchestrator.py
+
+# ✅ RIGHT
+uv run python src/ghostbusters/ghostbusters_orchestrator.py
+
+# ✅ BEST
+make ghostbusters
+```
+
+### **Running Tests**
+```bash
+# ❌ WRONG
+python -m pytest tests/
+
+# ✅ RIGHT
+uv run python -m pytest tests/
+
+# ✅ BEST
+make test
+```
+
+### **Running Interactive Python**
+```bash
+# ❌ WRONG
+python -c "import ast; print('AST module available')"
+
+# ✅ RIGHT
+uv run python -c "import ast; print('AST module available')"
+```
+
+### **Running Modules**
+```bash
+# ❌ WRONG
+python -m src.ghostbusters.ghostbusters_orchestrator
+
+# ✅ RIGHT
+uv run python -m src.ghostbusters.ghostbusters_orchestrator
+```
+
+## 🎯 **Why This Rule Exists**
+
+### **Project Requirements**
+- **UV Package Management**: This project uses UV for all Python operations
+- **Environment Isolation**: UV ensures proper dependency isolation
+- **Consistency**: All team members use the same execution method
+- **Make Integration**: Make targets provide standardized workflows
+
+### **Benefits of UV Run**
+- **Dependency Management**: Automatically uses project dependencies
+- **Environment Isolation**: Prevents conflicts with system Python
+- **Version Consistency**: Ensures same Python version across team
+- **Lock File Usage**: Uses `uv.lock` for reproducible builds
+
+## 🚨 **Violation Consequences**
+
+### **Immediate Actions**
+1. **Command Blocked**: Direct Python execution is prevented
+2. **Correction Required**: Must use `uv run python` or Make targets
+3. **Documentation**: Violation is logged for review
+
+### **Repeated Violations**
+1. **Warning Issued**: Clear explanation of the rule
+2. **Alternative Suggested**: Show proper `uv run` command
+3. **Make Target Recommended**: Suggest appropriate Make target
+
+## 📚 **Integration with Other Rules**
+
+### **Make-First Enforcement**
+- **Primary**: Use Make targets when available
+- **Secondary**: Use `uv run python` when no Make target exists
+- **Never**: Use direct Python commands
+
+### **UV Package Management**
+- **Dependencies**: Install via `uv add` and `uv sync`
+- **Execution**: Run via `uv run python`
+- **Environment**: Manage via `uv` commands
+
+### **Security Guidelines**
+- **No Subprocess**: Avoid direct Python execution
+- **UV Integration**: Use UV for all Python operations
+- **Make Targets**: Prefer Make targets for common operations
+
+## 🎯 **Remember**
+
+**"If you need to run Python, use `uv run python` or find a Make target. Direct Python execution is forbidden in this project."**
+
+**"UV run ensures proper dependency management and environment isolation. Make targets provide standardized workflows."**
+
+

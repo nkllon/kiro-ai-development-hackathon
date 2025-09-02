@@ -1,0 +1,123 @@
+---
+description: YAML file type-specific rules and validation strategies
+alwaysApply: false
+globs: *.yaml,*.yml,*.yaml.j2,*.yml.j2,*.yaml.template,*.yml.template
+---
+
+
+
+# YAML File Type-Specific Rules
+
+## Core Principle: Heuristic Evaluation Over Enumeration
+
+**When encountering YAML files, evaluate their purpose and apply appropriate rules rather than trying to predict every possible format quirk.**
+
+## Evaluation Strategy
+
+### 1. File Purpose Detection
+**Ask yourself: "What is this YAML file trying to accomplish?"**
+
+- **Infrastructure/CloudFormation**: AWS resources, CloudFormation templates
+- **Configuration**: App settings, environment configs, feature flags
+- **CI/CD**: GitHub Actions, GitLab CI, Azure Pipelines, Jenkins
+- **Container Orchestration**: Kubernetes, Docker Compose, Helm charts
+- **Application Config**: App-specific settings, database configs
+- **Schema/API**: OpenAPI specs, GraphQL schemas, data models
+- **Cursor Rules (MDC)**: Cursor-specific format with comma-separated globs
+
+### 2. Tool Selection by Purpose
+**Choose validation tools based on the file's purpose, not just its extension:**
+
+```bash
+# Infrastructure files
+cfn-lint *.yaml                    # CloudFormation
+kubectl validate -f *.yaml         # Kubernetes
+docker-compose config              # Docker Compose
+
+# Configuration files
+yamllint *.yaml                    # General YAML
+jsonschema -i schema.json *.yaml   # Schema validation
+
+# CI/CD files
+# GitHub Actions: Built-in validation
+# GitLab CI: gitlab-ci-lint
+# Azure Pipelines: az pipelines validate
+```
+
+### 3. When You Hit a New YAML Quirk
+
+**Follow this heuristic process:**
+
+1. **Identify the quirk**: What's different about this YAML format?
+2. **Determine the purpose**: What is this file trying to accomplish?
+3. **Find the right tool**: What tool understands this format?
+4. **Apply appropriate validation**: Use domain-specific tools, not generic YAML linters
+5. **Document the pattern**: Add to this rule for future reference
+
+### 4. Common YAML Quirks and Solutions
+
+#### CloudFormation Intrinsic Functions
+**Problem**: Generic YAML linters flag `!Ref`, `!Sub`, `!GetAtt` as errors
+**Solution**: Use `cfn-lint` instead of generic YAML validators
+
+#### Kubernetes Custom Resources
+**Problem**: Generic validators don't understand CRDs
+**Solution**: Use `kubectl validate` with proper API server
+
+#### GitHub Actions Context
+**Problem**: Generic YAML linters don't understand `${{ }}` expressions
+**Solution**: Use GitHub's built-in validation or `actionlint`
+
+#### Helm Templates
+**Problem**: Generic linters flag `{{ }}` as invalid YAML
+**Solution**: Use `helm template --validate` or `helm lint`
+
+#### Cursor Rules (MDC Files)
+**Problem**: Generic YAML linters flag comma-separated globs as invalid YAML
+**Solution**: Use `mdc-linter` for Cursor rules, not generic YAML tools
+**Format**: `globs: *.py,*.js,*.ts,*.yaml` (comma-separated, no quotes)
+
+#### Ansible Playbooks
+**Problem**: Generic linters don't understand Ansible-specific syntax
+**Solution**: Use `ansible-lint` for playbook validation
+
+## Universal YAML Principles
+
+### Formatting Standards
+- Use 2-space indentation (never tabs)
+- Use consistent quoting (prefer unquoted unless needed)
+- Use explicit `null` values when required
+- Use YAML anchors and aliases for DRY principles
+
+### Security Practices
+- Never hardcode secrets or credentials
+- Use environment variables or secret management
+- Validate all external inputs
+- Follow principle of least privilege
+
+### Validation Strategy
+1. **Detect file purpose** based on path, content, and context
+2. **Choose appropriate tools** for that purpose
+3. **Apply domain-specific validation** rather than generic YAML linting
+4. **Check security and best practices** for that domain
+5. **Document new patterns** when discovered
+
+### MDC File Detection
+**Path-based detection**: `.cursor/rules/*.mdc`
+**Content indicators**: `---`, `description:`, `globs:`, `alwaysApply:`
+**Special handling**: Comma-separated globs are valid Cursor syntax
+**Tool**: Use `mdc-linter`, not generic YAML validators
+
+## When You Encounter New YAML Formats
+
+**Remember: The goal is not to predict every quirk, but to have a principled approach for handling them.**
+
+1. **Don't panic** - YAML quirks are common and expected
+2. **Identify the purpose** - What domain does this YAML serve?
+3. **Find the right tool** - Use domain-specific validators
+4. **Apply appropriate rules** - Don't force generic YAML linting
+5. **Document the pattern** - Add to this rule for future reference
+
+**The principle: Use the right tool for the job, not a generic tool for everything.**
+
+

@@ -1,0 +1,396 @@
+# Cloud Workflows - GCP Setup Automation
+# This is Google's native workflow engine for GCP setup
+
+main:
+  params: [input]
+  steps:
+    # Step 1: Choose setup type
+    - choose_setup_type:
+        switch:
+          - condition: ${input.setup_type == "personal"}
+            next: personal_setup
+          - condition: ${input.setup_type == "enterprise"}
+            next: enterprise_setup
+          - condition: ${input.setup_type == "authorization"}
+            next: authorization_setup
+        default: error_invalid_type
+    
+    # Personal Setup Workflow
+    - personal_setup:
+        steps:
+          - create_billing_account:
+              call: http.post
+              args:
+                url: https://cloudbilling.googleapis.com/v1/billingAccounts
+                auth:
+                  type: OAuth2
+                body:
+                  displayName: ${input.project_name + " Billing Account"}
+              result: billing_account
+          
+          - create_project:
+              call: http.post
+              args:
+                url: https://cloudresourcemanager.googleapis.com/v1/projects
+                auth:
+                  type: OAuth2
+                body:
+                  projectId: ${input.project_id}
+                  name: ${input.project_name}
+              result: project
+          
+          - link_billing:
+              call: http.post
+              args:
+                url: https://cloudbilling.googleapis.com/v1/projects/${project.projectId}/billingInfo
+                auth:
+                  type: OAuth2
+                body:
+                  billingAccountName: ${billing_account.name}
+              result: billing_link
+          
+          - enable_apis:
+              call: enable_apis_parallel
+              args:
+                project_id: ${project.projectId}
+                apis:
+                  - container.googleapis.com
+                  - bigquery.googleapis.com
+                  - cloudbilling.googleapis.com
+                  - aiplatform.googleapis.com
+              result: apis_result
+          
+          - create_gke_cluster:
+              call: http.post
+              args:
+                url: https://container.googleapis.com/v1/projects/${project.projectId}/locations/${input.zone}/clusters
+                auth:
+                  type: OAuth2
+                body:
+                  cluster:
+                    name: ${input.cluster_name}
+                    nodePools:
+                      - name: default-pool
+                        config:
+                          machineType: ${input.machine_type}
+                          diskSizeGb: 100
+                        initialNodeCount: 3
+              result: gke_cluster
+          
+          - setup_billing_exports:
+              call: setup_billing_exports
+              args:
+                project_id: ${project.projectId}
+                billing_account_id: ${billing_account.name}
+              result: billing_exports
+          
+          - return_success:
+              return:
+                success: true
+                project_id: ${project.projectId}
+                billing_account_id: ${billing_account.name}
+                cluster_name: ${gke_cluster.name}
+                setup_type: "personal"
+    
+    # Enterprise Setup Workflow
+    - enterprise_setup:
+        steps:
+          - verify_billing_account:
+              call: http.get
+              args:
+                url: https://cloudbilling.googleapis.com/v1/${input.billing_account_id}
+                auth:
+                  type: OAuth2
+              result: billing_account
+          
+          - create_project:
+              call: http.post
+              args:
+                url: https://cloudresourcemanager.googleapis.com/v1/projects
+                auth:
+                  type: OAuth2
+                body:
+                  projectId: ${input.project_id}
+                  name: ${input.project_name}
+              result: project
+          
+          - link_billing:
+              call: http.post
+              args:
+                url: https://cloudbilling.googleapis.com/v1/projects/${project.projectId}/billingInfo
+                auth:
+                  type: OAuth2
+                body:
+                  billingAccountName: ${input.billing_account_id}
+              result: billing_link
+          
+          - setup_iam_permissions:
+              call: setup_iam_permissions
+              args:
+                project_id: ${project.projectId}
+                user_email: ${input.authorized_user}
+                roles:
+                  - roles/container.admin
+                  - roles/bigquery.admin
+                  - roles/aiplatform.user
+                  - roles/storage.admin
+              result: iam_result
+          
+          - enable_apis:
+              call: enable_apis_parallel
+              args:
+                project_id: ${project.projectId}
+                apis:
+                  - container.googleapis.com
+                  - bigquery.googleapis.com
+                  - cloudbilling.googleapis.com
+                  - aiplatform.googleapis.com
+                  - iam.googleapis.com
+              result: apis_result
+          
+          - create_gke_cluster:
+              call: http.post
+              args:
+                url: https://container.googleapis.com/v1/projects/${project.projectId}/locations/${input.zone}/clusters
+                auth:
+                  type: OAuth2
+                body:
+                  cluster:
+                    name: ${input.cluster_name}
+                    nodePools:
+                      - name: default-pool
+                        config:
+                          machineType: ${input.machine_type}
+                          diskSizeGb: 100
+                        initialNodeCount: 3
+              result: gke_cluster
+          
+          - return_success:
+              return:
+                success: true
+                project_id: ${project.projectId}
+                billing_account_id: ${input.billing_account_id}
+                cluster_name: ${gke_cluster.name}
+                setup_type: "enterprise"
+    
+    # Authorization Setup Workflow
+    - authorization_setup:
+        steps:
+          - request_authorization:
+              call: request_authorization
+              args:
+                developer_email: ${input.developer_email}
+                project_name: ${input.project_name}
+                billing_account_id: ${input.billing_account_id}
+                enterprise_domain: ${input.enterprise_domain}
+              result: auth_request
+          
+          - wait_for_admin_review:
+              call: wait_for_admin_review
+              args:
+                request_id: ${auth_request.request_id}
+                timeout: 3600  # 1 hour timeout
+              result: admin_response
+          
+          - verify_authorization:
+              call: verify_authorization
+              args:
+                request_id: ${auth_request.request_id}
+                billing_account_id: ${input.billing_account_id}
+              result: auth_verification
+          
+          - create_project:
+              call: http.post
+              args:
+                url: https://cloudresourcemanager.googleapis.com/v1/projects
+                auth:
+                  type: OAuth2
+                body:
+                  projectId: ${input.project_id}
+                  name: ${input.project_name}
+              result: project
+          
+          - link_project_with_auth:
+              call: http.post
+              args:
+                url: https://cloudbilling.googleapis.com/v1/projects/${project.projectId}/billingInfo
+                auth:
+                  type: OAuth2
+                body:
+                  billingAccountName: ${input.billing_account_id}
+              result: billing_link
+          
+          - apply_iam_permissions:
+              call: setup_iam_permissions
+              args:
+                project_id: ${project.projectId}
+                user_email: ${input.developer_email}
+                roles: ${admin_response.granted_roles}
+              result: iam_result
+          
+          - return_success:
+              return:
+                success: true
+                project_id: ${project.projectId}
+                billing_account_id: ${input.billing_account_id}
+                cluster_name: ${gke_cluster.name}
+                setup_type: "authorization"
+                authorization_id: ${auth_request.request_id}
+    
+    # Error handling
+    - error_invalid_type:
+        raise: ${"Invalid setup type: " + input.setup_type}
+
+# Helper functions
+enable_apis_parallel:
+  params: [project_id, apis]
+  steps:
+    - enable_apis:
+        parallel:
+          shared: [project_id]
+          for:
+            value: ${apis}
+            in: apis
+            steps:
+              - enable_single_api:
+                  call: http.post
+                  args:
+                    url: https://serviceusage.googleapis.com/v1/projects/${project_id}/services/${apis[apis.index(value)]}:enable
+                    auth:
+                      type: OAuth2
+                  result: api_result
+        result: apis_result
+    - return_apis_result:
+        return: ${apis_result}
+
+setup_billing_exports:
+  params: [project_id, billing_account_id]
+  steps:
+    - create_bigquery_dataset:
+        call: http.post
+        args:
+          url: https://bigquery.googleapis.com/v1/projects/${project_id}/datasets
+          auth:
+            type: OAuth2
+          body:
+            datasetReference:
+              datasetId: billing_analysis
+              projectId: ${project_id}
+        result: dataset
+    - configure_billing_export:
+        call: http.post
+        args:
+          url: https://cloudbilling.googleapis.com/v1/${billing_account_id}/exports
+          auth:
+            type: OAuth2
+          body:
+            name: billing_export
+            destination:
+              dataset:
+                datasetId: billing_analysis
+                projectId: ${project_id}
+        result: export
+    - return_export_result:
+        return: ${export}
+
+setup_iam_permissions:
+  params: [project_id, user_email, roles]
+  steps:
+    - apply_roles:
+        parallel:
+          shared: [project_id, user_email]
+          for:
+            value: ${roles}
+            in: roles
+            steps:
+              - apply_single_role:
+                  call: http.post
+                  args:
+                    url: https://cloudresourcemanager.googleapis.com/v1/projects/${project_id}:setIamPolicy
+                    auth:
+                      type: OAuth2
+                    body:
+                      policy:
+                        bindings:
+                          - role: ${roles[roles.index(value)]}
+                            members:
+                              - user:${user_email}
+                  result: role_result
+        result: iam_result
+    - return_iam_result:
+        return: ${iam_result}
+
+request_authorization:
+  params: [developer_email, project_name, billing_account_id, enterprise_domain]
+  steps:
+    - create_auth_request:
+        call: http.post
+        args:
+          url: https://enterprise-auth.googleapis.com/v1/authorizationRequests
+          auth:
+            type: OAuth2
+          body:
+            developerEmail: ${developer_email}
+            projectName: ${project_name}
+            billingAccountId: ${billing_account_id}
+            enterpriseDomain: ${enterprise_domain}
+            requestedRoles:
+              - roles/billing.user
+              - roles/container.admin
+              - roles/bigquery.admin
+              - roles/aiplatform.user
+        result: auth_request
+    - return_auth_request:
+        return: ${auth_request}
+
+wait_for_admin_review:
+  params: [request_id, timeout]
+  steps:
+    - check_admin_response:
+        call: http.get
+        args:
+          url: https://enterprise-auth.googleapis.com/v1/authorizationRequests/${request_id}
+          auth:
+            type: OAuth2
+        result: response
+    - check_status:
+        switch:
+          - condition: ${response.status == "approved"}
+            next: return_approved
+          - condition: ${response.status == "denied"}
+            next: return_denied
+          - condition: ${response.status == "pending"}
+            next: wait_and_retry
+        default: return_denied
+    - wait_and_retry:
+        call: sys.sleep
+        args:
+          seconds: 30
+        next: check_admin_response
+    - return_approved:
+        return: ${response}
+    - return_denied:
+        raise: ${"Authorization denied: " + response.reason}
+
+verify_authorization:
+  params: [request_id, billing_account_id]
+  steps:
+    - get_auth_status:
+        call: http.get
+        args:
+          url: https://enterprise-auth.googleapis.com/v1/authorizationRequests/${request_id}
+          auth:
+            type: OAuth2
+        result: auth_status
+    - verify_access:
+        call: http.get
+        args:
+          url: https://cloudbilling.googleapis.com/v1/${billing_account_id}
+          auth:
+            type: OAuth2
+        result: billing_access
+    - return_verification:
+        return:
+          authorized: ${auth_status.status == "approved"}
+          billing_access: ${billing_access != null}
+          granted_roles: ${auth_status.grantedRoles}

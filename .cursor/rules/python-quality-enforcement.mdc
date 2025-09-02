@@ -1,0 +1,220 @@
+---
+description: Python Quality Enforcement Rule
+alwaysApply: true
+---
+
+# Python Quality Enforcement Rule
+
+## Core Principle
+**Every Python file created MUST pass all quality checks before being considered complete.**
+
+## Quality Standards
+
+### 1. Linter Compliance
+- **Flake8**: Must pass with zero errors
+- **Black**: Must be properly formatted
+- **MyPy**: Must pass type checking (if applicable)
+- **No unused imports**: Remove all unused imports
+- **No trailing whitespace**: Clean line endings
+- **Proper indentation**: Consistent 4-space indentation
+
+### 2. ArtifactForge Compatibility
+- **AST Parsing**: File must parse successfully with `ast.parse()`
+- **ArtifactForge Detection**: Must be detected as valid Python artifact
+- **ArtifactForge Parsing**: Must parse successfully with ArtifactForge parser
+- **No syntax errors**: Zero syntax errors in any context
+
+### 3. Code Quality
+- **Type annotations**: Use proper type hints where applicable
+- **Docstrings**: Include docstrings for functions and classes
+- **Error handling**: Implement proper exception handling
+- **Logging**: Use appropriate logging levels
+- **Security**: Follow security best practices
+
+## Enforcement Process
+
+### Before Creating Files
+1. **Plan the structure** - Design the file structure before writing
+2. **Consider dependencies** - Only import what you actually use
+3. **Plan error handling** - Design exception handling strategy
+4. **Consider type safety** - Plan type annotations
+
+### During File Creation
+1. **Write clean code** - Follow PEP 8 from the start
+2. **Use proper imports** - Only import what you need
+3. **Add type hints** - Include type annotations
+4. **Add docstrings** - Document functions and classes
+5. **Handle errors** - Implement proper exception handling
+
+### After File Creation (MANDATORY)
+1. **Run Black**: `black filename.py`
+2. **Run Flake8**: `flake8 filename.py --select=F401,E302,E305,W291,W292`
+3. **Test AST parsing**: `python -c "import ast; ast.parse(open('filename.py').read())"`
+4. **Test ArtifactForge**: Verify file is detected and parsed by ArtifactForge
+5. **Fix any issues** - Address all linter errors immediately
+
+## Linter Error Categories
+
+### Critical (Must Fix)
+- **F401**: Unused imports - Remove immediately
+- **E302**: Expected 2 blank lines - Fix spacing
+
+- **E305**: Expected 2 blank lines after class/function - Fix spacing
+- **W291**: Trailing whitespace - Remove with `sed -i 's/[[:space:]]*$//' file.py`
+- **W292**: No newline at end of file - Add newline
+
+### Important (Should Fix)
+- **Type annotations**: Add proper type hints
+- **Docstrings**: Add documentation
+- **Error handling**: Implement proper exceptions
+
+## ArtifactForge Integration
+
+### Detection Requirements
+- File must be detected as Python artifact
+- File must have proper file extension (.py)
+- File must be in appropriate directory structure
+
+### Parsing Requirements
+- File must parse without syntax errors
+- File must extract functions, classes, imports correctly
+- File must generate valid AST model
+
+### Validation Commands
+```bash
+# Test AST parsing
+python -c "import ast; ast.parse(open('filename.py').read())"
+
+# Test ArtifactForge detection
+python -c "from src.artifact_forge.agents.artifact_detector import ArtifactDetector; detector = ArtifactDetector(); artifacts = detector.detect_artifacts('.'); print([a for a in artifacts if a.path == 'filename.py'])"
+
+# Test ArtifactForge parsing
+python -c "from src.artifact_forge.agents.artifact_parser import ArtifactParser; parser = ArtifactParser(); result = parser.parse_artifact('filename.py', 'python'); print('Parse successful' if result else 'Parse failed')"
+```
+
+## Error Prevention Strategies
+
+### Import Management
+```python
+# GOOD - Only import what you need
+from typing import List, Dict
+from dataclasses import dataclass
+from datetime import datetime
+
+# BAD - Don't import unused modules
+import json, asyncio, sys, os  # Only import what you actually use
+```
+
+### F-string Usage
+
+**✅ ALWAYS use f-strings for consistency:**
+```python
+# GOOD - Use f-strings everywhere for consistency
+print(f"Simple message")  # Even without placeholders
+print(f"Count: {count}")  # With placeholders
+print(f"Status: {status}")  # With placeholders
+```
+
+**❌ DON'T convert f-strings unnecessarily:**
+```python
+# BAD - Don't do this
+print("Simple message")  # Inconsistent with f-string usage
+print("Count: {}".format(count))  # Old-style formatting
+print("Status: %s" % status)  # Old-style formatting
+```
+
+**Policy: F-strings are the standard string formatting method in this project.**
+
+### Type Annotations
+```python
+# GOOD - Include type hints
+def process_data(data: List[str]) -> Dict[str, int]:
+    """Process data and return results."""
+    return {"count": len(data)}
+
+# BAD - Missing type hints
+def process_data(data):  # Missing type hints
+    return {"count": len(data)}
+```
+
+## Quality Checklist
+
+### Before Committing Any Python File
+- [ ] **Black formatting**: `black filename.py` passes
+- [ ] **Flake8 linting**: `flake8 filename.py` passes
+- [ ] **AST parsing**: `python -c "import ast; ast.parse(open('filename.py').read())"` succeeds
+- [ ] **ArtifactForge detection**: File is detected as valid artifact
+- [ ] **ArtifactForge parsing**: File parses successfully
+- [ ] **No unused imports**: All imports are actually used
+- [ ] **Proper indentation**: Consistent 4-space indentation
+- [ ] **No trailing whitespace**: Clean line endings
+- [ ] **Type annotations**: Proper type hints included
+- [ ] **Docstrings**: Functions and classes documented
+- [ ] **Error handling**: Proper exception handling
+
+## Ignore Directives (Use Sparingly)
+
+Only use ignore directives when absolutely necessary:
+
+```python
+# flake8: noqa: F401  # Only if import is truly needed but appears unused
+import some_module  # noqa: F401
+
+# type: ignore  # Only for complex type issues that can't be resolved
+complex_expression: Any = some_complex_expression  # type: ignore
+```
+
+## Consequences of Non-Compliance
+
+### Immediate Actions Required
+1. **Fix all linter errors** before considering file complete
+2. **Test AST parsing** to ensure syntax is correct
+3. **Verify ArtifactForge compatibility** for integration
+4. **Re-run quality checks** after any fixes
+
+### Quality Gates
+- **No file should be left with linter errors**
+- **No file should fail AST parsing**
+- **No file should fail ArtifactForge detection/parsing**
+- **All files must pass Black formatting**
+
+## Integration with Existing Tools
+
+### Pre-commit Hooks
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: local
+    hooks:
+      - id: black
+        name: Black formatting
+        entry: black
+        language: system
+        types: [python]
+      
+      - id: flake8
+        name: Flake8 linting
+        entry: flake8
+        language: system
+        types: [python]
+      
+      - id: ast-check
+        name: AST parsing check
+        entry: python -c "import ast; import sys; ast.parse(open(sys.argv[1]).read())"
+        language: system
+        types: [python]
+```
+
+### CI/CD Integration
+```yaml
+# GitHub Actions
+- name: Quality Checks
+  run: |
+    black --check .
+    flake8 .
+    python -c "import ast; [ast.parse(open(f).read()) for f in glob.glob('**/*.py', recursive=True)]"
+```
+
+## Remember
+**Quality is not an afterthought - it's built into the creation process. Every Python file must pass all quality checks before being considered complete.**
+

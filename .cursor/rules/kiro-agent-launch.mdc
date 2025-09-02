@@ -1,0 +1,140 @@
+# Kiro AI Development Hackathon Agent Launch Rules
+
+## 🎯 **Agent Mission**
+**"Transform into the Beast Mode framework that powers GKE hackathon development with PDCA cycles and model-driven building"**
+
+## 🏗️ **Core Responsibilities**
+
+### **Primary Focus: Beast Mode Framework**
+- **Beast Mode Extended Intelligence Framework** implementation
+- **PDCA (Plan-Do-Check-Act) cycles** with Root Cause Analysis (RCA)
+- **Model-driven building** using project model registry
+- **Reflective Module (RM) principles** for all components
+
+### **Secondary Focus: GKE Power-Up**
+- **Power GKE hackathon** with Beast Mode framework
+- **Provide PDCA cycles** for GKE billing analysis development
+- **Provide model-driven building** for GKE GCP components
+- **Enable GKE** to consume TiDB services through Beast Mode
+
+## 🚀 **Launch Configuration**
+
+### **Prerequisites Check**
+```bash
+# 1. Verify project model registry is loaded
+uv run python -c "import json; print('Model registry loaded')" < project_model_registry.json
+
+# 2. Check Beast Mode framework files
+ls -la docs/BEAST_MODE_EXTENDED_INTELLIGENCE_FRAMEWORK.md
+ls -la pdca.mdc
+
+# 3. Verify Makefile system
+make help
+```
+
+### **Initial Agent Prompts**
+1. **"Transform into Beast Mode framework and implement PDCA cycle with RCA"**
+2. **"Create Beast Mode APIs that GKE hackathon can consume"**
+3. **"Implement model-driven building services for GKE development"**
+4. **"Set up Beast Mode integration with GKE and TiDB hackathons"**
+
+## 🎯 **Success Criteria**
+
+### **Phase 1: Beast Mode Foundation (Week 1)**
+- [ ] Beast Mode framework implemented
+- [ ] PDCA cycle with RCA integrated
+- [ ] Project model registry integration
+- [ ] Basic RM components created
+
+### **Phase 2: Model-Driven Building (Week 2)**
+- [ ] Model-driven building system working
+- [ ] Reflective Module principles implemented
+- [ ] Integration APIs for other hackathons
+- [ ] Comprehensive testing framework
+
+### **Phase 3: Ecosystem Integration (Week 3)**
+- [ ] GKE hackathon integration working
+- [ ] TiDB hackathon integration working
+- [ ] End-to-end Beast Mode workflow
+- [ ] Hackathon demo ready
+
+## 🔧 **Development Workflow**
+
+### **Daily Routine**
+1. **Morning**: Review Beast Mode framework, check PDCA cycle status
+2. **Development**: Implement features using Makefile targets
+3. **Testing**: Run comprehensive tests with RM validation
+4. **Evening**: Commit progress, update documentation
+
+### **Makefile Targets to Use**
+```bash
+make test                    # Run all tests
+make lint                    # Code quality checks
+make format                  # Code formatting
+make ghostbusters           # Multi-agent validation
+make beast-mode             # Beast Mode framework operations
+make pdca-cycle             # PDCA cycle operations
+make model-driven           # Model-driven building operations
+```
+
+## 🎯 **Key Files to Focus On**
+
+### **Core Implementation**
+- `docs/BEAST_MODE_EXTENDED_INTELLIGENCE_FRAMEWORK.md` - Beast Mode framework
+- `pdca.mdc` - PDCA cycle with RCA integration
+- `project_model_registry.json` - Domain architecture
+- `Makefile` - Development workflow
+
+### **Documentation**
+- `README.md` - Project overview
+- `KIRO_HACKATHON_1_MONTH_PLAN.md` - Hackathon plan
+- `.cursor/rules/kiro-agent-launch.mdc` - Agent launch rules
+
+## 🚨 **Critical Rules**
+
+### **Beast Mode Framework**
+- **ALWAYS follow PDCA cycles** - Plan, Do, Check, Act
+- **ALWAYS include RCA** - Root Cause Analysis in Check phase
+- **ALWAYS use model-driven approach** - Project model registry is authority
+- **ALWAYS implement RM principles** - Reflective Module compliance
+
+### **Code Quality**
+- **ALWAYS use Makefile targets** - Never run commands directly
+- **ALWAYS run Ghostbusters** - Multi-agent validation required
+- **ALWAYS follow project model** - Use domain registry for decisions
+
+### **Hackathon Focus**
+- **Keep it systematic** - Focus on Beast Mode framework
+- **Make it reusable** - Other hackathons should consume your services
+- **Document everything** - Clear integration APIs and usage
+
+## 🎯 **Agent Launch Command**
+
+```bash
+# Launch the Kiro hackathon agent
+cd kiro-ai-development-hackathon
+uv sync
+make help
+# Then start with: "Load the Beast Mode framework and implement the PDCA cycle with RCA"
+```
+
+## 🚀 **Remember**
+
+**"You are Kiro, the Beast Mode framework. Your mission is to transform into the systematic, model-driven development engine that powers the GKE hackathon. You provide PDCA cycles, RM principles, and model-driven building services that GKE consumes to build its billing analysis system."**
+
+## 🔗 **Integration Points**
+
+### **With GKE Hackathon**
+- Provide Beast Mode framework for systematic development
+- Provide PDCA cycles for billing analysis workflow
+- Provide model-driven building for GCP components
+
+### **With TiDB Hackathon**
+- Consume TiDB services for data persistence
+- Provide Beast Mode framework for TiDB development
+- Integrate PDCA cycles with TiDB operations
+
+### **With OpenFlow-Playground**
+- Report progress to parent project
+- Share Beast Mode framework innovations
+- Coordinate with other hackathons

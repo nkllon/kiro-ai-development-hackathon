@@ -1,0 +1,232 @@
+---
+description: Comprehensive guide for integrating AST tools, Black API, and Python scripts for git operations
+globs: *.py,*.md,*.yaml,*.yml,*.json,**/*.py,**/*.md,**/*.yaml,**/*.yml,**/*.json
+alwaysApply: false
+---
+
+# Tool Integration Patterns
+
+## Core Development Principles
+
+### Code Quality Enforcement
+- **ALWAYS** use deterministic tools for file editing
+- **NEVER** use heuristic editors for structured files
+- **ALWAYS** validate code quality before considering files complete
+- **NEVER** leave files with linter errors
+
+### Security-First Development
+- **NEVER** hardcode credentials, API keys, or secrets
+- **ALWAYS** use environment variables or secure parameter stores
+- **ALWAYS** validate and sanitize user inputs
+- **NEVER** use unsafe shell commands or subprocess calls
+
+### Model-Driven Development
+- **ALWAYS** consult `project_model_registry.json` before executing tools
+- **ALWAYS** use domain-specific validation tools
+- **NEVER** assume generic tools work for specialized formats
+- **ALWAYS** project tool configurations from project models
+
+## Tool-Specific Rules
+
+### AST-Enhanced Linting & Scrubbing
+
+#### When to Use AST Tools
+- **Code Quality Analysis**: Use `ASTEnhancedLinter` for comprehensive Python analysis
+- **Auto-Fixing**: Use `UniversalASTEnhancedLinterModel` for multi-language fixes
+- **Import Validation**: Use AST parsing to detect unused imports and circular dependencies
+- **Code Structure Analysis**: Use AST for function/class complexity and dependency mapping
+
+#### AST Tool Integration
+```python
+# ALWAYS try to import AST tools first
+try:
+    from ast_enhanced_linter import ASTEnhancedLinter
+    AST_LINTER_AVAILABLE = True
+except ImportError:
+    AST_LINTER_AVAILABLE = False
+
+# Use AST linter for primary analysis
+if AST_LINTER_AVAILABLE:
+    linter = ASTEnhancedLinter()
+    results = linter.analyze_codebase()
+    linter.auto_fix_issues(results)
+```
+
+#### AST Configuration Projection
+- **ALWAYS** project AST linter settings from `project_model_registry.json`
+- **ALWAYS** use project-specific quality thresholds and rules
+- **NEVER** hardcode AST analysis parameters
+- **ALWAYS** validate AST tool availability before use
+
+### Black API Usage
+
+#### When to Use Black API vs CLI
+- **Use Black API**: When integrating with Python scripts, CI/CD, or automated tools
+- **Use Black CLI**: When running manual formatting or pre-commit hooks
+- **NEVER** use subprocess calls to Black when API is available
+
+#### Black API Best Practices
+```python
+# ALWAYS import Black API with fallback
+try:
+    from black import FileMode, format_file_contents
+    BLACK_API_AVAILABLE = True
+except ImportError:
+    BLACK_API_AVAILABLE = False
+
+# ALWAYS use fast=False for reliable formatting
+formatted_content = format_file_contents(
+    content, 
+    mode=black_mode, 
+    fast=False  # Required for API compatibility
+)
+
+# ALWAYS project configuration from pyproject.toml
+black_mode = FileMode(
+    line_length=project_config.black_config["line_length"],
+    target_version=set(project_config.black_config["target_version"])
+)
+```
+
+#### Black Configuration Management
+- **ALWAYS** load Black settings from `pyproject.toml`
+- **ALWAYS** use `ProjectModelConfig` class for configuration projection
+- **NEVER** hardcode line length or target version
+- **ALWAYS** validate Black API availability before use
+
+### Python Scripts for Git/GitHub Operations
+
+#### When to Use Python Scripts vs Shell Commands
+- **Use Python Scripts**: For complex git operations, GitHub API calls, or when shell escaping is problematic
+- **Use Shell Commands**: For simple git status, add, commit operations
+- **NEVER** use complex bash one-liners with escaping
+
+#### Git Operations via Python
+```python
+# Use subprocess.run for git operations
+import subprocess
+
+def git_commit(message: str) -> bool:
+    """Commit changes with proper error handling"""
+    try:
+        result = subprocess.run(
+            ["git", "commit", "-m", message],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"Git commit failed: {e.stderr}")
+        return False
+
+# Use subprocess.run for GitHub CLI operations
+def create_github_pr(title: str, body: str, base: str = "develop") -> bool:
+    """Create GitHub PR using gh CLI"""
+    try:
+        cmd = [
+            "gh", "pr", "create",
+            "--title", title,
+            "--body", body,
+            "--base", base
+        ]
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"PR creation failed: {e.stderr}")
+        return False
+```
+
+#### GitHub CLI Integration
+- **ALWAYS** use `gh` CLI for GitHub operations (PRs, issues, releases)
+- **ALWAYS** handle authentication via `gh auth` before operations
+- **ALWAYS** use structured commands with lists, not shell strings
+- **NEVER** use shell string interpolation for gh commands
+
+#### Avoiding Shell Escaping Issues
+- **NEVER** use f-strings with shell commands containing quotes
+- **ALWAYS** use subprocess with argument lists
+- **ALWAYS** handle dquote and escaping issues by using Python
+- **NEVER** construct shell commands as strings
+
+### MCP Server Limitations
+
+#### What MCP Servers Don't Handle
+- **Git Operations**: MCP servers don't execute git commands
+- **GitHub CLI**: MCP servers don't run `gh` commands
+- **File System Operations**: MCP servers don't modify local files
+- **Shell Commands**: MCP servers don't execute shell scripts
+
+#### When to Use MCP vs Direct Tools
+- **Use MCP**: For repository metadata, issue tracking, code review
+- **Use Direct Tools**: For git operations, file modifications, local development
+- **NEVER** assume MCP can replace local development tools
+
+## File Editing Rules
+
+### Deterministic File Editing
+- **YAML Files**: Use `ruamel.yaml` for parsing and serializing
+- **JSON Files**: Use `json` library with proper formatting
+- **Python Files**: Use `ast` for structural edits, `black` for formatting
+- **MDC Files**: Use structured tools, not heuristic editors
+
+### Code Quality Enforcement
+- **Black Formatting**: Must pass before file completion
+- **Flake8/Ruff**: Must pass with zero errors
+- **AST Parsing**: Must parse successfully
+- **Import Validation**: No unused imports allowed
+
+## Integration Patterns
+
+### Quality Gate Integration
+```python
+# ALWAYS integrate AST tools with quality gates
+def run_code_quality_gate(self) -> dict:
+    """Run comprehensive code quality analysis"""
+    if AST_LINTER_AVAILABLE:
+        return self._run_ast_based_analysis()
+    else:
+        return self._run_fallback_analysis()
+
+# ALWAYS use project model configuration
+def _run_ast_based_analysis(self) -> dict:
+    """Run AST-enhanced analysis with project configuration"""
+    linter = ASTEnhancedLinter()
+    linter.configure_from_project_model(self.project_config)
+    return linter.analyze_and_fix()
+```
+
+### Tool Availability Detection
+```python
+# ALWAYS detect tool availability at startup
+TOOL_AVAILABILITY = {
+    "ast_linter": AST_LINTER_AVAILABLE,
+    "black_api": BLACK_API_AVAILABLE,
+    "ruff_api": RUFF_AVAILABLE,
+    "bandit_api": BANDIT_AVAILABLE
+}
+
+# ALWAYS report tool availability
+def report_tool_availability(self):
+    """Report available tools for debugging"""
+    for tool, available in TOOL_AVAILABILITY.items():
+        status = "✅" if available else "❌"
+        print(f"  {status} {tool}: {'Available' if available else 'Not available'}")
+```
+
+## Error Prevention
+
+### Common Pitfalls to Avoid
+- **Shell Escaping**: Never use complex shell commands with quotes
+- **Hardcoded Configuration**: Never hardcode tool settings
+- **Tool Assumptions**: Always check tool availability before use
+- **Quality Bypass**: Never skip quality checks for convenience
+
+### Recovery Strategies
+- **Tool Unavailable**: Always provide fallback to subprocess
+- **Configuration Missing**: Always provide sensible defaults
+- **Quality Failures**: Always fix issues before proceeding
+- **Integration Errors**: Always validate before deployment
+
+## Remember
+**Use the right tool for the job: AST tools for analysis, Black API for formatting, Python scripts for complex operations, and always project configuration from your project models.**

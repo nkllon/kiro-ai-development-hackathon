@@ -1,0 +1,5 @@
+---
+globs: project_model_registry.json
+alwaysApply: false
+---
+Do not scan or futz with this file directly! Refer to @project-model.mdc

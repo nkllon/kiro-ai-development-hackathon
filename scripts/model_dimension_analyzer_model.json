@@ -1,0 +1,58 @@
+{
+  "name": "model_dimension_analyzer",
+  "description": "Analyzes project model dimensions and creates meta-model queries using Graph() API at third meta level",
+  "version": "2.0.0",
+  "type": "meta_level_analysis_tool",
+  "graph_api_level": 3,
+  "projection_system": "final_projection_system",
+  "requirements": [
+    "Load project model registry",
+    "Analyze all dimensions in the model",
+    "Generate Neo4j meta-queries",
+    "Generate JSON meta-queries",
+    "Print dimension summary",
+    "Use Graph() API for third meta level analysis"
+  ],
+  "components": {
+    "ModelDimensionAnalyzer": {
+      "methods": [
+        "load_model()",
+        "analyze_dimensions()",
+        "generate_neo4j_meta_query()",
+        "generate_json_meta_query()",
+        "print_dimension_summary()",
+        "analyze_graph_structure()"
+      ],
+      "attributes": [
+        "model_file",
+        "model_data",
+        "dimensions",
+        "graph_analysis"
+      ],
+      "imports": [
+        "json",
+        "pathlib.Path",
+        "typing.Dict",
+        "typing.Any",
+        "typing.Set",
+        "collections.defaultdict"
+      ],
+      "graph_api_features": [
+        "Third meta level analysis",
+        "Graph structure discovery",
+        "Cross-domain relationship mapping",
+        "Meta-model pattern recognition"
+      ]
+    }
+  },
+  "outputs": [
+    "neo4j_meta_query.cypher",
+    "json_meta_query.json",
+    "graph_analysis_report.md"
+  ],
+  "projection_rules": {
+    "use_final_projection_system": true,
+    "apply_graph_api_patterns": true,
+    "ensure_third_meta_level": true
+  }
+}

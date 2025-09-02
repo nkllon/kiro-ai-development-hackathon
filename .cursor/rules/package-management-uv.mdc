@@ -1,0 +1,205 @@
+---
+description: UV Package Management Rules
+alwaysApply: true
+---
+
+# UV Package Management Rules
+
+## Core Principle: UV-First Package Management
+
+**All Python package management MUST use UV. No pip, poetry, or pipenv allowed.**
+
+## UV Requirements
+
+### Installation and Setup
+- **Install UV**: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- **Initialize project**: `uv init` (creates pyproject.toml)
+- **Install dependencies**: `uv sync`
+- **Add dependency**: `uv add <package>`
+- **Add dev dependency**: `uv add --dev <package>`
+
+### Lock File Enforcement
+- **ALWAYS use lock files**: `uv.lock` must be committed
+- **NO requirements.txt**: Use pyproject.toml instead
+- **NO pip install**: Use `uv sync` instead
+- **NO poetry**: Use UV for all dependency management
+
+### Project Structure
+```
+project/
+├── pyproject.toml      # UV project configuration
+├── uv.lock            # UV lock file (MUST be committed)
+├── src/               # Source code
+└── tests/             # Tests
+```
+
+## Dependency Categories
+
+### Core Dependencies (pyproject.toml)
+```toml
+[project]
+dependencies = [
+    "streamlit>=1.28.0",
+    "boto3>=1.28.0",
+    "redis>=4.6.0",
+    "plotly>=5.15.0",
+    "pandas>=2.0.0",
+    "pydantic>=2.0.0",
+    "bcrypt>=4.0.0",
+    "cryptography>=41.0.0",
+    "PyJWT>=2.8.0",
+]
+```
+
+### Development Dependencies (pyproject.toml)
+```toml
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-mock>=3.11.0",
+    "flake8>=6.0.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
+    "bandit>=1.7.0",
+    "safety>=2.3.0",
+    "types-requests>=2.31.0",
+    "pandas-stubs>=2.0.0",
+]
+```
+
+### Security Dependencies (pyproject.toml)
+```toml
+[project.optional-dependencies]
+security = [
+    "bandit>=1.7.0",
+    "safety>=2.3.0",
+    "detect-secrets>=1.4.0",
+]
+```
+
+## UV Commands
+
+### Development
+```bash
+# Install all dependencies (including dev)
+uv sync --all-extras
+
+# Install only core dependencies
+uv sync
+
+# Install with specific extras
+uv sync --extra dev --extra security
+
+# Add new dependency
+uv add streamlit
+
+# Add dev dependency
+uv add --dev pytest
+
+# Update dependencies
+uv sync --upgrade
+```
+
+### Security
+```bash
+# Check for vulnerabilities
+uv run safety check
+
+# Run security scans
+uv run bandit -r src/
+
+# Check for secrets
+uv run detect-secrets scan
+```
+
+### Code Quality
+```bash
+# Format code
+uv run black src/ tests/
+
+# Lint code
+uv run flake8 src/ tests/
+
+# Type check
+uv run mypy src/
+
+# Run tests
+uv run pytest tests/
+```
+
+## Prohibited Commands
+
+### ❌ NEVER Use These:
+```bash
+pip install <package>           # Use uv add instead
+pip install -r requirements.txt # Use uv sync instead
+poetry install                  # Use uv sync instead
+pipenv install                  # Use uv sync instead
+```
+
+### ✅ ALWAYS Use These:
+```bash
+uv add <package>                # Add dependency
+uv sync                         # Install all dependencies
+uv run <command>                # Run commands in UV environment
+```
+
+## Model-Driven Requirements
+
+### Package Management Domain
+- **Patterns**: `pyproject.toml`, `uv.lock`
+- **Content Indicators**: `uv`, `dependencies`, `dev-dependencies`
+- **Linter**: `uv check`
+- **Validator**: `uv sync`
+- **Requirements**: 
+  - Use UV for all package management
+  - Enforce UV lock file usage
+  - Validate dependencies with UV check
+  - Sync dependencies with UV sync
+
+### Requirements Traceability
+- **UV package management enforcement**: UV lock file and dependency management
+- **Streamlit app dependencies with UV**: streamlit, boto3, redis, plotly, pandas, pydantic, bcrypt
+- **Security-first dependencies with UV**: cryptography, PyJWT, bandit, safety
+- **Development dependencies with UV**: pytest, flake8, black, mypy
+
+## Validation
+
+### Pre-commit Hooks
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: local
+    hooks:
+      - id: uv-sync
+        name: UV Sync
+        entry: uv sync
+        language: system
+        pass_filenames: false
+        always_run: true
+```
+
+### CI/CD Integration
+```yaml
+# GitHub Actions
+- name: Install UV
+  uses: astral-sh/setup-uv@v1
+  with:
+    version: "latest"
+
+- name: Install dependencies
+  run: uv sync --all-extras
+
+- name: Run tests
+  run: uv run pytest tests/
+```
+
+## Remember
+
+**UV is the ONLY package manager allowed. All dependencies must be managed through UV with proper lock files and pyproject.toml configuration.**
+
+
+**UV is the ONLY package manager allowed. All dependencies must be managed through UV with proper lock files and pyproject.toml configuration.**
+
+
+**UV is the ONLY package manager allowed. All dependencies must be managed through UV with proper lock files and pyproject.toml configuration.**

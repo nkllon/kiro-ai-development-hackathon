@@ -1,0 +1,17 @@
+{
+  "name": "openflow-json-maintenance",
+  "version": "1.0.0",
+  "description": "JSON maintenance tools for OpenFlow Playground project model",
+  "main": "src/json-recovery.js",
+  "scripts": {
+    "recover": "node src/json-recovery.js",
+    "validate": "node src/json-validator.js",
+    "test": "node src/json-recovery.js --dry-run"
+  },
+  "dependencies": {
+    "fs-extra": "^11.1.1"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.3"
+  }
+}

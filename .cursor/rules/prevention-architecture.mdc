@@ -1,0 +1,188 @@
+---
+description: Model-driven, test-driven prevention architecture
+alwaysApply: true
+---
+
+# Prevention Architecture: Model-Driven, Test-Driven
+
+## The Real Work: Prevention, Not Detection
+
+### Model-Driven Prevention
+**Instead of parsing for problems, model the system to prevent them:**
+
+#### Security Model
+```python
+# Model: What makes a system secure?
+security_model = {
+    "credentials": {
+        "storage": "environment_variables",
+        "validation": "required_at_runtime",
+        "examples": "placeholders_only"
+    },
+    "configuration": {
+        "templates": "no_real_values",
+        "validation": "schema_enforced",
+        "deployment": "parameterized"
+    },
+    "access": {
+        "principle": "least_privilege",
+        "audit": "automated",
+        "rotation": "mandatory"
+    }
+}
+```
+
+#### Test-Driven Prevention
+**Write tests that prevent problems, not detect them:**
+
+```python
+# Test: Configuration is parameterized
+def test_config_parameterized():
+    """Ensure no hardcoded values in config"""
+    config = load_config()
+    assert all(is_placeholder(value) for value in config.values())
+    
+# Test: Credentials are externalized
+def test_credentials_externalized():
+    """Ensure credentials come from environment"""
+    assert os.getenv('API_KEY') is not None
+    assert 'YOUR_API_KEY' not in source_code
+    
+# Test: Deployment is automated
+def test_deployment_automated():
+    """Ensure deployment uses proper parameters"""
+    deployment = load_deployment_script()
+    assert '--parameters' in deployment
+    assert 'ParameterKey=' in deployment
+```
+
+### Prevention Patterns
+
+#### 1. Template-Driven Configuration
+**Right:**
+```yaml
+# config.template.yaml
+api_key: ${API_KEY}
+secret: ${SECRET}
+url: ${BASE_URL}
+```
+
+**Wrong:**
+```yaml
+# config.yaml
+api_key: "sk-1234567890abcdef"
+secret: "my_secret_key"
+url: "https://api.example.com"
+```
+
+#### 2. Schema-Enforced Validation
+**Right:**
+```python
+# schema.py
+ConfigSchema = {
+    "api_key": {"type": "string", "pattern": r"^\$\{.*\}$"},
+    "secret": {"type": "string", "pattern": r"^\$\{.*\}$"},
+    "url": {"type": "string", "pattern": r"^\$\{.*\}$"}
+}
+```
+
+#### 3. Runtime Validation
+**Right:**
+```python
+# validation.py
+def validate_runtime_config():
+    required_vars = ['API_KEY', 'SECRET', 'BASE_URL']
+    missing = [var for var in required_vars if not os.getenv(var)]
+    if missing:
+        raise ConfigError(f"Missing environment variables: {missing}")
+```
+
+### The Architecture Approach
+
+#### Instead of Reactive Parsing:
+```bash
+# Wrong: Parse and detect problems
+grep -r "sk-" . && echo "Found API key!"
+```
+
+#### Use Proactive Prevention:
+```python
+# Right: Model and prevent
+class SecureConfig:
+    def __init__(self):
+        self.validate_environment()
+        self.validate_templates()
+        self.validate_deployment()
+    
+    def validate_environment(self):
+        """Ensure all required env vars are set"""
+        pass
+    
+    def validate_templates(self):
+        """Ensure config uses placeholders"""
+        pass
+    
+    def validate_deployment(self):
+        """Ensure deployment is parameterized"""
+        pass
+```
+
+### Test-Driven Prevention Examples
+
+#### 1. Configuration Tests
+```python
+def test_no_hardcoded_credentials():
+    """Test that no real credentials exist in code"""
+    files = find_config_files()
+    for file in files:
+        content = read_file(file)
+        assert not contains_real_credentials(content)
+
+def test_all_placeholders_used():
+    """Test that all config uses placeholders"""
+    templates = find_template_files()
+    for template in templates:
+        content = read_template(template)
+        assert all(is_placeholder(value) for value in extract_values(content))
+```
+
+#### 2. Deployment Tests
+```python
+def test_deployment_parameterized():
+    """Test that deployment uses parameters"""
+    deployment_script = read_deployment_script()
+    assert 'ParameterKey=' in deployment_script
+    assert 'ParameterValue=' in deployment_script
+
+def test_no_secrets_in_deployment():
+    """Test that deployment doesn't contain secrets"""
+    deployment_script = read_deployment_script()
+    assert not contains_secrets(deployment_script)
+```
+
+#### 3. Runtime Tests
+```python
+def test_environment_configured():
+    """Test that environment is properly configured"""
+    required_vars = ['API_KEY', 'SECRET', 'BASE_URL']
+    for var in required_vars:
+        assert os.getenv(var) is not None, f"Missing {var}"
+
+def test_credentials_not_in_code():
+    """Test that no credentials are in source code"""
+    source_files = find_source_files()
+    for file in source_files:
+        content = read_file(file)
+        assert not contains_credentials(content)
+```
+
+### The Meta-Rule
+**"Model the system to prevent problems, don't parse to detect them. Write tests that prevent chaos, not tools that detect it after it happens."**
+
+### Prevention Over Detection
+- **Model the security requirements** - Define what "secure" means
+- **Write prevention tests** - Tests that ensure the model is followed
+- **Validate at runtime** - Check that the system is configured correctly
+- **Template everything** - Use templates to prevent hardcoded values
+
+**Focus on the architecture that prevents chaos, not the tools that detect it.**

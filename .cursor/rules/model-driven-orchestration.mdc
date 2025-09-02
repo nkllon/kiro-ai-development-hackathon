@@ -1,0 +1,87 @@
+---
+description: Model-driven tool orchestration
+alwaysApply: true
+---
+
+# Model-Driven Tool Orchestration
+
+## ALWAYS Check for project_model_registry.json First
+
+### When Starting Work:
+1. **Look for `project_model_registry.json`** - This is the single source of truth
+2. **Load and parse the model** - Understand the domain registry and requirements
+3. **Use the model for tool selection** - Don't guess, use the explicit mappings
+4. **Validate against requirements** - Check that your work traces to the model
+
+### The Model Contains:
+- **Domain configurations** (cloudformation, python, yaml, security, bash)
+- **Pattern matching rules** for file detection
+- **Content indicators** for intelligent analysis
+- **Tool mappings** (linter, validator, formatter)
+- **Exclusion patterns** to avoid false positives
+- **Requirements traceability** linking intent to implementation
+
+### How to Use the Model:
+
+#### 1. Domain Detection
+```python
+# Load the model
+with open('project_model_registry.json') as f:
+    model = json.load(f)
+
+# Check file against domains
+for domain_name, config in model['domains'].items():
+    if file_matches_patterns(filepath, config['patterns']):
+        if file_has_indicators(filepath, config['content_indicators']):
+            return domain_name, config
+```
+
+#### 2. Tool Selection
+```python
+# Use the model's tool mappings
+domain_config = model['domains'][detected_domain]
+tools = [domain_config['linter']]
+if domain_config.get('validator'):
+    tools.append(domain_config['validator'])
+if domain_config.get('formatter'):
+    tools.append(domain_config['formatter'])
+```
+
+#### 3. Requirements Validation
+```python
+# Check that your work traces to requirements
+for req in model['requirements_traceability']:
+    if req['requirement'] == 'your_requirement':
+        assert req['test'] in test_files, f"Missing test: {req['test']}"
+```
+
+### Recovery Scenarios:
+
+#### If You're Lost:
+1. **Read `project_model_registry.json`** - Understand the system's intent
+2. **Check `requirements_traceability`** - See what each piece does
+3. **Run the tests** - `python test_model_traceability.py`
+4. **Follow the model** - Don't improvise, use the explicit mappings
+
+#### If Tools Are Failing:
+1. **Check the domain detection** - Is the file being classified correctly?
+2. **Verify tool availability** - Are the required tools installed?
+3. **Check exclusions** - Is the file being excluded incorrectly?
+4. **Update the model** - If the model is wrong, fix it and document why
+
+#### If Requirements Are Unclear:
+1. **Read the requirements** - Each domain has explicit requirements
+2. **Check the tests** - Tests show how requirements are implemented
+3. **Follow the traceability** - See how requirements map to code
+
+### The Meta-Rule:
+**"The model is the authority. If you're not using `project_model_registry.json` to make decisions, you're guessing. Load the model, understand the intent, follow the mappings."**
+
+### When to Update the Model:
+- **New domain detected** - Add it to the domains object
+- **Tool changes** - Update the linter/validator/formatter mappings
+- **Pattern changes** - Update patterns or content indicators
+- **New requirements** - Add to requirements_traceability
+- **Test failures** - Update the model to match reality
+
+**Remember: This model exists because generic tools fail on domain-specific problems. Use the model to be intelligent, not just compliant.**

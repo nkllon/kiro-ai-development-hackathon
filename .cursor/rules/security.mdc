@@ -1,0 +1,111 @@
+---
+description: Security guidelines and credential management
+alwaysApply: false
+severity: critical
+priority: high
+mode: advisory
+globs: *.py,*.js,*.ts,*.yaml,*.yml,*.md,*.sh,*.json,*.toml,*.cfg,*.ini,*.conf
+---
+
+
+
+# Security Guidelines
+
+## NEVER Hardcode These:
+- API keys, tokens, secrets, passwords
+- AWS access keys, private keys, certificates  
+- OAuth client IDs, client secrets, access tokens
+- Database connection strings with real credentials
+- Account-specific URLs, UUIDs, or identifiers
+- Real organization names, account IDs, or resource names
+
+## ALWAYS Use These Instead:
+- Environment variables: `$API_KEY`
+- Placeholder values: `YOUR_API_KEY`, `YOUR_SECRET`
+- Parameter stores or secrets managers
+- Configuration files with placeholders
+
+## Validation Checklist:
+- [ ] No hardcoded credentials in code
+- [ ] No real values in examples or documentation
+- [ ] All sensitive parameters are required (no defaults)
+- [ ] Placeholder values are clearly marked
+- [ ] Security warnings in documentation
+- [ ] Configuration is parameterized
+
+## File Types to Check:
+- YAML/JSON config files
+- Shell scripts
+- Python files
+- Documentation (README, MD files)
+- Environment files
+- Infrastructure templates
+
+## Exclusions (Low-Risk Files):
+The following files are excluded from security scanning via glob patterns:
+- **Lock files**: `uv.lock`, `package-lock.json`, `poetry.lock`
+- **Binary files**: `*.exe`, `*.dll`, `*.so`, `*.dylib`
+- **Version control**: `.git/`, `.gitignore`, `.gitattributes`
+- **Build artifacts**: `dist/`, `build/`, `__pycache__/`
+- **Temporary files**: `*.tmp`, `*.temp`, `*.log`
+
+**Note**: Exclusions are enforced through glob patterns, not just documentation.
+
+## Operational Mode:
+- **Mode**: Advisory-first (warn > block)
+- **Escalation**: Block only on high-confidence violations
+- **Intentional markers**: Allow explicit security exceptions
+- **False positive handling**: Report for review, don't auto-block
+
+## Remember:
+If you see hardcoded credentials, FIX THEM IMMEDIATELY.
+If you're not sure, DON'T HARDCODE IT.
+Treat every codebase as if it will be shared publicly.
+
+## Intentional Security Exceptions:
+When legitimate exceptions are needed, use explicit markers:
+```python
+# SECURITY_EXCEPTION: This is a test fixture with intentionally weak credentials
+# SECURITY_EXCEPTION: Placeholder for demonstration purposes only
+# SECURITY_EXCEPTION: This will be replaced with environment variables in production
+```
+
+## High-Confidence Violations (Auto-Block):
+- API keys starting with `sk-`, `pk_`, `ak_`
+- AWS access keys (20+ character alphanumeric)
+- Private keys (BEGIN PRIVATE KEY, BEGIN RSA PRIVATE KEY)
+- Database connection strings with real credentials
+- OAuth client secrets (32+ character strings)
+
+## Automated Security Scanning with Bandit:
+Our project integrates [Bandit](https://github.com/PyCQA/bandit) for automated security analysis:
+
+### **Integration Features:**
+- **Direct Python API** - No subprocess calls, pure Python integration
+- **AST-based analysis** - Leverages Python's Abstract Syntax Tree
+- **70+ security checks** - Covers OWASP Top 10 and Python-specific vulnerabilities
+- **Model-driven scanning** - Integrates with project architecture
+
+### **Usage:**
+```bash
+# Scan single file
+uv run python scripts/bandit_integration.py --path <file> --report
+
+# Scan entire project
+uv run python scripts/bandit_integration.py --project --report
+
+# Export results to JSON
+uv run python scripts/bandit_integration.py --project --output security_scan.json
+```
+
+### **Security Issue Categories:**
+- **HIGH**: Weak cryptography (MD5, SHA1), hardcoded passwords, SQL injection
+- **MEDIUM**: Insecure functions (mktemp), XML parsing vulnerabilities
+- **LOW**: Subprocess usage, partial executable paths
+
+### **Integration Points:**
+- **Security Scanner**: `scripts/bandit_integration.py`
+- **Test Suite**: `scripts/test_bandit_integration.py`
+- **Project Model**: Integrated with `project_model_registry.json`
+- **CI/CD Ready**: Can be integrated with pre-commit hooks and GitHub Actions
+

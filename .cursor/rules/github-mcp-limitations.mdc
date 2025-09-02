@@ -1,0 +1,120 @@
+---
+description: Clarify when to use GitHub MCP servers vs direct tools for local development operations
+globs: *.py,*.md,*.yaml,*.yml,**/*.py,**/*.md,**/*.yaml,**/*.yml
+alwaysApply: false
+---
+
+# GitHub MCP Server Limitations
+
+## Core Principle
+**GitHub MCP servers are for repository metadata and operations, NOT for local git operations or GitHub CLI commands. Use direct tools for local development tasks.**
+
+## What GitHub MCP Servers CAN Do
+
+### Repository Operations
+- **Repository metadata**: Get repo info, branches, tags
+- **Issue tracking**: Create, read, update issues
+- **Pull request management**: Create, read, update PRs
+- **Code review**: Comment on code, approve changes
+- **Release management**: Create and manage releases
+- **Workflow runs**: Monitor GitHub Actions
+
+### API Operations
+- **GitHub API calls**: Authenticated API requests
+- **Webhook management**: Configure repository webhooks
+- **Repository settings**: Manage repository configuration
+- **Collaborator management**: Add/remove team members
+
+## What GitHub MCP Servers CANNOT Do
+
+### Local Development Tasks
+- **Git operations**: `git add`, `git commit`, `git push`
+- **GitHub CLI**: `gh` commands for local operations
+- **File system operations**: Modify local files
+- **Shell commands**: Execute local scripts
+- **Local authentication**: Manage local git credentials
+
+### Local Git Workflows
+- **Branch management**: Create/switch local branches
+- **Staging changes**: Add files to git index
+- **Commit creation**: Create local commits
+- **Push/pull operations**: Sync with remote
+- **Merge operations**: Local branch merging
+
+## When to Use MCP vs Direct Tools
+
+### Use MCP For:
+```python
+# Repository metadata
+repo_info = mcp.get_repository_info("owner/repo")
+
+# Issue creation
+issue = mcp.create_issue(
+    title="Bug report",
+    body="Description of the issue",
+    labels=["bug", "help-wanted"]
+)
+
+# PR management
+pr = mcp.create_pull_request(
+    title="Feature implementation",
+    body="Description of changes",
+    head="feature-branch",
+    base="main"
+)
+```
+
+### Use Direct Tools For:
+```python
+# Local git operations
+import subprocess
+
+def git_commit(message: str):
+    """Local git commit"""
+    cmd = ["git", "commit", "-m", message]
+    subprocess.run(cmd, check=True)
+
+def git_push():
+    """Local git push"""
+    cmd = ["git", "push"]
+    subprocess.run(cmd, check=True)
+
+def create_local_pr():
+    """Create PR using local gh CLI"""
+    cmd = [
+        "gh", "pr", "create",
+        "--title", "My PR",
+        "--body", "Description",
+        "--base", "develop"
+    ]
+    subprocess.run(cmd, check=True)
+```
+
+## Common Misconceptions
+
+### ❌ Wrong Assumptions
+- "MCP can run git commands locally"
+- "MCP can execute shell scripts"
+- "MCP can modify local files"
+- "MCP can handle local authentication"
+- "MCP can replace local development tools"
+
+## Best Practices
+
+### 1. Tool Selection
+- **MCP**: Remote repository operations, API calls
+- **Direct tools**: Local git operations, file modifications
+- **Hybrid**: Combine both for complete workflows
+
+### 2. Error Handling
+- **Always provide fallbacks** when MCP fails
+- **Use direct tools** for critical local operations
+- **Validate results** from both approaches
+
+### 3. Authentication
+- **MCP**: Uses GitHub API tokens
+- **Direct tools**: Use local git credentials or gh auth
+- **Keep both authenticated** for seamless operation
+
+## Remember
+**GitHub MCP servers are powerful for repository operations but cannot replace local development tools. Use the right tool for each job: MCP for remote, direct tools for local.**

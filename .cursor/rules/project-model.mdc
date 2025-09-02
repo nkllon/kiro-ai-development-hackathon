@@ -1,0 +1,208 @@
+---
+description: Project Model Updates and Queries Rule
+alwaysApply: false
+---
+# Project Model Updates Rule
+
+## Core Principle
+**When asked for "project model updates", the agent MUST use the Model Registry and CRUD tools to query, analyze, and update the project model systematically.**
+
+## What "Project Model Updates" Means
+
+### 1. **Query Current State**
+**ALWAYS start by querying the current project model:**
+```python
+# ✅ REQUIRED: Use Model Registry to get current state
+from src.round_trip_engineering.tools import get_model_registry
+registry = get_model_registry()
+manager = registry.get_model('project')
+model_data = manager.load_model()
+
+# ✅ REQUIRED: Analyze current state
+domains = model_data.get('domains', {})
+requirements = model_data.get('requirements_traceability', [])
+use_cases = model_data.get('use_cases', [])
+```
+
+### 2. **Identify What Needs Updating**
+**Based on the conversation context, determine:**
+- **New domains** to add
+- **New requirements** to trace
+- **New use cases** to document
+- **Updated patterns** to reflect
+- **Architecture changes** to capture
+
+### 3. **Use CRUD Tools for Updates**
+**ALWAYS use the built tools for updates:**
+```bash
+# ✅ REQUIRED: Use CLI tools for updates
+uv run python scripts/model_crud.py add-item --model-name project --id new_requirement --description "Description" --collection requirements_traceability
+uv run python scripts/model_crud.py update-section --model-name project --section domains --updates '{"new_domain": {...}}'
+```
+
+### 4. **Document Changes**
+**After updates, document what was changed:**
+- What domains were added/modified
+- What requirements were traced
+- What use cases were documented
+- What patterns were updated
+
+## Mandatory Workflow
+
+### When User Says "Update Project Model":
+1. **✅ Query current state** using Model Registry
+2. **✅ Analyze conversation context** for new information
+3. **✅ Identify specific updates needed** (domains, requirements, use cases)
+4. **✅ Use CRUD tools** to make updates
+5. **✅ Validate changes** using model validation
+6. **✅ Document what was updated** in response
+
+### When User Says "What Does Project Model Say":
+1. **✅ Query current state** using Model Registry
+2. **✅ Extract relevant information** (domains, requirements, patterns)
+3. **✅ Process and organize results** - Don't just dump raw data
+4. **✅ Present information meaningfully** - Group, categorize, explain
+5. **✅ NEVER scan JSON directly** - always use tools
+6. **✅ NEVER ignore tool results** - Process what the tools return
+7. **✅ If tool fails, debug the tool** - Don't revert to manual methods
+8. **✅ Fix tool issues** - Make the tools work properly
+
+## Tool Failure Handling (Reflective Module Compliant)
+
+### **❌ DON'T Do This:**
+```python
+# ❌ Tool failed, so revert to manual methods
+try:
+    result = tool.query()
+except:
+    # Fallback to manual file reading - WRONG!
+    with open('file.json') as f:
+        data = json.load(f)
+```
+
+### **✅ DO This (Reflective Module Approach):**
+```python
+# ✅ Tool failed, so debug and fix the tool systematically
+try:
+    result = tool.query()
+except Exception as e:
+    # 1. Log the failure (RM Self-Monitoring)
+    tool.log_failure(e)
+    
+    # 2. Get tool health status (RM Self-Reporting)
+    health = tool.get_health_indicators()
+    
+    # 3. Identify the specific issue (RM Single Responsibility)
+    issue = tool.diagnose_failure(e)
+    
+    # 4. Fix the tool (RM Operational Visibility)
+    tool.fix_issue(issue)
+    
+    # 5. Validate the fix (RM Testability)
+    tool.validate_fix()
+    
+    # 6. Use the fixed tool (RM Architecture Boundaries)
+    result = tool.query()
+    
+    # 7. Update documentation (RM Self-Documentation)
+    tool.update_documentation(issue, fix)
+```
+
+### **Mandatory Tool Debugging (RM Compliant):**
+1. **✅ Self-Monitoring** - Log tool failures with context
+2. **✅ Self-Reporting** - Get tool health indicators
+3. **✅ Single Responsibility** - Diagnose specific failure type
+4. **✅ Operational Visibility** - Fix the underlying issue
+5. **✅ Testability** - Validate the fix works
+6. **✅ Architecture Boundaries** - Use the fixed tool, don't bypass
+7. **✅ Self-Documentation** - Update requirements, tests, docs
+
+### **Complete Update Requirements:**
+When fixing tool issues, MUST update:
+- **✅ Requirements**: Add tool failure handling requirements
+- **✅ Tests**: Add tests for the specific failure scenario
+- **✅ Documentation**: Update tool usage documentation
+- **✅ Health Monitoring**: Add health indicators for the failure type
+- **✅ Recovery Procedures**: Document recovery steps
+
+### **❌ DON'T Do This:**
+```python
+# ❌ Tool result ignored - just dumps raw data
+domains = model_data.get('domains', {})
+print("Domains:", list(domains.keys()))  # Raw dump, no processing
+```
+
+### **✅ DO This:**
+```python
+# ✅ Tool result processed and organized
+domains = model_data.get('domains', {})
+print("📋 Project Domains:")
+print("🎯 Core Demo:", [d for d in domains if 'demo' in d])
+print("🛠️ Tools:", [d for d in domains if d in ['ghostbusters', 'model_driven_testing']])
+print("🏗️ Infrastructure:", [d for d in domains if d in ['cloudformation', 'bash']])
+```
+
+### **Mandatory Result Processing:**
+1. **✅ Group related items** - Don't dump raw lists
+2. **✅ Categorize by purpose** - Core, tools, infrastructure, etc.
+3. **✅ Explain significance** - Why each domain matters
+4. **✅ Provide context** - How domains relate to each other
+5. **✅ Count and summarize** - Give overview before details
+
+### ❌ WRONG - Direct File Access
+```python
+# ❌ DON'T do this
+import json
+with open('project_model_registry.json') as f:
+    data = json.load(f)
+print("Domains:", list(data['domains'].keys()))
+```
+
+### ✅ RIGHT - Using Tools
+```python
+# ✅ DO this
+from src.round_trip_engineering.tools import get_model_registry
+registry = get_model_registry()
+manager = registry.get_model('project')
+model_data = manager.load_model()
+print("Domains:", list(model_data['domains'].keys()))
+```
+
+## Update Categories
+
+### **Domains** (Architecture)
+- New technical domains discovered
+- Domain relationships updated
+- Domain patterns identified
+
+### **Requirements** (Traceability)
+- New functional requirements
+- Non-functional requirements
+- Implementation requirements
+- Testing requirements
+
+### **Use Cases** (Behavior)
+- New user scenarios
+- System interactions
+- Workflow patterns
+- Integration patterns
+
+### **Patterns** (Architecture)
+- Design patterns identified
+- Anti-patterns discovered
+- Best practices documented
+- Architecture decisions
+
+## Validation Requirements
+
+### After Every Update:
+1. **✅ Run model validation** - `uv run python scripts/model_crud.py validate --model-name project`
+2. **✅ Check backup created** - Verify automatic backup
+3. **✅ Verify changes persisted** - Query model to confirm updates
+4. **✅ Document in response** - Explain what was updated
+
+## Remember
+**The project model is the single source of truth. Use the tools you built to maintain it properly. Never bypass the architecture for convenience. ALWAYS process and organize tool results meaningfully - don't just dump raw data.**
+description: Project Model Usage, Updates and Queries
+alwaysApply: false
+---

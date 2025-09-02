@@ -1,0 +1,69 @@
+# Universal Ruff configuration for OpenFlow-Playground subprojects
+# This template provides consistent linting rules across all subprojects
+
+# Target Python version
+target-version = "py39"
+
+# Line length
+line-length = 88
+
+# Enable all rules by default
+select = ["ALL"]
+
+# Ignore specific rules that are too noisy or not useful for subprojects
+ignore = [
+    # F541: f-string is missing placeholders (annoying and not useful)
+    "F541",
+    
+    # F401: unused imports (false positives for availability testing)
+    "F401",
+    
+    # PTH: pathlib modernization suggestions (stylistic, not critical)
+    "PTH120",  # Use Path.parent instead of os.path.dirname
+    "PTH100",  # Use Path.cwd() instead of os.getcwd()
+    "PTH109",  # Use Path.mkdir() instead of os.mkdir
+    "PTH103",  # Use Path.exists() instead of os.path.exists
+    
+    # UP: pyupgrade suggestions (modern Python features)
+    "UP035",   # typing.List/Dict deprecated (we handle this manually)
+    "UP006",   # Use list/dict instead of List/Dict (we handle this manually)
+    
+    # I: isort import sorting
+    "I001",    # Import block is un-sorted or un-formatted
+    
+    # W: whitespace issues
+    "W293",    # Blank line contains whitespace
+    
+    # E: pycodestyle errors
+    "E128",    # continuation line under-indented for visual indent
+]
+
+# Per-file ignores for specific cases
+[per-file-ignores]
+# Ignore certain rules in test files
+"**/tests/**/*.py" = ["FBT001", "FBT002", "FBT003"]
+"**/test_*.py" = ["FBT001", "FBT002", "FBT003"]
+
+# Ignore certain rules in migration templates
+"**/migration_templates/**/*.py" = ["F401", "F541"]
+
+# Ignore certain rules in backup files
+"**/*.backup*" = ["ALL"]
+"**/backup/**/*" = ["ALL"]
+
+# Formatting options
+[format]
+# Use double quotes for strings
+quote-style = "double"
+
+# Use spaces around operators
+indent-style = "space"
+
+# Use 4 spaces for indentation
+indent-width = 4
+
+# Skip magic trailing comma
+skip-magic-trailing-comma = false
+
+# Respect existing line endings
+line-ending = "auto"

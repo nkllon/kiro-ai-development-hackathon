@@ -1,0 +1,62 @@
+---
+description: ALWAYS consult project_model_registry.json before executing any tool or command
+globs: *.py,*.json,*.yaml,*.yml
+alwaysApply: false
+---
+
+# Model-Driven Tool Orchestration Enforcement
+
+## ALWAYS Consult Project Model First
+
+### Mandatory Pre-Action Checklist
+Before running ANY tests, linting, or tool operations:
+
+1. **✅ Load project_model_registry.json** - This is the single source of truth
+2. **✅ Identify relevant domains** - Check which domains apply to your task
+3. **✅ Use domain-specific tools** - Don't use generic tools when domain-specific ones exist
+4. **✅ Follow the model's requirements** - The model contains explicit requirements for each domain
+
+### Testing Domain Requirements
+When running tests, the model specifies:
+- **Linter**: flake8
+- **Formatter**: black
+- **Validator**: pytest  
+- **Type Checker**: mypy
+- **Order**: lint → format → type-check → test
+
+### Enforcement Commands
+```bash
+# ALWAYS use Make targets - never run commands directly
+make test-model-driven          # Model-driven testing
+make test                      # Full test suite
+make lint                      # Linting only
+make format                    # Formatting only
+make type-check               # Type checking only
+make security-check           # Security scanning
+make quality-check            # Code quality checks
+
+# NEVER run these directly:
+# ❌ python -m pytest tests/
+# ❌ python -m flake8 tests/
+# ❌ python -m black tests/
+# ❌ python -m mypy tests/
+```
+
+### The Rule
+**"If you're not using project_model_registry.json to make decisions, you're guessing. The model is the authority."**
+
+### Common Violations
+- ❌ Running pytest without checking the model first
+- ❌ Using generic tools when domain-specific ones exist
+- ❌ Ignoring the model's explicit tool mappings
+- ❌ Not following the model's requirements order
+
+### Correct Approach
+- ✅ Load and parse project_model_registry.json first
+- ✅ Identify the relevant domain(s) for your task
+- ✅ Use the model's specified tools in the correct order
+- ✅ Follow the model's requirements exactly
+
+## Remember
+The model exists because generic tools fail on domain-specific problems. Use the model to be intelligent, not just compliant.
+

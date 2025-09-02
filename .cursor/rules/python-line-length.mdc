@@ -1,0 +1,62 @@
+---
+description: Python Line Length Readability Over Arbitrary Limits
+globs: *.py
+alwaysApply: false
+---
+# Python Line Length: Readability Over Arbitrary Limits
+
+## Core Principle
+**Write readable code. Line length should serve readability, not arbitrary historical constraints.**
+
+## The Rule
+- **No arbitrary line length limits** (88, 120, etc.)
+- **No forced line breaks** that make code harder to read
+- **Trust the AI's formatting decisions** - if it wrote it that way, that's how it stays
+- **Focus on maintainable results, not style compliance**
+
+## What This Means
+- **Natural expressions stay together** - don't break function calls, conditionals, or logical groups
+- **Long but readable lines are fine** - URLs, error messages, descriptive names
+- **Only break where it improves readability** - not to satisfy arbitrary limits
+- **AI-generated formatting is intentional** - respect the AI's choices
+
+## Examples of What NOT to Do
+```python
+# DON'T break readable code into unreadable garbage
+result = some_long_function_call(
+    parameter1, 
+    parameter2, 
+    parameter3, 
+    parameter4
+)
+
+# DON'T split natural conditionals
+if (user.has_permission('admin') and 
+    user.is_active and 
+    user.last_login > threshold):
+```
+
+## Examples of What TO Do
+```python
+# DO keep natural expressions together
+result = some_long_function_call(parameter1, parameter2, parameter3, parameter4)
+
+# DO keep logical groups together
+if user.has_permission('admin') and user.is_active and user.last_login > threshold:
+
+# DO use line breaks only when they improve readability
+long_url = "https://api.example.com/v1/very/long/path/that/makes/sense/to/keep/together"
+```
+
+## Quality Tools Configuration
+- **Disable line length limits** in all linting tools
+- **Focus on actual quality issues** (unused imports, syntax errors, etc.)
+- **Trust the AI's formatting decisions**
+- **Prioritize maintainability over style compliance**
+
+## Remember
+**Readable code is maintainable code. Arbitrary line length limits are destructive to both.**
+description:
+globs:
+alwaysApply: true
+---

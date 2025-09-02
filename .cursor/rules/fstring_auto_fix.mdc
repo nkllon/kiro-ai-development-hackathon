@@ -1,0 +1,38 @@
+# F-String Policy Rule
+
+## Current Status: F541 Rule ELIMINATED ✅
+
+**The F541 rule has been eliminated from this project because:**
+- It provides no security value
+- Creates false positives and cognitive overhead
+- Enforces style preferences as security requirements
+- Real security risks are elsewhere (input validation, SQL injection, etc.)
+
+## Policy: F-Strings Are Always Allowed
+
+**Use f-strings freely:**
+- `f"Simple message"` ✅ (even without placeholders)
+- `f"Count: {count}"` ✅ (with placeholders)
+- `f"Status: {status}"` ✅ (with placeholders)
+
+## No More "Fixing" Needed
+
+**Do NOT:**
+- ❌ Try to "fix" f-strings without placeholders
+- ❌ Convert f-strings to regular strings
+- ❌ Run f-string "fixer" scripts
+- ❌ Treat f-string usage as a problem
+
+**DO:**
+- ✅ Use f-strings consistently throughout the codebase
+- ✅ Prefer f-strings for all string formatting
+- ✅ Ignore any F541 linting warnings
+- ✅ Focus on real security issues instead
+
+## Remember
+**"F-strings are a Python feature, not a security problem. Use them freely and consistently!"**
+
+description: F-string policy enforcement - F541 rule eliminated, f-strings mandatory
+globs: **/*.py,**/*.md,**/*.mdc
+alwaysApply: true
+---

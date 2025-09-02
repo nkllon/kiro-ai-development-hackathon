@@ -1,0 +1,127 @@
+---
+description: Rule for pr-procedure-enforcement
+globs: *.py,*.js,*.ts,*.yaml,*.yml,*.md,*.json,*.toml
+alwaysApply: false
+---
+
+# PR Procedure Enforcement Rule
+
+## Core Principle
+**ALWAYS create the actual Pull Request after preparing the description. Never leave PRs in "description-only" state.**
+
+## PR Procedure Requirements
+
+### 1. Pre-PR Preparation
+- [ ] **Complete all changes** in feature branch
+- [ ] **Test all functionality** locally
+- [ ] **Run quality checks** (linting, tests)
+- [ ] **Commit all changes** with descriptive messages
+- [ ] **Push branch** to remote repository
+
+### 2. PR Creation Process
+- [ ] **Create actual PR** on GitHub (not just description)
+- [ ] **Use descriptive title** with conventional commit format
+- [ ] **Add comprehensive description** with:
+  - Summary of changes
+  - Key metrics and results
+  - Testing performed
+  - Screenshots if applicable
+  - Related issues/context
+- [ ] **Add appropriate labels** (enhancement, bug-fix, documentation, etc.)
+- [ ] **Request reviews** from relevant team members
+- [ ] **Link related issues** if applicable
+
+### 3. PR Description Template
+```markdown
+## 🎯 Summary
+Brief description of what this PR accomplishes
+
+## 📊 Key Changes
+- [ ] Change 1
+- [ ] Change 2
+- [ ] Change 3
+
+## 🧪 Testing
+- [ ] Unit tests pass
+- [ ] Integration tests pass
+- [ ] Manual testing completed
+- [ ] Quality checks pass
+
+## 📈 Metrics/Results
+- Key metric 1: X → Y (Z% improvement)
+- Key metric 2: X → Y (Z% improvement)
+
+## 🔍 Review Checklist
+- [ ] Code follows project standards
+- [ ] Documentation updated
+- [ ] No breaking changes
+- [ ] Performance impact assessed
+
+## 🚀 Next Steps
+- [ ] Action item 1
+- [ ] Action item 2
+```
+
+### 4. Post-PR Actions
+- [ ] **Monitor CI/CD** pipeline results
+- [ ] **Address review comments** promptly
+- [ ] **Update PR** as needed
+- [ ] **Merge when approved** and all checks pass
+- [ ] **Delete feature branch** after merge
+
+## Common PR Mistakes to Avoid
+
+### ❌ Don't Do This
+- Create PR description but never submit the actual PR
+- Leave PRs in draft state indefinitely
+- Skip testing before creating PR
+- Use vague or unclear PR titles
+- Forget to add labels or assignees
+
+### ✅ Do This Instead
+- **ALWAYS create the actual PR** after preparing description
+- **Test thoroughly** before creating PR
+- **Use clear, descriptive titles** with conventional commit format
+- **Add comprehensive descriptions** with all relevant details
+- **Include metrics and results** to demonstrate impact
+- **Request appropriate reviews** and add labels
+
+## PR Creation Commands
+
+### GitHub CLI (Recommended)
+```bash
+# Create PR with title and description
+gh pr create --title "feat: Add diversity hypothesis validation" --body "$(cat PR_DESCRIPTION.md)"
+
+# Create PR with draft status
+gh pr create --draft --title "feat: Add diversity hypothesis validation" --body "$(cat PR_DESCRIPTION.md)"
+
+# Create PR and request review
+gh pr create --title "feat: Add diversity hypothesis validation" --body "$(cat PR_DESCRIPTION.md)" --reviewer username
+```
+
+### Manual GitHub Web Interface
+1. Go to repository on GitHub
+2. Click "Compare & pull request" for pushed branch
+3. Fill in title and description
+4. Add labels and assignees
+5. Click "Create pull request"
+
+## Validation Checklist
+
+### Before Creating PR
+- [ ] All changes committed and pushed
+- [ ] Tests pass locally
+- [ ] Quality checks pass
+- [ ] PR description prepared
+- [ ] Branch is up to date with main
+
+### After Creating PR
+- [ ] PR is actually created (not just description)
+- [ ] CI/CD pipeline triggered
+- [ ] Reviewers assigned
+- [ ] Labels added
+- [ ] Description is comprehensive
+
+## Remember
+**The PR is not complete until the actual Pull Request is created on GitHub. A description file alone is not a PR!**

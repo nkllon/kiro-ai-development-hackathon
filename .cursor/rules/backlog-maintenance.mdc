@@ -1,0 +1,238 @@
+# Backlog Maintenance Rule
+
+## 🎯 **Rule Definition**
+**"ALWAYS follow systematic backlog maintenance procedures when adding, updating, or removing backlog items - never make backlog changes without proper validation and documentation"**
+
+## 🚨 **Trigger Conditions**
+- User mentions: "add to backlog", "update backlog", "remove from backlog", "backlog item"
+- User says: "new requirement", "bug report", "technical debt", "feature request"
+- User mentions: "TODO", "FIXME", "HACK", "XXX", "BUG" that should be backlogged
+- User wants to: Create, modify, or delete backlog items
+- Any situation involving backlog lifecycle management
+
+## 📋 **Backlog Maintenance Requirements**
+
+### **1. Backlog Item Creation**
+**ALWAYS follow these steps when creating new backlog items:**
+
+#### **Step 1: Validate the Need**
+- **Check if item already exists** in current backlog
+- **Confirm it's actually needed** and not already covered
+- **Define clear scope** of what needs to be done
+- **Identify the source** (user request, bug report, code review, etc.)
+
+#### **Step 2: Use Standardized Format**
+```json
+{
+  "requirement": "Clear description of what needs to be done",
+  "status": "backlogged",
+  "domain": "Domain this belongs to",
+  "priority": "high|medium|low",
+  "estimated_effort": "X weeks",
+  "description": "Detailed description with context",
+  "date_added": "YYYY-MM-DD",
+  "dependencies": ["list", "of", "dependencies"],
+  "acceptance_criteria": ["specific", "measurable", "criteria"]
+}
+```
+
+#### **Step 3: Add to Project Model Registry**
+- **Navigate to `backlogged` array** in project_model_registry.json
+- **Add the new item** with all required fields
+- **Update requirements traceability** section
+- **Validate JSON syntax** before committing
+
+#### **Step 4: Update Related Sections**
+- **Domain status**: Update if domain status changes
+- **System status**: Update if backlog changes significantly
+- **Documentation**: Update relevant documentation files
+
+### **2. Backlog Item Updates**
+**ALWAYS follow these steps when updating existing items:**
+
+#### **Step 1: Locate the Item**
+- **Find the item** in project_model_registry.json
+- **Verify it's the correct item** to update
+- **Check current status** and information
+
+#### **Step 2: Make the Update**
+- **Update relevant fields** based on new information
+- **Add date_updated field** if not present
+- **Maintain all required fields** in the item
+- **Document the reason** for the update
+
+#### **Step 3: Validate the Update**
+- **Check consistency** with other backlog items
+- **Verify JSON syntax** is still valid
+- **Update related items** if dependencies change
+- **Maintain data integrity** across the system
+
+### **3. Backlog Item Completion**
+**ALWAYS follow these steps when marking items complete:**
+
+#### **Step 1: Verify Completion**
+- **All acceptance criteria met** ✅
+- **Tests passing** ✅
+- **Documentation updated** ✅
+- **Code reviewed and approved** ✅
+- **Deployment successful** ✅
+
+#### **Step 2: Mark as Complete**
+```json
+{
+  "status": "implemented",
+  "completion_date": "YYYY-MM-DD",
+  "test_results": {
+    "total": X,
+    "passed": Y,
+    "failed": Z,
+    "success_rate": Z/Y
+  }
+}
+```
+
+#### **Step 3: Update Project Status**
+- **Move to completed section** or remove from backlog
+- **Update domain status** if needed
+- **Update system status** to reflect completion
+- **Archive implementation files** and results
+
+### **4. Backlog Item Removal**
+**ALWAYS follow these steps when removing items:**
+
+#### **Step 1: Validate Removal**
+- **Item is completed** and properly archived
+- **Item is no longer relevant** to current project
+- **Item is superseded** by another approach
+- **Item is determined unnecessary** after analysis
+
+#### **Step 2: Document Removal**
+- **Record removal reason** for future reference
+- **Update project status** to reflect removal
+- **Archive any valuable information** before removal
+- **Notify stakeholders** if removal affects them
+
+## 🚫 **Common Mistakes to Avoid**
+
+### **❌ Don't Do This:**
+- **Add incomplete items** - missing required fields
+- **Skip validation** - not checking if item already exists
+- **Ignore dependencies** - not identifying blocking items
+- **Use inconsistent formats** - different structures for similar items
+- **Forget documentation** - not recording changes and decisions
+- **Skip JSON validation** - not checking syntax before committing
+
+### **✅ Do This Instead:**
+- **Always use standardized format** with all required fields
+- **Always validate** before adding to backlog
+- **Always identify dependencies** and relationships
+- **Always maintain consistency** across all items
+- **Always document changes** and decisions
+- **Always validate JSON syntax** before committing
+
+## 🔍 **Validation Checklist**
+
+### **Before Adding/Updating Backlog Items:**
+- [ ] **Item doesn't already exist** in current backlog
+- [ ] **All required fields** are present and complete
+- [ ] **Domain assignment** is correct and consistent
+- [ ] **Priority and effort** estimates are realistic
+- [ ] **Dependencies** are identified and valid
+- [ ] **Acceptance criteria** are specific and measurable
+- [ ] **JSON syntax** is valid and properly formatted
+
+### **After Adding/Updating Backlog Items:**
+- [ ] **Project model registry** is updated correctly
+- [ ] **Requirements traceability** is maintained
+- [ ] **Related sections** are updated if needed
+- [ ] **JSON validation** passes all checks
+- [ ] **Changes are committed** with descriptive messages
+- [ ] **Documentation** is updated if needed
+
+## 🛠️ **Implementation Commands**
+
+### **Adding New Backlog Item:**
+```bash
+# 1. Open project_model_registry.json
+# 2. Navigate to "backlogged" array
+# 3. Add new item with standardized format
+# 4. Validate JSON syntax
+# 5. Commit changes with descriptive message
+```
+
+### **Updating Existing Backlog Item:**
+```bash
+# 1. Locate item in project_model_registry.json
+# 2. Update relevant fields
+# 3. Add date_updated if needed
+# 4. Validate JSON syntax
+# 5. Commit changes with descriptive message
+```
+
+### **Completing Backlog Item:**
+```bash
+# 1. Verify all acceptance criteria met
+# 2. Update status to "implemented"
+# 3. Add completion_date and test_results
+# 4. Update project status
+# 5. Commit changes with descriptive message
+```
+
+## 🎯 **Success Criteria**
+
+### **✅ Backlog Maintenance Succeeds When:**
+- All items use standardized format
+- All required fields are present
+- Items are properly validated before addition
+- Changes are documented and committed
+- JSON syntax remains valid
+- Related sections are updated
+- Dependencies are properly identified
+
+### **❌ Backlog Maintenance Fails When:**
+- Items are missing required fields
+- Standardized format is not used
+- Validation is skipped
+- Changes are not documented
+- JSON syntax becomes invalid
+- Related sections are not updated
+- Dependencies are missing or incorrect
+
+## 🚀 **The Rule Implementation**
+
+### **Automatic Trigger:**
+```python
+# In conversation loop
+if detect_backlog_maintenance_trigger(message):
+    return f"""
+📋 BACKLOG MAINTENANCE REQUIRED:
+
+1. **Validate the need** - Check if item already exists
+2. **Use standardized format** - All required fields must be present
+3. **Update project model registry** - Add to backlogged array
+4. **Validate JSON syntax** - Ensure proper formatting
+5. **Update related sections** - Maintain consistency
+6. **Document all changes** - Record decisions and reasons
+
+🚨 **CRITICAL**: Never skip validation or use incomplete formats!
+"""
+```
+
+## 🏆 **The Meta-Rule**
+
+**"Systematic backlog maintenance ensures consistency and quality. Always validate, always document, always maintain standards."**
+
+This rule ensures that:
+1. **Backlog items are complete** and actionable
+2. **Format consistency** is maintained across all items
+3. **Data integrity** is preserved during changes
+4. **Project status** remains accurate and up-to-date
+5. **Maintenance procedures** are followed consistently
+
+**The era of systematic backlog maintenance has begun!** 🚀
+
+---
+description: "Enforce systematic backlog maintenance procedures when adding, updating, or removing backlog items"
+globs: "*.py,*.md,*.json,*.yaml,*.yml"
+alwaysApply: false
+---

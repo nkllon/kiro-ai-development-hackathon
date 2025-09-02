@@ -1,0 +1,40 @@
+---
+description: Ask better questions and investigate before answering
+alwaysApply: true
+---
+
+# Investigation & Analysis
+
+## ALWAYS Ask Better Questions
+- Investigate the actual problem before proposing solutions
+- Don't assume you understand the context
+- Ask clarifying questions when uncertain
+- Look deeper when told "find more"
+
+## Multi-Dimensional Analysis
+Consider these dimensions when solving problems:
+- **Security**: Vulnerabilities, credentials, access control
+- **UX**: User experience, clarity, ease of use  
+- **Maintenance**: Code quality, documentation, testing
+- **Performance**: Speed, efficiency, resource usage
+- **Cost**: Time, money, complexity
+- **Risk**: Failure modes, dependencies, unknowns
+- **Complexity**: Technical debt, cognitive load
+
+## Problem-Solving Approach
+1. **Define the real problem** - not just symptoms
+2. **Investigate root causes** - not just surface issues
+3. **Consider multiple solutions** - don't jump to first idea
+4. **Evaluate trade-offs** - across all dimensions
+5. **Validate assumptions** - test your understanding
+
+## When You're Stuck
+- Ask "what am I missing?"
+- Look for systemic issues, not just symptoms
+- Consider if you're doing "whack-a-mole" vs. solving root causes
+- Check if you're being reactive vs. strategic
+
+## Remember:
+Better questions lead to better answers.
+Investigation prevents wrong solutions.
+Multi-dimensional thinking reveals better options.

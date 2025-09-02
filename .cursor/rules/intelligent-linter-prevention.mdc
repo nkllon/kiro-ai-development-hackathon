@@ -1,0 +1,350 @@
+---
+description: Prevent linter violations before they happen by integrating directly with linter APIs and using AI-powered linters
+globs: *.py,*.pyi
+alwaysApply: false
+---
+
+# Intelligent Linter Prevention
+
+## Core Principle
+**Prevent linter violations before they happen by integrating directly with linter APIs and using AI-powered linters.**
+
+## Linter API Integration
+
+### Direct API Queries
+Instead of running linters after the fact, query their APIs directly:
+
+```python
+# Query flake8 API for current file
+import subprocess
+import json
+
+def query_flake8_api(file_path: str) -> dict:
+    """Query flake8 API for file-specific rules"""
+    result = subprocess.run([
+        "flake8", "--format=json", "--select=F401,E302,E305,W291,W292", file_path
+    ], capture_output=True, text=True)
+    return json.loads(result.stdout) if result.stdout else []
+
+def query_black_api(file_path: str) -> dict:
+    """Query black API for formatting requirements"""
+    result = subprocess.run([
+        "black", "--check", "--diff", file_path
+    ], capture_output=True, text=True)
+    return {"needs_formatting": result.returncode != 0, "diff": result.stdout}
+
+def query_mypy_api(file_path: str) -> dict:
+    """Query mypy API for type checking"""
+    result = subprocess.run([
+        "mypy", "--json", file_path
+    ], capture_output=True, text=True)
+    return json.loads(result.stdout) if result.stdout else []
+```
+
+### AI-Powered Linter Integration
+
+#### Ruff (AI-Powered Python Linter)
+```python
+# Ruff has AI capabilities and faster performance
+def query_ruff_api(file_path: str) -> dict:
+    """Query Ruff API with AI-powered suggestions"""
+    result = subprocess.run([
+        "ruff", "check", "--output-format=json", file_path
+    ], capture_output=True, text=True)
+    return json.loads(result.stdout) if result.stdout else []
+
+def get_ruff_suggestions(file_path: str) -> list:
+    """Get AI-powered suggestions from Ruff"""
+    result = subprocess.run([
+        "ruff", "check", "--fix", "--output-format=json", file_path
+    ], capture_output=True, text=True)
+    return json.loads(result.stdout) if result.stdout else []
+```
+
+#### Pre-commit with AI Integration
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.6
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.7.1
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-all]
+```
+
+## Proactive Prevention Rules
+
+### 1. Import Management
+**Before writing imports, query the linter API:**
+
+```python
+# BEFORE writing imports
+def check_import_requirements(file_path: str) -> dict:
+    """Query linter API for import requirements"""
+    # Check existing imports
+    existing_imports = get_existing_imports(file_path)
+    
+    # Query flake8 for unused import patterns
+    flake8_rules = query_flake8_api(file_path)
+    unused_imports = [rule for rule in flake8_rules if rule['code'] == 'F401']
+    
+    return {
+        'existing_imports': existing_imports,
+        'unused_imports': unused_imports,
+        'recommended_imports': suggest_imports(file_path)
+    }
+
+# RULE: Only import what you actually use
+# RULE: Use absolute imports unless relative is required
+# RULE: Group imports: stdlib, third-party, local
+```
+
+
+
+### 3. Blank Line Prevention
+**Query linter API for blank line requirements:**
+
+```python
+def check_blank_line_requirements(file_path: str, line_number: int) -> dict:
+    """Query linter API for blank line requirements"""
+    flake8_rules = query_flake8_api(file_path)
+    blank_line_violations = [
+        rule for rule in flake8_rules 
+        if rule['code'] in ['E302', 'E305'] and rule['line_number'] == line_number
+    ]
+    
+    return {
+        'needs_blank_lines': len(blank_line_violations) > 0,
+        'violations': blank_line_violations
+    }
+
+# RULE: Two blank lines before class/function definitions
+# RULE: One blank line between methods
+# RULE: No blank lines at end of file
+```
+
+### 4. Type Annotation Prevention
+**Query mypy API for type requirements:**
+
+```python
+def check_type_annotation_requirements(file_path: str) -> dict:
+    """Query mypy API for type annotation requirements"""
+    mypy_rules = query_mypy_api(file_path)
+    missing_types = [
+        rule for rule in mypy_rules 
+        if rule['code'] == 'no-untyped-def'
+    ]
+    
+    return {
+        'missing_type_annotations': missing_types,
+        'recommended_types': suggest_types(file_path)
+    }
+
+# RULE: Add type hints to all function parameters
+# RULE: Add return type annotations
+# RULE: Use proper typing imports
+```
+
+## Dynamic Rule Updates
+
+### Violation-Driven Rule Enhancement
+```python
+def update_rules_on_violation(violation: dict):
+    """Update rules when violations are detected"""
+    rule_type = violation['code']
+    file_path = violation['file']
+    line_number = violation['line']
+    
+    # Create specific prevention rule
+    prevention_rule = create_prevention_rule(rule_type, file_path, line_number)
+    
+    # Update cursor rules
+    update_cursor_rules(prevention_rule)
+    
+    # Log for future prevention
+    log_violation_pattern(violation)
+
+def create_prevention_rule(rule_type: str, file_path: str, line_number: int) -> dict:
+    """Create specific prevention rule based on violation"""
+    if rule_type == 'F401':
+        return {
+            'type': 'import_prevention',
+            'pattern': 'import.*unused',
+            'suggestion': 'Remove unused import or add # noqa: F401'
+        }
+
+    # ... more rule types
+```
+
+## AI-Powered Linter Integration
+
+### Ruff Integration
+```python
+# Use Ruff for faster, AI-powered linting
+def setup_ruff_integration():
+    """Setup Ruff as primary Python linter"""
+    ruff_config = {
+        'target-version': 'py39',
+        'line-length': 88,
+        'select': [
+            'E',  # pycodestyle errors
+            'W',  # pycodestyle warnings
+            'F',  # pyflakes
+            'I',  # isort
+            'B',  # flake8-bugbear
+            'C4', # flake8-comprehensions
+            'UP', # pyupgrade
+        ],
+        'ignore': [
+            'E501',  # line too long
+            'B008',  # do not perform function calls in argument defaults
+        ]
+    }
+    
+    # Write .ruff.toml
+    with open('.ruff.toml', 'w') as f:
+        toml.dump(ruff_config, f)
+
+def query_ruff_ai_suggestions(file_path: str) -> list:
+    """Get AI-powered suggestions from Ruff"""
+    result = subprocess.run([
+        'ruff', 'check', '--fix', '--output-format=json', file_path
+    ], capture_output=True, text=True)
+    
+    suggestions = json.loads(result.stdout) if result.stdout else []
+    return [s for s in suggestions if s.get('fix')]
+```
+
+### Pre-commit with AI
+```yaml
+# .pre-commit-config.yaml with AI integration
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.6
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        # AI-powered auto-fixing
+      - id: ruff-format
+        # AI-powered formatting
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.7.1
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-all]
+        # AI-powered type checking
+```
+
+## Real-Time Prevention
+
+### Before Writing Code
+```python
+def prevent_violations_before_writing(file_path: str, code_block: str) -> dict:
+    """Prevent violations before writing code"""
+    # Query all linter APIs
+    flake8_rules = query_flake8_api(file_path)
+    black_rules = query_black_api(file_path)
+    mypy_rules = query_mypy_api(file_path)
+    ruff_suggestions = query_ruff_ai_suggestions(file_path)
+    
+    # Analyze code block for potential violations
+    potential_violations = analyze_code_block(code_block, {
+        'flake8': flake8_rules,
+        'black': black_rules,
+        'mypy': mypy_rules,
+        'ruff': ruff_suggestions
+    })
+    
+    # Return prevention suggestions
+    return {
+        'potential_violations': potential_violations,
+        'suggestions': generate_prevention_suggestions(potential_violations),
+        'auto_fixes': get_auto_fixes(potential_violations)
+    }
+```
+
+### Intelligent Ignore Directives
+```python
+def suggest_ignore_directive(violation: dict) -> str:
+    """Suggest appropriate ignore directive"""
+    code = violation['code']
+    reason = violation.get('reason', '')
+    
+    if code == 'F401' and 'unused import' in reason:
+        return '# noqa: F401  # Import needed for type checking'
+    elif code == 'E501' and 'line too long' in reason:
+        return '# noqa: E501  # Line length acceptable for this context'
+
+    
+    return f"# noqa: {code}  # {reason}"
+```
+
+## Project Model Integration
+
+### Linter Configuration in Project Model
+```json
+{
+  "linters": {
+    "python": {
+      "primary": "ruff",
+      "secondary": ["flake8", "black", "mypy"],
+      "config_files": [".ruff.toml", "pyproject.toml", ".flake8"],
+      "api_endpoints": {
+        "ruff": "ruff check --output-format=json",
+        "flake8": "flake8 --format=json",
+        "black": "black --check --diff",
+        "mypy": "mypy --json"
+      },
+      "prevention_rules": {
+        "F401": "Remove unused imports",
+
+        "E302": "Add two blank lines before class/function",
+        "E305": "Add two blank lines after class/function",
+        "W291": "Remove trailing whitespace",
+        "W292": "Add newline at end of file"
+      }
+    }
+  }
+}
+```
+
+## Implementation Commands
+
+### Setup AI-Powered Linters
+```bash
+# Install Ruff (AI-powered Python linter)
+pip install ruff
+
+# Install pre-commit with AI integration
+pip install pre-commit
+
+# Setup pre-commit hooks
+pre-commit install
+
+# Configure Ruff
+ruff init
+```
+
+### Query Linter APIs
+```bash
+# Query flake8 API
+flake8 --format=json file.py
+
+# Query black API
+black --check --diff file.py
+
+# Query mypy API
+mypy --json file.py
+
+# Query Ruff API (AI-powered)
+ruff check --output-format=json file.py
+```
+
+## Remember
+**Use linter APIs directly to prevent violations before they happen. Integrate with AI-powered linters like Ruff for intelligent suggestions. Update rules dynamically when violations occur.**

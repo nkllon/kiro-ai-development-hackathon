@@ -1,0 +1,18 @@
+{
+  "models": {
+    "project": {
+      "implementation": "project_model_manager",
+      "config": {
+        "model_file": "project_model_registry.json",
+        "backup_dir": "backups"
+      }
+    },
+    "registry_manager": {
+      "implementation": "json_model_manager",
+      "config": {
+        "model_file": "model_registry.json",
+        "backup_dir": "backups"
+      }
+    }
+  }
+}

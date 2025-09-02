@@ -1,0 +1,76 @@
+---
+description: Rule for model-first-enforcement
+globs: *.py,*.js,*.ts,*.yaml,*.yml,*.md,*.json,*.toml
+alwaysApply: true
+---
+
+# Model-First Enforcement Rule
+
+## ALWAYS Check project_model_registry.json First
+
+### When Starting Any Work:
+1. **ALWAYS read `project_model_registry.json`** - This is the single source of truth
+2. **Check for existing tools/systems** - Look for implemented solutions before building new ones
+3. **Follow the model's guidance** - Use the explicit tool mappings and requirements
+4. **Don't reinvent wheels** - If a solution exists in the model, use it
+
+### Critical Checkpoints:
+- **Before fixing syntax errors**: Check if Ghostbusters recovery engines exist
+- **Before manual linting**: Check if automated linters are configured
+- **Before writing scripts**: Check if existing tools can handle the task
+- **Before debugging**: Check if diagnostic tools are already built
+- **Before security scanning**: Check if Bandit integration is available
+- **Before manual security fixes**: Use model-driven security scanning
+
+### Ghostbusters Priority:
+- **ALWAYS call Ghostbusters first** for any delusion detection/recovery
+- **Use recovery engines** instead of manual fixes
+- **Follow the orchestration pattern** defined in the model
+
+### Model Registry Structure:
+```json
+{
+  "domains": {
+    "ghostbusters": {
+      "linter": "ghostbusters-orchestrator",
+      "formatter": "ghostbusters-recovery",
+      "requirements": [
+        "Use Ghostbusters for delusion detection and recovery",
+        "Run Ghostbusters before linting to fix syntax issues"
+      ]
+    },
+    "security_first": {
+      "security_scanner": "bandit",
+      "requirements": [
+        "Integrate Bandit security scanning via Python API",
+        "Provide model-driven security scanning capabilities"
+      ]
+    }
+  }
+}
+```
+
+### Enforcement Checklist:
+- [ ] Read project_model_registry.json before starting
+- [ ] Check for existing tools in the model
+- [ ] Use model-prescribed tools instead of manual work
+- [ ] Follow the orchestration patterns defined
+- [ ] Don't ignore the single source of truth
+
+### Remember:
+**"The model registry is your brain - don't work without it!"**
+**"If you're doing manual work, you're probably ignoring the model!"**
+**"Ghostbusters first, manual fixes never!"**
+
+### Common Mistakes to Avoid:
+- ❌ Manual syntax error fixes (use Ghostbusters)
+- ❌ Manual linting scripts (use model-prescribed linters)
+- ❌ Manual type annotation fixes (use TypeAnnotationFixer)
+- ❌ Manual import resolution (use ImportResolver)
+- ❌ Manual indentation fixes (use IndentationFixer)
+- ❌ Manual security scanning (use Bandit integration)
+- ❌ Manual security issue fixes (use model-driven scanning)
+
+### Success Pattern:
+✅ Read model → Find existing tool → Use existing tool → Success
+❌ Skip model → Build new tool → Manual work → Pain

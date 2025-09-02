@@ -1,0 +1,307 @@
+---
+description: "Ghostbusters Component - Multi-Agent Delusion Detection & Recovery System"
+globs: src/ghostbusters/**/*.py,src/multi_agent_testing/**/*.py,tests/test_ghostbusters*.py
+alwaysApply: false
+---
+
+# Ghostbusters Component Rules
+
+## Overview
+Ghostbusters is a comprehensive multi-agent system for detecting and recovering from delusions in codebases. It uses LangGraph/LangChain for orchestration and provides expert agents for different domains.
+
+## Tool Integration
+
+### When to Use Ghostbusters
+- **Syntax errors detected**: Use Ghostbusters for automated recovery
+- **Indentation issues**: Leverage IndentationFixer for consistent formatting
+- **Import errors**: Use ImportResolver for dependency resolution
+- **Type safety issues**: Apply TypeAnnotationFixer for missing type hints
+- **Security vulnerabilities**: Use SecurityExpert for credential detection
+- **Code quality issues**: Apply CodeQualityExpert for syntax and style issues
+- **Test failures**: Use TestExpert for test coverage analysis
+- **Build issues**: Apply BuildExpert for configuration validation
+- **Architecture problems**: Use ArchitectureExpert for structure validation
+- **Model issues**: Apply ModelExpert for domain model validation
+
+### Ghostbusters Commands
+```bash
+# Run full Ghostbusters workflow (Diversity System)
+python3 src/multi_agent_testing/code_quality_automation_orchestrator.py .
+
+# Run simple quality automation
+python3 src/multi_agent_testing/automate_quality_secure.py .
+
+# Run diversity hypothesis testing
+python3 -m pytest src/multi_agent_testing/test_diversity_hypothesis.py
+
+# Run multi-agent analysis
+python3 src/multi_agent_testing/ghostbusters_diversity_analysis.py
+```
+
+### Integration with Existing Tools
+- **Before linting**: Run Ghostbusters to fix syntax issues
+- **Before testing**: Use Ghostbusters to resolve import errors
+- **Before building**: Apply Ghostbusters for configuration validation
+- **Before deployment**: Run security and quality checks
+
+## Component Structure
+
+### Core Components
+- **MultiDimensionalSmokeTest**: Core diversity testing system
+- **LangGraphDiversityOrchestrator**: Orchestrates diversity analysis
+- **DiversitySynthesisOrchestrator**: Synthesizes fixes for diversity issues
+- **CostAnalysis**: Analyzes costs of diversity systems
+- **CodeQualityAutomationOrchestrator**: Automated quality improvement workflow
+
+### Workflow Phases
+1. **Detect Delusions**: All agents analyze the project
+2. **Validate Findings**: Validators confirm delusions
+3. **Plan Recovery**: Map delusions to recovery actions
+4. **Execute Recovery**: Run recovery engines
+5. **Validate Recovery**: Re-check after fixes
+6. **Generate Report**: Comprehensive report
+
+## Agent Responsibilities
+
+### SecurityExpert
+- Detect hardcoded credentials
+- Identify security vulnerabilities
+- Check for proper credential management
+
+### CodeQualityExpert
+- Detect syntax errors
+- Identify indentation issues
+- Check code quality patterns
+
+### TestExpert
+- Analyze test coverage
+- Detect failing tests
+- Identify missing test implementations
+
+### BuildExpert
+- Check build configuration
+- Validate dependencies
+- Ensure proper package management
+
+### ArchitectureExpert
+- Validate project structure
+- Check module organization
+- Ensure proper __init__.py files
+
+### ModelExpert
+- Validate model registry
+- Check model structure
+- Ensure proper domain modeling
+
+## Recovery Engines
+
+### SyntaxRecoveryEngine
+- Fix syntax errors
+- Validate Python compilation
+- Provide syntax error details
+
+### IndentationFixer
+- Fix indentation issues
+- Ensure consistent spacing
+- Handle mixed indentation
+
+### ImportResolver
+- Fix import errors
+- Resolve module dependencies
+- Handle missing imports
+
+### TypeAnnotationFixer
+- Add missing type hints
+- Improve type safety
+- Enhance code documentation
+
+## LangGraph Integration
+
+### State Management
+- **GhostbustersState**: Central state for workflow
+- **DelusionResult**: Results from agent analysis
+- **ValidationResult**: Results from validation
+- **RecoveryResult**: Results from recovery actions
+
+### Workflow Nodes
+- `detect_delusions_node`: Run all agents
+- `validate_findings_node`: Validate results
+- `plan_recovery_node`: Plan recovery actions
+- `execute_recovery_node`: Execute fixes
+- `validate_recovery_node`: Re-validate
+- `generate_report_node`: Create report
+
+## Usage Patterns
+
+### Basic Usage
+```python
+from src.multi_agent_testing import MultiDimensionalSmokeTest
+
+# Run Ghostbusters on current project
+test_system = MultiDimensionalSmokeTest()
+result = test_system.run_test("code_quality", "security_expert", "direct_questions", "json", {})
+```
+
+### Custom Orchestrator
+```python
+from src.multi_agent_testing import CodeQualityAutomationOrchestrator
+
+orchestrator = CodeQualityAutomationOrchestrator("path/to/project")
+results = orchestrator.run_complete_automation()
+```
+
+### Individual Agents
+```python
+from src.multi_agent_testing import MultiDimensionalSmokeTest
+
+expert = MultiDimensionalSmokeTest()
+result = expert.run_test("security_audit", "security_expert", "socratic_questioning", "json", {})
+```
+
+## Configuration
+
+### Agent Configuration
+- Each agent can be configured independently
+- Agents support custom detection patterns
+- Configurable confidence thresholds
+
+### Recovery Configuration
+- Recovery engines can be enabled/disabled
+- Configurable fix strategies
+- Backup and rollback support
+
+### Validation Configuration
+- Custom validation rules
+- Configurable severity levels
+- Integration with existing tools
+
+## Best Practices
+
+### Agent Development
+- Extend BaseExpert for new agents
+- Implement async detect_delusions method
+- Provide clear delusion descriptions
+- Include actionable recommendations
+
+### Validator Development
+- Extend BaseValidator for new validators
+- Implement async validate_findings method
+- Return ValidationResult with confidence
+- Include specific recommendations
+
+### Recovery Engine Development
+- Extend BaseRecoveryEngine for new engines
+- Implement async execute_recovery method
+- Return RecoveryResult with success status
+- Include detailed error reporting
+
+### Testing
+- Test each agent independently
+- Validate workflow integration
+- Test recovery scenarios
+- Ensure proper error handling
+
+## Integration Points
+
+### LangChain Integration
+- Use LangChain tools for complex operations
+- Integrate with LLM for advanced analysis
+- Support for custom chains and agents
+
+### LangGraph Integration
+- Leverage StateGraph for workflow
+- Use proper state management
+- Support for conditional workflows
+- Handle async operations properly
+
+### External Tools
+- Integrate with linters (flake8, mypy)
+- Support for formatters (black, isort)
+- Integration with security tools
+- Support for build tools
+
+## Error Handling
+
+### Agent Errors
+- Graceful degradation on agent failure
+- Detailed error reporting
+- Fallback to basic analysis
+- Logging for debugging
+
+### Recovery Errors
+- Rollback on failed recovery
+- Detailed error reporting
+- Manual intervention support
+- Progress preservation
+
+### Workflow Errors
+- State preservation on failure
+- Partial result reporting
+- Recovery point identification
+- Comprehensive error logging
+
+## Performance Considerations
+
+### Parallel Processing
+- Agents run in parallel where possible
+- Async operations for I/O bound tasks
+- Configurable worker pools
+- Resource management
+
+### Caching
+- Cache agent results
+- Cache validation results
+- Cache recovery actions
+- Incremental processing
+
+### Resource Management
+- Memory usage monitoring
+- CPU utilization tracking
+- File I/O optimization
+- Network usage control
+
+## Security Considerations
+
+### Credential Handling
+- Never log sensitive information
+- Secure credential storage
+- Environment variable usage
+- Access control enforcement
+
+### File System Access
+- Validate file paths
+- Prevent directory traversal
+- Secure file operations
+- Backup before modifications
+
+### Network Security
+- Secure API calls
+- Validate external data
+- Rate limiting support
+- Error message sanitization
+
+## Monitoring and Logging
+
+### Logging Levels
+- DEBUG: Detailed operation info
+- INFO: General progress
+- WARNING: Potential issues
+- ERROR: Operation failures
+
+### Metrics Collection
+- Agent execution times
+- Recovery success rates
+- Confidence score trends
+- Error frequency tracking
+
+### Reporting
+- Comprehensive JSON reports
+- Human-readable summaries
+- Actionable recommendations
+- Historical trend analysis
+
+
+- Human-readable summaries
+- Actionable recommendations
+- Historical trend analysis
+

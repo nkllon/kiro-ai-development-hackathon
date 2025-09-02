@@ -1,0 +1,490 @@
+{
+  "system_name": "comprehensive_auto_formatter",
+  "description": "Comprehensive auto-formatting system using abstract factory pattern for artifact-specific formatters",
+  "purpose": "Ensure all code changes are properly formatted using deterministic tools before they reach the repository",
+  "graph_api_level": 3,
+  "projection_system": "final_projection_system",
+  "design_patterns": {
+    "abstract_factory": "Formatters are instantiated through factory methods based on artifact type",
+    "strategy": "Each formatter implements a common interface with type-specific formatting strategies",
+    "command": "Formatting operations are encapsulated as command objects",
+    "observer": "Progress tracking and result reporting through observer pattern"
+  },
+  "core_principles": [
+    "Always use deterministic tools for formatting",
+    "Use abstract factory to instantiate appropriate formatters",
+    "Cover all file types systematically",
+    "Integrate with development workflow",
+    "Prevent formatting issues before they happen"
+  ],
+  "artifact_types": {
+    "python": {
+      "extensions": [
+        ".py",
+        ".pyi"
+      ],
+      "factory_method": "create_python_formatter",
+      "formatter_class": "PythonFormatter",
+      "formatters": [
+        "black",
+        "autopep8",
+        "ruff"
+      ],
+      "exclusions": [
+        "*.backup.py",
+        "*.working.py",
+        "__pycache__",
+        ".git"
+      ],
+      "black_config": {
+        "line_length": 88,
+        "target_version": "py39"
+      },
+      "autopep8_config": {
+        "aggressive": 2,
+        "max_line_length": 88
+      },
+      "ruff_config": {
+        "fix": true,
+        "select": [
+          "E",
+          "W",
+          "F",
+          "I",
+          "B",
+          "C4",
+          "UP"
+        ]
+      }
+    },
+    "typescript": {
+      "extensions": [
+        ".ts",
+        ".tsx"
+      ],
+      "factory_method": "create_typescript_formatter",
+      "formatter_class": "TypeScriptFormatter",
+      "formatters": [
+        "prettier",
+        "eslint"
+      ],
+      "exclusions": [
+        "node_modules",
+        "dist",
+        "build"
+      ],
+      "prettier_config": {
+        "semi": true,
+        "trailingComma": "es5",
+        "singleQuote": true,
+        "printWidth": 80
+      },
+      "eslint_config": {
+        "fix": true,
+        "extensions": [
+          ".ts",
+          ".tsx"
+        ]
+      }
+    },
+    "javascript": {
+      "extensions": [
+        ".js",
+        ".jsx",
+        ".mjs"
+      ],
+      "factory_method": "create_javascript_formatter",
+      "formatter_class": "JavaScriptFormatter",
+      "formatters": [
+        "prettier",
+        "eslint"
+      ],
+      "exclusions": [
+        "node_modules",
+        "dist",
+        "build"
+      ],
+      "prettier_config": {
+        "semi": true,
+        "trailingComma": "es5",
+        "singleQuote": true,
+        "printWidth": 80
+      },
+      "eslint_config": {
+        "fix": true,
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".mjs"
+        ]
+      }
+    },
+    "shell": {
+      "extensions": [
+        ".sh",
+        ".bash",
+        ".zsh"
+      ],
+      "factory_method": "create_shell_formatter",
+      "formatter_class": "ShellFormatter",
+      "formatters": [
+        "shfmt"
+      ],
+      "exclusions": [],
+      "shfmt_config": {
+        "indent": 2,
+        "binary_next_line": false
+      }
+    },
+    "markdown": {
+      "extensions": [
+        ".md",
+        ".mdx"
+      ],
+      "factory_method": "create_markdown_formatter",
+      "formatter_class": "MarkdownFormatter",
+      "formatters": [
+        "prettier"
+      ],
+      "exclusions": [
+        "*.backup"
+      ],
+      "prettier_config": {
+        "proseWrap": "always",
+        "printWidth": 80,
+        "parser": "markdown"
+      }
+    },
+    "yaml": {
+      "extensions": [
+        ".yaml",
+        ".yml"
+      ],
+      "factory_method": "create_yaml_formatter",
+      "formatter_class": "YamlFormatter",
+      "formatters": [
+        "yamllint",
+        "prettier"
+      ],
+      "exclusions": [
+        "*.mdc"
+      ],
+      "yamllint_config": {
+        "extends": "default",
+        "rules": {
+          "line-length": {
+            "max": 120
+          },
+          "indentation": {
+            "spaces": 2
+          }
+        }
+      }
+    },
+    "json": {
+      "extensions": [
+        ".json"
+      ],
+      "factory_method": "create_json_formatter",
+      "formatter_class": "JsonFormatter",
+      "formatters": [
+        "prettier"
+      ],
+      "exclusions": [
+        "*.lock",
+        "large_files"
+      ],
+      "size_limit": 1048576
+    },
+    "go": {
+      "extensions": [
+        ".go"
+      ],
+      "factory_method": "create_go_formatter",
+      "formatter_class": "GoFormatter",
+      "formatters": [
+        "go fmt",
+        "gofmt"
+      ],
+      "exclusions": [
+        "vendor",
+        "node_modules"
+      ],
+      "go_config": {
+        "format": "gofmt",
+        "lint": "golangci-lint"
+      }
+    },
+    "rust": {
+      "extensions": [
+        ".rs"
+      ],
+      "factory_method": "create_rust_formatter",
+      "formatter_class": "RustFormatter",
+      "formatters": [
+        "rustfmt"
+      ],
+      "exclusions": [
+        "target",
+        "node_modules"
+      ],
+      "rustfmt_config": {
+        "edition": "2021",
+        "max_width": 100
+      }
+    },
+    "java": {
+      "extensions": [
+        ".java"
+      ],
+      "factory_method": "create_java_formatter",
+      "formatter_class": "JavaFormatter",
+      "formatters": [
+        "google-java-format"
+      ],
+      "exclusions": [
+        "target",
+        "build",
+        "node_modules"
+      ],
+      "java_config": {
+        "style": "google",
+        "aosp": false
+      }
+    }
+  },
+  "abstract_factory": {
+    "interface": "FormatterFactory",
+    "methods": [
+      "create_formatter(artifact_type: str) -> BaseFormatter",
+      "get_supported_types() -> List[str]",
+      "register_formatter(artifact_type: str, formatter_class: type) -> None"
+    ],
+    "base_formatter": "BaseFormatter",
+    "common_interface": [
+      "format_file(file_path: Path) -> FormatResult",
+      "check_formatting(file_path: Path) -> bool",
+      "get_formatter_name() -> str",
+      "get_supported_extensions() -> List[str]"
+    ]
+  },
+  "workflow_integration": {
+    "pre_commit": true,
+    "make_targets": true,
+    "ci_cd": true,
+    "development_reminders": true
+  },
+  "make_targets": {
+    "format-all": "Format all file types using abstract factory",
+    "format-python": "Format Python files with factory-created formatter",
+    "format-typescript": "Format TypeScript files with factory-created formatter",
+    "format-javascript": "Format JavaScript files with factory-created formatter",
+    "format-shell": "Format shell scripts with factory-created formatter",
+    "format-docs": "Format documentation with factory-created formatter",
+    "format-yaml": "Format YAML files with factory-created formatter",
+    "format-json": "Format JSON files with factory-created formatter",
+    "format-go": "Format Go files with factory-created formatter",
+    "format-rust": "Format Rust files with factory-created formatter",
+    "format-java": "Format Java files with factory-created formatter",
+    "format-check": "Check formatting without making changes"
+  },
+  "cursor_rules": {
+    "enforcement": "Always auto-format before committing code changes",
+    "integration": "Use auto-formatting as part of deterministic editing workflow",
+    "coverage": "Cover all artifact types using abstract factory pattern",
+    "pattern_usage": "Use factory methods to instantiate appropriate formatters"
+  },
+  "project_model_integration": {
+    "formatter_mappings": "Update all domains to use consistent formatters through factory",
+    "workflow_enforcement": "Integrate auto-formatting into project phases",
+    "quality_gates": "Formatting must pass before code is considered complete",
+    "artifact_detection": "Use project model to determine appropriate formatter types"
+  },
+  "components": {
+    "FormatterFactory": {
+      "class_name": "FormatterFactory",
+      "responsibility": "Abstract factory for creating artifact-specific formatters",
+      "methods": [
+        "create_formatter",
+        "get_supported_types",
+        "register_formatter",
+        "get_formatter_for_file"
+      ],
+      "patterns": [
+        "Abstract Factory",
+        "Registry"
+      ]
+    },
+    "BaseFormatter": {
+      "class_name": "BaseFormatter",
+      "responsibility": "Abstract base class for all formatters",
+      "methods": [
+        "format_file(file_path: Path) -> FormatResult",
+        "check_formatting(file_path: Path) -> bool",
+        "get_formatter_name() -> str",
+        "get_supported_extensions() -> List[str]"
+      ],
+      "patterns": [
+        "Template Method",
+        "Strategy"
+      ]
+    },
+    "PythonFormatter": {
+      "responsibility": "Handles Python files with Black + autopep8 + ruff",
+      "methods": [
+        "format_file(file_path: Path) -> FormatResult",
+        "check_formatting(file_path: Path) -> bool",
+        "get_formatter_name() -> str",
+        "get_supported_extensions() -> List[str]"
+      ]
+    },
+    "TypeScriptFormatter": {
+      "responsibility": "Handles TypeScript files with Prettier + ESLint",
+      "methods": [
+        "format_file(file_path: Path) -> FormatResult",
+        "check_formatting(file_path: Path) -> bool",
+        "get_formatter_name() -> str",
+        "get_supported_extensions() -> List[str]"
+      ]
+    },
+    "JavaScriptFormatter": {
+      "responsibility": "Handles JavaScript files with Prettier + ESLint",
+      "methods": [
+        "format_file(file_path: Path) -> FormatResult",
+        "check_formatting(file_path: Path) -> bool",
+        "get_formatter_name() -> str",
+        "get_supported_extensions() -> List[str]"
+      ]
+    },
+    "ShellFormatter": {
+      "responsibility": "Handles shell scripts with shfmt",
+      "methods": [
+        "format_file(file_path: Path) -> FormatResult",
+        "check_formatting(file_path: Path) -> bool",
+        "get_formatter_name() -> str",
+        "get_supported_extensions() -> List[str]"
+      ]
+    },
+    "MarkdownFormatter": {
+      "responsibility": "Handles markdown files with Prettier",
+      "methods": [
+        "format_file(file_path: Path) -> FormatResult",
+        "check_formatting(file_path: Path) -> bool",
+        "get_formatter_name() -> str",
+        "get_supported_extensions() -> List[str]"
+      ]
+    },
+    "YamlFormatter": {
+      "responsibility": "Handles YAML files with yamllint + Prettier",
+      "methods": [
+        "format_file(file_path: Path) -> FormatResult",
+        "check_formatting(file_path: Path) -> bool",
+        "get_formatter_name() -> str",
+        "get_supported_extensions() -> List[str]"
+      ]
+    },
+    "JsonFormatter": {
+      "responsibility": "Handles JSON files with Prettier",
+      "methods": [
+        "format_file(file_path: Path) -> FormatResult",
+        "check_formatting(file_path: Path) -> bool",
+        "get_formatter_name() -> str",
+        "get_supported_extensions() -> List[str]"
+      ]
+    },
+    "GoFormatter": {
+      "responsibility": "Handles Go files with go fmt",
+      "methods": [
+        "format_file(file_path: Path) -> FormatResult",
+        "check_formatting(file_path: Path) -> bool",
+        "get_formatter_name() -> str",
+        "get_supported_extensions() -> List[str]"
+      ]
+    },
+    "RustFormatter": {
+      "responsibility": "Handles Rust files with rustfmt",
+      "methods": [
+        "format_file(file_path: Path) -> FormatResult",
+        "check_formatting(file_path: Path) -> bool",
+        "get_formatter_name() -> str",
+        "get_supported_extensions() -> List[str]"
+      ]
+    },
+    "JavaFormatter": {
+      "responsibility": "Handles Java files with google-java-format",
+      "methods": [
+        "format_file(file_path: Path) -> FormatResult",
+        "check_formatting(file_path: Path) -> bool",
+        "get_formatter_name() -> str",
+        "get_supported_extensions() -> List[str]"
+      ]
+    },
+    "AutoFormatter": {
+      "class_name": "AutoFormatter",
+      "responsibility": "Main orchestrator using factory pattern",
+      "methods": [
+        "format_all_files",
+        "get_formatter_for_file",
+        "run_formatting_pipeline",
+        "generate_summary_report"
+      ],
+      "patterns": [
+        "Facade",
+        "Orchestrator"
+      ]
+    },
+    "FileDiscovery": {
+      "responsibility": "Find files to format with proper exclusions",
+      "features": [
+        "recursive file discovery",
+        "exclusion pattern matching",
+        "file size filtering",
+        "backup file detection",
+        "artifact type detection"
+      ]
+    },
+    "ResultTracking": {
+      "responsibility": "Track formatting results and errors",
+      "metrics": [
+        "files_formatted",
+        "errors_encountered",
+        "formatting_details",
+        "summary_statistics",
+        "per_formatter_results"
+      ]
+    }
+  },
+  "error_handling": {
+    "tool_failures": "Continue with other formatters, report issues",
+    "file_errors": "Log specific errors, continue with other files",
+    "permission_issues": "Skip read-only files, report access problems",
+    "syntax_errors": "Report files that can't be formatted",
+    "factory_errors": "Fallback to default formatter if specific one fails"
+  },
+  "output_formats": {
+    "console": "Real-time progress with emojis and status",
+    "summary": "Comprehensive formatting report per artifact type",
+    "json": "Machine-readable results for CI/CD",
+    "exit_codes": "Proper exit codes for automation"
+  },
+  "usage_patterns": {
+    "development": "python scripts/auto_format_all.py",
+    "check_only": "python scripts/auto_format_all.py --check",
+    "ci_cd": "python scripts/auto_format_all.py --ci",
+    "make_integration": "make format-all",
+    "factory_usage": "formatter = factory.create_formatter('python')"
+  },
+  "quality_standards": {
+    "zero_formatting_errors": "All files must be properly formatted",
+    "consistent_style": "Uniform formatting across all artifact types",
+    "deterministic_results": "Same input always produces same output",
+    "performance": "Format entire project in under 30 seconds",
+    "extensibility": "Easy to add new artifact types and formatters"
+  },
+  "extension_points": {
+    "new_artifact_types": "Register new artifact types with factory",
+    "custom_formatters": "Implement BaseFormatter for custom formatting logic",
+    "formatting_strategies": "Add new formatting strategies to existing formatters",
+    "output_formats": "Extend output reporting capabilities"
+  }
+}

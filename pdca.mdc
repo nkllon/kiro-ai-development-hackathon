@@ -1,0 +1,33 @@
+# PDCA Standard
+
+## Core Methodology
+**Plan → Do → Check → Act**
+
+## Enhanced Debugging Approach (AST Profiler Combo)
+1. **AST Analysis**: Use `ast.parse()` to understand code structure
+2. **Runtime Profiling**: Capture actual behavior with `cProfile`/`pstats`  
+3. **Behavioral Evidence**: Match expected vs actual interfaces
+4. **Evidence-Based Fixes**: Fix based on real data, not assumptions
+
+## Key Insight
+**"AST profiler combo enables precise debugging by matching activity models with actual behavior, revealing structural issues that manual code inspection misses."**
+
+## Tools
+- `ast.parse()` for structural analysis
+- `inspect.getsource()` for code examination
+- Runtime profiling with `cProfile`/`pstats`
+- Manual behavioral analysis
+
+## Implementation Example
+**Problem**: Profiler warning about `FunctionProfile` interface
+**Solution**: 
+1. AST analysis revealed code structure
+2. Runtime profiling showed actual `StatsProfile.func_profiles` interface
+3. Behavioral evidence: `profile.callcount` vs `StatsProfile.func_profiles[name].ncalls`
+4. Fixed based on actual interface, not assumptions
+
+## Benefits
+- **Precise debugging**: Reveals structural issues manual inspection misses
+- **Evidence-based**: Fixes based on real data, not assumptions
+- **Root cause analysis**: Addresses actual problems, not symptoms
+- **Systematic approach**: Structured methodology for complex issues

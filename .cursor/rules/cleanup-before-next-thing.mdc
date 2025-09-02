@@ -1,0 +1,32 @@
+---
+description: Rule for cleanup-before-next-thing
+globs: *.py,*.js,*.ts,*.yaml,*.yml,*.md,*.json,*.toml
+alwaysApply: false
+---
+
+# Cleanup Before Next Thing Rule
+
+## Core Principle
+**Always clean up and commit current work before starting the next task or feature.**
+
+## Cleanup Requirements
+
+### Before Starting New Work:
+- [ ] **Commit all current changes** with descriptive messages
+- [ ] **Push current branch** to remote repository
+- [ ] **Create/update PR** if work is complete
+- [ ] **Clean up temporary files** and test artifacts
+- [ ] **Update documentation** for completed work
+- [ ] **Run final quality checks** to ensure stability
+
+### Cleanup Checklist:
+- [ ] All code changes committed
+- [ ] Tests passing
+- [ ] Linting errors resolved
+- [ ] Documentation updated
+- [ ] Temporary files removed
+- [ ] Branch pushed to remote
+- [ ] PR created/updated if applicable
+
+## Remember
+**Clean work leads to clean progress. Don't leave messes behind!**

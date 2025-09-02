@@ -1,0 +1,229 @@
+---
+description: Detect when creating broken tools to fix broken things and prevent cascading failures
+globs: *.py,*.sh,*.js,*.ts
+alwaysApply: false
+---
+
+# Don't Break the Fixer Rule
+
+## 🎯 **Rule Definition**
+**"Detect when creating broken tools to fix broken things and prevent cascading failures"**
+
+## 🚨 **Trigger Conditions**
+- Creating a script to fix broken code
+- Creating a tool to fix broken tools
+- Creating a fixer that has syntax errors
+- Creating a linter that has linting errors
+- Creating a validator that has validation errors
+
+## 👥 **Available Ghostbusters (LLMs)**
+
+### **1. Meta-Failure Expert**
+- **Focus**: Detecting when tools are broken
+- **Validation**: "Is this tool itself broken?"
+- **Delusion Check**: "Are you creating a broken tool to fix broken things?"
+
+### **2. Tool Quality Expert**
+- **Focus**: Tool quality and reliability
+- **Validation**: "Is this tool well-designed?"
+- **Delusion Check**: "Are you overcomplicating a simple fix?"
+
+### **3. Architecture Expert**
+- **Focus**: Tool architecture and design
+- **Validation**: "Is this the right approach?"
+- **Delusion Check**: "Should you use existing tools instead of creating new ones?"
+
+### **4. Simplicity Expert**
+- **Focus**: KISS principle and simplicity
+- **Validation**: "Is this the simplest solution?"
+- **Delusion Check**: "Are you overengineering a simple problem?"
+
+## 🛠️ **Available Equipment (Deterministic Tools)**
+
+### **1. AST Parser**
+- **Tool**: `ast.parse()`
+- **Validation**: "Is the fixer script valid Python?"
+- **Delusion Check**: "Does the fixer have syntax errors?"
+
+### **2. Linters**
+- **Tools**: `black`, `flake8`, `mypy`
+- **Validation**: "Does the fixer pass linting?"
+- **Delusion Check**: "Does the fixer have code quality issues?"
+
+### **3. Tests**
+- **Tools**: `pytest`, unit tests
+- **Validation**: "Does the fixer work correctly?"
+- **Delusion Check**: "Does the fixer actually fix things?"
+
+### **4. Models**
+- **Tools**: `project_model_registry.json`
+- **Validation**: "Does the fixer follow project patterns?"
+- **Delusion Check**: "Is the fixer model-compliant?"
+
+## 🏢 **Available HQ (External Systems)**
+
+### **1. Git History**
+- **Validation**: "Have similar fixes been done before?"
+- **Delusion Check**: "Is there a simpler pattern in history?"
+
+### **2. Project Models**
+- **Validation**: "Does this fit the project architecture?"
+- **Delusion Check**: "Should this be a simple fix instead of a tool?"
+
+### **3. Requirements**
+- **Validation**: "Does this actually solve the problem?"
+- **Delusion Check**: "Is this overkill for the actual need?"
+
+## 🚀 **Implementation Protocol**
+
+### **Step 1: Detect Tool Creation**
+```python
+def detect_tool_creation(message):
+    """Detect when creating tools to fix things"""
+    triggers = [
+        "fix_", "repair_", "correct_", "fixer", "repairer", "corrector",
+        "script to fix", "tool to fix", "utility to fix"
+    ]
+    return any(trigger in message.lower() for trigger in triggers)
+```
+
+### **Step 2: Validate Tool Quality**
+```python
+def validate_tool_quality(tool_content):
+    """Validate that the tool itself is not broken"""
+    
+    # Check if tool is valid Python
+    try:
+        ast.parse(tool_content)
+        python_valid = True
+    except:
+        python_valid = False
+    
+    # Check if tool passes linting
+    linting_passed = run_linters(tool_content)
+    
+    # Check if tool is simple enough
+    complexity_score = calculate_complexity(tool_content)
+    is_simple = complexity_score < threshold
+    
+    return {
+        'python_valid': python_valid,
+        'linting_passed': linting_passed,
+        'is_simple': is_simple,
+        'should_exist': python_valid and linting_passed and is_simple
+    }
+```
+
+### **Step 3: Check for Simpler Alternatives**
+```python
+def check_simpler_alternatives(problem_description):
+    """Check if there are simpler alternatives to creating a tool"""
+    
+    alternatives = [
+        "Fix the file directly",
+        "Use existing tools",
+        "Manual correction",
+        "Simple script instead of complex tool"
+    ]
+    
+    # Analyze if the problem really needs a tool
+    needs_tool = analyze_problem_complexity(problem_description)
+    
+    return {
+        'alternatives': alternatives,
+        'needs_tool': needs_tool,
+        'recommendation': 'direct_fix' if not needs_tool else 'tool_creation'
+    }
+```
+
+### **Step 4: Meta-Failure Detection**
+```python
+def detect_meta_failures(tool_content, problem_description):
+    """Detect when creating broken tools to fix broken things"""
+    
+    # Check if tool is broken
+    tool_quality = validate_tool_quality(tool_content)
+    
+    # Check if simpler alternatives exist
+    alternatives = check_simpler_alternatives(problem_description)
+    
+    # Check for cascading failures
+    cascading_failure = (
+        not tool_quality['python_valid'] or
+        not tool_quality['linting_passed'] or
+        (not alternatives['needs_tool'] and tool_quality['complexity_score'] > 5)
+    )
+    
+    return {
+        'meta_failure_detected': cascading_failure,
+        'tool_quality': tool_quality,
+        'alternatives': alternatives,
+        'recommendation': 'use_simpler_approach' if cascading_failure else 'proceed_with_tool'
+    }
+```
+
+## 🎯 **Usage Examples**
+
+### **Example 1: Creating Broken Fixer**
+```
+User: "Create a script to fix indentation issues"
+Assistant: [Creates fix_test_rule_compliance_indentation.py with broken indentation]
+Rule: "🚨 META-FAILURE DETECTED! You're creating a broken tool to fix broken things!"
+```
+
+### **Example 2: Overcomplicating Simple Fix**
+```
+User: "Fix the indentation in this file"
+Assistant: [Creates complex tool instead of simple fix]
+Rule: "🚨 SIMPLICITY VIOLATION! Just fix the file directly!"
+```
+
+### **Example 3: Using Existing Tools**
+```
+User: "Fix the syntax errors"
+Assistant: [Uses black, flake8, mypy instead of creating new tool]
+Rule: "✅ GOOD APPROACH! Using existing deterministic tools!"
+```
+
+## 🏆 **Success Criteria**
+
+### **✅ Tool Creation is OK When:**
+- Tool is valid Python (passes `ast.parse()`)
+- Tool passes all linting (`black`, `flake8`, `mypy`)
+- Tool is simple and focused
+- No simpler alternative exists
+- Tool follows project patterns
+
+### **❌ Tool Creation is BAD When:**
+- Tool has syntax errors
+- Tool has linting errors
+- Tool is overly complex
+- Simpler direct fix exists
+- Tool breaks project patterns
+
+## 🚀 **The Rule Implementation**
+
+### **Automatic Trigger:**
+```python
+# In conversation loop
+if detect_tool_creation(message):
+    meta_failures = detect_meta_failures(tool_content, problem_description)
+    
+    if meta_failures['meta_failure_detected']:
+        return f"🚨 META-FAILURE DETECTED!\n{meta_failures['recommendation']}"
+    else:
+        return f"✅ TOOL CREATION APPROVED!\n{meta_failures['tool_quality']}"
+```
+
+## 🎯 **The Meta-Rule**
+
+**"When you break shit, don't break the fixer!"**
+
+This rule ensures that:
+1. **Tools are actually working** before using them
+2. **Simplicity is preferred** over complexity
+3. **Existing tools are used** when possible
+4. **Meta-failures are prevented** through validation
+
+**The era of meta-failure prevention has begun!** 🚀
+

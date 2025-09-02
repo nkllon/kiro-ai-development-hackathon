@@ -1,0 +1,45 @@
+# Python File Protection Rule
+
+## 🚨 **CRITICAL: NEVER Hand-Edit Python Files**
+
+**This project has a complete round-trip engineering system. NEVER use heuristic tools to edit Python files.**
+
+## ❌ **BANNED ACTIONS:**
+- **NEVER use `edit_file`** for Python files
+- **NEVER use `search_replace`** for Python files  
+- **NEVER use any heuristic editing tools** for Python files
+- **NEVER manually modify Python code** without using the round-trip system
+
+## ✅ **REQUIRED APPROACH:**
+
+### **Step 1: Extract Model**
+```bash
+python scripts/enforce_round_trip.py <python_file.py>
+```
+
+### **Step 2: Fix Issues in Model** (if needed)
+- Edit the extracted model JSON, not the Python file
+- Use the model-driven approach to fix issues
+
+### **Step 3: Regenerate Code**
+```bash
+python scripts/enforce_round_trip.py <python_file.py>
+```
+
+## 🔧 **Available Tools:**
+- **`scripts/enforce_round_trip.py`** - Complete round-trip workflow
+- **`src/round_trip_engineering/`** - Full round-trip engineering system
+- **AST-based analysis** - Use deterministic tools, not heuristic ones
+
+## 🚨 **ENFORCEMENT:**
+**This rule ALWAYS applies to Python files. Any attempt to hand-edit Python files will be blocked.**
+
+## 💡 **Why This Matters:**
+- **Preserves code structure** and functionality
+- **Uses the sophisticated round-trip system** that's already built
+- **Prevents introduction of bugs** from manual editing
+- **Maintains functional equivalence** between original and generated code
+
+## 🎯 **Success Pattern:**
+✅ Extract model → Fix model → Regenerate code → Success
+❌ Hand-edit Python file → Rule violation → Blocked

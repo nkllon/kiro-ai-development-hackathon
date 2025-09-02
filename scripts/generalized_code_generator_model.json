@@ -1,0 +1,203 @@
+{
+  "system_name": "generalized_code_generator",
+  "description": "Generalized system for generating Python code from JSON models with model-driven iteration",
+  "purpose": "Eliminate code patching by using models as the single source of truth for code generation",
+  "graph_api_level": 3,
+  "projection_system": "final_projection_system",
+  "core_workflow": {
+    "step_1": "Create/update JSON model",
+    "step_2": "Generate Python code from model",
+    "step_3": "Auto-format generated code",
+    "step_4": "Test generated code",
+    "step_5": "Fix model based on test results",
+    "step_6": "Regenerate code from fixed model",
+    "principle": "NEVER patch generated code - always fix the model and regenerate"
+  },
+  "design_patterns": {
+    "model_driven": "JSON model is the single source of truth",
+    "code_generation": "Python code is generated deterministically from model",
+    "iterative_refinement": "Model improves through testing and feedback",
+    "no_patching": "Generated code is never manually modified"
+  },
+  "model_structure": {
+    "metadata": {
+      "name": "string - Name of the system being generated",
+      "description": "string - Description of the system",
+      "purpose": "string - Purpose and goals",
+      "graph_api_level": "number - Graph API level for projection",
+      "projection_system": "string - Target projection system"
+    },
+    "architecture": {
+      "design_patterns": "array - List of design patterns to use",
+      "layers": "array - System layers/components",
+      "dependencies": "array - External dependencies"
+    },
+    "components": {
+      "classes": "object - Class definitions with methods and properties",
+      "interfaces": "object - Interface definitions",
+      "utilities": "object - Utility functions and helpers"
+    },
+    "code_generation": {
+      "imports": "array - Required imports",
+      "class_structure": "array - Order of class generation",
+      "patterns_used": "array - Design patterns implemented"
+    },
+    "quality_standards": {
+      "linting": "object - Linting requirements",
+      "testing": "object - Testing requirements",
+      "documentation": "object - Documentation requirements"
+    }
+  },
+  "generator_components": {
+    "ModelLoader": {
+      "responsibility": "Load and validate JSON models",
+      "methods": [
+        "load_model(model_file: str) -> Dict[str, Any]",
+        "validate_model(model: Dict[str, Any]) -> bool",
+        "get_model_metadata(model: Dict[str, Any]) -> Dict[str, Any]"
+      ]
+    },
+    "CodeGenerator": {
+      "responsibility": "Generate Python code from validated models",
+      "methods": [
+        "generate_code(model: Dict[str, Any]) -> str",
+        "generate_class(class_def: Dict[str, Any]) -> str",
+        "generate_method(method_def: Dict[str, Any]) -> str",
+        "generate_imports(imports: List[str]) -> str"
+      ]
+    },
+    "CodeWriter": {
+      "responsibility": "Write generated code to files",
+      "methods": [
+        "write_code(output_file: str, code: str) -> bool",
+        "backup_existing_file(file_path: str) -> bool",
+        "validate_written_code(file_path: str) -> bool"
+      ]
+    },
+    "AutoFormatter": {
+      "responsibility": "Format generated code using deterministic tools",
+      "methods": [
+        "format_file(file_path: str) -> bool",
+        "run_black(file_path: str) -> bool",
+        "run_autopep8(file_path: str) -> bool",
+        "run_ruff(file_path: str) -> bool"
+      ]
+    },
+    "CodeValidator": {
+      "responsibility": "Validate generated code for syntax and quality",
+      "methods": [
+        "validate_syntax(file_path: str) -> bool",
+        "validate_imports(file_path: str) -> bool",
+        "run_linters(file_path: str) -> Dict[str, Any]",
+        "check_quality(file_path: str) -> Dict[str, Any]"
+      ]
+    },
+    "TestRunner": {
+      "responsibility": "Run tests on generated code",
+      "methods": [
+        "run_tests(test_file: str) -> Dict[str, Any]",
+        "run_smoke_tests(file_path: str) -> bool",
+        "generate_test_report(results: Dict[str, Any]) -> str"
+      ]
+    },
+    "ModelFixer": {
+      "responsibility": "Fix models based on test results and validation",
+      "methods": [
+        "analyze_failures(test_results: Dict[str, Any]) -> List[str]",
+        "suggest_model_fixes(failures: List[str]) -> Dict[str, Any]",
+        "update_model(model: Dict[str, Any], fixes: Dict[str, Any]) -> Dict[str, Any]"
+      ]
+    },
+    "WorkflowOrchestrator": {
+      "responsibility": "Orchestrate the complete model-driven workflow",
+      "methods": [
+        "run_full_workflow(model_file: str, output_file: str) -> bool",
+        "iterate_until_success(model_file: str, max_iterations: int) -> bool",
+        "generate_workflow_report(iterations: List[Dict[str, Any]]) -> str"
+      ]
+    }
+  },
+  "workflow_steps": {
+    "step_1_model_creation": {
+      "description": "Create or update JSON model",
+      "input": "Requirements and design specifications",
+      "output": "Validated JSON model",
+      "validation": "Model structure and completeness"
+    },
+    "step_2_code_generation": {
+      "description": "Generate Python code from model",
+      "input": "Validated JSON model",
+      "output": "Generated Python code",
+      "validation": "Code syntax and structure"
+    },
+    "step_3_auto_formatting": {
+      "description": "Format generated code using deterministic tools",
+      "input": "Generated Python code",
+      "output": "Formatted Python code",
+      "validation": "Formatting compliance"
+    },
+    "step_4_code_validation": {
+      "description": "Validate code quality and syntax",
+      "input": "Formatted Python code",
+      "output": "Validation results",
+      "validation": "Linting, imports, syntax"
+    },
+    "step_5_testing": {
+      "description": "Run tests on generated code",
+      "input": "Validated Python code",
+      "output": "Test results",
+      "validation": "Functionality and correctness"
+    },
+    "step_6_model_fixing": {
+      "description": "Fix model based on test/validation results",
+      "input": "Test results and validation issues",
+      "output": "Updated JSON model",
+      "validation": "Model correctness and completeness"
+    },
+    "step_7_regeneration": {
+      "description": "Regenerate code from fixed model",
+      "input": "Updated JSON model",
+      "output": "New generated Python code",
+      "validation": "Code quality and test passing"
+    }
+  },
+  "quality_gates": {
+    "model_validation": "JSON model must be valid and complete",
+    "code_generation": "Code must generate without errors",
+    "auto_formatting": "Code must pass all formatters",
+    "linting": "Code must pass all linters with zero errors",
+    "testing": "Code must pass all tests",
+    "no_manual_patching": "Generated code must never be manually modified"
+  },
+  "error_handling": {
+    "model_errors": "Fix model structure and regenerate",
+    "generation_errors": "Fix model logic and regenerate",
+    "formatting_errors": "Fix model formatting specs and regenerate",
+    "validation_errors": "Fix model requirements and regenerate",
+    "test_failures": "Fix model behavior and regenerate"
+  },
+  "integration_points": {
+    "project_model": "Use project_model_registry.json for domain-specific configurations",
+    "cursor_rules": "Enforce model-driven development in deterministic editing workflow",
+    "make_targets": "Generate make targets for the complete workflow",
+    "ci_cd": "Integrate model-driven generation into CI/CD pipeline"
+  },
+  "usage_patterns": {
+    "development": "python scripts/generalized_code_generator.py model.json output.py",
+    "iteration": "python scripts/generalized_code_generator.py --iterate model.json output.py",
+    "testing": "python scripts/generalized_code_generator.py --test model.json output.py",
+    "validation": "python scripts/generalized_code_generator.py --validate model.json output.py"
+  },
+  "output_formats": {
+    "console": "Real-time progress with emojis and status",
+    "summary": "Comprehensive generation and testing report",
+    "json": "Machine-readable results for CI/CD",
+    "markdown": "Human-readable documentation of the process"
+  },
+  "extension_points": {
+    "new_model_types": "Add new model schemas for different code types",
+    "custom_generators": "Implement custom code generation strategies",
+    "additional_validators": "Add new validation and testing approaches",
+    "workflow_extensions": "Extend the workflow with additional steps"
+  }
+}

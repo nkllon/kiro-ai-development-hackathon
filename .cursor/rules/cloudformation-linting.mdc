@@ -1,0 +1,35 @@
+---
+description: CloudFormation linting rules and validation strategies
+alwaysApply: true
+---
+
+# CloudFormation Linting Rules
+
+## File Detection
+- Apply to CloudFormation templates and infrastructure YAML files
+- Focus on AWS infrastructure patterns
+- Include models directory for infrastructure templates
+
+## Validation Requirements
+- Validate CloudFormation syntax
+- Check for security best practices
+- Ensure proper resource naming conventions
+- Validate IAM permissions follow least privilege
+
+## Common Issues to Catch
+- Hardcoded credentials or secrets
+- Overly permissive IAM policies
+- Missing required properties
+- Invalid resource references
+- Security group misconfigurations
+
+## Best Practices
+- Use parameters for configurable values
+- Implement proper tagging strategies
+- Follow AWS Well-Architected Framework
+- Use CloudFormation macros for DRY principles
+- `*cloudformation*.yml`
+- `models/Openflow-Playground.yaml`
+
+## The Rule
+**"CloudFormation is not generic YAML - use the right tool for the job."**

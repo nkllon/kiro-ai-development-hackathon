@@ -1,0 +1,210 @@
+# Backlog Discovery Rule
+
+## 🎯 **Rule Definition**
+**"ALWAYS use systematic backlog discovery methods to find ALL backlog items - never assume a single search method is sufficient"**
+
+## 🚨 **Trigger Conditions**
+- User asks: "what is in the backlog?", "show me backlog items", "what needs to be done?"
+- User mentions: "backlog", "TODO", "FIXME", "pending work", "future work"
+- Assistant needs to: Find backlog items, discover pending work, identify incomplete tasks
+- Any situation requiring comprehensive project status understanding
+
+## 🔍 **Systematic Backlog Discovery Methods**
+
+### **Method 1: Project Model Registry (Primary Source)**
+**ALWAYS check first - this is the authoritative source:**
+```bash
+# Check formal backlog items
+grep -r 'backlogged\|pending\|incomplete' project_model_registry.json
+
+# Check next steps arrays
+grep -r 'next_steps' project_model_registry.json
+
+# Check over_engineering_prevention domain specifically
+grep -r 'over_engineering_prevention' project_model_registry.json
+
+# Check status fields
+grep -r 'status.*backlogged\|status.*pending' project_model_registry.json
+```
+
+**Key Locations:**
+- `backlogged` array - Formal backlog items with full metadata
+- `next_steps` arrays - Planned work in each domain
+- `over_engineering_prevention` domain - Massive backlog of 13 patterns, 200+ custom classes
+- Domain-specific status fields - Individual domain backlogs
+
+### **Method 2: Documentation Files**
+**Check all documentation for backlog items:**
+```bash
+# Check documentation files
+grep -r 'backlog\|next_steps\|future.*work' docs/
+
+# Check specific known backlog files
+grep -r 'OVER_ENGINEERING_AUDIT_COMPREHENSIVE' docs/
+grep -r 'project_management' docs/
+```
+
+**Key Files:**
+- `docs/OVER_ENGINEERING_AUDIT_COMPREHENSIVE.md` - 13 major over-engineering patterns
+- `project_management/README.md` - Project management status
+- `docs/*.md` - Various documentation with future work sections
+
+### **Method 3: Code-Level Indicators**
+**Search source code for implementation backlog:**
+```bash
+# Search for TODO patterns in code
+grep -r 'TODO\|FIXME\|HACK\|XXX\|BUG' . --include='*.py' --include='*.md'
+
+# Search for skeleton classes and unimplemented methods
+grep -r 'TODO.*Implement' . --include='*.py'
+grep -r 'skeleton.*TODO' . --include='*.py'
+```
+
+**Code Patterns:**
+- `# TODO:` - Implementation tasks
+- `# FIXME:` - Bug fixes needed  
+- `# HACK:` - Temporary workarounds
+- `# XXX:` - Critical issues
+- `# BUG:` - Known bugs
+- Skeleton classes with TODO comments
+- Unimplemented methods
+
+### **Method 4: Status-Based Indicators**
+**Check for status fields indicating backlog items:**
+```bash
+# Search for status indicators
+grep -r 'status.*backlogged\|status.*pending\|status.*incomplete' .
+
+# Search for priority and effort fields
+grep -r 'priority.*high\|estimated_effort' .
+```
+
+**Status Patterns:**
+- `status: "backlogged"` - Formal backlog status
+- `status: "pending"` - Work in progress
+- `status: "incomplete"` - Not finished
+- `priority: "high/medium/low"` - Work priority
+- `estimated_effort: "X weeks"` - Time estimates
+
+## 📋 **Backlog Item Format**
+
+### **Required Fields (Always Present):**
+```json
+{
+  "requirement": "Description of what needs to be done",
+  "status": "backlogged|pending|incomplete|implemented",
+  "domain": "Domain this belongs to",
+  "priority": "high|medium|low",
+  "estimated_effort": "X weeks",
+  "description": "Detailed description",
+  "date_added": "YYYY-MM-DD"
+}
+```
+
+### **Optional Fields (May Be Present):**
+```json
+{
+  "dependencies": ["list", "of", "dependencies"],
+  "acceptance_criteria": ["criteria", "list"],
+  "implementation_files": ["files", "to", "modify"],
+  "test_results": {"total": X, "passed": Y, "failed": Z},
+  "completion_date": "YYYY-MM-DD"
+}
+```
+
+## 🚫 **Common Mistakes to Avoid**
+
+### **❌ Don't Do This:**
+- Search only for "backlog" - too narrow
+- Stop after finding one backlog item - incomplete
+- Ignore code-level indicators - misses implementation backlog
+- Skip documentation files - misses major backlog items
+- Assume single search method is sufficient - guaranteed to miss items
+
+### **✅ Do This Instead:**
+- **ALWAYS use all 4 discovery methods**
+- **ALWAYS check project model registry first**
+- **ALWAYS search for code-level indicators**
+- **ALWAYS validate findings against multiple sources**
+- **ALWAYS document what you found and where**
+
+## 🔍 **Implementation Protocol**
+
+### **Step 1: Systematic Search**
+```bash
+# 1. Project Model Registry (Primary)
+grep -r 'backlogged\|pending\|incomplete' project_model_registry.json
+
+# 2. Documentation Files
+grep -r 'backlog\|next_steps\|future.*work' docs/
+
+# 3. Code-Level Indicators  
+grep -r 'TODO\|FIXME\|HACK\|XXX\|BUG' . --include='*.py' --include='*.md'
+
+# 4. Status-Based Indicators
+grep -r 'status.*backlogged\|status.*pending' .
+```
+
+### **Step 2: Validation**
+- Cross-reference findings across methods
+- Verify backlog items exist in multiple sources
+- Check for inconsistencies or missing information
+- Validate against project model requirements
+
+### **Step 3: Documentation**
+- Document all backlog items found
+- Note which discovery method found each item
+- Identify any gaps or missing information
+- Provide comprehensive backlog summary
+
+## 🎯 **Success Criteria**
+
+### **✅ Backlog Discovery Succeeds When:**
+- All 4 discovery methods are used
+- Project model registry is checked first
+- Code-level indicators are thoroughly searched
+- Findings are validated against multiple sources
+- Comprehensive backlog summary is provided
+
+### **❌ Backlog Discovery Fails When:**
+- Only one search method is used
+- Project model registry is ignored
+- Code-level indicators are missed
+- Findings aren't validated
+- Incomplete backlog summary is provided
+
+## 🚀 **The Rule Implementation**
+
+### **Automatic Trigger:**
+```python
+# In conversation loop
+if detect_backlog_trigger(message):
+    return f"""
+🔍 SYSTEMATIC BACKLOG DISCOVERY REQUIRED:
+
+1. **Project Model Registry**: Check project_model_registry.json first
+2. **Documentation Files**: Search docs/ for backlog items  
+3. **Code-Level Indicators**: Search for TODO, FIXME, HACK, XXX, BUG
+4. **Status-Based Indicators**: Check status fields for backlog items
+
+🚨 **CRITICAL**: Use ALL 4 methods - never assume single search is sufficient!
+"""
+```
+
+## 🏆 **The Meta-Rule**
+
+**"Systematic backlog discovery prevents missed work. Use all methods, validate findings, and never assume you have the complete picture."**
+
+This rule ensures that:
+1. **No backlog items are missed** through systematic search
+2. **All discovery methods are used** for comprehensive coverage
+3. **Findings are validated** against multiple sources
+4. **Complete backlog picture** is always provided
+
+**The era of systematic backlog discovery has begun!** 🚀
+
+---
+description: "Systematic methods for discovering and accessing backlog items across the project"
+globs: "*.py,*.md,*.json,*.yaml,*.yml"
+alwaysApply: false
+---

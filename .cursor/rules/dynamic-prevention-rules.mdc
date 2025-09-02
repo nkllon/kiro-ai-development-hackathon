@@ -1,0 +1,141 @@
+---
+description: Dynamic prevention rules for automatically generated code quality enforcement
+globs: *.py,*.js,*.ts,*.yaml,.cursor/rules/*,**/.cursor/rules/*
+alwaysApply: false
+---
+
+# Dynamic Prevention Rules
+
+## Core Principle
+**These rules are automatically generated based on detected violations to prevent future occurrences.**
+
+## 🚨 CRITICAL: Cursor Rules Directory Protection
+
+**The `.cursor/rules` directory is a sacred space that MUST only contain `.mdc` files.**
+
+**Why this matters:**
+- Non-MDC files in `.cursor/rules` will cause Cursor to malfunction
+- This directory is automatically scanned by Cursor for rule loading
+- Any non-MDC file here is a logic bomb waiting to explode
+- Cursor expects specific YAML frontmatter format in these files
+
+## Prevention Strategies
+
+
+
+### Unused Import Prevention
+
+**Rule Code:** IMPORT_PREVENTION
+**Description:** Prevent unused imports before they happen
+**Pattern:** import.*unused
+**Suggestion:** Only import modules that are actually used
+
+#### Prevention Code
+```python
+
+# BEFORE writing imports
+def validate_imports(imports: List[str], file_content: str):
+    """Validate that imports are actually used"""
+    used_imports = []
+    for imp in imports:
+        if is_import_used(imp, file_content):
+            used_imports.append(imp)
+        else:
+            suggest_removal(imp)
+    return used_imports
+
+```
+
+#### Ignore Directive (if intentional)
+```python
+# noqa: F401  # Import needed for type checking
+```
+
+#### Implementation
+- Check for pattern before writing code
+- Apply prevention strategy
+- Use ignore directive only when truly intentional
+
+
+
+
+
+### Blank Line Prevention
+
+**Rule Code:** BLANK_LINE_PREVENTION
+**Description:** Prevent missing blank lines before definitions
+**Pattern:** def.*|class.*
+**Suggestion:** Add two blank lines before class/function definitions
+
+#### Prevention Code
+```python
+
+# BEFORE writing class/function definitions
+def validate_spacing(context: str, definition_type: str):
+    """Validate proper spacing around definitions"""
+    if definition_type in ['class', 'function']:
+        ensure_two_blank_lines_before(context)
+
+```
+
+#### Ignore Directive (if intentional)
+```python
+# noqa: E302  # Compact module structure
+```
+
+#### Implementation
+- Check for pattern before writing code
+- Apply prevention strategy
+- Use ignore directive only when truly intentional
+
+
+### Generic Prevention
+
+**Rule Code:** GENERIC_PREVENTION
+**Description:** Prevent BLACK001 violations
+**Pattern:** .*
+**Suggestion:** Fix BLACK001 violation
+
+#### Prevention Code
+```python
+
+```
+
+#### Ignore Directive (if intentional)
+```python
+# noqa: BLACK001  # Code needs formatting
+```
+
+#### Implementation
+- Check for pattern before writing code
+- Apply prevention strategy
+- Use ignore directive only when truly intentional
+
+### Cursor Rules Directory Protection
+
+**Rule Code:** CURSOR_RULES_PROTECTION
+**Description:** Prevent non-MDC files in .cursor/rules directory
+**Pattern:** .cursor/rules/**/*
+**Suggestion:** Only MDC files should exist in .cursor/rules directory
+
+#### Prevention Code
+```python
+# BEFORE creating files in .cursor/rules
+def validate_cursor_rules_directory(file_path: str):
+    """Ensure only MDC files exist in .cursor/rules directory"""
+    if file_path.startswith('.cursor/rules/'):
+        if not file_path.endswith('.mdc'):
+            raise ValueError(f"Only .mdc files allowed in .cursor/rules: {file_path}")
+        validate_mdc_structure(file_path)
+```
+
+#### Ignore Directive (if intentional)
+```python
+# No ignore directive - this is a critical safety rule
+```
+
+#### Implementation
+- Check file extension before creation
+- Validate MDC structure for all .mdc files
+- Prevent any non-MDC files in .cursor/rules
+- Use mdc-linter for validation

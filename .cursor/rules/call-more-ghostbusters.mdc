@@ -1,0 +1,236 @@
+---
+description: When 'call more ghostbusters' is invoked, immediately trigger multi-agent validation with all available LLMs and deterministic tools
+globs: *.py,*.md,*.json,*.yaml,*.yml
+alwaysApply: false
+---
+
+# Call More Ghostbusters Rule
+
+## 🎯 **Rule Definition**
+**"When 'call more ghostbusters' is invoked, immediately trigger multi-agent validation with all available LLMs and deterministic tools"**
+
+## 🚨 **Trigger Conditions**
+- User says: "call more ghostbusters"
+- Assistant says: "call more ghostbusters"
+- Any mention of: "ghostbusters", "multi-agent validation", "delusion detection"
+
+## 👥 **Available Ghostbusters (LLMs)**
+
+### **1. Security Expert**
+- **Focus**: Security practices, credential handling, access control
+- **Validation**: "Are you being security-conscious?"
+- **Delusion Check**: "Are you hardcoding secrets? Are you following least privilege?"
+
+### **2. Code Quality Expert**
+- **Focus**: Code standards, best practices, maintainability
+- **Validation**: "Are you following best practices?"
+- **Delusion Check**: "Are you writing clean, maintainable code? Are you using proper patterns?"
+
+### **3. Architecture Expert**
+- **Focus**: Design patterns, system architecture, scalability
+- **Validation**: "Are you designing well?"
+- **Delusion Check**: "Is this architecture sound? Is it scalable? Is it maintainable?"
+
+### **4. Test Expert**
+- **Focus**: Testing approaches, coverage, validation
+- **Validation**: "Are you testing properly?"
+- **Delusion Check**: "Are you testing enough? Are you testing the right things?"
+
+### **5. Model Expert**
+- **Focus**: Model usage, model-driven development, model compliance
+- **Validation**: "Are you using models correctly?"
+- **Delusion Check**: "Are you actually following the model? Are you being model-driven?"
+
+### **6. Heuristic Expert**
+- **Focus**: Heuristic vs deterministic balance, tool selection
+- **Validation**: "Are you using the right balance of heuristics and deterministic tools?"
+- **Delusion Check**: "Are you using LLMs for intelligence and tools for precision?"
+
+## 🛠️ **Available Equipment (Deterministic Tools)**
+
+### **1. AST Parser**
+- **Tool**: `ast.parse()`
+- **Validation**: "Is this valid Python?"
+- **Delusion Check**: "Are there syntax errors I missed?"
+
+### **2. Linters**
+- **Tools**: `black`, `flake8`, `mypy`
+- **Validation**: "Does this follow standards?"
+- **Delusion Check**: "Are there style or quality issues I missed?"
+
+### **3. Tests**
+- **Tools**: `pytest`, unit tests, integration tests
+- **Validation**: "Does this work correctly?"
+- **Delusion Check**: "Are there functional issues I missed?"
+
+### **4. Models**
+- **Tools**: `project_model_registry.json`, AST models
+- **Validation**: "Does this match the model?"
+- **Delusion Check**: "Am I actually being model-driven?"
+
+## 🏢 **Available HQ (External Systems)**
+
+### **1. Git History**
+- **Validation**: "Does this match previous patterns?"
+- **Delusion Check**: "Am I following established conventions?"
+
+### **2. Project Models**
+- **Validation**: "Does this match the project model?"
+- **Delusion Check**: "Am I actually using the model registry?"
+
+### **3. Requirements**
+- **Validation**: "Does this meet requirements?"
+- **Delusion Check**: "Am I actually addressing the requirements?"
+
+## 🚀 **Implementation Protocol**
+
+### **Step 1: Trigger Detection**
+```python
+def detect_ghostbusters_trigger(message):
+    """Detect if ghostbusters should be called"""
+    triggers = [
+        "call more ghostbusters",
+        "ghostbusters",
+        "multi-agent validation",
+        "delusion detection"
+    ]
+    return any(trigger in message.lower() for trigger in triggers)
+```
+
+### **Step 2: Assemble Ghostbusters Team**
+```python
+def assemble_ghostbusters_team():
+    """Assemble all available ghostbusters"""
+    team = {
+        'security_expert': SecurityExpert(),
+        'code_quality_expert': CodeQualityExpert(),
+        'architecture_expert': ArchitectureExpert(),
+        'test_expert': TestExpert(),
+        'model_expert': ModelExpert(),
+        'heuristic_expert': HeuristicExpert()
+    }
+    return team
+```
+
+### **Step 3: Multi-Agent Validation**
+```python
+def call_more_ghostbusters(work_to_validate):
+    """Call all ghostbusters for validation"""
+    
+    # Assemble team
+    team = assemble_ghostbusters_team()
+    
+    # Get deterministic tools
+    tools = get_deterministic_tools()
+    
+    # Get external systems
+    external_systems = get_external_systems()
+    
+    # Run validation
+    results = {}
+    
+    # Agent validation
+    for agent_name, agent in team.items():
+        results[f'agent_{agent_name}'] = agent.validate(work_to_validate)
+    
+    # Tool validation
+    for tool_name, tool in tools.items():
+        results[f'tool_{tool_name}'] = tool.validate(work_to_validate)
+    
+    # External validation
+    for system_name, system in external_systems.items():
+        results[f'external_{system_name}'] = system.validate(work_to_validate)
+    
+    return results
+```
+
+### **Step 4: Delusion Detection Report**
+```python
+def generate_delusion_report(validation_results):
+    """Generate comprehensive delusion detection report"""
+    
+    report = {
+        'summary': {
+            'total_validators': len(validation_results),
+            'passed_validations': sum(1 for r in validation_results.values() if r['passed']),
+            'failed_validations': sum(1 for r in validation_results.values() if not r['passed']),
+            'delusions_detected': []
+        },
+        'detailed_results': validation_results,
+        'recommendations': []
+    }
+    
+    # Identify delusions
+    for validator_name, result in validation_results.items():
+        if not result['passed']:
+            report['summary']['delusions_detected'].append({
+                'validator': validator_name,
+                'issue': result['issue'],
+                'recommendation': result['recommendation']
+            })
+    
+    return report
+```
+
+## 🎯 **Usage Examples**
+
+### **Example 1: User Triggers**
+```
+User: "I think there might be a security issue here, call more ghostbusters"
+Assistant: [Immediately triggers multi-agent validation with focus on security]
+```
+
+### **Example 2: Assistant Self-Detection**
+```
+Assistant: "I'm not sure if I'm being model-driven correctly... call more ghostbusters"
+[Self-triggers validation with focus on model compliance]
+```
+
+### **Example 3: Delusion Detection**
+```
+User: "Are you sure about that approach?"
+Assistant: "Let me call more ghostbusters to validate my reasoning"
+[Triggers comprehensive validation]
+```
+
+## 🏆 **Success Criteria**
+
+### **✅ Validation Passes When:**
+- All agents approve the work
+- All deterministic tools pass
+- All external systems validate
+- No delusions detected
+
+### **❌ Validation Fails When:**
+- Any agent detects issues
+- Any deterministic tool fails
+- Any external system rejects
+- Delusions are detected
+
+## 🚀 **The Rule Implementation**
+
+### **Automatic Trigger:**
+```python
+# In conversation loop
+if detect_ghostbusters_trigger(message):
+    validation_results = call_more_ghostbusters(current_work)
+    delusion_report = generate_delusion_report(validation_results)
+    
+    if delusion_report['summary']['failed_validations'] > 0:
+        return f"🚨 GHOSTBUSTERS DETECTED DELUSIONS!\n{delusion_report}"
+    else:
+        return f"✅ GHOSTBUSTERS VALIDATION PASSED!\n{delusion_report}"
+```
+
+## 🎯 **The Meta-Rule**
+
+**"When in doubt, call more ghostbusters!"**
+
+This rule ensures that:
+1. **Multi-agent validation** is always available
+2. **Delusion detection** is systematic
+3. **Quality assurance** is comprehensive
+4. **Collective intelligence** prevents individual delusions
+
+**The era of systematic delusion detection has begun!** 🚀
+

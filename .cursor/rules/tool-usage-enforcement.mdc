@@ -1,0 +1,79 @@
+# Tool Usage Enforcement Rule
+
+## Core Principle
+**ALWAYS use Model Registry and CRUD tools instead of direct file access. Never bypass the tools you built.**
+
+## The Rule
+**"If you built a tool for it, you MUST use the tool. No direct file scanning, no JSON parsing, no bypassing the architecture."**
+
+## Mandatory Pre-Action Checklist
+Before accessing any model data:
+
+1. **✅ Check if there's a Model Registry tool** - Look for `get_model_registry()`
+2. **✅ Use the registry to get model** - `registry.get_model('model_name')`
+3. **✅ Use the manager to load data** - `manager.load_model()`
+4. **✅ Only access files directly if NO tool exists** - And document why
+
+## What This Means
+- **Model queries**: Use `registry.get_model('project').load_model()` 
+- **CRUD operations**: Use `scripts/model_crud.py` commands
+- **Data access**: Use built managers, not direct file reading
+- **Configuration**: Use registry configuration, not hardcoded paths
+- **Result processing**: ALWAYS process and organize tool results meaningfully
+- **No raw dumps**: Never just dump raw data without processing
+
+## Examples of What NOT to Do
+```python
+# ❌ DON'T do this - bypassing tools
+import json
+with open('project_model_registry.json') as f:
+    data = json.load(f)
+domains = data['domains'].keys()
+
+# ❌ DON'T do this - direct file access
+import os
+content = open('file.txt').read()
+```
+
+## Examples of What TO Do
+```python
+# ✅ DO this - use the tools you built
+from src.round_trip_engineering.tools import get_model_registry
+registry = get_model_registry()
+manager = registry.get_model('project')
+model_data = manager.load_model()
+domains = model_data['domains'].keys()
+
+# ✅ DO this - use CLI tools
+uv run python scripts/model_crud.py get-model-info --model-name project
+```
+
+## Common Violations
+- ❌ Direct JSON file reading
+- ❌ Direct file system access
+- ❌ Bypassing Model Registry
+- ❌ Manual parsing instead of using managers
+- ❌ Hardcoded file paths
+- ❌ Dumping raw tool results without processing
+- ❌ Ignoring tool output and going back to manual methods
+
+## Correct Approach
+- ✅ Use Model Registry for all model access
+- ✅ Use CRUD managers for all operations
+- ✅ Use CLI tools for all interactions
+- ✅ Follow the architecture you built
+
+## When No Tool Exists
+If you need to access data that doesn't have a tool:
+
+1. **Check if it should have a tool** - Most data access should
+2. **Build the missing tool** - Create appropriate manager
+3. **Document why** - Add comment explaining the exception
+4. **Use the new tool** - Then use the tool you built
+
+## Remember
+**You built these tools for a reason. Use them! The architecture exists to prevent chaos and ensure consistency.**
+description:
+globs:
+alwaysApply: true
+---
