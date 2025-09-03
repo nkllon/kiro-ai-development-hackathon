@@ -4,7 +4,7 @@ Implements RM interface compliance as required by C-01 constraint
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from dataclasses import dataclass
 from enum import Enum
 import time

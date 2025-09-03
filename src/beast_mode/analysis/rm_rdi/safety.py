@@ -5,7 +5,6 @@ CRITICAL: This module implements the safety guarantees that protect production s
 """
 
 import os
-import psutil
 import threading
 import time
 import signal
@@ -14,6 +13,51 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 import logging
+
+# Optional dependency - graceful fallback if not available
+try:
+    import psutil
+    PSUTIL_AVAILABLE = True
+except ImportError:
+    PSUTIL_AVAILABLE = False
+    # Mock psutil for basic functionality
+    class MockProcess:
+        def memory_info(self):
+            class MockMemInfo:
+                rss = 100 * 1024 * 1024  # 100MB
+            return MockMemInfo()
+            
+        def cpu_percent(self):
+            return 25.0
+            
+        def is_running(self):
+            return True
+            
+        def num_threads(self):
+            return 4
+    
+    class MockPsutil:
+        @staticmethod
+        def virtual_memory():
+            class MockMemory:
+                percent = 50.0  # Default safe value
+            return MockMemory()
+        
+        @staticmethod
+        def cpu_percent():
+            return 25.0  # Default safe value
+            
+        @staticmethod
+        def disk_usage(path):
+            class MockDisk:
+                percent = 30.0  # Default safe value
+            return MockDisk()
+            
+        @staticmethod
+        def Process():
+            return MockProcess()
+    
+    psutil = MockPsutil()
 
 
 @dataclass

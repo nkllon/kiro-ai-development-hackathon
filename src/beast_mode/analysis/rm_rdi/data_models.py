@@ -236,6 +236,26 @@ class MetricsReport:
     collection_period: str
 
 
+@dataclass
+class AnalysisConfiguration:
+    """Configuration for analysis operations"""
+    timeout_seconds: int = 300
+    max_parallel_analyses: int = 4
+    resource_limits: Dict[str, Any] = field(default_factory=lambda: {
+        "max_memory_mb": 1024,
+        "max_cpu_percent": 50,
+        "max_disk_io_mb": 100
+    })
+    analysis_thresholds: Dict[str, Any] = field(default_factory=lambda: {
+        "max_file_size_lines": 200,
+        "complexity_threshold": 10.0,
+        "coverage_minimum": 0.8,
+        "performance_threshold_ms": 1000
+    })
+    safety_enabled: bool = True
+    emergency_shutdown_enabled: bool = True
+
+
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class SafetyMetrics:
     """Safety and resource usage metrics"""
@@ -268,6 +288,12 @@ class AnalysisResult:
     recommendations: List[Recommendation] = field(default_factory=list)
     overall_health_score: float = 0.0
     safety_metrics: Optional[SafetyMetrics] = None
+    
+    # Additional attributes for workflow coordination
+    findings: List[str] = field(default_factory=list)
+    metrics: Dict[str, Any] = field(default_factory=dict)
+    priority: int = 1  # Default priority
+    confidence: float = 1.0  # Default confidence
     
     # Operator Safety Information
     operator_notes: List[str] = field(default_factory=list)
