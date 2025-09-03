@@ -10,6 +10,7 @@ include makefiles/activity-models.mk
 include makefiles/domains.mk
 include makefiles/testing.mk
 include makefiles/installation.mk
+include makefiles/beast-mode.mk
 
 # Main targets
 .PHONY: help status status-quick status-dashboard status-clean

@@ -1,0 +1,166 @@
+# Beast Mode Framework - Cursor Rules Integration
+# Implements UC-25: Self-Consistency Validation through systematic methodology
+
+## Beast Mode Systematic Development Enforcement
+
+### Core Principles
+- **Model-Driven Decisions**: Always consult project_model_registry.json before making development decisions
+- **Systematic Tool Repair**: Fix root causes, never implement workarounds
+- **PDCA Methodology**: Use Plan-Do-Check-Act cycles for all development tasks
+- **Reflective Module Compliance**: All components must implement RM interface
+- **Self-Consistency**: Beast Mode must use its own systematic methodology
+
+### Development Workflow Enforcement
+
+#### 1. Model-First Decision Making
+```
+WHEN making any development decision
+THEN consult project_model_registry.json first
+AND use domain-specific intelligence when available
+AND document model-based reasoning
+AND avoid guesswork-based decisions
+```
+
+#### 2. Systematic Tool Health Management
+```
+WHEN encountering broken tools
+THEN perform systematic diagnosis using Beast Mode tool orchestration
+AND identify root causes (not symptoms)
+AND implement systematic repairs (no workarounds)
+AND validate repairs work before proceeding
+AND document prevention patterns
+```
+
+#### 3. PDCA Cycle Integration
+```
+WHEN starting development tasks
+THEN execute complete PDCA cycle:
+  - PLAN: Use model registry and domain intelligence
+  - DO: Implement systematically with health monitoring
+  - CHECK: Validate against requirements with RCA
+  - ACT: Update model with learnings and patterns
+```
+
+#### 4. Reflective Module Implementation
+```
+WHEN creating Beast Mode components
+THEN implement ReflectiveModule interface:
+  - get_module_status() for operational visibility
+  - is_healthy() for health assessment
+  - get_health_indicators() for detailed metrics
+  - maintain single responsibility principle
+  - provide graceful degradation capabilities
+```
+
+### Beast Mode Integration Points
+
+#### Makefile Integration
+- Use `make beast-mode` for systematic development operations
+- Use `make pdca-cycle` for structured development workflow
+- Use `make beast-mode-validate` for self-consistency validation
+- Use `make beast-mode-health` for comprehensive health checks
+
+#### Project Registry Integration
+- Consult project_model_registry.json for domain intelligence
+- Use domain-specific tool mappings and requirements
+- Update registry with successful patterns and learnings
+- Maintain domain architecture compliance
+
+#### Quality Gates Integration
+- Enforce code quality through Beast Mode quality gates
+- Use systematic linting, formatting, and security scanning
+- Block deployment on quality gate failures
+- Generate quality improvement recommendations
+
+### Self-Consistency Validation (UC-25)
+
+#### Beast Mode Must Prove It Works On Itself
+```
+WHEN developing Beast Mode Framework
+THEN demonstrate self-consistency by:
+  - Using model registry for all Beast Mode decisions
+  - Applying PDCA cycles to Beast Mode development
+  - Fixing Beast Mode's own tools systematically
+  - Implementing RM compliance across all components
+  - Generating measurable superiority evidence
+```
+
+#### Credibility Requirements
+- Beast Mode's own Makefile must work flawlessly
+- All Beast Mode components must be healthy
+- System must demonstrate measurable superiority over ad-hoc approaches
+- Self-application validation must pass all checks
+
+### Systematic Superiority Evidence
+
+#### Measurable Metrics Required
+- Tool health management: Beast Mode vs Ad-hoc approaches
+- Decision success rates: Model-driven vs Guesswork
+- Development velocity: PDCA cycles vs Chaotic development
+- Quality consistency: Automated gates vs Manual checks
+- Problem resolution: Systematic repair vs Workarounds
+
+#### Evidence Generation
+```
+WHEN generating superiority evidence
+THEN provide concrete metrics showing:
+  - Faster problem resolution through systematic approaches
+  - Higher success rates for model-driven decisions
+  - Fewer broken tools with systematic repair
+  - Consistent quality through automated enforcement
+  - Measurable improvement in development outcomes
+```
+
+### Integration Validation
+
+#### Infrastructure Integration Checks
+- Makefile system includes Beast Mode operations
+- Project registry integration is functional
+- Cursor rules enforce Beast Mode methodology
+- All components implement RM interface correctly
+- Self-consistency validation passes
+
+#### Operational Validation
+- Beast Mode CLI operations work correctly
+- Health monitoring provides accurate status
+- Quality gates enforce standards automatically
+- PDCA cycles execute systematically
+- Superiority metrics are generated accurately
+
+### Error Prevention
+
+#### Common Anti-Patterns to Avoid
+- Making decisions without consulting project registry
+- Implementing workarounds instead of systematic repairs
+- Skipping PDCA methodology for development tasks
+- Creating components without RM interface compliance
+- Failing to validate Beast Mode self-consistency
+
+#### Quality Assurance
+- All Beast Mode code must pass quality gates
+- Components must demonstrate health monitoring
+- Self-consistency validation must be automated
+- Superiority evidence must be measurable
+- Integration tests must validate all connections
+
+### Continuous Improvement
+
+#### Learning Integration
+```
+WHEN Beast Mode operations complete
+THEN extract learnings and update:
+  - Project registry with successful patterns
+  - Prevention pattern library with failure analysis
+  - Quality rules with improvement opportunities
+  - Health indicators with operational insights
+  - Superiority metrics with performance data
+```
+
+#### Model Updates
+- Document architectural decisions in ADR system
+- Update domain intelligence with new patterns
+- Enhance tool orchestration with learned behaviors
+- Improve quality gates based on effectiveness data
+- Refine PDCA processes based on outcomes
+
+This integration ensures Beast Mode Framework maintains systematic superiority through self-consistent application of its own methodology, providing concrete evidence of effectiveness over ad-hoc development approaches.
