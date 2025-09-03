@@ -1,0 +1,25 @@
+2025-09-02 20:41:19,599 - INFO - audit_logging_initialized: {"log_level": "INFO", "log_file": "beast_mode_security_audit.log", "log_rotation": true, "log_encryption": true}
+2025-09-02 20:41:19,599 - INFO - access_control_initialized: {"authentication_required": true, "api_key_rotation": true, "rate_limiting": true, "session_timeout_minutes": 30}
+2025-09-02 20:41:19,599 - INFO - data_encrypted: {"context": "configuration", "key_id": "fdf1d6936ed09c1d", "data_size": 39}
+2025-09-02 20:41:19,599 - INFO - data_decrypted: {"context": "configuration", "key_id": "fdf1d6936ed09c1d"}
+2025-09-02 20:41:19,599 - INFO - api_key_validated: {"client": "gke_hackathon", "access_level": "read_write", "required_access": "read_write"}
+2025-09-02 20:41:46,634 - INFO - audit_logging_initialized: {"log_level": "INFO", "log_file": "beast_mode_security_audit.log", "log_rotation": true, "log_encryption": true}
+2025-09-02 20:41:46,634 - INFO - access_control_initialized: {"authentication_required": true, "api_key_rotation": true, "rate_limiting": true, "session_timeout_minutes": 30}
+2025-09-02 20:41:46,634 - INFO - data_encrypted: {"context": "configuration", "key_id": "ae714a01aa27f614", "data_size": 39}
+2025-09-02 20:41:46,634 - INFO - data_decrypted: {"context": "configuration", "key_id": "ae714a01aa27f614"}
+2025-09-02 20:41:46,635 - INFO - api_key_validated: {"client": "gke_hackathon", "access_level": "read_write", "required_access": "read_write"}
+2025-09-02 20:41:46,635 - INFO - security_violation: {"timestamp": "2025-09-02T20:41:46.635028", "violation_type": "invalid_api_key_used", "description": "Unknown key", "severity": "high"}
+2025-09-02 20:41:46,635 - WARNING - SECURITY VIOLATION: invalid_api_key_used - Unknown key
+2025-09-02 20:41:46,635 - INFO - security_audit_completed: {"audit_id": "ded725b30f324d30", "compliance_score": 1.0, "compliance_status": "COMPLIANT", "vulnerabilities": 0, "critical_issues": 0}
+2025-09-02 21:31:13,504 - INFO - audit_logging_initialized: {"log_level": "INFO", "log_file": "beast_mode_security_audit.log", "log_rotation": true, "log_encryption": true}
+2025-09-02 21:31:13,505 - INFO - access_control_initialized: {"authentication_required": true, "api_key_rotation": true, "rate_limiting": true, "session_timeout_minutes": 30}
+2025-09-02 21:31:13,510 - INFO - audit_logging_initialized: {"log_level": "INFO", "log_file": "beast_mode_security_audit.log", "log_rotation": true, "log_encryption": true}
+2025-09-02 21:31:13,510 - INFO - audit_logging_initialized: {"log_level": "INFO", "log_file": "beast_mode_security_audit.log", "log_rotation": true, "log_encryption": true}
+2025-09-02 21:31:13,510 - INFO - access_control_initialized: {"authentication_required": true, "api_key_rotation": true, "rate_limiting": true, "session_timeout_minutes": 30}
+2025-09-02 21:31:13,510 - INFO - access_control_initialized: {"authentication_required": true, "api_key_rotation": true, "rate_limiting": true, "session_timeout_minutes": 30}
+2025-09-02 21:37:40,166 - INFO - audit_logging_initialized: {"log_level": "INFO", "log_file": "beast_mode_security_audit.log", "log_rotation": true, "log_encryption": true}
+2025-09-02 21:37:40,166 - INFO - access_control_initialized: {"authentication_required": true, "api_key_rotation": true, "rate_limiting": true, "session_timeout_minutes": 30}
+2025-09-02 21:37:40,169 - INFO - audit_logging_initialized: {"log_level": "INFO", "log_file": "beast_mode_security_audit.log", "log_rotation": true, "log_encryption": true}
+2025-09-02 21:37:40,169 - INFO - audit_logging_initialized: {"log_level": "INFO", "log_file": "beast_mode_security_audit.log", "log_rotation": true, "log_encryption": true}
+2025-09-02 21:37:40,170 - INFO - access_control_initialized: {"authentication_required": true, "api_key_rotation": true, "rate_limiting": true, "session_timeout_minutes": 30}
+2025-09-02 21:37:40,170 - INFO - access_control_initialized: {"authentication_required": true, "api_key_rotation": true, "rate_limiting": true, "session_timeout_minutes": 30}

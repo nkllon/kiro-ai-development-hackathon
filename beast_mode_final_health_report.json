@@ -1,0 +1,94 @@
+{
+  "system_overview": {
+    "uptime_percentage": 100.0,
+    "uptime_target_met": true,
+    "total_components": 4,
+    "healthy_components": 4,
+    "degraded_components": 0,
+    "active_alerts": 0
+  },
+  "uptime_metrics": {
+    "availability_percentage": 100.0,
+    "total_uptime_hours": 0.006949864166666667,
+    "downtime_events": 0,
+    "mttr_minutes": 0.0,
+    "mtbf_hours": 0.0
+  },
+  "component_health": {
+    "health_monitoring_system": {
+      "healthy": false,
+      "degraded": false,
+      "critical": true,
+      "status": {
+        "module_name": "health_monitoring_system",
+        "status": "degraded",
+        "uptime_percentage": 100.0,
+        "uptime_target": 99.9,
+        "registered_components": 4,
+        "degraded_components": 0,
+        "active_alerts": 0,
+        "monitoring_active": false,
+        "degradation_active": false
+      }
+    },
+    "baseline_metrics_engine": {
+      "healthy": true,
+      "degraded": false,
+      "critical": true,
+      "status": {
+        "module_name": "baseline_metrics_engine",
+        "status": "operational",
+        "measurement_categories": [
+          "problem_resolution_speed",
+          "tool_health_performance",
+          "decision_success_rates",
+          "development_velocity"
+        ],
+        "concurrent_measurements": 0,
+        "max_capacity": 1000,
+        "capacity_utilization": "0.0%",
+        "total_baseline_samples": 0,
+        "total_systematic_samples": 0,
+        "degradation_active": false
+      }
+    },
+    "makefile_health_manager": {
+      "healthy": true,
+      "degraded": false,
+      "critical": true,
+      "status": {
+        "module_name": "makefile_health_manager",
+        "status": "operational",
+        "diagnoses_performed": 0,
+        "repairs_completed": 0,
+        "workarounds_rejected": 0,
+        "repair_principles": {
+          "no_workarounds": true,
+          "root_cause_only": true,
+          "systematic_validation": true,
+          "prevention_patterns": true
+        },
+        "expected_modules": 8,
+        "degradation_active": false
+      }
+    },
+    "multi_perspective_validator": {
+      "healthy": true,
+      "degraded": false,
+      "critical": false,
+      "status": {
+        "module_name": "multi_perspective_validator",
+        "status": "operational",
+        "validations_performed": 0,
+        "current_validations": 0,
+        "confidence_thresholds": {
+          "high_confidence": 0.8,
+          "medium_confidence": 0.5,
+          "low_confidence": 0.5
+        },
+        "degradation_active": false
+      }
+    }
+  },
+  "recent_alerts": []
+}
