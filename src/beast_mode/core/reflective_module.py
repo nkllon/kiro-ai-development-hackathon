@@ -124,3 +124,87 @@ class ReflectiveModule(ABC):
             message=message,
             timestamp=time.time()
         )
+        
+    # RM DOCUMENTATION CONSTRAINT METHODS
+    
+    def get_documentation_compliance_status(self) -> Dict[str, Any]:
+        """
+        RM CONSTRAINT: Each RM MUST maintain its documentation via DocumentManagementRM
+        This method checks compliance with the documentation constraint
+        """
+        try:
+            # Import here to avoid circular dependency
+            from ..documentation.document_management_rm import DocumentManagementRM
+            
+            # Get or create DocumentManagementRM instance
+            doc_manager = DocumentManagementRM()
+            
+            # Check documentation compliance for this RM
+            compliance_status = doc_manager.enforce_rm_documentation_constraint(self.module_name)
+            
+            return {
+                "rm_name": self.module_name,
+                "documentation_compliant": compliance_status.get("compliant", False),
+                "compliance_details": compliance_status,
+                "constraint_enforced": True,
+                "documentation_manager": "DocumentManagementRM"
+            }
+            
+        except Exception as e:
+            return {
+                "rm_name": self.module_name,
+                "documentation_compliant": False,
+                "error": f"Documentation compliance check failed: {str(e)}",
+                "constraint_enforced": False,
+                "required_action": "Register RDI-compliant documentation with DocumentManagementRM"
+            }
+            
+    def register_rm_documentation(self, documents: List[Any]) -> Dict[str, Any]:
+        """
+        Register this RM's documentation with DocumentManagementRM
+        REQUIRED: All RMs must call this method to maintain documentation compliance
+        """
+        try:
+            # Import here to avoid circular dependency
+            from ..documentation.document_management_rm import DocumentManagementRM
+            
+            # Get or create DocumentManagementRM instance
+            doc_manager = DocumentManagementRM()
+            
+            # Register documentation
+            registration_result = doc_manager.register_rm_documentation(self.module_name, documents)
+            
+            self.logger.info(f"RM documentation registered with DocumentManagementRM: {self.module_name}")
+            
+            return registration_result
+            
+        except Exception as e:
+            self.logger.error(f"RM documentation registration failed: {str(e)}")
+            return {"error": f"Documentation registration failed: {str(e)}"}
+            
+    def create_rm_documentation_template(self, document_type: str, title: str) -> Dict[str, Any]:
+        """
+        Create RDI-compliant documentation template for this RM
+        """
+        try:
+            # Import here to avoid circular dependency
+            from ..documentation.document_management_rm import DocumentManagementRM, DocumentType
+            
+            # Get or create DocumentManagementRM instance
+            doc_manager = DocumentManagementRM()
+            
+            # Convert string to DocumentType enum
+            doc_type = DocumentType(document_type.lower())
+            
+            # Create template
+            template_result = doc_manager.create_rdi_document_template(
+                self.module_name, 
+                doc_type, 
+                title
+            )
+            
+            return template_result
+            
+        except Exception as e:
+            self.logger.error(f"Documentation template creation failed: {str(e)}")
+            return {"error": f"Template creation failed: {str(e)}"}
