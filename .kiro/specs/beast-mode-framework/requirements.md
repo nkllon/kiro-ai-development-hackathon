@@ -2,104 +2,102 @@
 
 ## Introduction
 
-The Beast Mode Framework is the core systematic development engine that powers the Kiro AI Development Hackathon project. It implements PDCA (Plan-Do-Check-Act) cycles with Root Cause Analysis (RCA), model-driven building using the project model registry, and Reflective Module (RM) principles. This framework serves as the foundation that enables systematic, high-percentage decision making over ad-hoc approaches, providing extended intelligence through proper tool usage and multi-perspective validation.
+The Beast Mode Framework transforms the Kiro AI Development Hackathon from a regular hackathon into a systematic domination engine. Unlike regular hackathons that rely on chaos and guesswork, Beast Mode uses systematic PDCA cycles, fixes broken tools instead of working around them, and makes model-driven decisions using the project registry's 165 requirements and 100 domains. The framework must provide concrete, measurable superiority over ad-hoc approaches and power other hackathons (GKE) through systematic services.
 
 ## Requirements
 
 ### Requirement 1
 
-**User Story:** As a developer using the Beast Mode framework, I want systematic PDCA cycle implementation with integrated RCA, so that I can make high-percentage decisions based on available intelligence rather than guessing.
+**User Story:** As a Beast Mode hackathon, I want to demonstrate systematic superiority over regular hackathons, so that I can prove Beast Mode methodology works through concrete, measurable results.
 
 #### Acceptance Criteria
 
-1. WHEN a development task is initiated THEN the system SHALL enforce the PDCA cycle (Plan-Do-Check-Act)
-2. WHEN the Check phase is executed THEN the system SHALL perform comprehensive Root Cause Analysis (RCA) for any failures or issues
-3. WHEN making architectural decisions THEN the system SHALL consult the project model registry as the single source of truth
-4. IF tools are broken or failing THEN the system SHALL fix the tools first rather than working around them
-5. WHEN complex decisions are required THEN the system SHALL use Ghostbusters multi-perspective validation
+1. WHEN my own Makefile is executed THEN it SHALL work without errors (proving I can fix my own tools)
+2. WHEN I encounter a broken tool THEN I SHALL fix it systematically rather than work around it
+3. WHEN I make development decisions THEN I SHALL use project model registry data, not guesswork
+4. WHEN GKE hackathon requests services THEN I SHALL provide working Beast Mode capabilities
+5. WHEN measuring my performance THEN I SHALL demonstrate measurable superiority over ad-hoc approaches
 
 ### Requirement 2
 
-**User Story:** As a developer, I want model-driven building capabilities using the project model registry, so that I can make decisions based on the 165 requirements and 100 domains rather than assumptions.
+**User Story:** As a Beast Mode framework, I want to execute actual PDCA cycles on real development tasks, so that I can prove systematic methodology works in practice, not just theory.
 
 #### Acceptance Criteria
 
-1. WHEN starting any work THEN the system SHALL load and consult project_model_registry.json first
-2. WHEN identifying domain requirements THEN the system SHALL use the model's domain configurations and tool mappings
-3. WHEN validating implementations THEN the system SHALL check against the model's requirements traceability
-4. IF domain-specific tools exist THEN the system SHALL use them instead of generic tools
-5. WHEN updating patterns THEN the system SHALL update the project model registry with new learnings
+1. WHEN I start a development task THEN I SHALL execute a complete Plan-Do-Check-Act cycle
+2. WHEN planning THEN I SHALL use project model registry to identify requirements and constraints
+3. WHEN doing THEN I SHALL implement with systematic approach, not ad-hoc coding
+4. WHEN checking THEN I SHALL validate against model requirements and perform RCA on any failures
+5. WHEN acting THEN I SHALL update the project model with successful patterns and lessons learned
 
 ### Requirement 3
 
-**User Story:** As a developer, I want all components to follow Reflective Module (RM) principles, so that I have operational visibility, self-monitoring, and proper architectural boundaries.
+**User Story:** As a Beast Mode framework, I want to fix broken tools systematically, so that I can demonstrate the "fix tools first" principle instead of working around problems.
 
 #### Acceptance Criteria
 
-1. WHEN creating any module THEN the system SHALL implement the RM interface (get_module_status, is_healthy, get_health_indicators)
-2. WHEN a module is operational THEN it SHALL provide self-monitoring and health reporting capabilities
-3. WHEN accessing module functionality THEN the system SHALL use external interfaces instead of implementation probing
-4. IF a module fails or degrades THEN it SHALL implement graceful degradation without killing the system
-5. WHEN modules interact THEN they SHALL maintain clear architectural boundaries with single responsibility
+1. WHEN I encounter a broken tool THEN I SHALL diagnose the root cause systematically
+2. WHEN diagnosing tool failures THEN I SHALL check installation integrity, dependencies, configuration, and version compatibility
+3. WHEN fixing tools THEN I SHALL repair the actual problem, not implement workarounds
+4. WHEN tools are fixed THEN I SHALL validate the fix works before proceeding
+5. WHEN tool fixes are successful THEN I SHALL document the pattern for future prevention
 
 ### Requirement 4
 
-**User Story:** As a developer, I want comprehensive validation in the Check phase, so that I can ensure model compliance, RM compliance, tool integration, and architectural boundaries are maintained.
+**User Story:** As a Beast Mode framework, I want to make model-driven decisions using the project registry, so that I can demonstrate intelligence-based choices instead of guesswork.
 
 #### Acceptance Criteria
 
-1. WHEN the Check phase executes THEN the system SHALL perform C1: Model Compliance Check against project model requirements
-2. WHEN validating modules THEN the system SHALL perform C2: RM Compliance Check for all Reflective Module interfaces
-3. WHEN checking tools THEN the system SHALL perform C3: Tool Integration Check to verify all domain tools are working
-4. WHEN validating architecture THEN the system SHALL perform C4: Architecture Boundaries Check for proper delegation and no direct file access
-5. WHEN assessing quality THEN the system SHALL perform C5: Performance & Quality Check for regressions and module size limits
-6. WHEN failures occur THEN the system SHALL perform C6: Root Cause Analysis Check with systematic analysis
-7. WHEN complex validation is needed THEN the system SHALL perform C7: Ghostbusters Multi-Perspective Validation
+1. WHEN making any development decision THEN I SHALL consult project_model_registry.json first
+2. WHEN the project registry contains relevant domain information THEN I SHALL use domain-specific requirements and tool mappings
+3. WHEN the project registry lacks information THEN I SHALL gather intelligence systematically, not guess
+4. WHEN decisions are made THEN I SHALL document the model-based reasoning
+5. WHEN successful patterns emerge THEN I SHALL update the project registry with new intelligence
 
 ### Requirement 5
 
-**User Story:** As a developer, I want systematic Root Cause Analysis capabilities, so that I can identify actual root causes rather than symptoms and implement proper prevention measures.
+**User Story:** As a Beast Mode framework, I want to provide systematic services to other hackathons (GKE), so that I can prove my value through concrete service delivery.
 
 #### Acceptance Criteria
 
-1. WHEN performing RCA THEN the system SHALL analyze symptoms, tool health, dependency chains, and configuration issues
-2. WHEN tool failures occur THEN the system SHALL check installation integrity, missing dependencies, configuration issues, and version compatibility
-3. WHEN identifying root causes THEN the system SHALL use the RCA pattern library for common failure types
-4. IF root causes are identified THEN the system SHALL generate recovery strategies and prevention measures
-5. WHEN RCA is complete THEN the system SHALL update the project model with new patterns and prevention measures
+1. WHEN GKE hackathon requests PDCA cycle services THEN I SHALL provide working systematic development workflow
+2. WHEN GKE hackathon needs model-driven building THEN I SHALL provide project registry consultation services
+3. WHEN GKE hackathon requires tool health management THEN I SHALL provide systematic tool fixing capabilities
+4. WHEN GKE hackathon needs quality assurance THEN I SHALL provide systematic validation services
+5. WHEN providing services THEN I SHALL demonstrate measurable improvement over ad-hoc approaches
 
 ### Requirement 6
 
-**User Story:** As a developer, I want integration with Ghostbusters multi-perspective analysis, so that I can get expert validation from Security, Code Quality, Test, and Build perspectives for complex decisions.
+**User Story:** As a Beast Mode framework, I want to implement Reflective Module (RM) principles in all components, so that I can provide operational visibility and self-monitoring capabilities.
 
 #### Acceptance Criteria
 
-1. WHEN facing complex architectural decisions THEN the system SHALL call Ghostbusters for multi-perspective analysis
-2. WHEN Ghostbusters analysis is performed THEN it SHALL emulate SecurityExpert, CodeQualityExpert, TestExpert, and BuildExpert perspectives
-3. WHEN multi-perspective results are available THEN the system SHALL combine them with model validation for high-percentage decisions
-4. IF future multi-agent system is implemented THEN the system SHALL support LangGraph/LangChain integration for true multi-agent orchestration
-5. WHEN using Ghostbusters THEN the system SHALL maintain clean separation between multi-perspective analysis (current) and multi-agent system (future)
+1. WHEN creating any Beast Mode component THEN it SHALL implement the RM interface (get_module_status, is_healthy, get_health_indicators)
+2. WHEN a component is operational THEN it SHALL report its health status accurately
+3. WHEN components fail or degrade THEN they SHALL degrade gracefully without killing the system
+4. WHEN external systems query component status THEN they SHALL get accurate operational information
+5. WHEN components interact THEN they SHALL maintain clear boundaries and single responsibility
 
 ### Requirement 7
 
-**User Story:** As a developer, I want proper tool usage hierarchy and decision framework, so that I can make high-percentage decisions with appropriate confidence levels.
+**User Story:** As a Beast Mode framework, I want to perform systematic Root Cause Analysis on failures, so that I can fix actual problems instead of treating symptoms.
 
 #### Acceptance Criteria
 
-1. WHEN making decisions with 80%+ confidence THEN the system SHALL use project model plus deterministic tools
-2. WHEN making decisions with 50-80% confidence THEN the system SHALL add Ghostbusters multi-perspective validation
-3. WHEN making decisions with <50% confidence THEN the system SHALL use full multi-perspective analysis plus model validation
-4. WHEN using tools THEN the system SHALL follow the hierarchy: Project Model Tools → Domain-Specific Tools → Ghostbusters → Multi-Agent → Manual Analysis
-5. IF manual analysis is required THEN the system SHALL provide full documentation of the decision process
+1. WHEN any failure occurs THEN I SHALL perform systematic RCA to identify the actual root cause
+2. WHEN performing RCA THEN I SHALL analyze symptoms, tool health, dependencies, configuration, and installation integrity
+3. WHEN root causes are identified THEN I SHALL implement systematic fixes, not workarounds
+4. WHEN fixes are implemented THEN I SHALL validate they address the root cause, not just symptoms
+5. WHEN RCA is complete THEN I SHALL document patterns to prevent similar failures in the future
 
 ### Requirement 8
 
-**User Story:** As a developer, I want continuous improvement capabilities, so that successful patterns are standardized and failures are systematically addressed for future prevention.
+**User Story:** As a Beast Mode framework, I want to demonstrate measurable superiority over regular hackathon approaches, so that I can prove Beast Mode methodology delivers concrete results.
 
 #### Acceptance Criteria
 
-1. WHEN implementation is successful THEN the system SHALL document the approach and update the project model with new patterns
-2. WHEN failures occur THEN the system SHALL perform systematic root cause analysis and implement prevention measures
-3. WHEN new patterns are discovered THEN the system SHALL create templates for similar future work
-4. IF tools need updates THEN the system SHALL update tool mappings in the project model
-5. WHEN improvements are made THEN the system SHALL validate no regressions are introduced and update documentation
+1. WHEN comparing my approach to ad-hoc methods THEN I SHALL demonstrate faster problem resolution through systematic approaches
+2. WHEN measuring my tool health management THEN I SHALL show fewer broken tools and faster fixes compared to workaround approaches
+3. WHEN evaluating my model-driven decisions THEN I SHALL demonstrate higher success rates compared to guesswork
+4. WHEN assessing my service delivery to GKE THEN I SHALL show measurable improvement in their development velocity
+5. WHEN documenting my results THEN I SHALL provide concrete metrics proving Beast Mode superiority over chaos-driven development
