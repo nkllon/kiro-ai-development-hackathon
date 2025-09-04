@@ -104,10 +104,9 @@ task-info:
 		python3 cli.py task-info $(TASK); \
 	fi
 
-# Run tests
+# Run tests (delegates to testing.mk for RCA integration)
 test:
-	@echo "🧪 Running tests..."
-	uv run python -m pytest tests/ -v
+	@$(MAKE) -f makefiles/testing.mk test
 
 # Task DAG Analysis (using standalone version)
 dag-analyze:

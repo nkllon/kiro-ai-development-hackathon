@@ -39,7 +39,7 @@
   - Write integration tests with real RCAEngine functionality
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 5.1, 5.2, 5.3, 5.4_
 
-- [-] 6. Implement Automatic RCA Triggering on Test Failures
+- [x] 6. Implement Automatic RCA Triggering on Test Failures
   - Modify existing test make targets in makefiles/testing.mk to optionally trigger RCA on failures
   - Add environment variable controls for RCA behavior (RCA_ON_FAILURE, RCA_TIMEOUT)
   - Implement failure detection hooks in pytest execution workflow
@@ -47,7 +47,7 @@
   - Write end-to-end tests for automatic RCA triggering
   - _Requirements: 1.1, 1.4, 3.1_
 
-- [ ] 7. Add Multi-Failure Analysis and Grouping
+- [x] 7. Add Multi-Failure Analysis and Grouping
   - Implement failure grouping logic to identify related test failures
   - Add prioritization system for analyzing most critical failures first
   - Create batch RCA analysis for processing multiple failures efficiently
@@ -55,7 +55,7 @@
   - Write unit tests for failure grouping and prioritization algorithms
   - _Requirements: 1.3, 5.1, 5.2, 5.3, 5.4_
 
-- [ ] 8. Create Performance Optimization and Timeout Handling
+- [-] 8. Create Performance Optimization and Timeout Handling
   - Implement 30-second timeout requirement for RCA analysis completion
   - Add performance monitoring and metrics collection for RCA operations
   - Create resource usage limits and memory management for RCA processes

@@ -1,5 +1,10 @@
 # Beast Mode Framework - Testing with RCA Integration
-.PHONY: test-unit test-integration test-coverage test-with-rca rca rca-task rca-report
+.PHONY: test-unit test-integration test-coverage test-with-rca test rca rca-task rca-report
+
+# Environment variable defaults for RCA behavior
+RCA_ON_FAILURE ?= true
+RCA_TIMEOUT ?= 30
+RCA_VERBOSE ?= false
 
 test-unit:
 	@echo "$(YELLOW)Running unit tests...$(RESET)"
@@ -13,17 +18,35 @@ test-coverage:
 	@echo "$(YELLOW)Checking test coverage...$(RESET)"
 	@python3 -c "print('Coverage: >90% target')"
 
+# Enhanced test target with optional RCA integration
+test:
+	@echo "$(YELLOW)Running tests with optional RCA integration...$(RESET)"
+	@echo "🧪 Beast Mode Test Execution (RCA_ON_FAILURE=$(RCA_ON_FAILURE))"
+	@if [ "$(RCA_ON_FAILURE)" = "true" ]; then \
+		echo "🔍 RCA integration enabled - will analyze failures automatically"; \
+		if python3 -m pytest tests/ -v --tb=short --tb=line; then \
+			echo "$(GREEN)✅ All tests passed - no RCA needed$(RESET)"; \
+		else \
+			echo "$(RED)❌ Tests failed - triggering automatic RCA analysis...$(RESET)"; \
+			echo "⏱️  RCA timeout: $(RCA_TIMEOUT) seconds"; \
+			RCA_TIMEOUT=$(RCA_TIMEOUT) RCA_VERBOSE=$(RCA_VERBOSE) python3 scripts/rca_cli.py test-rca; \
+		fi; \
+	else \
+		echo "🧪 Standard test execution (RCA disabled)"; \
+		python3 -m pytest tests/ -v --tb=short; \
+	fi
+
 # RCA-Enhanced Testing Targets
 
 test-with-rca:
 	@echo "$(YELLOW)Running tests with automatic RCA on failures...$(RESET)"
 	@echo "🧪 Executing test suite with RCA integration..."
-	@if python3 -m pytest tests/ -v --tb=short; then \
+	@if python3 -m pytest tests/ -v --tb=short --tb=line; then \
 		echo "$(GREEN)✅ All tests passed - no RCA needed$(RESET)"; \
 	else \
 		echo "$(RED)❌ Tests failed - triggering automatic RCA analysis...$(RESET)"; \
 		echo "🔍 Analyzing test failures with Beast Mode RCA engine..."; \
-		python3 scripts/rca_cli.py test-rca; \
+		RCA_TIMEOUT=$(RCA_TIMEOUT) RCA_VERBOSE=$(RCA_VERBOSE) python3 scripts/rca_cli.py test-rca; \
 	fi
 
 rca:

@@ -306,6 +306,294 @@ def rm_compliance():
     else:
         click.echo("❌ RM compliance needs improvement")
 
+@cli.command()
+@click.option('--output', '-o', help='Output file for audit results')
+@click.option('--format', 'output_format', default='json', type=click.Choice(['json', 'yaml', 'text']), 
+              help='Output format')
+@click.option('--spec', help='Audit specific spec (otherwise audits all specs)')
+def requirements_audit(output, output_format, spec):
+    """🔍 Perform requirements consistency audit across specs"""
+    click.echo("🔍 REQUIREMENTS CONSISTENCY AUDIT")
+    click.echo("=" * 50)
+    
+    from pathlib import Path
+    import re
+    import glob
+    
+    # Discover all spec directories
+    specs_dir = Path('.kiro/specs')
+    if not specs_dir.exists():
+        click.echo("❌ No .kiro/specs directory found")
+        return
+    
+    spec_dirs = [d for d in specs_dir.iterdir() if d.is_dir()]
+    if spec:
+        spec_dirs = [d for d in spec_dirs if d.name == spec]
+        if not spec_dirs:
+            click.echo(f"❌ Spec '{spec}' not found")
+            return
+    
+    click.echo(f"📋 Found {len(spec_dirs)} specs to audit")
+    
+    audit_results = {
+        "timestamp": datetime.now().isoformat(),
+        "total_specs": len(spec_dirs),
+        "specs_audited": [],
+        "requirement_busts": [],
+        "consistency_issues": [],
+        "summary": {}
+    }
+    
+    all_requirements = {}  # requirement_id -> [spec_name, ...]
+    requirement_definitions = {}  # requirement_id -> definition
+    
+    for spec_dir in spec_dirs:
+        click.echo(f"\n🔍 Auditing spec: {spec_dir.name}")
+        
+        spec_audit = audit_spec_requirements(spec_dir)
+        audit_results["specs_audited"].append(spec_audit)
+        
+        # Collect requirements for cross-spec consistency check
+        for req_id in spec_audit.get("requirements_found", []):
+            if req_id not in all_requirements:
+                all_requirements[req_id] = []
+            all_requirements[req_id].append(spec_dir.name)
+    
+    # Check for requirement busts and inconsistencies
+    click.echo(f"\n🔍 Analyzing cross-spec consistency...")
+    
+    # Find orphaned requirements (referenced but not defined)
+    orphaned_reqs = []
+    duplicate_reqs = []
+    
+    for req_id, specs in all_requirements.items():
+        if len(specs) > 1:
+            # Check if it's the same definition across specs
+            definitions = []
+            for spec_name in specs:
+                spec_data = next((s for s in audit_results["specs_audited"] if s["spec_name"] == spec_name), None)
+                if spec_data and req_id in spec_data.get("requirement_details", {}):
+                    definitions.append(spec_data["requirement_details"][req_id])
+            
+            if len(set(definitions)) > 1:
+                duplicate_reqs.append({
+                    "requirement_id": req_id,
+                    "specs": specs,
+                    "definitions": definitions
+                })
+    
+    # Find missing requirements (tasks reference requirements that don't exist)
+    missing_reqs = find_missing_requirements(spec_dirs)
+    
+    # Compile results
+    audit_results["requirement_busts"] = missing_reqs
+    audit_results["consistency_issues"] = duplicate_reqs
+    audit_results["summary"] = {
+        "total_requirements": len(all_requirements),
+        "orphaned_requirements": len(orphaned_reqs),
+        "duplicate_requirements": len(duplicate_reqs),
+        "missing_requirements": len(missing_reqs)
+    }
+    
+    # Calculate consistency score after summary is populated
+    audit_results["summary"]["consistency_score"] = calculate_consistency_score(audit_results)
+    
+    # Display results
+    display_audit_results(audit_results)
+    
+    # Save results
+    output_file = output or f"requirements-audit-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
+    save_audit_results(audit_results, output_file, output_format)
+    
+    click.echo(f"\n💾 Audit results saved to: {output_file}")
+
+def audit_spec_requirements(spec_dir):
+    """Audit requirements in a single spec directory"""
+    import re
+    
+    spec_audit = {
+        "spec_name": spec_dir.name,
+        "files_found": [],
+        "requirements_found": [],
+        "requirement_details": {},
+        "issues": []
+    }
+    
+    # Look for common spec files
+    spec_files = []
+    for pattern in ['*.md', 'tasks.md', 'design.md', 'requirements.md']:
+        spec_files.extend(spec_dir.glob(pattern))
+    
+    spec_audit["files_found"] = [f.name for f in spec_files]
+    
+    # Parse requirements from files
+    requirement_pattern = re.compile(r'(?:_Requirements:|Requirements:)\s*([^_\n]+)', re.IGNORECASE)
+    requirement_ref_pattern = re.compile(r'\b([A-Z]+[-.]?\d+(?:\.\d+)*)\b')
+    
+    for file_path in spec_files:
+        try:
+            content = file_path.read_text()
+            
+            # Find requirement definitions
+            for match in requirement_pattern.finditer(content):
+                req_text = match.group(1).strip()
+                # Extract individual requirement IDs
+                req_ids = requirement_ref_pattern.findall(req_text)
+                for req_id in req_ids:
+                    if req_id not in spec_audit["requirements_found"]:
+                        spec_audit["requirements_found"].append(req_id)
+                        spec_audit["requirement_details"][req_id] = req_text
+            
+            # Find requirement references in task descriptions
+            task_pattern = re.compile(r'- \[.\] .+?_Requirements: ([^_\n]+)', re.MULTILINE | re.DOTALL)
+            for match in task_pattern.finditer(content):
+                req_text = match.group(1).strip()
+                req_ids = requirement_ref_pattern.findall(req_text)
+                for req_id in req_ids:
+                    if req_id not in spec_audit["requirements_found"]:
+                        spec_audit["requirements_found"].append(req_id)
+                        spec_audit["requirement_details"][req_id] = f"Referenced in task: {req_text}"
+                        
+        except Exception as e:
+            spec_audit["issues"].append(f"Error reading {file_path.name}: {str(e)}")
+    
+    return spec_audit
+
+def find_missing_requirements(spec_dirs):
+    """Find requirements that are referenced but not defined"""
+    import re
+    
+    missing_reqs = []
+    all_defined_reqs = set()
+    all_referenced_reqs = set()
+    
+    requirement_ref_pattern = re.compile(r'\b([A-Z]+[-.]?\d+(?:\.\d+)*)\b')
+    
+    for spec_dir in spec_dirs:
+        spec_files = list(spec_dir.glob('*.md'))
+        
+        for file_path in spec_files:
+            try:
+                content = file_path.read_text()
+                
+                # Find all requirement references
+                refs = requirement_ref_pattern.findall(content)
+                all_referenced_reqs.update(refs)
+                
+                # Check if this file defines requirements (has Requirements: sections)
+                if 'Requirements:' in content or '_Requirements:' in content:
+                    all_defined_reqs.update(refs)
+                    
+            except Exception:
+                continue
+    
+    # Find requirements that are referenced but not defined
+    for req_id in all_referenced_reqs:
+        if req_id not in all_defined_reqs:
+            # Check if it looks like a real requirement ID (not just a random match)
+            if re.match(r'^[A-Z]{1,3}[-.]?\d+(?:\.\d+)*$', req_id):
+                missing_reqs.append({
+                    "requirement_id": req_id,
+                    "status": "referenced_but_not_defined"
+                })
+    
+    return missing_reqs
+
+def calculate_consistency_score(audit_results):
+    """Calculate overall consistency score"""
+    total_issues = (
+        len(audit_results["requirement_busts"]) +
+        len(audit_results["consistency_issues"])
+    )
+    
+    total_requirements = audit_results["summary"]["total_requirements"]
+    
+    if total_requirements == 0:
+        return 0.0
+    
+    # Score based on issue ratio
+    issue_ratio = total_issues / total_requirements
+    consistency_score = max(0.0, 1.0 - issue_ratio)
+    
+    return round(consistency_score, 3)
+
+def display_audit_results(audit_results):
+    """Display audit results in console"""
+    summary = audit_results["summary"]
+    
+    click.echo(f"\n📊 AUDIT SUMMARY")
+    click.echo("-" * 30)
+    click.echo(f"Total Requirements: {summary['total_requirements']}")
+    click.echo(f"Missing Requirements: {summary['missing_requirements']}")
+    click.echo(f"Duplicate Requirements: {summary['duplicate_requirements']}")
+    click.echo(f"Consistency Score: {summary['consistency_score']}")
+    
+    # Show requirement busts
+    if audit_results["requirement_busts"]:
+        click.echo(f"\n❌ REQUIREMENT BUSTS ({len(audit_results['requirement_busts'])})")
+        click.echo("-" * 30)
+        for bust in audit_results["requirement_busts"][:10]:  # Show first 10
+            click.echo(f"  • {bust['requirement_id']}: {bust['status']}")
+        
+        if len(audit_results["requirement_busts"]) > 10:
+            click.echo(f"  ... and {len(audit_results['requirement_busts']) - 10} more")
+    
+    # Show consistency issues
+    if audit_results["consistency_issues"]:
+        click.echo(f"\n⚠️  CONSISTENCY ISSUES ({len(audit_results['consistency_issues'])})")
+        click.echo("-" * 30)
+        for issue in audit_results["consistency_issues"][:5]:  # Show first 5
+            click.echo(f"  • {issue['requirement_id']} appears in: {', '.join(issue['specs'])}")
+        
+        if len(audit_results["consistency_issues"]) > 5:
+            click.echo(f"  ... and {len(audit_results['consistency_issues']) - 5} more")
+    
+    # Overall assessment
+    score = summary['consistency_score']
+    if score >= 0.9:
+        click.echo(f"\n✅ Requirements consistency: EXCELLENT ({score})")
+    elif score >= 0.7:
+        click.echo(f"\n⚠️  Requirements consistency: GOOD ({score})")
+    elif score >= 0.5:
+        click.echo(f"\n⚠️  Requirements consistency: NEEDS IMPROVEMENT ({score})")
+    else:
+        click.echo(f"\n❌ Requirements consistency: POOR ({score})")
+
+def save_audit_results(audit_results, output_file, output_format):
+    """Save audit results to file"""
+    output_path = Path(output_file)
+    
+    if output_format == 'json':
+        with open(output_path, 'w') as f:
+            json.dump(audit_results, f, indent=2)
+    elif output_format == 'yaml':
+        import yaml
+        with open(output_path, 'w') as f:
+            yaml.dump(audit_results, f, default_flow_style=False)
+    else:  # text
+        with open(output_path, 'w') as f:
+            f.write("Requirements Consistency Audit Report\n")
+            f.write("=" * 50 + "\n\n")
+            
+            summary = audit_results["summary"]
+            f.write(f"Audit Summary:\n")
+            f.write(f"  Total Requirements: {summary['total_requirements']}\n")
+            f.write(f"  Missing Requirements: {summary['missing_requirements']}\n")
+            f.write(f"  Duplicate Requirements: {summary['duplicate_requirements']}\n")
+            f.write(f"  Consistency Score: {summary['consistency_score']}\n\n")
+            
+            if audit_results["requirement_busts"]:
+                f.write("Requirement Busts:\n")
+                for bust in audit_results["requirement_busts"]:
+                    f.write(f"  - {bust['requirement_id']}: {bust['status']}\n")
+                f.write("\n")
+            
+            if audit_results["consistency_issues"]:
+                f.write("Consistency Issues:\n")
+                for issue in audit_results["consistency_issues"]:
+                    f.write(f"  - {issue['requirement_id']} appears in: {', '.join(issue['specs'])}\n")
+                f.write("\n")
+
 def simulate_task_execution(engine):
     """Simulate task execution for demonstration purposes"""
     import time

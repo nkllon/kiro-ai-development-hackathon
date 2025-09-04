@@ -382,6 +382,24 @@ class RCAReportGenerator(ReflectiveModule):
             self.logger.error(f"Markdown report generation failed: {e}")
             return f"# Markdown Report Generation Error\n\nError: {e}"
             
+    def display_console_report(self, rca_report: TestRCAReportData, use_colors: bool = True) -> None:
+        """
+        Display RCA report directly to console with formatting
+        Requirements: 2.3 - Console output formatting with clear sections
+        """
+        try:
+            console_output = self.format_for_console(rca_report, use_colors)
+            print(console_output)
+            
+        except Exception as e:
+            self.logger.error(f"Console display failed: {e}")
+            print(f"❌ Console display error: {e}")
+            print("📋 Basic report information:")
+            print(f"   • Total failures: {rca_report.total_failures}")
+            print(f"   • Failures analyzed: {rca_report.failures_analyzed}")
+            print(f"   • Systematic fixes: {rca_report.summary.systematic_fixes_available}")
+            print(f"   • Confidence: {rca_report.summary.confidence_score:.1%}")
+            
     # Private helper methods for section generation
     
     def _generate_section(

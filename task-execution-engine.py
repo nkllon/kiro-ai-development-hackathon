@@ -11,7 +11,7 @@ import uuid
 import sys
 import time
 from pathlib import Path
-from typing import Dict, List, Set, Optional, Callable
+from typing import Dict, List, Set, Optional, Callable, Any
 from dataclasses import dataclass, field
 from enum import Enum
 from datetime import datetime
@@ -678,49 +678,31 @@ class TaskExecutionEngine(ReflectiveModule):
         elif self.auto_revert_on_failure and not execution_successful:
             self._revert_session_changes()
             git_status = "reverted"
-            else:
-                git_status = "branch_preserved"
+        else:
+            git_status = "branch_preserved"
             
-            summary = {
-                "execution_start": execution_start.isoformat(),
-                "execution_end": execution_end.isoformat(),
-                "total_duration_seconds": total_duration,
-                "iterations": iteration,
-                "total_tasks": len(self.tasks),
-                "completed_tasks": len(self.completed_tasks),
-                "failed_tasks": len(self.failed_tasks),
-                "in_progress_tasks": len([t for t in self.tasks.values() if t.status == TaskStatus.IN_PROGRESS]),
-                "not_started_tasks": len([t for t in self.tasks.values() if t.status == TaskStatus.NOT_STARTED]),
-                "completion_rate": success_rate,
-                "execution_successful": execution_successful,
-                "git_session": {
-                    "branch_name": self.git_session.branch_name if self.git_session else None,
-                    "original_branch": self.git_session.original_branch if self.git_session else None,
-                    "status": git_status,
-                    "changes_made": self.git_session.changes_made if self.git_session else False
-                },
-                "execution_log": self.execution_log
-            }
-            
-            return summary
-            
-        except Exception as e:
-            self.logger.error(f"Task execution failed: {e}")
-            
-            # Revert changes on exception
-            if self.auto_revert_on_failure:
-                self._revert_session_changes()
-            
-            return {
-                "error": str(e),
-                "execution_start": execution_start.isoformat(),
-                "execution_end": datetime.now().isoformat(),
-                "success": False,
-                "git_session": {
-                    "branch_name": self.git_session.branch_name if self.git_session else None,
-                    "status": "reverted_due_to_error"
-                }
-            }
+        summary = {
+            "execution_start": execution_start.isoformat(),
+            "execution_end": execution_end.isoformat(),
+            "total_duration_seconds": total_duration,
+            "iterations": iteration,
+            "total_tasks": len(self.tasks),
+            "completed_tasks": len(self.completed_tasks),
+            "failed_tasks": len(self.failed_tasks),
+            "in_progress_tasks": len([t for t in self.tasks.values() if t.status == TaskStatus.IN_PROGRESS]),
+            "not_started_tasks": len([t for t in self.tasks.values() if t.status == TaskStatus.NOT_STARTED]),
+            "completion_rate": success_rate,
+            "execution_successful": execution_successful,
+            "git_session": {
+                "branch_name": self.git_session.branch_name if self.git_session else None,
+                "original_branch": self.git_session.original_branch if self.git_session else None,
+                "status": git_status,
+                "changes_made": self.git_session.changes_made if self.git_session else False
+            },
+            "execution_log": self.execution_log
+        }
+        
+        return summary
     
     def _find_best_agent(self, task: Task, available_agents: List[Agent]) -> Optional[Agent]:
         """Find the best agent for a task based on capabilities"""

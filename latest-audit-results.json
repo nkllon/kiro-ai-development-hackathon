@@ -1,0 +1,659 @@
+{
+  "timestamp": "2025-09-04T15:57:36.456048",
+  "total_specs": 12,
+  "specs_audited": [
+    {
+      "spec_name": "rdi-rm-compliance-check",
+      "files_found": [
+        "requirements.md",
+        "tasks.md",
+        "design.md",
+        "tasks.md",
+        "design.md",
+        "requirements.md"
+      ],
+      "requirements_found": [],
+      "requirement_details": {},
+      "issues": []
+    },
+    {
+      "spec_name": "test-rca-issues-resolution",
+      "files_found": [
+        "requirements.md",
+        "tasks.md",
+        "TASK_DAG_USAGE.md",
+        "design.md",
+        "tasks.md",
+        "design.md",
+        "requirements.md"
+      ],
+      "requirements_found": [],
+      "requirement_details": {},
+      "issues": []
+    },
+    {
+      "spec_name": "test-rca-integration",
+      "files_found": [
+        "requirements.md",
+        "tasks.md",
+        "design.md",
+        "tasks.md",
+        "design.md",
+        "requirements.md"
+      ],
+      "requirements_found": [],
+      "requirement_details": {},
+      "issues": []
+    },
+    {
+      "spec_name": "rdi-rm-validation-system",
+      "files_found": [
+        "requirements.md",
+        "requirements.md"
+      ],
+      "requirements_found": [],
+      "requirement_details": {},
+      "issues": []
+    },
+    {
+      "spec_name": "domain-index-model-system",
+      "files_found": [
+        "requirements.md",
+        "tasks.md",
+        "task-dag-analysis.md",
+        "design.md",
+        "tasks.md",
+        "design.md",
+        "requirements.md"
+      ],
+      "requirements_found": [],
+      "requirement_details": {},
+      "issues": []
+    },
+    {
+      "spec_name": "openflow-backlog-management",
+      "files_found": [
+        "requirements.md",
+        "tasks.md",
+        "design.md",
+        "tasks.md",
+        "design.md",
+        "requirements.md"
+      ],
+      "requirements_found": [
+        "DR-3.2",
+        "DR-1.1",
+        "DR-1.3",
+        "DR-1.5",
+        "DR-2.1",
+        "DR-4.1",
+        "DR-4.4",
+        "DR-5.1",
+        "DR-5.2",
+        "DR-5.6",
+        "DR-4.2",
+        "DR-4.3",
+        "DR-2.2",
+        "DR-2.4",
+        "DR-2.5",
+        "DR-4.5",
+        "DR-5.3",
+        "DR-1.4",
+        "DR-2.3",
+        "DR-5.4",
+        "DR-5.5"
+      ],
+      "requirement_details": {
+        "DR-3.2": "1.2, 7.1, DR-3.2",
+        "DR-1.1": "1.1, DR-1.1, DR-1.3, DR-1.5",
+        "DR-1.3": "1.1, DR-1.1, DR-1.3, DR-1.5",
+        "DR-1.5": "1.1, DR-1.1, DR-1.3, DR-1.5",
+        "DR-2.1": "1.2, 1.4, 2.1, 2.4, DR-2.1",
+        "DR-4.1": "DR-4.1, DR-4.4, DR-5.1, DR-5.2, DR-5.6",
+        "DR-4.4": "DR-4.1, DR-4.4, DR-5.1, DR-5.2, DR-5.6",
+        "DR-5.1": "DR-4.1, DR-4.4, DR-5.1, DR-5.2, DR-5.6",
+        "DR-5.2": "DR-4.1, DR-4.4, DR-5.1, DR-5.2, DR-5.6",
+        "DR-5.6": "DR-4.1, DR-4.4, DR-5.1, DR-5.2, DR-5.6",
+        "DR-4.2": "1.4, 3.2, 3.5, DR-4.2, DR-4.3",
+        "DR-4.3": "1.4, 3.2, 3.5, DR-4.2, DR-4.3",
+        "DR-2.2": "DR-2.1, DR-2.2, DR-2.4, DR-2.5",
+        "DR-2.4": "DR-2.1, DR-2.2, DR-2.4, DR-2.5",
+        "DR-2.5": "DR-2.1, DR-2.2, DR-2.4, DR-2.5",
+        "DR-4.5": "4.1, 4.3, DR-4.5, DR-5.3",
+        "DR-5.3": "4.1, 4.3, DR-4.5, DR-5.3",
+        "DR-1.4": "8.3, DR-1.4, DR-2.3",
+        "DR-2.3": "8.3, DR-1.4, DR-2.3",
+        "DR-5.4": "DR-5.3, DR-5.4, DR-5.5",
+        "DR-5.5": "DR-5.3, DR-5.4, DR-5.5"
+      },
+      "issues": []
+    },
+    {
+      "spec_name": "ghostbusters-cli-integration",
+      "files_found": [
+        "requirements.md",
+        "tasks.md",
+        "design.md",
+        "tasks.md",
+        "design.md",
+        "requirements.md"
+      ],
+      "requirements_found": [],
+      "requirement_details": {},
+      "issues": []
+    },
+    {
+      "spec_name": "test-infrastructure-repair",
+      "files_found": [
+        "requirements.md",
+        "tasks.md",
+        "design.md",
+        "tasks.md",
+        "design.md",
+        "requirements.md"
+      ],
+      "requirements_found": [],
+      "requirement_details": {},
+      "issues": []
+    },
+    {
+      "spec_name": "kiro-hot-swap-architecture",
+      "files_found": [
+        "requirements.md",
+        "tasks.md",
+        "design.md",
+        "tasks.md",
+        "design.md",
+        "requirements.md"
+      ],
+      "requirements_found": [],
+      "requirement_details": {},
+      "issues": []
+    },
+    {
+      "spec_name": "cli-implementation-standards",
+      "files_found": [
+        "requirements.md",
+        "requirements.md"
+      ],
+      "requirements_found": [],
+      "requirement_details": {},
+      "issues": []
+    },
+    {
+      "spec_name": "beast-mode-framework",
+      "files_found": [
+        "requirements.md",
+        "task15-pdca-plan.md",
+        "use-case-analysis.md",
+        "vocabulary.md",
+        "tasks.md",
+        "task1-pdca-plan.md",
+        "task-dag-analysis.md",
+        "design.md",
+        "tasks.md",
+        "design.md",
+        "requirements.md"
+      ],
+      "requirements_found": [
+        "R8.1",
+        "R8.2",
+        "R8.3",
+        "R8.4",
+        "R8.5",
+        "DR1",
+        "C-07",
+        "R1.1",
+        "R1.2",
+        "R1.5",
+        "R3.1",
+        "R3.2",
+        "R3.3",
+        "R3.4",
+        "R3.5",
+        "C-03",
+        "R6.1",
+        "R6.2",
+        "R6.3",
+        "R6.4",
+        "R6.5",
+        "DR2",
+        "C-01",
+        "C-06",
+        "R5.1",
+        "R5.2",
+        "R5.3",
+        "R5.4",
+        "R5.5",
+        "DR7",
+        "C-05",
+        "C-08",
+        "DR4",
+        "C-10",
+        "R4.1",
+        "R4.2",
+        "R4.3",
+        "R4.4",
+        "R4.5",
+        "C-02",
+        "R2.1",
+        "R2.2",
+        "R2.3",
+        "R2.4",
+        "R2.5",
+        "DR8",
+        "C-09",
+        "R7.1",
+        "R7.2",
+        "R7.3",
+        "R7.4",
+        "R7.5",
+        "DR3",
+        "DR6",
+        "DR5",
+        "UC-25"
+      ],
+      "requirement_details": {
+        "R8.1": "R8.1, R8.2, R8.3, R8.4, R8.5, DR1 (Performance), Constraint C-07",
+        "R8.2": "R8.1, R8.2, R8.3, R8.4, R8.5, DR1 (Performance), Constraint C-07",
+        "R8.3": "R8.1, R8.2, R8.3, R8.4, R8.5, DR1 (Performance), Constraint C-07",
+        "R8.4": "R8.1, R8.2, R8.3, R8.4, R8.5, DR1 (Performance), Constraint C-07",
+        "R8.5": "R8.1, R8.2, R8.3, R8.4, R8.5, DR1 (Performance), Constraint C-07",
+        "DR1": "R8.1, R8.2, R8.3, R8.4, R8.5, DR1 (Performance), Constraint C-07",
+        "C-07": "R8.1, R8.2, R8.3, R8.4, R8.5, DR1 (Performance), Constraint C-07",
+        "R1.1": "R1.1, R1.2, R1.5, R3.1, R3.2, R3.3, R3.4, R3.5, Constraint C-03",
+        "R1.2": "R1.1, R1.2, R1.5, R3.1, R3.2, R3.3, R3.4, R3.5, Constraint C-03",
+        "R1.5": "R1.1, R1.2, R1.5, R3.1, R3.2, R3.3, R3.4, R3.5, Constraint C-03",
+        "R3.1": "R1.1, R1.2, R1.5, R3.1, R3.2, R3.3, R3.4, R3.5, Constraint C-03",
+        "R3.2": "R1.1, R1.2, R1.5, R3.1, R3.2, R3.3, R3.4, R3.5, Constraint C-03",
+        "R3.3": "R1.1, R1.2, R1.5, R3.1, R3.2, R3.3, R3.4, R3.5, Constraint C-03",
+        "R3.4": "R1.1, R1.2, R1.5, R3.1, R3.2, R3.3, R3.4, R3.5, Constraint C-03",
+        "R3.5": "R1.1, R1.2, R1.5, R3.1, R3.2, R3.3, R3.4, R3.5, Constraint C-03",
+        "C-03": "R1.1, R1.2, R1.5, R3.1, R3.2, R3.3, R3.4, R3.5, Constraint C-03",
+        "R6.1": "R6.1, R6.2, R6.3, R6.4, R6.5, DR2 (Reliability), Constraints C-01, C-06",
+        "R6.2": "R6.1, R6.2, R6.3, R6.4, R6.5, DR2 (Reliability), Constraints C-01, C-06",
+        "R6.3": "R6.1, R6.2, R6.3, R6.4, R6.5, DR2 (Reliability), Constraints C-01, C-06",
+        "R6.4": "R6.1, R6.2, R6.3, R6.4, R6.5, DR2 (Reliability), Constraints C-01, C-06",
+        "R6.5": "R6.1, R6.2, R6.3, R6.4, R6.5, DR2 (Reliability), Constraints C-01, C-06",
+        "DR2": "R6.1, R6.2, R6.3, R6.4, R6.5, DR2 (Reliability), Constraints C-01, C-06",
+        "C-01": "R6.1, R6.2, R6.3, R6.4, R6.5, DR2 (Reliability), Constraints C-01, C-06",
+        "C-06": "R6.1, R6.2, R6.3, R6.4, R6.5, DR2 (Reliability), Constraints C-01, C-06",
+        "R5.1": "R5.1, R5.2, R5.3, R5.4, R5.5, DR1 (Performance), DR7 (Usability), Constraints C-05, C-08",
+        "R5.2": "R5.1, R5.2, R5.3, R5.4, R5.5, DR1 (Performance), DR7 (Usability), Constraints C-05, C-08",
+        "R5.3": "R5.1, R5.2, R5.3, R5.4, R5.5, DR1 (Performance), DR7 (Usability), Constraints C-05, C-08",
+        "R5.4": "R5.1, R5.2, R5.3, R5.4, R5.5, DR1 (Performance), DR7 (Usability), Constraints C-05, C-08",
+        "R5.5": "R5.1, R5.2, R5.3, R5.4, R5.5, DR1 (Performance), DR7 (Usability), Constraints C-05, C-08",
+        "DR7": "R5.1, R5.2, R5.3, R5.4, R5.5, DR1 (Performance), DR7 (Usability), Constraints C-05, C-08",
+        "C-05": "R5.1, R5.2, R5.3, R5.4, R5.5, DR1 (Performance), DR7 (Usability), Constraints C-05, C-08",
+        "C-08": "R5.1, R5.2, R5.3, R5.4, R5.5, DR1 (Performance), DR7 (Usability), Constraints C-05, C-08",
+        "DR4": "DR4 (Security), Constraint C-10",
+        "C-10": "DR4 (Security), Constraint C-10",
+        "R4.1": "R4.1, R4.2, R4.3, R4.4, R4.5, DR1 (Performance), Constraint C-02",
+        "R4.2": "R4.1, R4.2, R4.3, R4.4, R4.5, DR1 (Performance), Constraint C-02",
+        "R4.3": "R4.1, R4.2, R4.3, R4.4, R4.5, DR1 (Performance), Constraint C-02",
+        "R4.4": "R4.1, R4.2, R4.3, R4.4, R4.5, DR1 (Performance), Constraint C-02",
+        "R4.5": "R4.1, R4.2, R4.3, R4.4, R4.5, DR1 (Performance), Constraint C-02",
+        "C-02": "R4.1, R4.2, R4.3, R4.4, R4.5, DR1 (Performance), Constraint C-02",
+        "R2.1": "R2.1, R2.2, R2.3, R2.4, R2.5",
+        "R2.2": "R2.1, R2.2, R2.3, R2.4, R2.5",
+        "R2.3": "R2.1, R2.2, R2.3, R2.4, R2.5",
+        "R2.4": "R2.1, R2.2, R2.3, R2.4, R2.5",
+        "R2.5": "R2.1, R2.2, R2.3, R2.4, R2.5",
+        "DR8": "DR8 (Compliance), >90% coverage, Constraint C-09",
+        "C-09": "DR8 (Compliance), >90% coverage, Constraint C-09",
+        "R7.1": "R7.1, R7.2, R7.3, R7.4, R7.5, DR3 (Scalability)",
+        "R7.2": "R7.1, R7.2, R7.3, R7.4, R7.5, DR3 (Scalability)",
+        "R7.3": "R7.1, R7.2, R7.3, R7.4, R7.5, DR3 (Scalability)",
+        "R7.4": "R7.1, R7.2, R7.3, R7.4, R7.5, DR3 (Scalability)",
+        "R7.5": "R7.1, R7.2, R7.3, R7.4, R7.5, DR3 (Scalability)",
+        "DR3": "R7.1, R7.2, R7.3, R7.4, R7.5, DR3 (Scalability)",
+        "DR6": "DR6 (Observability), Unknown demand profile handling",
+        "DR5": "DR5 (Maintainability), DR6 (Observability), DR8 (Compliance)",
+        "UC-25": "Integration with existing infrastructure, UC-25 self-consistency, R1.1"
+      },
+      "issues": []
+    },
+    {
+      "spec_name": "rm-rdi-analysis-system",
+      "files_found": [
+        "requirements.md",
+        "tasks.md",
+        "pdca-plan.md",
+        "design.md",
+        "operator-safety.md",
+        "tasks.md",
+        "design.md",
+        "requirements.md"
+      ],
+      "requirements_found": [],
+      "requirement_details": {},
+      "issues": []
+    }
+  ],
+  "requirement_busts": [
+    {
+      "requirement_id": "R10.1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T3.1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "ADR-001",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T4.2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "J.3",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T2.3",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T10.1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "P2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "G.2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T13",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "ADR-003",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T4.3",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "R10.5",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T15",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "G.3",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T7.3",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T7.2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "R9.2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "C2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T9.2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "B3",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T2.1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T5.1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "R10",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T10.2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T10",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T8.1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "R9",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "C6",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T8.2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T17",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "J.1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T9.1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "C3",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "D3",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T6.2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "C-7",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "P1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "R9.3",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "C7",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T6.1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "E2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "R10.4",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "R10.3",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T5.2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T18",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T6.3",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "R2.5",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "R10.2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T5.3",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "C1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "E3",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "D1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "ADR-002",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T14",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T3.2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "ADR-004",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T10.3",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "C4",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "R9.4",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T3.3",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "D2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T16",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "C5",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T7.1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "R9.5",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "P0",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "E1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T4.1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T2.2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "B1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "J.2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "R9.1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T8.3",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "B2",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "ADR-005",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "G.1",
+      "status": "referenced_but_not_defined"
+    },
+    {
+      "requirement_id": "T9.3",
+      "status": "referenced_but_not_defined"
+    }
+  ],
+  "consistency_issues": [],
+  "summary": {
+    "total_requirements": 77,
+    "orphaned_requirements": 0,
+    "duplicate_requirements": 0,
+    "missing_requirements": 79,
+    "consistency_score": 0.0
+  }
+}
