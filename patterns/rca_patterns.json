@@ -395,8 +395,96 @@
         "Preventive validation"
       ],
       "pattern_hash": "69d859fc"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757023954",
+      "pattern_name": "Prevent test_import_error in test:test_example_1.py",
+      "failure_signature": "test:test_example_1.py|dependency_issue|ImportError: No module named 'missing_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "62e6f4d9"
+    },
+    {
+      "pattern_id": "pattern_broken_dependencies_1757023954",
+      "pattern_name": "Prevent broken_dependencies in test:test_example_1.py",
+      "failure_signature": "test:test_example_1.py|dependency_issue|ImportError: No module named 'missing_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Missing or broken dependencies",
+      "prevention_steps": [
+        "Check for broken_dependencies before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for broken_dependencies symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for broken_dependencies",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "62e6f4d9"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757023954",
+      "pattern_name": "Prevent test_assertion_failure in test:test_example_0.py",
+      "failure_signature": "test:test_example_0.py|unknown|AssertionError: Expected True, got False|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "b11dd04f"
+    },
+    {
+      "pattern_id": "pattern_test_fixture_error_1757023955",
+      "pattern_name": "Prevent test_fixture_error in test:test_example_3.py",
+      "failure_signature": "test:test_example_3.py|unknown|FixtureError: Fixture 'database' not found|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test fixture error - fixture setup or teardown issue",
+      "prevention_steps": [
+        "Check for test_fixture_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_fixture_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_fixture_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "00c4962f"
     }
   ],
-  "last_updated": "2025-09-04T15:57:09.445444",
-  "pattern_count": 18
+  "last_updated": "2025-09-04T16:12:35.362368",
+  "pattern_count": 22
 }

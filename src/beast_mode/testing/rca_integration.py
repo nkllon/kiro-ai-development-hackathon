@@ -17,6 +17,8 @@ from ..analysis.rca_engine import (
     RCAEngine, Failure, FailureCategory, RCAResult, 
     RootCauseType, PreventionPattern
 )
+from .performance_monitor import RCAPerformanceMonitor, ResourceLimits, PerformanceStatus
+from .timeout_handler import RCATimeoutHandler, TimeoutConfiguration, TimeoutStrategy
 
 
 @dataclass
@@ -73,11 +75,40 @@ class TestRCAIntegrationEngine(ReflectiveModule):
     Provides failure grouping, prioritization, and comprehensive analysis workflow
     """
     
-    def __init__(self, rca_engine: Optional[RCAEngine] = None):
+    def __init__(self, rca_engine: Optional[RCAEngine] = None, 
+                 performance_monitor: Optional[RCAPerformanceMonitor] = None,
+                 timeout_handler: Optional[RCATimeoutHandler] = None):
         super().__init__("test_rca_integrator")
         
         # Initialize RCA engine
         self.rca_engine = rca_engine or RCAEngine()
+        
+        # Initialize performance monitoring and timeout handling
+        # Requirements: 1.4, 4.2 - Performance optimization and timeout handling
+        self.performance_monitor = performance_monitor or RCAPerformanceMonitor(
+            ResourceLimits(
+                max_memory_mb=512,
+                max_cpu_percent=80.0,
+                timeout_seconds=30,
+                warning_threshold_seconds=25,
+                memory_warning_threshold_mb=400
+            )
+        )
+        
+        self.timeout_handler = timeout_handler or RCATimeoutHandler(
+            TimeoutConfiguration(
+                primary_timeout_seconds=30,
+                warning_timeout_seconds=25,
+                graceful_timeout_seconds=20,
+                hard_timeout_seconds=35,
+                strategy=TimeoutStrategy.GRACEFUL_DEGRADATION,
+                enable_progressive_degradation=True,
+                max_degradation_levels=3
+            )
+        )
+        
+        # Start performance monitoring
+        self.performance_monitor.start_monitoring()
         
         # Integration metrics
         self.total_test_failures_processed = 0
@@ -106,6 +137,8 @@ class TestRCAIntegrationEngine(ReflectiveModule):
             "pattern_matches_found": self.pattern_matches_found,
             "average_analysis_time": self.total_analysis_time / max(1, self.successful_rca_analyses),
             "rca_engine_status": self.rca_engine.get_module_status() if self.rca_engine else "unavailable",
+            "performance_monitor_status": self.performance_monitor.get_module_status(),
+            "timeout_handler_status": self.timeout_handler.get_module_status(),
             "degradation_active": self._degradation_active
         }
         
@@ -113,7 +146,9 @@ class TestRCAIntegrationEngine(ReflectiveModule):
         """Health assessment for test RCA integration capability"""
         return (not self._degradation_active and 
                 self.rca_engine is not None and 
-                self.rca_engine.is_healthy())
+                self.rca_engine.is_healthy() and
+                self.performance_monitor.is_healthy() and
+                self.timeout_handler.is_healthy())
         
     def get_health_indicators(self) -> Dict[str, Any]:
         """Detailed health metrics for operational visibility"""
@@ -141,64 +176,103 @@ class TestRCAIntegrationEngine(ReflectiveModule):
         
     def analyze_test_failures(self, failures: List[TestFailureData]) -> TestRCAReportData:
         """
-        Comprehensive analysis workflow for test failures
-        Requirements: 1.1, 1.2, 2.1 - Automatic RCA analysis with comprehensive reporting
+        Comprehensive analysis workflow for test failures with performance monitoring and timeout handling
+        Requirements: 1.1, 1.2, 2.1, 1.4, 4.2 - Automatic RCA analysis with 30-second timeout and performance optimization
         """
-        start_time = time.time()
+        operation_id = f"test_rca_analysis_{int(time.time())}_{len(failures)}_failures"
         self.total_test_failures_processed += len(failures)
         
         try:
-            self.logger.info(f"Starting RCA analysis for {len(failures)} test failures")
+            self.logger.info(f"Starting RCA analysis for {len(failures)} test failures with performance monitoring")
             
-            # Step 1: Group related failures for efficient analysis
-            grouped_failures = self.group_related_failures(failures)
-            self.logger.info(f"Grouped {len(failures)} failures into {len(grouped_failures)} groups")
-            
-            # Step 2: Prioritize failures for analysis order
-            prioritized_failures = self.prioritize_failures(failures)
-            
-            # Step 3: Convert test failures to RCA-compatible Failure objects
-            rca_failures = []
-            for test_failure in prioritized_failures:
-                rca_failure = self.convert_to_rca_failure(test_failure)
-                rca_failures.append(rca_failure)
-                
-            # Step 4: Perform RCA analysis on each failure
-            rca_results = []
-            pattern_matches = []
-            
-            for rca_failure in rca_failures:
-                try:
-                    # Check for existing patterns first (fast path)
-                    existing_patterns = self.rca_engine.match_existing_patterns(rca_failure)
-                    pattern_matches.extend(existing_patterns)
-                    self.pattern_matches_found += len(existing_patterns)
+            # Use performance monitoring and timeout handling
+            with self.performance_monitor.monitor_operation(operation_id, timeout_seconds=30) as perf_metrics:
+                with self.timeout_handler.manage_operation_timeout(operation_id, self._handle_degradation_callback) as timeout_context:
                     
-                    # Perform comprehensive RCA analysis
-                    rca_result = self.rca_engine.perform_systematic_rca(rca_failure)
-                    rca_results.append(rca_result)
-                    self.successful_rca_analyses += 1
+                    # Step 1: Group related failures for efficient analysis
+                    grouped_failures = self.group_related_failures(failures)
+                    self.logger.info(f"Grouped {len(failures)} failures into {len(grouped_failures)} groups")
                     
-                    # Check timeout constraint (30 seconds per requirement 1.4)
-                    elapsed_time = time.time() - start_time
-                    if elapsed_time > self.analysis_timeout_seconds:
-                        self.logger.warning(f"RCA analysis timeout reached: {elapsed_time:.2f}s")
-                        break
+                    # Step 2: Prioritize failures for analysis order
+                    prioritized_failures = self.prioritize_failures(failures)
+                    
+                    # Step 3: Convert test failures to RCA-compatible Failure objects
+                    rca_failures = []
+                    for test_failure in prioritized_failures:
+                        rca_failure = self.convert_to_rca_failure(test_failure)
+                        rca_failures.append(rca_failure)
                         
-                except Exception as e:
-                    self.logger.error(f"RCA analysis failed for failure {rca_failure.failure_id}: {e}")
-                    continue
+                    # Step 4: Perform RCA analysis on each failure with timeout monitoring
+                    rca_results = []
+                    pattern_matches = []
+                    degradation_applied = False
                     
-            # Step 5: Generate comprehensive report
-            report = self.generate_comprehensive_report(
-                failures, grouped_failures, rca_results, pattern_matches
-            )
-            
-            analysis_time = time.time() - start_time
-            self.total_analysis_time += analysis_time
-            
-            self.logger.info(f"RCA analysis complete: {len(rca_results)} analyses in {analysis_time:.2f}s")
-            return report
+                    for i, rca_failure in enumerate(rca_failures):
+                        try:
+                            # Check timeout recommendations before each analysis
+                            elapsed_time = (datetime.now() - perf_metrics.start_time).total_seconds()
+                            timeout_recommendations = self.timeout_handler.get_timeout_recommendations(operation_id, elapsed_time)
+                            
+                            # Apply graceful degradation if recommended
+                            if timeout_recommendations.get("degradation_suggested", False) and not degradation_applied:
+                                self.logger.warning(f"Applying graceful degradation based on timeout recommendations")
+                                degradation_result = self.timeout_handler.apply_graceful_degradation(operation_id, degradation_level=1)
+                                degradation_applied = True
+                                
+                                if degradation_result.get("success", False):
+                                    # Switch to fast pattern matching only
+                                    existing_patterns = self.rca_engine.match_existing_patterns(rca_failure)
+                                    pattern_matches.extend(existing_patterns)
+                                    self.pattern_matches_found += len(existing_patterns)
+                                    continue
+                            
+                            # Optimize resource usage periodically
+                            if i % 5 == 0:  # Every 5 failures
+                                self.performance_monitor.optimize_resource_usage(operation_id)
+                            
+                            # Check for existing patterns first (fast path)
+                            existing_patterns = self.rca_engine.match_existing_patterns(rca_failure)
+                            pattern_matches.extend(existing_patterns)
+                            self.pattern_matches_found += len(existing_patterns)
+                            
+                            # Perform comprehensive RCA analysis if not degraded
+                            if not degradation_applied:
+                                rca_result = self.rca_engine.perform_systematic_rca(rca_failure)
+                                rca_results.append(rca_result)
+                                self.successful_rca_analyses += 1
+                            
+                            # Check if we're approaching timeout limits
+                            if elapsed_time > 25:  # 25 seconds warning threshold
+                                self.logger.warning(f"Approaching timeout limit: {elapsed_time:.2f}s")
+                                if not degradation_applied:
+                                    # Apply emergency degradation
+                                    self.timeout_handler.apply_graceful_degradation(operation_id, degradation_level=2)
+                                    degradation_applied = True
+                                    break
+                                    
+                        except Exception as e:
+                            self.logger.error(f"RCA analysis failed for failure {rca_failure.failure_id}: {e}")
+                            continue
+                            
+                    # Step 5: Generate comprehensive report
+                    report = self.generate_comprehensive_report(
+                        failures, grouped_failures, rca_results, pattern_matches
+                    )
+                    
+                    # Add performance metrics to report
+                    if hasattr(report, 'performance_metrics'):
+                        report.performance_metrics = {
+                            "analysis_duration_seconds": perf_metrics.duration_seconds,
+                            "memory_usage_mb": perf_metrics.memory_usage_mb,
+                            "peak_memory_mb": perf_metrics.peak_memory_mb,
+                            "timeout_occurred": perf_metrics.timeout_occurred,
+                            "graceful_degradation": perf_metrics.graceful_degradation,
+                            "performance_status": perf_metrics.operation_status.value
+                        }
+                    
+                    self.total_analysis_time += perf_metrics.duration_seconds
+                    self.logger.info(f"RCA analysis complete: {len(rca_results)} analyses in {perf_metrics.duration_seconds:.2f}s")
+                    return report
             
         except Exception as e:
             self.logger.error(f"Test RCA analysis failed: {e}")
@@ -449,6 +523,135 @@ class TestRCAIntegrationEngine(ReflectiveModule):
         except Exception as e:
             self.logger.error(f"Failure correlation detection failed: {e}")
             return correlations
+
+    def get_performance_report(self) -> Dict[str, Any]:
+        """
+        Get comprehensive performance report for RCA operations
+        Requirements: 4.2 - Performance monitoring and metrics collection
+        """
+        try:
+            performance_report = self.performance_monitor.get_performance_report()
+            timeout_status = self.timeout_handler.get_module_status()
+            
+            return {
+                "rca_integration_performance": {
+                    "total_operations": performance_report.total_operations,
+                    "successful_operations": performance_report.successful_operations,
+                    "timeout_operations": performance_report.timeout_operations,
+                    "degraded_operations": performance_report.degraded_operations,
+                    "average_duration_seconds": performance_report.average_duration_seconds,
+                    "average_memory_usage_mb": performance_report.average_memory_usage_mb,
+                    "peak_memory_usage_mb": performance_report.peak_memory_usage_mb,
+                    "timeout_rate": performance_report.timeout_rate,
+                    "degradation_rate": performance_report.degradation_rate,
+                    "performance_trend": performance_report.performance_trend
+                },
+                "timeout_management": {
+                    "timeout_compliance_rate": 1.0 - timeout_status.get("hard_timeout_rate", 0.0),
+                    "graceful_degradation_success_rate": timeout_status.get("successful_degradation_rate", 0.0),
+                    "primary_timeout_seconds": timeout_status.get("primary_timeout_seconds", 30),
+                    "timeout_strategy": timeout_status.get("timeout_strategy", "graceful_degradation")
+                },
+                "integration_metrics": {
+                    "test_failures_processed": self.total_test_failures_processed,
+                    "successful_rca_analyses": self.successful_rca_analyses,
+                    "pattern_matches_found": self.pattern_matches_found,
+                    "rca_success_rate": self.successful_rca_analyses / max(1, self.total_test_failures_processed),
+                    "pattern_match_rate": self.pattern_matches_found / max(1, self.successful_rca_analyses)
+                }
+            }
+            
+        except Exception as e:
+            self.logger.error(f"Failed to generate performance report: {e}")
+            return {
+                "error": str(e),
+                "timestamp": datetime.now().isoformat()
+            }
+            
+    def optimize_performance_configuration(self) -> Dict[str, Any]:
+        """
+        Optimize performance configuration based on historical data
+        Requirements: 4.2 - Performance optimization
+        """
+        try:
+            optimization_result = {
+                "optimization_applied": False,
+                "optimizations": [],
+                "performance_improvement_expected": 0.0
+            }
+            
+            # Optimize timeout configuration
+            timeout_optimization = self.timeout_handler.optimize_timeout_configuration()
+            if timeout_optimization.get("optimization_applied", False):
+                optimization_result["optimizations"].append(timeout_optimization)
+                optimization_result["optimization_applied"] = True
+                optimization_result["performance_improvement_expected"] += timeout_optimization.get("performance_improvement_expected", 0.0)
+            
+            # Optimize resource limits based on usage patterns
+            performance_report = self.performance_monitor.get_performance_report()
+            if performance_report.average_memory_usage_mb > 0:
+                current_limit = self.performance_monitor.resource_limits.max_memory_mb
+                optimal_limit = int(performance_report.peak_memory_usage_mb * 1.2)  # 20% buffer
+                
+                if optimal_limit != current_limit and optimal_limit > 256:  # Minimum 256MB
+                    self.performance_monitor.resource_limits.max_memory_mb = optimal_limit
+                    optimization_result["optimizations"].append({
+                        "type": "memory_limit_optimization",
+                        "previous_limit_mb": current_limit,
+                        "new_limit_mb": optimal_limit,
+                        "reason": "adjusted_based_on_peak_usage"
+                    })
+                    optimization_result["optimization_applied"] = True
+            
+            # Optimize failure grouping based on performance
+            if performance_report.average_duration_seconds > 20:  # If taking too long
+                if self.max_failures_per_group > 5:
+                    self.max_failures_per_group = max(5, self.max_failures_per_group - 2)
+                    optimization_result["optimizations"].append({
+                        "type": "failure_grouping_optimization",
+                        "new_max_failures_per_group": self.max_failures_per_group,
+                        "reason": "reduce_analysis_time"
+                    })
+                    optimization_result["optimization_applied"] = True
+            
+            self.logger.info(f"Performance optimization result: {optimization_result}")
+            return optimization_result
+            
+        except Exception as e:
+            self.logger.error(f"Performance optimization failed: {e}")
+            return {
+                "optimization_applied": False,
+                "error": str(e)
+            }
+            
+    def _handle_degradation_callback(self, degradation_config: Dict[str, Any]) -> None:
+        """
+        Handle graceful degradation callback from timeout handler
+        Requirements: 1.4 - Graceful degradation implementation
+        """
+        try:
+            self.logger.info(f"Applying degradation configuration: {degradation_config}")
+            
+            # Store degradation configuration for use in analysis
+            self._current_degradation_config = degradation_config
+            
+            # Adjust analysis parameters based on degradation level
+            if degradation_config.get("analysis_scope") == "reduced":
+                # Reduce the number of failures analyzed per group
+                self.max_failures_per_group = min(5, self.max_failures_per_group)
+                
+            elif degradation_config.get("analysis_scope") == "pattern_matching_only":
+                # Skip comprehensive analysis, use pattern matching only
+                self._pattern_matching_only = True
+                
+            elif degradation_config.get("analysis_scope") == "minimal":
+                # Minimal analysis - basic error reporting only
+                self._minimal_analysis_mode = True
+                
+            self.logger.info("Degradation configuration applied successfully")
+            
+        except Exception as e:
+            self.logger.error(f"Failed to apply degradation configuration: {e}")
 
     # Private helper methods for advanced grouping and analysis
     
