@@ -127,6 +127,30 @@ class TestPatternLibrary(ReflectiveModule):
         avg_match_time = self.total_match_time_ms / max(1, self.total_matches_performed)
         return not self._degradation_active and avg_match_time < 1000
         
+    def get_health_indicators(self) -> Dict[str, Any]:
+        """Detailed health metrics for operational visibility"""
+        avg_match_time = self.total_match_time_ms / max(1, self.total_matches_performed)
+        cache_hit_rate = self.cache_hits / max(1, self.cache_hits + self.cache_misses)
+        
+        return {
+            "pattern_library_health": {
+                "status": "healthy" if not self._degradation_active else "degraded",
+                "pattern_count": len(self.test_patterns),
+                "learning_samples": len(self.learning_data)
+            },
+            "performance_health": {
+                "status": "healthy" if avg_match_time < 1000 else "degraded",
+                "average_match_time_ms": avg_match_time,
+                "sub_second_compliance": avg_match_time < 1000,
+                "cache_hit_rate": cache_hit_rate
+            },
+            "learning_health": {
+                "status": "healthy" if len(self.learning_data) > 0 else "degraded",
+                "learning_samples": len(self.learning_data),
+                "patterns_learned": len([r for r in self.learning_data if r.successful_fix_applied])
+            }
+        }
+        
     def match_test_patterns(self, failure: Failure) -> List[PreventionPattern]:
         """
         High-performance test pattern matching with sub-second requirement

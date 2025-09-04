@@ -16,6 +16,7 @@ from pathlib import Path
 
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .rca_integration import TestFailureData
+from .error_handler import RCAErrorHandler
 
 
 class TestFailureDetector(ReflectiveModule):
@@ -24,8 +25,11 @@ class TestFailureDetector(ReflectiveModule):
     Provides comprehensive failure information for RCA analysis
     """
     
-    def __init__(self):
+    def __init__(self, error_handler: Optional[RCAErrorHandler] = None):
         super().__init__("test_failure_detector")
+        
+        # Initialize error handling
+        self.error_handler = error_handler or RCAErrorHandler()
         
         # Detection metrics
         self.total_test_runs_monitored = 0
@@ -95,8 +99,10 @@ class TestFailureDetector(ReflectiveModule):
         try:
             self.logger.info(f"Monitoring test execution: {test_command}")
             
-            # Execute pytest with JSON output for structured parsing
-            json_output_file = f"/tmp/pytest_output_{int(datetime.now().timestamp())}.json"
+            # Use error handler for comprehensive error management
+            with self.error_handler.handle_rca_operation("monitor_test_execution", "test_failure_detector"):
+                # Execute pytest with JSON output for structured parsing
+                json_output_file = f"/tmp/pytest_output_{int(datetime.now().timestamp())}.json"
             
             # Run pytest with both human-readable and JSON output
             cmd_parts = test_command.split()
@@ -114,42 +120,58 @@ class TestFailureDetector(ReflectiveModule):
             
             failures = []
             
-            # Try JSON parsing first (more reliable)
-            if os.path.exists(json_output_file):
-                try:
-                    failures = self._parse_json_output(json_output_file)
-                    self.logger.info(f"Parsed {len(failures)} failures from JSON output")
-                except Exception as e:
-                    self.logger.warning(f"JSON parsing failed: {e}, falling back to text parsing")
-                finally:
-                    # Clean up temp file
+                # Try JSON parsing first (more reliable)
+                if os.path.exists(json_output_file):
                     try:
-                        os.remove(json_output_file)
-                    except:
-                        pass
+                        failures = self._parse_json_output(json_output_file)
+                        self.logger.info(f"Parsed {len(failures)} failures from JSON output")
+                        # Monitor successful parsing
+                        self.error_handler.monitor_component_health("json_parser", True, 100.0)
+                    except Exception as e:
+                        self.logger.warning(f"JSON parsing failed: {e}, falling back to text parsing")
+                        # Monitor parsing failure
+                        self.error_handler.monitor_component_health("json_parser", False, 1000.0)
+                    finally:
+                        # Clean up temp file
+                        try:
+                            os.remove(json_output_file)
+                        except:
+                            pass
+                            
+                # Fallback to text parsing if JSON failed or unavailable
+                if not failures and result.returncode != 0:
+                    try:
+                        failures = self.parse_pytest_output(result.stdout + result.stderr)
+                        self.logger.info(f"Parsed {len(failures)} failures from text output")
+                        # Monitor successful text parsing
+                        self.error_handler.monitor_component_health("text_parser", True, 200.0)
+                    except Exception as e:
+                        self.logger.error(f"Text parsing also failed: {e}")
+                        # Monitor text parsing failure
+                        self.error_handler.monitor_component_health("text_parser", False, 2000.0)
+                        failures = [self._create_parsing_failure(test_command, str(e))]
                         
-            # Fallback to text parsing if JSON failed or unavailable
-            if not failures and result.returncode != 0:
-                failures = self.parse_pytest_output(result.stdout + result.stderr)
-                self.logger.info(f"Parsed {len(failures)} failures from text output")
+                self.total_failures_detected += len(failures)
                 
-            self.total_failures_detected += len(failures)
-            
-            # Update parsing success rate
-            if self.total_test_runs_monitored > 0:
-                self.parsing_success_rate = (
-                    (self.parsing_success_rate * (self.total_test_runs_monitored - 1) + 
-                     (1.0 if failures or result.returncode == 0 else 0.0)) / 
-                    self.total_test_runs_monitored
-                )
-                
-            return failures
+                # Update parsing success rate
+                if self.total_test_runs_monitored > 0:
+                    self.parsing_success_rate = (
+                        (self.parsing_success_rate * (self.total_test_runs_monitored - 1) + 
+                         (1.0 if failures or result.returncode == 0 else 0.0)) / 
+                        self.total_test_runs_monitored
+                    )
+                    
+                return failures
             
         except subprocess.TimeoutExpired:
             self.logger.error("Test execution timeout - creating timeout failure")
+            # Monitor timeout failure
+            self.error_handler.monitor_component_health("test_execution", False, 300000.0)  # 5 minutes in ms
             return [self._create_timeout_failure(test_command)]
         except Exception as e:
             self.logger.error(f"Test monitoring failed: {e}")
+            # Monitor general monitoring failure
+            self.error_handler.monitor_component_health("test_monitoring", False, 1000.0)
             return [self._create_monitoring_failure(test_command, str(e))]
             
     def parse_pytest_output(self, output: str) -> List[TestFailureData]:
@@ -469,4 +491,19 @@ class TestFailureDetector(ReflectiveModule):
             failure_timestamp=datetime.now(),
             test_context={"monitoring_error": True, "command": test_command},
             pytest_node_id="monitoring::error"
+        )
+        
+    def _create_parsing_failure(self, test_command: str, error: str) -> TestFailureData:
+        """Create failure object for parsing errors"""
+        return TestFailureData(
+            test_name="test_parsing_error",
+            test_file="parsing",
+            failure_type="parsing_error",
+            error_message=f"Test output parsing failed: {error}",
+            stack_trace=f"Command: {test_command}\nParsing Error: {error}",
+            test_function="parsing",
+            test_class=None,
+            failure_timestamp=datetime.now(),
+            test_context={"parsing_error": True, "command": test_command},
+            pytest_node_id="parsing::error"
         )
