@@ -57,7 +57,7 @@ class PDCALangGraphOrchestrator(ReflectiveModule):
         self.learning_database = []
         self.execution_history = []
         
-        # PDCA prompts for different phases
+        # PDCA prompts for different phases - using safe template format
         self.pdca_prompts = {
             "plan": """
 You are a systematic planning agent for Beast Mode Framework tasks.
@@ -74,14 +74,7 @@ Create a systematic plan that:
 4. Defines success criteria
 5. Maintains no-workaround approach (C-03)
 
-Return JSON with: {{
-    "plan_steps": [...],
-    "success_criteria": [...],
-    "constraints_to_monitor": [...],
-    "risk_mitigation": [...],
-    "estimated_effort": "...",
-    "confidence_level": 0.0-1.0
-}}
+Return JSON with: {{"plan_steps": [...], "success_criteria": [...], "constraints_to_monitor": [...], "risk_mitigation": [...], "estimated_effort": "...", "confidence_level": 0.0-1.0}}
 """,
             
             "do": """
@@ -99,14 +92,7 @@ Execute systematically:
 4. Generate evidence of systematic approach
 5. Track constraint satisfaction
 
-Return JSON with: {{
-    "execution_steps_completed": [...],
-    "code_files_created": [...],
-    "tests_implemented": [...],
-    "constraints_satisfied": {...},
-    "systematic_evidence": [...],
-    "issues_encountered": [...]
-}}
+Return JSON with: {{"execution_steps_completed": [...], "code_files_created": [...], "tests_implemented": [...], "constraints_satisfied": {{}}, "systematic_evidence": [...], "issues_encountered": [...]}}
 """,
             
             "check": """
@@ -124,15 +110,7 @@ Validate systematically:
 4. Assess code quality and evidence
 5. Identify gaps or issues
 
-Return JSON with: {{
-    "validation_passed": true/false,
-    "success_criteria_met": {...},
-    "constraint_satisfaction": {...},
-    "systematic_approach_score": 0.0-1.0,
-    "quality_assessment": {...},
-    "issues_found": [...],
-    "recommendations": [...]
-}}
+Return JSON with: {{"validation_passed": true, "success_criteria_met": {{}}, "constraint_satisfaction": {{}}, "systematic_approach_score": 0.9, "quality_assessment": {{}}, "issues_found": [], "recommendations": []}}
 """,
             
             "act": """
@@ -151,14 +129,7 @@ Generate systematic improvements:
 4. Generate recommendations for next tasks
 5. Build cumulative intelligence
 
-Return JSON with: {{
-    "key_learnings": [...],
-    "optimization_opportunities": [...],
-    "systematic_patterns_updated": [...],
-    "next_task_recommendations": [...],
-    "cumulative_intelligence": {...},
-    "confidence_in_learning": 0.0-1.0
-}}
+Return JSON with: {{"key_learnings": [], "optimization_opportunities": [], "systematic_patterns_updated": [], "next_task_recommendations": [], "cumulative_intelligence": {{}}, "confidence_in_learning": 0.85}}
 """
         }
         
@@ -253,11 +224,26 @@ Return JSON with: {{
     async def _plan_node(self, state: PDCAState) -> PDCAState:
         """Plan phase: Systematic task planning"""
         try:
-            prompt = self.pdca_prompts["plan"].format(
-                task=state["current_task"],
-                context=json.dumps(state["task_context"], indent=2),
-                learning=json.dumps(state["learning_history"][-5:], indent=2)  # Last 5 learnings
-            )
+            # Safe parameter extraction
+            current_task = state.get("current_task", "Unknown task")
+            context_data = state.get("task_context", {})
+            learning_data = state.get("learning_history", [])[-5:]  # Last 5 learnings
+            
+            # Safe string formatting
+            try:
+                prompt = self.pdca_prompts["plan"].format(
+                    task=current_task,
+                    context=json.dumps(context_data, indent=2),
+                    learning=json.dumps(learning_data, indent=2)
+                )
+            except (KeyError, ValueError) as format_error:
+                self.logger.warning(f"String formatting issue in plan phase: {format_error}")
+                # Fallback to safe prompt
+                prompt = f"""
+Plan systematic task: {current_task}
+Context: {json.dumps(context_data, indent=2)}
+Learning: {json.dumps(learning_data, indent=2)}
+"""
             
             # Call local LLM (would implement actual LLM call)
             plan_result = await self._call_local_llm(prompt, "plan")
@@ -278,12 +264,28 @@ Return JSON with: {{
         try:
             if state["error_state"]:
                 return state
-                
-            prompt = self.pdca_prompts["do"].format(
-                plan=json.dumps(state["plan_result"], indent=2),
-                context=json.dumps(state["task_context"], indent=2),
-                learning=json.dumps(state["learning_history"][-5:], indent=2)
-            )
+            
+            # Safe parameter extraction with defaults
+            plan_data = state.get("plan_result") or {}
+            context_data = state.get("task_context") or {}
+            learning_data = state.get("learning_history", [])[-5:]  # Last 5 learnings
+            
+            # Safe string formatting with parameter validation
+            try:
+                prompt = self.pdca_prompts["do"].format(
+                    plan=json.dumps(plan_data, indent=2),
+                    context=json.dumps(context_data, indent=2),
+                    learning=json.dumps(learning_data, indent=2)
+                )
+            except (KeyError, ValueError) as format_error:
+                self.logger.warning(f"String formatting issue in do phase: {format_error}")
+                # Fallback to safe prompt without formatting
+                prompt = f"""
+Execute systematic task: {state['current_task']}
+Plan: {json.dumps(plan_data, indent=2)}
+Context: {json.dumps(context_data, indent=2)}
+Learning: {json.dumps(learning_data, indent=2)}
+"""
             
             do_result = await self._call_local_llm(prompt, "do")
             

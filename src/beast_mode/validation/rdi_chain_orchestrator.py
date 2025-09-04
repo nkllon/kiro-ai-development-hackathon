@@ -198,20 +198,63 @@ class RDIChainOrchestrator(ReflectiveModule):
         consistency = (valid_transitions / total_transitions) * confidence_factor
         """
         # Extract validation metrics from PDCA result
-        if "check_result" not in pdca_result:
+        if not pdca_result:
             return 0.0
         
-        check_data = pdca_result["check_result"]
+        # Check for check_result in final_state (LangGraph structure)
+        check_data = None
+        if "final_state" in pdca_result and "check_result" in pdca_result["final_state"]:
+            check_data = pdca_result["final_state"]["check_result"]
+        elif "check_result" in pdca_result:
+            check_data = pdca_result["check_result"]
+        
+        if not check_data:
+            return 0.0
         
         # Default scoring if detailed metrics not available
         if "consistency_metrics" in check_data:
             return check_data["consistency_metrics"].get("score", 0.0)
         
-        # Fallback calculation based on issues
-        total_checks = check_data.get("total_checks", 1)
-        failed_checks = len(check_data.get("validation_issues", []))
+        # Enhanced calculation based on PDCA execution success
+        success_indicators = []
         
-        return max(0.0, (total_checks - failed_checks) / total_checks)
+        # Check if all PDCA phases completed successfully
+        if pdca_result.get("success", False):
+            success_indicators.append(0.4)  # Base success score
+        
+        # Check systematic approach score from validation
+        if "systematic_approach_score" in check_data:
+            success_indicators.append(check_data["systematic_approach_score"])
+        
+        # Check validation passed status
+        if check_data.get("validation_passed", False):
+            success_indicators.append(0.3)
+        
+        # Check constraint satisfaction
+        constraint_satisfaction = check_data.get("constraint_satisfaction", {})
+        if constraint_satisfaction:
+            satisfied_constraints = sum(1 for v in constraint_satisfaction.values() if v)
+            total_constraints = len(constraint_satisfaction)
+            if total_constraints > 0:
+                success_indicators.append(satisfied_constraints / total_constraints * 0.3)
+        
+        # Fallback calculation based on issues
+        validation_issues = check_data.get("validation_issues", [])
+        issues_found = check_data.get("issues_found", [])
+        total_issues = len(validation_issues) + len(issues_found)
+        
+        if total_issues == 0 and success_indicators:
+            # No issues found and some success indicators present
+            base_score = sum(success_indicators) / len(success_indicators)
+            return min(1.0, base_score)
+        elif total_issues == 0:
+            # No issues but no clear success indicators - moderate score
+            return 0.6
+        else:
+            # Issues found - reduce score based on severity
+            total_checks = check_data.get("total_checks", max(1, total_issues + 1))
+            failed_checks = total_issues
+            return max(0.0, (total_checks - failed_checks) / total_checks)
     
     async def execute_systematic_repair(self, chain_id: str) -> Dict[str, Any]:
         """
