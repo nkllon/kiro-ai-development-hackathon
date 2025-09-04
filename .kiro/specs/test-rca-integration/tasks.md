@@ -31,7 +31,7 @@
   - Update main Makefile to properly integrate new testing targets
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
 
-- [-] 5. Extend Existing RCA Engine for Test-Specific Analysis
+- [x] 5. Extend Existing RCA Engine for Test-Specific Analysis
   - Add test-specific failure analysis methods to existing RCAEngine in src/beast_mode/analysis/rca_engine.py
   - Implement test failure categorization (pytest, make, infrastructure failures)
   - Create test-specific systematic fix generation logic
@@ -39,7 +39,7 @@
   - Write integration tests with real RCAEngine functionality
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 5.1, 5.2, 5.3, 5.4_
 
-- [ ] 6. Implement Automatic RCA Triggering on Test Failures
+- [-] 6. Implement Automatic RCA Triggering on Test Failures
   - Modify existing test make targets in makefiles/testing.mk to optionally trigger RCA on failures
   - Add environment variable controls for RCA behavior (RCA_ON_FAILURE, RCA_TIMEOUT)
   - Implement failure detection hooks in pytest execution workflow
