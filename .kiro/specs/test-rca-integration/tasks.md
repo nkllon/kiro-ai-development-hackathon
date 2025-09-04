@@ -23,7 +23,7 @@
   - Write unit tests for report generation and formatting
   - _Requirements: 2.2, 2.3, 2.4_
 
-- [-] 4. Extend Make Command System with RCA Integration
+- [x] 4. Extend Make Command System with RCA Integration
   - Extend existing makefiles/testing.mk with new RCA-enabled make targets
   - Implement test-with-rca target that runs tests and triggers RCA on failures
   - Add rca target for manual RCA analysis on recent test failures
@@ -31,7 +31,7 @@
   - Update main Makefile to properly integrate new testing targets
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
 
-- [ ] 5. Extend Existing RCA Engine for Test-Specific Analysis
+- [-] 5. Extend Existing RCA Engine for Test-Specific Analysis
   - Add test-specific failure analysis methods to existing RCAEngine in src/beast_mode/analysis/rca_engine.py
   - Implement test failure categorization (pytest, make, infrastructure failures)
   - Create test-specific systematic fix generation logic

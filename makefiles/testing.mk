@@ -23,7 +23,7 @@ test-with-rca:
 	else \
 		echo "$(RED)❌ Tests failed - triggering automatic RCA analysis...$(RESET)"; \
 		echo "🔍 Analyzing test failures with Beast Mode RCA engine..."; \
-		python3 -c "from src.beast_mode.testing.test_failure_detector import TestFailureDetector; from src.beast_mode.testing.rca_integration import TestRCAIntegrator; from src.beast_mode.testing.rca_report_generator import RCAReportGenerator; detector = TestFailureDetector(); integrator = TestRCAIntegrator(); generator = RCAReportGenerator(); print('🦁 RCA analysis complete - check output above for systematic fixes')"; \
+		python3 scripts/rca_cli.py test-rca; \
 	fi
 
 rca:
@@ -31,7 +31,7 @@ rca:
 	@echo "🔍 Beast Mode RCA Engine - Systematic Failure Analysis"
 	@echo "======================================================"
 	@echo "Analyzing most recent test failures for root causes..."
-	@python3 -c "from src.beast_mode.testing.rca_integration import TestRCAIntegrator; from src.beast_mode.testing.rca_report_generator import RCAReportGenerator; integrator = TestRCAIntegrator(); generator = RCAReportGenerator(); print('🦁 Manual RCA analysis initiated'); print('📊 Analyzing recent test failures...'); print('✅ RCA analysis complete - systematic fixes identified')"
+	@python3 scripts/rca_cli.py rca
 
 rca-task:
 	@echo "$(YELLOW)Performing RCA analysis on specific task...$(RESET)"
@@ -44,7 +44,7 @@ rca-task:
 		echo "🔍 Beast Mode RCA Engine - Task-Specific Analysis"; \
 		echo "================================================"; \
 		echo "Analyzing task: $(TASK)"; \
-		python3 -c "from src.beast_mode.testing.rca_integration import TestRCAIntegrator; from src.beast_mode.testing.rca_report_generator import RCAReportGenerator; integrator = TestRCAIntegrator(); generator = RCAReportGenerator(); print('🦁 Task-specific RCA analysis for: $(TASK)'); print('📊 Analyzing task-specific failures...'); print('✅ Task RCA analysis complete')"; \
+		python3 scripts/rca_cli.py rca "$(TASK)"; \
 	fi
 
 rca-report:
@@ -52,4 +52,4 @@ rca-report:
 	@echo "📋 Beast Mode RCA Report Generation"
 	@echo "=================================="
 	@echo "Generating comprehensive RCA analysis report..."
-	@python3 -c "from src.beast_mode.testing.rca_report_generator import RCAReportGenerator; generator = RCAReportGenerator(); print('📊 Generating detailed RCA report...'); print('✅ RCA report generated successfully'); print('📁 Report available in console output and JSON format')"
+	@python3 scripts/rca_cli.py rca-report
