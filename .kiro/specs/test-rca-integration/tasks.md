@@ -1,14 +1,14 @@
 # Implementation Plan
 
 - [ ] 1. Create Test Failure Detection Infrastructure
-  - Implement TestFailureDetector class that monitors pytest execution and parses failure output
+  - Implement TestFailureDetector class in src/beast_mode/testing/test_failure_detector.py
   - Create TestFailure data model with comprehensive failure information
   - Add pytest output parsing logic to extract stack traces, error messages, and test context
   - Write unit tests for failure detection and parsing logic
   - _Requirements: 1.1, 1.3, 5.1, 5.2, 5.3_
 
 - [ ] 2. Implement RCA Integration Layer
-  - Create TestRCAIntegrator class that coordinates between test failures and RCA analysis
+  - Create TestRCAIntegrator class in src/beast_mode/testing/rca_integration.py
   - Implement failure grouping and prioritization logic for multiple test failures
   - Add methods to convert TestFailure objects to RCA-compatible Failure objects
   - Create comprehensive analysis workflow that leverages existing RCAEngine
@@ -16,7 +16,7 @@
   - _Requirements: 1.1, 1.2, 2.1, 4.1, 4.3_
 
 - [ ] 3. Create RCA Report Generation System
-  - Implement TestRCAReport and TestRCASummary data models
+  - Implement TestRCAReport and TestRCASummary data models in src/beast_mode/testing/rca_report_generator.py
   - Create RCAReportGenerator class for formatting analysis results
   - Add console output formatting with clear sections and actionable recommendations
   - Implement JSON and markdown report generation for different use cases
@@ -24,23 +24,23 @@
   - _Requirements: 2.2, 2.3, 2.4_
 
 - [ ] 4. Extend Make Command System with RCA Integration
-  - Create makefiles/testing.mk with new RCA-enabled make targets
+  - Extend existing makefiles/testing.mk with new RCA-enabled make targets
   - Implement test-with-rca target that runs tests and triggers RCA on failures
   - Add rca target for manual RCA analysis on recent test failures
   - Create rca-task target for analyzing specific tasks with TASK parameter
-  - Update main Makefile to include testing.mk module
+  - Ensure main Makefile properly includes testing.mk module (already included)
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
 
-- [ ] 5. Integrate with Existing Beast Mode RCA Engine
-  - Modify existing RCAEngine to support test-specific failure analysis
-  - Add test-specific root cause patterns to the pattern library
+- [ ] 5. Extend Existing RCA Engine for Test-Specific Analysis
+  - Add test-specific failure analysis methods to existing RCAEngine
   - Implement test failure categorization (pytest, make, infrastructure failures)
   - Create test-specific systematic fix generation logic
+  - Add test-specific root cause patterns to the existing pattern library
   - Write integration tests with real RCAEngine functionality
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 5.1, 5.2, 5.3, 5.4_
 
 - [ ] 6. Implement Automatic RCA Triggering on Test Failures
-  - Modify existing test make target to optionally trigger RCA on failures
+  - Modify existing test make targets to optionally trigger RCA on failures
   - Add environment variable controls for RCA behavior (RCA_ON_FAILURE, RCA_TIMEOUT)
   - Implement failure detection hooks in pytest execution workflow
   - Create seamless integration that doesn't disrupt normal test workflow
@@ -63,23 +63,23 @@
   - Write performance tests to validate timeout and resource requirements
   - _Requirements: 1.4, 4.2_
 
-- [ ] 9. Add Pattern Library Integration and Learning
+- [ ] 9. Add Test-Specific Pattern Library Integration
   - Extend existing pattern library with test-specific failure patterns
-  - Implement pattern learning from successful RCA analyses
-  - Add pattern matching optimization for sub-second performance requirement
-  - Create pattern library maintenance and cleanup functionality
-  - Write unit tests for pattern library operations and performance
+  - Implement pattern learning from successful test RCA analyses
+  - Add test-specific pattern matching optimization for sub-second performance
+  - Create test pattern library maintenance and cleanup functionality
+  - Write unit tests for test pattern library operations and performance
   - _Requirements: 2.4, 4.2, 4.4_
 
 - [ ] 10. Implement Error Handling and Graceful Degradation
-  - Add comprehensive error handling for RCA engine failures
-  - Implement fallback reporting when RCA analysis fails
-  - Create health monitoring for RCA system components
-  - Add automatic retry logic with simplified parameters on failures
+  - Add comprehensive error handling for RCA engine failures in test context
+  - Implement fallback reporting when RCA analysis fails during testing
+  - Create health monitoring for RCA system components during test execution
+  - Add automatic retry logic with simplified parameters on test failures
   - Write unit tests for error scenarios and recovery mechanisms
   - _Requirements: 1.1, 1.4, 4.1_
 
-- [ ] 11. Create Comprehensive Test Suite
+- [ ] 11. Create Comprehensive Test Suite for RCA Integration
   - Write integration tests for end-to-end test failure to RCA workflow
   - Create performance tests for 30-second analysis requirement validation
   - Add compatibility tests for different pytest versions and failure types
