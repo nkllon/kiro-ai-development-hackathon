@@ -483,8 +483,910 @@
         "Preventive validation"
       ],
       "pattern_hash": "00c4962f"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757027307",
+      "pattern_name": "Prevent test_import_error in test:tests/test_imports.py",
+      "failure_signature": "test:tests/test_imports.py|dependency_issue|ImportError: No module named 'missing_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "e8185d11"
+    },
+    {
+      "pattern_id": "pattern_broken_dependencies_1757027307",
+      "pattern_name": "Prevent broken_dependencies in test:tests/test_imports.py",
+      "failure_signature": "test:tests/test_imports.py|dependency_issue|ImportError: No module named 'missing_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Missing or broken dependencies",
+      "prevention_steps": [
+        "Check for broken_dependencies before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for broken_dependencies symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for broken_dependencies",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "e8185d11"
+    },
+    {
+      "pattern_id": "pattern_permission_denied_1757027307",
+      "pattern_name": "Prevent permission_denied in test:tests/test_permissions.py",
+      "failure_signature": "test:tests/test_permissions.py|permission_issue|PermissionError: [Errno 13] Permission denied: '/root/protected_file'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Insufficient permissions for file access",
+      "prevention_steps": [
+        "Check for permission_denied before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for permission_denied symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for permission_denied",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "fc30d0fc"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027308",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_logic.py",
+      "failure_signature": "test:tests/test_logic.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "539fc5e1"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757027321",
+      "pattern_name": "Prevent test_import_error in test:tests/test_imports.py",
+      "failure_signature": "test:tests/test_imports.py|dependency_issue|ImportError: No module named 'missing_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "e8185d11"
+    },
+    {
+      "pattern_id": "pattern_broken_dependencies_1757027321",
+      "pattern_name": "Prevent broken_dependencies in test:tests/test_imports.py",
+      "failure_signature": "test:tests/test_imports.py|dependency_issue|ImportError: No module named 'missing_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Missing or broken dependencies",
+      "prevention_steps": [
+        "Check for broken_dependencies before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for broken_dependencies symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for broken_dependencies",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "e8185d11"
+    },
+    {
+      "pattern_id": "pattern_permission_denied_1757027322",
+      "pattern_name": "Prevent permission_denied in test:tests/test_permissions.py",
+      "failure_signature": "test:tests/test_permissions.py|permission_issue|PermissionError: [Errno 13] Permission denied: '/root/protected_file'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Insufficient permissions for file access",
+      "prevention_steps": [
+        "Check for permission_denied before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for permission_denied symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for permission_denied",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "fc30d0fc"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027322",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_logic.py",
+      "failure_signature": "test:tests/test_logic.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "539fc5e1"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757027423",
+      "pattern_name": "Prevent test_import_error in test:tests/test_module_5.py",
+      "failure_signature": "test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_5'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "46ccc21d"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027424",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_1.py",
+      "failure_signature": "test:tests/test_module_1.py|unknown|AssertionError: Expected 1, got 2|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "9056395a"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027425",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_6.py",
+      "failure_signature": "test:tests/test_module_6.py|unknown|AssertionError: Expected 6, got 7|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "d6687ea0"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757027426",
+      "pattern_name": "Prevent test_import_error in test:tests/test_module_0.py",
+      "failure_signature": "test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_10'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "e19d845f"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757027427",
+      "pattern_name": "Prevent test_import_error in test:tests/test_module_5.py",
+      "failure_signature": "test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_15'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "b3f10b30"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027428",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_1.py",
+      "failure_signature": "test:tests/test_module_1.py|unknown|AssertionError: Expected 1, got 2|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "9056395a"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027430",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_1.py",
+      "failure_signature": "test:tests/test_module_1.py|resource_exhaustion|AssertionError: Expected 11, got 12|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "275db4bb"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027431",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_6.py",
+      "failure_signature": "test:tests/test_module_6.py|unknown|AssertionError: Expected 16, got 17|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "c5231731"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757027432",
+      "pattern_name": "Prevent test_import_error in test:tests/test_module_5.py",
+      "failure_signature": "test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_15'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "b3f10b30"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757027433",
+      "pattern_name": "Prevent test_import_error in test:tests/test_module_5.py",
+      "failure_signature": "test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_35'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0c9d00c6"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757027434",
+      "pattern_name": "Prevent test_import_error in test:tests/test_module_5.py",
+      "failure_signature": "test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_45'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "113f1e75"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027438",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_1.py",
+      "failure_signature": "test:tests/test_module_1.py|unknown|AssertionError: Expected 1, got 2|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "9056395a"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027440",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_6.py",
+      "failure_signature": "test:tests/test_module_6.py|unknown|AssertionError: Expected 6, got 7|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "d6687ea0"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027441",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_6.py",
+      "failure_signature": "test:tests/test_module_6.py|resource_exhaustion|AssertionError: Expected 26, got 27|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "6ef24254"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027444",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_1.py",
+      "failure_signature": "test:tests/test_module_1.py|resource_exhaustion|AssertionError: Expected 41, got 42|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "951f7611"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027445",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_6.py",
+      "failure_signature": "test:tests/test_module_6.py|unknown|AssertionError: Expected 46, got 47|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "f2a28a12"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757027445",
+      "pattern_name": "Prevent test_import_error in test:tests/test_module_5.py",
+      "failure_signature": "test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_5'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "46ccc21d"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757027446",
+      "pattern_name": "Prevent test_import_error in test:tests/test_module_5.py",
+      "failure_signature": "test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_25'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "d16a8f04"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757027447",
+      "pattern_name": "Prevent test_import_error in test:tests/test_module_0.py",
+      "failure_signature": "test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_40'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "4d5f8ee1"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757027448",
+      "pattern_name": "Prevent test_import_error in test:tests/test_module_5.py",
+      "failure_signature": "test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_55'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "474349b2"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757027449",
+      "pattern_name": "Prevent test_import_error in test:tests/test_module_5.py",
+      "failure_signature": "test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_75'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "a8a78e94"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757027450",
+      "pattern_name": "Prevent test_import_error in test:tests/test_module_5.py",
+      "failure_signature": "test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_95'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "f7c0b515"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027455",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_1.py",
+      "failure_signature": "test:tests/test_module_1.py|unknown|AssertionError: Expected 1, got 2|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "9056395a"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027456",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_6.py",
+      "failure_signature": "test:tests/test_module_6.py|unknown|AssertionError: Expected 6, got 7|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "d6687ea0"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027457",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_6.py",
+      "failure_signature": "test:tests/test_module_6.py|unknown|AssertionError: Expected 16, got 17|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "c5231731"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027458",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_1.py",
+      "failure_signature": "test:tests/test_module_1.py|unknown|AssertionError: Expected 21, got 22|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "fd880541"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027459",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_1.py",
+      "failure_signature": "test:tests/test_module_1.py|unknown|AssertionError: Expected 31, got 32|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "e666ccd7"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027460",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_6.py",
+      "failure_signature": "test:tests/test_module_6.py|unknown|AssertionError: Expected 36, got 37|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "edfae93f"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027461",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_6.py",
+      "failure_signature": "test:tests/test_module_6.py|unknown|AssertionError: Expected 46, got 47|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "f2a28a12"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027462",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_1.py",
+      "failure_signature": "test:tests/test_module_1.py|unknown|AssertionError: Expected 51, got 52|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "91626f11"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027463",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_1.py",
+      "failure_signature": "test:tests/test_module_1.py|unknown|AssertionError: Expected 61, got 62|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "760a9dfa"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027464",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_6.py",
+      "failure_signature": "test:tests/test_module_6.py|unknown|AssertionError: Expected 66, got 67|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "b39bab34"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757027465",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_1.py",
+      "failure_signature": "test:tests/test_module_1.py|resource_exhaustion|AssertionError: Expected 71, got 72|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "e30ba7d3"
     }
   ],
-  "last_updated": "2025-09-04T16:12:35.362368",
-  "pattern_count": 22
+  "last_updated": "2025-09-04T17:11:05.013749",
+  "pattern_count": 63
 }

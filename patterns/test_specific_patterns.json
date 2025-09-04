@@ -1,0 +1,163 @@
+{
+  "test_patterns": [
+    {
+      "pattern_id": "test_pattern_test_import_error_1757027307",
+      "pattern_name": "Prevent test_import_error in test:tests/test_imports.py",
+      "failure_signature": "test:test:tests/test_imports.py|dependency_issue|ImportError: No module named 'missing_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Analyze broken_dependencies systematically",
+        "Validate fix addresses root cause",
+        "Check if modules are installed: pip list | grep <module>",
+        "Install missing dependencies: pip install <module>",
+        "Identify missing modules from error message",
+        "Implement root cause fix"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error in test execution",
+        "Automated detection of dependency_issue failures",
+        "Proactive test environment validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous test environment monitoring",
+        "Preventive test dependency validation"
+      ],
+      "pattern_hash": "c7a20ca5"
+    },
+    {
+      "pattern_id": "test_pattern_permission_denied_1757027307",
+      "pattern_name": "Prevent permission_denied in test:tests/test_permissions.py",
+      "failure_signature": "test:test:tests/test_permissions.py|permission_issue|PermissionError: [Errno 13] Permission denied: '/root/protected_file'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Insufficient permissions for file access",
+      "prevention_steps": [
+        "Identify files with incorrect permissions",
+        "Verify user has necessary access rights",
+        "Apply correct permissions using chmod"
+      ],
+      "detection_criteria": [
+        "Monitor for permission_denied in test execution",
+        "Automated detection of permission_issue failures",
+        "Proactive test environment validation"
+      ],
+      "automated_checks": [
+        "Automated check for permission_denied",
+        "Continuous test environment monitoring",
+        "Preventive test dependency validation"
+      ],
+      "pattern_hash": "b5196250"
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757027308",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_logic.py",
+      "failure_signature": "test:test:tests/test_logic.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Review test logic and expected vs actual values",
+        "Analyze assertion failure details from stack trace",
+        "Check if test data or fixtures are correct"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure in test execution",
+        "Automated detection of unknown failures",
+        "Proactive test environment validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous test environment monitoring",
+        "Preventive test dependency validation"
+      ],
+      "pattern_hash": "9b4e42eb"
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757027424",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_1.py",
+      "failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 1, got 2|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Analyze assertion failure details from stack trace",
+        "Review test logic and expected vs actual values",
+        "Check if test data or fixtures are correct"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure in test execution",
+        "Automated detection of unknown failures",
+        "Proactive test environment validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous test environment monitoring",
+        "Preventive test dependency validation"
+      ],
+      "pattern_hash": "7e0ff0af"
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757027425",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_6.py",
+      "failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 6, got 7|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Analyze assertion failure details from stack trace",
+        "Review test logic and expected vs actual values",
+        "Check if test data or fixtures are correct"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure in test execution",
+        "Automated detection of unknown failures",
+        "Proactive test environment validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous test environment monitoring",
+        "Preventive test dependency validation"
+      ],
+      "pattern_hash": "4b3c01cb"
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757027430",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_1.py",
+      "failure_signature": "test:test:tests/test_module_1.py|resource_exhaustion|AssertionError: Expected 11, got 12|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Analyze assertion failure details from stack trace",
+        "Review test logic and expected vs actual values",
+        "Check if test data or fixtures are correct"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure in test execution",
+        "Automated detection of resource_exhaustion failures",
+        "Proactive test environment validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous test environment monitoring",
+        "Preventive test dependency validation"
+      ],
+      "pattern_hash": "d80bbb8e"
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757027441",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_6.py",
+      "failure_signature": "test:test:tests/test_module_6.py|resource_exhaustion|AssertionError: Expected 26, got 27|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Analyze assertion failure details from stack trace",
+        "Review test logic and expected vs actual values",
+        "Check if test data or fixtures are correct"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure in test execution",
+        "Automated detection of resource_exhaustion failures",
+        "Proactive test environment validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous test environment monitoring",
+        "Preventive test dependency validation"
+      ],
+      "pattern_hash": "4387c78a"
+    }
+  ],
+  "last_updated": "2025-09-04T17:11:05.014475",
+  "pattern_count": 7
+}
