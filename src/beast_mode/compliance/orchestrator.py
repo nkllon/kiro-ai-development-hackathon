@@ -24,6 +24,7 @@ from .models import (
     TestCoverageStatus,
     TaskReconciliationStatus
 )
+from .rm.rm_validator import RMValidator
 
 
 class ComplianceOrchestrator(ReflectiveModule):

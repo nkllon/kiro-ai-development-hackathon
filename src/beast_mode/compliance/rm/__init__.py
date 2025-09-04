@@ -1,8 +1,10 @@
 """
-RM (Reflective Module) architectural compliance validation components.
+RM (Reflective Module) compliance validation components.
 
-This module provides validation capabilities for ensuring all components
-follow RM architectural principles and interface requirements.
+This package contains validators for ensuring RM architectural compliance
+according to Beast Mode Framework standards.
 """
 
-# Placeholder for future RM validation components
+from .rm_validator import RMValidator
+
+__all__ = ['RMValidator']
