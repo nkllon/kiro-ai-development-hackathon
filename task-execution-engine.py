@@ -597,77 +597,87 @@ class TaskExecutionEngine(ReflectiveModule):
         
         try:
             while True:
-            iteration += 1
-            self.logger.info(f"Execution iteration {iteration}")
-            
-            # Get tasks ready for execution
-            ready_tasks = self.get_ready_tasks()
-            available_agents = self.get_available_agents()
-            
-            if not ready_tasks:
-                # Check if we're done or blocked
-                remaining_tasks = [t for t in self.tasks.values() 
-                                 if t.status in [TaskStatus.NOT_STARTED, TaskStatus.IN_PROGRESS]]
+                iteration += 1
+                self.logger.info(f"Execution iteration {iteration}")
                 
-                if not remaining_tasks:
-                    self.logger.info("All tasks completed!")
-                    break
-                elif not any(t.status == TaskStatus.IN_PROGRESS for t in remaining_tasks):
-                    self.logger.warning("No ready tasks and no tasks in progress - possible deadlock")
-                    break
-                else:
-                    self.logger.info("Waiting for in-progress tasks to complete...")
-                    # In a real implementation, this would wait for task completion events
-                    break
-            
-            if not available_agents:
-                self.logger.info("No available agents - waiting for task completions")
-                break
-            
-            # Assign tasks to agents
-            assignments_made = 0
-            for task in ready_tasks:
+                # Get tasks ready for execution
+                ready_tasks = self.get_ready_tasks()
+                available_agents = self.get_available_agents()
+                
+                if not ready_tasks:
+                    # Check if we're done or blocked
+                    remaining_tasks = [t for t in self.tasks.values() 
+                                     if t.status in [TaskStatus.NOT_STARTED, TaskStatus.IN_PROGRESS]]
+                    
+                    if not remaining_tasks:
+                        self.logger.info("All tasks completed!")
+                        break
+                    elif not any(t.status == TaskStatus.IN_PROGRESS for t in remaining_tasks):
+                        self.logger.warning("No ready tasks and no tasks in progress - possible deadlock")
+                        break
+                    else:
+                        self.logger.info("Waiting for in-progress tasks to complete...")
+                        # In a real implementation, this would wait for task completion events
+                        break
+                
                 if not available_agents:
+                    self.logger.info("No available agents - waiting for task completions")
                     break
                 
-                # Find best agent for this task (simple capability matching)
-                best_agent = self._find_best_agent(task, available_agents)
+                # Assign tasks to agents
+                assignments_made = 0
+                for task in ready_tasks:
+                    if not available_agents:
+                        break
+                    
+                    # Find best agent for this task (simple capability matching)
+                    best_agent = self._find_best_agent(task, available_agents)
+                    
+                    if best_agent and self.assign_task_to_agent(task, best_agent):
+                        available_agents.remove(best_agent)
+                        assignments_made += 1
                 
-                if best_agent and self.assign_task_to_agent(task, best_agent):
-                    available_agents.remove(best_agent)
-                    assignments_made += 1
-            
-            if assignments_made == 0:
-                self.logger.info("No task assignments made this iteration")
-                break
-            
-            self.logger.info(f"Made {assignments_made} task assignments in iteration {iteration}")
+                if assignments_made == 0:
+                    self.logger.info("No task assignments made this iteration")
+                    break
+                
+                self.logger.info(f"Made {assignments_made} task assignments in iteration {iteration}")
         
-            # Generate execution summary
+        except Exception as e:
+            self.logger.error(f"Error during task execution: {e}")
             execution_end = datetime.now()
-            total_duration = (execution_end - execution_start).total_seconds()
-            
-            # Commit final changes
-            if self.git_session and self.git_session.changes_made:
-                commit_msg = f"Task execution session completed - {len(self.completed_tasks)}/{len(self.tasks)} tasks completed"
-                self._commit_changes(commit_msg)
-                self._push_session_branch()
-            
-            # Determine if execution was successful
-            success_rate = len(self.completed_tasks) / len(self.tasks) * 100
-            execution_successful = success_rate >= 80  # Consider 80%+ completion as success
-            
-            # Handle Git session cleanup
-            if self.auto_merge and execution_successful:
-                merge_success = self._merge_session_branch()
-                if merge_success:
-                    self._cleanup_session_branch()
-                    git_status = "merged_and_cleaned"
-                else:
-                    git_status = "merge_failed"
-            elif self.auto_revert_on_failure and not execution_successful:
-                self._revert_session_changes()
-                git_status = "reverted"
+            return {
+                "error": str(e),
+                "execution_start": execution_start.isoformat(),
+                "execution_end": execution_end.isoformat(),
+                "success": False
+            }
+        
+        # Generate execution summary
+        execution_end = datetime.now()
+        total_duration = (execution_end - execution_start).total_seconds()
+        
+        # Commit final changes
+        if self.git_session and self.git_session.changes_made:
+            commit_msg = f"Task execution session completed - {len(self.completed_tasks)}/{len(self.tasks)} tasks completed"
+            self._commit_changes(commit_msg)
+            self._push_session_branch()
+        
+        # Determine if execution was successful
+        success_rate = len(self.completed_tasks) / len(self.tasks) * 100
+        execution_successful = success_rate >= 80  # Consider 80%+ completion as success
+        
+        # Handle Git session cleanup
+        if self.auto_merge and execution_successful:
+            merge_success = self._merge_session_branch()
+            if merge_success:
+                self._cleanup_session_branch()
+                git_status = "merged_and_cleaned"
+            else:
+                git_status = "merge_failed"
+        elif self.auto_revert_on_failure and not execution_successful:
+            self._revert_session_changes()
+            git_status = "reverted"
             else:
                 git_status = "branch_preserved"
             

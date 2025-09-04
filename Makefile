@@ -39,7 +39,12 @@ analyze-dependencies:
 	@echo "🔍 Analyzing task dependencies..."
 	python3 cli.py analyze
 
-# Execute tasks with recursive descent
+# Execute tasks with clean architecture
+execute:
+	@echo "🚀 Starting clean task execution..."
+	python3 clean_cli.py execute
+
+# Execute tasks with recursive descent (legacy)
 execute-tasks:
 	@echo "🚀 Starting recursive descent task execution..."
 	python3 cli.py execute --simulate
@@ -56,6 +61,11 @@ run-task-engine:
 # Show task status
 status:
 	@echo "📊 Showing current task status..."
+	python3 clean_cli.py status
+
+# Legacy status (old monolithic engine)
+legacy-status:
+	@echo "📊 Showing legacy task status..."
 	python3 cli.py status
 
 # Show specific task info
