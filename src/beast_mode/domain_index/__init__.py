@@ -55,6 +55,26 @@ from .base import (
     CachedComponent
 )
 
+from .domain_cache import (
+    DomainCache,
+    DomainSpecificCache
+)
+
+from .domain_index import (
+    DomainIndex
+)
+
+from .domain_validator import (
+    DomainValidator,
+    ValidationRule,
+    ConsistencyCheck,
+    SchemaValidator
+)
+
+from .registry_manager import (
+    DomainRegistryManager
+)
+
 from .exceptions import (
     DomainIndexError,
     DomainRegistryError,
@@ -117,6 +137,16 @@ __all__ = [
     "DomainSystemComponent",
     "ConfigurableComponent", 
     "CachedComponent",
+    
+    # Core Components
+    "DomainCache",
+    "DomainSpecificCache",
+    "DomainIndex",
+    "DomainValidator",
+    "ValidationRule",
+    "ConsistencyCheck",
+    "SchemaValidator",
+    "DomainRegistryManager",
     
     # Exceptions
     "DomainIndexError",
