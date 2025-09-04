@@ -1,5 +1,9 @@
 # Beast Mode Framework - Task Execution Makefile
 
+# Include modular makefiles
+include makefiles/colors.mk
+include makefiles/testing.mk
+
 .PHONY: help install test run-task-engine analyze-dependencies execute-tasks status task-info dag-analyze dag-status dag-info clean beast-mode pdca-cycle systematic-repair model-driven quality-gates self-consistency
 
 # Default target
@@ -17,6 +21,10 @@ help:
 	@echo "  📦 SETUP & TESTING:"
 	@echo "    install            Install dependencies with uv"
 	@echo "    test               Run tests"
+	@echo "    test-with-rca      Run tests with automatic RCA on failures"
+	@echo "    rca                Perform RCA analysis on recent test failures"
+	@echo "    rca-task           Perform RCA on specific task (use TASK=<id>)"
+	@echo "    rca-report         Generate detailed RCA analysis report"
 	@echo "    clean              Clean up generated files"
 	@echo ""
 	@echo "  🔧 LEGACY COMMANDS:"
