@@ -1564,7 +1564,3079 @@
         "analysis_source": "test_rca_integrator"
       },
       "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028574",
+      "source_failure_signature": "test:test:tests/test_example.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:29:34.849527",
+      "context_factors": {
+        "test_file": "tests/test_example.py",
+        "test_function": "test_sample_failure",
+        "test_class": null,
+        "pytest_node_id": "tests/test_example.py::test_sample_failure",
+        "failure_type": "assertion",
+        "test_context": {
+          "simulated": true
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028593",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:29:53.692499",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028594",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:29:54.011467",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028594",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:29:54.471230",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028629",
+      "source_failure_signature": "test:test:tests/test_imports.py|dependency_issue|ImportError: No module named 'missing_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:29.691816",
+      "context_factors": {
+        "test_file": "tests/test_imports.py",
+        "test_function": "test_import_error",
+        "test_class": "TestImports",
+        "pytest_node_id": "tests/test_imports.py::TestImports::test_import_error",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_permission_denied_1757028629",
+      "source_failure_signature": "test:test:tests/test_permissions.py|permission_issue|PermissionError: [Errno 13] Permission denied: '/root/protected_file'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:29.906784",
+      "context_factors": {
+        "test_file": "tests/test_permissions.py",
+        "test_function": "test_permission_error",
+        "test_class": "TestPermissions",
+        "pytest_node_id": "tests/test_permissions.py::TestPermissions::test_permission_error",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "integration"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028630",
+      "source_failure_signature": "test:test:tests/test_logic.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:30.123887",
+      "context_factors": {
+        "test_file": "tests/test_logic.py",
+        "test_function": "test_assertion_failure",
+        "test_class": "TestLogic",
+        "pytest_node_id": "tests/test_logic.py::TestLogic::test_assertion_failure",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028630",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'common_missing_dep'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:30.786819",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_import_0",
+        "test_class": "TestModule0",
+        "pytest_node_id": "tests/test_module_0.py::TestModule0::test_import_0",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028631",
+      "source_failure_signature": "test:test:tests/test_module_1.py|dependency_issue|ImportError: No module named 'common_missing_dep'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:31.008472",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_import_1",
+        "test_class": "TestModule1",
+        "pytest_node_id": "tests/test_module_1.py::TestModule1::test_import_1",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028631",
+      "source_failure_signature": "test:test:tests/test_module_2.py|dependency_issue|ImportError: No module named 'common_missing_dep'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:31.229970",
+      "context_factors": {
+        "test_file": "tests/test_module_2.py",
+        "test_function": "test_import_2",
+        "test_class": "TestModule2",
+        "pytest_node_id": "tests/test_module_2.py::TestModule2::test_import_2",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028631",
+      "source_failure_signature": "test:test:tests/test_imports.py|dependency_issue|ImportError: No module named 'missing_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:31.452103",
+      "context_factors": {
+        "test_file": "tests/test_imports.py",
+        "test_function": "test_import_error",
+        "test_class": "TestImports",
+        "pytest_node_id": "tests/test_imports.py::TestImports::test_import_error",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_permission_denied_1757028631",
+      "source_failure_signature": "test:test:tests/test_permissions.py|permission_issue|PermissionError: [Errno 13] Permission denied: '/root/protected_file'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:31.688898",
+      "context_factors": {
+        "test_file": "tests/test_permissions.py",
+        "test_function": "test_permission_error",
+        "test_class": "TestPermissions",
+        "pytest_node_id": "tests/test_permissions.py::TestPermissions::test_permission_error",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "integration"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028631",
+      "source_failure_signature": "test:test:tests/test_logic.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:31.919735",
+      "context_factors": {
+        "test_file": "tests/test_logic.py",
+        "test_function": "test_assertion_failure",
+        "test_class": "TestLogic",
+        "pytest_node_id": "tests/test_logic.py::TestLogic::test_assertion_failure",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028637",
+      "source_failure_signature": "test:test:tests/test_data_analysis.py|dependency_issue|ImportError: No module named 'pandas'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:37.930253",
+      "context_factors": {
+        "test_file": "tests/test_data_analysis.py",
+        "test_function": "test_pandas_import",
+        "test_class": "TestDataAnalysis",
+        "pytest_node_id": "tests/test_data_analysis.py::TestDataAnalysis::test_pandas_import",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit",
+          "category": "data_analysis"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028638",
+      "source_failure_signature": "test:test:tests/test_api.py|unknown|AssertionError: Expected status code 200, got 404|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:38.213780",
+      "context_factors": {
+        "test_file": "tests/test_api.py",
+        "test_function": "test_api_endpoint",
+        "test_class": "TestAPI",
+        "pytest_node_id": "tests/test_api.py::TestAPI::test_api_endpoint",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "integration",
+          "category": "api"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028638",
+      "source_failure_signature": "test:test:tests/test_imports.py|dependency_issue|ImportError: No module named 'nonexistent_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:38.445568",
+      "context_factors": {
+        "test_file": "tests/test_imports.py",
+        "test_function": "test_import_missing_module",
+        "test_class": "TestImports",
+        "pytest_node_id": "tests/test_imports.py::TestImports::test_import_missing_module",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit",
+          "test_category": "imports"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028638",
+      "source_failure_signature": "test:test:tests/test_module_a.py|dependency_issue|ImportError: No module named 'missing_dep'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:38.669057",
+      "context_factors": {
+        "test_file": "tests/test_module_a.py",
+        "test_function": "test_import_error_1",
+        "test_class": "TestModuleA",
+        "pytest_node_id": "tests/test_module_a.py::TestModuleA::test_import_error_1",
+        "failure_type": "error",
+        "test_context": {},
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028638",
+      "source_failure_signature": "test:test:tests/test_module_b.py|dependency_issue|ImportError: No module named 'missing_dep'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:38.897227",
+      "context_factors": {
+        "test_file": "tests/test_module_b.py",
+        "test_function": "test_import_error_2",
+        "test_class": "TestModuleB",
+        "pytest_node_id": "tests/test_module_b.py::TestModuleB::test_import_error_2",
+        "failure_type": "error",
+        "test_context": {},
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028639",
+      "source_failure_signature": "test:test:tests/test_imports.py|dependency_issue|ImportError: No module named 'nonexistent_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:39.165503",
+      "context_factors": {
+        "test_file": "tests/test_imports.py",
+        "test_function": "test_import_missing_module",
+        "test_class": "TestImports",
+        "pytest_node_id": "tests/test_imports.py::TestImports::test_import_missing_module",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit",
+          "test_category": "imports"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028639",
+      "source_failure_signature": "test:test:tests/test_imports.py|dependency_issue|ImportError: No module named 'nonexistent_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:39.518380",
+      "context_factors": {
+        "test_file": "tests/test_imports.py",
+        "test_function": "test_import_missing_module",
+        "test_class": "TestImports",
+        "pytest_node_id": "tests/test_imports.py::TestImports::test_import_missing_module",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit",
+          "test_category": "imports"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028639",
+      "source_failure_signature": "test:test:tests/test_imports.py|dependency_issue|ImportError: No module named 'nonexistent_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:39.843219",
+      "context_factors": {
+        "test_file": "tests/test_imports.py",
+        "test_function": "test_import_missing_module",
+        "test_class": "TestImports",
+        "pytest_node_id": "tests/test_imports.py::TestImports::test_import_missing_module",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit",
+          "test_category": "imports"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028640",
+      "source_failure_signature": "test:test:tests/test_data_analysis.py|dependency_issue|ImportError: No module named 'pandas'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:40.521597",
+      "context_factors": {
+        "test_file": "tests/test_data_analysis.py",
+        "test_function": "test_pandas_import",
+        "test_class": "TestDataAnalysis",
+        "pytest_node_id": "tests/test_data_analysis.py::TestDataAnalysis::test_pandas_import",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit",
+          "category": "data_analysis",
+          "priority": "high"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028640",
+      "source_failure_signature": "test:test:tests/test_data_analysis.py|dependency_issue|ImportError: No module named 'numpy'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:40.759135",
+      "context_factors": {
+        "test_file": "tests/test_data_analysis.py",
+        "test_function": "test_numpy_import",
+        "test_class": "TestDataAnalysis",
+        "pytest_node_id": "tests/test_data_analysis.py::TestDataAnalysis::test_numpy_import",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit",
+          "category": "data_analysis",
+          "priority": "high"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028641",
+      "source_failure_signature": "test:test:tests/test_visualization.py|dependency_issue|ImportError: No module named 'matplotlib'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:41.021730",
+      "context_factors": {
+        "test_file": "tests/test_visualization.py",
+        "test_function": "test_matplotlib_import",
+        "test_class": "TestVisualization",
+        "pytest_node_id": "tests/test_visualization.py::TestVisualization::test_matplotlib_import",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit",
+          "category": "visualization",
+          "priority": "medium"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_permission_denied_1757028641",
+      "source_failure_signature": "test:test:tests/test_security.py|permission_issue|PermissionError: [Errno 13] Permission denied: '/etc/secrets/api_key'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:41.568515",
+      "context_factors": {
+        "test_file": "tests/test_security.py",
+        "test_function": "test_secrets_file",
+        "test_class": "TestSecurity",
+        "pytest_node_id": "tests/test_security.py::TestSecurity::test_secrets_file",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "integration",
+          "category": "security",
+          "priority": "critical"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028643",
+      "source_failure_signature": "test:test:tests/test_views.py|unknown|AssertionError: 500 != 200 : Expected successful response, got server error|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:43.107462",
+      "context_factors": {
+        "test_file": "tests/test_views.py",
+        "test_function": "test_view_response",
+        "test_class": "TestViews",
+        "pytest_node_id": "tests/test_views.py::TestViews::test_view_response",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "integration",
+          "framework": "django",
+          "category": "views",
+          "priority": "high"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028643",
+      "source_failure_signature": "test:test:tests/test_api_endpoints.py|unknown|AssertionError: 401 != 200 : Authentication failed for protected endpoint|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:43.652922",
+      "context_factors": {
+        "test_file": "tests/test_api_endpoints.py",
+        "test_function": "test_api_endpoint_authentication",
+        "test_class": "TestAPIEndpoints",
+        "pytest_node_id": "tests/test_api_endpoints.py::TestAPIEndpoints::test_api_endpoint_authentication",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "integration",
+          "framework": "fastapi",
+          "category": "authentication",
+          "priority": "critical"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028645",
+      "source_failure_signature": "test:test:tests/test_cache.py|dependency_issue|ImportError: No module named 'redis'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:45.163764",
+      "context_factors": {
+        "test_file": "tests/test_cache.py",
+        "test_function": "test_redis_dependency",
+        "test_class": "TestCache",
+        "pytest_node_id": "tests/test_cache.py::TestCache::test_redis_dependency",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit",
+          "category": "cache",
+          "priority": "high"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028646",
+      "source_failure_signature": "test:test:tests/test_business.py|unknown|AssertionError: Expected total_amount to be 150.0, got 120.0|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:46.028064",
+      "context_factors": {
+        "test_file": "tests/test_business.py",
+        "test_function": "test_business_logic",
+        "test_class": "TestBusiness",
+        "pytest_node_id": "tests/test_business.py::TestBusiness::test_business_logic",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "category": "business_logic",
+          "priority": "low"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028647",
+      "source_failure_signature": "test:test:tests/test_data_analysis.py|dependency_issue|ImportError: No module named 'pandas'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:47.009305",
+      "context_factors": {
+        "test_file": "tests/test_data_analysis.py",
+        "test_function": "test_pandas_import",
+        "test_class": "TestDataAnalysis",
+        "pytest_node_id": "tests/test_data_analysis.py::TestDataAnalysis::test_pandas_import",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit",
+          "category": "data_analysis",
+          "priority": "high"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028647",
+      "source_failure_signature": "test:test:tests/test_data_analysis.py|dependency_issue|ImportError: No module named 'numpy'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:47.226799",
+      "context_factors": {
+        "test_file": "tests/test_data_analysis.py",
+        "test_function": "test_numpy_import",
+        "test_class": "TestDataAnalysis",
+        "pytest_node_id": "tests/test_data_analysis.py::TestDataAnalysis::test_numpy_import",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit",
+          "category": "data_analysis",
+          "priority": "high"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028647",
+      "source_failure_signature": "test:test:tests/test_visualization.py|dependency_issue|ImportError: No module named 'matplotlib'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:47.460137",
+      "context_factors": {
+        "test_file": "tests/test_visualization.py",
+        "test_function": "test_matplotlib_import",
+        "test_class": "TestVisualization",
+        "pytest_node_id": "tests/test_visualization.py::TestVisualization::test_matplotlib_import",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "unit",
+          "category": "visualization",
+          "priority": "medium"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.7
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028648",
+      "source_failure_signature": "test:test:tests/test_views.py|unknown|AssertionError: 500 != 200 : Expected successful response, got server error|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:48.064788",
+      "context_factors": {
+        "test_file": "tests/test_views.py",
+        "test_function": "test_view_response",
+        "test_class": "TestViews",
+        "pytest_node_id": "tests/test_views.py::TestViews::test_view_response",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "integration",
+          "framework": "django",
+          "category": "views",
+          "priority": "high"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028648",
+      "source_failure_signature": "test:test:tests/test_regression.py|unknown|AssertionError: Basic test|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:48.651280",
+      "context_factors": {
+        "test_file": "tests/test_regression.py",
+        "test_function": "test_regression",
+        "test_class": "TestRegression",
+        "pytest_node_id": "tests/test_regression.py::TestRegression::test_regression",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "regression"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028652",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_0'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:52.843823",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_0",
+        "test_class": "TestClass0",
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_0",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028653",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_5'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:53.070375",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_5",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass5::test_performance_5",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028653",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 1, got 2|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:53.711210",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_1",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass1::test_performance_1",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028654",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 6, got 7|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:54.349154",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_6",
+        "test_class": "TestClass6",
+        "pytest_node_id": "tests/test_module_6.py::TestClass6::test_performance_6",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028655",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_0'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:55.000415",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_0",
+        "test_class": "TestClass0",
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_0",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028655",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_20'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:55.238903",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_20",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_20",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028655",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_5'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:55.460465",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_5",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass5::test_performance_5",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028655",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_10'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:55.682962",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_10",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass10::test_performance_10",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028655",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_15'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:55.932393",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_15",
+        "test_class": "TestClass15",
+        "pytest_node_id": "tests/test_module_5.py::TestClass15::test_performance_15",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028657",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 1, got 2|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:57.759295",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_1",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass1::test_performance_1",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028658",
+      "source_failure_signature": "test:test:tests/test_module_1.py|resource_exhaustion|AssertionError: Expected 11, got 12|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:58.856539",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_11",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass11::test_performance_11",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028659",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 21, got 22|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:30:59.946302",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_21",
+        "test_class": "TestClass1",
+        "pytest_node_id": "tests/test_module_1.py::TestClass1::test_performance_21",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028660",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 6, got 7|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:00.168482",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_6",
+        "test_class": "TestClass6",
+        "pytest_node_id": "tests/test_module_6.py::TestClass6::test_performance_6",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028660",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 16, got 17|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:00.391962",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_16",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_6.py::TestClass16::test_performance_16",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028660",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_0'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:00.633508",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_0",
+        "test_class": "TestClass0",
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_0",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028660",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_5'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:00.864781",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_5",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass5::test_performance_5",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028661",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_10'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:01.097559",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_10",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass10::test_performance_10",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028661",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_15'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:01.317075",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_15",
+        "test_class": "TestClass15",
+        "pytest_node_id": "tests/test_module_5.py::TestClass15::test_performance_15",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028661",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_20'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:01.537082",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_20",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_20",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028661",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_25'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:01.755563",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_25",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass5::test_performance_25",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028661",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_30'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:01.972276",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_30",
+        "test_class": "TestClass10",
+        "pytest_node_id": "tests/test_module_0.py::TestClass10::test_performance_30",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 3,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028662",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_35'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:02.188236",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_35",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass15::test_performance_35",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 3,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028662",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_40'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:02.407093",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_40",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_40",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 4,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028662",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_45'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:02.624407",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_45",
+        "test_class": "TestClass5",
+        "pytest_node_id": "tests/test_module_5.py::TestClass5::test_performance_45",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 4,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028665",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 1, got 2|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:05.525608",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_1",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass1::test_performance_1",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028667",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 6, got 7|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:07.912133",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_6",
+        "test_class": "TestClass6",
+        "pytest_node_id": "tests/test_module_6.py::TestClass6::test_performance_6",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028668",
+      "source_failure_signature": "test:test:tests/test_module_1.py|resource_exhaustion|AssertionError: Expected 11, got 12|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:08.133594",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_11",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass11::test_performance_11",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028668",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 16, got 17|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:08.357901",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_16",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_6.py::TestClass16::test_performance_16",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028668",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 21, got 22|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:08.589081",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_21",
+        "test_class": "TestClass1",
+        "pytest_node_id": "tests/test_module_1.py::TestClass1::test_performance_21",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028668",
+      "source_failure_signature": "test:test:tests/test_module_6.py|resource_exhaustion|AssertionError: Expected 26, got 27|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:08.807650",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_26",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_6.py::TestClass6::test_performance_26",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028670",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 31, got 32|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:10.775963",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_31",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass11::test_performance_31",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 3,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028670",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 36, got 37|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:10.997539",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_36",
+        "test_class": "TestClass16",
+        "pytest_node_id": "tests/test_module_6.py::TestClass16::test_performance_36",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 3,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028671",
+      "source_failure_signature": "test:test:tests/test_module_1.py|resource_exhaustion|AssertionError: Expected 41, got 42|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:11.218457",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_41",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass1::test_performance_41",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 4,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028671",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 46, got 47|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:11.435467",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_46",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_6.py::TestClass6::test_performance_46",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 4,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028671",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_0'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:11.685644",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_0",
+        "test_class": "TestClass0",
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_0",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028671",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_5'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:11.911517",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_5",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass5::test_performance_5",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028672",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_10'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:12.126272",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_10",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass10::test_performance_10",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028672",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_15'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:12.340701",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_15",
+        "test_class": "TestClass15",
+        "pytest_node_id": "tests/test_module_5.py::TestClass15::test_performance_15",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028672",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_20'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:12.565960",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_20",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_20",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028672",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_25'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:12.793312",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_25",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass5::test_performance_25",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028673",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_30'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:13.008025",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_30",
+        "test_class": "TestClass10",
+        "pytest_node_id": "tests/test_module_0.py::TestClass10::test_performance_30",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 3,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028673",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_35'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:13.230550",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_35",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass15::test_performance_35",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 3,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028673",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_40'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:13.446496",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_40",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_40",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 4,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028673",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_45'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:13.660481",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_45",
+        "test_class": "TestClass5",
+        "pytest_node_id": "tests/test_module_5.py::TestClass5::test_performance_45",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 4,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028673",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_50'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:13.883806",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_50",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass10::test_performance_50",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 5,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028674",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_55'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:14.106620",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_55",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass15::test_performance_55",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 5,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028674",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_60'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:14.545599",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_60",
+        "test_class": "TestClass0",
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_60",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 6,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028674",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_65'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:14.761962",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_65",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass5::test_performance_65",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 6,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028674",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_70'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:14.979706",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_70",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass10::test_performance_70",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 7,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028675",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_75'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:15.212260",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_75",
+        "test_class": "TestClass15",
+        "pytest_node_id": "tests/test_module_5.py::TestClass15::test_performance_75",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 7,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028675",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_80'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:15.434913",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_80",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_80",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 8,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028675",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_85'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:15.652082",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_85",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass5::test_performance_85",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 8,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028675",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_90'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:15.864235",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_90",
+        "test_class": "TestClass10",
+        "pytest_node_id": "tests/test_module_0.py::TestClass10::test_performance_90",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 9,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028676",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_95'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:16.085114",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_95",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass15::test_performance_95",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 9,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028680",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 1, got 2|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:20.337608",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_1",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass1::test_performance_1",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028680",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 6, got 7|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:20.983067",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_6",
+        "test_class": "TestClass6",
+        "pytest_node_id": "tests/test_module_6.py::TestClass6::test_performance_6",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028681",
+      "source_failure_signature": "test:test:tests/test_module_1.py|resource_exhaustion|AssertionError: Expected 11, got 12|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:21.630065",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_11",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass11::test_performance_11",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028682",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 16, got 17|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:22.279159",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_16",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_6.py::TestClass16::test_performance_16",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028683",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 21, got 22|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:23.139159",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_21",
+        "test_class": "TestClass1",
+        "pytest_node_id": "tests/test_module_1.py::TestClass1::test_performance_21",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028683",
+      "source_failure_signature": "test:test:tests/test_module_6.py|resource_exhaustion|AssertionError: Expected 26, got 27|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:23.835207",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_26",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_6.py::TestClass6::test_performance_26",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028684",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 31, got 32|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:24.529594",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_31",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass11::test_performance_31",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 3,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028685",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 36, got 37|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:25.579994",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_36",
+        "test_class": "TestClass16",
+        "pytest_node_id": "tests/test_module_6.py::TestClass16::test_performance_36",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 3,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028686",
+      "source_failure_signature": "test:test:tests/test_module_1.py|resource_exhaustion|AssertionError: Expected 41, got 42|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:26.320423",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_41",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass1::test_performance_41",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 4,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028687",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 46, got 47|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:27.406123",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_46",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_6.py::TestClass6::test_performance_46",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 4,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028688",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 51, got 52|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:28.174639",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_51",
+        "test_class": "TestClass11",
+        "pytest_node_id": "tests/test_module_1.py::TestClass11::test_performance_51",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 5,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028688",
+      "source_failure_signature": "test:test:tests/test_module_6.py|resource_exhaustion|AssertionError: Expected 56, got 57|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:28.897253",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_56",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_6.py::TestClass16::test_performance_56",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 5,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028689",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 61, got 62|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:29.725236",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_61",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass1::test_performance_61",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 6,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028690",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 66, got 67|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:30.367716",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_66",
+        "test_class": "TestClass6",
+        "pytest_node_id": "tests/test_module_6.py::TestClass6::test_performance_66",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 6,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028691",
+      "source_failure_signature": "test:test:tests/test_module_1.py|resource_exhaustion|AssertionError: Expected 71, got 72|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:31.182773",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_71",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass11::test_performance_71",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 7,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028692",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_0'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:32.198055",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_0",
+        "test_class": "TestClass0",
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_0",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028692",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_40'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:32.198255",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_40",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_40",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 4,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028692",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_20'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:32.202995",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_20",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_20",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028692",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_55'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:32.465285",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_55",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass15::test_performance_55",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 5,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028692",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_25'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:32.465594",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_25",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass5::test_performance_25",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028692",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_15'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:32.470486",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_15",
+        "test_class": "TestClass15",
+        "pytest_node_id": "tests/test_module_5.py::TestClass15::test_performance_15",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028692",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_35'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:32.727467",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_35",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass15::test_performance_35",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 3,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028692",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_5'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:32.737544",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_5",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass5::test_performance_5",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028692",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_45'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:32.737685",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_45",
+        "test_class": "TestClass5",
+        "pytest_node_id": "tests/test_module_5.py::TestClass5::test_performance_45",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 4,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028693",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_30'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:33.002525",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_30",
+        "test_class": "TestClass10",
+        "pytest_node_id": "tests/test_module_0.py::TestClass10::test_performance_30",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 3,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028693",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_10'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:33.006849",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_10",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass10::test_performance_10",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028693",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_50'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:33.006946",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_50",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass10::test_performance_50",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 5,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028695",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 1, got 2|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:35.154635",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_1",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass1::test_performance_1",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028695",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 21, got 22|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:35.169498",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_21",
+        "test_class": "TestClass1",
+        "pytest_node_id": "tests/test_module_1.py::TestClass1::test_performance_21",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028695",
+      "source_failure_signature": "test:test:tests/test_module_6.py|resource_exhaustion|AssertionError: Expected 26, got 27|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:35.437618",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_26",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_6.py::TestClass6::test_performance_26",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028695",
+      "source_failure_signature": "test:test:tests/test_module_1.py|resource_exhaustion|AssertionError: Expected 41, got 42|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:35.680549",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_41",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass1::test_performance_41",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 4,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028695",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 6, got 7|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:35.957637",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_6",
+        "test_class": "TestClass6",
+        "pytest_node_id": "tests/test_module_6.py::TestClass6::test_performance_6",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028695",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 46, got 47|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:35.967427",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_46",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_6.py::TestClass6::test_performance_46",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 4,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028696",
+      "source_failure_signature": "test:test:tests/test_module_1.py|resource_exhaustion|AssertionError: Expected 11, got 12|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:36.832562",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_11",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass11::test_performance_11",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028696",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 51, got 52|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:36.839764",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_51",
+        "test_class": "TestClass11",
+        "pytest_node_id": "tests/test_module_1.py::TestClass11::test_performance_51",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 5,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028696",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 31, got 32|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:36.853506",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_31",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass11::test_performance_31",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 3,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028697",
+      "source_failure_signature": "test:test:tests/test_module_6.py|resource_exhaustion|AssertionError: Expected 56, got 57|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:37.607105",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_56",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_6.py::TestClass16::test_performance_56",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 5,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028697",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 16, got 17|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:37.607326",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_16",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_6.py::TestClass16::test_performance_16",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028697",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 36, got 37|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:31:37.612730",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_36",
+        "test_class": "TestClass16",
+        "pytest_node_id": "tests/test_module_6.py::TestClass16::test_performance_36",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 3,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028740",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_0'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:20.612662",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_0",
+        "test_class": "TestClass0",
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_0",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028740",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_5'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:20.836726",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_5",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass5::test_performance_5",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028741",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_10'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:21.058363",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_10",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass10::test_performance_10",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028741",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_15'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:21.287092",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_15",
+        "test_class": "TestClass15",
+        "pytest_node_id": "tests/test_module_5.py::TestClass15::test_performance_15",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028741",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_20'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:21.506213",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_20",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_20",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028741",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_25'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:21.833587",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_25",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass5::test_performance_25",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028742",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_30'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:22.054421",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_30",
+        "test_class": "TestClass10",
+        "pytest_node_id": "tests/test_module_0.py::TestClass10::test_performance_30",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 3,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028742",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_35'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:22.269059",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_35",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_5.py::TestClass15::test_performance_35",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 3,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028742",
+      "source_failure_signature": "test:test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_40'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:22.507700",
+      "context_factors": {
+        "test_file": "tests/test_module_0.py",
+        "test_function": "test_performance_40",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_0.py::TestClass0::test_performance_40",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 4,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_import_error_1757028742",
+      "source_failure_signature": "test:test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_45'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:22.723227",
+      "context_factors": {
+        "test_file": "tests/test_module_5.py",
+        "test_function": "test_performance_45",
+        "test_class": "TestClass5",
+        "pytest_node_id": "tests/test_module_5.py::TestClass5::test_performance_45",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 4,
+          "complexity": 0
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028745",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 1, got 2|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:25.804138",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_1",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass1::test_performance_1",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028748",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 6, got 7|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:28.399448",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_6",
+        "test_class": "TestClass6",
+        "pytest_node_id": "tests/test_module_6.py::TestClass6::test_performance_6",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 0,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028748",
+      "source_failure_signature": "test:test:tests/test_module_1.py|resource_exhaustion|AssertionError: Expected 11, got 12|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:28.619008",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_11",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass11::test_performance_11",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028748",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 16, got 17|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:28.965434",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_16",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_6.py::TestClass16::test_performance_16",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 1,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028749",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 21, got 22|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:29.201605",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_21",
+        "test_class": "TestClass1",
+        "pytest_node_id": "tests/test_module_1.py::TestClass1::test_performance_21",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028749",
+      "source_failure_signature": "test:test:tests/test_module_6.py|resource_exhaustion|AssertionError: Expected 26, got 27|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:29.428820",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_26",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_6.py::TestClass6::test_performance_26",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 2,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028751",
+      "source_failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 31, got 32|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:31.487090",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_31",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass11::test_performance_31",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 3,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028751",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 36, got 37|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:31.820234",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_36",
+        "test_class": "TestClass16",
+        "pytest_node_id": "tests/test_module_6.py::TestClass16::test_performance_36",
+        "failure_type": "error",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 3,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028752",
+      "source_failure_signature": "test:test:tests/test_module_1.py|resource_exhaustion|AssertionError: Expected 41, got 42|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:32.222241",
+      "context_factors": {
+        "test_file": "tests/test_module_1.py",
+        "test_function": "test_performance_41",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_1.py::TestClass1::test_performance_41",
+        "failure_type": "timeout",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 4,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028752",
+      "source_failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 46, got 47|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:32:32.467221",
+      "context_factors": {
+        "test_file": "tests/test_module_6.py",
+        "test_function": "test_performance_46",
+        "test_class": null,
+        "pytest_node_id": "tests/test_module_6.py::TestClass6::test_performance_46",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "performance",
+          "batch": 4,
+          "complexity": 1
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757028811",
+      "source_failure_signature": "test:test:tests/test_example.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-04T17:33:31.120592",
+      "context_factors": {
+        "test_file": "tests/test_example.py",
+        "test_function": "test_sample_failure",
+        "test_class": null,
+        "pytest_node_id": "tests/test_example.py::test_sample_failure",
+        "failure_type": "assertion",
+        "test_context": {
+          "simulated": true
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
     }
   ],
-  "last_updated": "2025-09-04T17:11:05.014724"
+  "last_updated": "2025-09-04T17:33:31.120705"
 }

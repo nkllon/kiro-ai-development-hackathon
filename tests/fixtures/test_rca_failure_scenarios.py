@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import List, Dict, Any
 from dataclasses import dataclass
 
-from beast_mode.testing.rca_integration import TestFailureData
+from src.beast_mode.testing.rca_integration import TestFailureData
 
 
 @dataclass
