@@ -45,7 +45,7 @@
     - **Dependencies:** Task 1
     - **Can run parallel with:** Tasks 3, 4, 7
 
-  - [ ] 2.2 Implement domain indexing and caching system 🔀 **`feature/domain-registry-manager`**
+  - [ ] 2.2 Implement domain indexing and caching system 🔀 **`task/2.2-domain-indexing-caching`**
     - Create DomainIndex class for efficient domain lookups
     - Implement DomainCache class with TTL and invalidation strategies
     - Write comprehensive tests for indexing performance and cache behavior
@@ -53,7 +53,7 @@
     - **Dependencies:** Task 2.1
     - **Can run parallel with:** Tasks 2.3, 3.x, 4.x, 7.x
 
-  - [ ] 2.3 Add domain validation and consistency checking 🔀 **`feature/domain-registry-manager`**
+  - [ ] 2.3 Add domain validation and consistency checking 🔀 **`task/2.3-domain-validation-consistency`**
     - Implement domain structure validation against schema
     - Create dependency validation logic to detect missing or circular dependencies
     - Write tests for validation edge cases and error handling
@@ -70,7 +70,7 @@
     - **Dependencies:** Task 1
     - **Can run parallel with:** Tasks 2, 4, 7
 
-  - [ ] 3.2 Add advanced query capabilities with relationship analysis 🔀 **`feature/query-engine`**
+  - [ ] 3.2 Add advanced query capabilities with relationship analysis 🔀 **`task/3.2-advanced-query-capabilities`**
     - Implement dependency graph traversal and relationship queries
     - Create capability-based search using domain requirements and tools
     - Add relevance scoring for search results
@@ -79,7 +79,7 @@
     - **Dependencies:** Task 3.1, Task 2.1 (for domain data)
     - **Can run parallel with:** Tasks 3.3, 4.x, 7.x
 
-  - [ ] 3.3 Implement natural language query processing 🔀 **`feature/query-engine`**
+  - [ ] 3.3 Implement natural language query processing 🔀 **`task/3.3-natural-language-query`**
     - Create query parser that converts natural language to structured queries
     - Implement query suggestion system for incomplete or ambiguous queries
     - Add query result ranking and filtering capabilities
@@ -98,7 +98,7 @@
     - **Dependencies:** Task 1
     - **Can run parallel with:** Tasks 2, 3, 7
 
-  - [ ] 4.2 Add comprehensive dependency analysis 🔀 **`feature/health-monitoring`**
+  - [ ] 4.2 Add comprehensive dependency analysis 🔀 **`task/4.2-dependency-analysis`**
     - Implement circular dependency detection algorithms
     - Create orphaned file detection by analyzing uncovered file patterns
     - Add dependency impact analysis for change assessment
@@ -107,7 +107,7 @@
     - **Dependencies:** Task 4.1, Task 2.1 (for domain data)
     - **Can run parallel with:** Tasks 4.3, 2.x, 3.x, 7.x
 
-  - [ ] 4.3 Build health reporting and alerting system 🔀 **`feature/health-monitoring`**
+  - [ ] 4.3 Build health reporting and alerting system 🔀 **`task/4.3-health-reporting-alerting`**
     - Create HealthReport generation with detailed issue categorization
     - Implement health status aggregation and trend analysis
     - Add configurable alerting for critical health issues
@@ -119,7 +119,7 @@
 ## PHASE 3: Advanced Features (Parallel Execution - 3 Agents)
 
 - [ ] 5. Develop Synchronization Engine **[PHASE 3A - PARALLEL]**
-  - [ ] 5.1 Implement filesystem synchronization
+  - [ ] 5.1 Implement filesystem synchronization 🔀 **`task/5.1-filesystem-synchronization`**
     - Create DomainSyncEngine class that compares registry with actual files
     - Implement file pattern change detection and analysis
     - Create domain assignment suggestions for new or moved files
@@ -128,7 +128,7 @@
     - **Dependencies:** Tasks 2.1, 3.1, 4.1 (Phase 2 complete)
     - **Can run parallel with:** Tasks 6, 8
 
-  - [ ] 5.2 Add automated registry updates
+  - [ ] 5.2 Add automated registry updates 🔀 **`task/5.2-automated-registry-updates`**
     - Implement safe registry update mechanisms with backup and rollback
     - Create change validation and approval workflows
     - Add batch update capabilities for large-scale changes
@@ -137,7 +137,7 @@
     - **Dependencies:** Task 5.1
     - **Can run parallel with:** Tasks 5.3, 6.x, 8.x
 
-  - [ ] 5.3 Build conflict resolution system
+  - [ ] 5.3 Build conflict resolution system 🔀 **`task/5.3-conflict-resolution-system`**
     - Implement conflict detection for overlapping domain patterns
     - Create resolution suggestion algorithms based on domain characteristics
     - Add manual conflict resolution interfaces with guided workflows
@@ -147,7 +147,7 @@
     - **Can run parallel with:** Tasks 5.2, 6.x, 8.x
 
 - [ ] 6. Create Analytics Engine for domain insights **[PHASE 3B - PARALLEL]**
-  - [ ] 6.1 Implement domain metrics calculation
+  - [ ] 6.1 Implement domain metrics calculation 🔀 **`task/6.1-domain-metrics-calculation`**
     - Create DomainAnalyticsEngine class with comprehensive metrics
     - Implement complexity scoring based on file count, dependencies, and patterns
     - Calculate coupling metrics and extraction potential scores
@@ -156,7 +156,7 @@
     - **Dependencies:** Tasks 2.1, 4.1 (Phase 2 complete)
     - **Can run parallel with:** Tasks 5, 8
 
-  - [ ] 6.2 Add extraction candidate identification
+  - [ ] 6.2 Add extraction candidate identification 🔀 **`task/6.2-extraction-candidate-identification`**
     - Implement scoring algorithms for PyPI packaging potential
     - Create dependency analysis for extraction feasibility
     - Add effort estimation based on domain complexity and dependencies
@@ -165,7 +165,7 @@
     - **Dependencies:** Task 6.1
     - **Can run parallel with:** Tasks 6.3, 5.x, 8.x
 
-  - [ ] 6.3 Build trend analysis and evolution tracking
+  - [ ] 6.3 Build trend analysis and evolution tracking 🔀 **`task/6.3-trend-analysis-evolution`**
     - Implement domain change tracking over time
     - Create evolution pattern analysis and prediction
     - Add comparative analysis between domains and domain categories
@@ -175,7 +175,7 @@
     - **Can run parallel with:** Tasks 6.2, 5.x, 8.x
 
 - [ ] 7. Integrate with existing Makefile system **[PHASE 2D - PARALLEL]** 🔀 **`feature/makefile-integration`**
-  - [ ] 7.1 Create Makefile integration layer 🔀 **`feature/makefile-integration`**
+  - [ ] 7.1 Create Makefile integration layer 🔀 **`task/7.1-makefile-integration-layer`**
     - Implement MakefileIntegrator class that extends existing makefiles/domains.mk
     - Create domain-to-makefile target mapping system using existing structure
     - Add makefile target execution with domain context
@@ -184,7 +184,7 @@
     - **Dependencies:** Task 1
     - **Can run parallel with:** Tasks 2, 3, 4
 
-  - [ ] 7.2 Enhance existing makefile targets with domain intelligence 🔀 **`feature/makefile-integration`**
+  - [ ] 7.2 Enhance existing makefile targets with domain intelligence 🔀 **`task/7.2-enhance-makefile-targets`**
     - Extend makefiles/domains.mk with domain-aware targets
     - Integrate with existing beast_mode CLI structure
     - Add domain-specific operations to existing makefile framework
@@ -193,7 +193,7 @@
     - **Dependencies:** Task 7.1, Task 2.1 (for domain data)
     - **Can run parallel with:** Tasks 7.3, 2.x, 3.x, 4.x
 
-  - [ ] 7.3 Build makefile health validation 🔀 **`feature/makefile-integration`**
+  - [ ] 7.3 Build makefile health validation 🔀 **`task/7.3-makefile-health-validation`**
     - Implement makefile target validation against domain capabilities
     - Create makefile dependency checking and circular dependency detection
     - Add makefile execution testing and validation
@@ -203,7 +203,7 @@
     - **Can run parallel with:** Tasks 7.2, 2.x, 3.x, 4.x
 
 - [ ] 8. Extend existing CLI with domain operations **[PHASE 3C - PARALLEL]**
-  - [ ] 8.1 Add domain commands to existing beast_mode CLI
+  - [ ] 8.1 Add domain commands to existing beast_mode CLI 🔀 **`task/8.1-domain-cli-commands`**
     - Extend src/beast_mode/cli/beast_mode_cli.py with domain operations
     - Create commands for domain querying, searching, and information display
     - Add health checking and status reporting commands for domains
@@ -212,7 +212,7 @@
     - **Dependencies:** Tasks 2.1, 3.1, 4.1 (Phase 2 complete)
     - **Can run parallel with:** Tasks 5, 6
 
-  - [ ] 8.2 Add advanced domain CLI operations
+  - [ ] 8.2 Add advanced domain CLI operations 🔀 **`task/8.2-advanced-cli-operations`**
     - Implement synchronization commands with progress indicators
     - Create analytics and reporting commands with multiple output formats
     - Add makefile integration commands for domain operations
@@ -221,7 +221,7 @@
     - **Dependencies:** Task 8.1, Tasks 5.1, 6.1, 7.2
     - **Can run parallel with:** Tasks 8.3, 5.x, 6.x
 
-  - [ ] 8.3 Build interactive domain CLI features
+  - [ ] 8.3 Build interactive domain CLI features 🔀 **`task/8.3-interactive-cli-features`**
     - Implement interactive domain exploration and navigation
     - Create guided workflows for domain maintenance and updates
     - Add CLI auto-completion and help system for domain operations
@@ -233,7 +233,7 @@
 ## PHASE 4: Testing & Integration (Mixed Parallel - 2 Agents)
 
 - [ ] 9. Create comprehensive test suite **[PHASE 4A - PARALLEL]**
-  - [ ] 9.1 Implement unit tests for all core components
+  - [ ] 9.1 Implement unit tests for all core components 🔀 **`task/9.1-unit-tests-core-components`**
     - Write unit tests for DomainRegistryManager with mock data
     - Create unit tests for QueryEngine with various query scenarios
     - Implement unit tests for HealthMonitor with simulated health issues
@@ -242,7 +242,7 @@
     - **Dependencies:** Phase 3 complete (all core components implemented)
     - **Can run parallel with:** Task 10.2 (documentation)
 
-  - [ ] 9.2 Build integration tests for end-to-end workflows
+  - [ ] 9.2 Build integration tests for end-to-end workflows 🔀 **`task/9.2-integration-tests-workflows`**
     - Create integration tests for complete domain lifecycle operations
     - Implement tests for CLI command integration with core components
     - Add tests for makefile integration with actual makefile execution
@@ -251,7 +251,7 @@
     - **Dependencies:** Task 9.1
     - **Can run parallel with:** Task 10.2 (documentation)
 
-  - [ ] 9.3 Add performance and reliability tests
+  - [ ] 9.3 Add performance and reliability tests 🔀 **`task/9.3-performance-reliability-tests`**
     - Implement performance tests for large-scale domain operations
     - Create reliability tests for error recovery and graceful degradation
     - Add stress tests for concurrent access and high-load scenarios
@@ -261,7 +261,7 @@
     - **Blocks:** Task 10.1 (system integration)
 
 - [ ] 10. Integrate and finalize system **[PHASE 4B/5 - MIXED]**
-  - [ ] 10.1 Wire all components together **[PHASE 5 - SEQUENTIAL]**
+  - [ ] 10.1 Wire all components together **[PHASE 5 - SEQUENTIAL]** 🔀 **`task/10.1-wire-components-together`**
     - Create main system orchestrator that coordinates all components
     - Implement configuration management for system-wide settings
     - Add logging and monitoring infrastructure across all components
@@ -270,7 +270,7 @@
     - **Dependencies:** Tasks 9.3 (all testing complete)
     - **Blocks:** Task 10.3 (final validation)
 
-  - [ ] 10.2 Add documentation and examples **[PHASE 4B - PARALLEL]**
+  - [ ] 10.2 Add documentation and examples **[PHASE 4B - PARALLEL]** 🔀 **`task/10.2-documentation-examples`**
     - Create comprehensive API documentation for all public interfaces
     - Write user guide with examples for common domain operations
     - Add developer documentation for extending and maintaining the system
@@ -279,7 +279,7 @@
     - **Dependencies:** Phase 3 complete (all features implemented)
     - **Can run parallel with:** Tasks 9.1, 9.2
 
-  - [ ] 10.3 Validate against existing domain registry **[PHASE 5 - SEQUENTIAL]**
+  - [ ] 10.3 Validate against existing domain registry **[PHASE 5 - SEQUENTIAL]** 🔀 **`task/10.3-validate-domain-registry`**
     - Test system against actual project_model_registry.json with 100+ domains
     - Validate health checking against real project structure and makefiles
     - Perform end-to-end validation of all query and analytics capabilities
