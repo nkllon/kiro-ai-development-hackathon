@@ -216,6 +216,21 @@ class ConfigurationFileError(ConfigurationError):
         self.reason = reason
 
 
+class DependencyAnalysisError(DomainIndexError):
+    """Errors related to dependency analysis operations"""
+    pass
+
+
+class HealthReportError(DomainIndexError):
+    """Errors related to health reporting operations"""
+    pass
+
+
+class AlertingError(DomainIndexError):
+    """Errors related to alerting operations"""
+    pass
+
+
 # Utility functions for error handling
 def handle_domain_error(func):
     """Decorator for handling domain system errors"""

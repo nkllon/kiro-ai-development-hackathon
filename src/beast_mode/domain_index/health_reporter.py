@@ -449,8 +449,9 @@ class AlertManager:
             alerts = [a for a in alerts if a.severity == severity]
         
         return sorted(alerts, key=lambda a: a.created_at, reverse=True)
-class
- HealthReportGenerator(DomainSystemComponent):
+
+
+class HealthReportGenerator(DomainSystemComponent):
     """
     Generates comprehensive health reports with detailed issue categorization
     """
