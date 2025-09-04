@@ -22,6 +22,9 @@ from .exceptions import (
     RegistryCorruptionError
 )
 from .config import get_config
+from .domain_cache import DomainCache, DomainSpecificCache
+from .domain_index import DomainIndex
+from .domain_validator import DomainValidator
 
 
 class DomainRegistryManager(CachedComponent, DomainRegistryInterface):
@@ -50,11 +53,22 @@ class DomainRegistryManager(CachedComponent, DomainRegistryInterface):
         self._last_load_time = None
         self._registry_version = None
         
+        # Initialize caching, indexing, and validation systems
+        cache_config = self.config.get('cache', {})
+        index_config = self.config.get('index', {})
+        validator_config = self.config.get('validator', {})
+        
+        self._cache = DomainCache(cache_config)
+        self._domain_cache = DomainSpecificCache(self._cache)
+        self._index = DomainIndex(index_config)
+        self._validator = DomainValidator(validator_config)
+        
         # Statistics
         self.load_count = 0
         self.validation_count = 0
         
         self.logger.info(f"Initialized DomainRegistryManager with registry: {self.registry_path}")
+        self.logger.info("Initialized caching, indexing, and validation systems")
     
     def load_registry(self) -> bool:
         """Load the domain registry from JSON file"""
@@ -77,6 +91,12 @@ class DomainRegistryManager(CachedComponent, DomainRegistryInterface):
                 
                 # Clear cache since we have new data
                 self._clear_cache()
+                
+                # Rebuild index with new data
+                self._index.build_index(self._domains)
+                
+                # Warm cache with frequently accessed domains
+                self._warm_cache()
                 
                 self.logger.info(f"Successfully loaded {len(self._domains)} domains from registry")
                 return True
@@ -158,8 +178,8 @@ class DomainRegistryManager(CachedComponent, DomainRegistryInterface):
     
     def get_domain(self, domain_name: str) -> Optional[Domain]:
         """Retrieve a specific domain by name"""
-        # Check cache first
-        cached_domain = self._get_from_cache(f"domain_{domain_name}")
+        # Check domain-specific cache first
+        cached_domain = self._domain_cache.get_domain(domain_name)
         if cached_domain:
             return cached_domain
         
@@ -172,15 +192,15 @@ class DomainRegistryManager(CachedComponent, DomainRegistryInterface):
             if not domain:
                 raise DomainNotFoundError(domain_name)
             
-            # Cache the result
-            self._set_in_cache(f"domain_{domain_name}", domain)
+            # Cache the result using domain-specific cache
+            self._domain_cache.cache_domain(domain)
             
             return domain
     
     def get_all_domains(self) -> DomainCollection:
         """Retrieve all domains"""
-        # Check cache first
-        cached_domains = self._get_from_cache("all_domains")
+        # Check domain-specific cache first
+        cached_domains = self._domain_cache.get_domain_collection()
         if cached_domains:
             return cached_domains
         
@@ -189,31 +209,27 @@ class DomainRegistryManager(CachedComponent, DomainRegistryInterface):
             if not self._registry_loaded:
                 self.load_registry()
             
-            # Cache the result
-            self._set_in_cache("all_domains", self._domains.copy())
+            # Cache the result using domain-specific cache
+            self._domain_cache.cache_domain_collection(self._domains.copy())
             
             return self._domains.copy()
     
     def search_domains(self, query: str, filters: Optional[Dict[str, Any]] = None) -> List[Domain]:
-        """Search domains with optional filters"""
+        """Search domains with optional filters using the index"""
         with self._time_operation("search_domains"):
-            all_domains = self.get_all_domains()
+            # Use index for efficient searching
+            domain_names = self._index.search_index(query, filters)
+            
+            # Convert domain names to domain objects
             results = []
-            
-            query_lower = query.lower()
-            
-            for domain in all_domains.values():
-                # Basic text search
-                if (query_lower in domain.name.lower() or 
-                    query_lower in domain.description.lower() or
-                    any(query_lower in pattern.lower() for pattern in domain.patterns)):
-                    
-                    # Apply filters if provided
-                    if filters:
-                        if not self._apply_filters(domain, filters):
-                            continue
-                    
-                    results.append(domain)
+            for domain_name in domain_names:
+                try:
+                    domain = self.get_domain(domain_name)
+                    if domain:
+                        results.append(domain)
+                except DomainNotFoundError:
+                    # Domain might have been removed, skip it
+                    continue
             
             return results
     
@@ -250,50 +266,13 @@ class DomainRegistryManager(CachedComponent, DomainRegistryInterface):
             )
     
     def validate_domain(self, domain: Domain) -> ValidationResult:
-        """Validate domain structure and requirements"""
+        """Validate domain structure and requirements using comprehensive validator"""
         with self._time_operation("validate_domain"):
             self.validation_count += 1
             
-            errors = []
-            warnings = []
-            suggestions = []
-            
-            # Basic validation
-            if not domain.name:
-                errors.append("Domain name is required")
-            
-            if not domain.description:
-                warnings.append("Domain description is empty")
-            
-            if not domain.patterns:
-                errors.append("Domain must have at least one file pattern")
-            
-            # Pattern validation
-            for pattern in domain.patterns:
-                if not isinstance(pattern, str):
-                    errors.append(f"Invalid pattern type: {type(pattern)}")
-                elif not pattern.strip():
-                    errors.append("Empty pattern found")
-            
-            # Dependency validation (basic)
-            for dep in domain.dependencies:
-                if dep not in self._domains:
-                    warnings.append(f"Dependency '{dep}' not found in registry")
-            
-            # Suggestions
-            if len(domain.patterns) == 1 and "**" not in domain.patterns[0]:
-                suggestions.append("Consider using recursive patterns (**) for better coverage")
-            
-            if not domain.content_indicators:
-                suggestions.append("Adding content indicators can improve domain detection")
-            
-            return ValidationResult(
-                is_valid=len(errors) == 0,
-                errors=errors,
-                warnings=warnings,
-                suggestions=suggestions,
-                validation_time_ms=0.0  # Will be set by timing decorator
-            )
+            # Use the comprehensive validator
+            context = {'all_domains': self._domains}
+            return self._validator.validate_domain(domain, context)
     
     def update_domain(self, domain: Domain) -> bool:
         """Update a domain in the registry"""
@@ -307,9 +286,11 @@ class DomainRegistryManager(CachedComponent, DomainRegistryInterface):
                 # Update in memory
                 self._domains[domain.name] = domain
                 
-                # Clear relevant cache entries
-                self._remove_from_cache(f"domain_{domain.name}")
-                self._remove_from_cache("all_domains")
+                # Update index
+                self._index.update_index(domain)
+                
+                # Invalidate cache entries
+                self._domain_cache.invalidate_domain(domain.name)
                 
                 self.logger.info(f"Updated domain: {domain.name}")
                 return True
@@ -334,8 +315,11 @@ class DomainRegistryManager(CachedComponent, DomainRegistryInterface):
                 # Add to registry
                 self._domains[domain.name] = domain
                 
-                # Clear cache
-                self._remove_from_cache("all_domains")
+                # Update index
+                self._index.update_index(domain)
+                
+                # Invalidate cache
+                self._domain_cache.invalidate_domain(domain.name)
                 
                 self.logger.info(f"Created new domain: {domain.name}")
                 return True
@@ -354,9 +338,15 @@ class DomainRegistryManager(CachedComponent, DomainRegistryInterface):
                 # Remove from registry
                 del self._domains[domain_name]
                 
-                # Clear cache
-                self._remove_from_cache(f"domain_{domain_name}")
-                self._remove_from_cache("all_domains")
+                # Update index (remove domain)
+                self._index.update_index(Domain(
+                    name=domain_name, description="", patterns=[], content_indicators=[],
+                    requirements=[], dependencies=[], tools=DomainTools("", "", ""),
+                    metadata=DomainMetadata("", "", PackagePotential(0.0, [], [], "", []))
+                ))
+                
+                # Invalidate cache
+                self._domain_cache.invalidate_domain(domain_name)
                 
                 self.logger.info(f"Deleted domain: {domain_name}")
                 return True
@@ -366,7 +356,7 @@ class DomainRegistryManager(CachedComponent, DomainRegistryInterface):
                 return False
     
     def get_registry_stats(self) -> Dict[str, Any]:
-        """Get registry statistics"""
+        """Get comprehensive registry statistics"""
         return {
             "total_domains": len(self._domains),
             "registry_loaded": self._registry_loaded,
@@ -374,7 +364,10 @@ class DomainRegistryManager(CachedComponent, DomainRegistryInterface):
             "load_count": self.load_count,
             "validation_count": self.validation_count,
             "registry_path": str(self.registry_path),
-            "cache_stats": self.get_cache_stats()
+            "cache_stats": self._cache.get_stats(),
+            "index_stats": self._index.get_index_stats(),
+            "validation_stats": self._validator.get_validation_stats(),
+            "component_health": self.get_health_indicators()
         }
     
     def reload_registry(self) -> bool:
@@ -383,3 +376,78 @@ class DomainRegistryManager(CachedComponent, DomainRegistryInterface):
         self._registry_loaded = False
         self._clear_cache()
         return self.load_registry()
+    
+    def _warm_cache(self) -> None:
+        """Warm cache with frequently accessed domains"""
+        try:
+            # Get list of domain names to warm
+            domain_names = list(self._domains.keys())
+            
+            # Warm cache with domain loader function
+            def domain_loader(domain_name: str) -> Optional[Domain]:
+                return self._domains.get(domain_name)
+            
+            # Warm the most commonly accessed domains first
+            priority_domains = domain_names[:20]  # Top 20 domains
+            warmed_count = self._domain_cache.warm_domains(domain_loader, priority_domains)
+            
+            self.logger.debug(f"Warmed cache with {warmed_count} domains")
+            
+        except Exception as e:
+            self.logger.warning(f"Failed to warm cache: {e}")
+    
+    def get_search_suggestions(self, partial_query: str) -> List[str]:
+        """Get search query suggestions"""
+        return self._index.suggest_completions(partial_query)
+    
+    def search_by_pattern(self, pattern: str) -> List[Domain]:
+        """Search domains by file pattern"""
+        domain_names = self._index.search_by_pattern(pattern)
+        return [self.get_domain(name) for name in domain_names if name in self._domains]
+    
+    def search_by_category(self, category: str) -> List[Domain]:
+        """Search domains by category"""
+        domain_names = self._index.search_by_category(category)
+        return [self.get_domain(name) for name in domain_names if name in self._domains]
+    
+    def get_domain_relationships(self, domain_name: str) -> Dict[str, List[str]]:
+        """Get domain relationships from index"""
+        return self._index.get_domain_relationships(domain_name)
+    
+    def invalidate_cache_by_category(self, category: str) -> int:
+        """Invalidate all cached domains in a category"""
+        return self._domain_cache.invalidate_by_category(category)
+    
+    def get_cache_info(self, key: str) -> Optional[Dict[str, Any]]:
+        """Get detailed cache information for a key"""
+        return self._cache.get_entry_info(key)
+    
+    def validate_all_domains(self) -> Dict[str, ValidationResult]:
+        """Validate all domains in the registry"""
+        with self._time_operation("validate_all_domains"):
+            return self._validator.validate_domain_collection(self._domains)
+    
+    def check_domain_consistency(self) -> List[Any]:
+        """Check cross-domain consistency"""
+        with self._time_operation("check_domain_consistency"):
+            return self._validator.check_consistency(self._domains)
+    
+    def detect_circular_dependencies(self) -> List[List[str]]:
+        """Detect circular dependencies between domains"""
+        return self._validator.detect_circular_dependencies(self._domains)
+    
+    def validate_domain_dependencies(self) -> List[Any]:
+        """Validate all domain dependencies"""
+        return self._validator.validate_dependencies(self._domains)
+    
+    def get_validation_stats(self) -> Dict[str, Any]:
+        """Get validation statistics"""
+        return self._validator.get_validation_stats()
+    
+    def add_validation_rule(self, rule) -> None:
+        """Add custom validation rule"""
+        self._validator.add_validation_rule(rule)
+    
+    def add_consistency_check(self, check) -> None:
+        """Add custom consistency check"""
+        self._validator.add_consistency_check(check)

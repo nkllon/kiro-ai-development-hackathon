@@ -45,7 +45,7 @@
     - **Dependencies:** Task 1
     - **Can run parallel with:** Tasks 3, 4, 7
 
-  - [ ] 2.2 Implement domain indexing and caching system 🔀 **`task/2.2-domain-indexing-caching`**
+  - [x] 2.2 Implement domain indexing and caching system 🔀 **`task/2.2-domain-indexing-caching`**
     - Create DomainIndex class for efficient domain lookups
     - Implement DomainCache class with TTL and invalidation strategies
     - Write comprehensive tests for indexing performance and cache behavior
@@ -53,7 +53,7 @@
     - **Dependencies:** Task 2.1
     - **Can run parallel with:** Tasks 2.3, 3.x, 4.x, 7.x
 
-  - [ ] 2.3 Add domain validation and consistency checking 🔀 **`task/2.3-domain-validation-consistency`**
+  - [x] 2.3 Add domain validation and consistency checking 🔀 **`task/2.3-domain-validation-consistency`**
     - Implement domain structure validation against schema
     - Create dependency validation logic to detect missing or circular dependencies
     - Write tests for validation edge cases and error handling
