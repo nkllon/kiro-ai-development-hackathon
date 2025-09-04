@@ -6,11 +6,22 @@ Automatically issues independent tasks to agents when dependencies are met
 
 import asyncio
 import json
+import subprocess
+import uuid
+import sys
+import time
+from pathlib import Path
 from typing import Dict, List, Set, Optional, Callable
 from dataclasses import dataclass, field
 from enum import Enum
 from datetime import datetime
 import logging
+
+# Add src to Python path for ReflectiveModule import
+src_path = Path(__file__).parent / "src"
+sys.path.insert(0, str(src_path))
+
+from beast_mode.core.reflective_module import ReflectiveModule, HealthStatus, HealthIndicator
 
 class TaskStatus(Enum):
     NOT_STARTED = "not_started"
@@ -42,22 +53,61 @@ class Agent:
     capabilities: List[str] = field(default_factory=list)
     max_concurrent_tasks: int = 1
 
-class TaskExecutionEngine:
+@dataclass
+class GitSession:
+    session_id: str
+    branch_name: str
+    original_branch: str
+    created_at: datetime
+    is_active: bool = True
+    changes_made: bool = False
+
+class TaskExecutionEngine(ReflectiveModule):
     """
     Recursive descent task execution engine with dependency resolution
+    Implements RM interface compliance for Beast Mode Framework
     """
     
-    def __init__(self):
+    def __init__(self, branch_name: Optional[str] = None):
+        super().__init__("task_execution_engine")
+        
         self.tasks: Dict[str, Task] = {}
         self.agents: Dict[str, Agent] = {}
         self.completed_tasks: Set[str] = set()
         self.failed_tasks: Set[str] = set()
         self.execution_log: List[Dict] = []
-        self.logger = logging.getLogger(__name__)
+        
+        # Git session management
+        self.git_session: Optional[GitSession] = None
+        self.specified_branch = branch_name
+        self.auto_merge = True
+        self.auto_revert_on_failure = True
+        
+        # RM compliance - health indicators
+        self._update_health_indicator(
+            "engine_status",
+            HealthStatus.HEALTHY,
+            "initialized",
+            "Task execution engine initialized successfully"
+        )
         
         # Initialize task definitions
         self._initialize_tasks()
         self._initialize_agents()
+        
+        self._update_health_indicator(
+            "task_definitions",
+            HealthStatus.HEALTHY,
+            len(self.tasks),
+            f"Loaded {len(self.tasks)} task definitions"
+        )
+        
+        self._update_health_indicator(
+            "agent_pool",
+            HealthStatus.HEALTHY,
+            len(self.agents),
+            f"Initialized {len(self.agents)} agents"
+        )
     
     def _initialize_tasks(self):
         """Initialize all tasks with their dependencies"""
@@ -198,6 +248,233 @@ class TaskExecutionEngine:
         """Check if all dependencies for a task are completed"""
         return all(dep_id in self.completed_tasks for dep_id in task.dependencies)
     
+    def _run_git_command(self, command: List[str]) -> tuple[bool, str]:
+        """Execute git command and return success status and output"""
+        try:
+            result = subprocess.run(
+                ['git'] + command,
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            return True, result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+            self.logger.error(f"Git command failed: git {' '.join(command)}")
+            self.logger.error(f"Error: {e.stderr}")
+            return False, e.stderr.strip()
+    
+    def _get_current_branch(self) -> Optional[str]:
+        """Get the current git branch"""
+        success, output = self._run_git_command(['branch', '--show-current'])
+        return output if success else None
+    
+    def _generate_session_branch_name(self) -> str:
+        """Generate a unique session branch name"""
+        if self.specified_branch:
+            return self.specified_branch
+        
+        timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
+        session_id = str(uuid.uuid4())[:8]
+        return f"task-session-{timestamp}-{session_id}"
+    
+    def _create_session_branch(self) -> bool:
+        """Create and switch to a new session branch"""
+        try:
+            # Get current branch
+            original_branch = self._get_current_branch()
+            if not original_branch:
+                self.logger.error("Could not determine current branch")
+                return False
+            
+            # Generate branch name
+            branch_name = self._generate_session_branch_name()
+            
+            # Pull latest changes on current branch
+            self.logger.info(f"Pulling latest changes on {original_branch}")
+            success, _ = self._run_git_command(['pull', 'origin', original_branch])
+            if not success:
+                self.logger.warning("Failed to pull latest changes, continuing anyway")
+            
+            # Create new branch
+            self.logger.info(f"Creating session branch: {branch_name}")
+            success, _ = self._run_git_command(['checkout', '-b', branch_name])
+            if not success:
+                return False
+            
+            # Create git session
+            self.git_session = GitSession(
+                session_id=str(uuid.uuid4()),
+                branch_name=branch_name,
+                original_branch=original_branch,
+                created_at=datetime.now()
+            )
+            
+            # Update health indicators
+            self._update_health_indicator(
+                "git_session",
+                HealthStatus.HEALTHY,
+                branch_name,
+                f"Git session created on branch: {branch_name}"
+            )
+            
+            self.execution_log.append({
+                'timestamp': datetime.now().isoformat(),
+                'action': 'session_branch_created',
+                'branch_name': branch_name,
+                'original_branch': original_branch
+            })
+            
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Failed to create session branch: {e}")
+            return False
+    
+    def _commit_changes(self, message: str) -> bool:
+        """Commit current changes"""
+        try:
+            # Check if there are changes to commit
+            success, output = self._run_git_command(['status', '--porcelain'])
+            if not success or not output.strip():
+                self.logger.info("No changes to commit")
+                return True
+            
+            # Add all changes
+            success, _ = self._run_git_command(['add', '.'])
+            if not success:
+                return False
+            
+            # Commit changes
+            success, _ = self._run_git_command(['commit', '-m', message])
+            if success and self.git_session:
+                self.git_session.changes_made = True
+            
+            return success
+            
+        except Exception as e:
+            self.logger.error(f"Failed to commit changes: {e}")
+            return False
+    
+    def _push_session_branch(self) -> bool:
+        """Push session branch to remote"""
+        if not self.git_session:
+            return False
+        
+        try:
+            success, _ = self._run_git_command(['push', 'origin', self.git_session.branch_name])
+            if success:
+                self.execution_log.append({
+                    'timestamp': datetime.now().isoformat(),
+                    'action': 'session_branch_pushed',
+                    'branch_name': self.git_session.branch_name
+                })
+            return success
+            
+        except Exception as e:
+            self.logger.error(f"Failed to push session branch: {e}")
+            return False
+    
+    def _merge_session_branch(self) -> bool:
+        """Merge session branch back to original branch"""
+        if not self.git_session or not self.git_session.changes_made:
+            self.logger.info("No changes to merge")
+            return True
+        
+        try:
+            # Switch back to original branch
+            success, _ = self._run_git_command(['checkout', self.git_session.original_branch])
+            if not success:
+                return False
+            
+            # Pull latest changes
+            success, _ = self._run_git_command(['pull', 'origin', self.git_session.original_branch])
+            if not success:
+                self.logger.warning("Failed to pull latest changes before merge")
+            
+            # Merge session branch
+            success, _ = self._run_git_command(['merge', self.git_session.branch_name])
+            if not success:
+                self.logger.error("Merge failed - manual intervention required")
+                return False
+            
+            # Push merged changes
+            success, _ = self._run_git_command(['push', 'origin', self.git_session.original_branch])
+            if success:
+                self.execution_log.append({
+                    'timestamp': datetime.now().isoformat(),
+                    'action': 'session_branch_merged',
+                    'branch_name': self.git_session.branch_name,
+                    'target_branch': self.git_session.original_branch
+                })
+            
+            return success
+            
+        except Exception as e:
+            self.logger.error(f"Failed to merge session branch: {e}")
+            return False
+    
+    def _cleanup_session_branch(self) -> bool:
+        """Delete the session branch after successful merge"""
+        if not self.git_session:
+            return True
+        
+        try:
+            # Delete local branch
+            success, _ = self._run_git_command(['branch', '-d', self.git_session.branch_name])
+            if not success:
+                self.logger.warning(f"Failed to delete local branch {self.git_session.branch_name}")
+            
+            # Delete remote branch
+            success, _ = self._run_git_command(['push', 'origin', '--delete', self.git_session.branch_name])
+            if not success:
+                self.logger.warning(f"Failed to delete remote branch {self.git_session.branch_name}")
+            
+            self.execution_log.append({
+                'timestamp': datetime.now().isoformat(),
+                'action': 'session_branch_cleaned_up',
+                'branch_name': self.git_session.branch_name
+            })
+            
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Failed to cleanup session branch: {e}")
+            return False
+    
+    def _revert_session_changes(self) -> bool:
+        """Revert all changes and return to original branch"""
+        if not self.git_session:
+            return True
+        
+        try:
+            # Switch back to original branch
+            success, _ = self._run_git_command(['checkout', self.git_session.original_branch])
+            if not success:
+                return False
+            
+            # Delete session branch (force delete to discard changes)
+            success, _ = self._run_git_command(['branch', '-D', self.git_session.branch_name])
+            if not success:
+                self.logger.warning(f"Failed to force delete branch {self.git_session.branch_name}")
+            
+            # Delete remote branch if it was pushed
+            if self.git_session.changes_made:
+                success, _ = self._run_git_command(['push', 'origin', '--delete', self.git_session.branch_name])
+                if not success:
+                    self.logger.warning(f"Failed to delete remote branch {self.git_session.branch_name}")
+            
+            self.execution_log.append({
+                'timestamp': datetime.now().isoformat(),
+                'action': 'session_changes_reverted',
+                'branch_name': self.git_session.branch_name
+            })
+            
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Failed to revert session changes: {e}")
+            return False
+    
     def get_available_agents(self) -> List[Agent]:
         """Get all available agents"""
         return [agent for agent in self.agents.values() if agent.is_available]
@@ -239,6 +516,20 @@ class TaskExecutionEngine:
             task.completion_time = datetime.now()
             self.completed_tasks.add(task_id)
             
+            # Update health indicators
+            completion_rate = len(self.completed_tasks) / len(self.tasks) * 100
+            self._update_health_indicator(
+                "task_completion",
+                HealthStatus.HEALTHY if completion_rate > 80 else HealthStatus.DEGRADED,
+                completion_rate,
+                f"Task completion rate: {completion_rate:.1f}%"
+            )
+            
+            # Commit changes for completed task
+            commit_msg = f"Complete task {task_id}: {task.name}"
+            if self._commit_changes(commit_msg):
+                self.logger.info(f"Committed changes for task {task_id}")
+            
             self.execution_log.append({
                 "timestamp": datetime.now().isoformat(),
                 "action": "task_completed",
@@ -252,6 +543,20 @@ class TaskExecutionEngine:
         else:
             task.status = TaskStatus.FAILED
             self.failed_tasks.add(task_id)
+            
+            # Update health indicators for failures
+            failure_rate = len(self.failed_tasks) / len(self.tasks) * 100
+            self._update_health_indicator(
+                "task_failures",
+                HealthStatus.UNHEALTHY if failure_rate > 20 else HealthStatus.DEGRADED,
+                failure_rate,
+                f"Task failure rate: {failure_rate:.1f}%"
+            )
+            
+            # Commit failed state for tracking
+            commit_msg = f"Task {task_id} failed: {task.name}"
+            if self._commit_changes(commit_msg):
+                self.logger.info(f"Committed failed state for task {task_id}")
             
             self.execution_log.append({
                 "timestamp": datetime.now().isoformat(),
@@ -279,9 +584,19 @@ class TaskExecutionEngine:
         execution_start = datetime.now()
         iteration = 0
         
-        self.logger.info("Starting recursive task execution...")
+        # Initialize Git session
+        if not self._create_session_branch():
+            return {
+                "error": "Failed to create session branch",
+                "execution_start": execution_start.isoformat(),
+                "execution_end": datetime.now().isoformat(),
+                "success": False
+            }
         
-        while True:
+        self.logger.info(f"Starting recursive task execution in branch: {self.git_session.branch_name}")
+        
+        try:
+            while True:
             iteration += 1
             self.logger.info(f"Execution iteration {iteration}")
             
@@ -328,25 +643,74 @@ class TaskExecutionEngine:
             
             self.logger.info(f"Made {assignments_made} task assignments in iteration {iteration}")
         
-        # Generate execution summary
-        execution_end = datetime.now()
-        total_duration = (execution_end - execution_start).total_seconds()
-        
-        summary = {
-            "execution_start": execution_start.isoformat(),
-            "execution_end": execution_end.isoformat(),
-            "total_duration_seconds": total_duration,
-            "iterations": iteration,
-            "total_tasks": len(self.tasks),
-            "completed_tasks": len(self.completed_tasks),
-            "failed_tasks": len(self.failed_tasks),
-            "in_progress_tasks": len([t for t in self.tasks.values() if t.status == TaskStatus.IN_PROGRESS]),
-            "not_started_tasks": len([t for t in self.tasks.values() if t.status == TaskStatus.NOT_STARTED]),
-            "completion_rate": len(self.completed_tasks) / len(self.tasks) * 100,
-            "execution_log": self.execution_log
-        }
-        
-        return summary
+            # Generate execution summary
+            execution_end = datetime.now()
+            total_duration = (execution_end - execution_start).total_seconds()
+            
+            # Commit final changes
+            if self.git_session and self.git_session.changes_made:
+                commit_msg = f"Task execution session completed - {len(self.completed_tasks)}/{len(self.tasks)} tasks completed"
+                self._commit_changes(commit_msg)
+                self._push_session_branch()
+            
+            # Determine if execution was successful
+            success_rate = len(self.completed_tasks) / len(self.tasks) * 100
+            execution_successful = success_rate >= 80  # Consider 80%+ completion as success
+            
+            # Handle Git session cleanup
+            if self.auto_merge and execution_successful:
+                merge_success = self._merge_session_branch()
+                if merge_success:
+                    self._cleanup_session_branch()
+                    git_status = "merged_and_cleaned"
+                else:
+                    git_status = "merge_failed"
+            elif self.auto_revert_on_failure and not execution_successful:
+                self._revert_session_changes()
+                git_status = "reverted"
+            else:
+                git_status = "branch_preserved"
+            
+            summary = {
+                "execution_start": execution_start.isoformat(),
+                "execution_end": execution_end.isoformat(),
+                "total_duration_seconds": total_duration,
+                "iterations": iteration,
+                "total_tasks": len(self.tasks),
+                "completed_tasks": len(self.completed_tasks),
+                "failed_tasks": len(self.failed_tasks),
+                "in_progress_tasks": len([t for t in self.tasks.values() if t.status == TaskStatus.IN_PROGRESS]),
+                "not_started_tasks": len([t for t in self.tasks.values() if t.status == TaskStatus.NOT_STARTED]),
+                "completion_rate": success_rate,
+                "execution_successful": execution_successful,
+                "git_session": {
+                    "branch_name": self.git_session.branch_name if self.git_session else None,
+                    "original_branch": self.git_session.original_branch if self.git_session else None,
+                    "status": git_status,
+                    "changes_made": self.git_session.changes_made if self.git_session else False
+                },
+                "execution_log": self.execution_log
+            }
+            
+            return summary
+            
+        except Exception as e:
+            self.logger.error(f"Task execution failed: {e}")
+            
+            # Revert changes on exception
+            if self.auto_revert_on_failure:
+                self._revert_session_changes()
+            
+            return {
+                "error": str(e),
+                "execution_start": execution_start.isoformat(),
+                "execution_end": datetime.now().isoformat(),
+                "success": False,
+                "git_session": {
+                    "branch_name": self.git_session.branch_name if self.git_session else None,
+                    "status": "reverted_due_to_error"
+                }
+            }
     
     def _find_best_agent(self, task: Task, available_agents: List[Agent]) -> Optional[Agent]:
         """Find the best agent for a task based on capabilities"""
@@ -436,6 +800,115 @@ class TaskExecutionEngine:
             tiers[tier].append(task_id)
         
         return tiers
+    
+    # RM Interface Implementation (Required for Beast Mode Framework compliance)
+    
+    def get_module_status(self) -> Dict[str, Any]:
+        """
+        Operational visibility - external status reporting for GKE queries
+        Required by R6.4 - external systems get accurate operational information
+        """
+        execution_status = self.get_execution_status()
+        
+        return {
+            "module_name": self.module_name,
+            "status": "operational" if self.is_healthy() else "degraded",
+            "task_execution": execution_status,
+            "git_session": {
+                "active": self.git_session is not None,
+                "branch_name": self.git_session.branch_name if self.git_session else None,
+                "changes_made": self.git_session.changes_made if self.git_session else False
+            },
+            "agent_pool": {
+                "total_agents": len(self.agents),
+                "available_agents": len(self.get_available_agents()),
+                "busy_agents": len([a for a in self.agents.values() if not a.is_available])
+            },
+            "health_indicators": {name: indicator.status.value for name, indicator in self._health_indicators.items()},
+            "last_updated": datetime.now().isoformat()
+        }
+    
+    def is_healthy(self) -> bool:
+        """
+        Self-monitoring - accurate health assessment
+        Required by R6.2 - components report health status accurately
+        """
+        # Check if any critical health indicators are unhealthy
+        critical_indicators = ["engine_status", "task_definitions", "agent_pool"]
+        
+        for indicator_name in critical_indicators:
+            if indicator_name in self._health_indicators:
+                indicator = self._health_indicators[indicator_name]
+                if indicator.status in [HealthStatus.UNHEALTHY, HealthStatus.UNKNOWN]:
+                    return False
+        
+        # Check for execution errors
+        if len(self.failed_tasks) > len(self.completed_tasks):
+            return False
+        
+        # Check Git session health if active
+        if self.git_session and not self.git_session.is_active:
+            return False
+        
+        return True
+    
+    def get_health_indicators(self) -> Dict[str, Any]:
+        """
+        Self-reporting - detailed health metrics for operational visibility
+        Required by R6.2 - components report health status accurately
+        """
+        indicators = {}
+        
+        for name, indicator in self._health_indicators.items():
+            indicators[name] = {
+                "status": indicator.status.value,
+                "value": indicator.value,
+                "message": indicator.message,
+                "timestamp": indicator.timestamp
+            }
+        
+        # Add dynamic health metrics
+        indicators["execution_health"] = {
+            "status": "healthy" if len(self.failed_tasks) == 0 else "degraded",
+            "value": {
+                "success_rate": len(self.completed_tasks) / max(len(self.tasks), 1) * 100,
+                "failure_rate": len(self.failed_tasks) / max(len(self.tasks), 1) * 100,
+                "completion_rate": (len(self.completed_tasks) + len(self.failed_tasks)) / max(len(self.tasks), 1) * 100
+            },
+            "message": f"Completed: {len(self.completed_tasks)}, Failed: {len(self.failed_tasks)}, Total: {len(self.tasks)}",
+            "timestamp": time.time()
+        }
+        
+        indicators["git_session_health"] = {
+            "status": "healthy" if not self.git_session or self.git_session.is_active else "degraded",
+            "value": {
+                "session_active": self.git_session is not None,
+                "branch_name": self.git_session.branch_name if self.git_session else None,
+                "changes_made": self.git_session.changes_made if self.git_session else False
+            },
+            "message": "Git session operational" if not self.git_session or self.git_session.is_active else "Git session inactive",
+            "timestamp": time.time()
+        }
+        
+        return indicators
+    
+    def _get_primary_responsibility(self) -> str:
+        """
+        Define the single primary responsibility of this module
+        Required by RM interface for single responsibility validation
+        """
+        return "Recursive descent task execution with dependency resolution and Git branch management"
+    
+    def _update_health_indicator(self, name: str, status: HealthStatus, value: Any, message: str):
+        """Update a health indicator with current status"""
+        import time
+        self._health_indicators[name] = HealthIndicator(
+            name=name,
+            status=status,
+            value=value,
+            message=message,
+            timestamp=time.time()
+        )
 
 def main():
     """Main execution function with CLI arguments"""

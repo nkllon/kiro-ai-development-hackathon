@@ -26,7 +26,7 @@ except ImportError:
 def cli():
     """🦁 Beast Mode Framework - Task Execution Engine
     
-    Recursive descent task execution with dependency resolution
+    Recursive descent task execution with dependency resolution and RM compliance
     """
     pass
 
@@ -98,15 +98,30 @@ def analyze(output, output_format):
 @click.option('--max-agents', default=7, help='Maximum number of concurrent agents')
 @click.option('--output', '-o', help='Output file for execution results')
 @click.option('--simulate', is_flag=True, help='Simulate task completion for testing')
-def execute(dry_run, max_agents, output, simulate):
-    """🚀 Execute tasks using recursive descent with dependency resolution"""
+@click.option('--branch', '-b', help='Specify branch name (otherwise generates random session branch)')
+@click.option('--no-merge', is_flag=True, help='Do not auto-merge successful execution')
+@click.option('--no-revert', is_flag=True, help='Do not auto-revert failed execution')
+def execute(dry_run, max_agents, output, simulate, branch, no_merge, no_revert):
+    """🚀 Execute tasks using recursive descent with dependency resolution
+    
+    Git Integration:
+    - Creates a session branch for all changes
+    - Commits progress after each task completion
+    - Auto-merges on successful execution (80%+ completion)
+    - Auto-reverts on failed execution (unless --no-revert)
+    - Pushes session branch to remote for backup
+    """
     
     if dry_run:
         click.echo("🔍 DRY RUN MODE - Showing execution plan without running tasks")
     else:
         click.echo("🚀 Starting task execution with dependency resolution...")
     
-    engine = TaskExecutionEngine()
+    engine = TaskExecutionEngine(branch_name=branch)
+    
+    # Configure Git session behavior
+    engine.auto_merge = not no_merge
+    engine.auto_revert_on_failure = not no_revert
     
     # Limit agents if specified
     if max_agents < len(engine.agents):
@@ -149,6 +164,16 @@ def execute(dry_run, max_agents, output, simulate):
     click.echo(f"Completion Rate: {summary['completion_rate']:.1f}%")
     click.echo(f"Tasks Assigned: {len([log for log in summary['execution_log'] if log['action'] == 'task_assigned'])}")
     
+    # Show Git session info
+    if 'git_session' in summary:
+        git_info = summary['git_session']
+        click.echo(f"\n🌿 GIT SESSION")
+        click.echo("-" * 30)
+        click.echo(f"  Branch: {git_info.get('branch_name', 'N/A')}")
+        click.echo(f"  Original Branch: {git_info.get('original_branch', 'N/A')}")
+        click.echo(f"  Status: {git_info.get('status', 'N/A')}")
+        click.echo(f"  Changes Made: {git_info.get('changes_made', False)}")
+    
     # Show current status
     status = engine.get_execution_status()
     click.echo(f"\n📊 FINAL STATUS")
@@ -176,6 +201,19 @@ def status():
     
     for key, value in status.items():
         click.echo(f"  {key.replace('_', ' ').title()}: {value}")
+    
+    # Show RM compliance status
+    click.echo(f"\n🏛️  RM COMPLIANCE STATUS")
+    click.echo("-" * 20)
+    module_status = engine.get_module_status()
+    click.echo(f"  Module: {module_status['module_name']}")
+    click.echo(f"  Status: {module_status['status']}")
+    click.echo(f"  Healthy: {engine.is_healthy()}")
+    
+    health_indicators = engine.get_health_indicators()
+    healthy_count = sum(1 for indicator in health_indicators.values() 
+                       if indicator.get('status') == 'healthy')
+    click.echo(f"  Health Indicators: {healthy_count}/{len(health_indicators)} healthy")
     
     if ready_tasks:
         click.echo(f"\n🎯 READY TASKS ({len(ready_tasks)})")
@@ -220,6 +258,53 @@ def task_info(task_id):
         duration = (task.completion_time - task.start_time).total_seconds() / 3600
         click.echo(f"Completion Time: {task.completion_time}")
         click.echo(f"Actual Duration: {duration:.2f} hours")
+
+@cli.command()
+def rm_compliance():
+    """🏛️  Check RM (Reflective Module) compliance status"""
+    click.echo("🏛️  RM COMPLIANCE CHECK")
+    click.echo("=" * 40)
+    
+    engine = TaskExecutionEngine()
+    
+    # Check ReflectiveModule implementation
+    required_methods = ['get_module_status', 'is_healthy', 'get_health_indicators']
+    implemented_methods = [method for method in required_methods if hasattr(engine, method)]
+    
+    click.echo(f"ReflectiveModule Interface: {len(implemented_methods)}/{len(required_methods)} methods")
+    for method in required_methods:
+        status = "✅" if hasattr(engine, method) else "❌"
+        click.echo(f"  {status} {method}")
+    
+    # Show module status
+    click.echo(f"\nModule Status:")
+    module_status = engine.get_module_status()
+    click.echo(f"  Name: {module_status['module_name']}")
+    click.echo(f"  Status: {module_status['status']}")
+    click.echo(f"  Healthy: {engine.is_healthy()}")
+    
+    # Show health indicators
+    click.echo(f"\nHealth Indicators:")
+    health_indicators = engine.get_health_indicators()
+    for name, indicator in health_indicators.items():
+        status_icon = "✅" if indicator.get('status') == 'healthy' else "⚠️" if indicator.get('status') == 'degraded' else "❌"
+        click.echo(f"  {status_icon} {name}: {indicator.get('status', 'unknown')}")
+        if indicator.get('message'):
+            click.echo(f"    {indicator['message']}")
+    
+    # Overall assessment
+    compliance_score = len(implemented_methods) / len(required_methods)
+    healthy_indicators = sum(1 for indicator in health_indicators.values() 
+                           if indicator.get('status') == 'healthy')
+    health_score = healthy_indicators / len(health_indicators) if health_indicators else 0
+    
+    overall_score = (compliance_score + health_score) / 2
+    
+    click.echo(f"\nOverall RM Compliance Score: {overall_score:.2f}")
+    if overall_score >= 0.8:
+        click.echo("✅ RM compliance acceptable")
+    else:
+        click.echo("❌ RM compliance needs improvement")
 
 def simulate_task_execution(engine):
     """Simulate task execution for demonstration purposes"""
