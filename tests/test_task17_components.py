@@ -533,7 +533,7 @@ class TestComprehensiveLoggingSystem:
         assert "total_performance_events" in analytics
         assert "average_duration_ms" in analytics
         assert analytics["total_performance_events"] == 3
-        assert analytics["average_duration_ms"] == 1166.67  # (1000+2000+500)/3
+        assert abs(analytics["average_duration_ms"] - 1166.67) < 0.01  # (1000+2000+500)/3 with tolerance
         
     def test_error_analytics(self, logging_system):
         """Test error analytics generation"""
@@ -620,8 +620,9 @@ class TestTask17Integration:
             
     def test_dashboard_logging_integration(self, temp_project_root):
         """Test dashboard manager integration with logging"""
-        dashboard_manager = OperationalDashboardManager(str(temp_project_root))
+        # Create logging system first to ensure proper handler setup
         logging_system = ComprehensiveLoggingSystem(str(temp_project_root))
+        dashboard_manager = OperationalDashboardManager(str(temp_project_root))
         
         # Dashboard operations should be loggable
         with logging_system.correlation_context("dashboard-test"):

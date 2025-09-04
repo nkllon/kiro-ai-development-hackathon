@@ -10,19 +10,21 @@ def test_hackathon_setup():
     assert True, "Hackathon repository is ready for development"
 
 
-def test_ai_agents_available():
-    """Test that AI agent dependencies are available"""
+def test_core_dependencies_available():
+    """Test that core dependencies are available"""
     try:
-        import clewcrew_common
-        import clewcrew_framework
-        import clewcrew_agents
+        import pydantic
+        import jinja2
+        import yaml
+        import click
         # Test that we can access the modules
-        assert clewcrew_common.__version__ is not None
-        assert clewcrew_framework.__version__ is not None
-        assert clewcrew_agents.__version__ is not None
-        assert True, "All clewcrew dependencies are available"
-    except ImportError:
-        pytest.skip("Clewcrew dependencies not installed")
+        assert pydantic.__version__ is not None
+        assert jinja2.__version__ is not None
+        assert yaml.__version__ is not None
+        assert click.__version__ is not None
+        assert True, "All core dependencies are available"
+    except ImportError as e:
+        pytest.fail(f"Core dependencies not available: {e}")
 
 
 def test_ai_development_tools():

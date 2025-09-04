@@ -435,11 +435,16 @@ class OperationalDashboardManager(ReflectiveModule):
         results = {}
         
         try:
+            # Log the start of dashboard refresh operation
+            self.logger.info(f"Starting dashboard refresh for {len(self.dashboards)} dashboards")
+            
             for dashboard_id, config in self.dashboards.items():
                 if not config.enabled:
                     continue
                     
                 try:
+                    self.logger.info(f"Refreshing dashboard: {dashboard_id} ({config.dashboard_type.value})")
+                    
                     if config.dashboard_type == DashboardType.HEALTH_MONITORING:
                         results[dashboard_id] = self.generate_health_monitoring_dashboard()
                     elif config.dashboard_type == DashboardType.SUPERIORITY_METRICS:
@@ -452,15 +457,19 @@ class OperationalDashboardManager(ReflectiveModule):
                         results[dashboard_id] = {"error": f"Unknown dashboard type: {config.dashboard_type}"}
                         
                 except Exception as e:
+                    self.logger.error(f"Dashboard {dashboard_id} refresh failed: {str(e)}")
                     results[dashboard_id] = {"error": f"Dashboard refresh failed: {str(e)}"}
                     
             # Update refresh metrics
             refresh_time = int((time.time() - start_time) * 1000)
             self._update_refresh_metrics(refresh_time)
             
+            successful_refreshes = len([r for r in results.values() if "error" not in r])
+            self.logger.info(f"Dashboard refresh completed: {successful_refreshes}/{len(results)} successful, {refresh_time}ms")
+            
             return {
                 "success": True,
-                "dashboards_refreshed": len([r for r in results.values() if "error" not in r]),
+                "dashboards_refreshed": successful_refreshes,
                 "total_dashboards": len(results),
                 "refresh_time_ms": refresh_time,
                 "results": results

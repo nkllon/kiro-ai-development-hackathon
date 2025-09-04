@@ -1,0 +1,273 @@
+---
+description: Root Cause Analysis (RCA) enforcement for systematic problem resolution
+globs: *.py,*.js,*.ts,*.yaml,*.yml,tests/**/*,src/**/*
+alwaysApply: true
+---
+
+# Root Cause Analysis (RCA) Rule
+
+## Core Principle
+**When problems occur, perform systematic root cause analysis before applying fixes. Learn from failures to prevent recurrence.**
+
+## RCA Methodology
+
+### 1. Immediate Response Protocol
+When encountering any failure or issue:
+
+```python
+# ALWAYS start with RCA context collection
+def handle_failure(failure_context: Dict[str, Any]):
+    """Systematic failure handling with RCA"""
+    
+    # 1. Collect failure context
+    context = {
+        'failure_type': classify_failure_type(failure_context),
+        'error_message': failure_context.get('error'),
+        'stack_trace': failure_context.get('stack_trace'),
+        'environment': collect_environment_data(),
+        'system_state': capture_system_state(),
+        'timestamp': datetime.now().isoformat(),
+        'related_failures': find_related_failures(failure_context)
+    }
+    
+    # 2. Trigger RCA analysis
+    rca_result = enhanced_rca_engine.analyze_test_failure(context)
+    
+    # 3. Apply systematic fixes only
+    if rca_result.confidence_score > 0.7:
+        apply_systematic_fixes(rca_result.root_causes)
+    else:
+        # Low confidence - use Ghostbusters multi-perspective analysis
+        ghostbusters_analysis = multi_perspective_validator.validate_c7_multi_stakeholder_perspectives(
+            decision_context=f"RCA for {failure_context}",
+            initial_confidence=rca_result.confidence_score
+        )
+        apply_validated_fixes(ghostbusters_analysis)
+    
+    # 4. Update prevention rules
+    prevention_rule_engine.create_prevention_rules(rca_result)
+```
+
+### 2. RCA Analysis Requirements
+
+#### For Test Failures
+```python
+# REQUIRED: Comprehensive test failure analysis
+class TestFailureRCA:
+    def analyze_test_failure(self, test_name: str, failure_details: Dict[str, Any]) -> RCAResult:
+        """
+        Systematic test failure analysis
+        Requirements: 4.1, 4.2, 4.3, 4.4, 4.5 from test-rca-issues-resolution spec
+        """
+        
+        # Categorize failure type
+        failure_category = self.categorize_failure_type(failure_details)
+        
+        # Identify root causes with confidence scoring
+        root_causes = self.identify_root_causes(failure_details, failure_category)
+        
+        # Generate remediation plan
+        remediation_plan = self.suggest_remediation(root_causes)
+        
+        # Learn from historical patterns
+        self.learn_from_resolution(test_name, failure_details, root_causes)
+        
+        return RCAResult(
+            root_causes=root_causes,
+            confidence_score=self.calculate_confidence(root_causes),
+            remediation_plan=remediation_plan,
+            prevention_measures=self.generate_prevention_measures(root_causes)
+        )
+```
+
+#### For Infrastructure Issues
+```python
+# REQUIRED: Infrastructure diagnostic analysis
+class InfrastructureRCA:
+    def diagnose_infrastructure_issue(self, issue_context: Dict[str, Any]) -> RCAResult:
+        """
+        Systematic infrastructure issue analysis
+        Requirements: 1.1, 1.3, 1.4, 1.5 from test-rca-issues-resolution spec
+        """
+        
+        # Check logging issues
+        logging_issues = self.diagnose_logging_issues()
+        
+        # Validate health checks
+        health_accuracy = self.validate_health_check_accuracy()
+        
+        # Analyze system state
+        system_analysis = self.analyze_system_state_impact(issue_context)
+        
+        return self.synthesize_infrastructure_rca(
+            logging_issues, health_accuracy, system_analysis
+        )
+```
+
+### 3. Integration with Existing Systems
+
+#### Ghostbusters Integration
+```python
+# Use Ghostbusters for complex RCA decisions
+if rca_confidence < 0.5:
+    # Low confidence - full multi-perspective analysis
+    ghostbusters_result = multi_perspective_validator.analyze_low_percentage_decision({
+        'decision_context': f'RCA analysis for {failure_type}',
+        'confidence': rca_confidence,
+        'stakeholder_concerns': extract_stakeholder_concerns(failure_context)
+    })
+    
+    # Apply Ghostbusters recommendations
+    final_rca_result = integrate_ghostbusters_analysis(rca_result, ghostbusters_result)
+```
+
+#### Prevention Architecture Integration
+```python
+# RCA feeds into prevention architecture
+def update_prevention_model(rca_result: RCAResult):
+    """Update prevention models based on RCA findings"""
+    
+    # Extract prevention patterns
+    prevention_patterns = extract_prevention_patterns(rca_result.root_causes)
+    
+    # Update prevention rules
+    for pattern in prevention_patterns:
+        prevention_rule_engine.create_prevention_rule(
+            pattern_type=pattern.type,
+            trigger_conditions=pattern.conditions,
+            prevention_actions=pattern.actions,
+            effectiveness_tracking=True
+        )
+    
+    # Update model-driven enforcement
+    model_registry.update_domain_requirements(
+        domain=rca_result.affected_domain,
+        new_requirements=rca_result.prevention_measures
+    )
+```
+
+### 4. RCA Enforcement Patterns
+
+#### ALWAYS Do RCA For:
+- Test failures (any test that fails)
+- Infrastructure issues (logging, permissions, health checks)
+- Performance degradation (>20% performance drop)
+- Security incidents (any security-related failure)
+- Deployment failures (any deployment that fails)
+- Integration failures (service integration issues)
+
+#### RCA Analysis Depth:
+```python
+# Determine RCA analysis depth based on impact
+def determine_rca_depth(failure_context: Dict[str, Any]) -> str:
+    """Determine appropriate RCA analysis depth"""
+    
+    impact_score = calculate_impact_score(failure_context)
+    
+    if impact_score >= 8:  # High impact
+        return "full_systematic_analysis"  # Complete RCA with all stakeholders
+    elif impact_score >= 5:  # Medium impact  
+        return "standard_analysis"  # Standard RCA with key stakeholders
+    else:  # Low impact
+        return "basic_analysis"  # Basic RCA with automated analysis
+```
+
+#### Prevention Rule Creation:
+```python
+# ALWAYS create prevention rules from RCA findings
+def create_prevention_rules(rca_result: RCAResult):
+    """Create prevention rules based on RCA analysis"""
+    
+    for root_cause in rca_result.root_causes:
+        if root_cause.confidence_score > 0.7:
+            # High confidence - create automatic prevention rule
+            prevention_rule = PreventionRule(
+                trigger_pattern=root_cause.trigger_pattern,
+                prevention_action=root_cause.prevention_action,
+                validation_method=root_cause.validation_method,
+                effectiveness_tracking=True
+            )
+            prevention_rule_engine.add_rule(prevention_rule)
+        else:
+            # Low confidence - create monitored prevention rule
+            monitored_rule = MonitoredPreventionRule(
+                trigger_pattern=root_cause.trigger_pattern,
+                monitoring_action=root_cause.monitoring_action,
+                escalation_threshold=3,  # Escalate after 3 occurrences
+                review_required=True
+            )
+            prevention_rule_engine.add_monitored_rule(monitored_rule)
+```
+
+## Integration with Existing Rules
+
+### Complementary to Prevention Architecture
+- **Prevention First**: Use prevention-architecture.mdc for proactive measures
+- **RCA Second**: Use RCA when prevention fails
+- **Learning Loop**: RCA findings improve prevention models
+
+### Complementary to Investigation Analysis
+- **Investigation**: Use investigation-analysis.mdc for general problem-solving
+- **RCA**: Use RCA for systematic failure analysis
+- **Scope**: Investigation is broader, RCA is failure-specific
+
+### Model-Driven Integration
+- **Model First**: Use model-driven-enforcement.mdc for proactive modeling
+- **RCA Learning**: Use RCA findings to improve models
+- **Feedback Loop**: RCA validates and refines model assumptions
+
+## RCA Quality Standards
+
+### Required RCA Components
+1. **Failure Classification**: Categorize failure type (infrastructure, logic, configuration, etc.)
+2. **Root Cause Identification**: Identify actual root causes with confidence scores
+3. **Remediation Plan**: Provide actionable fix recommendations
+4. **Prevention Measures**: Define measures to prevent recurrence
+5. **Learning Integration**: Update prevention models and rules
+
+### RCA Success Criteria
+- Analysis completion time < 5 seconds for automated analysis
+- Root cause identification accuracy > 85%
+- Remediation success rate > 90%
+- Prevention rule effectiveness > 80%
+- Zero false positive root cause identification
+
+## Enforcement Actions
+
+### When RCA is Required
+```bash
+# ALWAYS run RCA before fixing failures
+make rca-analysis FAILURE_CONTEXT="test_failure" FAILURE_DETAILS="details.json"
+
+# NEVER apply fixes without RCA
+# ❌ WRONG: Quick fix without analysis
+pytest tests/failing_test.py --fix-immediately
+
+# ✅ CORRECT: RCA first, then systematic fix
+make rca-analysis FAILURE_TYPE="test_failure" TEST_NAME="failing_test"
+make apply-systematic-fixes RCA_RESULT="rca_result.json"
+```
+
+### RCA Documentation Requirements
+```python
+# REQUIRED: Document all RCA findings
+@dataclass
+class RCADocumentation:
+    failure_id: str
+    analysis_timestamp: datetime
+    root_causes: List[RootCause]
+    remediation_applied: List[str]
+    prevention_measures: List[str]
+    effectiveness_validation: Dict[str, Any]
+    lessons_learned: List[str]
+    
+    def save_to_knowledge_base(self):
+        """Save RCA findings to organizational knowledge base"""
+        knowledge_base.store_rca_analysis(self)
+        prevention_rule_engine.update_rules(self.prevention_measures)
+```
+
+## Remember
+**RCA is not about blame - it's about learning and prevention. Every failure is an opportunity to improve our systematic approach and prevent future occurrences.**
+
+**The goal is to build a learning organization where failures become stepping stones to greater reliability and systematic superiority.**

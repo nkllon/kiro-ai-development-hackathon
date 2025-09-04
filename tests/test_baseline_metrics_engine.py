@@ -10,6 +10,7 @@ from pathlib import Path
 import json
 import time
 import threading
+import concurrent.futures
 from unittest.mock import patch, MagicMock
 
 from src.beast_mode.metrics.baseline_metrics_engine import BaselineMetricsEngine, PerformanceMetrics

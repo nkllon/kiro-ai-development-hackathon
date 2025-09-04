@@ -132,6 +132,7 @@ class BeastModeCLI(ReflectiveModule):
     def execute_command(self, command: str, args: Optional[List[str]] = None) -> CLIResult:
         """
         Execute CLI command with comprehensive error handling
+        Task 17 Requirement: Enhanced CLI with manual operations and debugging capabilities
         """
         start_time = time.time()
         args = args or []
@@ -140,7 +141,7 @@ class BeastModeCLI(ReflectiveModule):
             # Update metrics
             self.cli_metrics['total_commands'] += 1
             
-            # Route command
+            # Route command to enhanced operations
             if command == CLICommand.STATUS.value:
                 result = self._execute_status_command(args)
             elif command == CLICommand.HEALTH.value:
@@ -684,118 +685,71 @@ class BeastModeCLI(ReflectiveModule):
                 success=False,
                 output=f"Unknown risks command failed: {str(e)}"
             )
-            
-    # Helper methods
     
+    # Helper methods
     def _calculate_success_rate(self) -> float:
-        """Calculate CLI command success rate"""
-        total = self.cli_metrics['total_commands']
-        if total == 0:
-            return 0.0
-        return self.cli_metrics['successful_commands'] / total
+        """Calculate command success rate"""
+        if self.cli_metrics['total_commands'] == 0:
+            return 1.0
+        return self.cli_metrics['successful_commands'] / self.cli_metrics['total_commands']
         
     def _get_session_duration_minutes(self) -> float:
         """Get session duration in minutes"""
-        duration = datetime.now() - self.cli_metrics['session_start_time']
-        return duration.total_seconds() / 60
+        return (datetime.now() - self.cli_metrics['session_start_time']).total_seconds() / 60
         
     def _get_available_components(self) -> List[str]:
         """Get list of available components"""
-        return [
-            "integration_manager",
-            "consistency_validator", 
-            "tool_orchestrator",
-            "cli_interface"
-        ]
+        return ["integration_manager", "consistency_validator", "tool_orchestrator"]
         
     def _update_average_execution_time(self, execution_time_ms: int):
         """Update average execution time"""
-        current_avg = self.cli_metrics['average_execution_time_ms']
         total_commands = self.cli_metrics['total_commands']
-        
-        new_avg = ((current_avg * (total_commands - 1)) + execution_time_ms) / total_commands
-        self.cli_metrics['average_execution_time_ms'] = new_avg
+        current_avg = self.cli_metrics['average_execution_time_ms']
+        self.cli_metrics['average_execution_time_ms'] = (
+            (current_avg * (total_commands - 1) + execution_time_ms) / total_commands
+        )
         
     def _update_most_used_command(self, command: str):
         """Update most used command tracking"""
         command_counts = {}
         for cmd_history in self.command_history:
-            cmd = cmd_history["command"]
+            cmd = cmd_history['command']
             command_counts[cmd] = command_counts.get(cmd, 0) + 1
             
         if command_counts:
-            most_used = max(command_counts.items(), key=lambda x: x[1])
-            self.cli_metrics['most_used_command'] = most_used[0]
+            self.cli_metrics['most_used_command'] = max(command_counts, key=command_counts.get)
             
-    # Public API methods
-    
-    def get_command_history(self) -> List[Dict[str, Any]]:
-        """Get command execution history"""
-        return self.command_history.copy()
-        
-    def get_cli_analytics(self) -> Dict[str, Any]:
-        """Get comprehensive CLI analytics"""
-        return {
-            "cli_metrics": self.cli_metrics.copy(),
-            "command_history": self.command_history[-20:],  # Last 20 commands
-            "component_status": {
-                "integration_manager": self.integration_manager.get_module_status(),
-                "consistency_validator": self.consistency_validator.get_module_status(),
-                "tool_orchestrator": self.tool_orchestrator.get_module_status()
-            },
-            "session_info": {
-                "start_time": self.cli_metrics['session_start_time'],
-                "duration_minutes": self._get_session_duration_minutes(),
-                "commands_per_minute": self.cli_metrics['total_commands'] / max(1, self._get_session_duration_minutes())
-            }
-        }
-        
     def create_parser(self) -> argparse.ArgumentParser:
-        """Create CLI argument parser"""
+        """Create argument parser for CLI"""
         parser = argparse.ArgumentParser(
             description="Beast Mode Framework CLI - Operational Interface",
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog="""
 Examples:
-  beast-mode status                    # Show comprehensive status
-  beast-mode health                    # Check component health
-  beast-mode validate                  # Run complete validation
-  beast-mode validate consistency      # Run self-consistency validation only
-  beast-mode pdca cycle               # Execute complete PDCA cycle
-  beast-mode orchestrate              # Show tool orchestration analytics
-  beast-mode metrics superiority      # Generate superiority metrics
-  beast-mode debug system             # Show debug information
-  beast-mode unknown-risks list       # List all unknown risks and mitigations
-  beast-mode unknown-risks UK-01      # Show specific risk details
+  beast-mode status                    # Show system status
+  beast-mode health                    # Health check
+  beast-mode validate                  # Complete validation
+  beast-mode pdca cycle               # Run PDCA cycle
+  beast-mode debug system             # Debug information
+  beast-mode unknown-risks list       # List unknown risks
             """
         )
         
         parser.add_argument(
-            "command",
-            choices=[cmd.value for cmd in CLICommand],
-            help="Command to execute"
+            'command',
+            choices=['status', 'health', 'validate', 'pdca', 'orchestrate', 'metrics', 'debug', 'unknown-risks'],
+            help='Command to execute'
         )
         
         parser.add_argument(
-            "args",
-            nargs="*",
-            help="Command arguments"
-        )
-        
-        parser.add_argument(
-            "--json",
-            action="store_true",
-            help="Output results in JSON format"
-        )
-        
-        parser.add_argument(
-            "--verbose",
-            action="store_true",
-            help="Enable verbose output"
+            'args',
+            nargs='*',
+            help='Command arguments'
         )
         
         return parser
-        
+
+
 def main():
     """Main CLI entry point"""
     cli = BeastModeCLI()
@@ -807,25 +761,15 @@ def main():
         # Execute command
         result = cli.execute_command(args.command, args.args)
         
-        # Output result
-        if args.json:
-            output_data = {
-                "command": result.command,
-                "success": result.success,
-                "output": result.output,
-                "data": result.data,
-                "execution_time_ms": result.execution_time_ms,
-                "timestamp": result.timestamp.isoformat()
-            }
-            print(json.dumps(output_data, indent=2))
-        else:
-            print(result.output)
+        # Print output
+        print(result.output)
+        
+        # Print additional data if verbose
+        if result.data and len(sys.argv) > 1 and '--verbose' in sys.argv:
+            print("\n" + "=" * 50)
+            print("Detailed Data:")
+            print(json.dumps(result.data, indent=2, default=str))
             
-            if args.verbose and result.data:
-                print("\n" + "=" * 50)
-                print("Detailed Data:")
-                print(json.dumps(result.data, indent=2, default=str))
-                
         # Exit with appropriate code
         sys.exit(0 if result.success else 1)
         
@@ -835,6 +779,7 @@ def main():
     except Exception as e:
         print(f"CLI error: {str(e)}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

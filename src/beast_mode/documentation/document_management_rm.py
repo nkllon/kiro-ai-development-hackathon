@@ -110,6 +110,9 @@ class DocumentManagementRM(ReflectiveModule):
         # Load existing documents
         self._discover_existing_documents()
         
+        # Update metrics after initialization
+        self._update_documentation_metrics()
+        
         self._update_health_indicator(
             "document_management_rm",
             HealthStatus.HEALTHY,

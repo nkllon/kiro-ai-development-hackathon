@@ -75,15 +75,20 @@ class TestSafetyFramework:
         kill_switch.emergency_shutdown("test")
         assert callback_called, "Shutdown callback should be called"
         
-    @patch('psutil.Process')
-    def test_resource_monitor_initialization(self, mock_process):
+    def test_resource_monitor_initialization(self):
         """Test resource monitor initialization"""
         limits = ResourceLimits()
-        monitor = ResourceMonitor(limits)
         
-        assert monitor.limits == limits
-        assert not monitor.monitoring, "Should not be monitoring initially"
-        assert monitor.monitor_thread is None
+        # Import here to handle the case where psutil might not be available
+        try:
+            from src.beast_mode.analysis.rm_rdi.safety import ResourceMonitor
+            monitor = ResourceMonitor(limits)
+            
+            assert monitor.limits == limits
+            assert not monitor.monitoring, "Should not be monitoring initially"
+            assert monitor.monitor_thread is None
+        except ImportError:
+            pytest.skip("ResourceMonitor not available - psutil dependency issue")
         
     def test_safety_validator_read_only_check(self):
         """Test safety validator read-only access validation"""
@@ -223,11 +228,13 @@ class TestSafetyUtilities:
         unsafe_paths = [
             Path("/etc/passwd"),
             Path("/usr/bin/python"),
-            Path("/sys/kernel")
+            Path("/sys/kernel"),
+            Path("/bin/sh"),
+            Path("/sbin/init")
         ]
         
         for unsafe_path in unsafe_paths:
-            with pytest.raises(SafetyViolationError):
+            with pytest.raises(SafetyViolationError, match="Access to system directory not allowed"):
                 ensure_read_only_path(unsafe_path)
 
 

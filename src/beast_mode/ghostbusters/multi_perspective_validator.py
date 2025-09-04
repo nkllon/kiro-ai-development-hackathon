@@ -343,3 +343,64 @@ class MultiPerspectiveValidator(ReflectiveModule):
             final_recommendation=final_recommendation,
             risk_factors=risk_factors
         )
+
+    def get_basic_perspective_analysis(self, context: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Get basic perspective analysis for medium confidence decisions"""
+        if context is None:
+            context = {}
+            
+        decision_context = context.get('decision_context', 'general_decision')
+        confidence = context.get('confidence', 0.6)
+        
+        # Perform basic multi-perspective check
+        analysis = self._basic_multi_perspective_check(decision_context, confidence)
+        
+        return {
+            "perspectives": [stakeholder.value for stakeholder in analysis.stakeholder_perspectives.keys()],
+            "analysis": {
+                "overall_confidence": analysis.overall_confidence,
+                "consensus_reached": analysis.consensus_reached,
+                "final_recommendation": analysis.final_recommendation,
+                "stakeholder_count": len(analysis.stakeholder_perspectives)
+            },
+            "confidence": analysis.overall_confidence,
+            "recommendations": [
+                rec for perspective in analysis.stakeholder_perspectives.values()
+                for rec in perspective.recommendations
+            ]
+        }
+
+    def analyze_low_percentage_decision(self, context: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Analyze low confidence decisions using full Ghostbusters methodology"""
+        if context is None:
+            context = {}
+            
+        decision_context = context.get('decision_context', 'low_confidence_decision')
+        confidence = context.get('confidence', 0.3)
+        
+        # Perform full Ghostbusters analysis
+        analysis = self._full_ghostbusters_analysis(decision_context, confidence)
+        
+        # Extract risk factors and recommendations
+        risk_factors = analysis.risk_factors
+        recommendations = []
+        confidence_boost = 0.0
+        
+        for perspective in analysis.stakeholder_perspectives.values():
+            recommendations.extend(perspective.recommendations)
+            if perspective.approval_status:
+                confidence_boost += 0.1
+                
+        return {
+            "risk_factors": risk_factors,
+            "recommendations": recommendations,
+            "confidence_boost": min(confidence_boost, 0.4),  # Cap at 40% boost
+            "stakeholder_analysis": {
+                "total_stakeholders": len(analysis.stakeholder_perspectives),
+                "approvals": sum(1 for p in analysis.stakeholder_perspectives.values() if p.approval_status),
+                "consensus_reached": analysis.consensus_reached,
+                "overall_confidence": analysis.overall_confidence
+            },
+            "final_recommendation": analysis.final_recommendation,
+            "requires_full_validation": confidence < 0.5
+        }

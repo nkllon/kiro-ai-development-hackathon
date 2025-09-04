@@ -61,6 +61,41 @@ class LogEntry:
     performance_data: Optional[Dict[str, Any]] = None
     error_details: Optional[Dict[str, Any]] = None
 
+class ComprehensiveLoggingHandler(logging.Handler):
+    """Custom logging handler that forwards to ComprehensiveLoggingSystem"""
+    
+    def __init__(self, logging_system):
+        super().__init__()
+        self.logging_system = logging_system
+        
+    def emit(self, record):
+        """Emit a log record to the comprehensive logging system"""
+        try:
+            # Map Python logging levels to our LogLevel enum
+            level_mapping = {
+                logging.DEBUG: LogLevel.DEBUG,
+                logging.INFO: LogLevel.INFO,
+                logging.WARNING: LogLevel.WARNING,
+                logging.ERROR: LogLevel.ERROR,
+                logging.CRITICAL: LogLevel.CRITICAL
+            }
+            
+            level = level_mapping.get(record.levelno, LogLevel.INFO)
+            message = self.format(record)
+            component = record.name.replace('beast_mode.', '') if record.name.startswith('beast_mode.') else record.name
+            
+            # Forward to comprehensive logging system
+            self.logging_system.log(
+                level=level,
+                message=message,
+                component=component,
+                operation=getattr(record, 'operation', None),
+                metadata={'logger_name': record.name, 'module': record.module} if hasattr(record, 'module') else {'logger_name': record.name}
+            )
+        except Exception:
+            # Don't let logging errors break the application
+            pass
+
 class ComprehensiveLoggingSystem(ReflectiveModule):
     """
     Comprehensive logging system for Beast Mode Framework
@@ -486,15 +521,26 @@ class ComprehensiveLoggingSystem(ReflectiveModule):
         self.audit_log_file = self.log_directory / "beast_mode_audit.log"
         self.error_log_file = self.log_directory / "beast_mode_errors.log"
         
-        # Setup Python logging
-        logging.basicConfig(
-            level=logging.INFO,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-            handlers=[
-                logging.FileHandler(self.main_log_file),
-                logging.StreamHandler()
-            ]
-        )
+        # Create custom handler that forwards to our logging system
+        self.custom_handler = ComprehensiveLoggingHandler(self)
+        self.custom_handler.setLevel(logging.INFO)
+        self.custom_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+        
+        # Add our custom handler to the beast_mode logger hierarchy
+        beast_mode_logger = logging.getLogger('beast_mode')
+        beast_mode_logger.addHandler(self.custom_handler)
+        beast_mode_logger.setLevel(logging.INFO)
+        
+        # Also setup basic logging if not already configured
+        if not logging.getLogger().handlers:
+            logging.basicConfig(
+                level=logging.INFO,
+                format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                handlers=[
+                    logging.FileHandler(self.main_log_file),
+                    logging.StreamHandler()
+                ]
+            )
         
     def _get_or_create_correlation_id(self) -> str:
         """Get or create correlation ID for current thread"""

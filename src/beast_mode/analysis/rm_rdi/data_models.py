@@ -31,6 +31,8 @@ class AnalysisStatus(Enum):
     NOT_STARTED = "not_started"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
+    SUCCESS = "completed"  # Alias for backward compatibility
+    PARTIAL_SUCCESS = "partial_success"  # New value for partial completion
     FAILED = "failed"
     KILLED = "killed"  # Emergency shutdown
 

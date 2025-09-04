@@ -353,7 +353,7 @@ def ensure_read_only_path(path: Path) -> Path:
     abs_path = path.resolve()
     
     # Validate path doesn't point to system directories
-    unsafe_dirs = ['/etc', '/usr', '/bin', '/sbin', '/boot', '/sys', '/proc']
+    unsafe_dirs = ['/etc', '/usr', '/bin', '/sbin', '/boot', '/sys', '/proc', '/private/etc', '/private/usr']
     path_str = str(abs_path)
     
     for unsafe_dir in unsafe_dirs:
