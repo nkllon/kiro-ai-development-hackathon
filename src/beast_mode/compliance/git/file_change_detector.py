@@ -751,6 +751,409 @@ class FileChangeDetector(ReflectiveModule):
         analysis: AdvancedFileChangeAnalysis,
         claimed_tasks: Optional[List[str]] = None
     ) -> TaskMapping:
+        """
+        Analyze task completion with enhanced accuracy and validation.
+        
+        Args:
+            task_id: Identifier for the task
+            task_config: Configuration for the task including patterns and thresholds
+            analysis: Advanced file change analysis results
+            claimed_tasks: Optional list of claimed completed tasks
+            
+        Returns:
+            TaskMapping with confidence score and evidence
+        """
+        self.logger.debug(f"Analyzing task completion for {task_id}")
+        
+        # Initialize mapping
+        mapping = TaskMapping(
+            task_id=task_id,
+            task_description=task_config.get("description", ""),
+            confidence_score=0.0,
+            matching_files=[],
+            evidence=[],
+            completion_indicators=[]
+        )
+        
+        # Get all changed files
+        all_changes = []
+        for changes in analysis.changes_by_type.values():
+            all_changes.extend(changes)
+        
+        # Check file pattern matches
+        file_patterns = task_config.get("file_patterns", [])
+        content_indicators = task_config.get("content_indicators", [])
+        completion_threshold = task_config.get("completion_threshold", 0.5)
+        
+        pattern_matches = 0
+        content_matches = 0
+        
+        for change in all_changes:
+            # Check file pattern matches
+            if self._file_matches_task_patterns(change.file_path, file_patterns):
+                mapping.matching_files.append(change.file_path)
+                pattern_matches += 1
+                
+                # Add evidence based on change type
+                if change.change_type == ChangeType.ADDED:
+                    mapping.evidence.append(f"Added {change.file_path}")
+                elif change.change_type == ChangeType.MODIFIED:
+                    mapping.evidence.append(f"Modified {change.file_path}")
+                elif change.change_type == ChangeType.DELETED:
+                    mapping.evidence.append(f"Deleted {change.file_path}")
+            
+            # Check content indicators
+            content_evidence = self._detect_content_indicators(change.file_path, content_indicators)
+            if content_evidence:
+                content_matches += len(content_evidence)
+                mapping.completion_indicators.extend(content_evidence)
+        
+        # Calculate confidence score
+        if file_patterns:
+            pattern_score = min(1.0, pattern_matches / len(file_patterns))
+        else:
+            pattern_score = 0.0
+        
+        if content_indicators:
+            content_score = min(1.0, content_matches / len(content_indicators))
+        else:
+            content_score = 0.0
+        
+        # Weighted confidence calculation
+        mapping.confidence_score = (pattern_score * 0.6) + (content_score * 0.4)
+        
+        # Boost confidence if task is claimed and has evidence
+        if claimed_tasks and task_id in claimed_tasks and mapping.evidence:
+            mapping.confidence_score = min(1.0, mapping.confidence_score * 1.2)
+        
+        # Reduce confidence if task is claimed but no evidence
+        if claimed_tasks and task_id in claimed_tasks and not mapping.evidence:
+            mapping.confidence_score *= 0.3
+            mapping.evidence.append("Task claimed but no supporting file changes found")
+        
+        return mapping
+    
+    def _validate_claimed_vs_implemented(self, task_mappings: List[TaskMapping], claimed_tasks: List[str]) -> None:
+        """
+        Validate claimed tasks against implemented tasks.
+        
+        Args:
+            task_mappings: List of task mappings with confidence scores
+            claimed_tasks: List of claimed completed tasks
+        """
+        self.logger.debug("Validating claimed tasks against implementations")
+        
+        # Add validation metadata to task mappings
+        for mapping in task_mappings:
+            if claimed_tasks and mapping.task_id in claimed_tasks:
+                if mapping.confidence_score > 0.6:
+                    mapping.evidence.append("Task claimed and well-supported by evidence")
+                elif mapping.confidence_score > 0.3:
+                    mapping.evidence.append("Task claimed with moderate evidence")
+                else:
+                    mapping.evidence.append("Task claimed but evidence is weak")
+            else:
+                if mapping.confidence_score > 0.6:
+                    mapping.evidence.append("Strong implementation evidence but task not claimed")
+    
+    def _generate_file_change_breakdown(self, analysis: AdvancedFileChangeAnalysis) -> Dict[str, Any]:
+        """
+        Generate detailed breakdown of file changes.
+        
+        Args:
+            analysis: Advanced file change analysis
+            
+        Returns:
+            Dictionary with detailed file change breakdown
+        """
+        breakdown = {
+            "by_type": {},
+            "by_category": {}
+        }
+        
+        # Breakdown by change type
+        for change_type, changes in analysis.changes_by_type.items():
+            breakdown["by_type"][change_type.value] = {
+                "count": len(changes),
+                "files": [change.file_path for change in changes],
+                "impact_scores": [change.impact_score for change in changes]
+            }
+        
+        # Breakdown by file category
+        for category, changes in analysis.changes_by_category.items():
+            breakdown["by_category"][category.value] = {
+                "count": len(changes),
+                "files": [change.file_path for change in changes],
+                "impact_scores": [change.impact_score for change in changes]
+            }
+        
+        return breakdown
+    
+    def _validate_task_completion_claims(
+        self, 
+        task_mappings: List[TaskMapping], 
+        claimed_tasks: Optional[List[str]]
+    ) -> Dict[str, Any]:
+        """
+        Validate task completion claims against evidence.
+        
+        Args:
+            task_mappings: List of task mappings with confidence scores
+            claimed_tasks: Optional list of claimed completed tasks
+            
+        Returns:
+            Dictionary with validation results
+        """
+        if not claimed_tasks:
+            return {
+                "validation_performed": False,
+                "message": "No claimed tasks provided for validation"
+            }
+        
+        validated_tasks = []
+        questionable_tasks = []
+        missing_evidence_tasks = []
+        unclaimed_implementations = []
+        
+        # Create mapping of task_id to TaskMapping for easier lookup
+        mapping_dict = {mapping.task_id: mapping for mapping in task_mappings}
+        
+        # Validate claimed tasks
+        for claimed_task in claimed_tasks:
+            if claimed_task in mapping_dict:
+                mapping = mapping_dict[claimed_task]
+                if mapping.confidence_score > 0.6:
+                    validated_tasks.append(claimed_task)
+                elif mapping.confidence_score > 0.3:
+                    questionable_tasks.append(claimed_task)
+                else:
+                    missing_evidence_tasks.append(claimed_task)
+            else:
+                missing_evidence_tasks.append(claimed_task)
+        
+        # Find unclaimed but implemented tasks
+        for mapping in task_mappings:
+            if mapping.confidence_score > 0.6 and mapping.task_id not in claimed_tasks:
+                unclaimed_implementations.append(mapping.task_id)
+        
+        # Convert lists to detailed format for better reporting
+        validated_details = [{"task_id": task, "status": "validated"} for task in validated_tasks]
+        questionable_details = []
+        missing_evidence_details = []
+        
+        # Add confidence scores for questionable and missing evidence tasks
+        for task in questionable_tasks:
+            if task in mapping_dict:
+                questionable_details.append({
+                    "task_id": task,
+                    "confidence": mapping_dict[task].confidence_score,
+                    "status": "questionable"
+                })
+        
+        for task in missing_evidence_tasks:
+            if task in mapping_dict:
+                missing_evidence_details.append({
+                    "task_id": task,
+                    "confidence": mapping_dict[task].confidence_score,
+                    "status": "missing_evidence"
+                })
+            else:
+                missing_evidence_details.append({
+                    "task_id": task,
+                    "confidence": 0.0,
+                    "status": "no_evidence"
+                })
+        
+        return {
+            "validation_performed": True,
+            "total_claimed_tasks": len(claimed_tasks),
+            "validated_tasks": validated_details,
+            "questionable_tasks": questionable_details,
+            "missing_evidence_tasks": missing_evidence_details,
+            "unclaimed_implementations": unclaimed_implementations,
+            "validation_summary": {
+                "validated_count": len(validated_tasks),
+                "questionable_count": len(questionable_tasks),
+                "missing_evidence_count": len(missing_evidence_tasks),
+                "unclaimed_count": len(unclaimed_implementations)
+            }
+        }
+    
+    def _calculate_detection_accuracy_metrics(
+        self, 
+        analysis: AdvancedFileChangeAnalysis, 
+        task_mappings: List[TaskMapping]
+    ) -> Dict[str, float]:
+        """
+        Calculate accuracy metrics for file change detection and task mapping.
+        
+        Args:
+            analysis: Advanced file change analysis
+            task_mappings: List of task mappings
+            
+        Returns:
+            Dictionary with accuracy metrics
+        """
+        metrics = {}
+        
+        # File categorization confidence
+        if analysis.total_files_changed > 0:
+            categorized_files = sum(len(changes) for changes in analysis.changes_by_category.values())
+            metrics["file_categorization_confidence"] = categorized_files / analysis.total_files_changed
+        else:
+            metrics["file_categorization_confidence"] = 1.0
+        
+        # Task mapping confidence
+        if task_mappings:
+            avg_confidence = sum(mapping.confidence_score for mapping in task_mappings) / len(task_mappings)
+            metrics["task_mapping_confidence"] = avg_confidence
+            
+            # High confidence mappings ratio
+            high_confidence_count = sum(1 for mapping in task_mappings if mapping.confidence_score > 0.6)
+            metrics["high_confidence_mappings_ratio"] = high_confidence_count / len(task_mappings)
+        else:
+            metrics["task_mapping_confidence"] = 0.0
+            metrics["high_confidence_mappings_ratio"] = 0.0
+        
+        # Coverage completeness (how well we covered all changed files)
+        if analysis.total_files_changed > 0:
+            mapped_files = set()
+            for mapping in task_mappings:
+                mapped_files.update(mapping.matching_files)
+            
+            all_changed_files = set()
+            for changes in analysis.changes_by_type.values():
+                all_changed_files.update(change.file_path for change in changes)
+            
+            if all_changed_files:
+                metrics["coverage_completeness"] = len(mapped_files) / len(all_changed_files)
+            else:
+                metrics["coverage_completeness"] = 1.0
+        else:
+            metrics["coverage_completeness"] = 1.0
+        
+        # Overall accuracy (weighted average)
+        metrics["overall_accuracy"] = (
+            metrics["file_categorization_confidence"] * 0.3 +
+            metrics["task_mapping_confidence"] * 0.4 +
+            metrics["coverage_completeness"] * 0.3
+        )
+        
+        return metrics
+    
+    def _generate_task_completion_recommendations(
+        self, 
+        task_mappings: List[TaskMapping], 
+        claimed_tasks: Optional[List[str]]
+    ) -> List[str]:
+        """
+        Generate recommendations based on task completion analysis.
+        
+        Args:
+            task_mappings: List of task mappings
+            claimed_tasks: Optional list of claimed tasks
+            
+        Returns:
+            List of recommendation strings
+        """
+        recommendations = []
+        
+        if not task_mappings:
+            recommendations.append("No task mappings found - consider reviewing file change patterns")
+            return recommendations
+        
+        # High confidence mappings
+        high_confidence = [m for m in task_mappings if m.confidence_score > 0.7]
+        if high_confidence:
+            recommendations.append(
+                f"Found {len(high_confidence)} high-confidence task completions"
+            )
+        
+        # Low confidence mappings
+        low_confidence = [m for m in task_mappings if m.confidence_score < 0.3]
+        if low_confidence:
+            recommendations.append(
+                f"Review {len(low_confidence)} low-confidence task mappings for accuracy"
+            )
+        
+        # Claimed vs implemented analysis
+        if claimed_tasks:
+            mapping_dict = {m.task_id: m for m in task_mappings}
+            
+            # Missing evidence for claimed tasks
+            missing_evidence = [
+                task for task in claimed_tasks 
+                if task not in mapping_dict or mapping_dict[task].confidence_score < 0.3
+            ]
+            if missing_evidence:
+                recommendations.append(
+                    f"Verify completion of {len(missing_evidence)} claimed tasks with weak evidence"
+                )
+            
+            # Unclaimed implementations
+            unclaimed = [
+                m.task_id for m in task_mappings 
+                if m.confidence_score > 0.6 and m.task_id not in claimed_tasks
+            ]
+            if unclaimed:
+                recommendations.append(
+                    f"Consider marking {len(unclaimed)} well-implemented tasks as complete"
+                )
+        
+        # File coverage recommendations
+        total_files = sum(len(m.matching_files) for m in task_mappings)
+        if total_files == 0:
+            recommendations.append("No files mapped to tasks - review task patterns and file changes")
+        
+        return recommendations
+    
+    def _file_matches_task_patterns(self, file_path: str, patterns: List[str]) -> bool:
+        """
+        Check if a file matches any of the task patterns.
+        
+        Args:
+            file_path: Path to the file
+            patterns: List of patterns to match against
+            
+        Returns:
+            True if file matches any pattern
+        """
+        import fnmatch
+        
+        for pattern in patterns:
+            if fnmatch.fnmatch(file_path, pattern) or fnmatch.fnmatch(file_path.lower(), pattern.lower()):
+                return True
+        return False
+    
+    def _detect_content_indicators(self, file_path: str, indicators: List[str]) -> List[str]:
+        """
+        Detect content indicators in a file.
+        
+        Args:
+            file_path: Path to the file
+            indicators: List of content indicators to look for
+            
+        Returns:
+            List of detected indicators with context
+        """
+        detected = []
+        
+        # For now, we'll use filename-based detection
+        # In a full implementation, this would read file contents
+        file_name = Path(file_path).name.lower()
+        
+        for indicator in indicators:
+            if indicator.lower() in file_name:
+                detected.append(f"Found '{indicator}' indicator in {file_path}")
+        
+        # Add some heuristic detection based on file path
+        if "test" in file_name and "test_" in indicators:
+            detected.append(f"Test file pattern detected in {file_path}")
+        
+        if file_path.endswith(".py") and any(ind in indicators for ind in ["class", "def", "function"]):
+            detected.append(f"Python implementation file detected: {file_path}")
+        
+        return detected
         """Enhanced analysis of potential task completion based on file changes."""
         matching_files = []
         evidence = []
@@ -1027,71 +1430,6 @@ class FileChangeDetector(ReflectiveModule):
             }
         
         return breakdown
-    
-    def _validate_task_completion_claims(
-        self, 
-        task_mappings: List[TaskMapping], 
-        claimed_tasks: Optional[List[str]]
-    ) -> Dict[str, Any]:
-        """Validate task completion claims against implementation evidence."""
-        if not claimed_tasks:
-            return {
-                "validation_performed": False,
-                "message": "No claimed tasks provided for validation"
-            }
-        
-        validation_results = {
-            "validation_performed": True,
-            "total_claimed_tasks": len(claimed_tasks),
-            "validated_tasks": [],
-            "questionable_tasks": [],
-            "missing_evidence_tasks": [],
-            "unclaimed_implementations": []
-        }
-        
-        # Create mapping for easy lookup
-        mapping_by_task = {mapping.task_id: mapping for mapping in task_mappings}
-        
-        for claimed_task in claimed_tasks:
-            mapping = mapping_by_task.get(claimed_task)
-            
-            if mapping:
-                if mapping.confidence_score >= 0.7:
-                    validation_results["validated_tasks"].append({
-                        "task_id": claimed_task,
-                        "confidence": mapping.confidence_score,
-                        "status": "validated"
-                    })
-                elif mapping.confidence_score >= 0.3:
-                    validation_results["questionable_tasks"].append({
-                        "task_id": claimed_task,
-                        "confidence": mapping.confidence_score,
-                        "status": "questionable"
-                    })
-                else:
-                    validation_results["missing_evidence_tasks"].append({
-                        "task_id": claimed_task,
-                        "confidence": mapping.confidence_score,
-                        "status": "missing_evidence"
-                    })
-            else:
-                validation_results["missing_evidence_tasks"].append({
-                    "task_id": claimed_task,
-                    "confidence": 0.0,
-                    "status": "no_evidence"
-                })
-        
-        # Find high-confidence mappings that weren't claimed
-        claimed_task_ids = set(claimed_tasks)
-        for mapping in task_mappings:
-            if mapping.task_id not in claimed_task_ids and mapping.confidence_score >= 0.7:
-                validation_results["unclaimed_implementations"].append({
-                    "task_id": mapping.task_id,
-                    "confidence": mapping.confidence_score,
-                    "status": "unclaimed_but_implemented"
-                })
-        
-        return validation_results
     
     def _calculate_detection_accuracy_metrics(
         self, 

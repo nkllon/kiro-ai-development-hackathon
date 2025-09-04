@@ -19,8 +19,8 @@
   - Write unit tests for file change detection accuracy
   - _Requirements: 3.1, 4.1_
 
-- [ ] 3. Build RDI compliance validation system
-- [ ] 3.1 Implement requirement traceability validation
+- [-] 3. Build RDI compliance validation system
+- [-] 3.1 Implement requirement traceability validation
   - Create RequirementTracer class for analyzing requirement-to-implementation links
   - Implement traceability analysis against existing requirements documents
   - Write unit tests for traceability detection and validation
