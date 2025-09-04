@@ -70,7 +70,7 @@
     - **Dependencies:** Task 1
     - **Can run parallel with:** Tasks 2, 4, 7
 
-  - [ ] 3.2 Add advanced query capabilities with relationship analysis 🔀 **`task/3.2-advanced-query-capabilities`**
+  - [x] 3.2 Add advanced query capabilities with relationship analysis 🔀 **`task/3.2-advanced-query-capabilities`**
     - Implement dependency graph traversal and relationship queries
     - Create capability-based search using domain requirements and tools
     - Add relevance scoring for search results
@@ -79,7 +79,7 @@
     - **Dependencies:** Task 3.1, Task 2.1 (for domain data)
     - **Can run parallel with:** Tasks 3.3, 4.x, 7.x
 
-  - [ ] 3.3 Implement natural language query processing 🔀 **`task/3.3-natural-language-query`**
+  - [x] 3.3 Implement natural language query processing 🔀 **`task/3.3-natural-language-query`**
     - Create query parser that converts natural language to structured queries
     - Implement query suggestion system for incomplete or ambiguous queries
     - Add query result ranking and filtering capabilities
