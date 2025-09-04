@@ -11,10 +11,9 @@ import json
 import asyncio
 from pathlib import Path
 
-# LangGraph imports (would need: pip install langgraph)
+# LangGraph imports
 try:
-    from langgraph import StateGraph, END
-    from langgraph.graph import Graph
+    from langgraph.graph import StateGraph, END
     LANGGRAPH_AVAILABLE = True
 except ImportError:
     LANGGRAPH_AVAILABLE = False

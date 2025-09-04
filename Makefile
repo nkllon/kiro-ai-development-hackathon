@@ -8,17 +8,25 @@ help:
 	@echo "================================================"
 	@echo ""
 	@echo "Available targets:"
-	@echo "  install              Install dependencies with uv"
-	@echo "  analyze-dependencies Analyze task dependencies and create DAG"
-	@echo "  execute-tasks        Run the recursive descent task execution engine (simulated)"
-	@echo "  run-task-engine      Full task analysis and execution (dry-run + simulation)"
-	@echo "  status              Show current task execution status"
-	@echo "  task-info           Show detailed task information (use TASK=<id>)"
-	@echo "  dag-analyze         Analyze task dependencies with Task DAG system"
-	@echo "  dag-status          Show task status using Task DAG system"
-	@echo "  dag-info            Show task info using Task DAG system (use TASK=<id>)"
-	@echo "  test                Run tests"
-	@echo "  clean               Clean up generated files"
+	@echo "  🚀 BEAST MODE COMMANDS:"
+	@echo "    run                Execute tasks directly (./beast execute)"
+	@echo "    check              Show status directly (./beast status)"
+	@echo "    execute            Execute tasks with uv (uv run ./beast execute)"
+	@echo "    status             Show status with uv (uv run ./beast status)"
+	@echo ""
+	@echo "  📦 SETUP & TESTING:"
+	@echo "    install            Install dependencies with uv"
+	@echo "    test               Run tests"
+	@echo "    clean              Clean up generated files"
+	@echo ""
+	@echo "  🔧 LEGACY COMMANDS:"
+	@echo "    execute-tasks      Legacy recursive descent execution"
+	@echo "    analyze-dependencies Analyze task dependencies and create DAG"
+	@echo "    run-task-engine    Full task analysis and execution (dry-run + simulation)"
+	@echo "    task-info          Show detailed task information (use TASK=<id>)"
+	@echo "    dag-analyze        Analyze task dependencies with Task DAG system"
+	@echo "    dag-status         Show task status using Task DAG system"
+	@echo "    dag-info           Show task info using Task DAG system (use TASK=<id>)"
 	@echo ""
 	@echo "🦁 Beast Mode Framework Operations:"
 	@echo "  beast-mode          Run Beast Mode systematic development workflow"
@@ -41,8 +49,13 @@ analyze-dependencies:
 
 # Execute tasks with clean architecture
 execute:
-	@echo "🚀 Starting clean task execution..."
-	python3 clean_cli.py execute
+	@echo "🚀 Beast Mode Task Execution..."
+	uv run ./beast execute
+
+# Direct CLI execution (no uv wrapper)
+run:
+	@echo "🚀 Direct Beast Mode Execution..."
+	./beast execute
 
 # Execute tasks with recursive descent (legacy)
 execute-tasks:
@@ -60,8 +73,13 @@ run-task-engine:
 
 # Show task status
 status:
-	@echo "📊 Showing current task status..."
-	python3 clean_cli.py status
+	@echo "📊 Beast Mode Status..."
+	uv run ./beast status
+
+# Direct CLI status (no uv wrapper)  
+check:
+	@echo "📊 Direct Beast Mode Status..."
+	./beast status
 
 # Legacy status (old monolithic engine)
 legacy-status:

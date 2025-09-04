@@ -259,6 +259,12 @@ class BaseOrchestrator(ReflectiveModule):
                 "violations": safety_status.violations,
                 "kill_switch_armed": safety_status.kill_switch_armed
             },
+            "guarantees": [
+                "COORDINATES_ANALYZERS_SAFELY",
+                "EMERGENCY_SHUTDOWN_ALL_ANALYZERS", 
+                "NO_IMPACT_EXISTING_SYSTEMS",
+                "READ_ONLY_ORCHESTRATION"
+            ],
             "analyzer_statuses": analyzer_statuses
         }
         

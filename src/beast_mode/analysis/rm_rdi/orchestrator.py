@@ -326,13 +326,27 @@ class AnalysisOrchestratorRM(BaseOrchestrator):
             for future in future_to_analyzer:
                 future.cancel()
                 
+        # Filter results and move failed analyses to errors
+        successful_results = {}
+        for name, result in results.items():
+            if result.status in [AnalysisStatus.SUCCESS, AnalysisStatus.COMPLETED]:
+                successful_results[name] = result
+            else:
+                # Move failed analysis to errors
+                errors.append(f"Analyzer {name} failed with status: {result.status.value}")
+        
         # Determine overall status
-        if not results:
+        if not successful_results and not errors:
             status = AnalysisStatus.FAILED
-        elif errors:
-            status = AnalysisStatus.PARTIAL_SUCCESS
+        elif successful_results and errors:
+            status = AnalysisStatus.PARTIAL_SUCCESS  # Mixed results
+        elif errors and not successful_results:
+            status = AnalysisStatus.FAILED  # All failed
         else:
-            status = AnalysisStatus.SUCCESS
+            status = AnalysisStatus.SUCCESS  # All successful
+            
+        # Use filtered results
+        results = successful_results
             
         return WorkflowResult(
             workflow_id=workflow.workflow_id,
@@ -364,13 +378,23 @@ class AnalysisOrchestratorRM(BaseOrchestrator):
                 if not workflow.retry_on_failure:
                     break
                     
-        # Determine overall status
+        # Determine overall status based on result statuses
         if not results:
             status = AnalysisStatus.FAILED
-        elif errors:
-            status = AnalysisStatus.PARTIAL_SUCCESS
         else:
-            status = AnalysisStatus.SUCCESS
+            # Check individual result statuses
+            result_statuses = [result.status for result in results.values()]
+            successful_count = sum(1 for s in result_statuses if s in [AnalysisStatus.SUCCESS, AnalysisStatus.COMPLETED])
+            failed_count = sum(1 for s in result_statuses if s == AnalysisStatus.FAILED)
+            
+            if successful_count > 0 and failed_count > 0:
+                status = AnalysisStatus.PARTIAL_SUCCESS  # Mixed results
+            elif failed_count > 0:
+                status = AnalysisStatus.FAILED  # All failed
+            elif errors:
+                status = AnalysisStatus.PARTIAL_SUCCESS  # Execution errors
+            else:
+                status = AnalysisStatus.SUCCESS  # All successful
             
         return WorkflowResult(
             workflow_id=workflow.workflow_id,
