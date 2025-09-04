@@ -20,6 +20,7 @@ from .models import (
 )
 from .exceptions import HealthMonitorError, HealthCheckFailedError
 from .config import get_config
+from .health_reporter import HealthReportGenerator
 
 
 class DomainHealthMonitor(DomainSystemComponent, HealthMonitorInterface):
@@ -62,11 +63,21 @@ class DomainHealthMonitor(DomainSystemComponent, HealthMonitorInterface):
         # Project root for file validation
         self.project_root = Path.cwd()
         
+        # Health reporting integration
+        self.health_reporter = None
+        
         self.logger.info("Initialized DomainHealthMonitor")
     
     def set_registry_manager(self, registry_manager):
         """Set the registry manager (dependency injection)"""
         self.registry_manager = registry_manager
+        
+        # Initialize health reporter with this monitor
+        if registry_manager:
+            self.health_reporter = HealthReportGenerator(
+                health_monitor=self,
+                config=self.config
+            )
     
     def set_project_root(self, project_root: str):
         """Set the project root directory for file validation"""
@@ -620,5 +631,78 @@ class DomainHealthMonitor(DomainSystemComponent, HealthMonitorInterface):
             "scheduled_checks": len(self._scheduled_checks),
             "parallel_checks_enabled": self.parallel_checks,
             "max_workers": self.max_workers,
-            "performance_metrics": self.performance_metrics
+            "performance_metrics": self.performance_metrics,
+            "health_reporter_available": self.health_reporter is not None
         }
+    
+    def generate_health_report(self, report_type: str = "full", domain_name: str = None) -> Dict[str, Any]:
+        """Generate comprehensive health report"""
+        with self._time_operation("generate_health_report"):
+            try:
+                if not self.health_reporter:
+                    return {"error": "Health reporter not available"}
+                
+                if report_type == "full":
+                    report = self.health_reporter.generate_full_health_report()
+                elif report_type == "domain" and domain_name:
+                    report = self.health_reporter.generate_domain_report(domain_name)
+                elif report_type == "trend":
+                    report = self.health_reporter.generate_trend_report()
+                else:
+                    return {"error": f"Invalid report type: {report_type}"}
+                
+                return {
+                    "report_id": report.report_id,
+                    "report_type": report.report_type,
+                    "generated_at": report.generated_at.isoformat(),
+                    "total_domains": report.total_domains,
+                    "overall_health_score": report.overall_health_score,
+                    "critical_issues_count": len(report.critical_issues),
+                    "warning_issues_count": len(report.warning_issues),
+                    "recommendations_count": len(report.recommendations),
+                    "generation_time_ms": report.generation_time_ms
+                }
+                
+            except Exception as e:
+                self._handle_error(e, "generate_health_report")
+                return {"error": str(e)}
+    
+    def get_health_alerts(self) -> Dict[str, Any]:
+        """Get current health alerts"""
+        with self._time_operation("get_health_alerts"):
+            try:
+                if not self.health_reporter:
+                    return {"error": "Health reporter not available"}
+                
+                return self.health_reporter.get_alert_summary()
+                
+            except Exception as e:
+                self._handle_error(e, "get_health_alerts")
+                return {"error": str(e)}
+    
+    def export_health_report(self, report_id: str, format: str = "json") -> Dict[str, Any]:
+        """Export health report in specified format"""
+        with self._time_operation("export_health_report"):
+            try:
+                if not self.health_reporter:
+                    return {"error": "Health reporter not available"}
+                
+                # Find report in history
+                reports = self.health_reporter.get_report_history(days=30)
+                report = next((r for r in reports if r.report_id == report_id), None)
+                
+                if not report:
+                    return {"error": f"Report {report_id} not found"}
+                
+                exported_data = self.health_reporter.export_report(report, format)
+                
+                return {
+                    "report_id": report_id,
+                    "format": format,
+                    "exported_at": datetime.now().isoformat(),
+                    "data": exported_data
+                }
+                
+            except Exception as e:
+                self._handle_error(e, "export_health_report")
+                return {"error": str(e)}
