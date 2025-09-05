@@ -4,6 +4,8 @@
 
 This feature enables automated integration with Devpost to keep hackathon projects synchronized and up-to-date. The system will provide seamless project management capabilities, allowing developers to maintain their hackathon submissions directly from their development environment while ensuring all project information, updates, and deliverables are properly reflected on the Devpost platform.
 
+The integration supports both single and multi-project workflows, enabling developers to participate in multiple hackathons simultaneously while maintaining proper project isolation. Key capabilities include real-time synchronization, deadline tracking, submission preview, and automated validation against Devpost requirements.
+
 ## Requirements
 
 ### Requirement 1

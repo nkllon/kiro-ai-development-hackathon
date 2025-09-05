@@ -37,6 +37,11 @@ class DecisionContext:
     stakeholders: List[str]
     timeline: str
     risk_factors: List[str] = field(default_factory=list)
+    confidence_score: float = 0.0  # Add missing attribute for confidence-based routing
+    
+    def calculate_confidence(self) -> float:
+        """Calculate confidence score based on decision factors"""
+        return self.confidence_score
 
 @dataclass
 class DecisionOption:
@@ -161,10 +166,11 @@ class ADRSystem(ReflectiveModule):
         
     def _get_primary_responsibility(self) -> str:
         """Single responsibility: architectural decision documentation and tracking"""
-        return "architectural_decision_documentation_and_tracking"   
- def create_adr(self, title: str, category: DecisionCategory, 
-                  context: DecisionContext, decision_makers: List[str],
-                  template_id: Optional[str] = None) -> Dict[str, Any]:
+        return "architectural_decision_documentation_and_tracking"
+        
+    def create_adr(self, title: str, category: DecisionCategory, 
+                   context: DecisionContext, decision_makers: List[str],
+                   template_id: Optional[str] = None) -> Dict[str, Any]:
         """
         Create new Architectural Decision Record
         """

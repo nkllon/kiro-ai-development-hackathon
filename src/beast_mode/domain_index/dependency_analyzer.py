@@ -24,6 +24,7 @@ from .models import (
 )
 from .exceptions import DependencyAnalysisError
 from .config import get_config
+from ..utils.path_normalizer import PathNormalizer, safe_relative_to, normalize_path
 
 
 class CircularDependencyDetector:
@@ -235,14 +236,25 @@ class OrphanedFileDetector:
         """Get all relevant files in the project"""
         files = []
         
+        # Normalize project root to handle path conflicts
+        normalized_project_root = normalize_path(self.project_root)
+        
         for ext in self.file_extensions:
             pattern = f"**/*{ext}"
-            found_files = list(self.project_root.glob(pattern))
+            found_files = list(normalized_project_root.glob(pattern))
             
             # Filter out common exclusions
             filtered_files = []
             for file_path in found_files:
-                relative_path = file_path.relative_to(self.project_root)
+                # Normalize the file path first
+                normalized_file_path = normalize_path(file_path)
+                
+                # Use safe path normalization to handle absolute/relative conflicts
+                relative_path = safe_relative_to(normalized_file_path, normalized_project_root)
+                if relative_path is None:
+                    # If we can't make it relative, skip this file
+                    continue
+                    
                 path_str = str(relative_path)
                 
                 # Skip common exclusions
@@ -256,7 +268,8 @@ class OrphanedFileDetector:
                 if not include_tests and ('test' in path_str.lower() or 'spec' in path_str.lower()):
                     continue
                 
-                filtered_files.append(file_path)
+                # Use normalized path for consistency
+                filtered_files.append(normalized_file_path)
             
             files.extend(filtered_files)
         
@@ -271,7 +284,15 @@ class OrphanedFileDetector:
     
     def _find_covering_domains(self, file_path: Path, domain_patterns: Dict[str, List[str]]) -> List[str]:
         """Find which domains cover a specific file"""
-        relative_path = file_path.relative_to(self.project_root)
+        # Use path normalization to handle absolute/relative conflicts
+        normalized_project_root = normalize_path(self.project_root)
+        normalized_file_path = normalize_path(file_path)
+        relative_path = safe_relative_to(normalized_file_path, normalized_project_root)
+        
+        if relative_path is None:
+            # If we can't make it relative, return empty list
+            return []
+            
         covering_domains = []
         
         for domain_name, patterns in domain_patterns.items():
@@ -666,7 +687,7 @@ class ComprehensiveDependencyAnalyzer(DomainSystemComponent):
     
     def set_project_root(self, project_root: str):
         """Set the project root directory"""
-        self.project_root = Path(project_root)
+        self.project_root = normalize_path(project_root)
         self.logger.info(f"Set project root to: {self.project_root}")
     
     def perform_comprehensive_analysis(self) -> Dict[str, Any]:

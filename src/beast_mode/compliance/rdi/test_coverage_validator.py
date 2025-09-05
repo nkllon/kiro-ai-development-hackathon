@@ -16,6 +16,7 @@ from enum import Enum
 
 from ..interfaces import ComplianceValidator
 from ..models import ComplianceIssue, ComplianceIssueType, IssueSeverity
+from ...utils.path_normalizer import safe_relative_to
 
 
 class TestType(Enum):
@@ -276,7 +277,9 @@ class TestCoverageValidator(ComplianceValidator):
                 total_lines += file_total
                 
                 # Estimate coverage based on test file existence
-                relative_path = src_file.relative_to(self.repository_path)
+                relative_path = safe_relative_to(src_file, self.repository_path)
+                if relative_path is None:
+                    continue  # Skip files that can't be made relative
                 test_file_exists = self._has_corresponding_test_file(src_file, test_files)
                 
                 if test_file_exists:
@@ -509,7 +512,9 @@ class TestCoverageValidator(ComplianceValidator):
                 continue
             
             if not self._has_corresponding_test_file(src_file, test_files):
-                missing_test_files.append(str(src_file.relative_to(self.repository_path)))
+                relative_path = safe_relative_to(src_file, self.repository_path)
+                if relative_path is not None:
+                    missing_test_files.append(str(relative_path))
         
         return missing_test_files
     

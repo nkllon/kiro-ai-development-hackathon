@@ -1,5 +1,8 @@
 # Beast Mode Framework - Task Execution Makefile
 
+# Default target (must be first!)
+.DEFAULT_GOAL := help
+
 # Include modular makefiles
 include makefiles/colors.mk
 include makefiles/testing.mk

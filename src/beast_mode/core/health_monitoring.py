@@ -15,6 +15,7 @@ import json
 from pathlib import Path
 
 from .reflective_module import ReflectiveModule, HealthStatus, HealthIndicator
+from ..utils.enum_serialization import SerializationHandler, make_enum_json_serializable
 
 class AlertSeverity(Enum):
     INFO = "info"
@@ -28,8 +29,21 @@ class HealthAlert:
     severity: AlertSeverity
     message: str
     timestamp: datetime
+    metric_value: float
+    threshold_value: float
     resolved: bool = False
     resolution_time: Optional[datetime] = None
+    
+    def __post_init__(self):
+        """Validate health alert parameters after initialization"""
+        if not isinstance(self.metric_value, (int, float)):
+            raise ValueError(f"metric_value must be a number, got {type(self.metric_value)}")
+        if not isinstance(self.threshold_value, (int, float)):
+            raise ValueError(f"threshold_value must be a number, got {type(self.threshold_value)}")
+        if self.metric_value < 0:
+            raise ValueError(f"metric_value must be non-negative, got {self.metric_value}")
+        if self.threshold_value < 0:
+            raise ValueError(f"threshold_value must be non-negative, got {self.threshold_value}")
 
 @dataclass
 class UptimeMetrics:
@@ -231,13 +245,20 @@ class HealthMonitoringSystem(ReflectiveModule):
         try:
             degradation_result = component.degrade_gracefully(failure_context)
             
-            # Create alert
+            # Create alert with health metrics
             severity = AlertSeverity.CRITICAL if component_name in self.critical_components else AlertSeverity.WARNING
+            
+            # Calculate health metric values
+            health_score = 0.0  # Component is degraded, so health score is 0
+            health_threshold = 0.5  # Threshold for healthy component
+            
             alert = HealthAlert(
                 module_name=component_name,
                 severity=severity,
                 message=f"Component degraded: {error or 'Health check failed'}. Graceful degradation applied.",
-                timestamp=datetime.now()
+                timestamp=datetime.now(),
+                metric_value=health_score,
+                threshold_value=health_threshold
             )
             
             self.alerts.put(alert)
@@ -414,7 +435,13 @@ class HealthMonitoringSystem(ReflectiveModule):
         
         try:
             with open(report_file, 'w') as f:
-                json.dump(final_report, f, indent=2, default=str)
+                # Use enum-aware serialization for health reports
+                serialized_report = SerializationHandler.safe_serialize(final_report, indent=2)
+                f.write(serialized_report)
             self.logger.info(f"Final health report saved to {report_file}")
         except Exception as e:
             self.logger.error(f"Failed to save final health report: {e}")
+
+
+# Ensure AlertSeverity enum is JSON serializable
+make_enum_json_serializable(AlertSeverity)

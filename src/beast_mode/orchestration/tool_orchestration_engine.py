@@ -55,6 +55,11 @@ class DecisionContext:
     risk_tolerance: str  # "low", "medium", "high"
     domain: Optional[str] = None
     previous_decisions: List[Dict[str, Any]] = field(default_factory=list)
+    confidence_score: float = 0.0  # Add missing attribute for confidence-based routing
+    
+    def calculate_confidence(self) -> float:
+        """Calculate confidence score based on decision factors"""
+        return self.confidence_score
 
 @dataclass
 class ToolDefinition:
@@ -322,41 +327,49 @@ class ToolOrchestrationEngine(ReflectiveModule):
         Assess decision confidence using model-driven intelligence
         Returns confidence level and routing decision
         """
-        # Consult project registry first (R4.1)
-        registry_result = self.intelligence_engine.consult_registry_first(context)
-        
-        # Calculate base confidence from registry data
-        base_confidence = 0.0
-        confidence_factors = []
-        
-        if registry_result.get("domain_match"):
-            base_confidence += 0.4
-            confidence_factors.append("Domain intelligence available")
+        # Use existing confidence score if available, otherwise calculate
+        if context.confidence_score > 0.0:
+            base_confidence = context.confidence_score
+            confidence_factors = ["Pre-calculated confidence score used"]
+        else:
+            # Consult project registry first (R4.1)
+            registry_result = self.intelligence_engine.consult_registry_first(context)
             
-        if registry_result.get("requirements_match"):
-            base_confidence += 0.3
-            confidence_factors.append("Requirements mapping found")
+            # Calculate base confidence from registry data
+            base_confidence = 0.0
+            confidence_factors = []
             
-        if registry_result.get("tool_mappings"):
-            base_confidence += 0.2
-            confidence_factors.append("Tool mappings available")
+            if registry_result.get("domain_match"):
+                base_confidence += 0.4
+                confidence_factors.append("Domain intelligence available")
+                
+            if registry_result.get("requirements_match"):
+                base_confidence += 0.3
+                confidence_factors.append("Requirements mapping found")
+                
+            if registry_result.get("tool_mappings"):
+                base_confidence += 0.2
+                confidence_factors.append("Tool mappings available")
+                
+            if registry_result.get("historical_patterns"):
+                base_confidence += 0.1
+                confidence_factors.append("Historical patterns available")
+                
+            # Adjust confidence based on context factors
+            if context.time_pressure == "immediate":
+                base_confidence -= 0.1
+                confidence_factors.append("Time pressure reduces confidence")
+                
+            if context.risk_tolerance == "low":
+                base_confidence -= 0.1
+                confidence_factors.append("Low risk tolerance requires higher confidence")
+                
+            if len(context.previous_decisions) > 0:
+                base_confidence += 0.05
+                confidence_factors.append("Previous decision context available")
             
-        if registry_result.get("historical_patterns"):
-            base_confidence += 0.1
-            confidence_factors.append("Historical patterns available")
-            
-        # Adjust confidence based on context factors
-        if context.time_pressure == "immediate":
-            base_confidence -= 0.1
-            confidence_factors.append("Time pressure reduces confidence")
-            
-        if context.risk_tolerance == "low":
-            base_confidence -= 0.1
-            confidence_factors.append("Low risk tolerance requires higher confidence")
-            
-        if len(context.previous_decisions) > 0:
-            base_confidence += 0.05
-            confidence_factors.append("Previous decision context available")
+            # Update context with calculated confidence
+            context.confidence_score = base_confidence
             
         # Determine confidence level
         if base_confidence >= self.confidence_thresholds['high_threshold']:
@@ -370,7 +383,7 @@ class ToolOrchestrationEngine(ReflectiveModule):
             "confidence_level": confidence_level,
             "confidence_score": base_confidence,
             "confidence_factors": confidence_factors,
-            "registry_result": registry_result
+            "registry_result": registry_result if context.confidence_score == 0.0 else None
         }
         
     def _route_decision_by_confidence(self, 
