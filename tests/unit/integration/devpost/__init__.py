@@ -1,3 +1,1 @@
-"""
-Unit tests for Devpost integration components.
-"""
+# Devpost integration unit tests

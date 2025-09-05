@@ -2,6 +2,6 @@
 Project management services for Devpost integration.
 """
 
-from .project_manager import DevpostProjectManager
+from .manager import DevpostProjectManager
 
 __all__ = ["DevpostProjectManager"]

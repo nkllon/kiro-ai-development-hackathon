@@ -308,6 +308,11 @@ class FileChangeEvent(BaseModel):
     file_size: Optional[int] = None
     checksum: Optional[str] = None
     content_type: Optional[str] = None
+    content_hash: Optional[str] = None
+    previous_content_hash: Optional[str] = None
+    is_significant_change: bool = Field(default=True)
+    media_metadata: Optional[Dict[str, Any]] = None
+    git_info: Optional[Dict[str, Any]] = None
     
     model_config = ConfigDict(arbitrary_types_allowed=True)
     
@@ -326,17 +331,56 @@ class FileChangeEvent(BaseModel):
     
     def is_media_file(self) -> bool:
         """Check if file is a media file."""
-        media_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.mp4', '.mov', '.avi', '.pdf'}
+        media_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.mp4', '.mov', '.avi', '.pdf', '.webp', '.svg'}
         return self.file_path.suffix.lower() in media_extensions
     
     def is_documentation_file(self) -> bool:
         """Check if file is a documentation file."""
-        doc_patterns = ['readme', 'changelog', 'license', 'contributing']
+        doc_patterns = ['readme', 'changelog', 'license', 'contributing', 'docs', 'documentation']
         filename_lower = self.file_path.name.lower()
         return (
             any(pattern in filename_lower for pattern in doc_patterns) or
-            self.file_path.suffix.lower() in {'.md', '.txt', '.rst'}
+            self.file_path.suffix.lower() in {'.md', '.txt', '.rst', '.adoc'} or
+            'docs/' in str(self.file_path).lower()
         )
+    
+    def get_media_category(self) -> Optional[str]:
+        """Get the category of media file."""
+        if not self.is_media_file():
+            return None
+        
+        suffix = self.file_path.suffix.lower()
+        if suffix in {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'}:
+            return 'image'
+        elif suffix in {'.mp4', '.mov', '.avi', '.webm', '.mkv'}:
+            return 'video'
+        elif suffix in {'.pdf', '.doc', '.docx'}:
+            return 'document'
+        else:
+            return 'other'
+    
+    def is_configuration_file(self) -> bool:
+        """Check if file is a configuration file."""
+        config_files = {
+            'package.json', 'pyproject.toml', 'requirements.txt', 'Dockerfile',
+            'docker-compose.yml', 'docker-compose.yaml', '.env', 'config.json',
+            'config.yaml', 'config.yml', 'setup.py', 'setup.cfg'
+        }
+        config_extensions = {'.json', '.yaml', '.yml', '.toml', '.ini', '.cfg'}
+        
+        return (
+            self.file_path.name in config_files or
+            self.file_path.suffix.lower() in config_extensions
+        )
+    
+    def is_source_code_file(self) -> bool:
+        """Check if file is source code."""
+        code_extensions = {
+            '.py', '.js', '.ts', '.jsx', '.tsx', '.java', '.cpp', '.c', '.h',
+            '.cs', '.php', '.rb', '.go', '.rs', '.swift', '.kt', '.scala',
+            '.html', '.css', '.scss', '.sass', '.less'
+        }
+        return self.file_path.suffix.lower() in code_extensions
     
     def should_trigger_sync(self, watch_patterns: List[str]) -> bool:
         """Check if file change should trigger sync based on patterns."""

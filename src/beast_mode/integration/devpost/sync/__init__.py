@@ -2,7 +2,7 @@
 Synchronization services for Devpost integration.
 """
 
-from .sync_manager import DevpostSyncManager
-from .file_monitor import ProjectFileMonitor
+# Note: ProjectFileMonitor is now in the monitoring module
+# from .sync_manager import DevpostSyncManager
 
-__all__ = ["DevpostSyncManager", "ProjectFileMonitor"]
+# __all__ = ["DevpostSyncManager"]

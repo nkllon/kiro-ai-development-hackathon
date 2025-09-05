@@ -1,3 +1,1 @@
-"""
-Unit tests for integration components.
-"""
+# Integration unit tests

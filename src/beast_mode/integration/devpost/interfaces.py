@@ -111,6 +111,36 @@ class ProjectManagerInterface(ABC):
     def validate_project(self) -> ValidationResult:
         """Validate project against Devpost requirements."""
         pass
+    
+    @abstractmethod
+    def list_projects(self) -> List[Dict[str, Any]]:
+        """List all connected projects with their status."""
+        pass
+    
+    @abstractmethod
+    def switch_project(self, project_id: str) -> bool:
+        """Switch to a different project context."""
+        pass
+    
+    @abstractmethod
+    def get_project_status(self, project_id: Optional[str] = None) -> Dict[str, Any]:
+        """Get detailed status for a project."""
+        pass
+    
+    @abstractmethod
+    def disconnect_project(self, project_id: str) -> bool:
+        """Disconnect a project from Devpost integration."""
+        pass
+    
+    @abstractmethod
+    def detect_project_conflicts(self) -> List[Dict[str, Any]]:
+        """Detect conflicts between projects."""
+        pass
+    
+    @abstractmethod
+    def resolve_conflict(self, conflict_type: str, resolution: str, **kwargs) -> bool:
+        """Resolve a detected conflict."""
+        pass
 
 
 class SyncManagerInterface(ABC):

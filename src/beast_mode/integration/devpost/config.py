@@ -95,9 +95,9 @@ class DevpostConfigManager:
             if project_id:
                 if 'projects' not in config_data:
                     config_data['projects'] = {}
-                config_data['projects'][project_id] = config.dict()
+                config_data['projects'][project_id] = config.model_dump()
             else:
-                config_data['default'] = config.dict()
+                config_data['default'] = config.model_dump()
             
             # Save to file
             with open(self.config_file, 'w') as f:
@@ -164,7 +164,7 @@ class DevpostConfigManager:
             
             # Update connection
             connection_key = str(connection.local_path)
-            connections_data[connection_key] = connection.dict()
+            connections_data[connection_key] = connection.model_dump()
             
             # Save to file
             with open(self.connections_file, 'w') as f:
