@@ -118,7 +118,8 @@ class RDIRMAnalysisSystemInterface:
                                         0, f"RDI compliance validation failed: {str(e)}")
         
         return validation_result 
-   def analyze_requirements_traceability(self, traceability_config: Dict[str, Any]) -> Dict[str, Any]:
+    
+    def analyze_requirements_traceability(self, traceability_config: Dict[str, Any]) -> Dict[str, Any]:
         """
         Analyze requirements traceability through integrated validation
         
@@ -304,8 +305,9 @@ class RDIRMAnalysisSystemInterface:
             self._update_health_indicator("drift_detection", "degraded", 
                                         0, f"Compliance drift detection failed: {str(e)}")
         
-        return drift_detection_result    # Helper
- methods for RDI compliance validation
+        return drift_detection_result
+    
+    # Helper methods for RDI compliance validation
     def _validate_requirements_compliance(self, config: Dict[str, Any]) -> Dict[str, Any]:
         """Validate requirements compliance"""
         return {
@@ -555,8 +557,9 @@ class RDIRMAnalysisSystemInterface:
     
     def _get_primary_responsibility(self) -> str:
         """Get primary responsibility"""
-        return "Unified RDI/RM Analysis System with compliance validation, traceability analysis, and quality assurance"    def 
-_update_health_indicator(self, name: str, status: str, value: Any, message: str):
+        return "Unified RDI/RM Analysis System with compliance validation, traceability analysis, and quality assurance"
+    
+    def _update_health_indicator(self, name: str, status: str, value: Any, message: str):
         """Update health indicator"""
         self._health_indicators[name] = {
             "status": status,

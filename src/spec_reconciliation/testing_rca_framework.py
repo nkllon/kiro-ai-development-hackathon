@@ -120,7 +120,8 @@ class TestingRCAFrameworkInterface:
                                         0, f"RCA failed: {str(e)}")
         
         return rca_result 
-   def trigger_automated_resolution(self, resolution_config: Dict[str, Any]) -> Dict[str, Any]:
+    
+    def trigger_automated_resolution(self, resolution_config: Dict[str, Any]) -> Dict[str, Any]:
         """
         Trigger automated issue resolution workflows
         
@@ -556,8 +557,9 @@ class TestingRCAFrameworkInterface:
     
     def _get_primary_responsibility(self) -> str:
         """Get primary responsibility"""
-        return "Unified Testing and RCA Framework with comprehensive analysis, automated resolution, and quality insights"   
- def _update_health_indicator(self, name: str, status: str, value: Any, message: str):
+        return "Unified Testing and RCA Framework with comprehensive analysis, automated resolution, and quality insights"
+    
+    def _update_health_indicator(self, name: str, status: str, value: Any, message: str):
         """Update health indicator"""
         self._health_indicators[name] = {
             "status": status,
