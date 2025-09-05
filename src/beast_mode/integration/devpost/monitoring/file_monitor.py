@@ -497,9 +497,19 @@ class ProjectFileMonitor(FileMonitorInterface):
                     else:
                         operation_type = SyncOperationType.METADATA_UPDATE
                     
+                    # Resolve paths to handle absolute/relative path issues
+                    try:
+                        resolved_file_path = Path(event.file_path).resolve()
+                        resolved_project_path = self.project_path.resolve()
+                        relative_path = resolved_file_path.relative_to(resolved_project_path)
+                        target_field = str(relative_path)
+                    except ValueError:
+                        # If relative_to fails, use the filename
+                        target_field = Path(event.file_path).name
+                    
                     sync_op = SyncOperation(
                         operation_type=operation_type,
-                        target_field=str(event.file_path.relative_to(self.project_path)),
+                        target_field=target_field,
                         local_value=str(event.file_path),
                         priority=3 if event.is_media_file() else 5
                     )
