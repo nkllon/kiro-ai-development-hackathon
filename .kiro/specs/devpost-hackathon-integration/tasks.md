@@ -20,6 +20,13 @@
   - Write unit tests for configuration management
   - _Requirements: 1.3, 6.1, 6.2_
 
+- [ ] 2.3 Add deadline and notification data models
+  - Create Deadline, ProjectSummary, and NotificationSettings models
+  - Implement MultiProjectConfig for managing multiple project contexts
+  - Add ValidationRules model for configurable validation requirements
+  - Write unit tests for new data models
+  - _Requirements: 4.1, 4.2, 6.1, 6.4_
+
 - [x] 3. Create authentication service
 - [x] 3.1 Implement DevpostAuthService class
   - Write OAuth authentication flow handling
@@ -56,6 +63,13 @@
   - Write unit tests for API client methods with mocked responses
   - _Requirements: 2.4_
 
+- [ ] 4.4 Add deadline and submission requirement API methods
+  - Implement get_hackathon_deadlines() method for deadline retrieval
+  - Create get_submission_requirements() for requirement validation
+  - Add update_submission_status() method for status tracking
+  - Write unit tests for deadline and requirement API methods
+  - _Requirements: 4.1, 4.3, 4.4_
+
 - [x] 5. Develop project manager component
 - [x] 5.1 Create DevpostProjectManager class
   - Implement project connection establishment logic
@@ -71,7 +85,14 @@
   - Write unit tests for project management operations
   - _Requirements: 6.1, 6.2, 6.4_
 
-- [x] 6. Implement file monitoring system
+- [ ] 5.3 Create dedicated MultiProjectManager component
+  - Implement MultiProjectManager class for centralized project management
+  - Add context switching with proper isolation between projects
+  - Create project dashboard generation for status overview
+  - Write cross-contamination prevention mechanisms
+  - _Requirements: 6.1, 6.2, 6.3, 6.5_
+
+- [ ] 6. Implement file monitoring system
 - [ ] 6.1 Create ProjectFileMonitor class
   - Implement file system watching using watchdog library
   - Create configurable file pattern matching for relevant changes
@@ -86,7 +107,7 @@
   - Write unit tests for file monitoring with temporary directories
   - _Requirements: 2.1, 2.3, 2.4_
 
-- [-] 7. Build synchronization manager
+- [ ] 7. Build synchronization manager
 - [ ] 7.1 Create DevpostSyncManager class
   - Implement sync operation queuing and prioritization
   - Write metadata synchronization logic
@@ -100,6 +121,13 @@
   - Add sync scheduling and automatic retry logic
   - Write comprehensive unit tests for sync operations
   - _Requirements: 2.2, 2.5_
+
+- [ ] 7.3 Implement ValidationEngine component
+  - Create centralized ValidationEngine for consistent validation across components
+  - Implement Devpost requirement validation rules
+  - Add configurable validation rules for different hackathons
+  - Write validation error reporting with actionable suggestions
+  - _Requirements: 3.2, 3.5, 5.3, 5.5_
 
 - [ ] 8. Develop preview generation system
 - [ ] 8.1 Create DevpostPreviewGenerator class
@@ -130,6 +158,13 @@
   - Add `devpost disconnect` command for project disconnection
   - Write comprehensive CLI help and documentation
   - _Requirements: 3.1, 6.2, 6.4_
+
+- [ ] 9.3 Add deadline and validation CLI commands
+  - Create `devpost deadlines` command for deadline status display
+  - Implement `devpost validate` command for submission requirement checking
+  - Add `devpost switch` command for multi-project context switching
+  - Write CLI commands for notification configuration
+  - _Requirements: 4.1, 4.2, 4.5, 6.2_
 
 - [ ] 10. Implement deadline tracking and notifications
 - [ ] 10.1 Create deadline monitoring system
