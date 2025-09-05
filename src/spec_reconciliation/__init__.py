@@ -8,8 +8,14 @@ prevention mechanisms.
 
 from .governance import GovernanceController
 from .validation import ConsistencyValidator
+from .consolidation import SpecConsolidator
+from .monitoring import ContinuousMonitor
+from .boundary_resolver import ComponentBoundaryResolver
 
 __all__ = [
     'GovernanceController',
-    'ConsistencyValidator'
+    'ConsistencyValidator',
+    'SpecConsolidator',
+    'ContinuousMonitor',
+    'ComponentBoundaryResolver'
 ]

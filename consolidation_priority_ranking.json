@@ -1,0 +1,1041 @@
+{
+  "metadata": {
+    "generated_at": "2025-09-05T07:30:38.071577",
+    "analysis_type": "consolidation_priority_ranking",
+    "ranking_criteria": [
+      "overlap_percentage",
+      "effort_estimate",
+      "risk_level",
+      "implementation_impact",
+      "stakeholder_benefit"
+    ]
+  },
+  "high_priority_consolidations": [],
+  "medium_priority_consolidations": [
+    {
+      "target_specs": [
+        "test-rca-integration",
+        "domain-index-model-system"
+      ],
+      "overlap_percentage": 0.25276752767527677,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 51,
+      "risk_level": "medium",
+      "priority_score": 53.01070110701107,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "domain-index-model-system",
+        "openflow-backlog-management"
+      ],
+      "overlap_percentage": 0.20888157894736842,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 44,
+      "risk_level": "medium",
+      "priority_score": 51.955263157894734,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "test-rca-integration",
+        "ghostbusters-cli-integration"
+      ],
+      "overlap_percentage": 0.2386634844868735,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 59,
+      "risk_level": "medium",
+      "priority_score": 51.646539379474945,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "test-rca-integration",
+        "openflow-backlog-management"
+      ],
+      "overlap_percentage": 0.21052631578947367,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 52,
+      "risk_level": "medium",
+      "priority_score": 51.22105263157895,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "domain-index-model-system",
+        "devpost-hackathon-integration"
+      ],
+      "overlap_percentage": 0.22719141323792486,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 59,
+      "risk_level": "medium",
+      "priority_score": 51.187656529517,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "openflow-backlog-management",
+        "ghostbusters-cli-integration"
+      ],
+      "overlap_percentage": 0.20041753653444677,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 52,
+      "risk_level": "medium",
+      "priority_score": 50.816701461377875,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "test-rca-issues-resolution",
+        "test-rca-integration"
+      ],
+      "overlap_percentage": 0.272,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 82,
+      "risk_level": "medium",
+      "priority_score": 50.68,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    }
+  ],
+  "low_priority_consolidations": [
+    {
+      "target_specs": [
+        "test-rca-issues-resolution",
+        "domain-index-model-system"
+      ],
+      "overlap_percentage": 0.23220338983050848,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 76,
+      "risk_level": "medium",
+      "priority_score": 49.68813559322034,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "rdi-rm-compliance-check",
+        "domain-index-model-system"
+      ],
+      "overlap_percentage": 0.21880650994575046,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 72,
+      "risk_level": "medium",
+      "priority_score": 49.55226039783002,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "openflow-backlog-management",
+        "rm-rdi-analysis-system"
+      ],
+      "overlap_percentage": 0.24841772151898733,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 85,
+      "risk_level": "medium",
+      "priority_score": 49.436708860759495,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "domain-index-model-system",
+        "rm-rdi-analysis-system"
+      ],
+      "overlap_percentage": 0.24471299093655588,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 85,
+      "risk_level": "medium",
+      "priority_score": 49.28851963746224,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "test-rca-integration",
+        "rm-rdi-analysis-system"
+      ],
+      "overlap_percentage": 0.252991452991453,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 92,
+      "risk_level": "medium",
+      "priority_score": 48.91965811965812,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "rdi-rm-compliance-check",
+        "test-rca-integration"
+      ],
+      "overlap_percentage": 0.2222222222222222,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 80,
+      "risk_level": "medium",
+      "priority_score": 48.888888888888886,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "test-rca-issues-resolution",
+        "openflow-backlog-management"
+      ],
+      "overlap_percentage": 0.2097902097902098,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 76,
+      "risk_level": "medium",
+      "priority_score": 48.79160839160839,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "openflow-backlog-management",
+        "beast-mode-framework"
+      ],
+      "overlap_percentage": 0.2062111801242236,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 88,
+      "risk_level": "medium",
+      "priority_score": 47.44844720496894,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "kiro-hot-swap-architecture",
+        "rm-rdi-analysis-system"
+      ],
+      "overlap_percentage": 0.21196581196581196,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 93,
+      "risk_level": "medium",
+      "priority_score": 47.17863247863248,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "test-rca-integration",
+        "beast-mode-framework"
+      ],
+      "overlap_percentage": 0.2151394422310757,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 95,
+      "risk_level": "medium",
+      "priority_score": 47.10557768924303,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "spec-consistency-reconciliation",
+        "beast-mode-framework"
+      ],
+      "overlap_percentage": 0.20914285714285713,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 121,
+      "risk_level": "medium",
+      "priority_score": 46.26571428571428,
+      "benefits": [
+        "Reduces overall requirement complexity",
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "test-rca-issues-resolution",
+        "rm-rdi-analysis-system"
+      ],
+      "overlap_percentage": 0.23380726698262244,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 117,
+      "risk_level": "medium",
+      "priority_score": 45.6522906793049,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "rdi-rm-compliance-check",
+        "rm-rdi-analysis-system"
+      ],
+      "overlap_percentage": 0.2235294117647059,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 113,
+      "risk_level": "medium",
+      "priority_score": 45.641176470588235,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "spec-consistency-reconciliation",
+        "rm-rdi-analysis-system"
+      ],
+      "overlap_percentage": 0.22861150070126227,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 119,
+      "risk_level": "medium",
+      "priority_score": 45.24446002805049,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "test-rca-issues-resolution",
+        "beast-mode-framework"
+      ],
+      "overlap_percentage": 0.20828105395232122,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 120,
+      "risk_level": "medium",
+      "priority_score": 44.33124215809285,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    },
+    {
+      "target_specs": [
+        "beast-mode-framework",
+        "rm-rdi-analysis-system"
+      ],
+      "overlap_percentage": 0.22827346465816917,
+      "consolidation_type": "split",
+      "effort_estimate_hours": 128,
+      "risk_level": "medium",
+      "priority_score": 44.330938586326766,
+      "benefits": [
+        "Leverages high-quality specification patterns",
+        "Improves architectural consistency",
+        "Reduces implementation effort",
+        "Simplifies maintenance overhead"
+      ],
+      "challenges": [
+        "High complexity requires careful integration",
+        "Interface standardization complexity"
+      ],
+      "recommended_strategy": "keep_separate"
+    }
+  ],
+  "consolidation_roadmap": {
+    "phase_1_immediate": {
+      "description": "High-priority, low-risk consolidations",
+      "timeline": "Weeks 1-2",
+      "consolidations": []
+    },
+    "phase_2_planned": {
+      "description": "Medium-priority consolidations requiring planning",
+      "timeline": "Weeks 3-6",
+      "consolidations": [
+        {
+          "target_specs": [
+            "test-rca-integration",
+            "domain-index-model-system"
+          ],
+          "overlap_percentage": 0.25276752767527677,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 51,
+          "risk_level": "medium",
+          "priority_score": 53.01070110701107,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "domain-index-model-system",
+            "openflow-backlog-management"
+          ],
+          "overlap_percentage": 0.20888157894736842,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 44,
+          "risk_level": "medium",
+          "priority_score": 51.955263157894734,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "test-rca-integration",
+            "ghostbusters-cli-integration"
+          ],
+          "overlap_percentage": 0.2386634844868735,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 59,
+          "risk_level": "medium",
+          "priority_score": 51.646539379474945,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "test-rca-integration",
+            "openflow-backlog-management"
+          ],
+          "overlap_percentage": 0.21052631578947367,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 52,
+          "risk_level": "medium",
+          "priority_score": 51.22105263157895,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "domain-index-model-system",
+            "devpost-hackathon-integration"
+          ],
+          "overlap_percentage": 0.22719141323792486,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 59,
+          "risk_level": "medium",
+          "priority_score": 51.187656529517,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "openflow-backlog-management",
+            "ghostbusters-cli-integration"
+          ],
+          "overlap_percentage": 0.20041753653444677,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 52,
+          "risk_level": "medium",
+          "priority_score": 50.816701461377875,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration"
+          ],
+          "recommended_strategy": "keep_separate"
+        }
+      ]
+    },
+    "phase_3_strategic": {
+      "description": "Complex consolidations requiring architectural changes",
+      "timeline": "Weeks 7-12",
+      "consolidations": [
+        {
+          "target_specs": [
+            "test-rca-issues-resolution",
+            "test-rca-integration"
+          ],
+          "overlap_percentage": 0.272,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 82,
+          "risk_level": "medium",
+          "priority_score": 50.68,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "test-rca-issues-resolution",
+            "domain-index-model-system"
+          ],
+          "overlap_percentage": 0.23220338983050848,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 76,
+          "risk_level": "medium",
+          "priority_score": 49.68813559322034,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "rdi-rm-compliance-check",
+            "domain-index-model-system"
+          ],
+          "overlap_percentage": 0.21880650994575046,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 72,
+          "risk_level": "medium",
+          "priority_score": 49.55226039783002,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "openflow-backlog-management",
+            "rm-rdi-analysis-system"
+          ],
+          "overlap_percentage": 0.24841772151898733,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 85,
+          "risk_level": "medium",
+          "priority_score": 49.436708860759495,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "domain-index-model-system",
+            "rm-rdi-analysis-system"
+          ],
+          "overlap_percentage": 0.24471299093655588,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 85,
+          "risk_level": "medium",
+          "priority_score": 49.28851963746224,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "test-rca-integration",
+            "rm-rdi-analysis-system"
+          ],
+          "overlap_percentage": 0.252991452991453,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 92,
+          "risk_level": "medium",
+          "priority_score": 48.91965811965812,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "rdi-rm-compliance-check",
+            "test-rca-integration"
+          ],
+          "overlap_percentage": 0.2222222222222222,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 80,
+          "risk_level": "medium",
+          "priority_score": 48.888888888888886,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "test-rca-issues-resolution",
+            "openflow-backlog-management"
+          ],
+          "overlap_percentage": 0.2097902097902098,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 76,
+          "risk_level": "medium",
+          "priority_score": 48.79160839160839,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "openflow-backlog-management",
+            "beast-mode-framework"
+          ],
+          "overlap_percentage": 0.2062111801242236,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 88,
+          "risk_level": "medium",
+          "priority_score": 47.44844720496894,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "kiro-hot-swap-architecture",
+            "rm-rdi-analysis-system"
+          ],
+          "overlap_percentage": 0.21196581196581196,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 93,
+          "risk_level": "medium",
+          "priority_score": 47.17863247863248,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "test-rca-integration",
+            "beast-mode-framework"
+          ],
+          "overlap_percentage": 0.2151394422310757,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 95,
+          "risk_level": "medium",
+          "priority_score": 47.10557768924303,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "spec-consistency-reconciliation",
+            "beast-mode-framework"
+          ],
+          "overlap_percentage": 0.20914285714285713,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 121,
+          "risk_level": "medium",
+          "priority_score": 46.26571428571428,
+          "benefits": [
+            "Reduces overall requirement complexity",
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "test-rca-issues-resolution",
+            "rm-rdi-analysis-system"
+          ],
+          "overlap_percentage": 0.23380726698262244,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 117,
+          "risk_level": "medium",
+          "priority_score": 45.6522906793049,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "rdi-rm-compliance-check",
+            "rm-rdi-analysis-system"
+          ],
+          "overlap_percentage": 0.2235294117647059,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 113,
+          "risk_level": "medium",
+          "priority_score": 45.641176470588235,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "spec-consistency-reconciliation",
+            "rm-rdi-analysis-system"
+          ],
+          "overlap_percentage": 0.22861150070126227,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 119,
+          "risk_level": "medium",
+          "priority_score": 45.24446002805049,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "test-rca-issues-resolution",
+            "beast-mode-framework"
+          ],
+          "overlap_percentage": 0.20828105395232122,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 120,
+          "risk_level": "medium",
+          "priority_score": 44.33124215809285,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        },
+        {
+          "target_specs": [
+            "beast-mode-framework",
+            "rm-rdi-analysis-system"
+          ],
+          "overlap_percentage": 0.22827346465816917,
+          "consolidation_type": "split",
+          "effort_estimate_hours": 128,
+          "risk_level": "medium",
+          "priority_score": 44.330938586326766,
+          "benefits": [
+            "Leverages high-quality specification patterns",
+            "Improves architectural consistency",
+            "Reduces implementation effort",
+            "Simplifies maintenance overhead"
+          ],
+          "challenges": [
+            "High complexity requires careful integration",
+            "Interface standardization complexity"
+          ],
+          "recommended_strategy": "keep_separate"
+        }
+      ]
+    }
+  }
+}

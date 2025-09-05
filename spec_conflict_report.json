@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "generated_at": "2025-09-05T07:30:38.071464",
+    "analysis_type": "conflict_identification_report"
+  },
+  "terminology_conflicts": {},
+  "interface_conflicts": {},
+  "dependency_conflicts": {
+    "circular_rdi-rm-compliance-check_rm-rdi-analysis-system": {
+      "type": "circular_dependency",
+      "specs": [
+        "rdi-rm-compliance-check",
+        "rm-rdi-analysis-system"
+      ],
+      "severity": "high",
+      "description": "Circular dependency between rdi-rm-compliance-check and rm-rdi-analysis-system"
+    },
+    "circular_rm-rdi-analysis-system_test-rca-issues-resolution": {
+      "type": "circular_dependency",
+      "specs": [
+        "test-rca-issues-resolution",
+        "rm-rdi-analysis-system"
+      ],
+      "severity": "high",
+      "description": "Circular dependency between test-rca-issues-resolution and rm-rdi-analysis-system"
+    },
+    "circular_domain-index-model-system_integrated-beast-mode-system": {
+      "type": "circular_dependency",
+      "specs": [
+        "domain-index-model-system",
+        "integrated-beast-mode-system"
+      ],
+      "severity": "high",
+      "description": "Circular dependency between domain-index-model-system and integrated-beast-mode-system"
+    }
+  },
+  "conflict_summary": {
+    "total_terminology_conflicts": 0,
+    "total_interface_conflicts": 0,
+    "total_dependency_conflicts": 3,
+    "critical_conflicts": 0,
+    "high_priority_conflicts": 0,
+    "resolution_recommendations": [
+      "Resolve circular dependencies through architectural refactoring",
+      "Implement dependency injection to reduce coupling",
+      "Consider breaking large specs into smaller, focused components"
+    ]
+  }
+}

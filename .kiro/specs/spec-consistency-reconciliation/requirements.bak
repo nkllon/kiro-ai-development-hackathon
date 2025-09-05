@@ -22,7 +22,7 @@ This feature will systematically reconcile all specs to create a unified, consis
 
 **Pain Points:**
 - Multiple specs define overlapping functionality (Beast Mode Framework vs Integrated Beast Mode System)
-- Inconsistent terminology across specs (Requirements Management vs Requirements-Design-Implementation vs Domain Intelligence)
+- Inconsistent terminology across specs (RM vs RDI vs Domain Intelligence)
 - Fragmented implementation approaches leading to code duplication
 - Unclear component boundaries causing integration issues
 
