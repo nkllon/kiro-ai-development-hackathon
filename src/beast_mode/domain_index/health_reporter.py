@@ -21,6 +21,7 @@ from .models import (
 )
 from .exceptions import HealthReportError, AlertingError
 from .config import get_config
+from ..utils.enum_serialization import SerializationHandler
 
 
 class AlertSeverity(Enum):
@@ -358,6 +359,8 @@ class AlertManager:
             
             if degrading_trends:
                 trend_metrics = [t.metric_name for t in degrading_trends]
+                # Calculate average trend strength as metric value
+                avg_trend_strength = sum(t.trend_strength for t in degrading_trends) / len(degrading_trends)
                 alert = Alert(
                     id=f"{rule.name}_{domain_name}_{int(time.time())}",
                     rule_name=rule.name,
@@ -365,6 +368,8 @@ class AlertManager:
                     title=f"Degrading health trend: {domain_name}",
                     description=f"Degrading trends detected in: {', '.join(trend_metrics)}",
                     domain_name=domain_name,
+                    metric_value=avg_trend_strength,
+                    threshold_value=0.2,  # Threshold for degrading trends
                     created_at=datetime.now()
                 )
                 alerts.append(alert)
@@ -383,13 +388,17 @@ class AlertManager:
                                  if "circular" in issue.description.lower()]
                 
                 if circular_issues:
+                    # Use number of circular issues as metric value
+                    issue_count = len(circular_issues)
                     alert = Alert(
                         id=f"{rule.name}_{domain_name}_{int(time.time())}",
                         rule_name=rule.name,
                         severity=rule.severity,
                         title=f"Circular dependencies detected: {domain_name}",
-                        description=f"Found {len(circular_issues)} circular dependency issues",
+                        description=f"Found {issue_count} circular dependency issues",
                         domain_name=domain_name,
+                        metric_value=float(issue_count),
+                        threshold_value=1.0,  # Threshold for circular dependency count
                         created_at=datetime.now()
                     )
                     alerts.append(alert)
@@ -867,18 +876,20 @@ class HealthReportGenerator(DomainSystemComponent):
         return sorted(reports, key=lambda r: r.generated_at, reverse=True)
     
     def export_report(self, report: HealthReport, format: str = "json") -> str:
-        """Export report in specified format"""
+        """Export report in specified format with proper enum serialization"""
         if format == "json":
             # Convert report to JSON-serializable format
             report_dict = asdict(report)
             
-            # Handle datetime serialization
-            def datetime_handler(obj):
+            # Use enum-aware serialization with datetime handling
+            def combined_handler(obj):
                 if isinstance(obj, datetime):
                     return obj.isoformat()
+                elif isinstance(obj, Enum):
+                    return obj.value
                 raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
             
-            return json.dumps(report_dict, indent=2, default=datetime_handler)
+            return SerializationHandler.safe_serialize(report_dict, indent=2, default=combined_handler)
         else:
             raise ValueError(f"Unsupported export format: {format}")
     
@@ -903,3 +914,20 @@ class HealthReportGenerator(DomainSystemComponent):
                 for alert in active_alerts[:5]  # Most recent 5
             ]
         }
+
+
+# Ensure enum classes are JSON serializable
+def _setup_enum_serialization():
+    """Set up JSON serialization for enum classes"""
+    try:
+        from ..utils.enum_serialization import make_enum_json_serializable
+        make_enum_json_serializable(AlertSeverity, AlertChannel)
+    except ImportError:
+        # Fallback: add __json__ methods manually
+        if not hasattr(AlertSeverity, '__json__'):
+            AlertSeverity.__json__ = lambda self: self.value
+        if not hasattr(AlertChannel, '__json__'):
+            AlertChannel.__json__ = lambda self: self.value
+
+# Set up serialization when module is imported
+_setup_enum_serialization()

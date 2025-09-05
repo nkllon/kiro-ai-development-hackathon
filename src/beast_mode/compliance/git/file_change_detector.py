@@ -14,6 +14,7 @@ from enum import Enum
 
 from ...core.reflective_module import ReflectiveModule
 from ..models import CommitInfo, FileChangeAnalysis
+from ...utils.path_normalizer import PathNormalizer, normalize_path, safe_relative_to
 
 
 class ChangeType(Enum):
@@ -91,7 +92,7 @@ class FileChangeDetector(ReflectiveModule):
             repository_path: Path to the git repository
         """
         super().__init__("FileChangeDetector")
-        self.repository_path = Path(repository_path).resolve()
+        self.repository_path = normalize_path(repository_path)
         self.logger = logging.getLogger(__name__)
         
         # Configuration for file categorization
@@ -494,6 +495,34 @@ class FileChangeDetector(ReflectiveModule):
         """Define the single primary responsibility of this module."""
         return "Detect and analyze file changes with advanced categorization and task mapping"
     
+    def _normalize_file_path(self, file_path: str) -> Path:
+        """
+        Normalize file path relative to repository root.
+        
+        Args:
+            file_path: File path to normalize
+            
+        Returns:
+            Normalized path relative to repository root
+        """
+        try:
+            # If the path is already relative, use it as-is
+            path_obj = Path(file_path)
+            if not path_obj.is_absolute():
+                return path_obj
+            
+            # If absolute, try to make it relative to repository root
+            relative_path = safe_relative_to(file_path, self.repository_path)
+            if relative_path is not None:
+                return relative_path
+            
+            # Fallback: return the original path as Path object
+            return path_obj
+            
+        except Exception as e:
+            self.logger.warning(f"Failed to normalize path {file_path}: {e}")
+            return Path(file_path)
+    
     # Private helper methods
     def _extract_file_changes_from_commit(self, commit: CommitInfo) -> List[FileChange]:
         """Extract detailed file changes from a commit."""
@@ -501,10 +530,12 @@ class FileChangeDetector(ReflectiveModule):
         
         # Process added files
         for file_path in commit.added_files:
+            # Normalize file path for consistent handling
+            normalized_path = self._normalize_file_path(file_path)
             change = FileChange(
-                file_path=file_path,
+                file_path=str(normalized_path),
                 change_type=ChangeType.ADDED,
-                category=self._categorize_file(file_path),
+                category=self._categorize_file(str(normalized_path)),
                 commit_hash=commit.commit_hash
             )
             change.impact_score = self._calculate_base_impact(change)
@@ -512,10 +543,12 @@ class FileChangeDetector(ReflectiveModule):
         
         # Process modified files
         for file_path in commit.modified_files:
+            # Normalize file path for consistent handling
+            normalized_path = self._normalize_file_path(file_path)
             change = FileChange(
-                file_path=file_path,
+                file_path=str(normalized_path),
                 change_type=ChangeType.MODIFIED,
-                category=self._categorize_file(file_path),
+                category=self._categorize_file(str(normalized_path)),
                 commit_hash=commit.commit_hash
             )
             change.impact_score = self._calculate_base_impact(change)
@@ -523,10 +556,12 @@ class FileChangeDetector(ReflectiveModule):
         
         # Process deleted files
         for file_path in commit.deleted_files:
+            # Normalize file path for consistent handling
+            normalized_path = self._normalize_file_path(file_path)
             change = FileChange(
-                file_path=file_path,
+                file_path=str(normalized_path),
                 change_type=ChangeType.DELETED,
-                category=self._categorize_file(file_path),
+                category=self._categorize_file(str(normalized_path)),
                 commit_hash=commit.commit_hash
             )
             change.impact_score = self._calculate_base_impact(change)
@@ -1120,8 +1155,15 @@ class FileChangeDetector(ReflectiveModule):
         """
         import fnmatch
         
+        # Normalize the file path for consistent matching
+        normalized_path = self._normalize_file_path(file_path)
+        normalized_path_str = str(normalized_path)
+        
         for pattern in patterns:
-            if fnmatch.fnmatch(file_path, pattern) or fnmatch.fnmatch(file_path.lower(), pattern.lower()):
+            if (fnmatch.fnmatch(normalized_path_str, pattern) or 
+                fnmatch.fnmatch(normalized_path_str.lower(), pattern.lower()) or
+                fnmatch.fnmatch(file_path, pattern) or 
+                fnmatch.fnmatch(file_path.lower(), pattern.lower())):
                 return True
         return False
     
@@ -1138,13 +1180,16 @@ class FileChangeDetector(ReflectiveModule):
         """
         detected = []
         
+        # Normalize the file path for consistent handling
+        normalized_path = self._normalize_file_path(file_path)
+        
         # For now, we'll use filename-based detection
         # In a full implementation, this would read file contents
-        file_name = Path(file_path).name.lower()
+        file_name = normalized_path.name.lower()
         
         for indicator in indicators:
             if indicator.lower() in file_name:
-                detected.append(f"Found '{indicator}' indicator in {file_path}")
+                detected.append(f"Found '{indicator}' indicator in {normalized_path}")
         
         # Add some heuristic detection based on file path
         if "test" in file_name and "test_" in indicators:
@@ -1249,14 +1294,9 @@ class FileChangeDetector(ReflectiveModule):
         """Legacy method - delegates to enhanced version for backward compatibility."""
         return self._analyze_task_completion_enhanced(task_id, task_config, analysis)
     
-    def _file_matches_task_patterns(self, file_path: str, patterns: List[str]) -> bool:
-        """Check if a file matches any of the task patterns."""
-        import fnmatch
-        
-        for pattern in patterns:
-            if fnmatch.fnmatch(file_path, pattern):
-                return True
-        return False
+    def _file_matches_task_patterns_legacy(self, file_path: str, patterns: List[str]) -> bool:
+        """Legacy method - delegates to main implementation for consistency."""
+        return self._file_matches_task_patterns(file_path, patterns)
     
     def _detect_content_indicators(self, file_path: str, indicators: List[str]) -> List[str]:
         """Detect content indicators in a file (placeholder implementation)."""

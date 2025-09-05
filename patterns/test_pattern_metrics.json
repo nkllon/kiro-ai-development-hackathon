@@ -15,9 +15,99 @@
       "successful_applications": 0,
       "average_match_time_ms": 0.0,
       "last_matched": null,
+      "effectiveness_score": 0.9999998807907104,
+      "false_positive_count": 0
+    },
+    {
+      "pattern_id": "test_pattern_permission_denied_1757073903",
+      "match_count": 0,
+      "successful_applications": 0,
+      "average_match_time_ms": 0.0,
+      "last_matched": null,
+      "effectiveness_score": 0.5,
+      "false_positive_count": 0
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757073908",
+      "match_count": 0,
+      "successful_applications": 0,
+      "average_match_time_ms": 0.0,
+      "last_matched": null,
+      "effectiveness_score": 0.0,
+      "false_positive_count": 0
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757073911",
+      "match_count": 0,
+      "successful_applications": 0,
+      "average_match_time_ms": 0.0,
+      "last_matched": null,
+      "effectiveness_score": 0.0,
+      "false_positive_count": 0
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757073912",
+      "match_count": 0,
+      "successful_applications": 0,
+      "average_match_time_ms": 0.0,
+      "last_matched": null,
+      "effectiveness_score": 0.0,
+      "false_positive_count": 0
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757073913",
+      "match_count": 0,
+      "successful_applications": 0,
+      "average_match_time_ms": 0.0,
+      "last_matched": null,
+      "effectiveness_score": 0.0,
+      "false_positive_count": 0
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757073914",
+      "match_count": 0,
+      "successful_applications": 0,
+      "average_match_time_ms": 0.0,
+      "last_matched": null,
+      "effectiveness_score": 0.0,
+      "false_positive_count": 0
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757073917",
+      "match_count": 2,
+      "successful_applications": 2,
+      "average_match_time_ms": 0.0,
+      "last_matched": "2025-09-05T06:05:24.830976",
+      "effectiveness_score": 1.0,
+      "false_positive_count": 0
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757073918",
+      "match_count": 2,
+      "successful_applications": 2,
+      "average_match_time_ms": 0.0,
+      "last_matched": "2025-09-05T06:05:26.321767",
+      "effectiveness_score": 1.0,
+      "false_positive_count": 0
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757073920",
+      "match_count": 1,
+      "successful_applications": 1,
+      "average_match_time_ms": 0.0,
+      "last_matched": "2025-09-05T06:05:26.458168",
+      "effectiveness_score": 1.0,
+      "false_positive_count": 0
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757073927",
+      "match_count": 0,
+      "successful_applications": 0,
+      "average_match_time_ms": 0.0,
+      "last_matched": null,
       "effectiveness_score": 0.0,
       "false_positive_count": 0
     }
   ],
-  "last_updated": "2025-09-04T19:56:48.763162"
+  "last_updated": "2025-09-05T06:05:27.005977"
 }

@@ -21,6 +21,7 @@ from .models import (
 from .exceptions import HealthMonitorError, HealthCheckFailedError
 from .config import get_config
 from .health_reporter import HealthReportGenerator
+from ..utils.path_normalizer import safe_relative_to
 
 
 class DomainHealthMonitor(DomainSystemComponent, HealthMonitorInterface):
@@ -484,7 +485,9 @@ class DomainHealthMonitor(DomainSystemComponent, HealthMonitorInterface):
                 # Check which files are not covered by any pattern
                 orphaned_files = []
                 for file_path in all_py_files:
-                    relative_path = file_path.relative_to(self.project_root)
+                    relative_path = safe_relative_to(file_path, self.project_root)
+                    if relative_path is None:
+                        continue  # Skip files that can't be made relative
                     is_covered = False
                     
                     for pattern in covered_patterns:

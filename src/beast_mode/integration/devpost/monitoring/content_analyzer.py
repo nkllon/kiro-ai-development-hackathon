@@ -14,6 +14,8 @@ from typing import Dict, Any, Optional, List, Tuple
 from datetime import datetime
 import re
 
+from ....utils.path_normalizer import safe_relative_to
+
 try:
     from PIL import Image
     PIL_AVAILABLE = True
@@ -330,9 +332,8 @@ class ContentAnalyzer:
         try:
             # Get relative path from repo root
             repo_root = Path(self._git_repo.working_dir)
-            try:
-                relative_path = file_path.relative_to(repo_root)
-            except ValueError:
+            relative_path = safe_relative_to(file_path, repo_root)
+            if relative_path is None:
                 return None  # File is outside repo
             
             git_info = {}

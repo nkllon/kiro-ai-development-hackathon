@@ -20,6 +20,7 @@ from watchdog.events import FileSystemEventHandler, FileSystemEvent
 from ..interfaces import FileMonitorInterface, SyncManagerInterface
 from ..models import FileChangeEvent, ChangeType, DevpostConfig
 from .content_analyzer import ContentAnalyzer
+from ....utils.path_normalizer import safe_relative_to
 
 
 logger = logging.getLogger(__name__)
@@ -378,14 +379,13 @@ class ProjectFileMonitor(FileMonitorInterface):
         
         filename = path.name
         
-        try:
-            # Resolve both paths to handle symlinks and relative paths
-            resolved_path = path.resolve()
-            resolved_project = self.project_path.resolve()
-            relative_path = str(resolved_path.relative_to(resolved_project))
-        except ValueError:
+        # Use safe path normalization to handle absolute/relative conflicts
+        relative_path_obj = safe_relative_to(path, self.project_path)
+        if relative_path_obj is None:
             # Path is not within project directory
             return False
+        
+        relative_path = str(relative_path_obj)
         
         # Check against watch patterns
         for pattern in self.config.watch_patterns:
@@ -497,13 +497,11 @@ class ProjectFileMonitor(FileMonitorInterface):
                     else:
                         operation_type = SyncOperationType.METADATA_UPDATE
                     
-                    # Resolve paths to handle absolute/relative path issues
-                    try:
-                        resolved_file_path = Path(event.file_path).resolve()
-                        resolved_project_path = self.project_path.resolve()
-                        relative_path = resolved_file_path.relative_to(resolved_project_path)
+                    # Use safe path normalization to handle absolute/relative path issues
+                    relative_path = safe_relative_to(event.file_path, self.project_path)
+                    if relative_path is not None:
                         target_field = str(relative_path)
-                    except ValueError:
+                    else:
                         # If relative_to fails, use the filename
                         target_field = Path(event.file_path).name
                     

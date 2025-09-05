@@ -146,3 +146,20 @@ class RemediationStep:
     affected_components: List[str] = field(default_factory=list)
     prerequisites: List[str] = field(default_factory=list)
     validation_criteria: List[str] = field(default_factory=list)
+
+
+# Ensure enum classes are JSON serializable
+def _setup_enum_serialization():
+    """Set up JSON serialization for enum classes"""
+    try:
+        from ..utils.enum_serialization import make_enum_json_serializable
+        make_enum_json_serializable(ComplianceIssueType, IssueSeverity)
+    except ImportError:
+        # Fallback: add __json__ methods manually
+        if not hasattr(ComplianceIssueType, '__json__'):
+            ComplianceIssueType.__json__ = lambda self: self.value
+        if not hasattr(IssueSeverity, '__json__'):
+            IssueSeverity.__json__ = lambda self: self.value
+
+# Set up serialization when module is imported
+_setup_enum_serialization()

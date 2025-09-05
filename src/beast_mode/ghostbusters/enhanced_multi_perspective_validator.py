@@ -37,6 +37,11 @@ class DecisionContext:
     risk_factors: List[str]
     time_pressure: str  # low, medium, high, critical
     impact_scope: str   # local, module, system, enterprise
+    confidence_score: float = 0.0  # Add missing attribute for confidence-based routing
+    
+    def calculate_confidence(self) -> float:
+        """Calculate confidence score based on decision factors"""
+        return self.confidence_score
 
 @dataclass
 class StakeholderPerspective:

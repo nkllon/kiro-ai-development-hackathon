@@ -1,31 +1,9 @@
 {
   "patterns": [
     {
-      "pattern_id": "pattern_test_import_error_1757036990",
-      "pattern_name": "Prevent test_import_error in test:tests/test_module_0.py",
-      "failure_signature": "test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_10'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
-      "root_cause_pattern": "Test import error - missing or broken test dependencies",
-      "prevention_steps": [
-        "Check for test_import_error before deployment",
-        "Implement automated validation",
-        "Add monitoring for early detection"
-      ],
-      "detection_criteria": [
-        "Monitor for test_import_error symptoms",
-        "Automated health checks",
-        "Proactive system validation"
-      ],
-      "automated_checks": [
-        "Automated check for test_import_error",
-        "Continuous monitoring",
-        "Preventive validation"
-      ],
-      "pattern_hash": "e19d845f"
-    },
-    {
-      "pattern_id": "pattern_test_import_error_1757036991",
+      "pattern_id": "pattern_test_import_error_1757073973",
       "pattern_name": "Prevent test_import_error in test:tests/test_module_5.py",
-      "failure_signature": "test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_35'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "failure_signature": "test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_5'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test import error - missing or broken test dependencies",
       "prevention_steps": [
         "Check for test_import_error before deployment",
@@ -42,10 +20,32 @@
         "Continuous monitoring",
         "Preventive validation"
       ],
-      "pattern_hash": "0c9d00c6"
+      "pattern_hash": "46ccc21d"
     },
     {
-      "pattern_id": "pattern_test_import_error_1757036992",
+      "pattern_id": "pattern_test_import_error_1757073974",
+      "pattern_name": "Prevent test_import_error in test:tests/test_module_0.py",
+      "failure_signature": "test:tests/test_module_0.py|dependency_issue|ImportError: No module named 'module_40'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "4d5f8ee1"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757073975",
       "pattern_name": "Prevent test_import_error in test:tests/test_module_5.py",
       "failure_signature": "test:tests/test_module_5.py|dependency_issue|ImportError: No module named 'module_45'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test import error - missing or broken test dependencies",
@@ -67,7 +67,7 @@
       "pattern_hash": "113f1e75"
     },
     {
-      "pattern_id": "pattern_test_assertion_failure_1757036995",
+      "pattern_id": "pattern_test_assertion_failure_1757073976",
       "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_1.py",
       "failure_signature": "test:tests/test_module_1.py|unknown|AssertionError: Expected 1, got 2|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
@@ -89,9 +89,9 @@
       "pattern_hash": "9056395a"
     },
     {
-      "pattern_id": "pattern_test_assertion_failure_1757036997",
-      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_6.py",
-      "failure_signature": "test:tests/test_module_6.py|unknown|AssertionError: Expected 6, got 7|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "pattern_id": "pattern_test_assertion_failure_1757073978",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_1.py",
+      "failure_signature": "test:tests/test_module_1.py|unknown|AssertionError: Expected 21, got 22|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
       "prevention_steps": [
         "Check for test_assertion_failure before deployment",
@@ -108,10 +108,10 @@
         "Continuous monitoring",
         "Preventive validation"
       ],
-      "pattern_hash": "d6687ea0"
+      "pattern_hash": "fd880541"
     },
     {
-      "pattern_id": "pattern_test_assertion_failure_1757036998",
+      "pattern_id": "pattern_test_assertion_failure_1757073979",
       "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_6.py",
       "failure_signature": "test:tests/test_module_6.py|resource_exhaustion|AssertionError: Expected 26, got 27|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
@@ -133,29 +133,7 @@
       "pattern_hash": "6ef24254"
     },
     {
-      "pattern_id": "pattern_test_assertion_failure_1757037000",
-      "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_1.py",
-      "failure_signature": "test:tests/test_module_1.py|unknown|AssertionError: Expected 31, got 32|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
-      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
-      "prevention_steps": [
-        "Check for test_assertion_failure before deployment",
-        "Implement automated validation",
-        "Add monitoring for early detection"
-      ],
-      "detection_criteria": [
-        "Monitor for test_assertion_failure symptoms",
-        "Automated health checks",
-        "Proactive system validation"
-      ],
-      "automated_checks": [
-        "Automated check for test_assertion_failure",
-        "Continuous monitoring",
-        "Preventive validation"
-      ],
-      "pattern_hash": "e666ccd7"
-    },
-    {
-      "pattern_id": "pattern_test_assertion_failure_1757037001",
+      "pattern_id": "pattern_test_assertion_failure_1757073980",
       "pattern_name": "Prevent test_assertion_failure in test:tests/test_module_6.py",
       "failure_signature": "test:tests/test_module_6.py|unknown|AssertionError: Expected 46, got 47|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
@@ -177,9 +155,9 @@
       "pattern_hash": "f2a28a12"
     },
     {
-      "pattern_id": "pattern_test_assertion_failure_1757037078",
-      "pattern_name": "Prevent test_assertion_failure in test:tests/test_example.py",
-      "failure_signature": "test:tests/test_example.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "pattern_id": "pattern_test_assertion_failure_1757074726",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
       "prevention_steps": [
         "Check for test_assertion_failure before deployment",
@@ -196,9 +174,9 @@
         "Continuous monitoring",
         "Preventive validation"
       ],
-      "pattern_hash": "69d859fc"
+      "pattern_hash": "0a9fc9ad"
     }
   ],
-  "last_updated": "2025-09-04T19:51:18.784292",
-  "pattern_count": 9
+  "last_updated": "2025-09-05T06:18:46.919920",
+  "pattern_count": 8
 }

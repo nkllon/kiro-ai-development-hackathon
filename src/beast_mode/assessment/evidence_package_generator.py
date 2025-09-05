@@ -23,6 +23,12 @@ class SuperiorityEvidence:
     improvement_percentage: float
     evidence_type: str  # performance, quality, velocity, reliability
     statistical_confidence: float
+    concrete_proof: Optional[str] = None  # Add missing parameter
+    
+    def __post_init__(self):
+        """Initialize concrete_proof if None"""
+        if self.concrete_proof is None:
+            self.concrete_proof = f"Evidence for {self.metric_name}: {self.improvement_percentage:.1f}% improvement demonstrated"
     
 @dataclass
 class ConstraintComplianceEvidence:

@@ -177,26 +177,17 @@ class BeastModeCLI(ReflectiveModule):
             # Update average execution time
             self._update_average_execution_time(execution_time)
             
-            # Store command history
-            self.command_history.append({
-                "command": command,
-                "args": args,
-                "success": result.success,
-                "execution_time_ms": execution_time,
-                "timestamp": result.timestamp
-            })
-            
-            # Keep only last 100 commands
-            self.command_history = self.command_history[-100:]
-            
-            # Update most used command
-            self._update_most_used_command(command)
+            # Record command in history
+            self._record_command(command, args, result.success, execution_time)
             
             return result
             
         except Exception as e:
             execution_time = int((time.time() - start_time) * 1000)
             self.cli_metrics['failed_commands'] += 1
+            
+            # Record failed command in history
+            self._record_command(command, args, False, execution_time)
             
             return CLIResult(
                 command=command,
@@ -718,6 +709,38 @@ class BeastModeCLI(ReflectiveModule):
             
         if command_counts:
             self.cli_metrics['most_used_command'] = max(command_counts, key=command_counts.get)
+    
+    def get_command_history(self) -> List[Dict[str, Any]]:
+        """Return command execution history"""
+        return self.command_history.copy()
+    
+    def get_cli_analytics(self) -> Dict[str, Any]:
+        """Return CLI analytics and metrics"""
+        return {
+            "cli_metrics": self.cli_metrics.copy(),
+            "command_history_size": len(self.command_history),
+            "recent_commands": self.command_history[-10:] if self.command_history else [],
+            "session_duration_minutes": self._get_session_duration_minutes()
+        }
+    
+    def _record_command(self, command: str, args: Optional[List[str]] = None, 
+                       success: bool = True, execution_time_ms: int = 0) -> None:
+        """Record executed command in history"""
+        command_entry = {
+            "command": command,
+            "args": args or [],
+            "success": success,
+            "execution_time_ms": execution_time_ms,
+            "timestamp": datetime.now()
+        }
+        
+        self.command_history.append(command_entry)
+        
+        # Keep only last 100 commands
+        self.command_history = self.command_history[-100:]
+        
+        # Update most used command tracking
+        self._update_most_used_command(command)
             
     def create_parser(self) -> argparse.ArgumentParser:
         """Create argument parser for CLI"""
