@@ -6,7 +6,7 @@
       "successful_applications": 0,
       "average_match_time_ms": 0.0,
       "last_matched": null,
-      "effectiveness_score": 0.9999997615814209,
+      "effectiveness_score": 0.9999999701976776,
       "false_positive_count": 0
     },
     {
@@ -15,7 +15,7 @@
       "successful_applications": 0,
       "average_match_time_ms": 0.0,
       "last_matched": null,
-      "effectiveness_score": 0.5,
+      "effectiveness_score": 0.75,
       "false_positive_count": 0
     },
     {
@@ -98,7 +98,16 @@
       "last_matched": null,
       "effectiveness_score": 0.0,
       "false_positive_count": 0
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757029660",
+      "match_count": 0,
+      "successful_applications": 0,
+      "average_match_time_ms": 0.0,
+      "last_matched": null,
+      "effectiveness_score": 0.0,
+      "false_positive_count": 0
     }
   ],
-  "last_updated": "2025-09-04T17:30:48.651171"
+  "last_updated": "2025-09-04T17:47:40.380532"
 }
