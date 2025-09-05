@@ -120,48 +120,48 @@ class TestFailureDetector(ReflectiveModule):
             
             failures = []
             
-                # Try JSON parsing first (more reliable)
-                if os.path.exists(json_output_file):
+            # Try JSON parsing first (more reliable)
+            if os.path.exists(json_output_file):
+                try:
+                    failures = self._parse_json_output(json_output_file)
+                    self.logger.info(f"Parsed {len(failures)} failures from JSON output")
+                    # Monitor successful parsing
+                    self.error_handler.monitor_component_health("json_parser", True, 100.0)
+                except Exception as e:
+                    self.logger.warning(f"JSON parsing failed: {e}, falling back to text parsing")
+                    # Monitor parsing failure
+                    self.error_handler.monitor_component_health("json_parser", False, 1000.0)
+                finally:
+                    # Clean up temp file
                     try:
-                        failures = self._parse_json_output(json_output_file)
-                        self.logger.info(f"Parsed {len(failures)} failures from JSON output")
-                        # Monitor successful parsing
-                        self.error_handler.monitor_component_health("json_parser", True, 100.0)
-                    except Exception as e:
-                        self.logger.warning(f"JSON parsing failed: {e}, falling back to text parsing")
-                        # Monitor parsing failure
-                        self.error_handler.monitor_component_health("json_parser", False, 1000.0)
-                    finally:
-                        # Clean up temp file
-                        try:
-                            os.remove(json_output_file)
-                        except:
-                            pass
-                            
-                # Fallback to text parsing if JSON failed or unavailable
-                if not failures and result.returncode != 0:
-                    try:
-                        failures = self.parse_pytest_output(result.stdout + result.stderr)
-                        self.logger.info(f"Parsed {len(failures)} failures from text output")
-                        # Monitor successful text parsing
-                        self.error_handler.monitor_component_health("text_parser", True, 200.0)
-                    except Exception as e:
-                        self.logger.error(f"Text parsing also failed: {e}")
-                        # Monitor text parsing failure
-                        self.error_handler.monitor_component_health("text_parser", False, 2000.0)
-                        failures = [self._create_parsing_failure(test_command, str(e))]
+                        os.remove(json_output_file)
+                    except:
+                        pass
                         
-                self.total_failures_detected += len(failures)
+            # Fallback to text parsing if JSON failed or unavailable
+            if not failures and result.returncode != 0:
+                try:
+                    failures = self.parse_pytest_output(result.stdout + result.stderr)
+                    self.logger.info(f"Parsed {len(failures)} failures from text output")
+                    # Monitor successful text parsing
+                    self.error_handler.monitor_component_health("text_parser", True, 200.0)
+                except Exception as e:
+                    self.logger.error(f"Text parsing also failed: {e}")
+                    # Monitor text parsing failure
+                    self.error_handler.monitor_component_health("text_parser", False, 2000.0)
+                    failures = [self._create_parsing_failure(test_command, str(e))]
+                        
+            self.total_failures_detected += len(failures)
                 
-                # Update parsing success rate
-                if self.total_test_runs_monitored > 0:
-                    self.parsing_success_rate = (
-                        (self.parsing_success_rate * (self.total_test_runs_monitored - 1) + 
-                         (1.0 if failures or result.returncode == 0 else 0.0)) / 
-                        self.total_test_runs_monitored
-                    )
+            # Update parsing success rate
+            if self.total_test_runs_monitored > 0:
+                self.parsing_success_rate = (
+                    (self.parsing_success_rate * (self.total_test_runs_monitored - 1) + 
+                     (1.0 if failures or result.returncode == 0 else 0.0)) / 
+                    self.total_test_runs_monitored
+                )
                     
-                return failures
+            return failures
             
         except subprocess.TimeoutExpired:
             self.logger.error("Test execution timeout - creating timeout failure")
