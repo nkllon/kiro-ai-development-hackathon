@@ -6,12 +6,12 @@
       "failure_signature": "test:test:tests/test_imports.py|dependency_issue|ImportError: No module named 'missing_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test import error - missing or broken test dependencies",
       "prevention_steps": [
+        "Analyze broken_dependencies systematically",
+        "Implement root cause fix",
+        "Check if modules are installed: pip list | grep <module>",
         "Validate fix addresses root cause",
         "Identify missing modules from error message",
-        "Check if modules are installed: pip list | grep <module>",
-        "Install missing dependencies: pip install <module>",
-        "Analyze broken_dependencies systematically",
-        "Implement root cause fix"
+        "Install missing dependencies: pip install <module>"
       ],
       "detection_criteria": [
         "Monitor for test_import_error in test execution",
@@ -31,8 +31,8 @@
       "failure_signature": "test:test:tests/test_permissions.py|permission_issue|PermissionError: [Errno 13] Permission denied: '/root/protected_file'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Insufficient permissions for file access",
       "prevention_steps": [
-        "Identify files with incorrect permissions",
         "Verify user has necessary access rights",
+        "Identify files with incorrect permissions",
         "Apply correct permissions using chmod"
       ],
       "detection_criteria": [
@@ -53,9 +53,9 @@
       "failure_signature": "test:test:tests/test_logic.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
       "prevention_steps": [
-        "Analyze assertion failure details from stack trace",
+        "Check if test data or fixtures are correct",
         "Review test logic and expected vs actual values",
-        "Check if test data or fixtures are correct"
+        "Analyze assertion failure details from stack trace"
       ],
       "detection_criteria": [
         "Monitor for test_assertion_failure in test execution",
@@ -75,9 +75,9 @@
       "failure_signature": "test:test:tests/test_module_1.py|unknown|AssertionError: Expected 1, got 2|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
       "prevention_steps": [
-        "Review test logic and expected vs actual values",
         "Check if test data or fixtures are correct",
-        "Analyze assertion failure details from stack trace"
+        "Analyze assertion failure details from stack trace",
+        "Review test logic and expected vs actual values"
       ],
       "detection_criteria": [
         "Monitor for test_assertion_failure in test execution",
@@ -97,9 +97,9 @@
       "failure_signature": "test:test:tests/test_module_6.py|unknown|AssertionError: Expected 6, got 7|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
       "prevention_steps": [
-        "Review test logic and expected vs actual values",
         "Check if test data or fixtures are correct",
-        "Analyze assertion failure details from stack trace"
+        "Analyze assertion failure details from stack trace",
+        "Review test logic and expected vs actual values"
       ],
       "detection_criteria": [
         "Monitor for test_assertion_failure in test execution",
@@ -119,9 +119,9 @@
       "failure_signature": "test:test:tests/test_module_1.py|resource_exhaustion|AssertionError: Expected 11, got 12|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
       "prevention_steps": [
-        "Review test logic and expected vs actual values",
         "Check if test data or fixtures are correct",
-        "Analyze assertion failure details from stack trace"
+        "Analyze assertion failure details from stack trace",
+        "Review test logic and expected vs actual values"
       ],
       "detection_criteria": [
         "Monitor for test_assertion_failure in test execution",
@@ -141,9 +141,9 @@
       "failure_signature": "test:test:tests/test_module_6.py|resource_exhaustion|AssertionError: Expected 26, got 27|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
       "prevention_steps": [
-        "Review test logic and expected vs actual values",
         "Check if test data or fixtures are correct",
-        "Analyze assertion failure details from stack trace"
+        "Analyze assertion failure details from stack trace",
+        "Review test logic and expected vs actual values"
       ],
       "detection_criteria": [
         "Monitor for test_assertion_failure in test execution",
@@ -163,9 +163,9 @@
       "failure_signature": "test:test:tests/test_api.py|unknown|AssertionError: Expected status code 200, got 404|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
       "prevention_steps": [
-        "Review test logic and expected vs actual values",
         "Check if test data or fixtures are correct",
-        "Analyze assertion failure details from stack trace"
+        "Analyze assertion failure details from stack trace",
+        "Review test logic and expected vs actual values"
       ],
       "detection_criteria": [
         "Monitor for test_assertion_failure in test execution",
@@ -185,9 +185,9 @@
       "failure_signature": "test:test:tests/test_api_endpoints.py|unknown|AssertionError: 401 != 200 : Authentication failed for protected endpoint|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
       "prevention_steps": [
-        "Review test logic and expected vs actual values",
         "Check if test data or fixtures are correct",
-        "Analyze assertion failure details from stack trace"
+        "Analyze assertion failure details from stack trace",
+        "Review test logic and expected vs actual values"
       ],
       "detection_criteria": [
         "Monitor for test_assertion_failure in test execution",
@@ -207,9 +207,9 @@
       "failure_signature": "test:test:tests/test_business.py|unknown|AssertionError: Expected total_amount to be 150.0, got 120.0|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
       "prevention_steps": [
-        "Review test logic and expected vs actual values",
         "Check if test data or fixtures are correct",
-        "Analyze assertion failure details from stack trace"
+        "Analyze assertion failure details from stack trace",
+        "Review test logic and expected vs actual values"
       ],
       "detection_criteria": [
         "Monitor for test_assertion_failure in test execution",
@@ -229,9 +229,9 @@
       "failure_signature": "test:test:tests/test_regression.py|unknown|AssertionError: Basic test|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
       "prevention_steps": [
-        "Review test logic and expected vs actual values",
         "Check if test data or fixtures are correct",
-        "Analyze assertion failure details from stack trace"
+        "Analyze assertion failure details from stack trace",
+        "Review test logic and expected vs actual values"
       ],
       "detection_criteria": [
         "Monitor for test_assertion_failure in test execution",
@@ -251,9 +251,9 @@
       "failure_signature": "test:test:tests/test_views.py|unknown|AssertionError: 500 != 200 : Expected successful response, got server error|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
       "prevention_steps": [
-        "Review test logic and expected vs actual values",
         "Check if test data or fixtures are correct",
-        "Analyze assertion failure details from stack trace"
+        "Analyze assertion failure details from stack trace",
+        "Review test logic and expected vs actual values"
       ],
       "detection_criteria": [
         "Monitor for test_assertion_failure in test execution",
@@ -268,6 +268,6 @@
       "pattern_hash": "084a6eff"
     }
   ],
-  "last_updated": "2025-09-04T18:08:44.374730",
+  "last_updated": "2025-09-04T19:51:18.784725",
   "pattern_count": 12
 }
