@@ -73,33 +73,13 @@ tests/
 └── conftest.py        # Pytest configuration and shared fixtures
 ```
 
-## Scripts Organization (`scripts/`)
+## Organization Principles
 
-### Categories
-- **Analysis**: `*_analyzer.py`, `*_analysis.py` - Data analysis tools
-- **CLI Tools**: `*_cli.py` - Command-line utilities
-- **Generators**: `*_generator.py` - Code and artifact generation
-- **Validators**: `*_validator.py` - Validation and compliance tools
-- **Fixers**: `*_fixer.py` - Automated repair tools
-- **Integration**: `*_integration.py` - External system integration
-
-## File Naming Conventions
-
-### Python Files
-- **Modules**: `snake_case.py`
-- **Classes**: `PascalCase` in snake_case files
-- **CLI Scripts**: `*_cli.py`
-- **Tests**: `test_*.py`
-
-### Documentation
-- **Specifications**: `requirements.md`, `design.md`, `tasks.md`
-- **Documentation**: `README.md`, `*.md`
-- **Reports**: `*-report.md`, `*-analysis.md`
-
-### Configuration
-- **Python**: `pyproject.toml`, `requirements.txt`
-- **Make**: `Makefile`, `makefiles/*.mk`
-- **Git**: `.pre-commit-config.yaml`
+### Systematic Organization Standards
+- **No Ad-Hoc Placement**: Everything has a designated location
+- **Consistent Patterns**: Naming and structure follow systematic conventions
+- **Model-Driven Structure**: Organization based on project registry
+- **Separation of Concerns**: Clear boundaries between components
 
 ## Architecture Principles
 
