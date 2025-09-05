@@ -1,0 +1,117 @@
+# Beast Mode Framework - Task DAG Makefile Template
+# Include this in any spec directory for standardized task analysis and execution
+
+# Task DAG CLI path (adjust based on your project structure)
+TASK_DAG_CLI = python3 -m beast_mode.task_dag.cli
+
+# Spec-specific variables (override these in your spec's Makefile)
+SPEC_NAME ?= $(shell basename $(PWD))
+SPEC_PATH ?= .
+
+.PHONY: help dag-analyze dag-execute dag-status dag-health dag-list task-info clean-dag
+
+# Default target
+help:
+	@echo "🦁 Beast Mode Framework - Task DAG Commands for $(SPEC_NAME)"
+	@echo "================================================================"
+	@echo ""
+	@echo "Task DAG Analysis and Execution:"
+	@echo "  dag-analyze          Analyze task dependencies and create DAG"
+	@echo "  dag-execute          Execute tasks with recursive descent (simulated)"
+	@echo "  dag-status           Show current task execution status"
+	@echo "  dag-health           Show Task DAG RM health status"
+	@echo "  dag-list             List all tasks with optional filtering"
+	@echo "  task-info            Show detailed task information (use TASK=<id>)"
+	@echo "  clean-dag            Clean up generated DAG files"
+	@echo ""
+	@echo "Examples:"
+	@echo "  make dag-analyze                    # Analyze dependencies"
+	@echo "  make dag-execute                    # Simulate execution"
+	@echo "  make task-info TASK=1.1            # Show task 1.1 details"
+	@echo "  make dag-list TIER=0               # List tier 0 tasks"
+	@echo "  make dag-list STATUS=ready         # List ready tasks"
+	@echo ""
+
+# Analyze task dependencies
+dag-analyze:
+	@echo "🔍 Analyzing task dependencies for $(SPEC_NAME)..."
+	$(TASK_DAG_CLI) --spec-path $(SPEC_PATH) analyze
+
+# Execute tasks with simulation
+dag-execute:
+	@echo "🚀 Executing tasks for $(SPEC_NAME) (simulated)..."
+	$(TASK_DAG_CLI) --spec-path $(SPEC_PATH) execute --simulate
+
+# Execute with dry run first
+dag-execute-full:
+	@echo "🎯 Full task execution for $(SPEC_NAME)..."
+	@echo "First, showing execution plan:"
+	$(TASK_DAG_CLI) --spec-path $(SPEC_PATH) execute --dry-run
+	@echo ""
+	@echo "Now executing with simulation:"
+	$(TASK_DAG_CLI) --spec-path $(SPEC_PATH) execute --simulate
+
+# Show task status
+dag-status:
+	@echo "📊 Task status for $(SPEC_NAME)..."
+	$(TASK_DAG_CLI) --spec-path $(SPEC_PATH) status
+
+# Show health status
+dag-health:
+	@echo "🏥 Task DAG RM health for $(SPEC_NAME)..."
+	$(TASK_DAG_CLI) --spec-path $(SPEC_PATH) health
+
+# List tasks with optional filtering
+dag-list:
+	@echo "📋 Listing tasks for $(SPEC_NAME)..."
+	@if [ -n "$(TIER)" ]; then \
+		$(TASK_DAG_CLI) --spec-path $(SPEC_PATH) list-tasks --tier $(TIER); \
+	elif [ -n "$(STATUS)" ]; then \
+		$(TASK_DAG_CLI) --spec-path $(SPEC_PATH) list-tasks --status $(STATUS); \
+	else \
+		$(TASK_DAG_CLI) --spec-path $(SPEC_PATH) list-tasks; \
+	fi
+
+# Show specific task info
+task-info:
+	@echo "📋 Task information for $(SPEC_NAME):"
+	@if [ -z "$(TASK)" ]; then \
+		echo "Usage: make task-info TASK=<task_id>"; \
+		echo "Example: make task-info TASK=1.1"; \
+	else \
+		$(TASK_DAG_CLI) --spec-path $(SPEC_PATH) task-info $(TASK); \
+	fi
+
+# Clean up generated files
+clean-dag:
+	@echo "🧹 Cleaning up DAG files for $(SPEC_NAME)..."
+	rm -f dag-analysis-*.json
+	rm -f execution-results-*.json
+	rm -f task-dependency-analysis.json
+
+# Advanced commands
+
+# Execute only ready tasks (dry run)
+dag-ready:
+	@echo "🎯 Ready tasks for $(SPEC_NAME):"
+	$(TASK_DAG_CLI) --spec-path $(SPEC_PATH) list-tasks --status not_started
+
+# Show critical path
+dag-critical-path:
+	@echo "🛤️  Critical path analysis for $(SPEC_NAME):"
+	$(TASK_DAG_CLI) --spec-path $(SPEC_PATH) analyze --format text | grep -A 20 "TIER"
+
+# Export analysis to specific file
+dag-export:
+	@echo "💾 Exporting DAG analysis for $(SPEC_NAME)..."
+	@if [ -z "$(OUTPUT)" ]; then \
+		echo "Usage: make dag-export OUTPUT=<filename>"; \
+		echo "Example: make dag-export OUTPUT=my-analysis.json"; \
+	else \
+		$(TASK_DAG_CLI) --spec-path $(SPEC_PATH) analyze --output $(OUTPUT); \
+	fi
+
+# Validate DAG (check for cycles, etc.)
+dag-validate:
+	@echo "✅ Validating DAG for $(SPEC_NAME)..."
+	$(TASK_DAG_CLI) --spec-path $(SPEC_PATH) health | grep "DAG Valid"

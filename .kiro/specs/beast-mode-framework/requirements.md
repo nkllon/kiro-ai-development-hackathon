@@ -162,15 +162,30 @@ The Beast Mode Framework transforms the Kiro AI Development Hackathon from a reg
 
 ### Requirement 5
 
-**User Story:** As a Beast Mode framework, I want to provide systematic services to other hackathons (GKE), so that I can prove my value through concrete service delivery.
+**User Story:** As a Beast Mode framework, I want to provide systematic services through multiple implementation strategies, so that I can prove my value through concrete service delivery to different environments.
 
 #### Acceptance Criteria
 
-1. WHEN GKE hackathon requests PDCA cycle services THEN I SHALL provide working systematic development workflow
-2. WHEN GKE hackathon needs model-driven building THEN I SHALL provide project registry consultation services
-3. WHEN GKE hackathon requires tool health management THEN I SHALL provide systematic tool fixing capabilities
-4. WHEN GKE hackathon needs quality assurance THEN I SHALL provide systematic validation services
-5. WHEN providing services THEN I SHALL demonstrate measurable improvement over ad-hoc approaches
+1. WHEN external hackathons (GKE) request services THEN I SHALL provide systematic development workflow through service APIs
+2. WHEN Kiro users need systematic development THEN I SHALL provide native integration through hooks, specs, and steering
+3. WHEN providing PDCA cycle services THEN I SHALL offer both external API and native Kiro implementation options
+4. WHEN delivering model-driven building THEN I SHALL support both standalone service and Kiro-integrated approaches
+5. WHEN demonstrating value THEN I SHALL show measurable improvement over ad-hoc approaches in both deployment models
+
+#### Implementation Strategies
+
+**Strategy A: External Service Delivery (GKE Implementation)**
+- Standalone service APIs for external hackathon integration
+- Independent deployment with service discovery and load balancing
+- Cross-platform compatibility for diverse hackathon environments
+- Service-level SLAs and monitoring for external consumers
+
+**Strategy B: Native Kiro Integration (Kiro Implementation)**
+- Leverage Kiro's built-in agent execution and task orchestration
+- Integrate through Kiro hooks for automated systematic workflows
+- Use Kiro specs for PDCA cycle definition and execution
+- Enhance Kiro steering with Beast Mode domain intelligence
+- Utilize Kiro's MCP framework for tool integration and health management
 
 ### Requirement 6
 
@@ -210,27 +225,55 @@ The Beast Mode Framework transforms the Kiro AI Development Hackathon from a reg
 
 ### Requirement 9
 
-**User Story:** As a Beast Mode framework, I want autonomous PDCA orchestration capabilities, so that I can continuously improve and execute tasks without human intervention while maintaining systematic quality.
+**User Story:** As a Beast Mode framework, I want autonomous PDCA orchestration capabilities through multiple implementation approaches, so that I can continuously improve and execute tasks without human intervention while maintaining systematic quality.
 
 #### Acceptance Criteria
 
-1. WHEN executing autonomous PDCA loops THEN I SHALL use local LLM instances without external API dependencies
-2. WHEN planning tasks autonomously THEN I SHALL consult project registry and apply systematic methodology
+1. WHEN executing autonomous PDCA loops THEN I SHALL support both standalone and Kiro-native execution modes
+2. WHEN planning tasks autonomously THEN I SHALL consult project registry and apply systematic methodology regardless of implementation
 3. WHEN executing tasks autonomously THEN I SHALL maintain all constraints (C-03 no workarounds, C-05 <500ms response, etc.)
 4. WHEN validating autonomous execution THEN I SHALL perform systematic quality checks and constraint verification
 5. WHEN learning from autonomous cycles THEN I SHALL accumulate intelligence and improve subsequent task execution
 
+#### Implementation Approaches
+
+**Approach A: Standalone Autonomous Execution**
+- Local LLM instances without external API dependencies
+- Custom task orchestration and agent management
+- Independent workflow state management and persistence
+
+**Approach B: Kiro-Native Autonomous Execution**
+- Leverage Kiro's autopilot mode for autonomous agent execution
+- Use Kiro's built-in task orchestration and dependency resolution
+- Integrate with Kiro's agent hooks for automated PDCA cycle triggers
+- Utilize Kiro's spec system for systematic workflow definition
+- Enhance Kiro's steering with Beast Mode domain intelligence and PDCA patterns
+
 ### Requirement 10
 
-**User Story:** As a Beast Mode framework, I want LangGraph-based workflow orchestration, so that I can create complex autonomous workflows that maintain systematic approach across multiple interconnected tasks.
+**User Story:** As a Beast Mode framework, I want sophisticated workflow orchestration capabilities, so that I can create complex autonomous workflows that maintain systematic approach across multiple interconnected tasks.
 
 #### Acceptance Criteria
 
-1. WHEN orchestrating workflows THEN I SHALL use LangGraph state management for complex task dependencies
+1. WHEN orchestrating workflows THEN I SHALL support both custom and Kiro-native workflow management
 2. WHEN managing workflow state THEN I SHALL maintain learning history and cumulative intelligence across cycles
 3. WHEN handling workflow errors THEN I SHALL implement graceful degradation and systematic error recovery
 4. WHEN scaling workflows THEN I SHALL support concurrent execution of multiple PDCA loops without interference
 5. WHEN integrating workflows THEN I SHALL provide clear interfaces for external systems to trigger and monitor autonomous execution
+
+#### Orchestration Approaches
+
+**Approach A: Custom LangGraph Orchestration**
+- LangGraph state management for complex task dependencies
+- Custom workflow engine with Beast Mode-specific optimizations
+- Standalone deployment with independent scaling
+
+**Approach B: Kiro-Native Orchestration**
+- Leverage Kiro's built-in workflow orchestration and state management
+- Use Kiro specs for complex multi-task workflow definition
+- Integrate with Kiro's agent hooks for systematic workflow triggers
+- Utilize Kiro's MCP framework for tool orchestration and health management
+- Enhance Kiro's concurrent agent execution with Beast Mode domain intelligence
 
 ## Derived Requirements (Non-Functional)
 
@@ -308,15 +351,29 @@ The Beast Mode Framework transforms the Kiro AI Development Hackathon from a reg
 
 ### DR7: Usability Requirements
 
-**User Story:** As a GKE hackathon consumer, I want intuitive Beast Mode services, so that I can easily integrate and benefit from systematic approaches.
+**User Story:** As a Beast Mode consumer (GKE external or Kiro native), I want intuitive Beast Mode services, so that I can easily integrate and benefit from systematic approaches.
 
 #### Acceptance Criteria
 
-1. WHEN integrating with Beast Mode THEN GKE SHALL be able to start using services within 5 minutes using clear documentation
-2. WHEN service errors occur THEN error messages SHALL provide actionable guidance for resolution
-3. WHEN requesting services THEN API responses SHALL include clear status, results, and next steps
-4. WHEN monitoring Beast Mode performance THEN dashboards SHALL clearly show improvement metrics vs ad-hoc approaches
-5. WHEN troubleshooting issues THEN system SHALL provide self-diagnostic capabilities with recommended actions
+1. WHEN integrating with Beast Mode THEN consumers SHALL be able to start using services within 5 minutes using clear documentation
+2. WHEN using Kiro-native integration THEN Beast Mode SHALL integrate seamlessly with existing Kiro workflows and user experience
+3. WHEN service errors occur THEN error messages SHALL provide actionable guidance for resolution
+4. WHEN requesting services THEN responses SHALL include clear status, results, and next steps regardless of implementation
+5. WHEN monitoring Beast Mode performance THEN dashboards SHALL clearly show improvement metrics vs ad-hoc approaches
+
+#### Implementation-Specific Usability
+
+**External Service Usability (GKE)**
+- RESTful APIs with OpenAPI documentation and interactive examples
+- Service discovery and health check endpoints for easy integration
+- Clear error responses with troubleshooting guidance
+
+**Kiro-Native Usability**
+- Seamless integration with Kiro's command palette and chat interface
+- Beast Mode capabilities discoverable through Kiro's existing UI patterns
+- Steering files provide contextual guidance within Kiro's workflow
+- Hooks appear naturally in Kiro's agent hooks explorer
+- MCP tools integrate transparently with Kiro's tool ecosystem
 
 ### DR8: Compliance Requirements
 
@@ -329,3 +386,67 @@ The Beast Mode Framework transforms the Kiro AI Development Hackathon from a reg
 3. WHEN updating code THEN system SHALL enforce code quality gates (linting, formatting, security scanning)
 4. WHEN releasing versions THEN system SHALL follow semantic versioning with automated changelog generation
 5. WHEN documenting APIs THEN system SHALL maintain OpenAPI specifications with examples and validation
+##
+# Requirement 11 (NEW)
+
+**User Story:** As a Beast Mode framework, I want native Kiro integration capabilities, so that I can leverage Kiro's built-in features while providing systematic domain intelligence and PDCA optimization.
+
+#### Acceptance Criteria
+
+1. WHEN integrating with Kiro THEN I SHALL use Kiro's native agent execution instead of custom task engines
+2. WHEN providing systematic workflows THEN I SHALL define PDCA cycles as Kiro specs with proper task dependencies
+3. WHEN managing tools THEN I SHALL integrate through Kiro's MCP framework for standardized tool health management
+4. WHEN triggering systematic processes THEN I SHALL use Kiro hooks for automated PDCA cycle execution
+5. WHEN providing domain intelligence THEN I SHALL enhance Kiro steering with Beast Mode project registry insights
+
+#### Kiro Integration Points
+
+**Agent Execution Integration**
+- Replace custom TaskExecutionEngine with Kiro's native agent orchestration
+- Leverage Kiro's autopilot and supervised modes for autonomous execution
+- Use Kiro's concurrent agent capabilities for parallel PDCA cycle execution
+- Integrate Beast Mode domain intelligence into Kiro's agent decision-making
+
+**Spec System Integration**
+- Define systematic PDCA workflows as Kiro specs with structured tasks
+- Use Kiro's spec validation and execution for systematic quality assurance
+- Leverage Kiro's incremental development approach for complex Beast Mode features
+- Integrate Beast Mode project registry consultation into spec planning phases
+
+**Hook System Integration**
+- Create Beast Mode hooks for automated systematic workflow triggers
+- Implement tool health monitoring hooks that execute systematic diagnostics
+- Use file save hooks to trigger automatic PDCA cycle validation
+- Create manual hooks for on-demand systematic analysis and optimization
+
+**MCP Framework Integration**
+- Implement Beast Mode tools as MCP servers for standardized integration
+- Use MCP for systematic tool health management and automated repair
+- Leverage MCP's auto-approval system for trusted Beast Mode operations
+- Integrate project registry intelligence through MCP tool interfaces
+
+**Steering Enhancement**
+- Add Beast Mode steering files with domain-specific systematic patterns
+- Include project registry insights in conditional steering based on file context
+- Provide PDCA methodology guidance through always-included steering
+- Create manual steering for specialized Beast Mode systematic approaches
+
+#### Implementation Benefits
+
+**Leverage Native Capabilities**
+- Eliminate duplication of Kiro's task execution and agent management
+- Use proven Kiro infrastructure for reliability and performance
+- Benefit from Kiro's built-in observability and debugging capabilities
+- Integrate seamlessly with existing Kiro workflows and user experience
+
+**Focus on Unique Value**
+- Concentrate on domain intelligence and systematic PDCA optimization
+- Provide specialized hackathon workflow patterns and project registry insights
+- Deliver measurable systematic superiority through enhanced Kiro capabilities
+- Maintain Beast Mode's systematic approach while leveraging Kiro's execution engine
+
+**Deployment Flexibility**
+- Support both standalone service delivery (GKE) and native integration (Kiro)
+- Allow users to choose implementation approach based on their environment
+- Provide consistent Beast Mode systematic benefits across deployment models
+- Enable gradual migration from custom implementation to Kiro-native approach

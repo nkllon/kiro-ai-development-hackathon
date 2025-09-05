@@ -2,11 +2,11 @@
 
 ## Overview
 
-This design implements a comprehensive PCOR (Preventive Corrective Action Request) approach to eliminate existing spec fragmentation while implementing systematic prevention mechanisms. The system addresses both the immediate technical debt and the root causes that created it, ensuring long-term architectural consistency.
+This design implements a comprehensive system to eliminate existing spec fragmentation while implementing systematic prevention mechanisms. The system addresses both the immediate technical debt from 14 overlapping specs and the root causes that created it, ensuring long-term architectural consistency through automated governance, mandatory consistency validation, and continuous monitoring.
 
 ## Architecture
 
-### PCOR-Driven Architecture
+### System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -130,6 +130,25 @@ class ContinuousMonitor(ReflectiveModule):
 - Automatic drift detection and correction
 - Architectural decision validation
 - Proactive inconsistency prevention
+
+### 5. Migration Orchestrator
+
+**Purpose:** Manages transition from fragmented specs to unified specifications
+
+**Interface:**
+```python
+class MigrationOrchestrator(ReflectiveModule):
+    def create_migration_plan(self, consolidation_plan: ConsolidationPlan) -> MigrationPlan
+    def migrate_existing_implementations(self, migration_plan: MigrationPlan) -> MigrationResult
+    def update_legacy_references(self, spec_mapping: Dict[str, str]) -> UpdateResult
+    def validate_migration_completeness(self, migration_result: MigrationResult) -> ValidationReport
+```
+
+**Key Capabilities:**
+- Automated migration planning from consolidation analysis
+- Code and documentation migration coordination
+- Legacy reference updating and cleanup
+- Migration completeness validation
 
 ## Data Models
 
