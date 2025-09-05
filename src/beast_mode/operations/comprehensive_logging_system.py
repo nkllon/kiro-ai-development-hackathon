@@ -94,6 +94,7 @@ class ComprehensiveLoggingHandler(logging.Handler):
             )
         except Exception:
             # Don't let logging errors break the application
+            # Silently ignore logging failures during testing or when log directory is not available
             pass
 
 class ComprehensiveLoggingSystem(ReflectiveModule):
@@ -108,7 +109,13 @@ class ComprehensiveLoggingSystem(ReflectiveModule):
         # Configuration
         self.project_root = Path(project_root)
         self.log_directory = self.project_root / log_directory
-        self.log_directory.mkdir(exist_ok=True)
+        
+        # Try to create log directory, but don't fail if we can't
+        try:
+            self.log_directory.mkdir(exist_ok=True)
+        except (OSError, PermissionError):
+            # If we can't create the log directory, we'll fall back to console-only logging
+            pass
         
         # Logging configuration
         self.log_entries = []
@@ -516,30 +523,45 @@ class ComprehensiveLoggingSystem(ReflectiveModule):
     
     def _setup_logging_infrastructure(self):
         """Setup logging infrastructure"""
-        # Create log files
-        self.main_log_file = self.log_directory / "beast_mode.log"
-        self.audit_log_file = self.log_directory / "beast_mode_audit.log"
-        self.error_log_file = self.log_directory / "beast_mode_errors.log"
-        
-        # Create custom handler that forwards to our logging system
-        self.custom_handler = ComprehensiveLoggingHandler(self)
-        self.custom_handler.setLevel(logging.INFO)
-        self.custom_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-        
-        # Add our custom handler to the beast_mode logger hierarchy
-        beast_mode_logger = logging.getLogger('beast_mode')
-        beast_mode_logger.addHandler(self.custom_handler)
-        beast_mode_logger.setLevel(logging.INFO)
-        
-        # Also setup basic logging if not already configured
-        if not logging.getLogger().handlers:
+        try:
+            # Create log files
+            self.main_log_file = self.log_directory / "beast_mode.log"
+            self.audit_log_file = self.log_directory / "beast_mode_audit.log"
+            self.error_log_file = self.log_directory / "beast_mode_errors.log"
+            
+            # Create custom handler that forwards to our logging system
+            self.custom_handler = ComprehensiveLoggingHandler(self)
+            self.custom_handler.setLevel(logging.INFO)
+            self.custom_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+            
+            # Add our custom handler to the beast_mode logger hierarchy
+            beast_mode_logger = logging.getLogger('beast_mode')
+            beast_mode_logger.addHandler(self.custom_handler)
+            beast_mode_logger.setLevel(logging.INFO)
+            
+            # Also setup basic logging if not already configured
+            if not logging.getLogger().handlers:
+                handlers = [logging.StreamHandler()]  # Always include console handler
+                
+                # Only add file handler if we can create the log file
+                try:
+                    file_handler = logging.FileHandler(self.main_log_file)
+                    handlers.append(file_handler)
+                except (OSError, PermissionError, FileNotFoundError):
+                    # If we can't create the log file, just use console logging
+                    pass
+                
+                logging.basicConfig(
+                    level=logging.INFO,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    handlers=handlers
+                )
+        except Exception:
+            # If logging setup fails completely, fall back to basic console logging
             logging.basicConfig(
                 level=logging.INFO,
                 format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                handlers=[
-                    logging.FileHandler(self.main_log_file),
-                    logging.StreamHandler()
-                ]
+                handlers=[logging.StreamHandler()]
             )
         
     def _get_or_create_correlation_id(self) -> str:
@@ -583,26 +605,43 @@ class ComprehensiveLoggingSystem(ReflectiveModule):
             
             log_line = json.dumps(log_data) + "\n"
             
-            # Write to main log
-            with open(self.main_log_file, "a") as f:
-                f.write(log_line)
+            # Write to main log (with error handling)
+            try:
+                with open(self.main_log_file, "a") as f:
+                    f.write(log_line)
+            except (OSError, PermissionError, FileNotFoundError):
+                # Silently ignore file write errors (e.g., during testing)
+                pass
                 
-            # Write to audit log if audit event
+            # Write to audit log if audit event (with error handling)
             if log_entry.audit_event:
-                with open(self.audit_log_file, "a") as f:
-                    f.write(log_line)
+                try:
+                    with open(self.audit_log_file, "a") as f:
+                        f.write(log_line)
+                except (OSError, PermissionError, FileNotFoundError):
+                    # Silently ignore file write errors
+                    pass
                     
-            # Write to error log if error
+            # Write to error log if error (with error handling)
             if log_entry.level in [LogLevel.ERROR, LogLevel.CRITICAL]:
-                with open(self.error_log_file, "a") as f:
-                    f.write(log_line)
+                try:
+                    with open(self.error_log_file, "a") as f:
+                        f.write(log_line)
+                except (OSError, PermissionError, FileNotFoundError):
+                    # Silently ignore file write errors
+                    pass
                     
-            # Update file size metric
-            self.logging_metrics['log_file_size_bytes'] = self.main_log_file.stat().st_size
+            # Update file size metric (with error handling)
+            try:
+                if self.main_log_file.exists():
+                    self.logging_metrics['log_file_size_bytes'] = self.main_log_file.stat().st_size
+            except (OSError, FileNotFoundError):
+                # If we can't get file size, just skip this metric
+                pass
             
-        except Exception as e:
-            # Fallback to print if file writing fails
-            print(f"Failed to write log entry: {str(e)}")
+        except Exception:
+            # Silently ignore all logging errors to prevent breaking the application
+            pass
             
     def _trigger_alert(self, log_entry: LogEntry):
         """Trigger alert for critical log entries"""
