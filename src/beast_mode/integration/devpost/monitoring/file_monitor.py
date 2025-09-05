@@ -152,35 +152,62 @@ class ProjectFileMonitor(FileMonitorInterface):
                 raise
     
     def stop_monitoring(self) -> None:
-        """Stop file monitoring."""
-        with self._lock:
-            if not self._is_monitoring:
-                return
+        """Stop file monitoring with proper cleanup to prevent deadlocks."""
+        # Check if already stopped without holding lock
+        if not self._is_monitoring:
+            return
+        
+        logger.info("Stopping file monitoring...")
+        
+        try:
+            # Set stop flag first (thread-safe)
+            self._stop_processing.set()
             
-            logger.info("Stopping file monitoring...")
-            
-            try:
-                # Stop processing thread
-                self._stop_processing.set()
-                if self._processing_thread and self._processing_thread.is_alive():
-                    self._processing_thread.join(timeout=5.0)
-                
-                # Stop observer
-                if self._observer:
+            # Stop observer first to prevent new events
+            if self._observer:
+                try:
                     self._observer.stop()
-                    self._observer.join(timeout=5.0)
-                
-                # Cancel pending timers
-                for timer in self._debounce_timers.values():
+                    # Use shorter timeout to prevent hanging
+                    self._observer.join(timeout=2.0)
+                    if self._observer.is_alive():
+                        logger.warning("Observer thread did not stop gracefully")
+                except Exception as e:
+                    logger.warning(f"Error stopping observer: {e}")
+                finally:
+                    self._observer = None
+            
+            # Stop processing thread
+            if self._processing_thread and self._processing_thread.is_alive():
+                try:
+                    self._processing_thread.join(timeout=2.0)
+                    if self._processing_thread.is_alive():
+                        logger.warning("Processing thread did not stop gracefully")
+                except Exception as e:
+                    logger.warning(f"Error stopping processing thread: {e}")
+            
+            # Cancel pending timers (thread-safe)
+            timers_to_cancel = list(self._debounce_timers.values())
+            self._debounce_timers.clear()
+            for timer in timers_to_cancel:
+                try:
                     timer.cancel()
-                self._debounce_timers.clear()
-                
+                except Exception as e:
+                    logger.warning(f"Error canceling timer: {e}")
+            
+            # Final cleanup with lock
+            with self._lock:
                 self._cleanup()
-                logger.info("File monitoring stopped")
-                
-            except Exception as e:
-                logger.error(f"Error stopping file monitoring: {e}")
-                self._cleanup()
+            
+            logger.info("File monitoring stopped")
+            
+        except Exception as e:
+            logger.error(f"Error stopping file monitoring: {e}")
+            # Force cleanup even if there were errors
+            try:
+                with self._lock:
+                    self._cleanup()
+            except Exception as cleanup_error:
+                logger.error(f"Error during cleanup: {cleanup_error}")
     
     def add_watch_path(self, path: Path) -> None:
         """Add a path to be monitored."""
@@ -247,8 +274,12 @@ class ProjectFileMonitor(FileMonitorInterface):
             self._change_callbacks.remove(callback)
     
     def _handle_file_event(self, file_path: str, change_type: ChangeType) -> None:
-        """Handle a file system event."""
+        """Handle a file system event with deadlock prevention."""
         try:
+            # Check if we're shutting down
+            if self._stop_processing.is_set():
+                return
+            
             path = Path(file_path)
             
             # Skip if file doesn't match our project
@@ -260,9 +291,17 @@ class ProjectFileMonitor(FileMonitorInterface):
             if not event:
                 return
             
-            # Add to queue for processing
-            with self._lock:
-                self._event_queue.append(event)
+            # Add to queue for processing (use try/except to handle lock contention)
+            try:
+                with self._lock:
+                    # Double-check we're not shutting down
+                    if not self._stop_processing.is_set():
+                        self._event_queue.append(event)
+                    else:
+                        return
+            except Exception as lock_error:
+                logger.warning(f"Could not acquire lock for file event {file_path}: {lock_error}")
+                return
             
             # Set up debounced processing
             self._schedule_debounced_processing(str(path))
