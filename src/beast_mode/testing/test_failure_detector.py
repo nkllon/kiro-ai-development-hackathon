@@ -150,7 +150,7 @@ class TestFailureDetector(ReflectiveModule):
                     # Monitor text parsing failure
                     self.error_handler.monitor_component_health("text_parser", False, 2000.0)
                     failures = [self._create_parsing_failure(test_command, str(e))]
-                    
+                        
             self.total_failures_detected += len(failures)
                 
             # Update parsing success rate
@@ -160,7 +160,7 @@ class TestFailureDetector(ReflectiveModule):
                      (1.0 if failures or result.returncode == 0 else 0.0)) / 
                     self.total_test_runs_monitored
                 )
-                
+                    
             return failures
             
         except subprocess.TimeoutExpired:
