@@ -21,11 +21,12 @@
   - _Requirements: 1.4, 5.2_
 
 - [ ] 4. Implement structure validator
-  - Create StructureValidator class extending DocumentValidator
+  - Create StructureValidator class extending BaseDocumentValidator (with RM compliance)
   - Add validation for required sections (Introduction, Requirements, etc.)
   - Implement heading structure and numbering validation (H1, H2, H3)
   - Add line number tracking and violation reporting
-  - Write comprehensive unit tests for structure validation
+  - Implement health monitoring and status endpoints
+  - Write comprehensive unit tests for structure validation (>90% coverage)
   - _Requirements: 1.1, 1.2, 1.3, 1.5, 1.6_
 
 - [ ] 5. Implement EARS format validator
