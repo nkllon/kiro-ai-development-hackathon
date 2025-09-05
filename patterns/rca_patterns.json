@@ -483,8 +483,228 @@
         "Preventive validation"
       ],
       "pattern_hash": "00c4962f"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757037398",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757037408",
+      "pattern_name": "Prevent test_import_error in test:tests/test_module_a.py",
+      "failure_signature": "test:tests/test_module_a.py|dependency_issue|ImportError: No module named 'missing_dep'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "ca563599"
+    },
+    {
+      "pattern_id": "pattern_broken_dependencies_1757037408",
+      "pattern_name": "Prevent broken_dependencies in test:tests/test_module_a.py",
+      "failure_signature": "test:tests/test_module_a.py|dependency_issue|ImportError: No module named 'missing_dep'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Missing or broken dependencies",
+      "prevention_steps": [
+        "Check for broken_dependencies before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for broken_dependencies symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for broken_dependencies",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "ca563599"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757037409",
+      "pattern_name": "Prevent test_import_error in test:tests/test_imports.py",
+      "failure_signature": "test:tests/test_imports.py|dependency_issue|ImportError: No module named 'nonexistent_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "af9fd2cb"
+    },
+    {
+      "pattern_id": "pattern_broken_dependencies_1757037409",
+      "pattern_name": "Prevent broken_dependencies in test:tests/test_imports.py",
+      "failure_signature": "test:tests/test_imports.py|dependency_issue|ImportError: No module named 'nonexistent_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Missing or broken dependencies",
+      "prevention_steps": [
+        "Check for broken_dependencies before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for broken_dependencies symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for broken_dependencies",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "af9fd2cb"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757037692",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757037702",
+      "pattern_name": "Prevent test_import_error in test:tests/test_imports.py",
+      "failure_signature": "test:tests/test_imports.py|dependency_issue|ImportError: No module named 'nonexistent_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "af9fd2cb"
+    },
+    {
+      "pattern_id": "pattern_broken_dependencies_1757037702",
+      "pattern_name": "Prevent broken_dependencies in test:tests/test_imports.py",
+      "failure_signature": "test:tests/test_imports.py|dependency_issue|ImportError: No module named 'nonexistent_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Missing or broken dependencies",
+      "prevention_steps": [
+        "Check for broken_dependencies before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for broken_dependencies symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for broken_dependencies",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "af9fd2cb"
+    },
+    {
+      "pattern_id": "pattern_test_import_error_1757037703",
+      "pattern_name": "Prevent test_import_error in test:tests/test_imports.py",
+      "failure_signature": "test:tests/test_imports.py|dependency_issue|ImportError: No module named 'nonexistent_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test import error - missing or broken test dependencies",
+      "prevention_steps": [
+        "Check for test_import_error before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_import_error symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_import_error",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "af9fd2cb"
+    },
+    {
+      "pattern_id": "pattern_broken_dependencies_1757037703",
+      "pattern_name": "Prevent broken_dependencies in test:tests/test_imports.py",
+      "failure_signature": "test:tests/test_imports.py|dependency_issue|ImportError: No module named 'nonexistent_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Missing or broken dependencies",
+      "prevention_steps": [
+        "Check for broken_dependencies before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for broken_dependencies symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for broken_dependencies",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "af9fd2cb"
     }
   ],
-  "last_updated": "2025-09-04T16:12:35.362368",
-  "pattern_count": 22
+  "last_updated": "2025-09-04T20:01:43.597780",
+  "pattern_count": 32
 }
