@@ -64,11 +64,43 @@ interface ValidationEngine {
 
 #### DocumentValidator (Plugin Interface)
 ```typescript
-interface DocumentValidator {
+interface DocumentValidator extends ReflectiveModule {
   name: string;
   priority: number;
   validate(document: ParsedDocument): ValidatorResult;
   getSchema(): ValidationSchema;
+}
+
+// Base implementation
+abstract class BaseDocumentValidator implements DocumentValidator {
+  abstract name: string;
+  abstract priority: number;
+  
+  abstract validate(document: ParsedDocument): ValidatorResult;
+  abstract getSchema(): ValidationSchema;
+  
+  async getModuleStatus(): Promise<ModuleStatus> {
+    return {
+      name: this.name,
+      status: 'healthy',
+      uptime: process.uptime(),
+      version: '1.0.0'
+    };
+  }
+  
+  async isHealthy(): Promise<boolean> {
+    return true;
+  }
+  
+  async getHealthIndicators(): Promise<HealthIndicator[]> {
+    return [
+      { name: 'validator_ready', status: 'UP', details: {} }
+    ];
+  }
+  
+  async gracefulShutdown(): Promise<void> {
+    // Cleanup resources
+  }
 }
 ```
 
@@ -177,16 +209,20 @@ interface SectionRequirement {
 
 ### Error Response Format
 
-```typescript
-interface ErrorResponse {
-  error: {
-    code: string;
-    message: string;
-    details?: any;
-    timestamp: string;
-    requestId: string;
-  };
-}
+```python
+from pydantic import BaseModel
+from typing import Optional, Any
+from datetime import datetime
+
+class ErrorResponse(BaseModel):
+    error: ErrorDetail
+
+class ErrorDetail(BaseModel):
+    code: str
+    message: str
+    details: Optional[Any] = None
+    timestamp: datetime
+    request_id: str
 ```
 
 ### Graceful Degradation
