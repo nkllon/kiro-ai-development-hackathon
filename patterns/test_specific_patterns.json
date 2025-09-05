@@ -6,12 +6,12 @@
       "failure_signature": "test:test:tests/test_imports.py|dependency_issue|ImportError: No module named 'missing_module'|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test import error - missing or broken test dependencies",
       "prevention_steps": [
-        "Check if modules are installed: pip list | grep <module>",
-        "Implement root cause fix",
-        "Install missing dependencies: pip install <module>",
-        "Identify missing modules from error message",
         "Validate fix addresses root cause",
-        "Analyze broken_dependencies systematically"
+        "Identify missing modules from error message",
+        "Check if modules are installed: pip list | grep <module>",
+        "Install missing dependencies: pip install <module>",
+        "Analyze broken_dependencies systematically",
+        "Implement root cause fix"
       ],
       "detection_criteria": [
         "Monitor for test_import_error in test execution",
@@ -53,8 +53,8 @@
       "failure_signature": "test:test:tests/test_logic.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
       "prevention_steps": [
-        "Review test logic and expected vs actual values",
         "Analyze assertion failure details from stack trace",
+        "Review test logic and expected vs actual values",
         "Check if test data or fixtures are correct"
       ],
       "detection_criteria": [
@@ -268,6 +268,6 @@
       "pattern_hash": "084a6eff"
     }
   ],
-  "last_updated": "2025-09-04T17:50:49.743412",
+  "last_updated": "2025-09-04T18:08:44.374730",
   "pattern_count": 12
 }
