@@ -1,0 +1,234 @@
+{
+  "roles": [
+    {
+      "name": "Spec Architect",
+      "responsibilities": [
+        "Overall architectural consistency",
+        "Spec consolidation decisions",
+        "Component boundary definitions",
+        "Technical debt resolution"
+      ],
+      "required_skills": [
+        "System architecture",
+        "Requirements analysis",
+        "Technical leadership",
+        "Conflict resolution"
+      ],
+      "approval_authority": [
+        "New spec creation",
+        "Major architectural changes",
+        "Consolidation plans",
+        "Governance policy updates"
+      ],
+      "escalation_contacts": [
+        "technical_director",
+        "engineering_manager"
+      ]
+    },
+    {
+      "name": "Consistency Reviewer",
+      "responsibilities": [
+        "Terminology validation",
+        "Interface compliance checking",
+        "Pattern consistency review",
+        "Quality gate enforcement"
+      ],
+      "required_skills": [
+        "Technical writing",
+        "Pattern recognition",
+        "Quality assurance",
+        "Detail orientation"
+      ],
+      "approval_authority": [
+        "Terminology changes",
+        "Interface definitions",
+        "Consistency exceptions"
+      ],
+      "escalation_contacts": [
+        "spec_architect"
+      ]
+    },
+    {
+      "name": "Domain Expert",
+      "responsibilities": [
+        "Domain-specific validation",
+        "Business requirement alignment",
+        "Stakeholder representation",
+        "Use case validation"
+      ],
+      "required_skills": [
+        "Domain knowledge",
+        "Business analysis",
+        "Stakeholder management",
+        "Requirements validation"
+      ],
+      "approval_authority": [
+        "Domain-specific requirements",
+        "Business rule definitions",
+        "Use case specifications"
+      ],
+      "escalation_contacts": [
+        "product_owner",
+        "spec_architect"
+      ]
+    }
+  ],
+  "training_programs": [
+    {
+      "program_id": "consistency_standards_101",
+      "title": "Spec Consistency Standards and Procedures",
+      "description": "Comprehensive training on maintaining spec consistency and preventing fragmentation",
+      "target_roles": [
+        "GovernanceRoleType.SPEC_ARCHITECT",
+        "GovernanceRoleType.CONSISTENCY_REVIEWER"
+      ],
+      "learning_objectives": [
+        "Understand spec fragmentation causes and prevention",
+        "Master consistency validation procedures",
+        "Apply governance controls effectively",
+        "Implement continuous monitoring practices"
+      ],
+      "modules": [
+        "Introduction to Spec Consistency",
+        "Governance Framework Overview",
+        "Terminology Management",
+        "Interface Standardization",
+        "Continuous Monitoring",
+        "Conflict Resolution Procedures"
+      ],
+      "duration_hours": 16,
+      "refresh_interval_months": 12,
+      "assessment_criteria": [
+        "Pass written assessment (80% minimum)",
+        "Complete practical exercises",
+        "Demonstrate governance tool usage",
+        "Present case study analysis"
+      ]
+    },
+    {
+      "program_id": "governance_tools_training",
+      "title": "Governance Tools and Automation",
+      "description": "Hands-on training for governance automation tools and workflows",
+      "target_roles": [
+        "GovernanceRoleType.CONSISTENCY_REVIEWER",
+        "GovernanceRoleType.IMPLEMENTATION_LEAD"
+      ],
+      "learning_objectives": [
+        "Master governance automation tools",
+        "Configure validation pipelines",
+        "Implement monitoring workflows",
+        "Troubleshoot governance issues"
+      ],
+      "modules": [
+        "Tool Installation and Setup",
+        "Validation Pipeline Configuration",
+        "Monitoring Dashboard Usage",
+        "Automated Correction Workflows",
+        "Troubleshooting and Maintenance"
+      ],
+      "duration_hours": 8,
+      "refresh_interval_months": 6,
+      "assessment_criteria": [
+        "Successfully configure validation pipeline",
+        "Demonstrate monitoring setup",
+        "Complete troubleshooting scenarios"
+      ]
+    }
+  ],
+  "maintenance_schedules": [
+    {
+      "activity_id": "weekly_consistency_check",
+      "activity_type": "MaintenanceType.CONSISTENCY_VALIDATION",
+      "description": "Weekly automated consistency validation across all specs",
+      "frequency_days": 7,
+      "responsible_roles": [
+        "GovernanceRoleType.CONSISTENCY_REVIEWER"
+      ],
+      "validation_criteria": [
+        "Terminology consistency >95%",
+        "Interface compliance 100%",
+        "No unresolved conflicts",
+        "All governance controls active"
+      ],
+      "escalation_thresholds": {
+        "consistency_score": 0.9,
+        "unresolved_conflicts": 5,
+        "failed_validations": 3
+      }
+    },
+    {
+      "activity_id": "monthly_governance_audit",
+      "activity_type": "MaintenanceType.GOVERNANCE_AUDIT",
+      "description": "Monthly audit of governance process effectiveness",
+      "frequency_days": 30,
+      "responsible_roles": [
+        "GovernanceRoleType.SPEC_ARCHITECT"
+      ],
+      "validation_criteria": [
+        "All governance controls functioning",
+        "Training compliance >90%",
+        "Process adherence metrics reviewed",
+        "Improvement opportunities identified"
+      ],
+      "escalation_thresholds": {
+        "training_compliance": 0.85,
+        "process_violations": 10,
+        "system_downtime_hours": 4
+      }
+    },
+    {
+      "activity_id": "quarterly_system_update",
+      "activity_type": "MaintenanceType.SYSTEM_UPDATE",
+      "description": "Quarterly update of governance systems and tools",
+      "frequency_days": 90,
+      "responsible_roles": [
+        "GovernanceRoleType.SPEC_ARCHITECT",
+        "GovernanceRoleType.QUALITY_ASSURANCE"
+      ],
+      "validation_criteria": [
+        "All systems updated successfully",
+        "Backward compatibility maintained",
+        "Performance benchmarks met",
+        "Security vulnerabilities addressed"
+      ],
+      "escalation_thresholds": {
+        "update_failures": 1,
+        "performance_degradation": 0.1,
+        "security_issues": 1
+      }
+    }
+  ],
+  "improvement_processes": [
+    {
+      "process_id": "governance_effectiveness_review",
+      "trigger_conditions": [
+        "Monthly governance audit completion",
+        "Significant governance violations detected",
+        "Stakeholder feedback received",
+        "System performance degradation"
+      ],
+      "analysis_procedures": [
+        "Review governance metrics and trends",
+        "Analyze violation patterns and root causes",
+        "Collect stakeholder feedback",
+        "Benchmark against industry standards",
+        "Identify improvement opportunities"
+      ],
+      "improvement_actions": [
+        "Update governance policies and procedures",
+        "Enhance training programs",
+        "Improve automation and tooling",
+        "Refine validation criteria",
+        "Optimize workflow processes"
+      ],
+      "success_metrics": [
+        "Reduced governance violations",
+        "Improved consistency scores",
+        "Higher stakeholder satisfaction",
+        "Increased process efficiency",
+        "Better training effectiveness"
+      ],
+      "review_cycle_months": 3
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+[
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli --help",
+    "description": "Show main CLI help",
+    "return_code": 0,
+    "stdout": "usage: cli.py [-h] {governance,validate,analyze} ...\n\nSpec Reconciliation System\n\npositional arguments:\n  {governance,validate,analyze}\n                        Available commands\n    governance          Governance operations\n    validate            Validation operations\n    analyze             Analysis operations\n\noptions:\n  -h, --help            show this help message and exit\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli governance --help",
+    "description": "Show governance subcommand help",
+    "return_code": 0,
+    "stdout": "usage: cli.py governance [-h] [--validate-spec VALIDATE_SPEC]\n                         [--check-overlaps] [--status]\n\noptions:\n  -h, --help            show this help message and exit\n  --validate-spec VALIDATE_SPEC\n                        Validate a spec proposal\n  --check-overlaps      Check for spec overlaps\n  --status              Show governance status\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli validate --help",
+    "description": "Show validation subcommand help",
+    "return_code": 0,
+    "stdout": "usage: cli.py validate [-h] [--terminology TERMINOLOGY]\n                       [--interfaces INTERFACES]\n                       [--consistency-score CONSISTENCY_SCORE [CONSISTENCY_SCORE ...]]\n\noptions:\n  -h, --help            show this help message and exit\n  --terminology TERMINOLOGY\n                        Validate terminology in spec\n  --interfaces INTERFACES\n                        Validate interfaces in spec\n  --consistency-score CONSISTENCY_SCORE [CONSISTENCY_SCORE ...]\n                        Generate consistency score for specs\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli analyze --help",
+    "description": "Show analysis subcommand help",
+    "return_code": 0,
+    "stdout": "usage: cli.py analyze [-h] [--all-specs] [--overlap-matrix]\n\noptions:\n  -h, --help        show this help message and exit\n  --all-specs       Analyze all existing specs\n  --overlap-matrix  Generate overlap matrix\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli governance --status",
+    "description": "Check current governance system status",
+    "return_code": 0,
+    "stdout": "{\n  \"module_name\": \"GovernanceController\",\n  \"status\": \"operational\",\n  \"specs_monitored\": 15,\n  \"terminology_terms\": 901,\n  \"functionality_keywords\": 1503,\n  \"last_validation\": \"2025-09-05T08:55:52.942415\"\n}\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli governance --validate-spec temp_examples/sample_spec.md",
+    "description": "Validate sample spec for overlaps and conflicts",
+    "return_code": 0,
+    "stdout": "Validation result: approved\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli governance --check-overlaps",
+    "description": "Check for overlaps across all specs",
+    "return_code": 0,
+    "stdout": "Checking for spec overlaps...\nOverlap severity: none\nOverlapping specs: []\nRecommendation: LOW: Monitor for future consolidation opportunities\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli validate --terminology temp_examples/terminology_test.md",
+    "description": "Validate terminology consistency",
+    "return_code": 0,
+    "stdout": "Terminology Consistency Score: 1.00\nConsistent terms: 3\nInconsistent terms: 0\nNew terms: 0\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli validate --interfaces temp_examples/interface_test.md",
+    "description": "Validate interface compliance",
+    "return_code": 0,
+    "stdout": "Interface Compliance Score: 1.00\nCompliant interfaces: 2\nNon-compliant interfaces: 0\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli validate --consistency-score temp_examples/terminology_test.md temp_examples/interface_test.md",
+    "description": "Generate overall consistency score",
+    "return_code": 0,
+    "stdout": "Overall Consistency Score: 0.82\nConsistency Level: fair\nTerminology Score: 0.67\nInterface Score: 1.00\nPattern Score: 0.75\n\nCritical Issues:\n  - Critical terminology issues in temp_examples/interface_test.md\n\nImprovement Priorities:\n  - Improve terminology consistency (current: 0.67)\n  - Improve pattern consistency (current: 0.75)\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli analyze --all-specs",
+    "description": "Analyze all existing specs in the system",
+    "return_code": 0,
+    "stdout": "Analyzing all existing specs...\nSpecs monitored: 15\nTerminology terms: 901\nTerminology registry size: 204\nInterface patterns loaded: 2\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli analyze --overlap-matrix",
+    "description": "Generate overlap matrix (feature in development)",
+    "return_code": 0,
+    "stdout": "Generating overlap matrix...\nOverlap matrix generation not yet implemented\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli invalid-command",
+    "description": "Test invalid command handling",
+    "return_code": 2,
+    "stdout": "",
+    "stderr": "usage: cli.py [-h] {governance,validate,analyze} ...\ncli.py: error: argument command: invalid choice: 'invalid-command' (choose from 'governance', 'validate', 'analyze')\n",
+    "success": false
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli validate --terminology nonexistent_file.md",
+    "description": "Test missing file handling",
+    "return_code": 0,
+    "stdout": "Spec file not found: nonexistent_file.md\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli governance --validate-spec",
+    "description": "Test missing required argument",
+    "return_code": 2,
+    "stdout": "",
+    "stderr": "usage: cli.py governance [-h] [--validate-spec VALIDATE_SPEC]\n                         [--check-overlaps] [--status]\ncli.py governance: error: argument --validate-spec: expected one argument\n",
+    "success": false
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli validate --consistency-score temp_examples/batch_spec_0.md temp_examples/batch_spec_1.md temp_examples/batch_spec_2.md",
+    "description": "Batch validate multiple specs",
+    "return_code": 0,
+    "stdout": "Overall Consistency Score: 0.70\nConsistency Level: fair\nTerminology Score: 1.00\nInterface Score: 1.00\nPattern Score: 0.00\n\nCritical Issues:\n  - Critical pattern issues in temp_examples/batch_spec_0.md\n  - Critical pattern issues in temp_examples/batch_spec_1.md\n  - Critical pattern issues in temp_examples/batch_spec_2.md\n\nImprovement Priorities:\n  - Improve pattern consistency (current: 0.00)\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli validate --terminology temp_examples/batch_spec_0.md",
+    "description": "Individual validation of spec 0",
+    "return_code": 0,
+    "stdout": "Terminology Consistency Score: 1.00\nConsistent terms: 2\nInconsistent terms: 0\nNew terms: 0\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli validate --terminology temp_examples/batch_spec_1.md",
+    "description": "Individual validation of spec 1",
+    "return_code": 0,
+    "stdout": "Terminology Consistency Score: 1.00\nConsistent terms: 2\nInconsistent terms: 0\nNew terms: 0\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli validate --terminology temp_examples/batch_spec_2.md",
+    "description": "Individual validation of spec 2",
+    "return_code": 0,
+    "stdout": "Terminology Consistency Score: 1.00\nConsistent terms: 2\nInconsistent terms: 0\nNew terms: 0\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli governance --validate-spec temp_examples/comprehensive_spec.md",
+    "description": "Validate comprehensive spec",
+    "return_code": 0,
+    "stdout": "Validation result: approved\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli validate --terminology temp_examples/comprehensive_spec.md",
+    "description": "Check terminology in comprehensive spec",
+    "return_code": 0,
+    "stdout": "Terminology Consistency Score: 0.75\nConsistent terms: 6\nInconsistent terms: 0\nNew terms: 2\n\nRecommendations:\n  - Review new terms for consistency: ComprehensiveModule, IntegrationMetrics\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli validate --interfaces temp_examples/comprehensive_spec.md",
+    "description": "Check interfaces in comprehensive spec",
+    "return_code": 0,
+    "stdout": "Interface Compliance Score: 1.00\nCompliant interfaces: 2\nNon-compliant interfaces: 0\n",
+    "stderr": "",
+    "success": true
+  },
+  {
+    "command": "/Users/lou/kiro-3/kiro-ai-development-hackathon/.venv/bin/python -m src.spec_reconciliation.cli validate --consistency-score temp_examples/comprehensive_spec.md",
+    "description": "Generate consistency score for comprehensive spec",
+    "return_code": 0,
+    "stdout": "Overall Consistency Score: 0.62\nConsistency Level: poor\nTerminology Score: 0.75\nInterface Score: 1.00\nPattern Score: 0.00\n\nCritical Issues:\n  - Critical pattern issues in temp_examples/comprehensive_spec.md\n\nImprovement Priorities:\n  - Improve pattern consistency (current: 0.00)\n  - Improve terminology consistency (current: 0.75)\n",
+    "stderr": "",
+    "success": true
+  }
+]

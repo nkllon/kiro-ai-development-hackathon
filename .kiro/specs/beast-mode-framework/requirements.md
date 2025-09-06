@@ -242,15 +242,30 @@ Beast Mode Core (Integration Hub)
 
 ### Requirement 5: Service Delivery to External Hackathons
 
-**User Story:** As a Beast Mode framework, I want to provide systematic services to other hackathons (GKE), so that I can prove my value through concrete service delivery.
+**User Story:** As a Beast Mode framework, I want to provide systematic services through multiple implementation strategies, so that I can prove my value through concrete service delivery to different environments.
 
 #### Acceptance Criteria
 
-1. WHEN GKE hackathon requests PDCA cycle services THEN I SHALL provide working systematic development workflow
-2. WHEN GKE hackathon needs model-driven building THEN I SHALL provide project registry consultation services
-3. WHEN GKE hackathon requires tool health management THEN I SHALL provide systematic tool fixing capabilities
-4. WHEN GKE hackathon needs quality assurance THEN I SHALL provide systematic validation services
-5. WHEN providing services THEN I SHALL demonstrate measurable improvement over ad-hoc approaches
+1. WHEN external hackathons (GKE) request services THEN I SHALL provide systematic development workflow through service APIs
+2. WHEN Kiro users need systematic development THEN I SHALL provide native integration through hooks, specs, and steering
+3. WHEN providing PDCA cycle services THEN I SHALL offer both external API and native Kiro implementation options
+4. WHEN delivering model-driven building THEN I SHALL support both standalone service and Kiro-integrated approaches
+5. WHEN demonstrating value THEN I SHALL show measurable improvement over ad-hoc approaches in both deployment models
+
+#### Implementation Strategies
+
+**Strategy A: External Service Delivery (GKE Implementation)**
+- Standalone service APIs for external hackathon integration
+- Independent deployment with service discovery and load balancing
+- Cross-platform compatibility for diverse hackathon environments
+- Service-level SLAs and monitoring for external consumers
+
+**Strategy B: Native Kiro Integration (Kiro Implementation)**
+- Leverage Kiro's built-in agent execution and task orchestration
+- Integrate through Kiro hooks for automated systematic workflows
+- Use Kiro specs for PDCA cycle definition and execution
+- Enhance Kiro steering with Beast Mode domain intelligence
+- Utilize Kiro's MCP framework for tool integration and health management
 
 ### Requirement 6: Reflective Module Implementation
 
@@ -290,23 +305,23 @@ Beast Mode Core (Integration Hub)
 
 ### Requirement 9: Autonomous PDCA Orchestration
 
-**User Story:** As a Beast Mode framework, I want autonomous PDCA orchestration capabilities, so that I can continuously improve and execute tasks without human intervention while maintaining systematic quality.
+**User Story:** As a Beast Mode framework, I want autonomous PDCA orchestration capabilities through multiple implementation approaches, so that I can continuously improve and execute tasks without human intervention while maintaining systematic quality.
 
 #### Acceptance Criteria
 
-1. WHEN executing autonomous PDCA loops THEN I SHALL use local LLM instances without external API dependencies
-2. WHEN planning tasks autonomously THEN I SHALL consult project registry and apply systematic methodology
+1. WHEN executing autonomous PDCA loops THEN I SHALL support both standalone and Kiro-native execution modes
+2. WHEN planning tasks autonomously THEN I SHALL consult project registry and apply systematic methodology regardless of implementation
 3. WHEN executing tasks autonomously THEN I SHALL maintain all constraints (C-03 no workarounds, C-05 <500ms response, etc.)
 4. WHEN validating autonomous execution THEN I SHALL perform systematic quality checks and constraint verification
 5. WHEN learning from autonomous cycles THEN I SHALL accumulate intelligence and improve subsequent task execution
 
 ### Requirement 10: LangGraph Workflow Orchestration
 
-**User Story:** As a Beast Mode framework, I want LangGraph-based workflow orchestration, so that I can create complex autonomous workflows that maintain systematic approach across multiple interconnected tasks.
+**User Story:** As a Beast Mode framework, I want sophisticated workflow orchestration capabilities, so that I can create complex autonomous workflows that maintain systematic approach across multiple interconnected tasks.
 
 #### Acceptance Criteria
 
-1. WHEN orchestrating workflows THEN I SHALL use LangGraph state management for complex task dependencies
+1. WHEN orchestrating workflows THEN I SHALL support both custom and Kiro-native workflow management
 2. WHEN managing workflow state THEN I SHALL maintain learning history and cumulative intelligence across cycles
 3. WHEN handling workflow errors THEN I SHALL implement graceful degradation and systematic error recovery
 4. WHEN scaling workflows THEN I SHALL support concurrent execution of multiple PDCA loops without interference
@@ -446,15 +461,29 @@ Beast Mode Core (Integration Hub)
 
 ### Derived Requirement 7: Usability Requirements
 
-**User Story:** As a GKE hackathon consumer, I want intuitive Beast Mode services, so that I can easily integrate and benefit from systematic approaches.
+**User Story:** As a Beast Mode consumer (GKE external or Kiro native), I want intuitive Beast Mode services, so that I can easily integrate and benefit from systematic approaches.
 
 #### Acceptance Criteria
 
-1. WHEN integrating with Beast Mode THEN GKE SHALL be able to start using services within 5 minutes using clear documentation
-2. WHEN service errors occur THEN error messages SHALL provide actionable guidance for resolution
-3. WHEN requesting services THEN API responses SHALL include clear status, results, and next steps
-4. WHEN monitoring Beast Mode performance THEN dashboards SHALL clearly show improvement metrics vs ad-hoc approaches
-5. WHEN troubleshooting issues THEN system SHALL provide self-diagnostic capabilities with recommended actions
+1. WHEN integrating with Beast Mode THEN consumers SHALL be able to start using services within 5 minutes using clear documentation
+2. WHEN using Kiro-native integration THEN Beast Mode SHALL integrate seamlessly with existing Kiro workflows and user experience
+3. WHEN service errors occur THEN error messages SHALL provide actionable guidance for resolution
+4. WHEN requesting services THEN responses SHALL include clear status, results, and next steps regardless of implementation
+5. WHEN monitoring Beast Mode performance THEN dashboards SHALL clearly show improvement metrics vs ad-hoc approaches
+
+#### Implementation-Specific Usability
+
+**External Service Usability (GKE)**
+- RESTful APIs with OpenAPI documentation and interactive examples
+- Service discovery and health check endpoints for easy integration
+- Clear error responses with troubleshooting guidance
+
+**Kiro-Native Usability**
+- Seamless integration with Kiro's command palette and chat interface
+- Beast Mode capabilities discoverable through Kiro's existing UI patterns
+- Steering files provide contextual guidance within Kiro's workflow
+- Hooks appear naturally in Kiro's agent hooks explorer
+- MCP tools integrate transparently with Kiro's tool ecosystem
 
 ### Derived Requirement 8: Compliance Requirements
 

@@ -1,5 +1,1 @@
-"""
-Tests for Code with Kiro Hackathon
-
-Comprehensive testing suite for AI-powered development tools.
-"""
+"""Test suite for Multi-Instance Kiro Orchestration System."""

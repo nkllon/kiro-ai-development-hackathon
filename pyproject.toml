@@ -3,14 +3,15 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "kiro-ai-development-hackathon"
+name = "multi-instance-kiro-orchestration"
 version = "0.1.0"
-description = "Code with Kiro Hackathon: AI-Powered IDE for Spec-Driven Development"
-readme = "README.md"
-license = {text = "MIT"}
+description = "Multi-Instance Kiro Orchestration System with text-based communication"
 authors = [
-    {name = "nkllon Team", email = "team@nkllon.dev"}
+    {name = "Beast Mode Framework", email = "beast@mode.dev"},
 ]
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.9"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -20,18 +21,13 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Software Development :: Quality Assurance",
-    "Topic :: Software Development :: Testing",
 ]
-requires-python = ">=3.9"
+
 dependencies = [
-    "openai>=1.0.0",
-    "anthropic>=0.7.0",
     "pydantic>=2.0.0",
+    "click>=8.0.0",
     "jinja2>=3.1.0",
     "pyyaml>=6.0.0",
-    "click>=8.0.0",
     "langgraph>=0.6.6",
     "aiohttp>=3.8.0",
     "keyring>=24.0.0",
@@ -45,35 +41,42 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.4.0",
+    "pytest>=7.0.0",
     "pytest-asyncio>=0.21.0",
-    "pytest-mock>=3.11.0",
+    "pytest-mock>=3.10.0",
     "pytest-timeout>=2.1.0",
+    "pytest-cov>=4.0.0",
     "black>=23.0.0",
     "ruff>=0.1.0",
     "mypy>=1.0.0",
     "pre-commit>=3.4.0",
 ]
-test = [
-    "pytest>=7.4.0",
-    "pytest-asyncio>=0.21.0",
-    "pytest-cov>=4.1.0",
-    "pytest-mock>=3.11.0",
-    "pytest-timeout>=2.1.0",
-]
 
 [project.urls]
-Homepage = "https://github.com/nkllon/kiro-ai-development-hackathon"
-Documentation = "https://github.com/nkllon/kiro-ai-development-hackathon#readme"
-Repository = "https://github.com/nkllon/kiro-ai-development-hackathon.git"
-Issues = "https://github.com/nkllon/kiro-ai-development-hackathon/issues"
+Homepage = "https://github.com/beast-mode/multi-instance-kiro-orchestration"
+Repository = "https://github.com/beast-mode/multi-instance-kiro-orchestration"
+Issues = "https://github.com/beast-mode/multi-instance-kiro-orchestration/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src"]
+packages = ["src/multi_instance_orchestration"]
 
 [tool.black]
 line-length = 88
-target-version = ['py39']
+target-version = ['py39', 'py310', 'py311', 'py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
 
 [tool.ruff]
 target-version = "py39"
@@ -87,16 +90,62 @@ select = [
     "C4", # flake8-comprehensions
     "UP", # pyupgrade
 ]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/**/*" = ["B011"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
 
 [tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers --strict-config"
 testpaths = ["tests"]
-python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-addopts = "-v --tb=short --timeout=30 --timeout-method=thread"
-asyncio_mode = "auto"
 timeout = 30
 timeout_method = "thread"
+asyncio_mode = "auto"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+fail_under = 90
 
 [dependency-groups]
 dev = [

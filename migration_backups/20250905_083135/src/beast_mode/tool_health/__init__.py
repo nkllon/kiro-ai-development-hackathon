@@ -1,0 +1,1 @@
+# Beast Mode Framework - Tool Health Management
