@@ -160,31 +160,42 @@ class GCPBillingMonitor(BillingProvider, ReflectiveModule):
         return self._get_mock_metrics()
     
     def _get_mock_metrics(self) -> BillingMetrics:
-        """Get mock GCP metrics for development/demo purposes"""
+        """Get mock GCP metrics for Cloud Run pay-per-transaction model"""
         import random
         
-        # Generate realistic-looking mock data
-        daily_cost = random.uniform(8.0, 15.0)  # Realistic daily GCP cost
-        monthly_total = daily_cost * 30  # Approximate monthly total
+        # Cloud Run serverless cost model - pay per request/CPU-second
+        requests_today = random.randint(1200, 3500)  # API requests today
+        cpu_seconds = requests_today * random.uniform(0.1, 0.8)  # CPU seconds per request
+        
+        # Cloud Run pricing: ~$0.000024/request + $0.000009/CPU-second
+        request_cost = requests_today * 0.000024
+        cpu_cost = cpu_seconds * 0.000009
+        storage_cost = random.uniform(0.05, 0.25)  # Minimal storage
+        networking_cost = random.uniform(0.02, 0.15)  # Data transfer
+        
+        daily_cost = request_cost + cpu_cost + storage_cost + networking_cost
         
         return BillingMetrics(
             provider_type=BillingProviderType.GCP,
-            provider_name="Google Cloud Platform (Mock)",
-            total_cost_usd=monthly_total,
+            provider_name="Google Cloud Platform (Cloud Run)",
+            total_cost_usd=daily_cost * 7,  # Weekly total for context
             daily_cost_usd=daily_cost,
             hourly_burn_rate=daily_cost / 24,
             cost_breakdown={
-                "Compute Engine": daily_cost * 0.4 + random.uniform(-1, 1),
-                "Cloud Storage": daily_cost * 0.2 + random.uniform(-0.5, 0.5),
-                "AI Platform": daily_cost * 0.25 + random.uniform(-0.5, 1),
-                "Networking": daily_cost * 0.1 + random.uniform(-0.2, 0.2),
-                "Other": daily_cost * 0.05 + random.uniform(-0.1, 0.3)
+                "Cloud Run Requests": request_cost,
+                "Cloud Run CPU": cpu_cost,
+                "Cloud Storage": storage_cost,
+                "Networking": networking_cost,
+                "Other": random.uniform(0.01, 0.05)
             },
             usage_metrics={
-                "compute_hours": 156 + random.randint(-20, 30),
-                "storage_gb": 2048 + random.randint(-100, 200),
-                "api_calls": 15420 + random.randint(-1000, 2000),
-                "data_transfer_gb": 45.2 + random.uniform(-5, 10)
+                "cloud_run_requests": requests_today,
+                "cpu_seconds": round(cpu_seconds, 2),
+                "avg_request_duration_ms": round((cpu_seconds / requests_today) * 1000, 1),
+                "storage_gb": round(random.uniform(0.1, 2.0), 2),  # Minimal serverless storage
+                "data_transfer_gb": round(networking_cost / 0.12, 2),  # ~$0.12/GB
+                "cold_starts": random.randint(50, 200),
+                "concurrent_requests": random.randint(1, 10)
             },
             timestamp=datetime.now()
         )

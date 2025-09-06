@@ -473,16 +473,22 @@ class BeastModeResourceMonitor:
                 print(f"   {self._get_service_emoji(service)} {service}: ${cost:.2f}")
             print()
             
-            # GCP usage metrics
+            # GCP usage metrics (Cloud Run specific)
             if gcp_billing.usage_metrics:
-                print("📈 GCP USAGE:")
+                print("📈 CLOUD RUN USAGE:")
                 usage = gcp_billing.usage_metrics
-                if 'compute_hours' in usage:
-                    print(f"   🖥️  Compute Hours: {usage['compute_hours']:,}")
+                if 'cloud_run_requests' in usage:
+                    print(f"   🚀 Requests: {usage['cloud_run_requests']:,}")
+                if 'cpu_seconds' in usage:
+                    print(f"   ⚡ CPU Seconds: {usage['cpu_seconds']:,.1f}")
+                if 'avg_request_duration_ms' in usage:
+                    print(f"   ⏱️  Avg Duration: {usage['avg_request_duration_ms']:.1f}ms")
+                if 'cold_starts' in usage:
+                    print(f"   🥶 Cold Starts: {usage['cold_starts']:,}")
+                if 'concurrent_requests' in usage:
+                    print(f"   🔄 Max Concurrent: {usage['concurrent_requests']}")
                 if 'storage_gb' in usage:
-                    print(f"   🗄️  Storage: {usage['storage_gb']:,} GB")
-                if 'api_calls' in usage:
-                    print(f"   📞 API Calls: {usage['api_calls']:,}")
+                    print(f"   🗄️  Storage: {usage['storage_gb']:.2f} GB")
                 print()
         
         # Cost by Provider (unified view)
@@ -585,6 +591,8 @@ class BeastModeResourceMonitor:
             'AI Platform': '🤖',
             'Networking': '🌐',
             'Cloud Functions': '⚡',
+            'Cloud Run Requests': '🚀',  # Cloud Run specific
+            'Cloud Run CPU': '⚡',
             'Cloud SQL': '🗃️',
             'Kubernetes Engine': '☸️',
             'BigQuery': '📊',
@@ -592,6 +600,52 @@ class BeastModeResourceMonitor:
             'Other': '📦'
         }
         return service_emojis.get(service_name, '📦')
+    
+    async def stream_cost_updates(self, callback=None):
+        """
+        Stream real-time cost updates for Cloud Run pay-per-transaction model
+        
+        This enables real-time cost awareness during development
+        """
+        print("🌊 Starting real-time cost streaming...")
+        
+        try:
+            update_count = 0
+            while True:
+                # Collect latest metrics
+                await self._collect_gcp_billing_metrics()
+                await self._collect_financial_metrics()
+                
+                # Get current costs
+                unified = self.current_metrics.get('unified_financial')
+                if unified:
+                    cost_update = {
+                        'timestamp': datetime.now().isoformat(),
+                        'total_cost': unified.total_cost_usd,
+                        'hourly_rate': unified.hourly_burn_rate,
+                        'gcp_cost': unified.cost_by_category.get('gcp', 0),
+                        'llm_cost': unified.cost_by_category.get('llm', 0),
+                        'budget_remaining': unified.budget_remaining_usd,
+                        'update_count': update_count
+                    }
+                    
+                    # Stream update
+                    if callback:
+                        callback(cost_update)
+                    else:
+                        # Default: print streaming update
+                        print(f"💰 ${cost_update['total_cost']:.4f} | "
+                              f"🔥 ${cost_update['hourly_rate']:.4f}/hr | "
+                              f"🎯 ${cost_update['budget_remaining']:.2f} left | "
+                              f"#{update_count}")
+                
+                update_count += 1
+                await asyncio.sleep(2)  # Stream every 2 seconds for real-time feel
+                
+        except KeyboardInterrupt:
+            print("\n🛑 Cost streaming stopped")
+        except Exception as e:
+            print(f"❌ Streaming error: {e}")
     
     def log_token_usage(self, provider: str, model: str, input_tokens: int, 
                        output_tokens: int, request_id: str = None):

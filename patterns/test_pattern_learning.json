@@ -37262,7 +37262,1267 @@
         "analysis_source": "test_rca_integrator"
       },
       "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120812",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:06:52.893071",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120813",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:06:53.423553",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120813",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:06:53.937823",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120820",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:00.686321",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120821",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:01.334763",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120821",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:01.880795",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120829",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:09.027514",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120829",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:09.957550",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120830",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:10.753007",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120838",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:18.252187",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120838",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:18.835821",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120839",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:19.383225",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120845",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:25.874400",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120846",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:26.389922",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120846",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:26.906883",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120854",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:34.125485",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120854",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:34.651180",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120855",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:35.171612",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120861",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:41.724858",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120862",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:42.257782",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120862",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:42.796819",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120869",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:49.236716",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120869",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:49.754173",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120870",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:50.275104",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120876",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:56.777062",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120877",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:57.298789",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120877",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:07:57.828218",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120884",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:04.282343",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120884",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:04.802846",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120885",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:05.342055",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120891",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:11.857716",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120892",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:12.370735",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120893",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:13.163316",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120899",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:19.643572",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120900",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:20.172855",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120900",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:20.708369",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120907",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:27.338910",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120907",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:27.855087",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120908",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:28.394442",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120915",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:35.346140",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120915",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:35.990087",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120916",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:36.524703",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120923",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:43.242669",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120923",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:43.775147",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120924",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:44.311572",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120930",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:50.916326",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120931",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:51.700638",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120932",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:52.242471",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120939",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:59.045138",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120939",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:08:59.588462",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120940",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:09:00.125373",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120947",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:09:07.733680",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120948",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:09:08.256287",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120948",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:09:08.813095",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120955",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:09:15.528186",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120956",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:09:16.050533",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120956",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:09:16.567191",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120963",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:09:23.357421",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120964",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:09:24.031592",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120964",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:09:24.611326",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120971",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:09:31.117238",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120971",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:09:31.649934",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
+    },
+    {
+      "pattern_id": "test_pattern_test_assertion_failure_1757120972",
+      "source_failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "successful_fix_applied": true,
+      "fix_validation_score": 1.0,
+      "learning_timestamp": "2025-09-05T19:09:32.172511",
+      "context_factors": {
+        "test_file": "tests/test_sample.py",
+        "test_function": "test_failing_function",
+        "test_class": null,
+        "pytest_node_id": "tests/test_sample.py::test_failing_function",
+        "failure_type": "assertion",
+        "test_context": {
+          "test_type": "unit",
+          "environment": "test"
+        },
+        "analysis_source": "test_rca_integrator"
+      },
+      "generalization_potential": 0.5
     }
   ],
-  "last_updated": "2025-09-05T19:06:45.557198"
+  "last_updated": "2025-09-05T19:09:32.174031"
 }
