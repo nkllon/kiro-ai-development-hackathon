@@ -22,6 +22,18 @@ from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, asdict
 import subprocess
 import os
+import sys
+
+# Add src to path for Beast Mode imports
+sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
+
+# Import Beast Mode billing integration
+try:
+    from beast_mode.billing import GCPBillingMonitor, UnifiedFinancialMetrics, BillingProviderType
+    BEAST_MODE_BILLING_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Beast Mode billing not available: {e}")
+    BEAST_MODE_BILLING_AVAILABLE = False
 
 
 @dataclass
@@ -79,7 +91,12 @@ class BeastModeResourceMonitor:
     """
     Real-time resource monitoring for Beast Mode operations
     
-    Tracks everything that costs money or uses resources
+    Tracks everything that costs money or uses resources:
+    - LLM token usage and costs
+    - GCP billing and cloud resource costs  
+    - Network bandwidth and API calls
+    - Memory and compute resources
+    - Unified financial burn rate and budget tracking
     """
     
     def __init__(self):
@@ -91,17 +108,29 @@ class BeastModeResourceMonitor:
         self.network_metrics_log = self.data_dir / 'network_metrics.jsonl'
         self.resource_metrics_log = self.data_dir / 'resource_metrics.jsonl'
         self.financial_metrics_log = self.data_dir / 'financial_metrics.jsonl'
+        self.gcp_billing_log = self.data_dir / 'gcp_billing.jsonl'
         
         # Current state
         self.current_metrics = {
             'tokens': [],
             'network': None,
             'resources': None,
-            'financial': None
+            'financial': None,
+            'gcp_billing': None,
+            'unified_financial': None
         }
         
         # Configuration
         self.config = self._load_config()
+        
+        # Initialize GCP billing monitor if available and enabled
+        self.gcp_monitor = None
+        if BEAST_MODE_BILLING_AVAILABLE and self.config.get('gcp', {}).get('enabled', False):
+            try:
+                self.gcp_monitor = GCPBillingMonitor(self.config.get('gcp', {}))
+                print("✅ GCP billing integration enabled")
+            except Exception as e:
+                print(f"⚠️  GCP billing integration failed to initialize: {e}")
         
         # Tracking state
         self.session_start = datetime.now()
@@ -118,13 +147,30 @@ class BeastModeResourceMonitor:
                 'hourly_burn_rate': 5.0,
                 'token_cost_per_request': 0.10,
                 'memory_usage_percent': 85.0,
-                'cpu_usage_percent': 90.0
+                'cpu_usage_percent': 90.0,
+                'gcp_daily_limit': 25.0
             },
             'llm_pricing': {
                 'gpt-4': {'input': 0.03, 'output': 0.06},  # per 1K tokens
                 'gpt-3.5-turbo': {'input': 0.0015, 'output': 0.002},
                 'claude-3': {'input': 0.015, 'output': 0.075},
                 'claude-instant': {'input': 0.0008, 'output': 0.0024}
+            },
+            'gcp': {
+                'enabled': False,
+                'billing_account_id': '',
+                'project_ids': [],
+                'credentials_path': '~/.config/gcp/credentials.json',
+                'cache_duration_minutes': 15,
+                'cost_attribution': {
+                    'development': ['compute', 'storage'],
+                    'ai_ml': ['aiplatform', 'ml'],
+                    'networking': ['networking', 'cdn']
+                },
+                'budget_alerts': {
+                    'daily_limit_usd': 25.0,
+                    'hourly_spike_threshold': 5.0
+                }
             },
             'update_interval_seconds': 5
         }
@@ -155,6 +201,7 @@ class BeastModeResourceMonitor:
                 # Collect all metrics
                 await self._collect_network_metrics()
                 await self._collect_resource_metrics()
+                await self._collect_gcp_billing_metrics()
                 await self._collect_financial_metrics()
                 
                 # Display current status
@@ -239,10 +286,27 @@ class BeastModeResourceMonitor:
         with open(self.resource_metrics_log, 'a') as f:
             f.write(json.dumps(asdict(metrics), default=str) + '\n')
     
+    async def _collect_gcp_billing_metrics(self):
+        """Collect GCP billing metrics if enabled"""
+        if not self.gcp_monitor:
+            return
+        
+        try:
+            gcp_metrics = await self.gcp_monitor.collect_billing_metrics()
+            self.current_metrics['gcp_billing'] = gcp_metrics
+            
+            # Log to file
+            with open(self.gcp_billing_log, 'a') as f:
+                f.write(json.dumps(gcp_metrics.to_dict(), default=str) + '\n')
+                
+        except Exception as e:
+            self.logger.error(f"Failed to collect GCP billing metrics: {e}")
+            # Don't fail the entire monitoring loop for GCP issues
+    
     async def _collect_financial_metrics(self):
-        """Calculate financial metrics from token usage"""
-        # Calculate costs from recent token usage
-        total_cost = 0.0
+        """Calculate unified financial metrics from all sources"""
+        # Calculate costs from recent token usage (LLM costs)
+        llm_total_cost = 0.0
         cost_by_provider = {}
         cost_by_model = {}
         
@@ -258,7 +322,7 @@ class BeastModeResourceMonitor:
                         
                         if usage_time > cutoff_time:
                             cost = usage['cost_usd']
-                            total_cost += cost
+                            llm_total_cost += cost
                             
                             provider = usage['provider']
                             model = usage['model']
@@ -268,6 +332,15 @@ class BeastModeResourceMonitor:
                     except (json.JSONDecodeError, KeyError):
                         continue
         
+        # Add GCP costs if available
+        gcp_cost = 0.0
+        if self.current_metrics['gcp_billing']:
+            gcp_cost = self.current_metrics['gcp_billing'].total_cost_usd
+            cost_by_provider['GCP'] = gcp_cost
+        
+        # Calculate unified totals
+        total_cost = llm_total_cost + gcp_cost
+        
         # Calculate hourly burn rate
         session_hours = (datetime.now() - self.session_start).total_seconds() / 3600
         hourly_burn_rate = total_cost / max(session_hours, 0.1)  # Avoid division by zero
@@ -276,6 +349,42 @@ class BeastModeResourceMonitor:
         daily_budget = self.config['daily_budget_usd']
         budget_remaining = daily_budget - total_cost
         
+        # Create unified financial metrics
+        if BEAST_MODE_BILLING_AVAILABLE:
+            from beast_mode.billing.interfaces import BudgetStatus
+            
+            # Determine budget status
+            utilization = (total_cost / daily_budget) * 100 if daily_budget > 0 else 0
+            if utilization >= 100:
+                budget_status = BudgetStatus.EXCEEDED
+            elif utilization >= 90:
+                budget_status = BudgetStatus.CRITICAL
+            elif utilization >= 75:
+                budget_status = BudgetStatus.WARNING
+            else:
+                budget_status = BudgetStatus.HEALTHY
+            
+            unified_metrics = UnifiedFinancialMetrics(
+                total_cost_usd=total_cost,
+                daily_cost_usd=total_cost,  # Simplified for now
+                hourly_burn_rate=hourly_burn_rate,
+                budget_limit_usd=daily_budget,
+                budget_remaining_usd=budget_remaining,
+                budget_status=budget_status,
+                cost_by_provider=cost_by_provider,
+                cost_by_category={
+                    'llm': llm_total_cost,
+                    'gcp': gcp_cost,
+                    'other': 0.0
+                },
+                provider_metrics=[],  # Will be populated with actual provider metrics
+                cost_attribution=None,  # TODO: Implement cost attribution
+                timestamp=datetime.now()
+            )
+            
+            self.current_metrics['unified_financial'] = unified_metrics
+        
+        # Legacy financial metrics for backward compatibility
         metrics = FinancialMetrics(
             total_cost_usd=total_cost,
             hourly_burn_rate=hourly_burn_rate,
@@ -297,14 +406,46 @@ class BeastModeResourceMonitor:
         os.system('clear')
         
         print("💰 ═══════════════════════════════════════════════════════════")
-        print("   BEAST MODE RESOURCE MONITOR - Show Me The Money!")
-        print("   \"Tracking every token, every byte, every dollar\"")
+        print("   BEAST MODE UNIFIED COST MONITOR")
+        print("   \"LLMs + GCP + Everything = Total Visibility\"")
         print("═══════════════════════════════════════════════════════════")
         print()
         
-        # Financial Status
+        # Unified Financial Status
+        unified = self.current_metrics.get('unified_financial')
         financial = self.current_metrics['financial']
-        if financial:
+        
+        if unified:
+            print("💸 UNIFIED FINANCIAL STATUS:")
+            print(f"   💰 Total Cost: ${unified.total_cost_usd:.4f}")
+            
+            # Show breakdown by category
+            llm_cost = unified.cost_by_category.get('llm', 0)
+            gcp_cost = unified.cost_by_category.get('gcp', 0)
+            if gcp_cost > 0:
+                print(f"       LLM: ${llm_cost:.4f} | GCP: ${gcp_cost:.4f}")
+            
+            print(f"   🔥 Burn Rate: ${unified.hourly_burn_rate:.4f}/hour")
+            print(f"   🎯 Budget: ${unified.budget_remaining_usd:.2f} remaining")
+            print(f"   📊 Utilization: {unified.budget_utilization_percent:.1f}%")
+            
+            # Budget status indicator
+            status_emoji = {
+                'HEALTHY': '✅',
+                'WARNING': '⚠️',
+                'CRITICAL': '🔥', 
+                'EXCEEDED': '🚨'
+            }
+            status_name = unified.budget_status.name if hasattr(unified.budget_status, 'name') else str(unified.budget_status)
+            print(f"   {status_emoji.get(status_name, '❓')} Status: {status_name}")
+            
+            if unified.budget_remaining_usd < 0:
+                print(f"   🚨 OVER BUDGET by ${abs(unified.budget_remaining_usd):.2f}!")
+            
+            print()
+            
+        elif financial:
+            # Fallback to legacy financial display
             print("💸 FINANCIAL STATUS:")
             print(f"   💰 Total Cost: ${financial.total_cost_usd:.4f}")
             print(f"   🔥 Burn Rate: ${financial.hourly_burn_rate:.4f}/hour")
@@ -314,12 +455,38 @@ class BeastModeResourceMonitor:
                 print(f"   🚨 OVER BUDGET by ${abs(financial.budget_remaining):.2f}!")
             
             print()
+        
+        # GCP Breakdown (if available)
+        gcp_billing = self.current_metrics.get('gcp_billing')
+        if gcp_billing:
+            print("📊 GCP BREAKDOWN:")
+            for service, cost in gcp_billing.cost_breakdown.items():
+                print(f"   {self._get_service_emoji(service)} {service}: ${cost:.2f}")
+            print()
             
-            if financial.cost_by_provider:
-                print("   📊 Cost by Provider:")
-                for provider, cost in financial.cost_by_provider.items():
-                    print(f"      {provider}: ${cost:.4f}")
+            # GCP usage metrics
+            if gcp_billing.usage_metrics:
+                print("📈 GCP USAGE:")
+                usage = gcp_billing.usage_metrics
+                if 'compute_hours' in usage:
+                    print(f"   🖥️  Compute Hours: {usage['compute_hours']:,}")
+                if 'storage_gb' in usage:
+                    print(f"   🗄️  Storage: {usage['storage_gb']:,} GB")
+                if 'api_calls' in usage:
+                    print(f"   📞 API Calls: {usage['api_calls']:,}")
                 print()
+        
+        # Cost by Provider (unified view)
+        if unified and unified.cost_by_provider:
+            print("📊 COST BY PROVIDER:")
+            for provider, cost in unified.cost_by_provider.items():
+                print(f"   {provider}: ${cost:.4f}")
+            print()
+        elif financial and financial.cost_by_provider:
+            print("📊 COST BY PROVIDER:")
+            for provider, cost in financial.cost_by_provider.items():
+                print(f"   {provider}: ${cost:.4f}")
+            print()
         
         # Token Usage (recent)
         recent_tokens = self.current_metrics['tokens'][-5:] if self.current_metrics['tokens'] else []
@@ -362,9 +529,24 @@ class BeastModeResourceMonitor:
         alerts = []
         thresholds = self.config['alert_thresholds']
         
-        # Financial alerts
+        # Financial alerts (unified or legacy)
+        unified = self.current_metrics.get('unified_financial')
         financial = self.current_metrics['financial']
-        if financial:
+        
+        if unified:
+            if unified.hourly_burn_rate > thresholds['hourly_burn_rate']:
+                alerts.append(f"🚨 High burn rate: ${unified.hourly_burn_rate:.2f}/hour")
+            
+            if unified.budget_remaining_usd < 0:
+                alerts.append(f"🚨 Over budget by ${abs(unified.budget_remaining_usd):.2f}")
+                
+            # GCP-specific alerts
+            gcp_cost = unified.cost_by_category.get('gcp', 0)
+            gcp_limit = thresholds.get('gcp_daily_limit', 25.0)
+            if gcp_cost > gcp_limit:
+                alerts.append(f"🚨 GCP costs exceed daily limit: ${gcp_cost:.2f} > ${gcp_limit:.2f}")
+                
+        elif financial:
             if financial.hourly_burn_rate > thresholds['hourly_burn_rate']:
                 alerts.append(f"🚨 High burn rate: ${financial.hourly_burn_rate:.2f}/hour")
             
@@ -385,6 +567,22 @@ class BeastModeResourceMonitor:
             print("\n🚨 ALERTS:")
             for alert in alerts:
                 print(f"   {alert}")
+    
+    def _get_service_emoji(self, service_name: str) -> str:
+        """Get emoji for GCP service"""
+        service_emojis = {
+            'Compute Engine': '🖥️',
+            'Cloud Storage': '🗄️', 
+            'AI Platform': '🤖',
+            'Networking': '🌐',
+            'Cloud Functions': '⚡',
+            'Cloud SQL': '🗃️',
+            'Kubernetes Engine': '☸️',
+            'BigQuery': '📊',
+            'Pub/Sub': '📡',
+            'Other': '📦'
+        }
+        return service_emojis.get(service_name, '📦')
     
     def log_token_usage(self, provider: str, model: str, input_tokens: int, 
                        output_tokens: int, request_id: str = None):
