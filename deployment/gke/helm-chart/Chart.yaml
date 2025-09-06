@@ -1,0 +1,18 @@
+apiVersion: v2
+name: systematic-pdca-orchestrator
+description: Systematic PDCA Orchestrator with Model-Driven Intelligence
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - systematic
+  - pdca
+  - model-driven
+  - intelligence
+  - orchestration
+home: https://github.com/your-org/systematic-pdca-orchestrator
+sources:
+  - https://github.com/your-org/systematic-pdca-orchestrator
+maintainers:
+  - name: Beast Mode Team
+    email: team@beastmode.dev

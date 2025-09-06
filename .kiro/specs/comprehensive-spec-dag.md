@@ -16,6 +16,7 @@ graph TB
         DAG[Parallel DAG Orchestrator]
         GIT[Systematic Git Workflow]
         SECRETS[Systematic Secrets Management]
+        GKE[GKE Cluster Management]
     end
     
     subgraph "Core Services Layer"

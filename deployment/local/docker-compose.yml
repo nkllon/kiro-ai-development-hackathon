@@ -1,0 +1,64 @@
+# Systematic PDCA Orchestrator - Local Development
+# Runs exactly like Cloud Run but on developer workstation
+
+version: '3.8'
+
+services:
+  systematic-pdca-orchestrator:
+    build:
+      context: ../..
+      dockerfile: deployment/systematic-pdca/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ENVIRONMENT=development
+      - PYTHONPATH=/app
+      - LOG_LEVEL=DEBUG
+      - PORT=8080
+    volumes:
+      # Mount source code for hot reload during development
+      - ../../src:/app/src:ro
+      - ../../project_model_registry.json:/app/project_model_registry.json:ro
+      - ../../learning_patterns:/app/learning_patterns
+    healthcheck:
+      test: ["CMD", "python", "-c", "from src.beast_mode.core.model_registry import ModelRegistry; r = ModelRegistry(); print('Health:', r.get_health_status()['status'])"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    
+  # Optional: Local monitoring (Prometheus-compatible)
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    profiles:
+      - monitoring
+    
+  # Optional: Local log aggregation
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=systematic
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    profiles:
+      - monitoring
+
+volumes:
+  grafana-storage:
+
+networks:
+  default:
+    name: systematic-pdca-local

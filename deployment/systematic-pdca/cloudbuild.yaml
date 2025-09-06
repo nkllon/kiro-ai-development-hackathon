@@ -1,0 +1,44 @@
+# Cloud Build configuration for Systematic PDCA Orchestrator
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build', 
+      '-f', 'deployment/systematic-pdca/Dockerfile',
+      '-t', 'gcr.io/$PROJECT_ID/systematic-pdca-orchestrator:$BUILD_ID',
+      '-t', 'gcr.io/$PROJECT_ID/systematic-pdca-orchestrator:latest',
+      '.'
+    ]
+
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/systematic-pdca-orchestrator:$BUILD_ID']
+  
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/systematic-pdca-orchestrator:latest']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: [
+      'run', 'deploy', 'systematic-pdca-orchestrator',
+      '--image', 'gcr.io/$PROJECT_ID/systematic-pdca-orchestrator:$BUILD_ID',
+      '--region', 'us-central1',
+      '--platform', 'managed',
+      '--allow-unauthenticated',
+      '--memory', '2Gi',
+      '--cpu', '2',
+      '--max-instances', '10',
+      '--set-env-vars', 'ENVIRONMENT=production,PYTHONPATH=/app',
+      '--service-account', 'systematic-pdca@$PROJECT_ID.iam.gserviceaccount.com'
+    ]
+
+# Store images in Container Registry
+images:
+  - 'gcr.io/$PROJECT_ID/systematic-pdca-orchestrator:$BUILD_ID'
+  - 'gcr.io/$PROJECT_ID/systematic-pdca-orchestrator:latest'
+
+# Build options
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
