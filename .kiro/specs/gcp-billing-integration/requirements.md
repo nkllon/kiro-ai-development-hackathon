@@ -52,6 +52,34 @@ Integrate existing OpenFlow-Playground GCP billing analysis capabilities into Be
 - [ ] Recommend cost optimization opportunities
 - [ ] Generate cost-per-feature reports
 
+### US-5: Mathematical Cost Correlation (Cloud Run Pay-Per-Transaction)
+**As a** developer using Cloud Run serverless functions  
+**I want to** understand exact mathematical correlation between transaction count and costs  
+**So that** I can predict and optimize costs based on usage patterns  
+
+**Acceptance Criteria:**
+- [ ] Implement transaction-correlated cost model: requests × $0.000024
+- [ ] Track CPU-correlated costs: CPU_seconds × $0.000009  
+- [ ] Monitor memory-correlated costs: GB_seconds × $0.0000025
+- [ ] Calculate network-proportional costs: data_transfer_GB × $0.12
+- [ ] Separate fixed costs (storage, registry) from variable costs
+- [ ] Display cost-per-request and cost-per-CPU-second metrics
+- [ ] Provide real-time correlation analysis and efficiency insights
+- [ ] Alert on optimization opportunities (high CPU usage, cold starts)
+
+### US-6: Real-Time Cost Streaming
+**As a** developer actively coding  
+**I want to** see streaming cost updates during development  
+**So that** I have immediate cost awareness while building features  
+
+**Acceptance Criteria:**
+- [ ] Stream cost updates every 2 seconds during active development
+- [ ] Show real-time transaction count and associated costs
+- [ ] Display live burn rate calculations based on current activity
+- [ ] Provide streaming budget utilization updates
+- [ ] Enable cost-aware development with immediate feedback
+- [ ] Support callback functions for custom cost streaming integrations
+
 ## Technical Requirements
 
 ### TR-1: GCP API Integration
