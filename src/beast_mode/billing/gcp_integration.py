@@ -160,20 +160,35 @@ class GCPBillingMonitor(BillingProvider, ReflectiveModule):
         return self._get_mock_metrics()
     
     def _get_mock_metrics(self) -> BillingMetrics:
-        """Get mock GCP metrics for Cloud Run pay-per-transaction model"""
+        """Get mock GCP metrics for Cloud Run pay-per-transaction model with proper correlation"""
         import random
         
-        # Cloud Run serverless cost model - pay per request/CPU-second
+        # Base transaction metrics
         requests_today = random.randint(1200, 3500)  # API requests today
-        cpu_seconds = requests_today * random.uniform(0.1, 0.8)  # CPU seconds per request
+        avg_cpu_per_request = random.uniform(0.1, 0.8)  # CPU seconds per request
+        avg_memory_mb = random.randint(128, 512)  # Memory allocation per request
         
-        # Cloud Run pricing: ~$0.000024/request + $0.000009/CPU-second
-        request_cost = requests_today * 0.000024
-        cpu_cost = cpu_seconds * 0.000009
-        storage_cost = random.uniform(0.05, 0.25)  # Minimal storage
-        networking_cost = random.uniform(0.02, 0.15)  # Data transfer
+        # **TRANSACTION-CORRELATED COSTS** (scale with request count)
+        # Cloud Run pricing (actual GCP rates)
+        request_cost = requests_today * 0.000024  # $0.000024 per request
+        cpu_seconds = requests_today * avg_cpu_per_request
+        cpu_cost = cpu_seconds * 0.000009  # $0.000009 per CPU-second
         
-        daily_cost = request_cost + cpu_cost + storage_cost + networking_cost
+        # Memory cost (correlated with requests * memory * duration)
+        memory_gb_seconds = requests_today * (avg_memory_mb / 1024) * avg_cpu_per_request
+        memory_cost = memory_gb_seconds * 0.0000025  # $0.0000025 per GB-second
+        
+        # **TRANSACTION-PROPORTIONAL COSTS** (loosely correlated)
+        # Networking scales with request volume (more requests = more data transfer)
+        avg_response_kb = random.uniform(2, 15)  # KB per response
+        data_transfer_gb = (requests_today * avg_response_kb) / (1024 * 1024)
+        networking_cost = data_transfer_gb * 0.12  # $0.12 per GB egress
+        
+        # **FIXED COSTS** (not correlated with transactions)
+        storage_cost = random.uniform(0.01, 0.05)  # Container registry, logs
+        
+        # Total daily cost
+        daily_cost = request_cost + cpu_cost + memory_cost + networking_cost + storage_cost
         
         return BillingMetrics(
             provider_type=BillingProviderType.GCP,
@@ -184,18 +199,23 @@ class GCPBillingMonitor(BillingProvider, ReflectiveModule):
             cost_breakdown={
                 "Cloud Run Requests": request_cost,
                 "Cloud Run CPU": cpu_cost,
-                "Cloud Storage": storage_cost,
-                "Networking": networking_cost,
-                "Other": random.uniform(0.01, 0.05)
+                "Cloud Run Memory": memory_cost,
+                "Networking (Egress)": networking_cost,
+                "Storage (Fixed)": storage_cost
             },
             usage_metrics={
                 "cloud_run_requests": requests_today,
                 "cpu_seconds": round(cpu_seconds, 2),
-                "avg_request_duration_ms": round((cpu_seconds / requests_today) * 1000, 1),
-                "storage_gb": round(random.uniform(0.1, 2.0), 2),  # Minimal serverless storage
-                "data_transfer_gb": round(networking_cost / 0.12, 2),  # ~$0.12/GB
+                "memory_gb_seconds": round(memory_gb_seconds, 2),
+                "avg_request_duration_ms": round(avg_cpu_per_request * 1000, 1),
+                "avg_memory_mb": avg_memory_mb,
+                "avg_response_kb": round(avg_response_kb, 1),
+                "data_transfer_gb": round(data_transfer_gb, 3),
                 "cold_starts": random.randint(50, 200),
-                "concurrent_requests": random.randint(1, 10)
+                "concurrent_requests": random.randint(1, 10),
+                # **CORRELATION METRICS**
+                "cost_per_request": round(daily_cost / requests_today, 6),
+                "cost_per_cpu_second": round(cpu_cost / cpu_seconds, 6) if cpu_seconds > 0 else 0
             },
             timestamp=datetime.now()
         )

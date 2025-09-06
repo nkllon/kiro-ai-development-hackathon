@@ -1,16 +1,11 @@
 {
-  "daily_budget_usd": 25.0,
+  "daily_budget_usd": 10.0,
   "gcp": {
     "enabled": true,
-    "billing_account_id": "cloudrun-test-123",
+    "billing_account_id": "correlation-test-123",
     "project_ids": [
-      "beast-mode-cloudrun"
+      "cost-correlation-analysis"
     ],
-    "cache_duration_minutes": 1,
-    "budget_alerts": {
-      "daily_limit_usd": 20.0,
-      "hourly_spike_threshold": 2.0
-    }
-  },
-  "update_interval_seconds": 2
+    "cache_duration_minutes": 1
+  }
 }

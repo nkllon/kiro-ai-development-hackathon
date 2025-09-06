@@ -481,15 +481,39 @@ class BeastModeResourceMonitor:
                     print(f"   🚀 Requests: {usage['cloud_run_requests']:,}")
                 if 'cpu_seconds' in usage:
                     print(f"   ⚡ CPU Seconds: {usage['cpu_seconds']:,.1f}")
+                if 'memory_gb_seconds' in usage:
+                    print(f"   🧠 Memory GB-Seconds: {usage['memory_gb_seconds']:,.1f}")
                 if 'avg_request_duration_ms' in usage:
                     print(f"   ⏱️  Avg Duration: {usage['avg_request_duration_ms']:.1f}ms")
+                if 'avg_memory_mb' in usage:
+                    print(f"   💾 Avg Memory: {usage['avg_memory_mb']} MB")
+                if 'avg_response_kb' in usage:
+                    print(f"   📦 Avg Response: {usage['avg_response_kb']:.1f} KB")
+                if 'data_transfer_gb' in usage:
+                    print(f"   🌐 Data Transfer: {usage['data_transfer_gb']:.3f} GB")
                 if 'cold_starts' in usage:
                     print(f"   🥶 Cold Starts: {usage['cold_starts']:,}")
-                if 'concurrent_requests' in usage:
-                    print(f"   🔄 Max Concurrent: {usage['concurrent_requests']}")
-                if 'storage_gb' in usage:
-                    print(f"   🗄️  Storage: {usage['storage_gb']:.2f} GB")
                 print()
+                
+                # **CORRELATION ANALYSIS**
+                if 'cost_per_request' in usage and 'cost_per_cpu_second' in usage:
+                    print("🧮 COST CORRELATION:")
+                    print(f"   💰 Cost/Request: ${usage['cost_per_request']:.6f}")
+                    print(f"   ⚡ Cost/CPU-Second: ${usage['cost_per_cpu_second']:.6f}")
+                    
+                    # Calculate efficiency metrics
+                    requests = usage.get('cloud_run_requests', 1)
+                    cpu_seconds = usage.get('cpu_seconds', 1)
+                    if requests > 0 and cpu_seconds > 0:
+                        cpu_efficiency = cpu_seconds / requests
+                        print(f"   📊 CPU Efficiency: {cpu_efficiency:.3f} CPU-sec/request")
+                        
+                        # Cost optimization insights
+                        if cpu_efficiency > 0.5:
+                            print(f"   💡 Optimization: High CPU usage per request")
+                        if usage.get('cold_starts', 0) / requests > 0.1:
+                            print(f"   💡 Optimization: High cold start ratio ({usage.get('cold_starts', 0)/requests:.1%})")
+                    print()
         
         # Cost by Provider (unified view)
         if unified and unified.cost_by_provider:

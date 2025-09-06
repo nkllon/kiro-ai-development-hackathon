@@ -22329,8 +22329,822 @@
         "Preventive validation"
       ],
       "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757120979",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757120980",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757120986",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757120987",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757120994",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757120995",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121002",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121003",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121004",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121012",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121013",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121020",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121021",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121027",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121028",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121035",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121036",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121043",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121044",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121051",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121052",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121059",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121060",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121067",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121068",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121075",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121076",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121082",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121083",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121090",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121091",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121098",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121099",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121106",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121107",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121114",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
+    },
+    {
+      "pattern_id": "pattern_test_assertion_failure_1757121115",
+      "pattern_name": "Prevent test_assertion_failure in test:tests/test_sample.py",
+      "failure_signature": "test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
+      "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
+      "prevention_steps": [
+        "Check for test_assertion_failure before deployment",
+        "Implement automated validation",
+        "Add monitoring for early detection"
+      ],
+      "detection_criteria": [
+        "Monitor for test_assertion_failure symptoms",
+        "Automated health checks",
+        "Proactive system validation"
+      ],
+      "automated_checks": [
+        "Automated check for test_assertion_failure",
+        "Continuous monitoring",
+        "Preventive validation"
+      ],
+      "pattern_hash": "0a9fc9ad"
     }
   ],
-  "last_updated": "2025-09-05T19:09:32.152260",
-  "pattern_count": 1015
+  "last_updated": "2025-09-05T19:11:55.476579",
+  "pattern_count": 1052
 }

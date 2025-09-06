@@ -7,3 +7,5 @@
 {"provider": "openai", "model": "gpt-4", "input_tokens": 1500, "output_tokens": 800, "total_tokens": 2300, "cost_usd": 0.093, "timestamp": "2025-09-05 19:08:56.247447", "request_id": "test_request_1"}
 {"provider": "anthropic", "model": "claude-3", "input_tokens": 2000, "output_tokens": 1200, "total_tokens": 3200, "cost_usd": 0.032, "timestamp": "2025-09-05 19:08:56.247652", "request_id": "test_request_2"}
 {"provider": "openai", "model": "gpt-4", "input_tokens": 500, "output_tokens": 300, "total_tokens": 800, "cost_usd": 0.033, "timestamp": "2025-09-05 19:09:10.072609", "request_id": "cloudrun_request_1"}
+{"provider": "openai", "model": "gpt-4", "input_tokens": 1500, "output_tokens": 800, "total_tokens": 2300, "cost_usd": 0.093, "timestamp": "2025-09-05 19:11:36.450523", "request_id": "test_request_1"}
+{"provider": "anthropic", "model": "claude-3", "input_tokens": 2000, "output_tokens": 1200, "total_tokens": 3200, "cost_usd": 0.032, "timestamp": "2025-09-05 19:11:36.450721", "request_id": "test_request_2"}
