@@ -1,5 +1,5 @@
 {
-    "kiroAgent.configureMCP": "Enabled",
+    "kiroAgent.configureMCP": "Disabled",
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#d593c5",
         "activityBar.background": "#d593c5",
