@@ -1,0 +1,33 @@
+{
+  "daily_budget_usd": 100.0,
+  "alert_thresholds": {
+    "hourly_burn_rate": 10.0,
+    "token_cost_per_request": 0.2,
+    "memory_usage_percent": 85.0,
+    "cpu_usage_percent": 90.0,
+    "gcp_daily_limit": 50.0
+  },
+  "llm_pricing": {
+    "gpt-4": {
+      "input": 0.03,
+      "output": 0.06
+    },
+    "gpt-3.5-turbo": {
+      "input": 0.0015,
+      "output": 0.002
+    }
+  },
+  "gcp": {
+    "enabled": true,
+    "billing_account_id": "test-account-123",
+    "project_ids": [
+      "test-project-1"
+    ],
+    "cache_duration_minutes": 15,
+    "budget_alerts": {
+      "daily_limit_usd": 50.0,
+      "hourly_spike_threshold": 10.0
+    }
+  },
+  "update_interval_seconds": 1
+}

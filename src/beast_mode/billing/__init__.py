@@ -10,7 +10,8 @@ from .interfaces import (
     BillingMetrics,
     UnifiedFinancialMetrics,
     CostAttribution,
-    BudgetStatus
+    BudgetStatus,
+    BillingProviderType
 )
 
 from .gcp_integration import GCPBillingMonitor
@@ -21,6 +22,7 @@ __all__ = [
     'UnifiedFinancialMetrics',
     'CostAttribution',
     'BudgetStatus',
+    'BillingProviderType',
     'GCPBillingMonitor'
 ]
 

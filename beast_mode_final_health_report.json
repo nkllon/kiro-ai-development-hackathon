@@ -9,7 +9,7 @@
   },
   "uptime_metrics": {
     "availability_percentage": 100.0,
-    "total_uptime_hours": 0.027799875833333335,
+    "total_uptime_hours": 0.012510263888888888,
     "downtime_events": 0,
     "mttr_minutes": 0.0,
     "mtbf_hours": 0.0

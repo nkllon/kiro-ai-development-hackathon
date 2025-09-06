@@ -1,0 +1,2 @@
+{"total_cost_usd": 0.125, "hourly_burn_rate": 1.25, "daily_budget": 100.0, "budget_remaining": 99.875, "cost_by_provider": {"openai": 0.093, "anthropic": 0.032}, "cost_by_model": {"gpt-4": 0.093, "claude-3": 0.032}, "timestamp": "2025-09-05 19:04:10.124756"}
+{"total_cost_usd": 50.9466226524461, "hourly_burn_rate": 509.466226524461, "daily_budget": 100.0, "budget_remaining": 49.0533773475539, "cost_by_provider": {"openai": 0.186, "anthropic": 0.064, "GCP": 50.6966226524461}, "cost_by_model": {"gpt-4": 0.186, "claude-3": 0.064}, "timestamp": "2025-09-05 19:04:24.330278"}
