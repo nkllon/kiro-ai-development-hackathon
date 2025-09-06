@@ -15,6 +15,7 @@ from pathlib import Path
 import json
 
 from ..core.reflective_module import ReflectiveModule
+from .execution_strategy import ExecutionStrategySelector, ExecutionStrategy, ExecutionType
 
 
 @dataclass
@@ -54,16 +55,27 @@ class ParallelExecutionCoordinator(ReflectiveModule):
     def __init__(self):
         super().__init__("ParallelExecutionCoordinator")
         self.logger = logging.getLogger(__name__)
-        self.max_concurrent_agents = 20
+        self.strategy_selector = ExecutionStrategySelector()
+        self.current_strategy: Optional[ExecutionStrategy] = None
         self.active_agents: Dict[str, ParallelAgent] = {}
         self.completed_agents: List[ParallelAgent] = []
         self.merge_queue: List[str] = []
         
-        self.logger.info(f"⚡ Parallel Execution Coordinator initialized (max agents: {self.max_concurrent_agents})")
+        self.logger.info("⚡ Parallel Execution Coordinator initialized with dynamic execution strategies")
     
     async def execute_parallel_tasks(self, tasks: List[Any]) -> Dict[str, Any]:
         """Execute multiple tasks in parallel using Kiro agents"""
         self.logger.info(f"🚀 Executing {len(tasks)} tasks in parallel...")
+        
+        # Select execution strategy based on task characteristics
+        complexity_score = self._calculate_task_complexity(tasks)
+        self.current_strategy = self.strategy_selector.select_strategy(
+            task_count=len(tasks),
+            complexity_score=complexity_score,
+            local_resources_available=True  # TODO: Add resource detection
+        )
+        
+        self.logger.info(f"📋 Selected {self.current_strategy.execution_type.value} strategy with {self.current_strategy.max_concurrent_agents} max agents")
         
         # Create parallel agents for tasks
         agents = []
@@ -89,8 +101,12 @@ class ParallelExecutionCoordinator(ReflectiveModule):
         
         launch_results = []
         
-        # Launch agents in batches to avoid overwhelming the system
-        batch_size = min(self.max_concurrent_agents, len(agents))
+        # Launch agents in batches based on current execution strategy
+        if not self.current_strategy:
+            # Fallback to local strategy if none selected
+            self.current_strategy = self.strategy_selector.get_local_strategy()
+            
+        batch_size = min(self.current_strategy.max_concurrent_agents, len(agents))
         
         for i in range(0, len(agents), batch_size):
             batch = agents[i:i + batch_size]
@@ -466,12 +482,39 @@ class ParallelExecutionCoordinator(ReflectiveModule):
         reduction = ((successful_agents - 1) / successful_agents) * 100
         return max(0.0, reduction)
     
+    def _calculate_task_complexity(self, tasks: List[Any]) -> float:
+        """Calculate complexity score for task list (0.0 = simple, 1.0 = complex)"""
+        if not tasks:
+            return 0.0
+        
+        # Simple heuristic based on task count and characteristics
+        base_complexity = min(len(tasks) / 10.0, 0.5)  # More tasks = higher complexity
+        
+        # Add complexity based on task types (if available)
+        type_complexity = 0.0
+        for task in tasks:
+            if hasattr(task, 'complexity') and task.complexity:
+                if task.complexity == 'high':
+                    type_complexity += 0.3
+                elif task.complexity == 'medium':
+                    type_complexity += 0.2
+                else:
+                    type_complexity += 0.1
+        
+        total_complexity = min(base_complexity + (type_complexity / len(tasks)), 1.0)
+        self.logger.debug(f"Calculated task complexity: {total_complexity} for {len(tasks)} tasks")
+        return total_complexity
+    
     # ReflectiveModule implementation
     def get_module_status(self) -> Dict[str, Any]:
         """Get current status of parallel coordinator"""
+        current_max_agents = self.current_strategy.max_concurrent_agents if self.current_strategy else 1
+        execution_type = self.current_strategy.execution_type.value if self.current_strategy else "local"
+        
         return {
             "module_name": "ParallelExecutionCoordinator",
-            "max_concurrent_agents": self.max_concurrent_agents,
+            "execution_strategy": execution_type,
+            "max_concurrent_agents": current_max_agents,
             "active_agents": len(self.active_agents),
             "completed_agents": len(self.completed_agents),
             "agents_in_merge_queue": len(self.merge_queue),
@@ -482,8 +525,9 @@ class ParallelExecutionCoordinator(ReflectiveModule):
     def is_healthy(self) -> bool:
         """Check if parallel coordinator is healthy"""
         try:
-            # Check if we're not exceeding max agents
-            if len(self.active_agents) > self.max_concurrent_agents:
+            # Check if we're not exceeding max agents for current strategy
+            current_max = self.current_strategy.max_concurrent_agents if self.current_strategy else 1
+            if len(self.active_agents) > current_max:
                 return False
             
             # Check if agents aren't stuck (running for more than 4 hours)
@@ -503,12 +547,16 @@ class ParallelExecutionCoordinator(ReflectiveModule):
         indicators = []
         
         # Agent capacity health
+        current_max = self.current_strategy.max_concurrent_agents if self.current_strategy else 1
+        execution_type = self.current_strategy.execution_type.value if self.current_strategy else "local"
+        
         indicators.append({
             "name": "agent_capacity",
-            "status": "healthy" if len(self.active_agents) <= self.max_concurrent_agents else "overloaded",
+            "status": "healthy" if len(self.active_agents) <= current_max else "overloaded",
+            "execution_strategy": execution_type,
             "active_agents": len(self.active_agents),
-            "max_capacity": self.max_concurrent_agents,
-            "utilization_percentage": (len(self.active_agents) / self.max_concurrent_agents) * 100
+            "max_capacity": current_max,
+            "utilization_percentage": (len(self.active_agents) / current_max) * 100 if current_max > 0 else 0
         })
         
         # Agent execution health

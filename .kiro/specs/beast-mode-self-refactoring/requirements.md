@@ -130,7 +130,7 @@ We face the ultimate meta-challenge: refactoring Beast Mode from monolithic to R
 
 #### Acceptance Criteria
 
-1. WHEN parallel execution is needed THEN system SHALL support up to 20 concurrent refactoring agents
+1. WHEN parallel execution is needed THEN system SHALL support up to 4 concurrent refactoring agents
 2. WHEN using cloud scaling THEN system SHALL automatically provision GKE Cloud Functions based on task complexity
 3. WHEN managing branches THEN system SHALL handle up to 50 parallel development branches without performance degradation
 4. WHEN coordinating work THEN system SHALL scale coordination overhead linearly with number of parallel tasks

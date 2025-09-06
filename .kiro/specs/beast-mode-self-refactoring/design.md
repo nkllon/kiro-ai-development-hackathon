@@ -15,7 +15,7 @@ This design addresses the ultimate meta-engineering challenge: refactoring Beast
 │  │   Dependency    │  │   Parallel      │  │   Live      │  │
 │  │   Manager       │  │   Execution     │  │   Migration │  │
 │  │   (Foundation   │  │   Coordinator   │  │   Manager   │  │
-│  │    First)       │  │   (20 Agents)   │  │   (Zero     │  │
+│  │    First)       │  │   (4 Agents)    │  │   (Zero     │  │
 │  │                 │  │                 │  │  Downtime)  │  │
 │  └─────────────────┘  └─────────────────┘  └─────────────┘  │
 ├─────────────────────────────────────────────────────────────┤
@@ -113,7 +113,7 @@ Phase 4: Migration and Cleanup
 ```python
 class ParallelExecutionCoordinator(ReflectiveModule):
     def __init__(self):
-        self.max_concurrent_agents = 20
+        self.max_concurrent_agents = 4
         self.branch_manager = BranchManager()
         self.merge_coordinator = MergeCoordinator()
         

@@ -1,0 +1,22 @@
+# Beast Mode Monitoring Dependencies
+
+# Terminal UI framework
+rich>=13.0.0
+
+# Async support
+asyncio-mqtt>=0.11.0  # For future MQTT integration
+
+# System monitoring
+psutil>=5.9.0  # For system health metrics
+
+# Web framework (for War Room mode)
+fastapi>=0.100.0
+uvicorn>=0.20.0
+websockets>=11.0.0
+
+# Alerting integrations
+slack-sdk>=3.20.0
+twilio>=8.0.0
+
+# Data persistence
+aiosqlite>=0.19.0

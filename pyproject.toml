@@ -36,6 +36,10 @@ dependencies = [
     "aiohttp>=3.8.0",
     "keyring>=24.0.0",
     "watchdog>=3.0.0",
+    "rich>=14.1.0",
+    "fastapi>=0.116.1",
+    "uvicorn>=0.35.0",
+    "websockets>=15.0.1",
 ]
 
 [project.optional-dependencies]
@@ -92,3 +96,12 @@ addopts = "-v --tb=short --timeout=30 --timeout-method=thread"
 asyncio_mode = "auto"
 timeout = 30
 timeout_method = "thread"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.1.0",
+    "pytest-cov>=6.2.1",
+    "pytest-mock>=3.14.1",
+    "pytest-timeout>=2.4.0",
+]
