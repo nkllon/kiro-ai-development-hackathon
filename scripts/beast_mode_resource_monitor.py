@@ -341,9 +341,18 @@ class BeastModeResourceMonitor:
         # Calculate unified totals
         total_cost = llm_total_cost + gcp_cost
         
-        # Calculate hourly burn rate
+        # Calculate hourly burn rate (more realistic calculation)
         session_hours = (datetime.now() - self.session_start).total_seconds() / 3600
-        hourly_burn_rate = total_cost / max(session_hours, 0.1)  # Avoid division by zero
+        
+        # For very short sessions, use a more reasonable projection
+        if session_hours < 0.1:  # Less than 6 minutes
+            # Use daily cost as a more realistic hourly rate estimate
+            if self.current_metrics['gcp_billing']:
+                hourly_burn_rate = self.current_metrics['gcp_billing'].daily_cost_usd / 24
+            else:
+                hourly_burn_rate = total_cost * 10  # Conservative 10x projection for short sessions
+        else:
+            hourly_burn_rate = total_cost / session_hours
         
         # Budget calculations
         daily_budget = self.config['daily_budget_usd']

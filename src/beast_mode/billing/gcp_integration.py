@@ -164,21 +164,21 @@ class GCPBillingMonitor(BillingProvider, ReflectiveModule):
         import random
         
         # Generate realistic-looking mock data
-        base_cost = 45.67
-        daily_variation = random.uniform(-5.0, 8.0)
+        daily_cost = random.uniform(8.0, 15.0)  # Realistic daily GCP cost
+        monthly_total = daily_cost * 30  # Approximate monthly total
         
         return BillingMetrics(
             provider_type=BillingProviderType.GCP,
             provider_name="Google Cloud Platform (Mock)",
-            total_cost_usd=base_cost + daily_variation,
-            daily_cost_usd=abs(daily_variation),
-            hourly_burn_rate=(base_cost + daily_variation) / 24,
+            total_cost_usd=monthly_total,
+            daily_cost_usd=daily_cost,
+            hourly_burn_rate=daily_cost / 24,
             cost_breakdown={
-                "Compute Engine": 18.50 + random.uniform(-2, 3),
-                "Cloud Storage": 8.25 + random.uniform(-1, 2),
-                "AI Platform": 6.58 + random.uniform(-1, 4),
-                "Networking": 2.15 + random.uniform(-0.5, 1),
-                "Other": 10.19 + random.uniform(-2, 2)
+                "Compute Engine": daily_cost * 0.4 + random.uniform(-1, 1),
+                "Cloud Storage": daily_cost * 0.2 + random.uniform(-0.5, 0.5),
+                "AI Platform": daily_cost * 0.25 + random.uniform(-0.5, 1),
+                "Networking": daily_cost * 0.1 + random.uniform(-0.2, 0.2),
+                "Other": daily_cost * 0.05 + random.uniform(-0.1, 0.3)
             },
             usage_metrics={
                 "compute_hours": 156 + random.randint(-20, 30),
