@@ -1,107 +1,216 @@
-# Implementation Plan
+# Implementation Plan - Beast Mode DAG
 
-- [ ] 1. Set up core event streaming infrastructure
-  - Create EventStreamManager class with subscription/publishing capabilities
-  - Implement event buffering and persistence using SQLite
-  - Add event filtering and routing logic
-  - _Requirements: 5.1, 5.2, 5.3, 5.4_
+## DAG Structure Overview
 
-- [ ] 2. Implement Whiskey Mode terminal dashboard
-  - [x] 2.1 Create terminal UI framework with Rich/Textual
-    - Set up basic terminal application structure
-    - Implement responsive layout system for different terminal sizes
-    - Create color scheme and styling system
-    - _Requirements: 2.1, 2.2_
+This implementation follows Beast Mode DAG principles with systematic dependencies. All tasks depend on the Event/Polling Hysteresis Service being completed first.
 
-  - [ ] 2.2 Build live test results display
-    - Create test matrix grid component with real-time updates
-    - Implement satisfying green cascade animations for passing tests
-    - Add attention-getting red indicators for failing tests
-    - Create test status badges with icons and timing information
-    - _Requirements: 2.1, 2.2, 2.3_
+## Dependency Requirements
 
-  - [ ] 2.3 Add hubris prevention monitoring panel
-    - Display "Mama Discovery Protocol" status and activations
-    - Show accountability chain information when hubris is detected
-    - Implement non-intrusive alert ticker for hubris events
-    - _Requirements: 2.4_
+**BLOCKING DEPENDENCY**: Event/Polling Hysteresis Service
+- **Spec Location**: `.kiro/specs/event-polling-hysteresis-service/`
+- **Required Tasks**: All tasks (1.1 through 11.2) must be completed
+- **Validation**: Hysteresis service must pass all integration tests
 
-  - [ ] 2.4 Create system health sparklines
-    - Add CPU, memory, and test velocity mini-charts
-    - Implement smooth 60fps update animations
-    - Create pulse animations for system health indicators
-    - _Requirements: 2.1, 2.2_
+## Foundation Layer (Depends on Hysteresis Service)
 
-- [ ] 3. Implement Page Me Mode alerting system
-  - [ ] 3.1 Create alert processing pipeline
-    - Build event filtering for critical alerts only
-    - Implement deduplication to prevent spam
-    - Add rate limiting and escalation logic
-    - _Requirements: 3.1, 3.2, 3.3, 3.4_
+- [ ] 1.1 Create systematic dashboard foundation with Beast Mode integration
+  - Create systematic FastAPI application with ReflectiveModule pattern
+  - Implement systematic WebSocket support with health monitoring
+  - Create systematic React frontend with TypeScript and systematic error handling
+  - Verify systematic integration with Event/Polling Hysteresis Service
+  - _Dependencies: event-polling-hysteresis-service/11.2_
+  - _Requirements: 9.1, 9.2_
 
-  - [ ] 3.2 Add notification channel integrations
-    - Implement Slack SDK integration for team notifications
-    - Add SMS/phone capabilities via Twilio API
-    - Create email delivery with HTML formatting
-    - Add webhook support for custom integrations
-    - _Requirements: 3.1, 3.2, 3.3, 3.4_
+- [ ] 1.2 Implement systematic dashboard data models with validation
+  - Create systematic Pydantic models with comprehensive validation
+  - Implement systematic DashboardState and DashboardEvent models
+  - Create systematic database schemas with migration management
+  - Define systematic interfaces for hysteresis service integration
+  - _Dependencies: 1.1_
+  - _Requirements: 1.1, 1.2, 1.3_
 
-- [ ] 4. Implement War Room Mode web dashboard
-  - [x] 4.1 Create FastAPI web server with WebSocket support
-    - Set up high-performance async web framework
-    - Implement real-time bidirectional communication
-    - Add authentication and access control
-    - _Requirements: 4.1, 4.2, 4.3, 4.4_
+- [ ] 1.3 Set up systematic storage and caching infrastructure
+  - Configure systematic database connections with health monitoring
+  - Implement systematic caching strategies with invalidation
+  - Create systematic data retention policies with archival
+  - Implement systematic backup and recovery procedures
+  - _Dependencies: 1.2_
+  - _Requirements: 9.1, 9.2, 9.6_
 
-  - [ ] 4.2 Build React frontend with real-time updates
-    - Create modern TypeScript frontend application
-    - Implement Socket.IO for reliable real-time communication
-    - Add interactive data visualization with Chart.js/D3
-    - Create collaborative features with shared annotations
-    - _Requirements: 4.1, 4.2, 4.3, 4.4_
+## Data Integration Layer (Depends on Foundation)
 
-- [ ] 5. Integrate with Beast Mode event sources
-  - [ ] 5.1 Connect filesystem watcher events
-    - Subscribe to file change events from Beast Mode pipeline
-    - Transform filesystem events into monitoring events
-    - Add event correlation and tagging
-    - _Requirements: 5.1_
+- [ ] 2.1 Implement systematic cost monitoring with hysteresis integration
+  - Create systematic CostMonitoringService with ReflectiveModule pattern
+  - Implement systematic cost data source registration with validation
+  - Create systematic cost threshold checking with adaptive algorithms
+  - Implement systematic cost anomaly detection with machine learning
+  - _Dependencies: 1.1, 1.2, 1.3_
+  - _Requirements: 2.1, 2.2, 2.3, 7.1, 7.2_
 
-  - [ ] 5.2 Integrate test execution results
-    - Connect to test runner output streams
-    - Parse test results and create monitoring events
-    - Add test timing and performance metrics
-    - _Requirements: 5.2_
+- [ ] 2.2 Implement systematic task completion tracking with intelligence
+  - Create systematic TaskCompletionTracker with predictive analytics
+  - Implement systematic task data source registration with validation
+  - Create systematic completion gap analysis with root cause identification
+  - Implement systematic velocity tracking with trend analysis
+  - _Dependencies: 1.1, 1.2, 1.3_
+  - _Requirements: 3.1, 3.2, 3.3, 7.1, 7.2_
 
-  - [ ] 5.3 Connect hubris prevention system
-    - Subscribe to hubris detection events
-    - Display accountability chain discoveries
-    - Show mama discovery protocol activations
-    - _Requirements: 5.3_
+- [ ] 2.3 Implement systematic token usage analytics with anomaly detection
+  - Create systematic TokenAnalyticsService with pattern recognition
+  - Implement systematic token data source registration with validation
+  - Create systematic rate monitoring with flood detection algorithms
+  - Implement systematic efficiency metrics with optimization recommendations
+  - _Dependencies: 1.1, 1.2, 1.3_
+  - _Requirements: 4.1, 4.2, 4.3, 7.1, 7.2_
 
-- [ ] 6. Add scenario detection and auto-switching
-  - Implement business hours detection for automatic mode switching
-  - Add user activity monitoring for War Room mode suggestions
-  - Create manual override capabilities with timeout
-  - Add configuration system for user preferences
-  - _Requirements: 1.4_
+## User Interface Layer (Depends on Data Integration)
 
-- [ ] 7. Create comprehensive test suite
-  - [ ] 7.1 Write unit tests for all core components
-    - Test event stream manager functionality
-    - Test terminal UI components and animations
-    - Test alert processing and delivery
-    - _Requirements: All_
+- [ ] 3.1 Create systematic multi-hackathon interface with intelligence
+  - Implement systematic React tab component with performance optimization
+  - Create systematic hackathon selection with predictive loading
+  - Implement systematic tab state persistence with conflict resolution
+  - Create systematic performance testing with automated benchmarking
+  - _Dependencies: 2.1, 2.2, 2.3_
+  - _Requirements: 1.1, 1.2, 1.3, 1.4_
 
-  - [ ] 7.2 Add integration tests for end-to-end scenarios
-    - Test complete event flow from source to display
-    - Test multi-mode operation and switching
-    - Test error handling and recovery scenarios
-    - _Requirements: All_
+- [ ] 3.2 Implement systematic real-time WebSocket service with reliability
+  - Create systematic DashboardWebSocketService with circuit breakers
+  - Implement systematic client subscription with health monitoring
+  - Create systematic WebSocket connection handling with intelligent reconnection
+  - Implement systematic event delivery testing with validation
+  - _Dependencies: 3.1_
+  - _Requirements: 1.5, 9.1, 9.2_
 
-- [ ] 8. Add configuration and deployment
-  - Create configuration system for all monitoring modes
-  - Add Docker containerization for easy deployment
-  - Create documentation and usage examples
-  - Add performance monitoring and optimization
-  - _Requirements: All_
+- [ ] 3.3 Create systematic visualization components with intelligence
+  - Implement systematic cost monitoring charts with predictive analytics
+  - Create systematic task completion indicators with trend analysis
+  - Implement systematic token usage visualizations with anomaly highlighting
+  - Create systematic alert displays with intelligent prioritization
+  - _Dependencies: 3.2_
+  - _Requirements: 2.5, 3.4, 4.5_
+
+## Intelligence Layer (Depends on User Interface)
+
+- [ ] 4.1 Implement systematic alert management with intelligence
+  - Create systematic alert processing pipeline with priority algorithms
+  - Implement systematic alert severity classification with machine learning
+  - Create systematic alert acknowledgment with workflow automation
+  - Implement systematic alert escalation testing with validation
+  - _Dependencies: 3.1, 3.2, 3.3_
+  - _Requirements: 2.2, 2.3, 5.1, 5.2, 5.3_
+
+- [ ] 4.2 Create systematic anomaly detection integration with correlation
+  - Implement systematic anomaly detection integration with pattern recognition
+  - Create systematic anomaly visualization with correlation analysis
+  - Implement systematic anomaly investigation with automated RCA
+  - Create systematic anomaly response testing with accuracy validation
+  - _Dependencies: 4.1_
+  - _Requirements: 5.4, 5.5, 5.6_
+
+## Analytics Layer (Depends on Intelligence)
+
+- [ ] 5.1 Implement systematic historical data access with intelligence
+  - Create systematic historical data retrieval with predictive caching
+  - Implement systematic trend analysis with machine learning
+  - Create systematic data export with automated formatting
+  - Implement systematic historical data testing with accuracy validation
+  - _Dependencies: 4.1, 4.2_
+  - _Requirements: 6.1, 6.2, 6.3, 6.4_
+
+- [ ] 5.2 Create systematic reporting and analytics with intelligence
+  - Implement systematic cross-hackathon analysis with pattern recognition
+  - Create systematic success pattern identification with recommendations
+  - Implement systematic automated report generation with scheduling
+  - Create systematic reporting testing with accuracy and performance validation
+  - _Dependencies: 5.1_
+  - _Requirements: 6.5, 6.6_
+
+## Performance Layer (Depends on Analytics)
+
+- [ ] 6.1 Implement systematic performance optimization with intelligence
+  - Create systematic query optimization with predictive caching
+  - Implement systematic client-side performance monitoring with analytics
+  - Create systematic load balancing with intelligent routing
+  - Implement systematic performance testing with automated benchmarking
+  - _Dependencies: 5.1, 5.2_
+  - _Requirements: 9.1, 9.2, 9.3, 9.5_
+
+- [ ] 6.2 Create systematic comprehensive testing with automation
+  - Implement systematic unit tests with automated generation
+  - Create systematic integration tests with scenario modeling
+  - Implement systematic performance tests with predictive validation
+  - Create systematic end-to-end tests with workflow automation
+  - _Dependencies: 6.1_
+  - _Requirements: 9.4, 9.6_
+
+## Resilience Layer (Depends on Performance)
+
+- [ ] 7.1 Implement systematic error handling with intelligence
+  - Create systematic fallback strategies with predictive switching
+  - Implement systematic client-side error handling with adaptive retry
+  - Create systematic health monitoring with predictive alerts
+  - Implement systematic error scenario testing with automated validation
+  - _Dependencies: 6.1, 6.2_
+  - _Requirements: 7.4, 7.5, 7.6_
+
+- [ ] 7.2 Create systematic monitoring and observability with intelligence
+  - Implement systematic dashboard metrics with predictive analytics
+  - Create systematic health check endpoints with intelligent diagnostics
+  - Implement systematic distributed tracing with correlation analysis
+  - Create systematic observability testing with automated validation
+  - _Dependencies: 7.1_
+  - _Requirements: 7.6, 9.6_
+
+## Production Readiness Layer (Depends on Resilience)
+
+- [ ] 8.1 Create systematic deployment with automation
+  - Create systematic Docker containers with security scanning
+  - Implement systematic Kubernetes manifests with best practices
+  - Create systematic CI/CD pipeline with intelligent quality gates
+  - Implement systematic deployment testing with automated validation
+  - _Dependencies: 7.1, 7.2_
+  - _Requirements: 8.5, 8.6_
+
+- [ ] 8.2 Create systematic documentation with intelligence
+  - Create systematic user guide with interactive examples
+  - Implement systematic configuration examples with validation
+  - Create systematic troubleshooting guide with automated diagnostics
+  - Implement systematic documentation testing with accuracy validation
+  - _Dependencies: 8.1_
+  - _Requirements: 8.6_
+
+## Integration Testing Requirements
+
+### Hysteresis Service Integration Tests
+- [ ] Verify cost data flow through hysteresis service event and polling modes
+- [ ] Test task completion tracking with hysteresis service reconciliation
+- [ ] Validate token analytics with hysteresis service anomaly detection
+- [ ] Test dashboard resilience when hysteresis service fails and recovers
+- [ ] Verify multi-tenant isolation works correctly for different hackathons
+
+### End-to-End Workflow Tests
+- [ ] Test complete hackathon monitoring workflow from creation to completion
+- [ ] Verify real-time cost alerts and budget management workflows
+- [ ] Test task completion tracking and gap analysis workflows
+- [ ] Validate token usage monitoring and flood detection workflows
+- [ ] Test historical data analysis and reporting workflows
+
+## Success Criteria
+
+### Performance Benchmarks
+- Dashboard response times < 2 seconds under normal load
+- WebSocket event delivery < 30 seconds for cost updates
+- Support for 10+ concurrent hackathons with maintained performance
+- Handle 1000+ events per minute through hysteresis service integration
+
+### Reliability Requirements
+- 99.9% uptime when hysteresis service is available
+- Graceful degradation when hysteresis service is unavailable
+- Automatic recovery when hysteresis service becomes available
+- Zero data loss during service transitions
+
+### User Experience Goals
+- Intuitive multi-hackathon navigation and management
+- Real-time updates without manual refresh
+- Clear visualization of cost, task, and token metrics
+- Actionable alerts and anomaly notifications

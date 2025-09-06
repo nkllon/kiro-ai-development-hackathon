@@ -4,7 +4,7 @@
 **Owner RM:** test_rm  
 **Status:** Draft  
 **Version:** 1.0.0  
-**Created:** 2025-09-05  
+**Created:** 2025-09-06  
 
 ## Overview
 
@@ -40,7 +40,7 @@
 
 | Version | Date | Changes | Author |
 |---------|------|---------|--------|
-| 1.0.0 | 2025-09-05 | Initial creation | test_rm |
+| 1.0.0 | 2025-09-06 | Initial creation | test_rm |
 
 ---
 *This document is maintained by test_rm via DocumentManagementRM*

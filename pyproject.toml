@@ -100,6 +100,7 @@ timeout_method = "thread"
 
 [dependency-groups]
 dev = [
+    "google-cloud-billing>=1.16.3",
     "pytest>=8.4.2",
     "pytest-asyncio>=1.1.0",
     "pytest-cov>=6.2.1",

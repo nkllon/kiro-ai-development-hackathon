@@ -6,9 +6,9 @@
       "failure_signature": "test:test:tests/test_sample.py|unknown|AssertionError: Expected 5, got 3|['analysis_source', 'failure_type', 'pytest_node_id', 'test_class', 'test_context', 'test_file', 'test_function']",
       "root_cause_pattern": "Test assertion failure - test logic or implementation issue",
       "prevention_steps": [
-        "Review test logic and expected vs actual values",
         "Check if test data or fixtures are correct",
-        "Analyze assertion failure details from stack trace"
+        "Analyze assertion failure details from stack trace",
+        "Review test logic and expected vs actual values"
       ],
       "detection_criteria": [
         "Monitor for test_assertion_failure in test execution",
@@ -268,6 +268,6 @@
       "pattern_hash": "4387c78a"
     }
   ],
-  "last_updated": "2025-09-05T19:11:55.497029",
+  "last_updated": "2025-09-06T05:49:35.076395",
   "pattern_count": 12
 }

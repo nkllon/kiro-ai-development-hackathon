@@ -1,0 +1,44 @@
+# Cloud Build configuration for Research CMA System
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build', 
+      '-t', 'gcr.io/$PROJECT_ID/research-cms:$COMMIT_SHA',
+      '-t', 'gcr.io/$PROJECT_ID/research-cms:latest',
+      '-f', 'deployment/gcp/Dockerfile',
+      '.'
+    ]
+
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/research-cms:$COMMIT_SHA']
+  
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/research-cms:latest']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: [
+      'run', 'deploy', 'research-cms',
+      '--image', 'gcr.io/$PROJECT_ID/research-cms:$COMMIT_SHA',
+      '--region', 'us-central1',
+      '--platform', 'managed',
+      '--allow-unauthenticated',
+      '--memory', '2Gi',
+      '--cpu', '2',
+      '--max-instances', '100',
+      '--set-env-vars', 'PROJECT_ID=$PROJECT_ID',
+      '--set-cloudsql-instances', '$PROJECT_ID:us-central1:research-cms-db'
+    ]
+
+# Store images in Container Registry
+images:
+  - 'gcr.io/$PROJECT_ID/research-cms:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/research-cms:latest'
+
+# Build options
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
