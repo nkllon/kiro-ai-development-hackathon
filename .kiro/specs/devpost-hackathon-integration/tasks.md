@@ -20,7 +20,7 @@
   - Write unit tests for configuration management
   - _Requirements: 1.3, 6.1, 6.2_
 
-- [ ] 2.3 Add deadline and notification data models
+- [x] 2.3 Add deadline and notification data models
   - Create Deadline, ProjectSummary, and NotificationSettings models
   - Implement MultiProjectConfig for managing multiple project contexts
   - Add ValidationRules model for configurable validation requirements
@@ -63,7 +63,7 @@
   - Write unit tests for API client methods with mocked responses
   - _Requirements: 2.4_
 
-- [ ] 4.4 Add deadline and submission requirement API methods
+- [x] 4.4 Add deadline and submission requirement API methods
   - Implement get_hackathon_deadlines() method for deadline retrieval
   - Create get_submission_requirements() for requirement validation
   - Add update_submission_status() method for status tracking
@@ -85,7 +85,7 @@
   - Write unit tests for project management operations
   - _Requirements: 6.1, 6.2, 6.4_
 
-- [ ] 5.3 Create dedicated MultiProjectManager component
+- [-] 5.3 Create dedicated MultiProjectManager component
   - Implement MultiProjectManager class for centralized project management
   - Add context switching with proper isolation between projects
   - Create project dashboard generation for status overview

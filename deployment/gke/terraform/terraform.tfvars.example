@@ -1,0 +1,65 @@
+# GKE Cluster Management - Example Terraform Variables
+# Copy this file to terraform.tfvars and customize for your environment
+
+# Project Configuration
+project_id = "your-gcp-project-id"
+region     = "us-central1"
+
+# Cluster Configuration
+cluster_name = "beast-mode-cluster"
+environment  = "dev"
+
+# Node Configuration
+machine_type = "e2-standard-2"
+min_nodes    = 1
+max_nodes    = 3
+disk_size_gb = 50
+disk_type    = "pd-standard"
+
+# Network Configuration
+network_name = "beast-mode-network"
+subnet_name  = "beast-mode-subnet"
+subnet_cidr  = "10.0.0.0/24"
+pods_cidr    = "10.1.0.0/16"
+services_cidr = "10.2.0.0/16"
+
+# Security Configuration
+enable_workload_identity = true
+enable_network_policy    = true
+enable_private_nodes     = true
+master_ipv4_cidr_block   = "172.16.0.0/28"
+
+# Operational Configuration
+enable_autoscaling  = true
+enable_autorepair   = true
+enable_autoupgrade  = true
+kubernetes_version  = "latest"
+maintenance_start_time = "03:00"
+
+# Monitoring Configuration
+enable_monitoring = true
+enable_logging    = true
+
+# Cost Optimization
+preemptible_nodes = false
+spot_nodes        = false
+
+# Labels
+labels = {
+  project     = "beast-mode"
+  managed-by  = "terraform"
+  framework   = "systematic-pdca"
+  environment = "dev"
+}
+
+node_labels = {
+  workload-type = "systematic-pdca"
+  cost-center   = "development"
+  environment   = "dev"
+}
+
+# Service Account
+service_account_name = "beast-mode-cluster-sa"
+service_account_scopes = [
+  "https://www.googleapis.com/auth/cloud-platform"
+]
