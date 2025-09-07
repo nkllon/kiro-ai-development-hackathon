@@ -779,6 +779,450 @@ class DevpostAPIClient(DevpostAPIClientInterface):
             logger.error(f"Failed to remove team member {username} from project {project_id}: {e}")
             raise
     
+    async def get_hackathon_deadlines(
+        self, 
+        hackathon_id: str,
+        include_past: bool = False
+    ) -> List[Dict[str, Any]]:
+        """
+        Retrieve hackathon deadlines for deadline tracking.
+        
+        Args:
+            hackathon_id: Hackathon identifier
+            include_past: Include past deadlines in response
+            
+        Returns:
+            List of deadline dictionaries with type, time, and requirements
+            
+        Raises:
+            ValidationError: If hackathon_id is invalid
+            NetworkError: If request fails
+        """
+        if not hackathon_id or not hackathon_id.strip():
+            raise ValidationError("Hackathon ID cannot be empty")
+        
+        endpoint = f"/hackathons/{hackathon_id}/deadlines"
+        
+        params = {}
+        if include_past:
+            params["include_past"] = "true"
+        
+        try:
+            response_data = await self._make_request("GET", endpoint, params=params)
+            
+            deadlines = response_data.get("deadlines", [])
+            
+            logger.info(f"Retrieved {len(deadlines)} deadlines for hackathon {hackathon_id}")
+            return deadlines
+            
+        except Exception as e:
+            logger.error(f"Failed to get hackathon deadlines for {hackathon_id}: {e}")
+            raise
+    
+    async def get_submission_requirements(
+        self, 
+        hackathon_id: str,
+        project_id: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        Retrieve submission requirements for requirement validation.
+        
+        Args:
+            hackathon_id: Hackathon identifier
+            project_id: Optional project ID to get project-specific completion status
+            
+        Returns:
+            List of requirement dictionaries with validation rules
+            
+        Raises:
+            ValidationError: If hackathon_id is invalid
+            NetworkError: If request fails
+        """
+        if not hackathon_id or not hackathon_id.strip():
+            raise ValidationError("Hackathon ID cannot be empty")
+        
+        endpoint = f"/hackathons/{hackathon_id}/requirements"
+        
+        params = {}
+        if project_id:
+            params["project_id"] = project_id
+        
+        try:
+            response_data = await self._make_request("GET", endpoint, params=params)
+            
+            requirements = response_data.get("requirements", [])
+            
+            # Filter out malformed requirements (missing required fields)
+            valid_requirements = []
+            for req in requirements:
+                if "id" in req and "title" in req:
+                    valid_requirements.append(req)
+                else:
+                    logger.warning(f"Skipping malformed requirement: {req}")
+            
+            logger.info(f"Retrieved {len(valid_requirements)} requirements for hackathon {hackathon_id}")
+            return valid_requirements
+            
+        except Exception as e:
+            logger.error(f"Failed to get submission requirements for {hackathon_id}: {e}")
+            raise
+    
+    async def update_submission_status(
+        self, 
+        project_id: str, 
+        status: str,
+        completion_notes: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Update project submission status for status tracking.
+        
+        Args:
+            project_id: Unique project identifier
+            status: New submission status (draft, submitted, withdrawn)
+            completion_notes: Optional notes about the status change
+            
+        Returns:
+            Dictionary with update result and status information
+            
+        Raises:
+            ValidationError: If inputs are invalid
+            NetworkError: If request fails
+        """
+        if not project_id or not project_id.strip():
+            raise ValidationError("Project ID cannot be empty")
+        
+        if not status or not status.strip():
+            raise ValidationError("Status cannot be empty")
+        
+        # Validate status value
+        valid_statuses = ["draft", "submitted", "withdrawn", "judging", "complete"]
+        if status.lower() not in valid_statuses:
+            raise ValidationError(f"Invalid status '{status}'. Must be one of: {valid_statuses}")
+        
+        endpoint = f"/projects/{project_id}/status"
+        
+        payload = {
+            "status": status.lower()
+        }
+        if completion_notes:
+            payload["completion_notes"] = completion_notes
+        
+        try:
+            response_data = await self._make_request("PUT", endpoint, json_data=payload)
+            
+            result = {
+                "success": response_data.get("success", True),
+                "previous_status": response_data.get("previous_status"),
+                "new_status": status.lower(),
+                "completion_notes": completion_notes,
+                "updated_at": response_data.get("updated_at"),
+                "project_id": project_id
+            }
+            
+            if result["success"]:
+                logger.info(f"Successfully updated status for project {project_id} to {status}")
+            else:
+                logger.warning(f"Status update returned success=False for project {project_id}")
+                result["error"] = response_data.get("error", "Status update failed")
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Failed to update submission status for project {project_id}: {e}")
+            raise
+    
+    async def validate_project_requirements(
+        self, 
+        project_id: str, 
+        hackathon_id: str
+    ) -> Dict[str, Any]:
+        """
+        Validate project against hackathon submission requirements.
+        
+        Args:
+            project_id: Unique project identifier
+            hackathon_id: Hackathon identifier for requirement validation
+            
+        Returns:
+            Dictionary with validation results and missing requirements
+            
+        Raises:
+            ValidationError: If inputs are invalid
+            NetworkError: If request fails
+        """
+        if not project_id or not project_id.strip():
+            raise ValidationError("Project ID cannot be empty")
+        
+        if not hackathon_id or not hackathon_id.strip():
+            raise ValidationError("Hackathon ID cannot be empty")
+        
+        endpoint = f"/projects/{project_id}/validate"
+        
+        params = {
+            "hackathon_id": hackathon_id
+        }
+        
+        try:
+            response_data = await self._make_request("GET", endpoint, params=params)
+            
+            # Process missing requirements - handle both string and object formats
+            missing_requirements = response_data.get("missing_requirements", [])
+            processed_missing = []
+            
+            for req in missing_requirements:
+                if isinstance(req, str):
+                    # Convert string format to object format
+                    processed_missing.append({
+                        "requirement_id": req,
+                        "title": req,
+                        "description": f"Missing requirement: {req}",
+                        "required": True,
+                        "suggested_action": f"Please provide {req}"
+                    })
+                elif isinstance(req, dict):
+                    # Already in object format, ensure required fields
+                    processed_req = {
+                        "requirement_id": req.get("id", req.get("requirement_id", "unknown")),
+                        "title": req.get("title", "Unknown Requirement"),
+                        "description": req.get("description", ""),
+                        "required": req.get("required", True),
+                        "suggested_action": req.get("suggested_action", "Please complete this requirement")
+                    }
+                    processed_missing.append(processed_req)
+            
+            result = {
+                "is_valid": response_data.get("is_valid", False),
+                "completion_percentage": response_data.get("completion_percentage", 0.0),
+                "missing_requirements": processed_missing,
+                "validation_errors": response_data.get("validation_errors", []),
+                "warnings": response_data.get("warnings", []),
+                "ready_for_submission": response_data.get("ready_for_submission", False),
+                "project_id": project_id,
+                "hackathon_id": hackathon_id,
+                "validated_at": datetime.now().isoformat()
+            }
+            
+            logger.info(f"Validated project {project_id} - {result['completion_percentage']:.1f}% complete")
+            return result
+            
+        except Exception as e:
+            logger.error(f"Failed to validate project requirements for {project_id}: {e}")
+            raise
+    
+    async def get_project_submission_history(
+        self, 
+        project_id: str,
+        limit: Optional[int] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        Get submission history for a project.
+        
+        Args:
+            project_id: Unique project identifier
+            limit: Optional limit on number of history entries
+            
+        Returns:
+            List of submission history entries
+            
+        Raises:
+            ValidationError: If project_id is invalid
+            NetworkError: If request fails
+        """
+        if not project_id or not project_id.strip():
+            raise ValidationError("Project ID cannot be empty")
+        
+        endpoint = f"/projects/{project_id}/submission-history"
+        
+        params = {}
+        if limit:
+            params["limit"] = limit
+        
+        try:
+            response_data = await self._make_request("GET", endpoint, params=params)
+            
+            history = response_data.get("history", [])
+            
+            logger.info(f"Retrieved {len(history)} history entries for project {project_id}")
+            return history
+            
+        except Exception as e:
+            logger.error(f"Failed to get submission history for project {project_id}: {e}")
+            raise
+    
+    async def schedule_deadline_notification(
+        self, 
+        project_id: str, 
+        deadline_type: str,
+        advance_time_hours: int,
+        notification_type: str = "push",
+        custom_message: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Schedule a deadline notification for a project.
+        
+        Args:
+            project_id: Unique project identifier
+            deadline_type: Type of deadline (submission, judging, final)
+            advance_time_hours: Hours before deadline to send notification
+            notification_type: Type of notification (push, email, sms)
+            custom_message: Optional custom notification message
+            
+        Returns:
+            Dictionary with scheduling result
+            
+        Raises:
+            ValidationError: If inputs are invalid
+            NetworkError: If request fails
+        """
+        if not project_id or not project_id.strip():
+            raise ValidationError("Project ID cannot be empty")
+        
+        if not deadline_type or not deadline_type.strip():
+            raise ValidationError("Deadline type cannot be empty")
+        
+        if advance_time_hours < 0:
+            raise ValidationError("Advance time must be non-negative")
+        
+        endpoint = f"/projects/{project_id}/notifications/schedule"
+        
+        payload = {
+            "deadline_type": deadline_type,
+            "advance_time_hours": advance_time_hours,
+            "notification_type": notification_type
+        }
+        if custom_message:
+            payload["custom_message"] = custom_message
+        
+        try:
+            response_data = await self._make_request("POST", endpoint, json_data=payload)
+            
+            result = {
+                "success": response_data.get("success", True),
+                "notification_id": response_data.get("notification_id"),
+                "scheduled_time": response_data.get("scheduled_time"),
+                "project_id": project_id,
+                "deadline_type": deadline_type,
+                "advance_time_hours": advance_time_hours,
+                "notification_type": notification_type
+            }
+            
+            if result["success"]:
+                logger.info(f"Scheduled {deadline_type} notification for project {project_id}")
+            else:
+                logger.warning(f"Failed to schedule notification for project {project_id}")
+                result["error"] = response_data.get("error", "Scheduling failed")
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Failed to schedule deadline notification for project {project_id}: {e}")
+            raise
+    
+    async def get_deadline_notifications(
+        self, 
+        project_id: str,
+        active_only: bool = True
+    ) -> List[Dict[str, Any]]:
+        """
+        Get deadline notifications for a project.
+        
+        Args:
+            project_id: Unique project identifier
+            active_only: Only return active (not sent/cancelled) notifications
+            
+        Returns:
+            List of notification dictionaries
+            
+        Raises:
+            ValidationError: If project_id is invalid
+            NetworkError: If request fails
+        """
+        if not project_id or not project_id.strip():
+            raise ValidationError("Project ID cannot be empty")
+        
+        endpoint = f"/projects/{project_id}/notifications"
+        
+        params = {}
+        if active_only:
+            params["active_only"] = "true"
+        
+        try:
+            response_data = await self._make_request("GET", endpoint, params=params)
+            
+            notifications = response_data.get("notifications", [])
+            
+            # Normalize notification format
+            processed_notifications = []
+            for notif in notifications:
+                processed_notif = {
+                    "notification_id": notif.get("id", notif.get("notification_id")),
+                    "deadline_type": notif.get("deadline_type"),
+                    "scheduled_time": notif.get("scheduled_time"),
+                    "notification_type": notif.get("notification_type"),
+                    "status": notif.get("status"),
+                    "custom_message": notif.get("custom_message"),
+                    "created_at": notif.get("created_at"),
+                    "sent_at": notif.get("sent_at")
+                }
+                processed_notifications.append(processed_notif)
+            
+            logger.info(f"Retrieved {len(processed_notifications)} notifications for project {project_id}")
+            return processed_notifications
+            
+        except Exception as e:
+            logger.error(f"Failed to get deadline notifications for project {project_id}: {e}")
+            raise
+    
+    async def cancel_deadline_notification(
+        self, 
+        project_id: str, 
+        notification_id: str
+    ) -> Dict[str, Any]:
+        """
+        Cancel a scheduled deadline notification.
+        
+        Args:
+            project_id: Unique project identifier
+            notification_id: Notification identifier to cancel
+            
+        Returns:
+            Dictionary with cancellation result
+            
+        Raises:
+            ValidationError: If inputs are invalid
+            NetworkError: If request fails
+        """
+        if not project_id or not project_id.strip():
+            raise ValidationError("Project ID cannot be empty")
+        
+        if not notification_id or not notification_id.strip():
+            raise ValidationError("Notification ID cannot be empty")
+        
+        endpoint = f"/projects/{project_id}/notifications/{notification_id}/cancel"
+        
+        try:
+            response_data = await self._make_request("POST", endpoint)
+            
+            result = {
+                "success": response_data.get("success", True),
+                "notification_id": notification_id,
+                "project_id": project_id,
+                "cancelled_at": response_data.get("cancelled_at"),
+                "previous_status": response_data.get("previous_status")
+            }
+            
+            if result["success"]:
+                logger.info(f"Cancelled notification {notification_id} for project {project_id}")
+            else:
+                logger.warning(f"Failed to cancel notification {notification_id}")
+                result["error"] = response_data.get("error", "Cancellation failed")
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Failed to cancel notification {notification_id} for project {project_id}: {e}")
+            raise
+
     async def _upload_large_media(
         self,
         project_id: str,
@@ -1658,6 +2102,7 @@ class DevpostAPIClient(DevpostAPIClientInterface):
     
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         """Async context manager exit."""
+        await self.close()
         await self.close()
     
     # Basic HTTP method wrappers for direct API access
