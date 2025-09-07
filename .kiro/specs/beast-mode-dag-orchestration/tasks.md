@@ -19,14 +19,14 @@
   - Add dependency validation and conflict detection capabilities
   - _Requirements: 1.1, 1.2, 1.5_
 
-- [ ] 2.3 Implement critical path analysis and layer processing
+- [x] 2.3 Implement critical path analysis and layer processing
   - Write CriticalPathAnalyzer to identify longest dependency chains and bottlenecks
   - Implement LayerProcessor to categorize specifications by dependency layers
   - Create systematic analysis of completion percentages and remaining work estimates
   - _Requirements: 1.2, 1.3, 2.1_
 
 - [ ] 3. Implement MVP route calculation and optimization
-- [ ] 3.1 Create MVP criteria evaluation and route calculation engine
+- [x] 3.1 Create MVP criteria evaluation and route calculation engine
   - Write MVPRouteCalculator class with systematic MVP criteria evaluation
   - Implement shortest path algorithms for MVP delivery optimization
   - Create systematic phase boundary identification and deliverable mapping
