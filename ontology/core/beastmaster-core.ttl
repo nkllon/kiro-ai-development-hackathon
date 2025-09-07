@@ -1,0 +1,214 @@
+@prefix bm:   <http://nkllon.dev/beastmaster#> .
+@prefix metr: <http://nkllon.dev/metrics#> .
+@prefix spore:<http://nkllon.dev/spore#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+# Core Beastmaster Classes
+bm:Requirement a rdfs:Class ;
+    rdfs:comment "A requirement that must be satisfied by artifacts" .
+
+bm:ValidationCriteria a rdfs:Class ;
+    rdfs:comment "Criteria for validating requirement satisfaction" .
+
+bm:AcceptanceCriteria a rdfs:Class ;
+    rdfs:comment "Criteria for accepting specification implementation" .
+
+bm:Specification a rdfs:Class ;
+    rdfs:comment "A specification that defines how requirements are met" .
+
+bm:Artifact a rdfs:Class ;
+    rdfs:comment "A concrete artifact that implements specifications" .
+
+bm:Code a rdfs:Class ; 
+    rdfs:subClassOf bm:Artifact ;
+    rdfs:comment "Source code artifact" .
+
+bm:Test a rdfs:Class ; 
+    rdfs:subClassOf bm:Artifact ;
+    rdfs:comment "Test artifact" .
+
+bm:Doc a rdfs:Class ; 
+    rdfs:subClassOf bm:Artifact ;
+    rdfs:comment "Documentation artifact" .
+
+bm:Config a rdfs:Class ; 
+    rdfs:subClassOf bm:Artifact ;
+    rdfs:comment "Configuration artifact" .
+
+# Agent Classes
+bm:Agent a rdfs:Class ;
+    rdfs:comment "An agent that can make decisions and perform actions" .
+
+bm:HumanAgent a rdfs:Class ; 
+    rdfs:subClassOf bm:Agent ;
+    rdfs:comment "A human agent" .
+
+bm:LLMAgent a rdfs:Class ; 
+    rdfs:subClassOf bm:Agent ;
+    rdfs:comment "A large language model agent" .
+
+# Personal Ontology Classes
+bm:PersonalOntology a rdfs:Class ;
+    rdfs:label "Personal Ontology" ;
+    skos:altLabel "EasyPath" ;
+    skos:altLabel "ActionHandle" ;
+    skos:altLabel "Shortcut" ;
+    rdfs:comment "Per-human alias map (slang, nicknames) that does not pollute enterprise UL." .
+
+bm:AliasEntry a rdfs:Class ;
+    rdfs:comment "Individual alias mapping within a PersonalOntology" .
+
+# Affordance Classes
+bm:Affordance a rdfs:Class ;
+    rdfs:label "Affordance" ;
+    skos:altLabel "EasyPath" ;
+    skos:altLabel "ActionHandle" ;
+    skos:altLabel "Shortcut" ;
+    rdfs:comment "Designed path that makes it easy for an agent to fulfill a requirement/policy." .
+
+# Crosscutting Concern Classes
+bm:CrosscuttingConcern a rdfs:Class ;
+    rdfs:comment "A concern that cuts across multiple components" .
+
+bm:Policy a rdfs:Class ;
+    rdfs:comment "A policy that governs behavior" .
+
+# Core Properties
+bm:tracesTo a rdf:Property ; 
+    rdfs:domain bm:Artifact ; 
+    rdfs:range bm:Requirement ;
+    rdfs:comment "Artifact traces to requirement" .
+
+bm:satisfies a rdf:Property ; 
+    rdfs:domain bm:Artifact ; 
+    rdfs:range bm:Requirement ;
+    rdfs:comment "Artifact satisfies requirement" .
+
+bm:hasValidationCriteria a rdf:Property ; 
+    rdfs:domain bm:Requirement ; 
+    rdfs:range bm:ValidationCriteria ;
+    rdfs:comment "Requirement has validation criteria" .
+
+bm:hasAcceptanceCriteria a rdf:Property ; 
+    rdfs:domain bm:Specification ; 
+    rdfs:range bm:AcceptanceCriteria ;
+    rdfs:comment "Specification has acceptance criteria" .
+
+# Affordance Properties
+bm:forAgent a rdf:Property ; 
+    rdfs:domain bm:Affordance ; 
+    rdfs:range bm:Agent ;
+    rdfs:comment "Affordance is for specific agent" .
+
+bm:fulfills a rdf:Property ; 
+    rdfs:domain bm:Affordance ; 
+    rdfs:range rdfs:Resource ;
+    rdfs:comment "Affordance fulfills requirement or policy" .
+
+# Personal Ontology Properties
+bm:maintainedBy a rdf:Property ; 
+    rdfs:domain bm:PersonalOntology ; 
+    rdfs:range bm:HumanAgent ;
+    rdfs:comment "Personal ontology maintained by human agent" .
+
+bm:definesAliasFor a rdf:Property ; 
+    rdfs:domain bm:PersonalOntology ; 
+    rdfs:range rdfs:Resource ;
+    rdfs:comment "Personal ontology defines alias for resource" .
+
+bm:hasAliasEntry a rdf:Property ; 
+    rdfs:domain bm:PersonalOntology ; 
+    rdfs:range bm:AliasEntry ;
+    rdfs:comment "Personal ontology has alias entry" .
+
+bm:aliasFor a rdf:Property ; 
+    rdfs:domain bm:AliasEntry ; 
+    rdfs:range rdfs:Resource ;
+    rdfs:comment "Alias entry is for resource" .
+
+bm:personalTerm a rdf:Property ; 
+    rdfs:domain bm:AliasEntry ; 
+    rdfs:range xsd:string ;
+    rdfs:comment "Personal term used by human" .
+
+bm:confidence a rdf:Property ; 
+    rdfs:domain bm:AliasEntry ; 
+    rdfs:range xsd:double ;
+    rdfs:comment "Confidence in alias mapping (0.0-1.0)" .
+
+bm:contextualUsage a rdf:Property ; 
+    rdfs:domain bm:AliasEntry ; 
+    rdfs:range xsd:string ;
+    rdfs:comment "When/where this human uses this alias" .
+
+# Crosscutting Properties
+bm:addressesConcern a rdf:Property ; 
+    rdfs:domain rdf:Resource ; 
+    rdfs:range bm:CrosscuttingConcern ;
+    rdfs:comment "Resource addresses crosscutting concern" .
+
+bm:requiresConcern a rdf:Property ; 
+    rdfs:domain bm:Policy ; 
+    rdfs:range bm:CrosscuttingConcern ;
+    rdfs:comment "Policy requires crosscutting concern" .
+
+# Metrics (core)
+metr:Metric a rdfs:Class ;
+    rdfs:comment "A metric that can be measured" .
+
+metr:Measurement a rdfs:Class ;
+    rdfs:comment "A measurement of a metric" .
+
+metr:ofMetric a rdf:Property ; 
+    rdfs:domain metr:Measurement ; 
+    rdfs:range metr:Metric ;
+    rdfs:comment "Measurement is of metric" .
+
+metr:measures a rdf:Property ; 
+    rdfs:domain metr:Measurement ; 
+    rdfs:range rdf:Resource ;
+    rdfs:comment "Measurement measures resource" .
+
+metr:value a rdf:Property ; 
+    rdfs:domain metr:Measurement ; 
+    rdfs:range xsd:double ;
+    rdfs:comment "Measurement value" .
+
+metr:unit a rdf:Property ; 
+    rdfs:domain metr:Metric ; 
+    rdfs:range xsd:string ;
+    rdfs:comment "Metric unit" .
+
+metr:timestamp a rdf:Property ; 
+    rdfs:domain metr:Measurement ; 
+    rdfs:range xsd:dateTime ;
+    rdfs:comment "Measurement timestamp" .
+
+# Spores
+spore:Spore a rdfs:Class ;
+    rdfs:comment "A spore containing a proposal" .
+
+spore:Evidence a rdfs:Class ;
+    rdfs:comment "Evidence supporting a spore" .
+
+spore:proposes a rdf:Property ; 
+    rdfs:domain spore:Spore ; 
+    rdfs:range rdfs:Resource ;
+    rdfs:comment "Spore proposes resource" .
+
+spore:hasEvidence a rdf:Property ; 
+    rdfs:domain spore:Spore ; 
+    rdfs:range spore:Evidence ;
+    rdfs:comment "Spore has evidence" .
+
+spore:lineage a rdf:Property ; 
+    rdfs:domain spore:Spore ; 
+    rdfs:range prov:Entity ;
+    rdfs:comment "Spore lineage" .
+
+spore:license a rdf:Property ;
+    rdfs:comment "Spore license" .

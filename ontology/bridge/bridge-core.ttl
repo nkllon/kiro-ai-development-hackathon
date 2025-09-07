@@ -1,0 +1,68 @@
+@prefix bridge: <http://nkllon.dev/bridge#> .
+@prefix bm: <http://nkllon.dev/beastmaster#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Bridge Classes
+bridge:BabelBridge a rdfs:Class ;
+    rdfs:comment "Bridge between different vocabularies" .
+
+bridge:PersonalBridge a rdfs:Class ;
+    rdfs:subClassOf bridge:BabelBridge ;
+    rdfs:comment "Bridge from personal ontology to canonical vocabulary" .
+
+# Bridge Properties
+bridge:fromVocabulary a rdf:Property ;
+    rdfs:domain bridge:BabelBridge ;
+    rdfs:range rdfs:Resource ;
+    rdfs:comment "Source vocabulary for bridge" .
+
+bridge:toVocabulary a rdf:Property ;
+    rdfs:domain bridge:BabelBridge ;
+    rdfs:range rdfs:Resource ;
+    rdfs:comment "Target vocabulary for bridge" .
+
+bridge:method a rdf:Property ;
+    rdfs:domain bridge:BabelBridge ;
+    rdfs:range xsd:string ;
+    rdfs:comment "Method used for bridging (mapping, learned, rule-based, hybrid)" .
+
+bridge:confidence a rdf:Property ;
+    rdfs:domain bridge:BabelBridge ;
+    rdfs:range xsd:double ;
+    rdfs:comment "Confidence in bridge accuracy (0.0-1.0)" .
+
+bridge:mapsTerm a rdf:Property ;
+    rdfs:domain bridge:BabelBridge ;
+    rdfs:range rdfs:Resource ;
+    rdfs:comment "Term mapped by this bridge" .
+
+bridge:fromPersonalOntology a rdf:Property ;
+    rdfs:domain bridge:PersonalBridge ;
+    rdfs:range bm:PersonalOntology ;
+    rdfs:comment "Personal ontology source for bridge" .
+
+bridge:toCanonicalVocabulary a rdf:Property ;
+    rdfs:domain bridge:PersonalBridge ;
+    rdfs:range rdfs:Resource ;
+    rdfs:comment "Canonical vocabulary target for bridge" .
+
+# Vocabulary Policy Classes
+bridge:VocabularyPolicy a rdfs:Class ;
+    rdfs:comment "Policy governing vocabulary usage in bridges" .
+
+# Vocabulary Policy Properties
+bridge:allowPersonalOntology a rdf:Property ;
+    rdfs:domain bridge:VocabularyPolicy ;
+    rdfs:range xsd:boolean ;
+    rdfs:comment "Whether personal ontologies are allowed" .
+
+bridge:requiresCanonicalLabels a rdf:Property ;
+    rdfs:domain bridge:VocabularyPolicy ;
+    rdfs:range xsd:boolean ;
+    rdfs:comment "Whether canonical labels are required" .
+
+bridge:appliesToBridge a rdf:Property ;
+    rdfs:domain bridge:VocabularyPolicy ;
+    rdfs:range bridge:BabelBridge ;
+    rdfs:comment "Policy applies to specific bridge" .

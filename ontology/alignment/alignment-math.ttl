@@ -1,0 +1,131 @@
+@prefix align: <http://nkllon.dev/alignment#> .
+@prefix math: <http://nkllon.dev/math#> .
+@prefix bm: <http://nkllon.dev/beastmaster#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Mathematical Alignment Classes
+align:ObjectiveSpace a rdfs:Class ;
+    rdfs:comment "n-dimensional space of objectives (utilization, space, revenue, risk)" .
+
+align:RequirementVector a rdfs:Class ;
+    rdfs:comment "Unit vector representing requirement direction in objective space" .
+
+align:SolutionOutcome a rdfs:Class ;
+    rdfs:comment "Point in objective space representing candidate solution" .
+
+align:AlignmentCalculation a rdfs:Class ;
+    rdfs:comment "Cosine similarity calculation between requirement and outcome" .
+
+align:ConflictMeasure a rdfs:Class ;
+    rdfs:comment "Quantified conflict between two requirements" .
+
+align:GlobalAlignmentScore a rdfs:Class ;
+    rdfs:comment "Weighted global alignment score for solution" .
+
+# Dimension Classes
+align:Dimension a rdfs:Class ;
+    rdfs:comment "A dimension in the objective space" .
+
+align:UtilizationDimension a rdfs:Class ;
+    rdfs:subClassOf align:Dimension ;
+    rdfs:comment "Utilization dimension" .
+
+align:SpaceDimension a rdfs:Class ;
+    rdfs:subClassOf align:Dimension ;
+    rdfs:comment "Space dimension" .
+
+align:RevenueDimension a rdfs:Class ;
+    rdfs:subClassOf align:Dimension ;
+    rdfs:comment "Revenue dimension" .
+
+align:RiskDimension a rdfs:Class ;
+    rdfs:subClassOf align:Dimension ;
+    rdfs:comment "Risk dimension" .
+
+# Feasibility Classes
+align:FeasibilityConstraint a rdfs:Class ;
+    rdfs:comment "Constraint on feasible solutions" .
+
+# Alignment Properties
+align:hasObjectiveSpace a rdf:Property ;
+    rdfs:domain bm:Requirement ;
+    rdfs:range align:ObjectiveSpace ;
+    rdfs:comment "Requirement operates in objective space" .
+
+align:hasVector a rdf:Property ;
+    rdfs:domain bm:Requirement ;
+    rdfs:range align:RequirementVector ;
+    rdfs:comment "Requirement has vector representation" .
+
+align:hasWeight a rdf:Property ;
+    rdfs:domain bm:Requirement ;
+    rdfs:range xsd:double ;
+    rdfs:comment "Weight of requirement in alignment calculation" .
+
+align:hasDimension a rdf:Property ;
+    rdfs:domain align:ObjectiveSpace ;
+    rdfs:range align:Dimension ;
+    rdfs:comment "Objective space has dimension" .
+
+align:dimensionValue a rdf:Property ;
+    rdfs:domain align:RequirementVector ;
+    rdfs:range xsd:double ;
+    rdfs:comment "Value in specific dimension" .
+
+align:alignmentScore a rdf:Property ;
+    rdfs:domain align:AlignmentCalculation ;
+    rdfs:range xsd:double ;
+    rdfs:comment "Cosine similarity score (-1.0 to 1.0)" .
+
+align:conflictScore a rdf:Property ;
+    rdfs:domain align:ConflictMeasure ;
+    rdfs:range xsd:double ;
+    rdfs:comment "Conflict score (0.0 to 1.0)" .
+
+align:weightedScore a rdf:Property ;
+    rdfs:domain align:GlobalAlignmentScore ;
+    rdfs:range xsd:double ;
+    rdfs:comment "Weighted global alignment score" .
+
+# Feasibility Properties
+align:lowerBound a rdf:Property ;
+    rdfs:domain align:FeasibilityConstraint ;
+    rdfs:range xsd:double ;
+    rdfs:comment "Lower bound for feasibility" .
+
+align:upperBound a rdf:Property ;
+    rdfs:domain align:FeasibilityConstraint ;
+    rdfs:range xsd:double ;
+    rdfs:comment "Upper bound for feasibility" .
+
+align:constrainsDimension a rdf:Property ;
+    rdfs:domain align:FeasibilityConstraint ;
+    rdfs:range align:Dimension ;
+    rdfs:comment "Constraint applies to dimension" .
+
+# Calculation Properties
+align:requirement a rdf:Property ;
+    rdfs:domain align:AlignmentCalculation ;
+    rdfs:range bm:Requirement ;
+    rdfs:comment "Requirement in alignment calculation" .
+
+align:outcome a rdf:Property ;
+    rdfs:domain align:AlignmentCalculation ;
+    rdfs:range align:SolutionOutcome ;
+    rdfs:comment "Outcome in alignment calculation" .
+
+align:requirement1 a rdf:Property ;
+    rdfs:domain align:ConflictMeasure ;
+    rdfs:range bm:Requirement ;
+    rdfs:comment "First requirement in conflict measure" .
+
+align:requirement2 a rdf:Property ;
+    rdfs:domain align:ConflictMeasure ;
+    rdfs:range bm:Requirement ;
+    rdfs:comment "Second requirement in conflict measure" .
+
+align:inObjectiveSpace a rdf:Property ;
+    rdfs:domain align:SolutionOutcome ;
+    rdfs:range align:ObjectiveSpace ;
+    rdfs:comment "Solution outcome in objective space" .

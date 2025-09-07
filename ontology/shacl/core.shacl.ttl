@@ -1,0 +1,84 @@
+@prefix bm: <http://nkllon.dev/beastmaster#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Core Beastmaster SHACL Shapes
+
+# Requirements must have validation criteria
+bm:RequirementShape a sh:NodeShape ;
+    sh:targetClass bm:Requirement ;
+    sh:property [
+        sh:path bm:hasValidationCriteria ;
+        sh:minCount 1 ;
+        sh:message "Every requirement must have validation criteria"
+    ] .
+
+# Specifications must have acceptance criteria
+bm:SpecificationShape a sh:NodeShape ;
+    sh:targetClass bm:Specification ;
+    sh:property [
+        sh:path bm:hasAcceptanceCriteria ;
+        sh:minCount 1 ;
+        sh:message "Every specification must have acceptance criteria"
+    ] .
+
+# Artifacts must trace to requirements
+bm:ArtifactTraceShape a sh:NodeShape ;
+    sh:targetClass bm:Artifact ;
+    sh:property [
+        sh:path bm:tracesTo ;
+        sh:minCount 1 ;
+        sh:message "Every artifact must trace to at least one requirement"
+    ] .
+
+# Affordances must target agents and fulfill something
+bm:AffordanceShape a sh:NodeShape ;
+    sh:targetClass bm:Affordance ;
+    sh:property [
+        sh:path bm:forAgent ;
+        sh:minCount 1 ;
+        sh:message "Affordance must target at least one agent"
+    ] ;
+    sh:property [
+        sh:path bm:fulfills ;
+        sh:minCount 1 ;
+        sh:message "Affordance must fulfill at least one requirement or policy"
+    ] .
+
+# Personal ontologies must be maintained by exactly one human
+bm:PersonalOntologyShape a sh:NodeShape ;
+    sh:targetClass bm:PersonalOntology ;
+    sh:property [
+        sh:path bm:maintainedBy ;
+        sh:class bm:HumanAgent ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Personal ontology must be maintained by exactly one human agent"
+    ] ;
+    sh:property [
+        sh:path bm:definesAliasFor ;
+        sh:minCount 1 ;
+        sh:message "Personal ontology must define aliases for at least one resource"
+    ] .
+
+# Alias entries must have personal terms and confidence
+bm:AliasEntryShape a sh:NodeShape ;
+    sh:targetClass bm:AliasEntry ;
+    sh:property [
+        sh:path bm:aliasFor ;
+        sh:minCount 1 ;
+        sh:message "Alias entry must specify what it is an alias for"
+    ] ;
+    sh:property [
+        sh:path bm:personalTerm ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:message "Alias entry must have a personal term"
+    ] ;
+    sh:property [
+        sh:path bm:confidence ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Confidence must be between 0.0 and 1.0"
+    ] .
