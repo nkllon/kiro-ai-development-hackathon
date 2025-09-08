@@ -51,9 +51,9 @@ class ParallelExecutionOptimizer:
         self.max_parallel_tasks = 8  # Maximum tasks per parallel group
         self.coordination_overhead_base = 0.1  # 10% base overhead
         self.efficiency_threshold = 0.7  # Minimum efficiency for parallelization
-        self.resource_utilization_target = 0.85  # Target resource utilization    
-    a
-sync def optimize_parallel_execution_with_extreme_prejudice(self, 
+        self.resource_utilization_target = 0.85  # Target resource utilization
+    
+    async def optimize_parallel_execution_with_extreme_prejudice(self, 
                                                                execution_plan: 'ExecutionPlan', 
                                                                resource_constraints: 'ResourceConstraints') -> OptimizedExecution:
         """
