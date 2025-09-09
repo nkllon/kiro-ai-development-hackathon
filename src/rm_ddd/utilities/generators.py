@@ -1129,9 +1129,9 @@ def generate_aggregate_from_dict(aggregate_def: Dict[str, Any]) -> GeneratedCode
         metadata=aggregate_def.get('metadata', {})
     )
     
-    return generator.generate_code(spec)    
- 
-   def register_custom_template(self, 
+    return generator.generate_code(spec)
+    
+    def register_custom_template(self, 
                                 name: str, 
                                 content: str, 
                                 target_type: GenerationTarget,

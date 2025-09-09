@@ -404,7 +404,7 @@ class HumilityEnforcerImpl(HumilityEnforcer):
                     f"Security breach affecting {claim.claim_type}"
                 ])
             
-            if 'process' in claim.claim_type.lower()::
+            if 'process' in claim.claim_type.lower():
                 scenarios.extend([
                     f"Process breakdown under stress for {claim.claim_type}",
                     f"Human error cascade in {claim.claim_type}",

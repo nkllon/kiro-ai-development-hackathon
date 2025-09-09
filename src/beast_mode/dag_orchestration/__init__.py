@@ -8,7 +8,7 @@ calculation for complex multi-spec ecosystems.
 from .core.orchestration_engine import OrchestrationEngine
 from .analysis.dependency_analyzer import DependencyAnalyzer
 from .optimization.mvp_calculator import MVPRouteCalculator
-from .optimization.parallel_optimizer import ParallelExecutionOptimizer
+from .optimization.parallel_optimizer import ParallelOptimizer as ParallelExecutionOptimizer
 from .models.dag_models import (
     EcosystemDAG,
     SpecificationNode,

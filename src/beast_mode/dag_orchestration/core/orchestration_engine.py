@@ -19,7 +19,7 @@ from ..models.dag_models import (
 from ..models.enums import ExecutionStatus, TaskStatus
 from ..analysis.dependency_analyzer import DependencyAnalyzer, EcosystemAnalysisResult
 from ..optimization.mvp_calculator import MVPRouteCalculator, MVPCriteria
-from ..optimization.parallel_optimizer import ParallelExecutionOptimizer
+from ..optimization.parallel_optimizer import ParallelOptimizer as ParallelExecutionOptimizer
 from ..optimization.risk_assessor import RiskAssessor, RiskAssessmentResult
 from ..optimization.phase_optimizer import PhaseOptimizer
 

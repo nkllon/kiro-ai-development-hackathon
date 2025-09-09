@@ -118,8 +118,9 @@ class DomainValidator:
             rule_result = rule.validate(entity)
             result.merge(rule_result)
         
-        return result    def v
-alidate_aggregate(self, aggregate: AggregateRoot) -> ValidationResult:
+        return result
+    
+    def validate_aggregate(self, aggregate: AggregateRoot) -> ValidationResult:
         """Validate an aggregate root."""
         result = ValidationResult(is_valid=True)
         
