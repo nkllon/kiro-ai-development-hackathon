@@ -1,0 +1,894 @@
+"""
+Installation and Setup Validator for Hackathon Demo Framework.
+
+Validates installation processes, dependency management, and setup instructions
+to ensure hackathon submissions can be easily reproduced by judges and users.
+"""
+
+import logging
+import subprocess
+import sys
+import tempfile
+import shutil
+import venv
+from pathlib import Path
+from typing import Dict, List, Optional, Any, Tuple
+from dataclasses import dataclass
+from enum import Enum
+import json
+import re
+import os
+
+from ..models import ValidationResult
+
+
+class InstallationIssueType(Enum):
+    """Types of installation issues."""
+    MISSING_REQUIREMENTS = "missing_requirements"
+    DEPENDENCY_CONFLICT = "dependency_conflict"
+    INSTALLATION_FAILURE = "installation_failure"
+    SETUP_INSTRUCTIONS = "setup_instructions"
+    ENVIRONMENT_SETUP = "environment_setup"
+    DOCUMENTATION = "documentation"
+
+
+@dataclass
+class InstallationIssue:
+    """Individual installation issue."""
+    issue_type: InstallationIssueType
+    severity: str  # "critical", "major", "minor", "info"
+    message: str
+    file_path: str = ""
+    suggestion: str = ""
+    command_output: str = ""
+
+
+@dataclass
+class InstallationReport:
+    """Comprehensive installation validation report."""
+    overall_score: float
+    requirements_score: float
+    dependency_score: float
+    setup_score: float
+    documentation_score: float
+    environment_score: float
+    total_issues: int
+    critical_issues: int
+    major_issues: int
+    minor_issues: int
+    issues: List[InstallationIssue]
+    recommendations: List[str]
+    installation_time: float  # seconds
+    success_rate: float  # percentage
+
+
+class InstallationSetupValidator:
+    """
+    Validates installation processes and setup instructions.
+    
+    Tests dependency installation, environment setup, and documentation
+    quality to ensure hackathon submissions can be easily reproduced.
+    """
+    
+    def __init__(self, project_path: Path):
+        """
+        Initialize the installation validator.
+        
+        Args:
+            project_path: Path to the project being validated
+        """
+        self.project_path = Path(project_path)
+        self.logger = logging.getLogger(__name__)
+        
+        # Configuration files to check
+        self.config_files = [
+            "requirements.txt",
+            "pyproject.toml",
+            "setup.py",
+            "Pipfile",
+            "environment.yml",
+            "poetry.lock"
+        ]
+        
+        # Documentation files to check
+        self.doc_files = [
+            "README.md",
+            "README.rst",
+            "INSTALL.md",
+            "SETUP.md",
+            "docs/installation.md",
+            "docs/setup.md"
+        ]
+        
+        # Required setup instruction sections
+        self.required_sections = [
+            "installation",
+            "setup",
+            "requirements",
+            "dependencies",
+            "getting started",
+            "quick start"
+        ]
+        
+        self.logger.info(f"Installation validator initialized for {self.project_path}")
+    
+    def validate_installation_setup(self) -> InstallationReport:
+        """
+        Perform comprehensive installation and setup validation.
+        
+        Returns:
+            Detailed installation validation report
+        """
+        self.logger.info("Starting installation and setup validation")
+        
+        try:
+            import time
+            start_time = time.time()
+            
+            all_issues = []
+            
+            # 1. Validate configuration files
+            self.logger.info("Validating configuration files")
+            config_analysis = self._validate_configuration_files()
+            all_issues.extend(config_analysis["issues"])
+            
+            # 2. Validate dependencies
+            self.logger.info("Validating dependencies")
+            dependency_analysis = self._validate_dependencies()
+            all_issues.extend(dependency_analysis["issues"])
+            
+            # 3. Validate setup instructions
+            self.logger.info("Validating setup instructions")
+            setup_analysis = self._validate_setup_instructions()
+            all_issues.extend(setup_analysis["issues"])
+            
+            # 4. Validate documentation
+            self.logger.info("Validating installation documentation")
+            doc_analysis = self._validate_documentation()
+            all_issues.extend(doc_analysis["issues"])
+            
+            # 5. Test installation process (if safe)
+            self.logger.info("Testing installation process")
+            installation_analysis = self._test_installation_process()
+            all_issues.extend(installation_analysis["issues"])
+            
+            end_time = time.time()
+            installation_time = end_time - start_time
+            
+            # Calculate scores
+            requirements_score = config_analysis["score"]
+            dependency_score = dependency_analysis["score"]
+            setup_score = setup_analysis["score"]
+            documentation_score = doc_analysis["score"]
+            environment_score = installation_analysis["score"]
+            
+            overall_score = (
+                requirements_score * 0.25 +
+                dependency_score * 0.25 +
+                setup_score * 0.20 +
+                documentation_score * 0.15 +
+                environment_score * 0.15
+            )
+            
+            # Categorize issues
+            critical_issues = [i for i in all_issues if i.severity == "critical"]
+            major_issues = [i for i in all_issues if i.severity == "major"]
+            minor_issues = [i for i in all_issues if i.severity == "minor"]
+            
+            # Calculate success rate
+            success_rate = max(0, 100 - len(critical_issues) * 30 - len(major_issues) * 10 - len(minor_issues) * 2)
+            
+            # Generate recommendations
+            recommendations = self._generate_recommendations(all_issues, {
+                "requirements": requirements_score,
+                "dependency": dependency_score,
+                "setup": setup_score,
+                "documentation": documentation_score,
+                "environment": environment_score
+            })
+            
+            report = InstallationReport(
+                overall_score=overall_score,
+                requirements_score=requirements_score,
+                dependency_score=dependency_score,
+                setup_score=setup_score,
+                documentation_score=documentation_score,
+                environment_score=environment_score,
+                total_issues=len(all_issues),
+                critical_issues=len(critical_issues),
+                major_issues=len(major_issues),
+                minor_issues=len(minor_issues),
+                issues=all_issues,
+                recommendations=recommendations,
+                installation_time=installation_time,
+                success_rate=success_rate
+            )
+            
+            self.logger.info(f"Installation validation complete. Overall score: {overall_score:.1f}")
+            return report
+            
+        except Exception as e:
+            self.logger.error(f"Installation validation failed: {e}")
+            return self._create_error_report(f"Validation failed: {e}")
+    
+    def validate_installation_reliability(self, num_tests: int = 3) -> ValidationResult:
+        """
+        Test installation reliability across multiple attempts.
+        
+        Args:
+            num_tests: Number of installation attempts to test
+            
+        Returns:
+            Validation result with reliability assessment
+        """
+        self.logger.info(f"Testing installation reliability with {num_tests} attempts")
+        
+        successful_installs = 0
+        issues = []
+        recommendations = []
+        
+        for attempt in range(num_tests):
+            try:
+                self.logger.info(f"Installation attempt {attempt + 1}/{num_tests}")
+                
+                # Create temporary environment for testing
+                with tempfile.TemporaryDirectory() as temp_dir:
+                    test_result = self._test_single_installation(Path(temp_dir))
+                    
+                    if test_result["success"]:
+                        successful_installs += 1
+                    else:
+                        issues.extend(test_result["issues"])
+                        
+            except Exception as e:
+                issues.append(f"Installation attempt {attempt + 1} failed: {e}")
+        
+        success_rate = (successful_installs / num_tests) * 100
+        
+        if success_rate < 80:
+            issues.append(f"Installation reliability too low: {success_rate:.1f}%")
+            recommendations.append("Improve installation process reliability")
+        
+        if success_rate < 50:
+            recommendations.append("Critical: Fix installation process - more than half of attempts fail")
+        
+        return ValidationResult(
+            is_valid=success_rate >= 80,
+            score=success_rate,
+            issues=issues,
+            recommendations=recommendations
+        )
+    
+    def generate_installation_guide(self) -> str:
+        """
+        Generate comprehensive installation guide based on project analysis.
+        
+        Returns:
+            Markdown-formatted installation guide
+        """
+        self.logger.info("Generating installation guide")
+        
+        guide_sections = []
+        
+        # Header
+        guide_sections.append("# Installation Guide\n")
+        guide_sections.append("This guide provides step-by-step instructions for installing and setting up the project.\n")
+        
+        # Prerequisites
+        guide_sections.append("## Prerequisites\n")
+        guide_sections.append("- Python 3.8 or higher")
+        guide_sections.append("- pip (Python package installer)")
+        
+        # Check for additional requirements
+        if (self.project_path / "package.json").exists():
+            guide_sections.append("- Node.js and npm")
+        
+        if (self.project_path / "docker-compose.yml").exists():
+            guide_sections.append("- Docker and Docker Compose")
+        
+        guide_sections.append("")
+        
+        # Installation steps
+        guide_sections.append("## Installation Steps\n")
+        
+        # Step 1: Clone repository
+        guide_sections.append("### 1. Clone the Repository\n")
+        guide_sections.append("```bash")
+        guide_sections.append("git clone <repository-url>")
+        guide_sections.append("cd <project-directory>")
+        guide_sections.append("```\n")
+        
+        # Step 2: Create virtual environment
+        guide_sections.append("### 2. Create Virtual Environment\n")
+        guide_sections.append("```bash")
+        guide_sections.append("python -m venv venv")
+        guide_sections.append("")
+        guide_sections.append("# Activate virtual environment")
+        guide_sections.append("# On Windows:")
+        guide_sections.append("venv\\Scripts\\activate")
+        guide_sections.append("")
+        guide_sections.append("# On macOS/Linux:")
+        guide_sections.append("source venv/bin/activate")
+        guide_sections.append("```\n")
+        
+        # Step 3: Install dependencies
+        guide_sections.append("### 3. Install Dependencies\n")
+        
+        if (self.project_path / "requirements.txt").exists():
+            guide_sections.append("```bash")
+            guide_sections.append("pip install -r requirements.txt")
+            guide_sections.append("```\n")
+        elif (self.project_path / "pyproject.toml").exists():
+            guide_sections.append("```bash")
+            guide_sections.append("pip install -e .")
+            guide_sections.append("```\n")
+        elif (self.project_path / "setup.py").exists():
+            guide_sections.append("```bash")
+            guide_sections.append("pip install -e .")
+            guide_sections.append("```\n")
+        else:
+            guide_sections.append("```bash")
+            guide_sections.append("# Install required packages manually")
+            guide_sections.append("pip install <package-name>")
+            guide_sections.append("```\n")
+        
+        # Step 4: Configuration
+        guide_sections.append("### 4. Configuration\n")
+        
+        config_files = [
+            ".env.example",
+            "config.example.json",
+            "settings.example.py"
+        ]
+        
+        found_config = False
+        for config_file in config_files:
+            if (self.project_path / config_file).exists():
+                guide_sections.append(f"Copy and configure the example configuration file:")
+                guide_sections.append("```bash")
+                guide_sections.append(f"cp {config_file} {config_file.replace('.example', '')}")
+                guide_sections.append("```")
+                guide_sections.append(f"Edit the configuration file as needed.\n")
+                found_config = True
+                break
+        
+        if not found_config:
+            guide_sections.append("No configuration files found. The project may work with default settings.\n")
+        
+        # Step 5: Verification
+        guide_sections.append("### 5. Verify Installation\n")
+        guide_sections.append("Test that the installation was successful:")
+        guide_sections.append("```bash")
+        
+        # Try to detect main entry point
+        if (self.project_path / "main.py").exists():
+            guide_sections.append("python main.py --help")
+        elif (self.project_path / "app.py").exists():
+            guide_sections.append("python app.py")
+        elif (self.project_path / "src").exists():
+            guide_sections.append("python -m src")
+        else:
+            guide_sections.append("python -c \"import <main_module>; print('Installation successful!')\"")
+        
+        guide_sections.append("```\n")
+        
+        # Troubleshooting
+        guide_sections.append("## Troubleshooting\n")
+        guide_sections.append("### Common Issues\n")
+        guide_sections.append("1. **Permission errors**: Use `sudo` on Unix systems or run as administrator on Windows")
+        guide_sections.append("2. **Python version**: Ensure you're using Python 3.8 or higher")
+        guide_sections.append("3. **Virtual environment**: Make sure the virtual environment is activated")
+        guide_sections.append("4. **Dependencies**: Try upgrading pip: `pip install --upgrade pip`\n")
+        
+        # Support
+        guide_sections.append("## Support\n")
+        guide_sections.append("If you encounter issues during installation:")
+        guide_sections.append("1. Check the project documentation")
+        guide_sections.append("2. Review error messages carefully")
+        guide_sections.append("3. Ensure all prerequisites are met")
+        guide_sections.append("4. Try installing in a fresh virtual environment\n")
+        
+        return "\n".join(guide_sections)
+    
+    # Private methods for validation implementation
+    
+    def _validate_configuration_files(self) -> Dict[str, Any]:
+        """Validate presence and quality of configuration files."""
+        issues = []
+        score = 100
+        
+        # Check for at least one configuration file
+        config_files_found = []
+        for config_file in self.config_files:
+            if (self.project_path / config_file).exists():
+                config_files_found.append(config_file)
+        
+        if not config_files_found:
+            issues.append(InstallationIssue(
+                issue_type=InstallationIssueType.MISSING_REQUIREMENTS,
+                severity="critical",
+                message="No dependency configuration files found",
+                suggestion="Add requirements.txt, pyproject.toml, or setup.py"
+            ))
+            score = 0
+        else:
+            # Validate each found configuration file
+            for config_file in config_files_found:
+                file_path = self.project_path / config_file
+                file_issues = self._validate_config_file(file_path)
+                issues.extend(file_issues)
+                if file_issues:
+                    score -= len(file_issues) * 10
+        
+        return {
+            "score": max(0, score),
+            "issues": issues
+        }
+    
+    def _validate_config_file(self, file_path: Path) -> List[InstallationIssue]:
+        """Validate a specific configuration file."""
+        issues = []
+        
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            if file_path.name == "requirements.txt":
+                issues.extend(self._validate_requirements_txt(file_path, content))
+            elif file_path.name == "pyproject.toml":
+                issues.extend(self._validate_pyproject_toml(file_path, content))
+            elif file_path.name == "setup.py":
+                issues.extend(self._validate_setup_py(file_path, content))
+                
+        except Exception as e:
+            issues.append(InstallationIssue(
+                issue_type=InstallationIssueType.INSTALLATION_FAILURE,
+                severity="major",
+                message=f"Cannot read {file_path.name}: {e}",
+                file_path=str(file_path),
+                suggestion="Fix file encoding or permissions"
+            ))
+        
+        return issues
+    
+    def _validate_requirements_txt(self, file_path: Path, content: str) -> List[InstallationIssue]:
+        """Validate requirements.txt file."""
+        issues = []
+        
+        lines = content.strip().split('\n')
+        
+        if not lines or (len(lines) == 1 and not lines[0].strip()):
+            issues.append(InstallationIssue(
+                issue_type=InstallationIssueType.MISSING_REQUIREMENTS,
+                severity="major",
+                message="requirements.txt is empty",
+                file_path=str(file_path),
+                suggestion="Add required dependencies to requirements.txt"
+            ))
+        
+        for i, line in enumerate(lines):
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
+            
+            # Check for version pinning
+            if '==' not in line and '>=' not in line and '~=' not in line:
+                issues.append(InstallationIssue(
+                    issue_type=InstallationIssueType.DEPENDENCY_CONFLICT,
+                    severity="minor",
+                    message=f"Dependency '{line}' not version-pinned",
+                    file_path=str(file_path),
+                    suggestion="Consider pinning versions for reproducible builds"
+                ))
+            
+            # Check for invalid package names
+            if not re.match(r'^[a-zA-Z0-9_-]+', line.split('=')[0].split('>')[0].split('<')[0]):
+                issues.append(InstallationIssue(
+                    issue_type=InstallationIssueType.DEPENDENCY_CONFLICT,
+                    severity="major",
+                    message=f"Invalid package name format: {line}",
+                    file_path=str(file_path),
+                    suggestion="Use valid Python package names"
+                ))
+        
+        return issues
+    
+    def _validate_pyproject_toml(self, file_path: Path, content: str) -> List[InstallationIssue]:
+        """Validate pyproject.toml file."""
+        issues = []
+        
+        try:
+            import tomllib
+        except ImportError:
+            try:
+                import tomli as tomllib
+            except ImportError:
+                issues.append(InstallationIssue(
+                    issue_type=InstallationIssueType.INSTALLATION_FAILURE,
+                    severity="minor",
+                    message="Cannot validate pyproject.toml - TOML parser not available",
+                    file_path=str(file_path),
+                    suggestion="Install tomli or use Python 3.11+"
+                ))
+                return issues
+        
+        try:
+            data = tomllib.loads(content)
+            
+            # Check for required sections
+            if 'project' not in data and 'tool' not in data:
+                issues.append(InstallationIssue(
+                    issue_type=InstallationIssueType.MISSING_REQUIREMENTS,
+                    severity="major",
+                    message="pyproject.toml missing project or tool sections",
+                    file_path=str(file_path),
+                    suggestion="Add [project] section with dependencies"
+                ))
+            
+            # Check for dependencies
+            if 'project' in data:
+                project = data['project']
+                if 'dependencies' not in project and 'requires' not in project:
+                    issues.append(InstallationIssue(
+                        issue_type=InstallationIssueType.MISSING_REQUIREMENTS,
+                        severity="minor",
+                        message="No dependencies specified in pyproject.toml",
+                        file_path=str(file_path),
+                        suggestion="Add dependencies list if project has requirements"
+                    ))
+                    
+        except Exception as e:
+            issues.append(InstallationIssue(
+                issue_type=InstallationIssueType.INSTALLATION_FAILURE,
+                severity="major",
+                message=f"Invalid pyproject.toml format: {e}",
+                file_path=str(file_path),
+                suggestion="Fix TOML syntax errors"
+            ))
+        
+        return issues
+    
+    def _validate_setup_py(self, file_path: Path, content: str) -> List[InstallationIssue]:
+        """Validate setup.py file."""
+        issues = []
+        
+        # Check for basic setup.py structure
+        if 'setup(' not in content:
+            issues.append(InstallationIssue(
+                issue_type=InstallationIssueType.INSTALLATION_FAILURE,
+                severity="major",
+                message="setup.py missing setup() call",
+                file_path=str(file_path),
+                suggestion="Add proper setup() function call"
+            ))
+        
+        # Check for install_requires
+        if 'install_requires' not in content:
+            issues.append(InstallationIssue(
+                issue_type=InstallationIssueType.MISSING_REQUIREMENTS,
+                severity="minor",
+                message="setup.py missing install_requires",
+                file_path=str(file_path),
+                suggestion="Add install_requires list if project has dependencies"
+            ))
+        
+        return issues
+    
+    def _validate_dependencies(self) -> Dict[str, Any]:
+        """Validate dependency specifications and conflicts."""
+        issues = []
+        score = 100
+        
+        # Try to resolve dependencies
+        try:
+            # Use pip-tools or similar to check for conflicts
+            result = subprocess.run([
+                sys.executable, "-m", "pip", "check"
+            ], capture_output=True, text=True, timeout=30)
+            
+            if result.returncode != 0:
+                issues.append(InstallationIssue(
+                    issue_type=InstallationIssueType.DEPENDENCY_CONFLICT,
+                    severity="major",
+                    message="Dependency conflicts detected",
+                    command_output=result.stdout + result.stderr,
+                    suggestion="Resolve dependency version conflicts"
+                ))
+                score -= 30
+                
+        except subprocess.TimeoutExpired:
+            issues.append(InstallationIssue(
+                issue_type=InstallationIssueType.INSTALLATION_FAILURE,
+                severity="minor",
+                message="Dependency check timed out",
+                suggestion="Check for complex dependency resolution issues"
+            ))
+            score -= 10
+        except Exception as e:
+            issues.append(InstallationIssue(
+                issue_type=InstallationIssueType.INSTALLATION_FAILURE,
+                severity="minor",
+                message=f"Could not check dependencies: {e}",
+                suggestion="Ensure pip is available and working"
+            ))
+            score -= 5
+        
+        return {
+            "score": max(0, score),
+            "issues": issues
+        }
+    
+    def _validate_setup_instructions(self) -> Dict[str, Any]:
+        """Validate setup instructions in documentation."""
+        issues = []
+        score = 100
+        
+        # Find documentation files
+        doc_files_found = []
+        for doc_file in self.doc_files:
+            if (self.project_path / doc_file).exists():
+                doc_files_found.append(self.project_path / doc_file)
+        
+        if not doc_files_found:
+            issues.append(InstallationIssue(
+                issue_type=InstallationIssueType.DOCUMENTATION,
+                severity="major",
+                message="No installation documentation found",
+                suggestion="Add README.md with installation instructions"
+            ))
+            score = 30
+        else:
+            # Check each documentation file
+            for doc_file in doc_files_found:
+                try:
+                    with open(doc_file, 'r', encoding='utf-8') as f:
+                        content = f.read().lower()
+                    
+                    # Check for required sections
+                    sections_found = 0
+                    for section in self.required_sections:
+                        if section in content:
+                            sections_found += 1
+                    
+                    if sections_found == 0:
+                        issues.append(InstallationIssue(
+                            issue_type=InstallationIssueType.SETUP_INSTRUCTIONS,
+                            severity="major",
+                            message=f"No installation instructions in {doc_file.name}",
+                            file_path=str(doc_file),
+                            suggestion="Add installation/setup section to documentation"
+                        ))
+                        score -= 20
+                    elif sections_found < 2:
+                        issues.append(InstallationIssue(
+                            issue_type=InstallationIssueType.SETUP_INSTRUCTIONS,
+                            severity="minor",
+                            message=f"Limited installation instructions in {doc_file.name}",
+                            file_path=str(doc_file),
+                            suggestion="Expand installation instructions with more detail"
+                        ))
+                        score -= 10
+                    
+                    # Check for code blocks (installation commands)
+                    if '```' not in content and '`' not in content:
+                        issues.append(InstallationIssue(
+                            issue_type=InstallationIssueType.SETUP_INSTRUCTIONS,
+                            severity="minor",
+                            message=f"No code examples in {doc_file.name}",
+                            file_path=str(doc_file),
+                            suggestion="Add code examples for installation commands"
+                        ))
+                        score -= 5
+                        
+                except Exception as e:
+                    issues.append(InstallationIssue(
+                        issue_type=InstallationIssueType.DOCUMENTATION,
+                        severity="minor",
+                        message=f"Cannot read {doc_file.name}: {e}",
+                        file_path=str(doc_file),
+                        suggestion="Fix file encoding or permissions"
+                    ))
+                    score -= 5
+        
+        return {
+            "score": max(0, score),
+            "issues": issues
+        }
+    
+    def _validate_documentation(self) -> Dict[str, Any]:
+        """Validate installation documentation quality."""
+        issues = []
+        score = 100
+        
+        readme_path = None
+        for readme_name in ["README.md", "README.rst", "README.txt"]:
+            if (self.project_path / readme_name).exists():
+                readme_path = self.project_path / readme_name
+                break
+        
+        if not readme_path:
+            issues.append(InstallationIssue(
+                issue_type=InstallationIssueType.DOCUMENTATION,
+                severity="critical",
+                message="No README file found",
+                suggestion="Add README.md with project description and setup instructions"
+            ))
+            score = 0
+        else:
+            try:
+                with open(readme_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                
+                # Check README length
+                if len(content.strip()) < 100:
+                    issues.append(InstallationIssue(
+                        issue_type=InstallationIssueType.DOCUMENTATION,
+                        severity="major",
+                        message="README too short",
+                        file_path=str(readme_path),
+                        suggestion="Expand README with detailed project information"
+                    ))
+                    score -= 30
+                
+                # Check for essential sections
+                essential_sections = ["installation", "usage", "setup"]
+                missing_sections = []
+                for section in essential_sections:
+                    if section not in content.lower():
+                        missing_sections.append(section)
+                
+                if missing_sections:
+                    issues.append(InstallationIssue(
+                        issue_type=InstallationIssueType.DOCUMENTATION,
+                        severity="major",
+                        message=f"README missing sections: {', '.join(missing_sections)}",
+                        file_path=str(readme_path),
+                        suggestion="Add missing sections to README"
+                    ))
+                    score -= len(missing_sections) * 15
+                    
+            except Exception as e:
+                issues.append(InstallationIssue(
+                    issue_type=InstallationIssueType.DOCUMENTATION,
+                    severity="major",
+                    message=f"Cannot read README: {e}",
+                    file_path=str(readme_path),
+                    suggestion="Fix README file encoding or permissions"
+                ))
+                score -= 20
+        
+        return {
+            "score": max(0, score),
+            "issues": issues
+        }
+    
+    def _test_installation_process(self) -> Dict[str, Any]:
+        """Test the actual installation process in a clean environment."""
+        issues = []
+        score = 100
+        
+        # This is a simplified test - in production, would use containers
+        try:
+            # Check if we can import the project
+            if (self.project_path / "src").exists():
+                # Try importing from src directory
+                import importlib.util
+                init_file = self.project_path / "src" / "__init__.py"
+                if init_file.exists():
+                    spec = importlib.util.spec_from_file_location("test_module", init_file)
+                    if spec and spec.loader:
+                        module = importlib.util.module_from_spec(spec)
+                        spec.loader.exec_module(module)
+            
+        except ImportError as e:
+            issues.append(InstallationIssue(
+                issue_type=InstallationIssueType.INSTALLATION_FAILURE,
+                severity="major",
+                message=f"Import test failed: {e}",
+                suggestion="Fix import issues or missing dependencies"
+            ))
+            score -= 30
+        except Exception as e:
+            issues.append(InstallationIssue(
+                issue_type=InstallationIssueType.INSTALLATION_FAILURE,
+                severity="minor",
+                message=f"Installation test error: {e}",
+                suggestion="Review project structure and dependencies"
+            ))
+            score -= 10
+        
+        return {
+            "score": max(0, score),
+            "issues": issues
+        }
+    
+    def _test_single_installation(self, temp_dir: Path) -> Dict[str, Any]:
+        """Test a single installation attempt in a temporary directory."""
+        try:
+            # Copy project files to temp directory
+            project_copy = temp_dir / "project"
+            shutil.copytree(self.project_path, project_copy, ignore=shutil.ignore_patterns(
+                '__pycache__', '*.pyc', '.git', 'venv', 'env', '.venv'
+            ))
+            
+            # Create virtual environment
+            venv_path = temp_dir / "venv"
+            venv.create(venv_path, with_pip=True)
+            
+            # Determine pip path
+            if sys.platform == "win32":
+                pip_path = venv_path / "Scripts" / "pip"
+            else:
+                pip_path = venv_path / "bin" / "pip"
+            
+            # Try to install dependencies
+            if (project_copy / "requirements.txt").exists():
+                result = subprocess.run([
+                    str(pip_path), "install", "-r", "requirements.txt"
+                ], cwd=project_copy, capture_output=True, text=True, timeout=300)
+                
+                if result.returncode != 0:
+                    return {
+                        "success": False,
+                        "issues": [f"pip install failed: {result.stderr}"]
+                    }
+            
+            return {"success": True, "issues": []}
+            
+        except Exception as e:
+            return {
+                "success": False,
+                "issues": [f"Installation test failed: {e}"]
+            }
+    
+    def _generate_recommendations(self, issues: List[InstallationIssue], scores: Dict[str, float]) -> List[str]:
+        """Generate improvement recommendations."""
+        recommendations = []
+        
+        # Critical issues first
+        critical_issues = [i for i in issues if i.severity == "critical"]
+        if critical_issues:
+            recommendations.append(f"Fix {len(critical_issues)} critical installation issues immediately")
+        
+        # Score-based recommendations
+        if scores["requirements"] < 70:
+            recommendations.append("Add or improve dependency configuration files")
+        
+        if scores["documentation"] < 80:
+            recommendations.append("Improve installation documentation and README")
+        
+        if scores["setup"] < 70:
+            recommendations.append("Add detailed setup instructions with examples")
+        
+        if scores["dependency"] < 80:
+            recommendations.append("Resolve dependency conflicts and version issues")
+        
+        # General recommendations
+        recommendations.append("Test installation process in clean environment")
+        recommendations.append("Consider adding automated installation verification")
+        
+        return recommendations[:5]
+    
+    def _create_error_report(self, error_message: str) -> InstallationReport:
+        """Create error report when validation fails."""
+        return InstallationReport(
+            overall_score=0.0,
+            requirements_score=0.0,
+            dependency_score=0.0,
+            setup_score=0.0,
+            documentation_score=0.0,
+            environment_score=0.0,
+            total_issues=1,
+            critical_issues=1,
+            major_issues=0,
+            minor_issues=0,
+            issues=[InstallationIssue(
+                issue_type=InstallationIssueType.INSTALLATION_FAILURE,
+                severity="critical",
+                message=error_message,
+                suggestion="Fix validation environment and try again"
+            )],
+            recommendations=[error_message],
+            installation_time=0.0,
+            success_rate=0.0
+        )
