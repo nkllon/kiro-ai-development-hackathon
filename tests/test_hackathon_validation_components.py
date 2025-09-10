@@ -26,7 +26,6 @@ from hackathon_demo_framework.validation.installation_validator import (
     InstallationReport
 )
 
-
 class TestCodeQualityAssessmentEngine:
     """Test suite for the code quality assessment engine."""
     
@@ -368,7 +367,6 @@ class WellDesignedClass:
         assert any("complexity" in step.lower() for step in improvement_plan)
         assert any("documentation" in step.lower() for step in improvement_plan)
 
-
 class TestInstallationSetupValidator:
     """Test suite for the installation setup validator."""
     
@@ -539,24 +537,16 @@ build-backend = "setuptools.build_meta"
         assert "Troubleshooting" in guide
         assert "```bash" in guide  # Should have code blocks
     
-    @patch('subprocess.run')
-    def test_dependency_validation(self, mock_subprocess):
+    def test_dependency_validation(self):
         """Test dependency conflict validation."""
-        # Mock successful pip check
-        mock_subprocess.return_value = MagicMock(returncode=0, stdout="", stderr="")
-        
         report = self.validator.validate_installation_setup()
         
         # Should have good dependency score with no conflicts
         dependency_issues = [i for i in report.issues if i.issue_type == InstallationIssueType.DEPENDENCY_CONFLICT]
         assert len(dependency_issues) == 0
         
-        # Mock failed pip check
-        mock_subprocess.return_value = MagicMock(
-            returncode=1, 
-            stdout="", 
-            stderr="package-a 1.0 has requirement package-b>=2.0, but you have package-b 1.0"
-        )
+        # Create a requirements file with conflicts to test detection
+        (self.temp_dir / "requirements.txt").write_text("package-a==1.0\npackage-a>=2.0")
         
         report = self.validator.validate_installation_setup()
         
@@ -636,7 +626,6 @@ Run with: `python main.py`
             assert result.score == 0.0  # All attempts failed
             assert not result.is_valid
             assert len(result.issues) > 0
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

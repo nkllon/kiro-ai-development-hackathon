@@ -29,7 +29,6 @@ from hackathon_demo_framework.presentation.timing_optimizer import (
     PacingStrategy, TimingConstraint, TimingAnalysis, PacingRecommendation
 )
 
-
 class TestDemoScriptGenerator:
     """Test suite for the demo script generator."""
     
@@ -223,7 +222,6 @@ class TestDemoScriptGenerator:
         assert isinstance(demo_script, DemoScript)
         # In practice, would verify that technical depth is reduced
         # and business elements are emphasized
-
 
 class TestPresentationMaterialsCreator:
     """Test suite for the presentation materials creator."""
@@ -422,7 +420,6 @@ class TestPresentationMaterialsCreator:
         # Should maintain slide structure
         assert len(optimized_package.slides) == len(package.slides)
 
-
 class TestDemoTimingOptimizer:
     """Test suite for the demo timing optimizer."""
     
@@ -602,7 +599,6 @@ class TestDemoTimingOptimizer:
         plans_text = " ".join(contingency_plans).lower()
         assert "running long" in plans_text or "time" in plans_text
         assert "demo" in plans_text or "backup" in plans_text
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
