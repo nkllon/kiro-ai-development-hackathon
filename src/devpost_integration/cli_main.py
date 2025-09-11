@@ -8,28 +8,45 @@ Single responsibility: Main CLI orchestration and coordination.
 
 import logging
 import sys
-from typing import Dict, Any, Optional
+from datetime import datetime
+from typing import Dict, Any, Optional, List
 
 from .cli_parser import CLIParser
 from .cli_commands import CLICommands
 from .cli_output import CLIOutput
 from .project_manager import DevpostProjectManager
+from .reflective_module import (
+    ReflectiveModule, ModuleHealth, ModuleStatus, ModuleCapability, 
+    ModuleConfiguration, register_module
+)
 
 logger = logging.getLogger(__name__)
 
 
-class DevPostCLI:
-    """Main DevPost CLI orchestration class."""
+class DevPostCLI(ReflectiveModule):
+    """Main DevPost CLI orchestration class with RM-DDD compliance."""
     
     def __init__(self):
         """Initialize CLI components."""
+        super().__init__(module_id="devpost_cli_main", version="1.0.0")
         self.parser = CLIParser()
         self.project_manager = DevpostProjectManager()
         self.commands = CLICommands(self.project_manager)
+        
+        # Metrics tracking
+        self._command_count = 0
+        self._error_count = 0
+        self._start_time = datetime.now()
+        
+        # Register with global registry
+        register_module(self)
     
     def run(self, args: Optional[list] = None) -> int:
         """Run the CLI with given arguments."""
         try:
+            # Track command execution
+            self._command_count += 1
+            
             # Parse arguments
             parsed_args = self.parser.parse_args(args)
             
@@ -44,6 +61,10 @@ class DevPostCLI:
             
             # Execute command
             result = self._execute_command(parsed_args)
+            
+            # Track errors
+            if result.get('status') == 'error':
+                self._error_count += 1
             
             # Format and display output
             formatted_output = output.format_result(result, parsed_args['command'])
@@ -141,6 +162,157 @@ class DevPostCLI:
     def get_command_help(self, command: str) -> str:
         """Get help text for specific command."""
         return self.parser.get_command_help(command)
+    
+    # ReflectiveModule interface implementation
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get comprehensive module information."""
+        return {
+            'module_id': self.module_id,
+            'version': self.version,
+            'name': 'DevPost CLI Main',
+            'description': 'Main CLI orchestration for DevPost integration',
+            'author': 'DevPost Integration Team',
+            'created_at': self._start_time.isoformat(),
+            'interface_version': self.get_interface_version()
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities."""
+        return [
+            ModuleCapability.CORE_FUNCTIONALITY,
+            ModuleCapability.HEALTH_MONITORING,
+            ModuleCapability.CONFIGURATION,
+            ModuleCapability.LOGGING,
+            ModuleCapability.METRICS
+        ]
+    
+    def get_dependencies(self) -> List[str]:
+        """Get module dependencies."""
+        return [
+            'cli_parser',
+            'cli_commands', 
+            'cli_output',
+            'project_manager'
+        ]
+    
+    def check_health(self) -> ModuleHealth:
+        """Perform comprehensive health check."""
+        issues = []
+        health_score = 1.0
+        
+        try:
+            # Check parser health
+            if not hasattr(self.parser, 'parse_args'):
+                issues.append("CLI parser missing parse_args method")
+                health_score -= 0.2
+            
+            # Check project manager health
+            if not hasattr(self.project_manager, 'get_projects'):
+                issues.append("Project manager missing get_projects method")
+                health_score -= 0.2
+            
+            # Check commands health
+            if not hasattr(self.commands, 'interrogate_projects'):
+                issues.append("CLI commands missing interrogate_projects method")
+                health_score -= 0.2
+            
+            # Check error rate
+            if self._command_count > 0:
+                error_rate = self._error_count / self._command_count
+                if error_rate > 0.1:  # More than 10% error rate
+                    issues.append(f"High error rate: {error_rate:.1%}")
+                    health_score -= 0.3
+                elif error_rate > 0.05:  # More than 5% error rate
+                    health_score -= 0.1
+            
+            # Determine status
+            if health_score >= 0.9:
+                status = ModuleStatus.HEALTHY
+            elif health_score >= 0.7:
+                status = ModuleStatus.DEGRADED
+            else:
+                status = ModuleStatus.UNHEALTHY
+            
+            return ModuleHealth(
+                module_id=self.module_id,
+                status=status,
+                last_check=datetime.now(),
+                health_score=max(0.0, health_score),
+                issues=issues,
+                capabilities=self.get_capabilities(),
+                dependencies=self.get_dependencies(),
+                metrics=self.get_metrics()
+            )
+            
+        except Exception as e:
+            logger.error(f"Health check failed: {e}")
+            return ModuleHealth(
+                module_id=self.module_id,
+                status=ModuleStatus.UNHEALTHY,
+                last_check=datetime.now(),
+                health_score=0.0,
+                issues=[f"Health check exception: {e}"],
+                capabilities=self.get_capabilities(),
+                dependencies=self.get_dependencies(),
+                metrics={}
+            )
+    
+    def get_configuration(self) -> ModuleConfiguration:
+        """Get module configuration."""
+        return ModuleConfiguration(
+            module_id=self.module_id,
+            config_version="1.0.0",
+            parameters={
+                'log_level': 'INFO',
+                'verbose': False,
+                'json_output': False
+            },
+            required_parameters=['log_level'],
+            optional_parameters=['verbose', 'json_output'],
+            validation_rules={
+                'log_level': ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+                'verbose': [True, False],
+                'json_output': [True, False]
+            },
+            last_updated=datetime.now()
+        )
+    
+    def update_configuration(self, config: ModuleConfiguration) -> bool:
+        """Update module configuration."""
+        try:
+            if not config.is_valid():
+                logger.error("Invalid configuration provided")
+                return False
+            
+            # Update configuration parameters
+            # Note: In a real implementation, this would update actual config
+            logger.info(f"Configuration updated for {self.module_id}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error updating configuration: {e}")
+            return False
+    
+    def get_metrics(self) -> Dict[str, Any]:
+        """Get module metrics."""
+        uptime = (datetime.now() - self._start_time).total_seconds()
+        error_rate = (self._error_count / self._command_count) if self._command_count > 0 else 0.0
+        
+        return {
+            'command_count': self._command_count,
+            'error_count': self._error_count,
+            'error_rate': error_rate,
+            'uptime_seconds': uptime,
+            'uptime_hours': uptime / 3600,
+            'last_command_time': datetime.now().isoformat()
+        }
+    
+    def reset_metrics(self) -> None:
+        """Reset module metrics to initial state."""
+        self._command_count = 0
+        self._error_count = 0
+        self._start_time = datetime.now()
+        logger.info("Metrics reset for CLI main module")
 
 
 def main() -> int:

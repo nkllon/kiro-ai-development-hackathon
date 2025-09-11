@@ -38,8 +38,8 @@ logger = logging.getLogger(__name__)
         return {
             'module_id': self.module_id,
             'version': self.version,
-            'name': 'Deadline Tracker',
-            'description': 'deadline_tracker module for DevPost integration',
+            'name': 'Deadline Tracker Refactored',
+            'description': 'deadline_tracker_refactored module for DevPost integration',
             'author': 'DevPost Integration Team',
             'created_at': self._start_time.isoformat(),
             'interface_version': self.get_interface_version()
@@ -150,7 +150,7 @@ class DevpostDeadlineTracker(ReflectiveModule):
     """
     
     def __init__(self, config: Optional[DevpostConfig] = None, 
-        super().__init__(module_id="deadline_tracker", version="1.0.0")
+        super().__init__(module_id="deadline_tracker_refactored", version="1.0.0")
         self._start_time = datetime.now()
         register_module(self)
 
