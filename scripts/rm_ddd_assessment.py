@@ -381,30 +381,34 @@ class HealthMonitoringAnalyzer:
     def _has_health_indicators(self, content: str) -> bool:
         """Check if module has health indicators"""
         health_patterns = [
-            'health_indicators',
-            'get_health_indicators',
-            'health_status',
-            'is_healthy'
+            'check_health',
+            'ModuleHealth',
+            'uptime_seconds',
+            'success_rate',
+            'error_rate',
+            'health_status'
         ]
         return any(pattern in content for pattern in health_patterns)
     
     def _has_status_reporting(self, content: str) -> bool:
         """Check if module has status reporting"""
         status_patterns = [
-            'get_module_status',
-            'status_report',
-            'operational_status',
-            'module_status'
+            'get_metrics',
+            'total_operations',
+            'success_count',
+            'error_count',
+            'last_updated'
         ]
         return any(pattern in content for pattern in status_patterns)
     
     def _has_graceful_degradation(self, content: str) -> bool:
         """Check if module has graceful degradation"""
         degradation_patterns = [
-            'graceful_degradation',
-            'degrade_gracefully',
-            'fallback',
-            'error_handling'
+            'try:',
+            'except Exception',
+            'error_handling',
+            'logger.error',
+            'return ModuleHealth.UNHEALTHY'
         ]
         return any(pattern in content for pattern in degradation_patterns)
     
@@ -463,7 +467,9 @@ class RMComplianceAssessmentTool:
         health_compliant = health_gap.health_coverage_score == 100.0
         
         # Registry integration (simplified check)
-        registry_integrated = False  # Will be implemented in registry integration phase
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        registry_integrated = self._check_registry_integration(content)
         
         # Calculate overall compliance score
         compliance_scores = []
@@ -494,6 +500,15 @@ class RMComplianceAssessmentTool:
             health_gaps=[health_gap],
             refactoring_priority=refactoring_priority
         )
+    
+    def _check_registry_integration(self, content: str) -> bool:
+        """Check if module has registry integration"""
+        registry_patterns = [
+            'register_module',
+            'ReflectiveModuleRegistry',
+            'from .reflective_module import.*register_module'
+        ]
+        return any(pattern in content for pattern in registry_patterns)
     
     def _generate_compliance_report(self, assessments: List[ModuleAssessment]) -> ComplianceReport:
         """Generate overall compliance report"""
