@@ -10,8 +10,9 @@ import os
 import json
 import time
 from pathlib import Path
-from typing import Optional, Dict, Any, Tuple
+from typing import Optional, Dict, Any, Tuple, List
 import logging
+from datetime import datetime
 
 from .auth_models import AuthCredentials, AuthSession, AuthResult, AuthConfig
 from .auth_session_manager import AuthSessionManager
@@ -19,19 +20,119 @@ from .reflective_module import (
     ReflectiveModule, ModuleHealth, ModuleStatus, ModuleCapability, 
     ModuleConfiguration, register_module
 )
-from datetime import datetime
-
 
 logger = logging.getLogger(__name__)
 
+
+class DevpostAuthService(ReflectiveModule):
+    """Main authentication service with RM-DDD compliance"""
+    
+    def __init__(self, config: Optional[AuthConfig] = None):
+        """Initialize authentication service"""
+        super().__init__(module_id="auth_service", version="1.0.0")
+        self.config = config or AuthConfig()
+        self.session_manager = AuthSessionManager(self.config)
+        self._start_time = datetime.now()
+        self._auth_attempts = 0
+        self._successful_auths = 0
+        self._failed_auths = 0
+        register_module(self)
+    
+    def authenticate(self, credentials: AuthCredentials) -> AuthResult:
+        """Authenticate with DevPost using provided credentials"""
+        try:
+            self._auth_attempts += 1
+            
+            # Validate credentials
+            if not credentials.is_valid():
+                self._failed_auths += 1
+                return AuthResult(
+                    success=False,
+                    message="Invalid credentials provided",
+                    session=None
+                )
+            
+            # Attempt authentication
+            result = self.session_manager.authenticate(credentials)
+            
+            if result.success:
+                self._successful_auths += 1
+                logger.info(f"Authentication successful for user: {credentials.username}")
+            else:
+                self._failed_auths += 1
+                logger.warning(f"Authentication failed for user: {credentials.username}")
+            
+            return result
+            
+        except Exception as e:
+            self._failed_auths += 1
+            logger.error(f"Authentication error: {e}")
+            return AuthResult(
+                success=False,
+                message=f"Authentication error: {str(e)}",
+                session=None
+            )
+    
+    def get_current_session(self) -> Optional[AuthSession]:
+        """Get current active session"""
+        return self.session_manager.get_current_session()
+    
+    def refresh_session(self) -> AuthResult:
+        """Refresh current session"""
+        try:
+            current_session = self.get_current_session()
+            if not current_session:
+                return AuthResult(
+                    success=False,
+                    message="No active session to refresh",
+                    session=None
+                )
+            
+            return self.session_manager.refresh_session(current_session)
+            
+        except Exception as e:
+            logger.error(f"Session refresh error: {e}")
+            return AuthResult(
+                success=False,
+                message=f"Session refresh error: {str(e)}",
+                session=None
+            )
+    
+    def logout(self) -> bool:
+        """Logout current session"""
+        try:
+            success = self.session_manager.logout()
+            if success:
+                logger.info("Successfully logged out")
+            return success
+            
+        except Exception as e:
+            logger.error(f"Logout error: {e}")
+            return False
+    
+    def is_authenticated(self) -> bool:
+        """Check if currently authenticated"""
+        session = self.get_current_session()
+        return session is not None and session.is_valid()
+    
+    def get_auth_status(self) -> Dict[str, Any]:
+        """Get authentication status information"""
+        session = self.get_current_session()
+        return {
+            'authenticated': self.is_authenticated(),
+            'session': session.to_dict() if session else None,
+            'config': self.config.to_dict(),
+            'metrics': self.get_metrics()
+        }
+    
     # ReflectiveModule interface implementation
     def get_module_info(self) -> Dict[str, Any]:
         """Get comprehensive module information."""
         return {
             'module_id': self.module_id,
             'version': self.version,
-            'name': 'Auth Service',
-            'description': 'auth_service module for DevPost integration',
+            'name': 'DevPost Auth Service',
+            'description': 'Authentication service for DevPost integration',
             'author': 'DevPost Integration Team',
             'created_at': self._start_time.isoformat(),
             'interface_version': self.get_interface_version()
@@ -39,11 +140,21 @@ logger = logging.getLogger(__name__)
     
     def get_capabilities(self) -> List[ModuleCapability]:
         """Get module capabilities."""
-        return []
+        return [
+            ModuleCapability.CORE_FUNCTIONALITY,
+            ModuleCapability.HEALTH_MONITORING,
+            ModuleCapability.CONFIGURATION,
+            ModuleCapability.LOGGING,
+            ModuleCapability.METRICS,
+            ModuleCapability.API_INTEGRATION
+        ]
     
     def get_dependencies(self) -> List[str]:
         """Get module dependencies."""
-        return []
+        return [
+            'auth_models',
+            'auth_session_manager'
+        ]
     
     def check_health(self) -> ModuleHealth:
         """Perform comprehensive health check."""
@@ -51,13 +162,22 @@ logger = logging.getLogger(__name__)
         health_score = 1.0
         
         try:
-            # Basic health checks
-            if not hasattr(self, 'module_id'):
-                issues.append("Missing module_id")
+            # Check session manager
+            if not hasattr(self, 'session_manager'):
+                issues.append("Missing session manager")
+                health_score -= 0.3
+            
+            # Check configuration
+            if not hasattr(self, 'config'):
+                issues.append("Missing configuration")
                 health_score -= 0.2
             
-            # Add module-specific health checks here
-            
+            # Check authentication success rate
+            if self._auth_attempts > 0:
+                success_rate = self._successful_auths / self._auth_attempts
+                if success_rate < 0.5:  # Less than 50% success rate
+                    issues.append(f"Low authentication success rate: {success_rate:.1%}")
+                    health_score -= 0.2
             
             # Determine status
             if health_score >= 0.9:
@@ -79,7 +199,6 @@ logger = logging.getLogger(__name__)
             )
             
         except Exception as e:
-            logger.error(f"Health check failed: {e}")
             return ModuleHealth(
                 module_id=self.module_id,
                 status=ModuleStatus.UNHEALTHY,
@@ -96,10 +215,15 @@ logger = logging.getLogger(__name__)
         return ModuleConfiguration(
             module_id=self.module_id,
             config_version="1.0.0",
-            parameters={},
-            required_parameters=[],
-            optional_parameters=[],
-            validation_rules={},
+            parameters=self.config.to_dict(),
+            required_parameters=['api_base_url', 'timeout'],
+            optional_parameters=['retry_attempts', 'session_timeout'],
+            validation_rules={
+                'api_base_url': 'string',
+                'timeout': 'integer',
+                'retry_attempts': 'integer',
+                'session_timeout': 'integer'
+            },
             last_updated=datetime.now()
         )
     
@@ -107,282 +231,44 @@ logger = logging.getLogger(__name__)
         """Update module configuration."""
         try:
             if not config.is_valid():
-                logger.error("Invalid configuration provided")
                 return False
             
-            logger.info(f"Configuration updated for {self.module_id}")
+            # Update auth config
+            if 'api_base_url' in config.parameters:
+                self.config.api_base_url = config.parameters['api_base_url']
+            if 'timeout' in config.parameters:
+                self.config.timeout = config.parameters['timeout']
+            if 'retry_attempts' in config.parameters:
+                self.config.retry_attempts = config.parameters['retry_attempts']
+            if 'session_timeout' in config.parameters:
+                self.config.session_timeout = config.parameters['session_timeout']
+            
             return True
             
         except Exception as e:
-            logger.error(f"Error updating configuration: {e}")
+            logger.error(f"Configuration update error: {e}")
             return False
     
     def get_metrics(self) -> Dict[str, Any]:
         """Get module metrics."""
         uptime = (datetime.now() - self._start_time).total_seconds()
+        success_rate = (self._successful_auths / self._auth_attempts) if self._auth_attempts > 0 else 0.0
         
         return {
             'uptime_seconds': uptime,
             'uptime_hours': uptime / 3600,
+            'auth_attempts': self._auth_attempts,
+            'successful_auths': self._successful_auths,
+            'failed_auths': self._failed_auths,
+            'success_rate': success_rate,
+            'is_authenticated': self.is_authenticated(),
             'last_check': datetime.now().isoformat()
         }
     
     def reset_metrics(self) -> None:
         """Reset module metrics to initial state."""
+        self._auth_attempts = 0
+        self._successful_auths = 0
+        self._failed_auths = 0
         self._start_time = datetime.now()
-        logger.info("Metrics reset for {self.module_id} module")
-
-
-class DevPostAuthService(ReflectiveModule):
-    """
-    DevPost Authentication Service
-    
-    Provides secure authentication, session management, and API access
-    for DevPost integration. Handles credential management and token-based
-    authentication with session persistence.
-    """
-    
-    def __init__(self, config: Optional[AuthConfig] = None, storage_path: Optional[Path] = None):
-        super().__init__(module_id="auth_service", version="1.0.0")
-        self._start_time = datetime.now()
-        register_module(self)
-
-        """Initialize authentication service"""
-        self.config = config or AuthConfig()
-        self.storage_path = storage_path or Path("devpost_auth.json")
-        self.session_manager = AuthSessionManager(self.config, storage_path)
-        self.login_attempts: Dict[str, int] = {}
-        self.lockout_until: Dict[str, float] = {}
-        
-        # Load stored credentials
-        self._load_credentials()
-    
-    def authenticate(self, username: str, password: str, api_key: Optional[str] = None) -> AuthResult:
-        """Authenticate user with DevPost"""
-        try:
-            # Check if user is locked out
-            if self._is_user_locked_out(username):
-                return AuthResult(
-                    success=False,
-                    message="Account is temporarily locked due to too many failed attempts",
-                    error_code="ACCOUNT_LOCKED"
-                )
-            
-            # Validate credentials
-            credentials = AuthCredentials(
-                username=username,
-                password=password,
-                api_key=api_key
-            )
-            
-            # Validate password strength
-            is_valid_password, password_message = self.config.validate_password(password)
-            if not is_valid_password:
-                self._record_failed_attempt(username)
-                return AuthResult(
-                    success=False,
-                    message=f"Password validation failed: {password_message}",
-                    error_code="INVALID_PASSWORD"
-                )
-            
-            # Simulate DevPost API authentication
-            auth_success = self._simulate_devpost_auth(credentials)
-            if not auth_success:
-                self._record_failed_attempt(username)
-                return AuthResult(
-                    success=False,
-                    message="Invalid credentials",
-                    error_code="INVALID_CREDENTIALS"
-                )
-            
-            # Reset failed attempts on successful login
-            self._reset_failed_attempts(username)
-            
-            # Create session
-            user_id = self._generate_user_id(username)
-            session_result = self.session_manager.create_session(user_id, username, credentials)
-            
-            if session_result.success:
-                # Store credentials
-                self._store_credentials(credentials)
-                logger.info(f"User {username} authenticated successfully")
-            
-            return session_result
-            
-        except Exception as e:
-            logger.error(f"Authentication error for {username}: {e}")
-            return AuthResult(
-                success=False,
-                message=f"Authentication failed: {str(e)}",
-                error_code="AUTH_ERROR"
-            )
-    
-    def validate_session(self, session_token: str) -> AuthResult:
-        """Validate an active session"""
-        return self.session_manager.validate_session(session_token)
-    
-    def refresh_session(self, session_token: str) -> AuthResult:
-        """Refresh an active session"""
-        return self.session_manager.refresh_session(session_token)
-    
-    def logout(self, session_token: str) -> AuthResult:
-        """Logout user and invalidate session"""
-        try:
-            result = self.session_manager.invalidate_session(session_token)
-            if result.success:
-                logger.info("User logged out successfully")
-            return result
-            
-        except Exception as e:
-            logger.error(f"Logout error: {e}")
-            return AuthResult(
-                success=False,
-                message=f"Logout failed: {str(e)}",
-                error_code="LOGOUT_ERROR"
-            )
-    
-    def get_user_sessions(self, username: str) -> List[AuthSession]:
-        """Get all active sessions for a user"""
-        user_id = self._generate_user_id(username)
-        return self.session_manager.get_user_sessions(user_id)
-    
-    def cleanup_expired_sessions(self) -> int:
-        """Clean up expired sessions"""
-        return self.session_manager.cleanup_expired_sessions()
-    
-    def get_auth_stats(self) -> Dict[str, Any]:
-        """Get authentication statistics"""
-        session_stats = self.session_manager.get_session_stats()
-        return {
-            'session_stats': session_stats,
-            'config': self.config.to_dict(),
-            'locked_users': len(self.lockout_until),
-            'failed_attempts': len(self.login_attempts)
-        }
-    
-    def _simulate_devpost_auth(self, credentials: AuthCredentials) -> bool:
-        """Simulate DevPost API authentication"""
-        # In a real implementation, this would make an API call to DevPost
-        # For now, we'll simulate with basic validation
-        
-        # Check if credentials are not empty
-        if not credentials.username or not credentials.password:
-            return False
-        
-        # Simulate API delay
-        time.sleep(0.1)
-        
-        # For demo purposes, accept any non-empty credentials
-        # In production, this would validate against DevPost API
-        return True
-    
-    def _is_user_locked_out(self, username: str) -> bool:
-        """Check if user is currently locked out"""
-        if username not in self.lockout_until:
-            return False
-        
-        lockout_time = self.lockout_until[username]
-        if time.time() > lockout_time:
-            # Lockout expired
-            del self.lockout_until[username]
-            return False
-        
-        return True
-    
-    def _record_failed_attempt(self, username: str) -> None:
-        """Record a failed login attempt"""
-        self.login_attempts[username] = self.login_attempts.get(username, 0) + 1
-        
-        # Check if user should be locked out
-        if self.login_attempts[username] >= self.config.max_login_attempts:
-            lockout_duration = self.config.lockout_duration_minutes * 60
-            self.lockout_until[username] = time.time() + lockout_duration
-            logger.warning(f"User {username} locked out for {self.config.lockout_duration_minutes} minutes")
-    
-    def _reset_failed_attempts(self, username: str) -> None:
-        """Reset failed login attempts for user"""
-        if username in self.login_attempts:
-            del self.login_attempts[username]
-        if username in self.lockout_until:
-            del self.lockout_until[username]
-    
-    def _generate_user_id(self, username: str) -> str:
-        """Generate user ID from username"""
-        return f"user_{hash(username) % 1000000}"
-    
-    def _load_credentials(self) -> None:
-        """Load stored credentials from file"""
-        try:
-            if not self.storage_path.exists():
-                return
-            
-            with open(self.storage_path, 'r') as f:
-                data = json.load(f)
-            
-            # Load configuration if available
-            if 'config' in data:
-                self.config = AuthConfig.from_dict(data['config'])
-            
-            logger.info("Loaded stored credentials and configuration")
-            
-        except Exception as e:
-            logger.error(f"Error loading credentials: {e}")
-    
-    def _store_credentials(self, credentials: AuthCredentials) -> None:
-        """Store credentials to file"""
-        try:
-            data = {
-                'config': self.config.to_dict(),
-                'stored_at': time.time()
-            }
-            
-            with open(self.storage_path, 'w') as f:
-                json.dump(data, f, indent=2)
-                
-        except Exception as e:
-            logger.error(f"Error storing credentials: {e}")
-    
-    def update_config(self, new_config: AuthConfig) -> None:
-        """Update authentication configuration"""
-        self.config = new_config
-        self.session_manager.config = new_config
-        self._store_credentials(AuthCredentials("", ""))  # Just to save config
-    
-    def is_healthy(self) -> bool:
-        """Check if authentication service is healthy"""
-        try:
-            # Check if session manager is working
-            stats = self.session_manager.get_session_stats()
-            
-            # Check if storage is accessible
-            if self.config.enable_session_persistence:
-                storage_accessible = self.storage_path.parent.exists()
-                if not storage_accessible:
-                    return False
-            
-            return True
-            
-        except Exception as e:
-            logger.error(f"Health check failed: {e}")
-            return False
-    
-    def get_health_indicators(self) -> Dict[str, Any]:
-        """Get detailed health indicators"""
-        try:
-            stats = self.session_manager.get_session_stats()
-            
-            return {
-                'service_healthy': self.is_healthy(),
-                'session_manager_stats': stats,
-                'config': self.config.to_dict(),
-                'storage_accessible': self.storage_path.parent.exists() if self.config.enable_session_persistence else True,
-                'locked_users_count': len(self.lockout_until),
-                'failed_attempts_count': len(self.login_attempts)
-            }
-            
-        except Exception as e:
-            logger.error(f"Error getting health indicators: {e}")
-            return {
-                'service_healthy': False,
-                'error': str(e)
-            }
+        logger.info("Metrics reset for auth service module")

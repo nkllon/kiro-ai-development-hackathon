@@ -20,19 +20,178 @@ from .reflective_module import (
     ReflectiveModule, ModuleHealth, ModuleStatus, ModuleCapability, 
     ModuleConfiguration, register_module
 )
-from datetime import datetime
-
 
 logger = logging.getLogger(__name__)
 
+
+class DevpostGitIntegration(ReflectiveModule):
+    """Main git integration with RM-DDD compliance"""
+    
+    def __init__(self, config: Optional[DevpostConfig] = None):
+        """Initialize git integration"""
+        super().__init__(module_id="git_integration", version="1.0.0")
+        self.config = config or DevpostConfig()
+        self.git_operations = GitOperations()
+        self.change_tracker = GitChangeTracker()
+        self.branch_manager = GitBranchManager()
+        self._start_time = datetime.now()
+        self._operations_count = 0
+        self._errors = 0
+        register_module(self)
+    
+    def initialize_repository(self, repo_path: Path) -> bool:
+        """Initialize git repository"""
+        try:
+            self._operations_count += 1
+            success = self.git_operations.initialize_repository(repo_path)
+            if success:
+                logger.info(f"Initialized git repository at {repo_path}")
+            return success
+        except Exception as e:
+            self._errors += 1
+            logger.error(f"Error initializing repository: {e}")
+            return False
+    
+    def add_files(self, repo_path: Path, files: List[Path]) -> bool:
+        """Add files to git staging"""
+        try:
+            self._operations_count += 1
+            success = self.git_operations.add_files(repo_path, files)
+            if success:
+                logger.info(f"Added {len(files)} files to staging")
+            return success
+        except Exception as e:
+            self._errors += 1
+            logger.error(f"Error adding files: {e}")
+            return False
+    
+    def commit_changes(self, repo_path: Path, message: str) -> bool:
+        """Commit staged changes"""
+        try:
+            self._operations_count += 1
+            success = self.git_operations.commit_changes(repo_path, message)
+            if success:
+                logger.info(f"Committed changes: {message}")
+            return success
+        except Exception as e:
+            self._errors += 1
+            logger.error(f"Error committing changes: {e}")
+            return False
+    
+    def push_changes(self, repo_path: Path, remote: str = "origin", branch: str = "main") -> bool:
+        """Push changes to remote repository"""
+        try:
+            self._operations_count += 1
+            success = self.git_operations.push_changes(repo_path, remote, branch)
+            if success:
+                logger.info(f"Pushed changes to {remote}/{branch}")
+            return success
+        except Exception as e:
+            self._errors += 1
+            logger.error(f"Error pushing changes: {e}")
+            return False
+    
+    def get_changes(self, repo_path: Path) -> List[FileChangeEvent]:
+        """Get list of file changes"""
+        try:
+            return self.change_tracker.get_changes(repo_path)
+        except Exception as e:
+            self._errors += 1
+            logger.error(f"Error getting changes: {e}")
+            return []
+    
+    def get_status(self, repo_path: Path) -> Dict[str, Any]:
+        """Get git repository status"""
+        try:
+            return self.git_operations.get_status(repo_path)
+        except Exception as e:
+            self._errors += 1
+            logger.error(f"Error getting status: {e}")
+            return {}
+    
+    def create_branch(self, repo_path: Path, branch_name: str) -> bool:
+        """Create new branch"""
+        try:
+            self._operations_count += 1
+            success = self.branch_manager.create_branch(repo_path, branch_name)
+            if success:
+                logger.info(f"Created branch: {branch_name}")
+            return success
+        except Exception as e:
+            self._errors += 1
+            logger.error(f"Error creating branch: {e}")
+            return False
+    
+    def switch_branch(self, repo_path: Path, branch_name: str) -> bool:
+        """Switch to branch"""
+        try:
+            self._operations_count += 1
+            success = self.branch_manager.switch_branch(repo_path, branch_name)
+            if success:
+                logger.info(f"Switched to branch: {branch_name}")
+            return success
+        except Exception as e:
+            self._errors += 1
+            logger.error(f"Error switching branch: {e}")
+            return False
+    
+    def get_branches(self, repo_path: Path) -> List[str]:
+        """Get list of branches"""
+        try:
+            return self.branch_manager.get_branches(repo_path)
+        except Exception as e:
+            self._errors += 1
+            logger.error(f"Error getting branches: {e}")
+            return []
+    
+    def sync_repository(self, repo_path: Path) -> Dict[str, Any]:
+        """Sync repository with remote"""
+        try:
+            self._operations_count += 1
+            
+            # Get current status
+            status = self.get_status(repo_path)
+            
+            # Get changes
+            changes = self.get_changes(repo_path)
+            
+            # Add all changes
+            if changes:
+                files = [change.file_path for change in changes]
+                self.add_files(repo_path, files)
+            
+            # Commit if there are staged changes
+            if status.get('staged_files'):
+                commit_message = f"Auto-sync: {len(changes)} files changed"
+                self.commit_changes(repo_path, commit_message)
+            
+            # Push changes
+            self.push_changes(repo_path)
+            
+            return {
+                'success': True,
+                'changes_processed': len(changes),
+                'files_staged': len(status.get('staged_files', [])),
+                'message': 'Repository synced successfully'
+            }
+            
+        except Exception as e:
+            self._errors += 1
+            logger.error(f"Error syncing repository: {e}")
+            return {
+                'success': False,
+                'error': str(e),
+                'message': 'Repository sync failed'
+            }
+    
     # ReflectiveModule interface implementation
     def get_module_info(self) -> Dict[str, Any]:
         """Get comprehensive module information."""
         return {
             'module_id': self.module_id,
             'version': self.version,
-            'name': 'Git Integration',
-            'description': 'git_integration module for DevPost integration',
+            'name': 'DevPost Git Integration',
+            'description': 'Git integration for DevPost project management',
             'author': 'DevPost Integration Team',
             'created_at': self._start_time.isoformat(),
             'interface_version': self.get_interface_version()
@@ -40,11 +199,22 @@ logger = logging.getLogger(__name__)
     
     def get_capabilities(self) -> List[ModuleCapability]:
         """Get module capabilities."""
-        return []
+        return [
+            ModuleCapability.CORE_FUNCTIONALITY,
+            ModuleCapability.HEALTH_MONITORING,
+            ModuleCapability.CONFIGURATION,
+            ModuleCapability.LOGGING,
+            ModuleCapability.METRICS,
+            ModuleCapability.PERSISTENCE
+        ]
     
     def get_dependencies(self) -> List[str]:
         """Get module dependencies."""
-        return []
+        return [
+            'git_operations',
+            'git_change_tracker',
+            'git_branch_manager'
+        ]
     
     def check_health(self) -> ModuleHealth:
         """Perform comprehensive health check."""
@@ -52,13 +222,27 @@ logger = logging.getLogger(__name__)
         health_score = 1.0
         
         try:
-            # Basic health checks
-            if not hasattr(self, 'module_id'):
-                issues.append("Missing module_id")
+            # Check git operations
+            if not hasattr(self, 'git_operations'):
+                issues.append("Missing git operations component")
+                health_score -= 0.3
+            
+            # Check change tracker
+            if not hasattr(self, 'change_tracker'):
+                issues.append("Missing change tracker component")
                 health_score -= 0.2
             
-            # Add module-specific health checks here
+            # Check branch manager
+            if not hasattr(self, 'branch_manager'):
+                issues.append("Missing branch manager component")
+                health_score -= 0.2
             
+            # Check error rate
+            if self._operations_count > 0:
+                error_rate = self._errors / self._operations_count
+                if error_rate > 0.1:  # More than 10% error rate
+                    issues.append(f"High error rate: {error_rate:.1%}")
+                    health_score -= 0.2
             
             # Determine status
             if health_score >= 0.9:
@@ -80,7 +264,6 @@ logger = logging.getLogger(__name__)
             )
             
         except Exception as e:
-            logger.error(f"Health check failed: {e}")
             return ModuleHealth(
                 module_id=self.module_id,
                 status=ModuleStatus.UNHEALTHY,
@@ -97,7 +280,7 @@ logger = logging.getLogger(__name__)
         return ModuleConfiguration(
             module_id=self.module_id,
             config_version="1.0.0",
-            parameters={},
+            parameters=self.config.to_dict() if hasattr(self.config, 'to_dict') else {},
             required_parameters=[],
             optional_parameters=[],
             validation_rules={},
@@ -108,330 +291,33 @@ logger = logging.getLogger(__name__)
         """Update module configuration."""
         try:
             if not config.is_valid():
-                logger.error("Invalid configuration provided")
                 return False
             
+            # Update configuration
             logger.info(f"Configuration updated for {self.module_id}")
             return True
             
         except Exception as e:
-            logger.error(f"Error updating configuration: {e}")
+            logger.error(f"Configuration update error: {e}")
             return False
     
     def get_metrics(self) -> Dict[str, Any]:
         """Get module metrics."""
         uptime = (datetime.now() - self._start_time).total_seconds()
+        error_rate = (self._errors / self._operations_count) if self._operations_count > 0 else 0.0
         
         return {
             'uptime_seconds': uptime,
             'uptime_hours': uptime / 3600,
+            'operations_count': self._operations_count,
+            'errors': self._errors,
+            'error_rate': error_rate,
             'last_check': datetime.now().isoformat()
         }
     
     def reset_metrics(self) -> None:
         """Reset module metrics to initial state."""
+        self._operations_count = 0
+        self._errors = 0
         self._start_time = datetime.now()
-        logger.info("Metrics reset for {self.module_id} module")
-
-
-class GitIntegration(ReflectiveModule):
-    """
-    Git repository integration for Devpost project synchronization.
-    
-    Provides git operations, change tracking, and version control
-    integration for project file monitoring.
-    """
-    
-    def __init__(self, project_path: Path, config: Optional[DevpostConfig] = None):
-        super().__init__(module_id="git_integration", version="1.0.0")
-        self._start_time = datetime.now()
-        register_module(self)
-
-        """Initialize git integration"""
-        self.project_path = Path(project_path).resolve()
-        self.config = config or DevpostConfig()
-        
-        # Initialize components
-        self.git_operations = GitOperations(self.project_path)
-        self.change_tracker = GitChangeTracker(self.git_operations)
-        self.branch_manager = GitBranchManager(self.git_operations)
-        
-        # Git configuration
-        self.auto_commit = getattr(self.config, 'auto_commit', False)
-        self.commit_message_template = getattr(
-            self.config, 
-            'commit_message_template', 
-            "Devpost sync: {change_type} {file_path}"
-        )
-        self.branch_name = getattr(self.config, 'branch_name', 'devpost-sync')
-        
-        # Statistics
-        self.stats = {
-            'commits_made': 0,
-            'branches_created': 0,
-            'conflicts_resolved': 0,
-            'last_commit': None,
-            'last_sync': None
-        }
-    
-    def initialize_repository(self) -> bool:
-        """Initialize git repository if not already initialized"""
-        try:
-            if self.git_operations.is_git_repo:
-                logger.info("Git repository already initialized")
-                return True
-            
-            # Initialize repository
-            if not self.git_operations.init_repository():
-                return False
-            
-            # Create initial commit
-            self.git_operations.add_files(['.'])
-            self.git_operations.commit_changes("Initial commit - Devpost integration setup")
-            
-            # Create devpost branch
-            if self.branch_name != 'main' and self.branch_name != 'master':
-                self.branch_manager.create_branch(self.branch_name)
-                self.branch_manager.switch_branch(self.branch_name)
-            
-            logger.info("Git repository initialized successfully")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Error initializing git repository: {e}")
-            return False
-    
-    def sync_changes(self, file_paths: List[str], 
-                    commit_message: Optional[str] = None) -> bool:
-        """Sync changes to git repository"""
-        try:
-            if not self.git_operations.is_git_repo:
-                logger.error("Not a git repository")
-                return False
-            
-            # Track files for changes
-            self.change_tracker.start_tracking(file_paths)
-            
-            # Detect changes
-            changes = self.change_tracker.detect_changes()
-            if not changes:
-                logger.info("No changes detected")
-                return True
-            
-            # Add changed files
-            changed_files = [change.file_path for change in changes]
-            if not self.git_operations.add_files(changed_files):
-                return False
-            
-            # Create commit message
-            if not commit_message:
-                change_types = set(change.change_type for change in changes)
-                change_summary = ", ".join(change_types)
-                commit_message = self.commit_message_template.format(
-                    change_type=change_summary,
-                    file_path=f"{len(changed_files)} files"
-                )
-            
-            # Commit changes
-            if not self.git_operations.commit_changes(commit_message):
-                return False
-            
-            # Update statistics
-            self.stats['commits_made'] += 1
-            self.stats['last_commit'] = datetime.now().isoformat()
-            self.stats['last_sync'] = datetime.now().isoformat()
-            
-            logger.info(f"Synced {len(changes)} changes to git repository")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Error syncing changes: {e}")
-            return False
-    
-    def get_repository_status(self) -> Dict[str, Any]:
-        """Get comprehensive repository status"""
-        try:
-            # Get git status
-            git_status = self.git_operations.get_status()
-            
-            # Get branch information
-            current_branch = self.branch_manager.get_current_branch()
-            branch_info = self.branch_manager.get_branch_info(current_branch)
-            
-            # Get change tracking info
-            tracking_stats = self.change_tracker.get_tracking_stats()
-            
-            return {
-                'repository_path': str(self.project_path),
-                'is_git_repo': self.git_operations.is_git_repo,
-                'current_branch': current_branch,
-                'branch_info': branch_info,
-                'git_status': git_status,
-                'tracking_stats': tracking_stats,
-                'integration_stats': self.stats,
-                'last_sync': self.stats['last_sync']
-            }
-            
-        except Exception as e:
-            logger.error(f"Error getting repository status: {e}")
-            return {'error': str(e)}
-    
-    def get_change_history(self, limit: int = 10) -> List[Dict[str, Any]]:
-        """Get recent change history"""
-        try:
-            # Get git commit history
-            git_history = self.git_operations.get_commit_history(limit)
-            
-            # Get tracked changes
-            tracked_changes = self.change_tracker.get_recent_changes(limit)
-            
-            return {
-                'git_commits': git_history,
-                'tracked_changes': [change.to_dict() for change in tracked_changes],
-                'total_git_commits': len(git_history),
-                'total_tracked_changes': len(tracked_changes)
-            }
-            
-        except Exception as e:
-            logger.error(f"Error getting change history: {e}")
-            return {'error': str(e)}
-    
-    def create_feature_branch(self, feature_name: str) -> bool:
-        """Create a new feature branch"""
-        try:
-            branch_name = f"feature/{feature_name}"
-            success = self.branch_manager.create_branch(branch_name)
-            
-            if success:
-                self.stats['branches_created'] += 1
-                logger.info(f"Created feature branch: {branch_name}")
-            
-            return success
-            
-        except Exception as e:
-            logger.error(f"Error creating feature branch: {e}")
-            return False
-    
-    def merge_feature_branch(self, feature_name: str, target_branch: str = 'main') -> bool:
-        """Merge feature branch into target branch"""
-        try:
-            feature_branch = f"feature/{feature_name}"
-            
-            # Switch to target branch
-            if not self.branch_manager.switch_branch(target_branch):
-                return False
-            
-            # Merge feature branch
-            success = self.branch_manager.merge_branch(feature_branch, target_branch)
-            
-            if success:
-                # Delete feature branch
-                self.branch_manager.delete_branch(feature_branch)
-                logger.info(f"Merged feature branch {feature_branch} into {target_branch}")
-            
-            return success
-            
-        except Exception as e:
-            logger.error(f"Error merging feature branch: {e}")
-            return False
-    
-    def resolve_conflicts(self, file_path: str) -> bool:
-        """Resolve merge conflicts in a file"""
-        try:
-            # Get file diff to see conflicts
-            diff_content = self.change_tracker.get_file_diff(file_path)
-            if not diff_content:
-                return True  # No conflicts
-            
-            # Check for conflict markers
-            if '<<<<<<< HEAD' in diff_content:
-                logger.warning(f"Conflicts detected in {file_path}")
-                # In a real implementation, this would open a conflict resolution tool
-                # For now, we'll just log the conflict
-                self.stats['conflicts_resolved'] += 1
-                return True
-            
-            return True
-            
-        except Exception as e:
-            logger.error(f"Error resolving conflicts: {e}")
-            return False
-    
-    def export_repository_data(self, export_path: str) -> bool:
-        """Export repository data and history"""
-        try:
-            export_file = Path(export_path) / "git_integration_export.json"
-            
-            # Get all data
-            status = self.get_repository_status()
-            history = self.get_change_history(100)  # Export more history
-            
-            export_data = {
-                'export_time': datetime.now().isoformat(),
-                'repository_status': status,
-                'change_history': history,
-                'integration_stats': self.stats
-            }
-            
-            # Write to file
-            import json
-            with open(export_file, 'w') as f:
-                json.dump(export_data, f, indent=2)
-            
-            logger.info(f"Exported repository data to {export_file}")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Error exporting repository data: {e}")
-            return False
-    
-    def get_integration_stats(self) -> Dict[str, Any]:
-        """Get comprehensive integration statistics"""
-        return {
-            'integration_stats': self.stats.copy(),
-            'git_operations_stats': self.git_operations.get_operation_stats(),
-            'branch_manager_stats': self.branch_manager.get_branch_stats(),
-            'change_tracker_stats': self.change_tracker.get_tracking_stats(),
-            'repository_path': str(self.project_path),
-            'is_git_repo': self.git_operations.is_git_repo,
-            'current_branch': self.branch_manager.get_current_branch()
-        }
-    
-    def is_healthy(self) -> bool:
-        """Check if git integration is healthy"""
-        try:
-            # Check all components
-            if not self.git_operations.is_healthy():
-                return False
-            
-            if not self.change_tracker.is_healthy():
-                return False
-            
-            if not self.branch_manager.is_healthy():
-                return False
-            
-            return True
-            
-        except Exception as e:
-            logger.error(f"Health check failed: {e}")
-            return False
-    
-    def get_health_indicators(self) -> Dict[str, Any]:
-        """Get detailed health indicators"""
-        try:
-            return {
-                'integration_healthy': self.is_healthy(),
-                'git_operations_healthy': self.git_operations.is_healthy(),
-                'change_tracker_healthy': self.change_tracker.is_healthy(),
-                'branch_manager_healthy': self.branch_manager.is_healthy(),
-                'repository_path': str(self.project_path),
-                'is_git_repo': self.git_operations.is_git_repo,
-                'current_branch': self.branch_manager.get_current_branch(),
-                'integration_stats': self.stats,
-                'last_sync': self.stats['last_sync']
-            }
-        except Exception as e:
-            return {
-                'integration_healthy': False,
-                'error': str(e)
-            }
+        logger.info("Metrics reset for git integration module")
