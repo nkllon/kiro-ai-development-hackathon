@@ -19,7 +19,7 @@ from .reflective_module import (
 logger = logging.getLogger(__name__)
 
 
-class Unknown(ReflectiveModule):
+class AuthSessionManager(ReflectiveModule):
     """Unknown with RM-DDD compliance with RM-DDD compliance"""
     
     def __init__(selfself):

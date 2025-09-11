@@ -4,6 +4,31 @@ from typing import Dict, Any, List, Optional
 from pathlib import Path
 import logging
 
+# Define ValidationResult class locally
+class ValidationResult:
+    """Validation result structure"""
+    def __init__(self, is_valid: bool = True, errors: List[str] = None, warnings: List[str] = None):
+        self.is_valid = is_valid
+        self.errors = errors or []
+        self.warnings = warnings or []
+
+# Define MediaFile class locally
+class MediaFile:
+    """Media file structure"""
+    def __init__(self, path: str, file_type: str, size: int = 0):
+        self.path = path
+        self.file_type = file_type
+        self.size = size
+
+# Define MediaType enum locally
+class MediaType:
+    """Media type enumeration"""
+    IMAGE = "image"
+    VIDEO = "video"
+    AUDIO = "audio"
+    DOCUMENT = "document"
+    OTHER = "other"
+
 logger = logging.getLogger(__name__)
 
 # Define PreviewData class

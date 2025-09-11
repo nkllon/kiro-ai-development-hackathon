@@ -15,7 +15,7 @@ from .project_manager import DevpostProjectManager
 from .sync_manager import DevpostSyncManager
 from .preview_generator import DevpostPreviewGenerator
 from .api_client import DevPostAPIClient
-from .auth_service import DevPostAuthService
+from .auth_service import DevpostAuthService
 from .config import DevpostConfig
 
 __all__ = [
@@ -23,6 +23,6 @@ __all__ = [
     'DevpostSyncManager',
     'DevpostPreviewGenerator',
     'DevPostAPIClient',
-    'DevPostAuthService',
+    'DevpostAuthService',
     'DevpostConfig'
 ]

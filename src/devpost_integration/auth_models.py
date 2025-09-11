@@ -10,7 +10,7 @@ import hashlib
 import secrets
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List, Tuple
 import logging
 from .reflective_module import (
     ReflectiveModule, ModuleHealth, ModuleStatus, ModuleCapability, 

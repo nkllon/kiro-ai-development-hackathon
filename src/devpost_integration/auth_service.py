@@ -272,3 +272,6 @@ class DevpostAuthService(ReflectiveModule):
         self._failed_auths = 0
         self._start_time = datetime.now()
         logger.info("Metrics reset for auth service module")
+
+# Export the main class
+__all__ = ['DevPostAuthService']
