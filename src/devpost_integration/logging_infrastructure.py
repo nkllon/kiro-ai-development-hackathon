@@ -215,30 +215,65 @@ class LoggingInfrastructure(ReflectiveModule):
         return ["reflective_module"]
     
     def check_health(self) -> ModuleHealth:
-        """Perform comprehensive health check"""
+        """Perform comprehensive health check with graceful degradation"""
         issues = []
         
-        # Check logger configuration
-        if not self.logger.handlers:
-            issues.append("No logging handlers configured")
+        # Check logger configuration with graceful degradation
+        try:
+            if not self.logger.handlers:
+                issues.append("No logging handlers configured")
+                # Graceful degradation: try to add a basic handler
+                try:
+                    self.logger.addHandler(logging.StreamHandler())
+                    issues.append("Added fallback console handler")
+                except Exception as e:
+                    issues.append(f"Failed to add fallback handler: {e}")
+        except Exception as e:
+            issues.append(f"Error checking logger configuration: {e}")
         
-        # Check log file accessibility
-        if self.config.enable_file:
-            log_path = Path(self.config.log_file)
-            if not log_path.parent.exists():
-                issues.append(f"Log directory does not exist: {log_path.parent}")
+        # Check log file accessibility with graceful degradation
+        try:
+            if self.config.enable_file:
+                log_path = Path(self.config.log_file)
+                if not log_path.parent.exists():
+                    issues.append(f"Log directory does not exist: {log_path.parent}")
+                    # Graceful degradation: try to create the directory
+                    try:
+                        log_path.parent.mkdir(parents=True, exist_ok=True)
+                        issues.append("Created missing log directory")
+                    except Exception as e:
+                        issues.append(f"Failed to create log directory: {e}")
+        except Exception as e:
+            issues.append(f"Error checking log file accessibility: {e}")
         
-        # Check log events storage
-        if len(self.log_events) > 10000:  # Arbitrary threshold
-            issues.append("Too many log events stored, consider clearing")
+        # Check log events storage with graceful degradation
+        try:
+            if len(self.log_events) > 10000:  # Arbitrary threshold
+                issues.append("Too many log events stored, consider clearing")
+                # Graceful degradation: clear old events
+                try:
+                    self.log_events = self.log_events[-5000:]  # Keep last 5000 events
+                    issues.append("Cleared old log events")
+                except Exception as e:
+                    issues.append(f"Failed to clear old events: {e}")
+        except Exception as e:
+            issues.append(f"Error checking log events storage: {e}")
         
-        status = ModuleStatus.HEALTHY if not issues else ModuleStatus.DEGRADED
-        score = 100 - len(issues) * 10
+        # Determine status with graceful degradation consideration
+        if not issues:
+            status = ModuleStatus.HEALTHY
+            score = 1.0
+        elif any("graceful degradation" in issue.lower() or "added fallback" in issue.lower() or "created" in issue.lower() for issue in issues):
+            status = ModuleStatus.DEGRADED
+            score = 0.7  # Still functional with degraded performance
+        else:
+            status = ModuleStatus.UNHEALTHY
+            score = 0.3
         
         return ModuleHealth(
             module_id=self.module_id,
             status=status,
-            health_score=max(0, score) / 100.0,  # Convert to 0.0-1.0 range
+            health_score=score,
             issues=issues,
             capabilities=self.get_capabilities(),
             dependencies=self.get_dependencies(),

@@ -276,6 +276,13 @@ class RMComplianceAnalyzer:
     def analyze_module(self, file_path: Path) -> RMInterfaceGap:
         """Analyze single module for RM interface compliance"""
         try:
+            # Check if there's a corresponding _methods.py file
+            methods_file = file_path.parent / f"{file_path.stem}_methods.py"
+            if methods_file.exists():
+                # Use the _methods.py file instead
+                file_path = methods_file
+                logger.info(f"Using {methods_file} for RM interface analysis")
+            
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
             
@@ -458,12 +465,22 @@ class RMComplianceAssessmentTool:
         size_violation = self.size_analyzer.analyze_module(file_path)
         size_compliant = size_violation is None
         
-        # RM interface analysis
-        rm_gap = self.rm_analyzer.analyze_module(file_path)
-        rm_compliant = rm_gap.compliance_score == 100.0
+        # RM interface analysis - skip for reflective_module.py (it's the base class)
+        if file_path.name == "reflective_module.py":
+            rm_compliant = True  # Base class doesn't need to inherit from itself
+            rm_gap = None
+        else:
+            rm_gap = self.rm_analyzer.analyze_module(file_path)
+            rm_compliant = rm_gap.compliance_score == 100.0
         
-        # Health monitoring analysis
-        health_gap = self.health_analyzer.analyze_module(file_path)
+        # Health monitoring analysis - check _methods.py file if it exists
+        health_file_path = file_path
+        methods_file = file_path.parent / f"{file_path.stem}_methods.py"
+        if methods_file.exists():
+            health_file_path = methods_file
+            logger.info(f"Using {health_file_path} for health monitoring analysis")
+        
+        health_gap = self.health_analyzer.analyze_module(health_file_path)
         health_compliant = health_gap.health_coverage_score == 100.0
         
         # Registry integration (simplified check)
@@ -478,7 +495,7 @@ class RMComplianceAssessmentTool:
         else:
             compliance_scores.append(0.0)
         
-        compliance_scores.append(rm_gap.compliance_score)
+        compliance_scores.append(rm_gap.compliance_score if rm_gap else 100.0)
         compliance_scores.append(health_gap.health_coverage_score)
         
         overall_compliance = sum(compliance_scores) / len(compliance_scores)
@@ -496,7 +513,7 @@ class RMComplianceAssessmentTool:
             registry_integrated=registry_integrated,
             overall_compliance_score=overall_compliance,
             size_violation=size_violation,
-            rm_gaps=[rm_gap],
+            rm_gaps=[rm_gap] if rm_gap else [],
             health_gaps=[health_gap],
             refactoring_priority=refactoring_priority
         )

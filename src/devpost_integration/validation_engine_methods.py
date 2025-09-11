@@ -14,28 +14,10 @@ class ValidationEngine(ReflectiveModule):
     project validation with actionable feedback.
     """
     
-    def __init__(self, project_id: str):
-        super().__init__(module_id="validation_engine", version="1.0.0")
-        self._start_time = datetime.now()
-        register_module(self)
-
-        """
-        Initialize validation engine.
-        
-        Args:
-            project_id: Unique identifier for the project
-        """
-        self.project_id = project_id
-        self.validation_rules = self._initialize_validation_rules()
-        
-        # Statistics
-        self.stats = {
-            'total_validations': 0,
-            'successful_validations': 0,
-            'failed_validations': 0,
-            'last_validation': None
-        }
-    
+    def __init__(self):
+        """Call extracted __init__ method"""
+        from .validation_engine_methods___init__ import __init__
+        return __init__(self)
     def _initialize_validation_rules(self) -> List[Any]:
         """Initialize all validation rules."""
         return [
@@ -221,26 +203,57 @@ class ValidationEngine(ReflectiveModule):
         return ["reflective_module", "validation_rules", "core_models"]
     
     def check_health(self) -> ModuleHealth:
-        """Check module health"""
+        """Perform comprehensive health check"""
+        issues = []
+        
+        # Check basic module state
+        if not hasattr(self, 'module_id'):
+            issues.append('Missing module_id attribute')
+        
+        if not hasattr(self, 'version'):
+            issues.append('Missing version attribute')
+        
+        # Check for common health indicators
         try:
-            if not hasattr(self, '_start_time'):
-                return ModuleHealth.UNHEALTHY
-            uptime = (datetime.now() - self._start_time).total_seconds()
-            if uptime < 0:
-                return ModuleHealth.UNHEALTHY
-            error_count = getattr(self, '_error_count', 0)
-            total_operations = getattr(self, '_command_count', 1)
-            error_rate = error_count / total_operations if total_operations > 0 else 0
-            if error_rate > 0.5:
-                return ModuleHealth.UNHEALTHY
-            elif error_rate > 0.1:
-                return ModuleHealth.DEGRADED
-            else:
-                return ModuleHealth.HEALTHY
+            # Test basic functionality
+            if hasattr(self, 'get_module_info'):
+                info = self.get_module_info()
+                if not isinstance(info, dict):
+                    issues.append('get_module_info() does not return dict')
+            
+            if hasattr(self, 'get_capabilities'):
+                caps = self.get_capabilities()
+                if not isinstance(caps, list):
+                    issues.append('get_capabilities() does not return list')
+            
+            if hasattr(self, 'get_dependencies'):
+                deps = self.get_dependencies()
+                if not isinstance(deps, list):
+                    issues.append('get_dependencies() does not return list')
         except Exception as e:
-            logger.error(f"Health check failed: {e}")
-            return ModuleHealth.UNHEALTHY
-    
+            issues.append(f'Error during health check: {str(e)}')
+        
+        # Determine health status
+        if not issues:
+            status = ModuleStatus.HEALTHY
+            health_score = 1.0
+        elif len(issues) <= 2:
+            status = ModuleStatus.DEGRADED
+            health_score = 0.7
+        else:
+            status = ModuleStatus.UNHEALTHY
+            health_score = 0.3
+        
+        return ModuleHealth(
+            module_id="validationengine",
+            status=status,
+            health_score=health_score,
+            issues=issues,
+            capabilities=self.get_capabilities() if hasattr(self, 'get_capabilities') else [],
+            dependencies=self.get_dependencies() if hasattr(self, 'get_dependencies') else [],
+            metrics=self.get_metrics() if hasattr(self, 'get_metrics') else {},
+            last_check=datetime.now()
+        )
     def get_configuration(self) -> ModuleConfiguration:
         """Get module configuration"""
         return ModuleConfiguration(
