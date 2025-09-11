@@ -1,0 +1,647 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>packer-systo: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/your-org/packer-systo-go/cmd/packer-systo/main.go (0.0%)</option>
+				
+				<option value="file1">github.com/your-org/packer-systo-go/pkg/bridge/ffi.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">no coverage</span>
+				<span class="cov1">low coverage</span>
+				<span class="cov2">*</span>
+				<span class="cov3">*</span>
+				<span class="cov4">*</span>
+				<span class="cov5">*</span>
+				<span class="cov6">*</span>
+				<span class="cov7">*</span>
+				<span class="cov8">*</span>
+				<span class="cov9">*</span>
+				<span class="cov10">high coverage</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">// Package main provides the CLI entry point for the Packer Systo Go toolkit
+package main
+
+import (
+        "context"
+        "fmt"
+        "os"
+
+        "github.com/spf13/cobra"
+        "github.com/spf13/viper"
+        "go.uber.org/zap"
+        "go.uber.org/zap/zapcore"
+)
+
+var (
+        // Version information (set by build)
+        version = "dev"
+        commit  = "unknown"
+        date    = "unknown"
+        
+        // Global logger
+        logger *zap.Logger
+        
+        // Global configuration
+        cfgFile string
+        verbose bool
+        debug   bool
+)
+
+// rootCmd represents the base command when called without any subcommands
+var rootCmd = &amp;cobra.Command{
+        Use:   "packer-systo",
+        Short: "Systematic improvements for HashiCorp Packer",
+        Long: `Packer Systo provides systematic improvements to HashiCorp Packer through:
+
+• Intelligent delusion detection and pattern recognition
+• Automatic recovery engines for common build failures  
+• Multi-dimensional validation with confidence scoring
+• Enhanced error messages and diagnostics
+• Systematic build optimization and caching
+
+This tool applies Beast Mode Framework principles to make Packer
+easier to understand, leverage, and use for all skill levels.`,
+        PersistentPreRun: func(cmd *cobra.Command, args []string) <span class="cov0" title="0">{
+                initLogger()
+        }</span>,
+}
+
+// versionCmd represents the version command
+var versionCmd = &amp;cobra.Command{
+        Use:   "version",
+        Short: "Print version information",
+        Run: func(cmd *cobra.Command, args []string) <span class="cov0" title="0">{
+                fmt.Printf("packer-systo version %s\n", version)
+                fmt.Printf("commit: %s\n", commit)
+                fmt.Printf("built: %s\n", date)
+        }</span>,
+}
+
+// analyzeCmd represents the analyze command
+var analyzeCmd = &amp;cobra.Command{
+        Use:   "analyze [config-file]",
+        Short: "Analyze Packer configuration for delusions and issues",
+        Long: `Analyze performs comprehensive delusion detection on Packer configurations:
+
+• Syntax delusions: Configuration syntax errors and inconsistencies
+• Security delusions: Security misconfigurations and vulnerabilities  
+• Architecture delusions: Architectural anti-patterns and issues
+• Build delusions: Common build failure patterns and problems
+
+The analysis provides confidence scores, remediation suggestions,
+and learning opportunities for systematic improvement.`,
+        Args: cobra.ExactArgs(1),
+        RunE: func(cmd *cobra.Command, args []string) error <span class="cov0" title="0">{
+                configFile := args[0]
+                logger.Info("Starting configuration analysis", 
+                        zap.String("config_file", configFile))
+                
+                // TODO: Implement actual analysis logic
+                fmt.Printf("🔍 Analyzing Packer configuration: %s\n", configFile)
+                fmt.Println("📊 Delusion detection: READY")
+                fmt.Println("🎯 Pattern recognition: ACTIVE") 
+                fmt.Println("🧠 Systematic analysis: IN PROGRESS...")
+                
+                // Mock analysis result
+                fmt.Println("\n✅ Analysis Complete!")
+                fmt.Println("📈 Confidence Score: 95%")
+                fmt.Println("🚨 Issues Found: 0 critical, 1 medium, 2 low")
+                fmt.Println("💡 Recommendations: 3 optimization opportunities")
+                
+                return nil
+        }</span>,
+}
+
+// validateCmd represents the validate command
+var validateCmd = &amp;cobra.Command{
+        Use:   "validate [config-file]",
+        Short: "Perform multi-dimensional validation of Packer configuration",
+        Long: `Validate performs comprehensive multi-dimensional validation:
+
+• Functionality: Does the configuration work as expected?
+• Performance: Is the configuration optimized for speed and efficiency?
+• Security: Does the configuration follow security best practices?
+• Compliance: Does the configuration meet organizational standards?
+
+Results include confidence scores, validation certificates,
+and detailed audit trails for systematic quality assurance.`,
+        Args: cobra.ExactArgs(1),
+        RunE: func(cmd *cobra.Command, args []string) error <span class="cov0" title="0">{
+                configFile := args[0]
+                logger.Info("Starting configuration validation",
+                        zap.String("config_file", configFile))
+                
+                // TODO: Implement actual validation logic
+                fmt.Printf("🔬 Validating Packer configuration: %s\n", configFile)
+                fmt.Println("⚡ Multi-dimensional analysis: ACTIVE")
+                fmt.Println("🛡️  Security validation: RUNNING")
+                fmt.Println("🚀 Performance analysis: RUNNING")
+                fmt.Println("📋 Compliance check: RUNNING")
+                
+                // Mock validation result
+                fmt.Println("\n✅ Validation Complete!")
+                fmt.Println("📊 Functionality: 98%")
+                fmt.Println("🚀 Performance: 85%") 
+                fmt.Println("🛡️  Security: 92%")
+                fmt.Println("📋 Compliance: 100%")
+                fmt.Println("🎯 Overall Score: 94%")
+                
+                return nil
+        }</span>,
+}
+
+// diagnoseCmd represents the diagnose command
+var diagnoseCmd = &amp;cobra.Command{
+        Use:   "diagnose [build-log]",
+        Short: "Diagnose Packer build failures and generate recovery plans",
+        Long: `Diagnose analyzes Packer build failures and provides systematic recovery:
+
+• Root cause analysis of build failures
+• Pattern recognition for common failure modes
+• Automatic recovery plan generation
+• Confidence scoring for recovery actions
+• Learning from recovery operations
+
+The diagnosis includes detailed evidence, recommendations,
+and systematic approaches to resolve build issues.`,
+        Args: cobra.ExactArgs(1),
+        RunE: func(cmd *cobra.Command, args []string) error <span class="cov0" title="0">{
+                buildLog := args[0]
+                logger.Info("Starting build failure diagnosis",
+                        zap.String("build_log", buildLog))
+                
+                // TODO: Implement actual diagnosis logic
+                fmt.Printf("🔧 Diagnosing build failure: %s\n", buildLog)
+                fmt.Println("🕵️  Root cause analysis: ACTIVE")
+                fmt.Println("🎯 Pattern matching: RUNNING")
+                fmt.Println("🛠️  Recovery planning: GENERATING")
+                
+                // Mock diagnosis result
+                fmt.Println("\n✅ Diagnosis Complete!")
+                fmt.Println("🎯 Root Cause: SSH connection timeout")
+                fmt.Println("📊 Confidence: 87%")
+                fmt.Println("🛠️  Recovery Plan: 3 steps identified")
+                fmt.Println("⏱️  Estimated Fix Time: 5 minutes")
+                
+                return nil
+        }</span>,
+}
+
+// optimizeCmd represents the optimize command
+var optimizeCmd = &amp;cobra.Command{
+        Use:   "optimize [config-file]",
+        Short: "Optimize Packer configuration for performance and efficiency",
+        Long: `Optimize provides systematic performance improvements:
+
+• Build time optimization through intelligent caching
+• Resource usage optimization and efficiency improvements
+• Parallelization opportunities and bottleneck identification
+• Cache management and invalidation strategies
+• Performance profiling and systematic recommendations
+
+Results include specific optimization suggestions with
+confidence scores and estimated improvement metrics.`,
+        Args: cobra.ExactArgs(1),
+        RunE: func(cmd *cobra.Command, args []string) error <span class="cov0" title="0">{
+                configFile := args[0]
+                logger.Info("Starting configuration optimization",
+                        zap.String("config_file", configFile))
+                
+                // TODO: Implement actual optimization logic
+                fmt.Printf("⚡ Optimizing Packer configuration: %s\n", configFile)
+                fmt.Println("📊 Performance analysis: RUNNING")
+                fmt.Println("🎯 Bottleneck detection: ACTIVE")
+                fmt.Println("💾 Cache optimization: ANALYZING")
+                fmt.Println("🔄 Parallelization: EVALUATING")
+                
+                // Mock optimization result
+                fmt.Println("\n✅ Optimization Complete!")
+                fmt.Println("⚡ Potential Speed Improvement: 40%")
+                fmt.Println("💾 Cache Efficiency Gain: 25%")
+                fmt.Println("🎯 Optimization Opportunities: 5 identified")
+                fmt.Println("📈 Confidence Score: 91%")
+                
+                return nil
+        }</span>,
+}
+
+// initConfig reads in config file and ENV variables if set
+func initConfig() <span class="cov0" title="0">{
+        if cfgFile != "" </span><span class="cov0" title="0">{
+                // Use config file from the flag
+                viper.SetConfigFile(cfgFile)
+        }</span> else<span class="cov0" title="0"> {
+                // Find home directory
+                home, err := os.UserHomeDir()
+                cobra.CheckErr(err)
+
+                // Search config in home directory with name ".packer-systo" (without extension)
+                viper.AddConfigPath(home)
+                viper.AddConfigPath(".")
+                viper.SetConfigType("yaml")
+                viper.SetConfigName(".packer-systo")
+        }</span>
+
+        <span class="cov0" title="0">viper.AutomaticEnv() // read in environment variables that match
+
+        // If a config file is found, read it in
+        if err := viper.ReadInConfig(); err == nil </span><span class="cov0" title="0">{
+                logger.Info("Using config file", zap.String("file", viper.ConfigFileUsed()))
+        }</span>
+}
+
+// initLogger initializes the global logger based on configuration
+func initLogger() <span class="cov0" title="0">{
+        var config zap.Config
+        
+        if debug </span><span class="cov0" title="0">{
+                config = zap.NewDevelopmentConfig()
+                config.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+        }</span> else<span class="cov0" title="0"> if verbose </span><span class="cov0" title="0">{
+                config = zap.NewProductionConfig()
+                config.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
+        }</span> else<span class="cov0" title="0"> {
+                config = zap.NewProductionConfig()
+                config.Level = zap.NewAtomicLevelAt(zap.WarnLevel)
+        }</span>
+        
+        // Customize encoder for better CLI output
+        <span class="cov0" title="0">config.EncoderConfig.TimeKey = "timestamp"
+        config.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+        config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
+        
+        var err error
+        logger, err = config.Build()
+        if err != nil </span><span class="cov0" title="0">{
+                fmt.Fprintf(os.Stderr, "Failed to initialize logger: %v\n", err)
+                os.Exit(1)
+        }</span>
+}
+
+func init() <span class="cov0" title="0">{
+        cobra.OnInitialize(initConfig)
+
+        // Global flags
+        rootCmd.PersistentFlags().StringVar(&amp;cfgFile, "config", "", "config file (default is $HOME/.packer-systo.yaml)")
+        rootCmd.PersistentFlags().BoolVarP(&amp;verbose, "verbose", "v", false, "verbose output")
+        rootCmd.PersistentFlags().BoolVar(&amp;debug, "debug", false, "debug output")
+
+        // Add subcommands
+        rootCmd.AddCommand(versionCmd)
+        rootCmd.AddCommand(analyzeCmd)
+        rootCmd.AddCommand(validateCmd)
+        rootCmd.AddCommand(diagnoseCmd)
+        rootCmd.AddCommand(optimizeCmd)
+}</span>
+
+func main() <span class="cov0" title="0">{
+        ctx := context.Background()
+        
+        // Execute the root command
+        if err := rootCmd.ExecuteContext(ctx); err != nil </span><span class="cov0" title="0">{
+                if logger != nil </span><span class="cov0" title="0">{
+                        logger.Error("Command execution failed", zap.Error(err))
+                }</span> else<span class="cov0" title="0"> {
+                        fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+                }</span>
+                <span class="cov0" title="0">os.Exit(1)</span>
+        }
+}</pre>
+		
+		<pre class="file" id="file1" style="display: none">// Package bridge provides FFI (Foreign Function Interface) capabilities
+// for Go-Python interoperability in the Packer Systo ecosystem
+package bridge
+
+/*
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+// C bridge functions for Python FFI
+typedef struct {
+    char* data;
+    int length;
+    int error_code;
+    char* error_message;
+} BridgeResult;
+
+// Free memory allocated by bridge functions
+void free_bridge_result(BridgeResult* result) {
+    if (result-&gt;data) {
+        free(result-&gt;data);
+        result-&gt;data = NULL;
+    }
+    if (result-&gt;error_message) {
+        free(result-&gt;error_message);
+        result-&gt;error_message = NULL;
+    }
+}
+*/
+import "C"
+
+import (
+        "context"
+        "encoding/json"
+        "fmt"
+        "unsafe"
+
+        "github.com/your-org/packer-systo-go/pkg/interfaces"
+)
+
+// BridgeAPI provides the main API for Python-Go bridge communication
+type BridgeAPI struct {
+        delusionDetector interfaces.DelusionDetector
+        recoveryEngine   interfaces.RecoveryEngine
+        validationAgent  interfaces.ValidationAgent
+}
+
+// NewBridgeAPI creates a new bridge API instance
+func NewBridgeAPI(
+        detector interfaces.DelusionDetector,
+        recovery interfaces.RecoveryEngine,
+        validator interfaces.ValidationAgent,
+) *BridgeAPI <span class="cov0" title="0">{
+        return &amp;BridgeAPI{
+                delusionDetector: detector,
+                recoveryEngine:   recovery,
+                validationAgent:  validator,
+        }
+}</span>
+
+// createBridgeResult creates a C bridge result from Go data
+func createBridgeResult(data interface{}, err error) *C.BridgeResult <span class="cov0" title="0">{
+        result := (*C.BridgeResult)(C.malloc(C.sizeof_BridgeResult))
+        
+        if err != nil </span><span class="cov0" title="0">{
+                result.error_code = C.int(1)
+                errMsg := C.CString(err.Error())
+                result.error_message = errMsg
+                result.data = nil
+                result.length = 0
+                return result
+        }</span>
+        
+        <span class="cov0" title="0">jsonData, jsonErr := json.Marshal(data)
+        if jsonErr != nil </span><span class="cov0" title="0">{
+                result.error_code = C.int(2)
+                errMsg := C.CString(fmt.Sprintf("JSON marshal error: %v", jsonErr))
+                result.error_message = errMsg
+                result.data = nil
+                result.length = 0
+                return result
+        }</span>
+        
+        <span class="cov0" title="0">result.error_code = 0
+        result.error_message = nil
+        result.data = C.CString(string(jsonData))
+        result.length = C.int(len(jsonData))
+        
+        return result</span>
+}
+
+// parsePackerConfig parses JSON string to PackerConfig
+func parsePackerConfig(jsonStr string) (*interfaces.PackerConfig, error) <span class="cov0" title="0">{
+        var config interfaces.PackerConfig
+        err := json.Unmarshal([]byte(jsonStr), &amp;config)
+        return &amp;config, err
+}</span>
+
+//export analyze_configuration
+func analyze_configuration(configJSON *C.char) *C.BridgeResult <span class="cov0" title="0">{
+        goConfigJSON := C.GoString(configJSON)
+        
+        config, err := parsePackerConfig(goConfigJSON)
+        if err != nil </span><span class="cov0" title="0">{
+                return createBridgeResult(nil, fmt.Errorf("failed to parse config: %v", err))
+        }</span>
+        
+        // This would be injected by the actual implementation
+        // For now, we create a mock bridge API
+        <span class="cov0" title="0">bridgeAPI := &amp;BridgeAPI{}
+        if bridgeAPI.delusionDetector == nil </span><span class="cov0" title="0">{
+                return createBridgeResult(nil, fmt.Errorf("delusion detector not initialized"))
+        }</span>
+        
+        <span class="cov0" title="0">ctx := context.Background()
+        report, err := bridgeAPI.delusionDetector.AnalyzeConfiguration(ctx, config)
+        
+        return createBridgeResult(report, err)</span>
+}
+
+//export detect_patterns
+func detect_patterns(hclContent *C.char) *C.BridgeResult <span class="cov0" title="0">{
+        goHCL := C.GoString(hclContent)
+        
+        bridgeAPI := &amp;BridgeAPI{}
+        if bridgeAPI.delusionDetector == nil </span><span class="cov0" title="0">{
+                return createBridgeResult(nil, fmt.Errorf("delusion detector not initialized"))
+        }</span>
+        
+        <span class="cov0" title="0">ctx := context.Background()
+        patterns, err := bridgeAPI.delusionDetector.DetectPatterns(ctx, goHCL)
+        
+        return createBridgeResult(patterns, err)</span>
+}
+
+//export diagnose_failure
+func diagnose_failure(buildLog *C.char, configJSON *C.char) *C.BridgeResult <span class="cov0" title="0">{
+        goBuildLog := C.GoString(buildLog)
+        goConfigJSON := C.GoString(configJSON)
+        
+        config, err := parsePackerConfig(goConfigJSON)
+        if err != nil </span><span class="cov0" title="0">{
+                return createBridgeResult(nil, fmt.Errorf("failed to parse config: %v", err))
+        }</span>
+        
+        <span class="cov0" title="0">bridgeAPI := &amp;BridgeAPI{}
+        if bridgeAPI.recoveryEngine == nil </span><span class="cov0" title="0">{
+                return createBridgeResult(nil, fmt.Errorf("recovery engine not initialized"))
+        }</span>
+        
+        <span class="cov0" title="0">ctx := context.Background()
+        diagnosis, err := bridgeAPI.recoveryEngine.DiagnoseFailure(ctx, goBuildLog, config)
+        
+        return createBridgeResult(diagnosis, err)</span>
+}
+
+//export validate_configuration
+func validate_configuration(configJSON *C.char) *C.BridgeResult <span class="cov0" title="0">{
+        goConfigJSON := C.GoString(configJSON)
+        
+        config, err := parsePackerConfig(goConfigJSON)
+        if err != nil </span><span class="cov0" title="0">{
+                return createBridgeResult(nil, fmt.Errorf("failed to parse config: %v", err))
+        }</span>
+        
+        <span class="cov0" title="0">bridgeAPI := &amp;BridgeAPI{}
+        if bridgeAPI.validationAgent == nil </span><span class="cov0" title="0">{
+                return createBridgeResult(nil, fmt.Errorf("validation agent not initialized"))
+        }</span>
+        
+        <span class="cov0" title="0">ctx := context.Background()
+        report, err := bridgeAPI.validationAgent.ValidateConfiguration(ctx, config)
+        
+        return createBridgeResult(report, err)</span>
+}
+
+//export free_result
+func free_result(result *C.BridgeResult) <span class="cov0" title="0">{
+        if result != nil </span><span class="cov0" title="0">{
+                C.free_bridge_result(result)
+                C.free(unsafe.Pointer(result))
+        }</span>
+}
+
+// SetGlobalBridgeAPI sets the global bridge API instance for FFI calls
+// This should be called during initialization
+var globalBridgeAPI *BridgeAPI
+
+func SetGlobalBridgeAPI(api *BridgeAPI) <span class="cov0" title="0">{
+        globalBridgeAPI = api
+}</span>
+
+// GetGlobalBridgeAPI returns the global bridge API instance
+func GetGlobalBridgeAPI() *BridgeAPI <span class="cov0" title="0">{
+        return globalBridgeAPI
+}</span>
+
+// BridgeConfig represents configuration for the bridge
+type BridgeConfig struct {
+        LogLevel    string `json:"log_level"`
+        Timeout     int    `json:"timeout_seconds"`
+        MaxRetries  int    `json:"max_retries"`
+        EnableCache bool   `json:"enable_cache"`
+}
+
+// InitializeBridge initializes the Go-Python bridge with the given configuration
+//export initialize_bridge
+func initialize_bridge(configJSON *C.char) *C.BridgeResult <span class="cov0" title="0">{
+        goConfigJSON := C.GoString(configJSON)
+        
+        var config BridgeConfig
+        err := json.Unmarshal([]byte(goConfigJSON), &amp;config)
+        if err != nil </span><span class="cov0" title="0">{
+                return createBridgeResult(nil, fmt.Errorf("failed to parse bridge config: %v", err))
+        }</span>
+        
+        // Initialize bridge with configuration
+        // This would set up logging, timeouts, etc.
+        
+        <span class="cov0" title="0">result := map[string]interface{}{
+                "status":  "initialized",
+                "config":  config,
+                "version": "1.0.0",
+        }
+        
+        return createBridgeResult(result, nil)</span>
+}
+
+// GetBridgeInfo returns information about the bridge
+//export get_bridge_info
+func get_bridge_info() *C.BridgeResult <span class="cov0" title="0">{
+        info := map[string]interface{}{
+                "version":     "1.0.0",
+                "go_version":  "1.21",
+                "features":    []string{"delusion_detection", "recovery_engine", "validation"},
+                "status":      "ready",
+                "initialized": globalBridgeAPI != nil,
+        }
+        
+        return createBridgeResult(info, nil)
+}</span>
+
+func main() {<span class="cov0" title="0">
+        // Required for CGO builds
+}</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

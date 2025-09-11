@@ -11,14 +11,18 @@ The Requirements ARE the Solution.
 
 __version__ = "0.1.0"
 
-from .cli import cli
 from .project_manager import DevpostProjectManager
 from .sync_manager import DevpostSyncManager
 from .preview_generator import DevpostPreviewGenerator
+from .api_client import DevPostAPIClient
+from .auth_service import DevPostAuthService
+from .config import DevpostConfig
 
 __all__ = [
-    'cli',
     'DevpostProjectManager', 
     'DevpostSyncManager',
-    'DevpostPreviewGenerator'
+    'DevpostPreviewGenerator',
+    'DevPostAPIClient',
+    'DevPostAuthService',
+    'DevpostConfig'
 ]

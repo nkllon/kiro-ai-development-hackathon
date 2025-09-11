@@ -1,7 +1,7 @@
 # Packer Systo Multi-Language Build System
 # Systematic build orchestration for Go and Python components
 
-.PHONY: help build test clean install dev-setup go-build python-build docker-build
+.PHONY: help build test clean install dev-setup go-build python-build docker-build devpost-cli devpost-interrogate devpost-status
 .DEFAULT_GOAL := help
 
 # Build configuration
@@ -91,6 +91,45 @@ python-test: ## Run Python tests
 	@echo "$(BLUE)🧪 Running Python tests...$(RESET)"
 	@cd $(PYTHON_MODULE) && $(VENV_DIR)/bin/pytest tests/ -v --cov=src --cov-report=html --cov-report=term
 	@echo "$(GREEN)✅ Python tests complete with coverage report$(RESET)"
+
+# Validation targets
+validate: validate-modules validate-imports validate-components ## Run all validations
+	@echo "$(GREEN)🔍 Systematic validation complete!$(RESET)"
+
+validate-modules: ## Validate module completeness
+	@echo "$(BLUE)🔍 Validating module completeness...$(RESET)"
+	@uv run python scripts/validate_module_completeness.py
+
+validate-imports: ## Validate imports work correctly
+	@echo "$(BLUE)🔍 Validating imports...$(RESET)"
+	@uv run python scripts/pre_commit_validation.py
+
+validate-components: ## Validate critical components
+	@echo "$(BLUE)🔍 Validating components...$(RESET)"
+	@uv run python -c "from src.competitive_launch.superiority_engine import SystematicSuperiorityEngine; from src.competitive_launch.failure_recovery import FailureRecoverySystem; from src.competitive_launch.launch_execution import LaunchExecutionSystem; from src.devpost_integration.auth_service import DevPostAuthService; print('✅ All critical components importable')"
+
+# Development checklist
+checklist: checklist-status ## Show development checklist status
+checklist-status: ## Show development checklist status
+	@echo "$(BLUE)📋 Development checklist status...$(RESET)"
+	@uv run python scripts/development_checklist.py status
+
+checklist-validate: ## Validate development checklist
+	@echo "$(BLUE)📋 Validating development checklist...$(RESET)"
+	@uv run python scripts/development_checklist.py validate
+
+# Pre-commit validation
+pre-commit: validate-checklist ## Run pre-commit validation
+	@echo "$(BLUE)🚀 Running pre-commit validation...$(RESET)"
+	@uv run python scripts/pre_commit_validation.py
+
+# Comprehensive validation
+validate-all: validate-modules validate-imports validate-components ## Run comprehensive validation
+	@echo "$(GREEN)🏆 All validations passed!$(RESET)"
+
+# Quick validation (most critical checks)
+validate-quick: validate-components ## Run quick validation
+	@echo "$(GREEN)⚡ Quick validation completed!$(RESET)"
 
 # Quality assurance
 lint: go-lint python-lint ## Run linting for both languages
@@ -269,3 +308,30 @@ status: ## Show systematic project status
 	@echo "  4. Run '$(CYAN)make install$(RESET)' to install for system use"
 	@echo ""
 	@echo "$(GREEN)SYSTEMATIC COLLABORATION ENGAGED - EVERYONE WINS! 💪$(RESET)"
+
+# DevPost CLI targets - User-friendly commands
+devpost-cli: ## Show DevPost CLI help
+	@echo "$(CYAN)🔍 DevPost Integration CLI$(RESET)"
+	@echo "$(YELLOW)User-friendly project interrogation$(RESET)"
+	@echo ""
+	@uv run devpost-cli --help
+
+devpost-interrogate: ## Interrogate all projects (table format)
+	@echo "$(CYAN)🔍 Interrogating all projects...$(RESET)"
+	@uv run devpost-cli interrogate
+
+devpost-interrogate-json: ## Interrogate all projects (JSON format)
+	@echo "$(CYAN)🔍 Interrogating all projects (JSON)...$(RESET)"
+	@uv run devpost-cli interrogate --format json
+
+devpost-interrogate-verbose: ## Interrogate all projects (verbose logging)
+	@echo "$(CYAN)🔍 Interrogating all projects (verbose)...$(RESET)"
+	@uv run devpost-cli interrogate --verbose
+
+devpost-status: ## Show project status overview
+	@echo "$(CYAN)📊 Project status overview...$(RESET)"
+	@uv run devpost-cli status
+
+devpost-status-json: ## Show project status (JSON format)
+	@echo "$(CYAN)📊 Project status overview (JSON)...$(RESET)"
+	@uv run devpost-cli status --format json

@@ -940,18 +940,6 @@ class ComprehensiveMonitoringSystem(ReflectiveModule):
             'alert_evaluation_interval_seconds': 30,
             'auto_scaling_evaluation_interval_seconds': 300
         }
-                    
-                except Exception as e:
-                    self.emit_structured_log(
-                        "error",
-                        f"Error in monitoring loop: {str(e)}",
-                        component="background_monitoring"
-                    )
-                    time.sleep(60)
-                    
-        # Start monitoring thread
-        monitoring_thread = threading.Thread(target=monitoring_loop, daemon=True)
-        monitoring_thread.start()
         
     def _update_system_metrics(self):
         """Update system metrics (simulated for this implementation)"""

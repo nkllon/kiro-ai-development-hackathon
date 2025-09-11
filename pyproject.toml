@@ -51,7 +51,9 @@ dependencies = [
     "numpy>=2.0.2",
     "beautifulsoup4>=4.13.5",
     "requests>=2.32.5",
+    "tomlkit>=0.13.3",
 ]
+
 
 [project.optional-dependencies]
 dev = [
@@ -99,6 +101,8 @@ beast-mode = "beast_mode.messaging.cli:cli"
 bm = "beast_mode.messaging.cli:cli"
 beast = "beast_mode.messaging.cli:cli"
 rm-ddd = "rm_ddd.cli:main"
+devpost-cli = "devpost_integration.cli:main"
+devpost = "devpost_integration.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

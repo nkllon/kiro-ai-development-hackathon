@@ -14,11 +14,12 @@ from .models import ProjectMetadata
 from .validation_models import (
     ValidationReport, ValidationContext, ValidationSeverity, ValidationCategory
 )
-from .core_validation_rules import RequiredFieldRule, ContentQualityRule
-from .format_validation_rules import FormatValidationRule, ConsistencyRule
-from .link_validation_rule import LinkValidationRule
-from .team_validation_rule import TeamValidationRule
-from .tag_validation_rule import TagValidationRule
+from .validation_rules import (
+    RequiredFieldRule, ContentQualityRule, FormatValidationRule, ConsistencyRule
+)
+from .validation_rules_extended import (
+    LinkValidationRule, TeamValidationRule, TagValidationRule
+)
 
 logger = logging.getLogger(__name__)
 
