@@ -1,0 +1,422 @@
+"""
+Service Monitor for Beast Mode Deployment
+
+Provides process monitoring, automatic restart capabilities,
+and health checking for deployed services.
+"""
+
+import time
+import threading
+import logging
+import psutil
+import subprocess
+from typing import Dict, List, Optional, Callable, Any
+from dataclasses import dataclass, field
+from enum import Enum
+import json
+from pathlib import Path
+
+from .config_manager import DeploymentConfig
+
+
+class ServiceStatus(str, Enum):
+    """Service status states"""
+    STARTING = "starting"
+    RUNNING = "running"
+    STOPPING = "stopping"
+    STOPPED = "stopped"
+    FAILED = "failed"
+    RESTARTING = "restarting"
+
+
+@dataclass
+class ServiceMetrics:
+    """Service performance metrics"""
+    cpu_percent: float = 0.0
+    memory_percent: float = 0.0
+    memory_mb: float = 0.0
+    open_files: int = 0
+    connections: int = 0
+    uptime_seconds: float = 0.0
+    restart_count: int = 0
+    last_restart: Optional[str] = None
+
+
+@dataclass
+class MonitoredService:
+    """A service being monitored"""
+    name: str
+    command: List[str]
+    working_directory: str
+    environment: Dict[str, str]
+    pid: Optional[int] = None
+    process: Optional[subprocess.Popen] = None
+    status: ServiceStatus = ServiceStatus.STOPPED
+    metrics: ServiceMetrics = field(default_factory=ServiceMetrics)
+    auto_restart: bool = True
+    max_restarts: int = 5
+    restart_delay: int = 10
+    health_check_url: Optional[str] = None
+    health_check_command: Optional[List[str]] = None
+    started_at: Optional[float] = None
+    last_health_check: Optional[float] = None
+    health_check_failures: int = 0
+
+
+class ServiceMonitor:
+    """Monitors and manages service processes"""
+    
+    def __init__(self, config: DeploymentConfig):
+        self.config = config
+        self.logger = logging.getLogger(__name__)
+        self.services: Dict[str, MonitoredService] = {}
+        self.monitoring_thread: Optional[threading.Thread] = None
+        self.running = False
+        self.callbacks: Dict[str, List[Callable]] = {
+            'service_started': [],
+            'service_stopped': [],
+            'service_failed': [],
+            'service_restarted': [],
+            'health_check_failed': []
+        }
+    
+    def add_service(self, service: MonitoredService):
+        """Add a service to monitor"""
+        self.services[service.name] = service
+        self.logger.info(f"Added service to monitor: {service.name}")
+    
+    def remove_service(self, service_name: str):
+        """Remove a service from monitoring"""
+        if service_name in self.services:
+            service = self.services[service_name]
+            if service.status == ServiceStatus.RUNNING:
+                self.stop_service(service_name)
+            del self.services[service_name]
+            self.logger.info(f"Removed service from monitor: {service_name}")
+    
+    def start_service(self, service_name: str) -> bool:
+        """Start a monitored service"""
+        if service_name not in self.services:
+            self.logger.error(f"Service not found: {service_name}")
+            return False
+        
+        service = self.services[service_name]
+        
+        if service.status == ServiceStatus.RUNNING:
+            self.logger.warning(f"Service {service_name} is already running")
+            return True
+        
+        try:
+            service.status = ServiceStatus.STARTING
+            self.logger.info(f"Starting service: {service_name}")
+            
+            # Prepare environment
+            env = service.environment.copy()
+            
+            # Start process
+            process = subprocess.Popen(
+                service.command,
+                cwd=service.working_directory,
+                env=env,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                preexec_fn=None if hasattr(subprocess, 'CREATE_NEW_PROCESS_GROUP') else lambda: None
+            )
+            
+            service.process = process
+            service.pid = process.pid
+            service.status = ServiceStatus.RUNNING
+            service.started_at = time.time()
+            service.metrics.restart_count += 1
+            service.metrics.last_restart = time.strftime("%Y-%m-%d %H:%M:%S")
+            
+            self.logger.info(f"Service {service_name} started with PID {service.pid}")
+            self._trigger_callbacks('service_started', service)
+            
+            return True
+            
+        except Exception as e:
+            service.status = ServiceStatus.FAILED
+            self.logger.error(f"Failed to start service {service_name}: {e}")
+            self._trigger_callbacks('service_failed', service)
+            return False
+    
+    def stop_service(self, service_name: str, graceful: bool = True) -> bool:
+        """Stop a monitored service"""
+        if service_name not in self.services:
+            self.logger.error(f"Service not found: {service_name}")
+            return False
+        
+        service = self.services[service_name]
+        
+        if service.status != ServiceStatus.RUNNING:
+            self.logger.warning(f"Service {service_name} is not running")
+            return True
+        
+        try:
+            service.status = ServiceStatus.STOPPING
+            self.logger.info(f"Stopping service: {service_name}")
+            
+            if service.process:
+                if graceful:
+                    # Graceful shutdown
+                    service.process.terminate()
+                    try:
+                        service.process.wait(timeout=self.config.service_management.get('graceful_shutdown_timeout', 30))
+                    except subprocess.TimeoutExpired:
+                        self.logger.warning(f"Service {service_name} did not stop gracefully, forcing shutdown")
+                        service.process.kill()
+                        service.process.wait()
+                else:
+                    # Force shutdown
+                    service.process.kill()
+                    service.process.wait()
+                
+                service.process = None
+            
+            service.pid = None
+            service.status = ServiceStatus.STOPPED
+            
+            self.logger.info(f"Service {service_name} stopped")
+            self._trigger_callbacks('service_stopped', service)
+            
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Failed to stop service {service_name}: {e}")
+            return False
+    
+    def restart_service(self, service_name: str) -> bool:
+        """Restart a monitored service"""
+        if service_name not in self.services:
+            self.logger.error(f"Service not found: {service_name}")
+            return False
+        
+        service = self.services[service_name]
+        
+        # Check restart limits
+        if service.metrics.restart_count >= service.max_restarts:
+            self.logger.error(f"Service {service_name} has exceeded max restarts ({service.max_restarts})")
+            service.status = ServiceStatus.FAILED
+            return False
+        
+        service.status = ServiceStatus.RESTARTING
+        self.logger.info(f"Restarting service: {service_name}")
+        
+        # Stop the service
+        if not self.stop_service(service_name):
+            return False
+        
+        # Wait before restart
+        time.sleep(service.restart_delay)
+        
+        # Start the service
+        success = self.start_service(service_name)
+        
+        if success:
+            self._trigger_callbacks('service_restarted', service)
+        
+        return success
+    
+    def start_monitoring(self):
+        """Start the monitoring thread"""
+        if self.running:
+            self.logger.warning("Monitoring is already running")
+            return
+        
+        self.running = True
+        self.monitoring_thread = threading.Thread(target=self._monitoring_loop, daemon=True)
+        self.monitoring_thread.start()
+        self.logger.info("Service monitoring started")
+    
+    def stop_monitoring(self):
+        """Stop the monitoring thread"""
+        if not self.running:
+            return
+        
+        self.running = False
+        if self.monitoring_thread:
+            self.monitoring_thread.join(timeout=5)
+        self.logger.info("Service monitoring stopped")
+    
+    def _monitoring_loop(self):
+        """Main monitoring loop"""
+        while self.running:
+            try:
+                for service_name, service in self.services.items():
+                    self._check_service_health(service)
+                    self._update_service_metrics(service)
+                
+                time.sleep(self.config.monitoring.health_check_interval)
+                
+            except Exception as e:
+                self.logger.error(f"Error in monitoring loop: {e}")
+                time.sleep(5)  # Brief pause before retrying
+    
+    def _check_service_health(self, service: MonitoredService):
+        """Check health of a single service"""
+        if service.status != ServiceStatus.RUNNING:
+            return
+        
+        # Check if process is still running
+        if service.process and service.process.poll() is not None:
+            # Process has terminated
+            exit_code = service.process.returncode
+            self.logger.warning(f"Service {service.name} terminated with exit code {exit_code}")
+            
+            service.status = ServiceStatus.FAILED
+            service.process = None
+            service.pid = None
+            
+            self._trigger_callbacks('service_failed', service)
+            
+            # Auto-restart if enabled
+            if service.auto_restart and service.metrics.restart_count < service.max_restarts:
+                self.logger.info(f"Auto-restarting service {service.name}")
+                threading.Thread(target=self.restart_service, args=(service.name,), daemon=True).start()
+            
+            return
+        
+        # Check process health using psutil
+        if service.pid:
+            try:
+                process = psutil.Process(service.pid)
+                if not process.is_running():
+                    self.logger.warning(f"Service {service.name} process is not running")
+                    service.status = ServiceStatus.FAILED
+                    self._trigger_callbacks('service_failed', service)
+                    
+                    if service.auto_restart and service.metrics.restart_count < service.max_restarts:
+                        threading.Thread(target=self.restart_service, args=(service.name,), daemon=True).start()
+                
+            except psutil.NoSuchProcess:
+                self.logger.warning(f"Service {service.name} process not found")
+                service.status = ServiceStatus.FAILED
+                service.pid = None
+                self._trigger_callbacks('service_failed', service)
+        
+        # Custom health check
+        if service.health_check_command:
+            self._run_health_check_command(service)
+        
+        service.last_health_check = time.time()
+    
+    def _run_health_check_command(self, service: MonitoredService):
+        """Run custom health check command"""
+        try:
+            result = subprocess.run(
+                service.health_check_command,
+                capture_output=True,
+                timeout=10,
+                cwd=service.working_directory
+            )
+            
+            if result.returncode != 0:
+                service.health_check_failures += 1
+                self.logger.warning(f"Health check failed for {service.name}: {result.stderr.decode()}")
+                
+                if service.health_check_failures >= 3:  # Threshold for restart
+                    self.logger.error(f"Multiple health check failures for {service.name}, restarting")
+                    service.health_check_failures = 0
+                    self._trigger_callbacks('health_check_failed', service)
+                    
+                    if service.auto_restart:
+                        threading.Thread(target=self.restart_service, args=(service.name,), daemon=True).start()
+            else:
+                service.health_check_failures = 0
+                
+        except subprocess.TimeoutExpired:
+            service.health_check_failures += 1
+            self.logger.warning(f"Health check timeout for {service.name}")
+        except Exception as e:
+            service.health_check_failures += 1
+            self.logger.error(f"Health check error for {service.name}: {e}")
+    
+    def _update_service_metrics(self, service: MonitoredService):
+        """Update metrics for a service"""
+        if service.status != ServiceStatus.RUNNING or not service.pid:
+            return
+        
+        try:
+            process = psutil.Process(service.pid)
+            
+            service.metrics.cpu_percent = process.cpu_percent()
+            memory_info = process.memory_info()
+            service.metrics.memory_mb = memory_info.rss / 1024 / 1024
+            service.metrics.memory_percent = process.memory_percent()
+            
+            try:
+                service.metrics.open_files = len(process.open_files())
+            except (psutil.AccessDenied, psutil.NoSuchProcess):
+                pass
+            
+            try:
+                service.metrics.connections = len(process.connections())
+            except (psutil.AccessDenied, psutil.NoSuchProcess):
+                pass
+            
+            if service.started_at:
+                service.metrics.uptime_seconds = time.time() - service.started_at
+                
+        except psutil.NoSuchProcess:
+            # Process no longer exists
+            service.status = ServiceStatus.FAILED
+            service.pid = None
+        except Exception as e:
+            self.logger.error(f"Error updating metrics for {service.name}: {e}")
+    
+    def get_service_status(self, service_name: str) -> Optional[MonitoredService]:
+        """Get status of a specific service"""
+        return self.services.get(service_name)
+    
+    def get_all_services_status(self) -> Dict[str, MonitoredService]:
+        """Get status of all services"""
+        return self.services.copy()
+    
+    def add_callback(self, event: str, callback: Callable):
+        """Add callback for service events"""
+        if event in self.callbacks:
+            self.callbacks[event].append(callback)
+    
+    def _trigger_callbacks(self, event: str, service: MonitoredService):
+        """Trigger callbacks for an event"""
+        for callback in self.callbacks.get(event, []):
+            try:
+                callback(service)
+            except Exception as e:
+                self.logger.error(f"Error in callback for {event}: {e}")
+    
+    def export_metrics(self, output_file: str):
+        """Export service metrics to file"""
+        metrics_data = {
+            "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "services": {}
+        }
+        
+        for service_name, service in self.services.items():
+            metrics_data["services"][service_name] = {
+                "status": service.status.value,
+                "metrics": {
+                    "cpu_percent": service.metrics.cpu_percent,
+                    "memory_percent": service.metrics.memory_percent,
+                    "memory_mb": service.metrics.memory_mb,
+                    "uptime_seconds": service.metrics.uptime_seconds,
+                    "restart_count": service.metrics.restart_count,
+                    "open_files": service.metrics.open_files,
+                    "connections": service.metrics.connections
+                }
+            }
+        
+        with open(output_file, 'w') as f:
+            json.dump(metrics_data, f, indent=2)
+        
+        self.logger.info(f"Metrics exported to {output_file}")
+    
+    def cleanup(self):
+        """Cleanup resources and stop all services"""
+        self.stop_monitoring()
+        
+        for service_name in list(self.services.keys()):
+            self.stop_service(service_name)
+        
+        self.logger.info("Service monitor cleanup completed")

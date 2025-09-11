@@ -1,0 +1,509 @@
+"""
+Integration tests for deployment system
+"""
+
+import pytest
+import tempfile
+import os
+import time
+import subprocess
+from pathlib import Path
+from unittest.mock import patch, Mock
+
+from beast_mode.deployment.config_manager import ConfigManager
+from beast_mode.deployment.deployment_manager import DeploymentManager
+from beast_mode.deployment.service_monitor import ServiceMonitor, MonitoredService
+from beast_mode.deployment.validator import DeploymentValidator, ValidationLevel
+
+
+class TestDeploymentIntegration:
+    """Integration tests for complete deployment workflow"""
+    
+    def setup_method(self):
+        """Setup test environment"""
+        self.temp_dir = tempfile.mkdtemp()
+        self.config_manager = ConfigManager(self.temp_dir)
+        self.deployment_manager = DeploymentManager(self.config_manager)
+        self.validator = DeploymentValidator(self.config_manager)
+    
+    def teardown_method(self):
+        """Cleanup test environment"""
+        import shutil
+        
+        # Stop all deployments
+        self.deployment_manager.stop_all_deployments()
+        
+        # Cleanup temp directory
+        shutil.rmtree(self.temp_dir, ignore_errors=True)
+        
+        # Cleanup any created files
+        for pattern in ["docker-compose-*.yml", ".env-*", "deployment_*.json"]:
+            import glob
+            for file in glob.glob(pattern):
+                try:
+                    os.remove(file)
+                except OSError:
+                    pass
+    
+    def test_config_manager_integration(self):
+        """Test configuration manager integration"""
+        # Test creating and saving custom configuration
+        config = self.config_manager.get_config("development")
+        config.agent.agent_id = "integration_test_agent"
+        config.agent.capabilities = ["integration_testing"]
+        
+        # Save configuration
+        self.config_manager.save_config("integration_test", config)
+        
+        # Load and verify
+        loaded_config = self.config_manager.load_config("integration_test")
+        assert loaded_config.agent.agent_id == "integration_test_agent"
+        assert loaded_config.agent.capabilities == ["integration_testing"]
+        
+        # Test environment variables
+        env_vars = self.config_manager.get_environment_variables("integration_test")
+        assert env_vars["AGENT_ID"] == "integration_test_agent"
+        assert env_vars["AGENT_CAPABILITIES"] == "integration_testing"
+        
+        # Test Docker env file creation
+        env_file = os.path.join(self.temp_dir, "integration.env")
+        self.config_manager.create_docker_env_file("integration_test", env_file)
+        
+        assert os.path.exists(env_file)
+        with open(env_file, 'r') as f:
+            content = f.read()
+        assert "AGENT_ID=integration_test_agent" in content
+    
+    @patch('subprocess.Popen')
+    def test_single_machine_deployment_workflow(self, mock_popen):
+        """Test complete single machine deployment workflow"""
+        # Mock process
+        mock_process = Mock()
+        mock_process.pid = 12345
+        mock_process.poll.return_value = None
+        mock_popen.return_value = mock_process
+        
+        # Create deployment
+        deployment_id = self.deployment_manager.create_single_machine_deployment("development")
+        
+        # Verify deployment was created
+        assert deployment_id in self.deployment_manager.deployments
+        deployment = self.deployment_manager.deployments[deployment_id]
+        
+        assert deployment.type.value == "single_machine"
+        assert deployment.environment == "development"
+        assert len(deployment.services) > 0
+        
+        # Check deployment status
+        status = self.deployment_manager.get_deployment_status(deployment_id)
+        assert status.deployment_id == deployment_id
+        
+        # List deployments
+        deployments = self.deployment_manager.list_deployments()
+        assert len(deployments) == 1
+        assert deployments[0].deployment_id == deployment_id
+        
+        # Health check
+        with patch('psutil.Process'), patch('psutil.cpu_percent'), \
+             patch('psutil.virtual_memory'), patch('psutil.disk_usage'):
+            health = self.deployment_manager.health_check_deployment(deployment_id)
+            assert health["deployment_id"] == deployment_id
+            assert "services" in health
+            assert "system_resources" in health
+        
+        # Stop deployment
+        self.deployment_manager.stop_deployment(deployment_id)
+        
+        final_status = self.deployment_manager.get_deployment_status(deployment_id)
+        assert final_status.status == "stopped"
+    
+    def test_distributed_deployment_workflow(self):
+        """Test distributed deployment workflow"""
+        nodes = ["node1.example.com", "node2.example.com", "node3.example.com"]
+        
+        # Create distributed deployment
+        deployment_id = self.deployment_manager.create_distributed_deployment("distributed", nodes)
+        
+        # Verify deployment was created
+        assert deployment_id in self.deployment_manager.deployments
+        deployment = self.deployment_manager.deployments[deployment_id]
+        
+        assert deployment.type.value == "distributed"
+        assert deployment.environment == "distributed"
+        
+        # Verify manifest file was created
+        manifest_file = f"deployment_{deployment_id}.json"
+        assert os.path.exists(manifest_file)
+        
+        # Load and verify manifest content
+        import json
+        with open(manifest_file, 'r') as f:
+            manifest = json.load(f)
+        
+        assert manifest["deployment_id"] == deployment_id
+        assert manifest["nodes"] == nodes
+        assert "services" in manifest
+        
+        # Verify services are distributed across nodes
+        services = manifest["services"]
+        used_nodes = set()
+        for service_info in services.values():
+            used_nodes.add(service_info["node"])
+        
+        assert len(used_nodes) > 0
+        assert all(node in nodes for node in used_nodes)
+        
+        # Cleanup
+        os.remove(manifest_file)
+    
+    def test_docker_deployment_workflow(self):
+        """Test Docker deployment workflow"""
+        # Create Docker deployment
+        deployment_id = self.deployment_manager.create_docker_deployment("docker")
+        
+        # Verify deployment was created
+        assert deployment_id in self.deployment_manager.deployments
+        deployment = self.deployment_manager.deployments[deployment_id]
+        
+        assert deployment.type.value == "docker"
+        assert deployment.environment == "docker"
+        
+        # Verify Docker Compose file was created
+        compose_file = f"docker-compose-{deployment_id}.yml"
+        env_file = f".env-{deployment_id}"
+        
+        assert os.path.exists(compose_file)
+        assert os.path.exists(env_file)
+        
+        # Verify compose file content
+        with open(compose_file, 'r') as f:
+            import yaml
+            compose_content = yaml.safe_load(f)
+        
+        assert "version" in compose_content
+        assert "services" in compose_content
+        
+        services = compose_content["services"]
+        assert "redis" in services
+        assert "mailbox_logger" in services
+        assert "agent" in services
+        
+        # Verify Redis service configuration
+        redis_service = services["redis"]
+        assert redis_service["image"] == "redis:7-alpine"
+        assert "healthcheck" in redis_service
+        
+        # Verify agent service configuration
+        agent_service = services["agent"]
+        assert "build" in agent_service
+        assert "depends_on" in agent_service
+        assert "redis" in agent_service["depends_on"]
+        
+        # Cleanup
+        os.remove(compose_file)
+        os.remove(env_file)
+    
+    @patch('subprocess.Popen')
+    def test_service_monitor_integration(self, mock_popen):
+        """Test service monitor integration"""
+        # Mock process
+        mock_process = Mock()
+        mock_process.pid = 12345
+        mock_process.poll.return_value = None
+        mock_popen.return_value = mock_process
+        
+        # Get configuration
+        config = self.config_manager.get_config("development")
+        
+        # Create service monitor
+        monitor = ServiceMonitor(config)
+        
+        try:
+            # Add a test service
+            service = MonitoredService(
+                name="test_service",
+                command=["python", "-c", "import time; time.sleep(60)"],
+                working_directory=self.temp_dir,
+                environment={"TEST": "integration"},
+                auto_restart=False  # Disable for testing
+            )
+            
+            monitor.add_service(service)
+            
+            # Start service
+            success = monitor.start_service("test_service")
+            assert success
+            
+            # Check service status
+            status = monitor.get_service_status("test_service")
+            assert status.name == "test_service"
+            assert status.pid == 12345
+            
+            # Start monitoring
+            monitor.start_monitoring()
+            assert monitor.running
+            
+            # Wait a bit for monitoring to run
+            time.sleep(0.1)
+            
+            # Stop monitoring
+            monitor.stop_monitoring()
+            assert not monitor.running
+            
+            # Stop service
+            success = monitor.stop_service("test_service")
+            assert success
+            
+        finally:
+            monitor.cleanup()
+    
+    @patch('socket.socket')
+    @patch('redis.Redis')
+    def test_validator_integration(self, mock_redis, mock_socket):
+        """Test validator integration"""
+        # Mock successful connectivity
+        mock_sock = Mock()
+        mock_sock.connect_ex.return_value = 0
+        mock_socket.return_value = mock_sock
+        
+        # Mock successful Redis
+        mock_client = Mock()
+        mock_client.ping.return_value = True
+        mock_client.set.return_value = True
+        mock_client.get.return_value = b"test_value"
+        mock_client.delete.return_value = 1
+        
+        # Mock pub/sub
+        mock_pubsub = Mock()
+        mock_pubsub.get_message.side_effect = [
+            {'type': 'subscribe'},
+            {'type': 'message', 'data': b'test'}
+        ]
+        mock_client.pubsub.return_value = mock_pubsub
+        mock_client.publish.return_value = 1
+        
+        mock_redis.return_value = mock_client
+        
+        # Run validation
+        report = self.validator.validate_deployment(
+            "integration_test", 
+            "development", 
+            ValidationLevel.STANDARD
+        )
+        
+        # Verify report
+        assert report.deployment_id == "integration_test"
+        assert report.environment == "development"
+        assert report.validation_level == ValidationLevel.STANDARD
+        assert report.total_checks > 0
+        assert report.passed_checks >= 0
+        assert report.total_duration_ms > 0
+        
+        # Generate HTML report
+        report_file = os.path.join(self.temp_dir, "integration_report.html")
+        self.validator.generate_report_html(report, report_file)
+        
+        assert os.path.exists(report_file)
+        
+        with open(report_file, 'r') as f:
+            content = f.read()
+        
+        assert "Beast Mode Deployment Validation Report" in content
+        assert "integration_test" in content
+    
+    @patch('subprocess.Popen')
+    @patch('socket.socket')
+    @patch('redis.Redis')
+    def test_complete_deployment_lifecycle(self, mock_redis, mock_socket, mock_popen):
+        """Test complete deployment lifecycle"""
+        # Mock all dependencies
+        mock_process = Mock()
+        mock_process.pid = 12345
+        mock_process.poll.return_value = None
+        mock_popen.return_value = mock_process
+        
+        mock_sock = Mock()
+        mock_sock.connect_ex.return_value = 0
+        mock_socket.return_value = mock_sock
+        
+        mock_client = Mock()
+        mock_client.ping.return_value = True
+        mock_client.set.return_value = True
+        mock_client.get.return_value = b"test_value"
+        mock_client.delete.return_value = 1
+        mock_client.publish.return_value = 1
+        mock_redis.return_value = mock_client
+        
+        # 1. Create custom configuration
+        config = self.config_manager.get_config("development")
+        config.agent.agent_id = "lifecycle_test_agent"
+        config.agent.capabilities = ["lifecycle_testing", "integration"]
+        self.config_manager.save_config("lifecycle_test", config)
+        
+        # 2. Create deployment
+        deployment_id = self.deployment_manager.create_single_machine_deployment("lifecycle_test")
+        
+        # 3. Verify deployment
+        status = self.deployment_manager.get_deployment_status(deployment_id)
+        assert status.deployment_id == deployment_id
+        assert status.environment == "lifecycle_test"
+        
+        # 4. Health check
+        with patch('psutil.Process'), patch('psutil.cpu_percent'), \
+             patch('psutil.virtual_memory'), patch('psutil.disk_usage'):
+            health = self.deployment_manager.health_check_deployment(deployment_id)
+            assert health["deployment_id"] == deployment_id
+        
+        # 5. Validate deployment
+        report = self.validator.validate_deployment(
+            deployment_id, 
+            "lifecycle_test", 
+            ValidationLevel.BASIC
+        )
+        assert report.deployment_id == deployment_id
+        
+        # 6. Monitor services
+        monitor = ServiceMonitor(config)
+        try:
+            # Add monitoring for a test service
+            service = MonitoredService(
+                name="lifecycle_service",
+                command=["echo", "lifecycle test"],
+                working_directory=self.temp_dir,
+                environment={}
+            )
+            monitor.add_service(service)
+            
+            # Export metrics
+            metrics_file = os.path.join(self.temp_dir, "lifecycle_metrics.json")
+            monitor.export_metrics(metrics_file)
+            assert os.path.exists(metrics_file)
+            
+        finally:
+            monitor.cleanup()
+        
+        # 7. Stop deployment
+        self.deployment_manager.stop_deployment(deployment_id)
+        
+        final_status = self.deployment_manager.get_deployment_status(deployment_id)
+        assert final_status.status == "stopped"
+    
+    def test_configuration_validation_integration(self):
+        """Test configuration validation integration"""
+        # Test valid configuration
+        config = self.config_manager.get_config("development")
+        issues = self.config_manager.validate_config(config)
+        assert len(issues) == 0
+        
+        # Test invalid configuration
+        config.redis.host = ""  # Invalid
+        config.redis.port = -1  # Invalid
+        config.agent.agent_id = ""  # Invalid
+        config.agent.capabilities = []  # Invalid
+        
+        issues = self.config_manager.validate_config(config)
+        assert len(issues) > 0
+        
+        # Verify specific issues are caught
+        issue_text = " ".join(issues)
+        assert "Redis host cannot be empty" in issue_text
+        assert "Redis port must be between" in issue_text
+        assert "Agent ID cannot be empty" in issue_text
+        assert "Agent must have at least one capability" in issue_text
+    
+    def test_environment_specific_configurations(self):
+        """Test environment-specific configurations"""
+        environments = ["development", "production", "single_machine", "distributed"]
+        
+        for env in environments:
+            config = self.config_manager.get_config(env)
+            
+            # Verify environment is set correctly
+            assert config.environment.value == env
+            
+            # Verify configuration is valid
+            issues = self.config_manager.validate_config(config)
+            assert len(issues) == 0, f"Environment {env} has validation issues: {issues}"
+            
+            # Verify environment variables can be generated
+            env_vars = self.config_manager.get_environment_variables(env)
+            assert "BEAST_MODE_ENVIRONMENT" in env_vars
+            assert env_vars["BEAST_MODE_ENVIRONMENT"] == env
+    
+    def test_deployment_script_integration(self):
+        """Test deployment script integration"""
+        # Test that deployment scripts exist and are executable
+        script_dir = Path(__file__).parent.parent.parent / "scripts"
+        
+        expected_scripts = [
+            "deploy_single_machine.py",
+            "deploy_distributed.py", 
+            "deploy_docker.py"
+        ]
+        
+        for script_name in expected_scripts:
+            script_path = script_dir / script_name
+            assert script_path.exists(), f"Deployment script not found: {script_name}"
+            
+            # Check if script is executable (on Unix systems)
+            if hasattr(os, 'access'):
+                assert os.access(script_path, os.X_OK), f"Script not executable: {script_name}"
+    
+    def test_error_handling_integration(self):
+        """Test error handling across components"""
+        # Test invalid environment
+        with pytest.raises(ValueError, match="Unknown environment"):
+            self.config_manager.get_config("invalid_environment")
+        
+        # Test invalid deployment ID
+        with pytest.raises(ValueError, match="Deployment not found"):
+            self.deployment_manager.get_deployment_status("invalid_deployment")
+        
+        with pytest.raises(ValueError, match="Deployment not found"):
+            self.deployment_manager.stop_deployment("invalid_deployment")
+        
+        with pytest.raises(ValueError, match="Deployment not found"):
+            self.deployment_manager.health_check_deployment("invalid_deployment")
+        
+        # Test loading non-existent configuration
+        with pytest.raises(FileNotFoundError):
+            self.config_manager.load_config("nonexistent_config")
+    
+    def test_concurrent_operations(self):
+        """Test concurrent operations"""
+        import threading
+        
+        results = []
+        errors = []
+        
+        def create_deployment(env_name):
+            try:
+                with patch('subprocess.Popen') as mock_popen:
+                    mock_popen.return_value = Mock(pid=12345)
+                    deployment_id = self.deployment_manager.create_single_machine_deployment(env_name)
+                    results.append(deployment_id)
+            except Exception as e:
+                errors.append(e)
+        
+        # Create multiple deployments concurrently
+        threads = []
+        for i in range(3):
+            thread = threading.Thread(target=create_deployment, args=(f"test_env_{i}",))
+            threads.append(thread)
+            thread.start()
+        
+        # Wait for all threads to complete
+        for thread in threads:
+            thread.join()
+        
+        # Verify results
+        assert len(errors) == 0, f"Errors occurred: {errors}"
+        assert len(results) == 3
+        assert len(set(results)) == 3  # All deployment IDs should be unique
+        
+        # Cleanup
+        for deployment_id in results:
+            try:
+                self.deployment_manager.stop_deployment(deployment_id)
+            except Exception:
+                pass  # Ignore cleanup errors

@@ -5,7 +5,9 @@
 
 **Submission Category:** Productivity & Workflow Tools  
 **Prize Pool:** $100,000  
-**Deadline:** September 15, 2025 @ 12:00pm PDT  
+**Submission Period:** July 14, 2025 (9:00 am PT) – September 15, 2025 (12:00 pm PT)  
+**Judging Period:** September 29, 2025 – October 20, 2025  
+**Winners Announced:** October 24, 2025  
 
 ---
 
