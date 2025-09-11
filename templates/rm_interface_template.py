@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-cli_project_commands - cli_project_commands module for DevPost integration
+{module_name} - {module_description}
 
 Refactored for RM-DDD compliance.
-Single responsibility: cli_project_commands functionality.
+Single responsibility: {single_responsibility}.
 """
 
 import logging
@@ -19,40 +19,39 @@ from .reflective_module import (
 logger = logging.getLogger(__name__)
 
 
-class Unknown(ReflectiveModule):
-    """Unknown with RM-DDD compliance with RM-DDD compliance"""
+class {class_name}(ReflectiveModule):
+    """{class_description} with RM-DDD compliance"""
     
-    def __init__(selfself):
-        """Initialize cli_project_commands"""
-        super().__init__(module_id="cli_project_commands", version="1.0.0")
-        # Initialize module components
+    def __init__(self{init_params}):
+        """Initialize {module_name}"""
+        super().__init__(module_id="{module_id}", version="1.0.0")
+        {init_body}
         self._start_time = datetime.now()
-        self._operation_count = 0
-        self._errors = 0
+        {metrics_init}
         register_module(self)
     
-        # Core methods will be implemented here
+    {core_methods}
     
     # ReflectiveModule interface implementation
     def get_module_info(self) -> Dict[str, Any]:
         """Get comprehensive module information."""
-        return {
+        return {{
             'module_id': self.module_id,
             'version': self.version,
-            'name': 'Cli Project Commands',
-            'description': 'cli_project_commands module for DevPost integration',
+            'name': '{display_name}',
+            'description': '{module_description}',
             'author': 'DevPost Integration Team',
             'created_at': self._start_time.isoformat(),
             'interface_version': self.get_interface_version()
-        }
+        }}
     
     def get_capabilities(self) -> List[ModuleCapability]:
         """Get module capabilities."""
-        return []
+        return {capabilities}
     
     def get_dependencies(self) -> List[str]:
         """Get module dependencies."""
-        return []
+        return {dependencies}
     
     def check_health(self) -> ModuleHealth:
         """Perform comprehensive health check."""
@@ -60,7 +59,7 @@ class Unknown(ReflectiveModule):
         health_score = 1.0
         
         try:
-            # Add module-specific health checks here
+            {health_checks}
             
             # Determine status
             if health_score >= 0.9:
@@ -87,10 +86,10 @@ class Unknown(ReflectiveModule):
                 status=ModuleStatus.UNHEALTHY,
                 last_check=datetime.now(),
                 health_score=0.0,
-                issues=[f"Health check exception: {e}"],
+                issues=[f"Health check exception: {{e}}"],
                 capabilities=self.get_capabilities(),
                 dependencies=self.get_dependencies(),
-                metrics={}
+                metrics={{}}
             )
     
     def get_configuration(self) -> ModuleConfiguration:
@@ -98,10 +97,10 @@ class Unknown(ReflectiveModule):
         return ModuleConfiguration(
             module_id=self.module_id,
             config_version="1.0.0",
-            parameters={},
-            required_parameters=[],
-            optional_parameters=[],
-            validation_rules={},
+            parameters={config_parameters},
+            required_parameters={required_parameters},
+            optional_parameters={optional_parameters},
+            validation_rules={validation_rules},
             last_updated=datetime.now()
         )
     
@@ -111,30 +110,28 @@ class Unknown(ReflectiveModule):
             if not config.is_valid():
                 return False
             
-            # Update configuration parameters
-            logger.info(f"Configuration updated for {self.module_id}")
+            {config_update_body}
+            logger.info(f"Configuration updated for {{self.module_id}}")
             return True
             
         except Exception as e:
-            logger.error(f"Configuration update error: {e}")
+            logger.error(f"Configuration update error: {{e}}")
             return False
     
     def get_metrics(self) -> Dict[str, Any]:
         """Get module metrics."""
         uptime = (datetime.now() - self._start_time).total_seconds()
-        # Add module-specific metrics here
+        {metrics_body}
         
-        return {
+        return {{
             'uptime_seconds': uptime,
             'uptime_hours': uptime / 3600,
-            'operation_count': self._operation_count,
-            'errors': self._errors,
+            {metrics_return}
             'last_check': datetime.now().isoformat()
-        }
+        }}
     
     def reset_metrics(self) -> None:
         """Reset module metrics to initial state."""
-        self._operation_count = 0
-        self._errors = 0
+        {metrics_reset}
         self._start_time = datetime.now()
-        logger.info("Metrics reset for cli_project_commands module")
+        logger.info("Metrics reset for {module_id} module")

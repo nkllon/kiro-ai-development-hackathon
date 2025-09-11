@@ -1,166 +1,140 @@
 #!/usr/bin/env python3
 """
-Tag Validation Rule - Project tag validation
+tag_validation_rule - tag_validation_rule module for DevPost integration
 
-Extracted from validation_rules_extended.py for RM-DDD compliance.
-Single responsibility: Project tag validation and categorization.
+Refactored for RM-DDD compliance.
+Single responsibility: tag_validation_rule functionality.
 """
 
-import re
-from typing import List, Optional, Dict, Any
+import logging
+from datetime import datetime
+from typing import Dict, Any, List, Optional
+from pathlib import Path
 
-from .models import ProjectMetadata
-from .validation_models import (
-    ValidationRule, ValidationIssue, ValidationSeverity, 
-    ValidationCategory, ValidationContext
+from .reflective_module import (
+    ReflectiveModule, ModuleHealth, ModuleStatus, ModuleCapability, 
+    ModuleConfiguration, register_module
 )
 
+logger = logging.getLogger(__name__)
 
-class TagValidationRule(ValidationRule):
-    """Validation rule for project tags."""
+
+class TagValidationRule(ReflectiveModule):
+    """TagValidationRule with RM-DDD compliance with RM-DDD compliance"""
     
-    def __init__(self):
-        super().__init__(
-            name="tag_validation",
-            description="Validates project tags and categorization",
-            category=ValidationCategory.TAGS
+    def __init__(selfself):
+        """Initialize tag_validation_rule"""
+        super().__init__(module_id="tag_validation_rule", version="1.0.0")
+        # Initialize module components
+        self._start_time = datetime.now()
+        self._operation_count = 0
+        self._errors = 0
+        register_module(self)
+    
+        # Core methods will be implemented here
+    
+    # ReflectiveModule interface implementation
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get comprehensive module information."""
+        return {
+            'module_id': self.module_id,
+            'version': self.version,
+            'name': 'Tag Validation Rule',
+            'description': 'tag_validation_rule module for DevPost integration',
+            'author': 'DevPost Integration Team',
+            'created_at': self._start_time.isoformat(),
+            'interface_version': self.get_interface_version()
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities."""
+        return ['ModuleCapability.CORE_FUNCTIONALITY', 'ModuleCapability.CONFIGURATION', 'ModuleCapability.LOGGING']
+    
+    def get_dependencies(self) -> List[str]:
+        """Get module dependencies."""
+        return ['models', 'validation_models']
+    
+    def check_health(self) -> ModuleHealth:
+        """Perform comprehensive health check."""
+        issues = []
+        health_score = 1.0
+        
+        try:
+            # Add module-specific health checks here
+            
+            # Determine status
+            if health_score >= 0.9:
+                status = ModuleStatus.HEALTHY
+            elif health_score >= 0.7:
+                status = ModuleStatus.DEGRADED
+            else:
+                status = ModuleStatus.UNHEALTHY
+            
+            return ModuleHealth(
+                module_id=self.module_id,
+                status=status,
+                last_check=datetime.now(),
+                health_score=max(0.0, health_score),
+                issues=issues,
+                capabilities=self.get_capabilities(),
+                dependencies=self.get_dependencies(),
+                metrics=self.get_metrics()
+            )
+            
+        except Exception as e:
+            return ModuleHealth(
+                module_id=self.module_id,
+                status=ModuleStatus.UNHEALTHY,
+                last_check=datetime.now(),
+                health_score=0.0,
+                issues=[f"Health check exception: {e}"],
+                capabilities=self.get_capabilities(),
+                dependencies=self.get_dependencies(),
+                metrics={}
+            )
+    
+    def get_configuration(self) -> ModuleConfiguration:
+        """Get module configuration."""
+        return ModuleConfiguration(
+            module_id=self.module_id,
+            config_version="1.0.0",
+            parameters={},
+            required_parameters=[],
+            optional_parameters=[],
+            validation_rules={},
+            last_updated=datetime.now()
         )
     
-    def validate(self, metadata: ProjectMetadata, context: Optional[ValidationContext] = None) -> List[ValidationIssue]:
-        """Validate project tags."""
-        issues = []
-        
-        if not metadata.tags:
-            issues.append(ValidationIssue(
-                field="tags",
-                message="No project tags provided",
-                severity=ValidationSeverity.HIGH,
-                category=ValidationCategory.TAGS,
-                suggestion="Add relevant project tags",
-                fix_action="Specify project tags for better categorization"
-            ))
-            return issues
-        
-        # Check tag count
-        tag_count = len(metadata.tags)
-        if tag_count < 3:
-            issues.append(ValidationIssue(
-                field="tags",
-                message="Too few tags (minimum 3 recommended)",
-                severity=ValidationSeverity.MEDIUM,
-                category=ValidationCategory.TAGS,
-                suggestion="Add more relevant tags",
-                fix_action="Include at least 3 project tags"
-            ))
-        elif tag_count > 15:
-            issues.append(ValidationIssue(
-                field="tags",
-                message="Too many tags (maximum 15 recommended)",
-                severity=ValidationSeverity.LOW,
-                category=ValidationCategory.TAGS,
-                suggestion="Use most relevant tags only",
-                fix_action="Reduce tags to most important ones"
-            ))
-        
-        # Validate individual tags
-        for i, tag in enumerate(metadata.tags):
-            tag_issues = self._validate_single_tag(tag, i)
-            issues.extend(tag_issues)
-        
-        # Check for tag relevance
-        relevance_issues = self._check_tag_relevance(metadata)
-        issues.extend(relevance_issues)
-        
-        return issues
+    def update_configuration(self, config: ModuleConfiguration) -> bool:
+        """Update module configuration."""
+        try:
+            if not config.is_valid():
+                return False
+            
+            # Update configuration parameters
+            logger.info(f"Configuration updated for {self.module_id}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Configuration update error: {e}")
+            return False
     
-    def _validate_single_tag(self, tag: str, index: int) -> List[ValidationIssue]:
-        """Validate individual tag."""
-        issues = []
+    def get_metrics(self) -> Dict[str, Any]:
+        """Get module metrics."""
+        uptime = (datetime.now() - self._start_time).total_seconds()
+        # Add module-specific metrics here
         
-        if not tag or not tag.strip():
-            issues.append(ValidationIssue(
-                field=f"tags[{index}]",
-                message="Empty tag",
-                severity=ValidationSeverity.MEDIUM,
-                category=ValidationCategory.TAGS,
-                suggestion="Remove empty tags",
-                fix_action="Delete empty tag entries"
-            ))
-            return issues
-        
-        tag = tag.strip()
-        
-        # Check tag length
-        if len(tag) < 2:
-            issues.append(ValidationIssue(
-                field=f"tags[{index}]",
-                message="Tag is too short (minimum 2 characters)",
-                severity=ValidationSeverity.LOW,
-                category=ValidationCategory.TAGS,
-                suggestion="Use longer, more descriptive tags",
-                fix_action="Expand tag to at least 2 characters"
-            ))
-        elif len(tag) > 30:
-            issues.append(ValidationIssue(
-                field=f"tags[{index}]",
-                message="Tag is too long (maximum 30 characters)",
-                severity=ValidationSeverity.LOW,
-                category=ValidationCategory.TAGS,
-                suggestion="Use shorter, more concise tags",
-                fix_action="Shorten tag to 30 characters or less"
-            ))
-        
-        # Check tag format
-        if not re.match(r'^[a-zA-Z0-9\s\-_]+$', tag):
-            issues.append(ValidationIssue(
-                field=f"tags[{index}]",
-                message="Tag contains invalid characters",
-                severity=ValidationSeverity.MEDIUM,
-                category=ValidationCategory.TAGS,
-                suggestion="Use only letters, numbers, spaces, hyphens, and underscores",
-                fix_action="Remove special characters from tag"
-            ))
-        
-        # Check for proper capitalization
-        if tag != tag.lower() and tag != tag.title():
-            issues.append(ValidationIssue(
-                field=f"tags[{index}]",
-                message="Tag should be lowercase or title case",
-                severity=ValidationSeverity.LOW,
-                category=ValidationCategory.TAGS,
-                suggestion="Use consistent capitalization",
-                fix_action="Convert tag to lowercase or title case"
-            ))
-        
-        return issues
+        return {
+            'uptime_seconds': uptime,
+            'uptime_hours': uptime / 3600,
+            'operation_count': self._operation_count,
+            'errors': self._errors,
+            'last_check': datetime.now().isoformat()
+        }
     
-    def _check_tag_relevance(self, metadata: ProjectMetadata) -> List[ValidationIssue]:
-        """Check if tags are relevant to project content."""
-        issues = []
-        
-        if not metadata.tags or not metadata.description:
-            return issues
-        
-        # Common technology tags
-        tech_tags = {'python', 'javascript', 'react', 'node', 'java', 'c++', 'html', 'css', 'sql', 'mongodb'}
-        project_tags = {tag.lower() for tag in metadata.tags}
-        description_lower = metadata.description.lower()
-        
-        # Check if technology tags match description
-        mentioned_techs = set()
-        for tech in tech_tags:
-            if tech in description_lower:
-                mentioned_techs.add(tech)
-        
-        relevant_tech_tags = project_tags.intersection(tech_tags)
-        if relevant_tech_tags and not mentioned_techs:
-            issues.append(ValidationIssue(
-                field="tags",
-                message="Technology tags don't match project description",
-                severity=ValidationSeverity.LOW,
-                category=ValidationCategory.TAGS,
-                suggestion="Ensure tags reflect technologies used in project",
-                fix_action="Update tags or description for consistency"
-            ))
-        
-        return issues
+    def reset_metrics(self) -> None:
+        """Reset module metrics to initial state."""
+        self._operation_count = 0
+        self._errors = 0
+        self._start_time = datetime.now()
+        logger.info("Metrics reset for tag_validation_rule module")

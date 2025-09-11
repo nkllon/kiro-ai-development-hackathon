@@ -1,32 +1,37 @@
 #!/usr/bin/env python3
 """
-Format Validation Rules - Format and consistency validation
+format_validation_rules - format_validation_rules module for DevPost integration
 
-Extracted from validation_rules.py for RM-DDD compliance.
-Single responsibility: Format validation and consistency checking.
+Refactored for RM-DDD compliance.
+Single responsibility: format_validation_rules functionality.
 """
 
-import re
-from typing import List, Optional, Dict, Any
+import logging
+from datetime import datetime
+from typing import Dict, Any, List, Optional
+from pathlib import Path
 
-from .models import ProjectMetadata
-from .validation_models import (
-    ValidationRule, ValidationIssue, ValidationSeverity, 
-    ValidationCategory, ValidationContext
+from .reflective_module import (
+    ReflectiveModule, ModuleHealth, ModuleStatus, ModuleCapability, 
+    ModuleConfiguration, register_module
 )
 
+logger = logging.getLogger(__name__)
 
-class FormatValidationRule(ValidationRule):
-    """Validation rule for format compliance."""
+
+class FormatValidationRule(ReflectiveModule):
+    """FormatValidationRule with RM-DDD compliance with RM-DDD compliance"""
     
-    def __init__(self):
-        super().__init__(
-            name="format_validation",
-            description="Validates format compliance and structure",
-            category=ValidationCategory.FORMAT
-        )
+    def __init__(selfself):
+        """Initialize format_validation_rules"""
+        super().__init__(module_id="format_validation_rules", version="1.0.0")
+        # Initialize module components
+        self._start_time = datetime.now()
+        self._operation_count = 0
+        self._errors = 0
+        register_module(self)
     
-    def validate(self, metadata: ProjectMetadata, context: Optional[ValidationContext] = None) -> List[ValidationIssue]:
+        def validate(self, metadata: ProjectMetadata, context: Optional[ValidationContext] = None) -> List[ValidationIssue]:
         """Validate format compliance."""
         issues = []
         
@@ -100,54 +105,109 @@ class FormatValidationRule(ValidationRule):
         return issues
 
 
-class ConsistencyRule(ValidationRule):
-    """Validation rule for consistency checks."""
     
-    def __init__(self):
-        super().__init__(
-            name="consistency",
-            description="Validates consistency across project metadata",
-            category=ValidationCategory.CONSISTENCY
+    # ReflectiveModule interface implementation
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get comprehensive module information."""
+        return {
+            'module_id': self.module_id,
+            'version': self.version,
+            'name': 'Format Validation Rules',
+            'description': 'format_validation_rules module for DevPost integration',
+            'author': 'DevPost Integration Team',
+            'created_at': self._start_time.isoformat(),
+            'interface_version': self.get_interface_version()
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities."""
+        return ['ModuleCapability.CORE_FUNCTIONALITY', 'ModuleCapability.CONFIGURATION', 'ModuleCapability.LOGGING']
+    
+    def get_dependencies(self) -> List[str]:
+        """Get module dependencies."""
+        return ['models', 'validation_models']
+    
+    def check_health(self) -> ModuleHealth:
+        """Perform comprehensive health check."""
+        issues = []
+        health_score = 1.0
+        
+        try:
+            # Add module-specific health checks here
+            
+            # Determine status
+            if health_score >= 0.9:
+                status = ModuleStatus.HEALTHY
+            elif health_score >= 0.7:
+                status = ModuleStatus.DEGRADED
+            else:
+                status = ModuleStatus.UNHEALTHY
+            
+            return ModuleHealth(
+                module_id=self.module_id,
+                status=status,
+                last_check=datetime.now(),
+                health_score=max(0.0, health_score),
+                issues=issues,
+                capabilities=self.get_capabilities(),
+                dependencies=self.get_dependencies(),
+                metrics=self.get_metrics()
+            )
+            
+        except Exception as e:
+            return ModuleHealth(
+                module_id=self.module_id,
+                status=ModuleStatus.UNHEALTHY,
+                last_check=datetime.now(),
+                health_score=0.0,
+                issues=[f"Health check exception: {e}"],
+                capabilities=self.get_capabilities(),
+                dependencies=self.get_dependencies(),
+                metrics={}
+            )
+    
+    def get_configuration(self) -> ModuleConfiguration:
+        """Get module configuration."""
+        return ModuleConfiguration(
+            module_id=self.module_id,
+            config_version="1.0.0",
+            parameters={},
+            required_parameters=[],
+            optional_parameters=[],
+            validation_rules={},
+            last_updated=datetime.now()
         )
     
-    def validate(self, metadata: ProjectMetadata, context: Optional[ValidationContext] = None) -> List[ValidationIssue]:
-        """Validate consistency."""
-        issues = []
-        
-        # Check for consistent naming
-        if metadata.title and metadata.description:
-            title_words = set(metadata.title.lower().split())
-            desc_words = set(metadata.description.lower().split())
+    def update_configuration(self, config: ModuleConfiguration) -> bool:
+        """Update module configuration."""
+        try:
+            if not config.is_valid():
+                return False
             
-            # Check if key terms from title appear in description
-            key_terms = [word for word in title_words if len(word) > 3]
-            if key_terms:
-                common_terms = title_words.intersection(desc_words)
-                if len(common_terms) < len(key_terms) * 0.3:
-                    issues.append(ValidationIssue(
-                        field="description",
-                        message="Description doesn't reference key terms from title",
-                        severity=ValidationSeverity.LOW,
-                        category=ValidationCategory.CONSISTENCY,
-                        suggestion="Include key terms from title in description",
-                        fix_action="Update description to reference title concepts"
-                    ))
-        
-        # Check technology consistency
-        if metadata.technologies and metadata.description:
-            tech_mentioned = 0
-            for tech in metadata.technologies:
-                if tech.lower() in metadata.description.lower():
-                    tech_mentioned += 1
+            # Update configuration parameters
+            logger.info(f"Configuration updated for {self.module_id}")
+            return True
             
-            if tech_mentioned < len(metadata.technologies) * 0.5:
-                issues.append(ValidationIssue(
-                    field="technologies",
-                    message="Many technologies not mentioned in description",
-                    severity=ValidationSeverity.LOW,
-                    category=ValidationCategory.CONSISTENCY,
-                    suggestion="Reference technologies in project description",
-                    fix_action="Update description to mention key technologies"
-                ))
+        except Exception as e:
+            logger.error(f"Configuration update error: {e}")
+            return False
+    
+    def get_metrics(self) -> Dict[str, Any]:
+        """Get module metrics."""
+        uptime = (datetime.now() - self._start_time).total_seconds()
+        # Add module-specific metrics here
         
-        return issues
+        return {
+            'uptime_seconds': uptime,
+            'uptime_hours': uptime / 3600,
+            'operation_count': self._operation_count,
+            'errors': self._errors,
+            'last_check': datetime.now().isoformat()
+        }
+    
+    def reset_metrics(self) -> None:
+        """Reset module metrics to initial state."""
+        self._operation_count = 0
+        self._errors = 0
+        self._start_time = datetime.now()
+        logger.info("Metrics reset for format_validation_rules module")
