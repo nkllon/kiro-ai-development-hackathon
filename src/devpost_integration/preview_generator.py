@@ -5,8 +5,22 @@ Generates local HTML preview of Devpost submission.
 """
 
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 import json
+from datetime import datetime
+from dataclasses import dataclass, field
+
+from .models import ProjectMetadata, ValidationResult, MediaFile, MediaType
+
+
+@dataclass
+class PreviewData:
+    """Data for preview generation."""
+    project_metadata: ProjectMetadata
+    validation_result: ValidationResult
+    media_files: List[MediaFile] = field(default_factory=list)
+    generated_at: datetime = field(default_factory=datetime.now)
+    template_version: str = "1.0"
 
 
 class DevpostPreviewGenerator:
@@ -28,17 +42,28 @@ class DevpostPreviewGenerator:
         self._project_data_cache = None
         self._cache_timestamp = None
     
-    def generate_preview(self, output_file: str = 'preview.html') -> Path:
-        """Generate HTML preview of the project."""
+    def generate_preview(self, output_file: str = 'preview.html') -> PreviewData:
+        """Generate preview data for the project."""
+        # Collect project metadata
+        project_metadata = self._get_project_metadata()
+        
+        # Validate project
+        validation_result = self._validate_project()
+        
+        # Find media files
+        media_files = self._find_media_files()
+        
+        # Generate HTML preview file
         project_data = self._collect_project_data()
-        
-        # Generate HTML from template and data
         html_content = self.template.format(**project_data)
-        
         output_path = Path(output_file)
         output_path.write_text(html_content, encoding='utf-8')
         
-        return output_path
+        return PreviewData(
+            project_metadata=project_metadata,
+            validation_result=validation_result,
+            media_files=media_files
+        )
     
     def _collect_project_data(self) -> Dict[str, Any]:
         """Collect project data from local files."""
@@ -54,6 +79,137 @@ class DevpostPreviewGenerator:
         }
         
         return data
+    
+    def _get_project_metadata(self) -> ProjectMetadata:
+        """Extract project metadata from project files."""
+        # Try to get project name from package.json or README
+        project_name = self._extract_project_name()
+        
+        # Get description from README
+        description = self._get_description()
+        
+        # Get repository URL
+        repo_url = self._get_repository_url()
+        
+        return ProjectMetadata(
+            title=project_name,
+            tagline="A systematic development project",
+            description=description,
+            repository_url=repo_url,
+            demo_url=None,
+            team_members=[],
+            tags=self._get_tech_stack()
+        )
+    
+    def _validate_project(self) -> ValidationResult:
+        """Validate project against DevPost requirements."""
+        errors = []
+        warnings = []
+        
+        # Check if README exists
+        readme_path = self.project_path / 'README.md'
+        if not readme_path.exists():
+            errors.append("README.md is required")
+        
+        # Check if project has basic structure
+        if not (self.project_path / 'src').exists() and not (self.project_path / 'app').exists():
+            warnings.append("No src/ or app/ directory found")
+        
+        is_valid = len(errors) == 0
+        
+        return ValidationResult(
+            is_valid=is_valid,
+            missing_fields=[],
+            errors=errors,
+            warnings=warnings,
+            completion_percentage=80.0 if is_valid else 40.0
+        )
+    
+    def _find_media_files(self) -> List[MediaFile]:
+        """Find media files in the project."""
+        media_files = []
+        
+        # Look for common media file extensions
+        media_extensions = ['.png', '.jpg', '.jpeg', '.gif', '.mp4', '.mov', '.webm']
+        
+        for ext in media_extensions:
+            for file_path in self.project_path.rglob(f'*{ext}'):
+                if file_path.is_file():
+                    # Map file extension to MediaType
+                    media_type = self._get_media_type(ext)
+                    media_files.append(MediaFile(
+                        filename=file_path.name,
+                        file_path=file_path,
+                        media_type=media_type,
+                        file_size=file_path.stat().st_size
+                    ))
+        
+        return media_files
+    
+    def _get_media_type(self, extension: str) -> MediaType:
+        """Map file extension to MediaType enum."""
+        ext = extension.lower()
+        if ext in ['.png', '.jpg', '.jpeg', '.gif']:
+            return MediaType.IMAGE
+        elif ext in ['.mp4', '.mov', '.webm']:
+            return MediaType.VIDEO
+        else:
+            return MediaType.OTHER
+    
+    def _extract_project_name(self) -> str:
+        """Extract project name from package.json or README."""
+        # Try package.json first
+        package_json = self.project_path / 'package.json'
+        if package_json.exists():
+            try:
+                data = json.loads(package_json.read_text())
+                if 'name' in data:
+                    return data['name']
+            except:
+                pass
+        
+        # Try README.md title
+        readme = self.project_path / 'README.md'
+        if readme.exists():
+            try:
+                content = readme.read_text()
+                lines = content.split('\n')
+                for line in lines:
+                    if line.startswith('# '):
+                        return line[2:].strip()
+            except:
+                pass
+        
+        # Fallback to directory name
+        return self.project_path.name.replace('-', ' ').replace('_', ' ').title()
+    
+    def _get_repository_url(self) -> Optional[str]:
+        """Extract repository URL from package.json or git config."""
+        # Try package.json
+        package_json = self.project_path / 'package.json'
+        if package_json.exists():
+            try:
+                data = json.loads(package_json.read_text())
+                if 'repository' in data:
+                    repo = data['repository']
+                    if isinstance(repo, str):
+                        return repo
+                    elif isinstance(repo, dict) and 'url' in repo:
+                        return repo['url']
+            except:
+                pass
+        
+        # Try git config
+        try:
+            import subprocess
+            result = subprocess.run(['git', 'config', '--get', 'remote.origin.url'], 
+                                 cwd=self.project_path, capture_output=True, text=True)
+            if result.returncode == 0:
+                return result.stdout.strip()
+        except:
+            pass
+        
+        return None
     
     def _get_description(self) -> str:
         """Get project description from README."""

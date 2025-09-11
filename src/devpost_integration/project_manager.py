@@ -66,7 +66,7 @@ class DevpostProjectManager:
         self.sync_operations: List[SyncOperation] = []
     
     def connect_project(self, project_id: str, local_path: Path, config_file: Optional[str] = None) -> bool:
-        """Connect local project to Devpost submission."""
+        """Connect local project to DevPost submission."""
         try:
             # Systematic validation - no ad-hoc connections
             if not self._validate_project_structure(local_path):
@@ -83,7 +83,12 @@ class DevpostProjectManager:
                 'tidb_ready': True             # TiDB scale marker
             }
             
-            # Save configuration systematically
+            # Save configuration in project directory
+            project_config_path = local_path / '.devpost' / 'config.json'
+            project_config_path.parent.mkdir(parents=True, exist_ok=True)
+            project_config_path.write_text(json.dumps(config, indent=2))
+            
+            # Also save to global config for tracking
             self.config_path.write_text(json.dumps(config, indent=2))
             
             return True
@@ -92,13 +97,23 @@ class DevpostProjectManager:
             print(f"Systematic connection failed: {e}")
             return False
     
-    def get_project_status(self) -> ProjectStatus:
+    def get_project_status(self, project_path: Optional[Path] = None) -> ProjectStatus:
         """Get systematic project status."""
-        if not self.config_path.exists():
+        # Check project-specific config first, then global config
+        config_path = None
+        if project_path:
+            project_config_path = project_path / '.devpost' / 'config.json'
+            if project_config_path.exists():
+                config_path = project_config_path
+        
+        if not config_path and self.config_path.exists():
+            config_path = self.config_path
+        
+        if not config_path:
             return ProjectStatus(connected=False)
         
         try:
-            config = json.loads(self.config_path.read_text())
+            config = json.loads(config_path.read_text())
             
             # Systematic status collection
             status = ProjectStatus(
