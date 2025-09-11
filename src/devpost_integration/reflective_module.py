@@ -34,6 +34,17 @@ class ModuleCapability(Enum):
     NOTIFICATIONS = "notifications"
     PERSISTENCE = "persistence"
     API_INTEGRATION = "api_integration"
+    STRUCTURED_LOGGING = "structured_logging"
+    PERFORMANCE_MONITORING = "performance_monitoring"
+    ERROR_TRACKING = "error_tracking"
+    LOG_EXPORT = "log_export"
+    METRICS_COLLECTION = "metrics_collection"
+    EXECUTION_TIMING = "execution_timing"
+    RESOURCE_MONITORING = "resource_monitoring"
+    DEBUGGING = "debugging"
+    DIAGNOSTICS = "diagnostics"
+    EXECUTION_TRACING = "execution_tracing"
+    ISSUE_RESOLUTION = "issue_resolution"
 
 
 @dataclass
