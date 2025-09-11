@@ -402,6 +402,116 @@ class DeadlineRequirement:
         }
     
     @classmethod
+
+    # Registry Integration Enhancements
+    def _register_with_registry(self):
+        """Register module with RM registry."""
+        try:
+            from .reflective_module import ReflectiveModuleRegistry
+            ReflectiveModuleRegistry.register(self)
+            logger.info(f"Module {self.module_id} registered with RM registry")
+        except Exception as e:
+            logger.error(f"Failed to register module {self.module_id}: {e}")
+    
+    def _unregister_from_registry(self):
+        """Unregister module from RM registry."""
+        try:
+            from .reflective_module import ReflectiveModuleRegistry
+            ReflectiveModuleRegistry.unregister(self.module_id)
+            logger.info(f"Module {self.module_id} unregistered from RM registry")
+        except Exception as e:
+            logger.error(f"Failed to unregister module {self.module_id}: {e}")
+    
+    def get_registry_status(self) -> Dict[str, Any]:
+        """Get registry integration status."""
+        try:
+            from .reflective_module import ReflectiveModuleRegistry
+            is_registered = ReflectiveModuleRegistry.get_module(self.module_id) is not None
+            all_modules = list(ReflectiveModuleRegistry.get_all_modules().keys())
+            
+            return {
+                'is_registered': is_registered,
+                'module_id': self.module_id,
+                'total_registered_modules': len(all_modules),
+                'all_module_ids': all_modules,
+                'registry_available': True
+            }
+        except Exception as e:
+            return {
+                'is_registered': False,
+                'module_id': self.module_id,
+                'total_registered_modules': 0,
+                'all_module_ids': [],
+                'registry_available': False,
+                'error': str(e)
+            }
+    
+    def discover_related_modules(self) -> List[str]:
+        """Discover related modules in the registry."""
+        try:
+            from .reflective_module import ReflectiveModuleRegistry
+            all_modules = ReflectiveModuleRegistry.get_all_modules()
+            related_modules = []
+            
+            # Find modules with similar names or dependencies
+            for module_id, module in all_modules.items():
+                if module_id != self.module_id:
+                    # Check if modules are related by name similarity
+                    if any(word in module_id.lower() for word in module_name.lower().split('_')):
+                        related_modules.append(module_id)
+                    # Check if modules are related by dependencies
+                    elif module_id in self.get_dependencies():
+                        related_modules.append(module_id)
+            
+            return related_modules
+        except Exception as e:
+            logger.error(f"Failed to discover related modules: {e}")
+            return []
+    
+    def get_registry_health(self) -> Dict[str, Any]:
+        """Get registry health information."""
+        try:
+            from .reflective_module import ReflectiveModuleRegistry
+            all_modules = ReflectiveModuleRegistry.get_all_modules()
+            
+            healthy_modules = 0
+            degraded_modules = 0
+            unhealthy_modules = 0
+            
+            for module_id, module in all_modules.items():
+                try:
+                    health = module.check_health()
+                    if health.status.value == 'healthy':
+                        healthy_modules += 1
+                    elif health.status.value == 'degraded':
+                        degraded_modules += 1
+                    else:
+                        unhealthy_modules += 1
+                except Exception:
+                    unhealthy_modules += 1
+            
+            total_modules = len(all_modules)
+            health_percentage = (healthy_modules / total_modules * 100) if total_modules > 0 else 0
+            
+            return {
+                'total_modules': total_modules,
+                'healthy_modules': healthy_modules,
+                'degraded_modules': degraded_modules,
+                'unhealthy_modules': unhealthy_modules,
+                'health_percentage': health_percentage,
+                'registry_status': 'healthy' if health_percentage >= 80 else 'degraded' if health_percentage >= 60 else 'unhealthy'
+            }
+        except Exception as e:
+            return {
+                'total_modules': 0,
+                'healthy_modules': 0,
+                'degraded_modules': 0,
+                'unhealthy_modules': 0,
+                'health_percentage': 0,
+                'registry_status': 'error',
+                'error': str(e)
+            }
+
     def from_dict(cls, data: Dict[str, Any]) -> 'DeadlineRequirement':
         """Create from dictionary."""
         return cls(
