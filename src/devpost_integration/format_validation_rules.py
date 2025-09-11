@@ -19,8 +19,8 @@ from .reflective_module import (
 logger = logging.getLogger(__name__)
 
 
-class FormatValidationRule(ReflectiveModule):
-    """FormatValidationRule with RM-DDD compliance with RM-DDD compliance"""
+class Unknown(ReflectiveModule):
+    """Unknown with RM-DDD compliance with RM-DDD compliance"""
     
     def __init__(selfself):
         """Initialize format_validation_rules"""
@@ -31,80 +31,7 @@ class FormatValidationRule(ReflectiveModule):
         self._errors = 0
         register_module(self)
     
-        def validate(self, metadata: ProjectMetadata, context: Optional[ValidationContext] = None) -> List[ValidationIssue]:
-        """Validate format compliance."""
-        issues = []
-        
-        # Validate title format
-        if metadata.title:
-            if len(metadata.title) > 100:
-                issues.append(ValidationIssue(
-                    field="title",
-                    message="Project title is too long (maximum 100 characters)",
-                    severity=ValidationSeverity.MEDIUM,
-                    category=ValidationCategory.FORMAT,
-                    suggestion="Shorten the project title",
-                    fix_action="Reduce title length to 100 characters or less"
-                ))
-            
-            if not metadata.title.strip():
-                issues.append(ValidationIssue(
-                    field="title",
-                    message="Project title contains only whitespace",
-                    severity=ValidationSeverity.HIGH,
-                    category=ValidationCategory.FORMAT,
-                    suggestion="Provide a non-empty project title",
-                    fix_action="Enter a valid project title"
-                ))
-        
-        # Validate description format
-        if metadata.description:
-            if len(metadata.description) > 2000:
-                issues.append(ValidationIssue(
-                    field="description",
-                    message="Project description is too long (maximum 2000 characters)",
-                    severity=ValidationSeverity.MEDIUM,
-                    category=ValidationCategory.FORMAT,
-                    suggestion="Shorten the project description",
-                    fix_action="Reduce description length to 2000 characters or less"
-                ))
-            
-            # Check for proper line breaks
-            if '\n' in metadata.description and len(metadata.description.split('\n')) > 20:
-                issues.append(ValidationIssue(
-                    field="description",
-                    message="Project description has too many line breaks",
-                    severity=ValidationSeverity.LOW,
-                    category=ValidationCategory.FORMAT,
-                    suggestion="Use paragraphs instead of many line breaks",
-                    fix_action="Reformat description with proper paragraph structure"
-                ))
-        
-        # Validate technologies format
-        if metadata.technologies:
-            for i, tech in enumerate(metadata.technologies):
-                if not tech.strip():
-                    issues.append(ValidationIssue(
-                        field=f"technologies[{i}]",
-                        message="Empty technology entry",
-                        severity=ValidationSeverity.MEDIUM,
-                        category=ValidationCategory.FORMAT,
-                        suggestion="Remove empty technology entries",
-                        fix_action="Clean up technology list"
-                    ))
-                elif len(tech) > 50:
-                    issues.append(ValidationIssue(
-                        field=f"technologies[{i}]",
-                        message="Technology name is too long (maximum 50 characters)",
-                        severity=ValidationSeverity.LOW,
-                        category=ValidationCategory.FORMAT,
-                        suggestion="Use shorter technology names",
-                        fix_action="Abbreviate or shorten technology name"
-                    ))
-        
-        return issues
-
-
+        # Core methods will be implemented here
     
     # ReflectiveModule interface implementation
     def get_module_info(self) -> Dict[str, Any]:
@@ -121,11 +48,11 @@ class FormatValidationRule(ReflectiveModule):
     
     def get_capabilities(self) -> List[ModuleCapability]:
         """Get module capabilities."""
-        return ['ModuleCapability.CORE_FUNCTIONALITY', 'ModuleCapability.CONFIGURATION', 'ModuleCapability.LOGGING']
+        return []
     
     def get_dependencies(self) -> List[str]:
         """Get module dependencies."""
-        return ['models', 'validation_models']
+        return []
     
     def check_health(self) -> ModuleHealth:
         """Perform comprehensive health check."""

@@ -19,8 +19,8 @@ from .reflective_module import (
 logger = logging.getLogger(__name__)
 
 
-class ContentQualityRule(ReflectiveModule):
-    """ContentQualityRule with RM-DDD compliance with RM-DDD compliance"""
+class Unknown(ReflectiveModule):
+    """Unknown with RM-DDD compliance with RM-DDD compliance"""
     
     def __init__(selfself):
         """Initialize validation_rules"""
@@ -31,155 +31,7 @@ class ContentQualityRule(ReflectiveModule):
         self._errors = 0
         register_module(self)
     
-        def validate(self, metadata: ProjectMetadata, context: Optional[ValidationContext] = None) -> List[ValidationIssue]:
-        """Validate required fields."""
-        issues = []
-        
-        # Required fields for DevPost submission
-        required_fields = {
-            'title': metadata.title,
-            'description': metadata.description,
-            'technologies': metadata.technologies,
-            'team_members': metadata.team_members,
-            'links': metadata.links
-        }
-        
-        for field_name, field_value in required_fields.items():
-            if not field_value or (isinstance(field_value, list) and len(field_value) == 0):
-                issues.append(ValidationIssue(
-                    field=field_name,
-                    message=f"Required field '{field_name}' is missing or empty",
-                    severity=ValidationSeverity.CRITICAL,
-                    category=ValidationCategory.REQUIRED_FIELDS,
-                    suggestion=f"Provide a value for the {field_name} field",
-                    fix_action=f"Set {field_name} in project metadata"
-                ))
-        
-        # Validate title length
-        if metadata.title and len(metadata.title.strip()) < 10:
-            issues.append(ValidationIssue(
-                field="title",
-                message="Project title is too short (minimum 10 characters)",
-                severity=ValidationSeverity.HIGH,
-                category=ValidationCategory.REQUIRED_FIELDS,
-                suggestion="Provide a more descriptive project title",
-                fix_action="Expand the project title to at least 10 characters"
-            ))
-        
-        # Validate description length
-        if metadata.description and len(metadata.description.strip()) < 50:
-            issues.append(ValidationIssue(
-                field="description",
-                message="Project description is too short (minimum 50 characters)",
-                severity=ValidationSeverity.HIGH,
-                category=ValidationCategory.REQUIRED_FIELDS,
-                suggestion="Provide a more detailed project description",
-                fix_action="Expand the project description to at least 50 characters"
-            ))
-        
-        return issues
-
-
-
-        def _has_excessive_repetition(self, text: str) -> bool:
-        """Check for excessive word repetition."""
-        words = text.lower().split()
-        if len(words) < 10:
-            return False
-        
-        # Count word frequencies
-        word_counts = {}
-        for word in words:
-            if len(word) > 3:  # Only check longer words
-                word_counts[word] = word_counts.get(word, 0) + 1
-        
-        # Check if any word appears more than 20% of the time
-        total_words = len([w for w in words if len(w) > 3])
-        if total_words == 0:
-            return False
-        
-        for count in word_counts.values():
-            if count / total_words > 0.2:
-                return True
-        
-        return False
-
-
-
-        def validate(self, metadata: ProjectMetadata, context: Optional[ValidationContext] = None) -> List[ValidationIssue]:
-        """Validate format compliance."""
-        issues = []
-        
-        # Validate title format
-        if metadata.title:
-            if len(metadata.title) > 100:
-                issues.append(ValidationIssue(
-                    field="title",
-                    message="Project title is too long (maximum 100 characters)",
-                    severity=ValidationSeverity.MEDIUM,
-                    category=ValidationCategory.FORMAT,
-                    suggestion="Shorten the project title",
-                    fix_action="Reduce title length to 100 characters or less"
-                ))
-            
-            if not metadata.title.strip():
-                issues.append(ValidationIssue(
-                    field="title",
-                    message="Project title contains only whitespace",
-                    severity=ValidationSeverity.HIGH,
-                    category=ValidationCategory.FORMAT,
-                    suggestion="Provide a non-empty project title",
-                    fix_action="Enter a valid project title"
-                ))
-        
-        # Validate description format
-        if metadata.description:
-            if len(metadata.description) > 2000:
-                issues.append(ValidationIssue(
-                    field="description",
-                    message="Project description is too long (maximum 2000 characters)",
-                    severity=ValidationSeverity.MEDIUM,
-                    category=ValidationCategory.FORMAT,
-                    suggestion="Shorten the project description",
-                    fix_action="Reduce description length to 2000 characters or less"
-                ))
-            
-            # Check for proper line breaks
-            if '\n' in metadata.description and len(metadata.description.split('\n')) > 20:
-                issues.append(ValidationIssue(
-                    field="description",
-                    message="Project description has too many line breaks",
-                    severity=ValidationSeverity.LOW,
-                    category=ValidationCategory.FORMAT,
-                    suggestion="Use paragraphs instead of many line breaks",
-                    fix_action="Reformat description with proper paragraph structure"
-                ))
-        
-        # Validate technologies format
-        if metadata.technologies:
-            for i, tech in enumerate(metadata.technologies):
-                if not tech.strip():
-                    issues.append(ValidationIssue(
-                        field=f"technologies[{i}]",
-                        message="Empty technology entry",
-                        severity=ValidationSeverity.MEDIUM,
-                        category=ValidationCategory.FORMAT,
-                        suggestion="Remove empty technology entries",
-                        fix_action="Clean up technology list"
-                    ))
-                elif len(tech) > 50:
-                    issues.append(ValidationIssue(
-                        field=f"technologies[{i}]",
-                        message="Technology name is too long (maximum 50 characters)",
-                        severity=ValidationSeverity.LOW,
-                        category=ValidationCategory.FORMAT,
-                        suggestion="Use shorter technology names",
-                        fix_action="Abbreviate or shorten technology name"
-                    ))
-        
-        return issues
-
-
+        # Core methods will be implemented here
     
     # ReflectiveModule interface implementation
     def get_module_info(self) -> Dict[str, Any]:
@@ -196,11 +48,11 @@ class ContentQualityRule(ReflectiveModule):
     
     def get_capabilities(self) -> List[ModuleCapability]:
         """Get module capabilities."""
-        return ['ModuleCapability.CORE_FUNCTIONALITY', 'ModuleCapability.CONFIGURATION', 'ModuleCapability.LOGGING']
+        return []
     
     def get_dependencies(self) -> List[str]:
         """Get module dependencies."""
-        return ['models', 'validation_models']
+        return []
     
     def check_health(self) -> ModuleHealth:
         """Perform comprehensive health check."""

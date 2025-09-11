@@ -19,8 +19,8 @@ from .reflective_module import (
 logger = logging.getLogger(__name__)
 
 
-class ContentQualityRule(ReflectiveModule):
-    """ContentQualityRule with RM-DDD compliance with RM-DDD compliance"""
+class Unknown(ReflectiveModule):
+    """Unknown with RM-DDD compliance with RM-DDD compliance"""
     
     def __init__(selfself):
         """Initialize core_validation_rules"""
@@ -31,55 +31,7 @@ class ContentQualityRule(ReflectiveModule):
         self._errors = 0
         register_module(self)
     
-        def validate(self, metadata: ProjectMetadata, context: Optional[ValidationContext] = None) -> List[ValidationIssue]:
-        """Validate required fields."""
-        issues = []
-        
-        # Required fields for DevPost submission
-        required_fields = {
-            'title': metadata.title,
-            'description': metadata.description,
-            'technologies': metadata.technologies,
-            'team_members': metadata.team_members,
-            'links': metadata.links
-        }
-        
-        for field_name, field_value in required_fields.items():
-            if not field_value or (isinstance(field_value, list) and len(field_value) == 0):
-                issues.append(ValidationIssue(
-                    field=field_name,
-                    message=f"Required field '{field_name}' is missing or empty",
-                    severity=ValidationSeverity.CRITICAL,
-                    category=ValidationCategory.REQUIRED_FIELDS,
-                    suggestion=f"Provide a value for the {field_name} field",
-                    fix_action=f"Set {field_name} in project metadata"
-                ))
-        
-        # Validate title length
-        if metadata.title and len(metadata.title.strip()) < 10:
-            issues.append(ValidationIssue(
-                field="title",
-                message="Project title is too short (minimum 10 characters)",
-                severity=ValidationSeverity.HIGH,
-                category=ValidationCategory.REQUIRED_FIELDS,
-                suggestion="Provide a more descriptive project title",
-                fix_action="Expand the project title to at least 10 characters"
-            ))
-        
-        # Validate description length
-        if metadata.description and len(metadata.description.strip()) < 50:
-            issues.append(ValidationIssue(
-                field="description",
-                message="Project description is too short (minimum 50 characters)",
-                severity=ValidationSeverity.HIGH,
-                category=ValidationCategory.REQUIRED_FIELDS,
-                suggestion="Provide a more detailed project description",
-                fix_action="Expand the project description to at least 50 characters"
-            ))
-        
-        return issues
-
-
+        # Core methods will be implemented here
     
     # ReflectiveModule interface implementation
     def get_module_info(self) -> Dict[str, Any]:
@@ -96,11 +48,11 @@ class ContentQualityRule(ReflectiveModule):
     
     def get_capabilities(self) -> List[ModuleCapability]:
         """Get module capabilities."""
-        return ['ModuleCapability.CORE_FUNCTIONALITY', 'ModuleCapability.CONFIGURATION', 'ModuleCapability.LOGGING']
+        return []
     
     def get_dependencies(self) -> List[str]:
         """Get module dependencies."""
-        return ['models', 'validation_models']
+        return []
     
     def check_health(self) -> ModuleHealth:
         """Perform comprehensive health check."""

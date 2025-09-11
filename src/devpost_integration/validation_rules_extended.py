@@ -19,8 +19,8 @@ from .reflective_module import (
 logger = logging.getLogger(__name__)
 
 
-class LinkValidationRule(ReflectiveModule):
-    """LinkValidationRule with RM-DDD compliance with RM-DDD compliance"""
+class Unknown(ReflectiveModule):
+    """Unknown with RM-DDD compliance with RM-DDD compliance"""
     
     def __init__(selfself):
         """Initialize validation_rules_extended"""
@@ -31,51 +31,7 @@ class LinkValidationRule(ReflectiveModule):
         self._errors = 0
         register_module(self)
     
-        def _is_url_accessible(self, url: str) -> bool:
-        """Check if URL is accessible (with timeout)."""
-        try:
-            response = requests.head(url, timeout=5)
-            return response.status_code < 400
-        except Exception:
-            return False
-
-
-
-        def _check_duplicate_members(self, members: List[ProjectTeamMember]) -> List[ValidationIssue]:
-        """Check for duplicate team members."""
-        issues = []
-        
-        # Check for duplicate names
-        names = [member.name.lower().strip() for member in members if member.name]
-        duplicate_names = set([name for name in names if names.count(name) > 1])
-        
-        for duplicate_name in duplicate_names:
-            issues.append(ValidationIssue(
-                field="team_members",
-                message=f"Duplicate team member name: {duplicate_name}",
-                severity=ValidationSeverity.MEDIUM,
-                category=ValidationCategory.TEAM,
-                suggestion="Ensure team member names are unique",
-                fix_action="Use unique names for each team member"
-            ))
-        
-        # Check for duplicate emails
-        emails = [member.email.lower().strip() for member in members if member.email]
-        duplicate_emails = set([email for email in emails if emails.count(email) > 1])
-        
-        for duplicate_email in duplicate_emails:
-            issues.append(ValidationIssue(
-                field="team_members",
-                message=f"Duplicate team member email: {duplicate_email}",
-                severity=ValidationSeverity.MEDIUM,
-                category=ValidationCategory.TEAM,
-                suggestion="Ensure team member emails are unique",
-                fix_action="Use unique emails for each team member"
-            ))
-        
-        return issues
-
-
+        # Core methods will be implemented here
     
     # ReflectiveModule interface implementation
     def get_module_info(self) -> Dict[str, Any]:
@@ -92,11 +48,11 @@ class LinkValidationRule(ReflectiveModule):
     
     def get_capabilities(self) -> List[ModuleCapability]:
         """Get module capabilities."""
-        return ['ModuleCapability.CORE_FUNCTIONALITY', 'ModuleCapability.CONFIGURATION', 'ModuleCapability.LOGGING']
+        return []
     
     def get_dependencies(self) -> List[str]:
         """Get module dependencies."""
-        return ['models', 'validation_models']
+        return []
     
     def check_health(self) -> ModuleHealth:
         """Perform comprehensive health check."""
