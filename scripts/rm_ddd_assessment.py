@@ -263,10 +263,14 @@ class RMComplianceAnalyzer:
     """Analyzes RM interface compliance"""
     
     REQUIRED_METHODS = [
-        'get_module_status',
-        'is_healthy', 
-        'get_health_indicators',
-        '_get_primary_responsibility'
+        'get_module_info',
+        'get_capabilities',
+        'get_dependencies',
+        'check_health',
+        'get_configuration',
+        'update_configuration',
+        'get_metrics',
+        'reset_metrics'
     ]
     
     def analyze_module(self, file_path: Path) -> RMInterfaceGap:

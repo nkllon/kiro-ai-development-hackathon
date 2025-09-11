@@ -3,7 +3,7 @@
 preview_generator - Simplified for size compliance
 """
 
-from .preview_generator_methods import *
+from .preview_generator_methods import DevpostPreviewGenerator
 from .reflective_module import ReflectiveModule, register_module
 from datetime import datetime
 from typing import Dict, Any, List, Optional
@@ -11,5 +11,5 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# Import the main class from methods file
-# This keeps the main file under 300 lines
+# Export the main class
+__all__ = ['DevpostPreviewGenerator']

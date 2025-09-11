@@ -1,4 +1,28 @@
-class DevpostPreviewGenerator:
+from .reflective_module import ReflectiveModule, register_module, ModuleCapability, ModuleHealth, ModuleStatus, ModuleConfiguration
+from datetime import datetime
+from typing import Dict, Any, List, Optional
+from pathlib import Path
+import logging
+
+logger = logging.getLogger(__name__)
+
+# Define PreviewData class
+class PreviewData:
+    """Preview data structure"""
+    def __init__(self, content: str, file_path: str, success: bool = True):
+        self.content = content
+        self.file_path = file_path
+        self.success = success
+
+# Define ProjectMetadata class
+class ProjectMetadata:
+    """Project metadata structure"""
+    def __init__(self, name: str = "", description: str = "", team: List[str] = None):
+        self.name = name
+        self.description = description
+        self.team = team or []
+
+class DevpostPreviewGenerator(ReflectiveModule):
     """Generates local preview of Devpost submission."""
     
     def __init__(self, project_path: Optional[Path] = None, validation_engine: Optional[Any] = None):

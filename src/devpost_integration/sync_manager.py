@@ -5,7 +5,7 @@ Handles synchronization between local project and Devpost submission.
 """
 
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from pathlib import Path
 from enum import Enum
 from datetime import datetime

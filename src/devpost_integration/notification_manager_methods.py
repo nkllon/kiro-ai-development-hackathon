@@ -1,3 +1,11 @@
+from .reflective_module import ReflectiveModule, register_module, ModuleCapability, ModuleHealth, ModuleStatus, ModuleConfiguration
+from datetime import datetime
+from typing import Dict, Any, List, Optional
+from pathlib import Path
+import logging
+
+logger = logging.getLogger(__name__)
+
 class NotificationConfig(ReflectiveModule):
     """Notification configuration settings."""
     enabled: bool = True
@@ -10,6 +18,11 @@ class NotificationConfig(ReflectiveModule):
     smtp_password: Optional[str] = None
     deadline_warning_hours: int = 24
     status_change_notifications: bool = True
+    
+    def __init__(self):
+        super().__init__(module_id="notification_config", version="1.0.0")
+        self._start_time = datetime.now()
+        register_module(self)
 
     # ReflectiveModule interface implementation
     def get_module_info(self) -> Dict[str, Any]:

@@ -1,3 +1,11 @@
+from .reflective_module import ReflectiveModule, register_module, ModuleCapability, ModuleHealth, ModuleStatus, ModuleConfiguration
+from datetime import datetime
+from typing import Dict, Any, List, Optional
+from pathlib import Path
+import logging
+
+logger = logging.getLogger(__name__)
+
 class FileWatcherCore(ReflectiveModule):
     """
     Core file system monitoring functionality.
@@ -12,6 +20,10 @@ class FileWatcherCore(ReflectiveModule):
         config: Optional[DevpostConfig] = None
     ):
         """Initialize core file watcher."""
+        super().__init__(module_id="file_watcher_core", version="1.0.0")
+        self._start_time = datetime.now()
+        register_module(self)
+        
         self.project_path = Path(project_path).resolve()
         self.config = config or DevpostConfig()
         
