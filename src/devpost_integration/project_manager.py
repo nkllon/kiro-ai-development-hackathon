@@ -1,10 +1,11 @@
 """
-Devpost Project Manager - Minimal Multi-Target Implementation
+Devpost Project Manager - Production Implementation
 
 Demonstrates:
 1. Hackathon-ready CLI functionality
 2. Kiro AI-powered systematic development
 3. TiDB-scale systematic architecture patterns
+4. Real DevPost API integration
 """
 
 from dataclasses import dataclass
@@ -12,6 +13,9 @@ from pathlib import Path
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 import json
+
+from .api_client import DevPostAPIClient, DevPostAPIError
+from .models import DevpostProject, ProjectMetadata, SyncOperation
 
 
 @dataclass
@@ -40,11 +44,26 @@ class DevpostProjectManager:
     - Requirements ARE the Solution
     - Systematic over ad-hoc
     - Physics-informed architecture
+    - Real API integration
     """
     
-    def __init__(self):
+    def __init__(self, api_key: Optional[str] = None, access_token: Optional[str] = None):
+        """
+        Initialize the project manager.
+        
+        Args:
+            api_key: DevPost API key for authentication
+            access_token: OAuth access token for authentication
+        """
         self.config_path = Path('.devpost/config.json')
         self.config_path.parent.mkdir(exist_ok=True)
+        
+        # Initialize API client
+        self.api_client = DevPostAPIClient(api_key=api_key, access_token=access_token)
+        
+        # Project tracking
+        self.connected_projects: Dict[str, ProjectStatus] = {}
+        self.sync_operations: List[SyncOperation] = []
     
     def connect_project(self, project_id: str, local_path: Path, config_file: Optional[str] = None) -> bool:
         """Connect local project to Devpost submission."""

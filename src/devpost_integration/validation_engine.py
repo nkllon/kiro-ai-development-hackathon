@@ -25,7 +25,7 @@ from .models import (
     ProjectMetadata, DevpostProject, ValidationResult, ValidationRules,
     MediaType, SubmissionRequirement, TeamMember, ProjectLink, MediaFile
 )
-from .api_client import DevpostAPIClient
+from .api_client import DevPostAPIClient
 
 
 class ValidationSeverity(str, Enum):

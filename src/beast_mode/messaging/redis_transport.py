@@ -8,7 +8,7 @@ Preserves all current functionality while implementing the transport interface.
 import asyncio
 import logging
 from typing import Callable, Dict, Any, List
-from .transport import BeastModeTransport
+from .transport import BeastModeTransport, TransportFactory
 from .models import BeastModeMessage
 from .daemon_client import BeastModeDaemon
 
@@ -257,6 +257,5 @@ class RedisTransport(BeastModeTransport):
         """Direct access to daemon's check_mail for backward compatibility."""
         return self.daemon.check_mail()
 
-#
- Register Redis transport with factory
+# Register Redis transport with factory
 TransportFactory.register_transport('redis', RedisTransport)

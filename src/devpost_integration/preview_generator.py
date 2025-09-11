@@ -5,15 +5,28 @@ Generates local HTML preview of Devpost submission.
 """
 
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 import json
 
 
 class DevpostPreviewGenerator:
     """Generates local preview of Devpost submission."""
     
-    def __init__(self):
+    def __init__(self, project_path: Optional[Path] = None, validation_engine: Optional[Any] = None):
+        """
+        Initialize the preview generator.
+        
+        Args:
+            project_path: Path to the project directory (optional)
+            validation_engine: Validation engine instance (optional)
+        """
+        self.project_path = Path(project_path) if project_path else Path.cwd()
+        self.validation_engine = validation_engine
         self.template = self._get_preview_template()
+        
+        # Cache attributes for testing
+        self._project_data_cache = None
+        self._cache_timestamp = None
     
     def generate_preview(self, output_file: str = 'preview.html') -> Path:
         """Generate HTML preview of the project."""
@@ -130,3 +143,33 @@ class DevpostPreviewGenerator:
     </div>
 </body>
 </html>'''
+
+
+class RealtimePreviewManager:
+    """Manages real-time preview updates for Devpost submissions."""
+    
+    def __init__(self, watch_directory: str = ".", preview_generator: Optional[DevpostPreviewGenerator] = None):
+        """
+        Initialize the realtime preview manager.
+        
+        Args:
+            watch_directory: Directory to watch for changes
+            preview_generator: Preview generator instance (optional)
+        """
+        self.watch_directory = Path(watch_directory)
+        self.generator = preview_generator or DevpostPreviewGenerator()
+        self.is_watching = False
+    
+    def start_watching(self) -> None:
+        """Start watching for file changes and updating preview."""
+        self.is_watching = True
+        # Implementation would use file system watchers
+        pass
+    
+    def stop_watching(self) -> None:
+        """Stop watching for file changes."""
+        self.is_watching = False
+    
+    def update_preview(self) -> Path:
+        """Update the preview with current project state."""
+        return self.generator.generate_preview()

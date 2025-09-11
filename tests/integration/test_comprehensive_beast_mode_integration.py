@@ -136,6 +136,36 @@ class TestMultiAgentCollaborationScenarios:
         # Process help request with potential helpers
         responses = []
         for helper in [helper1, helper2]:
+            # Make sure the helper's agent registry knows about the requester
+            requester_caps = AgentCapabilities(
+                agent_id=requester.agent_id,
+                capabilities=requester.capabilities,
+                availability="ready_for_business"
+            )
+            
+            discovered_requester = DiscoveredAgent(
+                agent_id=requester.agent_id,
+                capabilities=requester_caps,
+                collaboration_score=1.0
+            )
+            
+            helper.agent_registry.agents[requester.agent_id] = discovered_requester
+            
+            # Make sure the helper is registered in its own agent registry
+            helper_caps = AgentCapabilities(
+                agent_id=helper.agent_id,
+                capabilities=helper.capabilities,
+                availability="ready_for_business"
+            )
+            
+            discovered_helper = DiscoveredAgent(
+                agent_id=helper.agent_id,
+                capabilities=helper_caps,
+                collaboration_score=1.0
+            )
+            
+            helper.agent_registry.agents[helper.agent_id] = discovered_helper
+            
             response = helper.help_system.process_help_request(
                 help_request_message,
                 helper.agent_id

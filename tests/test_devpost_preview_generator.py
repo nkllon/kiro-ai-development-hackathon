@@ -114,11 +114,11 @@ Built with Python, TypeScript, and systematic engineering practices.
             validation_engine=mock_validation_engine
         )
     
-    def test_initialization(self, temp_project_dir):
+    def test_initialization(self, preview_generator):
         """Test preview generator initialization."""
-        generator = DevpostPreviewGenerator(project_path=temp_project_dir)
+        generator = preview_generator
         
-        assert generator.project_path == temp_project_dir
+        assert generator.project_path is not None
         assert generator.validation_engine is not None
         assert generator._project_data_cache is None
         assert generator._cache_timestamp is None

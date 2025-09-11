@@ -12,7 +12,7 @@ import logging
 from .models import (
     MarketConditions, CompetitiveThreat, PlatformAllocation,
     StrategyExecution, ResponsePlan, AllocationPlan,
-    PlatformType
+    PlatformType, CompetitorMove
 )
 from .platform_orchestrators import (
     GKEPlatformOrchestrator,
@@ -159,8 +159,18 @@ class CompetitiveCommandCenter:
                 "deployment": datetime.now() + timedelta(days=3)
             }
         
+        # Convert threat to competitor move for intelligence analysis
+        competitor_move = CompetitorMove(
+            competitor=threat.competitor,
+            move_type=threat.threat_type,
+            announcement_date=threat.detection_time,
+            description=threat.market_impact.get("description", "Competitive threat detected"),
+            market_impact=threat.impact_level,
+            response_urgency=threat.response_urgency
+        )
+        
         # Generate differentiation strategy
-        differentiation = self.competitive_intelligence.generate_differentiation_strategy(threat)
+        differentiation = self.competitive_intelligence.generate_differentiation_strategy(competitor_move)
         
         # Allocate resources for response
         response_resources = self.resource_allocator.allocate_for_response(threat)

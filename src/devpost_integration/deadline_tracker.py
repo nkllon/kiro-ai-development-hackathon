@@ -20,7 +20,7 @@ from .models import (
     Deadline, ProjectSummary, NotificationSettings, ValidationRules,
     DevpostConfig, ProjectConnection
 )
-from .api_client import DevpostAPIClient
+from .api_client import DevPostAPIClient
 from .notification_manager import NotificationManager
 
 
@@ -78,7 +78,7 @@ class DeadlineTracker:
     def __init__(
         self,
         config_file: Optional[Path] = None,
-        api_client: Optional[DevpostAPIClient] = None,
+        api_client: Optional[DevPostAPIClient] = None,
         notification_manager: Optional[NotificationManager] = None
     ):
         """
@@ -90,7 +90,7 @@ class DeadlineTracker:
             notification_manager: Notification manager instance
         """
         self.config_file = config_file or Path.cwd() / '.devpost' / 'config.json'
-        self.api_client = api_client or DevpostAPIClient()
+        self.api_client = api_client or DevPostAPIClient()
         self.notification_manager = notification_manager or NotificationManager()
         self.logger = logging.getLogger(__name__)
         

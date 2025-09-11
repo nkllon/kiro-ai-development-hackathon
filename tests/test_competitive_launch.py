@@ -20,7 +20,8 @@ from src.competitive_launch import (
 from src.competitive_launch.models import (
     MarketConditions, CompetitiveThreat, PlatformAllocation,
     CompetitorMove, MarketTrend, CustomerFeedback, DeadlinePressure,
-    ResourceConstraints, GKEResources, TiDBResources, KiroResources
+    ResourceConstraints, GKEResources, TiDBResources, KiroResources,
+    ThreatLevel, PlatformType
 )
 
 
@@ -42,7 +43,7 @@ class TestCompetitiveCommandCenter:
                     announcement_date=datetime.now(),
                     description="Meta announces AI development tools",
                     market_impact=0.7,
-                    response_urgency="urgent"
+                    response_urgency=ThreatLevel.URGENT
                 )
             ],
             market_trends=[
@@ -103,7 +104,7 @@ class TestCompetitiveCommandCenter:
             competitor="Meta",
             threat_type="feature_announcement",
             impact_level=0.8,
-            response_urgency="urgent",
+            response_urgency=ThreatLevel.URGENT,
             market_impact={"description": "Meta announces competing feature"},
             detection_time=datetime.now(),
             response_deadline=datetime.now() + timedelta(hours=24)
@@ -197,7 +198,7 @@ class TestGKEPlatformOrchestrator:
         
         assert isinstance(result, dict)
         assert "action" in result
-        assert "reason" in result or "success" in result
+        assert result["action"] in ["scaled", "no_scaling"]
     
     def test_monitor_cloud_costs(self):
         """Test cloud cost monitoring."""
@@ -384,7 +385,7 @@ class TestCompetitiveIntelligenceEngine:
             announcement_date=datetime.now(),
             description="Meta announces AI development tools",
             market_impact=0.7,
-            response_urgency="urgent"
+            response_urgency=ThreatLevel.URGENT
         )
         
         result = self.engine.generate_differentiation_strategy(competitor_move)
@@ -552,7 +553,7 @@ class TestIntegrationScenarios:
             competitor="Meta",
             threat_type="feature_announcement",
             impact_level=0.8,
-            response_urgency="urgent",
+            response_urgency=ThreatLevel.URGENT,
             market_impact={"description": "Meta announces competing feature"},
             detection_time=datetime.now(),
             response_deadline=datetime.now() + timedelta(hours=24)

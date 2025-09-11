@@ -94,6 +94,13 @@ class CompletionStatus(str, Enum):
     INCOMPLETE = "incomplete"
 
 
+class ValidationSeverity(str, Enum):
+    """Validation issue severity levels."""
+    INFO = "info"
+    WARNING = "warning"
+    ERROR = "error"
+
+
 # Core Data Models
 @dataclass
 class TeamMember:
@@ -232,6 +239,72 @@ class ProjectSummary:
     pending_changes: int = 0
     validation_errors: int = 0
     is_active: bool = False
+
+
+@dataclass
+class ValidationIssue:
+    """Individual validation issue."""
+    field: str
+    message: str
+    severity: ValidationSeverity
+    suggestion: Optional[str] = None
+    line_number: Optional[int] = None
+    file_path: Optional[Path] = None
+    
+    def __post_init__(self):
+        if isinstance(self.file_path, str):
+            self.file_path = Path(self.file_path)
+
+
+@dataclass
+class ValidationReport:
+    """Validation report for project requirements."""
+    project_id: str
+    is_valid: bool
+    issues: List[ValidationIssue] = field(default_factory=list)
+    warnings: List[ValidationIssue] = field(default_factory=list)
+    errors: List[ValidationIssue] = field(default_factory=list)
+    created_at: datetime = field(default_factory=datetime.now)
+    
+    def get_critical_issues(self) -> List[ValidationIssue]:
+        """Get critical validation issues (errors only)."""
+        return [issue for issue in self.issues if issue.severity == ValidationSeverity.ERROR]
+    
+    def get_warnings(self) -> List[ValidationIssue]:
+        """Get warning validation issues."""
+        return [issue for issue in self.issues if issue.severity == ValidationSeverity.WARNING]
+    
+    def get_info_issues(self) -> List[ValidationIssue]:
+        """Get informational validation issues."""
+        return [issue for issue in self.issues if issue.severity == ValidationSeverity.INFO]
+    
+    def has_errors(self) -> bool:
+        """Check if there are any critical errors."""
+        return len(self.get_critical_issues()) > 0
+    
+    def has_warnings(self) -> bool:
+        """Check if there are any warnings."""
+        return len(self.get_warnings()) > 0
+    
+    def add_issue(self, issue: ValidationIssue) -> None:
+        """Add a validation issue to the report."""
+        self.issues.append(issue)
+        if issue.severity == ValidationSeverity.ERROR:
+            self.errors.append(issue)
+        elif issue.severity == ValidationSeverity.WARNING:
+            self.warnings.append(issue)
+    
+    def summary(self) -> Dict[str, Any]:
+        """Get a summary of the validation report."""
+        return {
+            'project_id': self.project_id,
+            'is_valid': self.is_valid,
+            'total_issues': len(self.issues),
+            'errors': len(self.errors),
+            'warnings': len(self.warnings),
+            'info': len(self.get_info_issues()),
+            'created_at': self.created_at.isoformat()
+        }
 
 
 @dataclass
