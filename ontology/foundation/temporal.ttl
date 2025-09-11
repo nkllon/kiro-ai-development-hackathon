@@ -1,0 +1,62 @@
+@prefix time: <http://nkllon.dev/time#> .
+@prefix lifecycle: <http://nkllon.dev/lifecycle#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# Temporal Management Classes
+time:TemporalEntity a rdfs:Class ;
+    rdfs:comment "An entity with temporal validity constraints" .
+
+# Temporal Properties
+time:validFrom a rdf:Property ; 
+    rdfs:range xsd:dateTime ;
+    rdfs:comment "Start of validity period" .
+
+time:validUntil a rdf:Property ; 
+    rdfs:range xsd:dateTime ;
+    rdfs:comment "End of validity period" .
+
+time:supersedes a rdf:Property ;
+    rdfs:comment "This entity supersedes another" .
+
+time:supersededBy a rdf:Property ;
+    rdfs:comment "This entity is superseded by another" .
+
+time:isValidAt a rdf:Property ;
+    rdfs:comment "Check if entity is valid at specific timestamp" .
+
+time:getValidVersion a rdf:Property ;
+    rdfs:comment "Get version valid at specific time" .
+
+# Lifecycle Management Classes
+lifecycle:LifecycleState a rdfs:Class ;
+    rdfs:comment "A state in the lifecycle of an entity" .
+
+lifecycle:draft a lifecycle:LifecycleState ;
+    rdfs:comment "Entity is in draft state" .
+
+lifecycle:active a lifecycle:LifecycleState ;
+    rdfs:comment "Entity is active and in use" .
+
+lifecycle:deprecated a lifecycle:LifecycleState ;
+    rdfs:comment "Entity is deprecated but still valid" .
+
+lifecycle:retired a lifecycle:LifecycleState ;
+    rdfs:comment "Entity is retired and no longer valid" .
+
+# Lifecycle Properties
+lifecycle:hasState a rdf:Property ;
+    rdfs:range lifecycle:LifecycleState ;
+    rdfs:comment "Current lifecycle state of entity" .
+
+lifecycle:transitionedAt a rdf:Property ; 
+    rdfs:range xsd:dateTime ;
+    rdfs:comment "When entity transitioned to current state" .
+
+lifecycle:transitionReason a rdf:Property ;
+    rdfs:range xsd:string ;
+    rdfs:comment "Reason for lifecycle state transition" .
+
+# Temporal Query Classes
+time:TemporalQuery a rdfs:Class ;
+    rdfs:comment "Query that respects temporal validity" .

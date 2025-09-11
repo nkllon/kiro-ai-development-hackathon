@@ -1,0 +1,41 @@
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix bm:   <http://nkllon.dev/beastmaster#> .
+@prefix metr: <http://nkllon.dev/metrics#> .
+@prefix ddd:  <http://nkllon.dev/ddd#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# Every Artifact must trace to ≥1 Requirement
+bm:ArtifactTraceShape a sh:NodeShape ;
+  sh:targetClass bm:Artifact ;
+  sh:property [ sh:path bm:tracesTo ; sh:minCount 1 ] .
+
+# Every Convergence must have a ConstraintSet and at least one Constraint
+bm:ConvergenceShape a sh:NodeShape ;
+  sh:targetClass bm:Convergence ;
+  sh:property [ sh:path bm:constrains ; sh:minCount 1 ] .
+
+bm:ConstraintSetShape a sh:NodeShape ;
+  sh:targetClass bm:ConstraintSet ;
+  sh:property [ sh:path bm:hasConstraint ; sh:minCount 1 ] .
+
+bm:ConstraintShape a sh:NodeShape ;
+  sh:targetClass bm:Constraint ;
+  sh:property [ sh:path bm:hasOperator ; sh:minCount 1 ] ;
+  sh:property [ sh:path bm:hasValue ; sh:minCount 1 ] .
+
+# Measurements must reference a Metric and subject, with numeric value
+metr:MeasurementShape a sh:NodeShape ;
+  sh:targetClass metr:Measurement ;
+  sh:property [ sh:path metr:ofMetric ; sh:minCount 1 ] ;
+  sh:property [ sh:path metr:measures ; sh:minCount 1 ] ;
+  sh:property [ sh:path metr:value ; sh:datatype xsd:double ] .
+
+# Process/workflow integrity
+bm:WorkflowShape a sh:NodeShape ;
+  sh:targetClass bm:Workflow ;
+  sh:property [ sh:path bm:hasStep ; sh:minCount 1 ] .
+
+# Bounded context on requirements
+ddd:ContextShape a sh:NodeShape ;
+  sh:targetClass bm:Requirement ;
+  sh:property [ sh:path ddd:withinContext ; sh:minCount 1 ] .

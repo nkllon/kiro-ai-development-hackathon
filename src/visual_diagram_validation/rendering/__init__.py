@@ -1,0 +1,1 @@
+"""Universal rendering utilities for PNG normalization."""

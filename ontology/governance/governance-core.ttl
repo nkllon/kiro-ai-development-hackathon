@@ -1,0 +1,138 @@
+@prefix gov: <http://nkllon.dev/governance#> .
+@prefix bm: <http://nkllon.dev/beastmaster#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Decision & Alignment Classes
+gov:AlignmentCheck a rdfs:Class ;
+    rdfs:comment "Check for alignment between requirements and solutions" .
+
+gov:DecisionRecord a rdfs:Class ;
+    rdfs:comment "Record of a decision made in the system" .
+
+gov:DecisionOutcome a rdfs:Class ;
+    rdfs:comment "Possible outcomes of a decision" .
+
+gov:accepted a gov:DecisionOutcome ;
+    rdfs:comment "Decision was accepted" .
+
+gov:rejected a gov:DecisionOutcome ;
+    rdfs:comment "Decision was rejected" .
+
+gov:deferred a gov:DecisionOutcome ;
+    rdfs:comment "Decision was deferred" .
+
+gov:clarify a gov:DecisionOutcome ;
+    rdfs:comment "Decision requires clarification" .
+
+# Decision Properties
+gov:reason a rdf:Property ;
+    rdfs:domain gov:DecisionRecord ;
+    rdfs:range xsd:string ;
+    rdfs:comment "Reason for the decision" .
+
+gov:outcome a rdf:Property ;
+    rdfs:domain gov:DecisionRecord ;
+    rdfs:range gov:DecisionOutcome ;
+    rdfs:comment "Outcome of the decision" .
+
+gov:decidedBy a rdf:Property ;
+    rdfs:domain gov:DecisionRecord ;
+    rdfs:range bm:Agent ;
+    rdfs:comment "Agent who made the decision" .
+
+gov:about a rdf:Property ;
+    rdfs:domain gov:DecisionRecord ;
+    rdfs:range rdfs:Resource ;
+    rdfs:comment "What the decision is about" .
+
+gov:basedOn a rdf:Property ;
+    rdfs:domain gov:DecisionRecord ;
+    rdfs:range gov:AlignmentCheck ;
+    rdfs:comment "Decision based on alignment check" .
+
+# Escape Patch Classes
+gov:EscapePatch a rdfs:Class ;
+    rdfs:comment "Systematic handling of low-confidence situations" .
+
+# Escape Patch Properties
+gov:invokedBy a rdf:Property ;
+    rdfs:domain gov:EscapePatch ;
+    rdfs:range bm:Agent ;
+    rdfs:comment "Agent who invoked the escape patch" .
+
+gov:invokedFor a rdf:Property ;
+    rdfs:domain gov:EscapePatch ;
+    rdfs:range rdfs:Resource ;
+    rdfs:comment "Resource the escape patch was invoked for" .
+
+gov:confidence a rdf:Property ;
+    rdfs:domain gov:EscapePatch ;
+    rdfs:range xsd:double ;
+    rdfs:comment "Confidence level that triggered escape" .
+
+gov:recommendedAction a rdf:Property ;
+    rdfs:domain gov:EscapePatch ;
+    rdfs:range gov:DecisionOutcome ;
+    rdfs:comment "Recommended action from escape patch" .
+
+# Behavioral Governance Classes
+gov:EaseOfAction a rdfs:Class ;
+    rdfs:comment "Measurement of how easy an action is to perform" .
+
+gov:Nudge a rdfs:Class ;
+    rdfs:comment "Behavioral nudge to encourage specific actions" .
+
+gov:BehaviorSLO a rdfs:Class ;
+    rdfs:comment "Service Level Objective for behavioral metrics" .
+
+# Behavioral Properties
+gov:easeScore a rdf:Property ;
+    rdfs:domain gov:EaseOfAction ;
+    rdfs:range xsd:double ;
+    rdfs:comment "Ease score (0.0 = hard, 1.0 = easy)" .
+
+gov:measuresAffordance a rdf:Property ;
+    rdfs:domain gov:EaseOfAction ;
+    rdfs:range bm:Affordance ;
+    rdfs:comment "Ease measurement for specific affordance" .
+
+gov:nudgeType a rdf:Property ;
+    rdfs:domain gov:Nudge ;
+    rdfs:range xsd:string ;
+    rdfs:comment "Type of nudge (default, reminder, etc.)" .
+
+gov:targetsAffordance a rdf:Property ;
+    rdfs:domain gov:Nudge ;
+    rdfs:range bm:Affordance ;
+    rdfs:comment "Affordance targeted by nudge" .
+
+gov:targetsActor a rdf:Property ;
+    rdfs:domain gov:BehaviorSLO ;
+    rdfs:range bm:Agent ;
+    rdfs:comment "Agent targeted by behavior SLO" .
+
+gov:targetsAffordanceSLO a rdf:Property ;
+    rdfs:domain gov:BehaviorSLO ;
+    rdfs:range bm:Affordance ;
+    rdfs:comment "Affordance targeted by behavior SLO" .
+
+gov:targetRate a rdf:Property ;
+    rdfs:domain gov:BehaviorSLO ;
+    rdfs:range xsd:double ;
+    rdfs:comment "Target success rate for behavior SLO" .
+
+# Alignment Properties
+gov:checksAlignmentWith a rdf:Property ;
+    rdfs:domain gov:AlignmentCheck ;
+    rdfs:comment "What alignment is being checked against" .
+
+gov:alignmentResult a rdf:Property ;
+    rdfs:domain gov:AlignmentCheck ;
+    rdfs:range xsd:string ;
+    rdfs:comment "Result of alignment check" .
+
+gov:threshold a rdf:Property ;
+    rdfs:domain gov:AlignmentCheck ;
+    rdfs:range xsd:double ;
+    rdfs:comment "Threshold for alignment acceptance" .

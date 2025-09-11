@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
 Beast Mode Framework Setup
+
+The comprehensive AI-powered development framework with domain-driven design
+and reflective module architecture for systematic software development.
 """
 
 from setuptools import setup, find_packages
@@ -20,7 +23,7 @@ if requirements_path.exists():
 setup(
     name="beast-mode-framework",
     version="1.0.0",
-    description="Systematic AI-Powered Development Framework",
+    description="Systematic AI-Powered Development Framework with Domain-Driven Design",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Beast Mode Development Team",
@@ -30,6 +33,26 @@ setup(
     package_dir={"": "src"},
     python_requires=">=3.9",
     install_requires=requirements,
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: Software Development :: Code Generators",
+        "Topic :: Software Development :: Quality Assurance",
+        "Topic :: System :: Monitoring",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+    ],
+    keywords=[
+        "ai", "development", "framework", "systematic", "collaboration", "agents",
+        "domain-driven-design", "ddd", "reflective-module", "architecture", "patterns",
+        "enterprise", "microservices", "bounded-context"
+    ],
     extras_require={
         "dev": [
             "pytest>=7.0.0",
@@ -39,10 +62,26 @@ setup(
             "isort>=5.12.0",
             "mypy>=1.0.0",
             "flake8>=6.0.0",
+            "pre-commit>=3.0.0",
         ],
         "docs": [
             "sphinx>=6.0.0",
             "sphinx-rtd-theme>=1.2.0",
+            "myst-parser>=1.0.0",
+            "sphinx-autodoc-typehints>=1.23.0",
+        ],
+        "examples": [
+            "fastapi>=0.100.0",
+            "sqlalchemy>=2.0.0",
+            "uvicorn>=0.23.0",
+            "httpx>=0.24.0",
+        ],
+        "testing": [
+            "pytest>=7.0.0",
+            "pytest-asyncio>=0.21.0",
+            "pytest-cov>=4.0.0",
+            "pytest-mock>=3.11.0",
+            "factory-boy>=3.3.0",
         ],
     },
     entry_points={
@@ -50,28 +89,24 @@ setup(
             "beast-mode=beast_mode.messaging.cli:cli",
             "bm=beast_mode.messaging.cli:cli",
             "beast=beast_mode.messaging.cli:cli",
+            "rm-ddd=rm_ddd.cli:main",
         ],
     },
-    classifiers=[
-        "Development Status :: 4 - Beta",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.12",
-        "Topic :: Software Development :: Libraries :: Python Modules",
-        "Topic :: Software Development :: Quality Assurance",
-        "Topic :: System :: Monitoring",
-    ],
-    keywords="ai development framework systematic collaboration agents",
-    project_urls={
-        "Bug Reports": "https://github.com/beast-mode/framework/issues",
-        "Source": "https://github.com/beast-mode/framework",
-        "Documentation": "https://beast-mode.readthedocs.io/",
-    },
     include_package_data=True,
+    package_data={
+        "rm_ddd": [
+            "templates/**/*.j2",
+            "stubs/**/*",
+            "examples/**/*.py",
+            "docs/**/*.md",
+        ],
+    },
+    project_urls={
+        "Homepage": "https://beast-mode.dev",
+        "Documentation": "https://beast-mode.readthedocs.io/",
+        "Repository": "https://github.com/beast-mode/framework",
+        "Bug Tracker": "https://github.com/beast-mode/framework/issues",
+        "Ecosystem": "https://beast-mode.dev/ecosystem",
+    },
     zip_safe=False,
 )

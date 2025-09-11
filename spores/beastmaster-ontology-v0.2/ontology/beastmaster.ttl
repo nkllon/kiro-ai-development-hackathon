@@ -1,0 +1,127 @@
+@prefix bm:   <http://nkllon.dev/beastmaster#> .
+@prefix ddd:  <http://nkllon.dev/ddd#> .
+@prefix metr: <http://nkllon.dev/metrics#> .
+@prefix spore:<http://nkllon.dev/spore#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+### Core artifact & spec
+bm:Requirement      a rdfs:Class .
+bm:Specification    a rdfs:Class .
+bm:Artifact         a rdfs:Class .
+bm:Code             a rdfs:Class ; rdfs:subClassOf bm:Artifact .
+bm:Test             a rdfs:Class ; rdfs:subClassOf bm:Artifact .
+bm:Doc              a rdfs:Class ; rdfs:subClassOf bm:Artifact .
+bm:Config           a rdfs:Class ; rdfs:subClassOf bm:Artifact .
+
+bm:Projection       a rdfs:Class .
+bm:Convergence      a rdfs:Class .
+
+### Constraints (enhanced)
+bm:ConstraintSet    a rdfs:Class .
+bm:Constraint       a rdfs:Class .
+bm:ConstraintType   a rdfs:Class .
+bm:ConstraintOperator a rdfs:Class .
+bm:greaterThan      a bm:ConstraintOperator .
+bm:lessThan         a bm:ConstraintOperator .
+bm:equals           a bm:ConstraintOperator .
+bm:contains         a bm:ConstraintOperator .
+
+### PDCA & RCA
+bm:RCAFinding       a rdfs:Class .
+bm:PDCACycle        a rdfs:Class .
+bm:PDCAState        a rdfs:Class .  # Plan|Do|Check|Act
+
+### Process / Workflow (new)
+bm:Process          a rdfs:Class .
+bm:Workflow         a rdfs:Class .
+bm:Step             a rdfs:Class .
+
+### Quality gates (new)
+bm:QualityGate      a rdfs:Class .
+bm:Validation       a rdfs:Class .
+
+### Tools / Execution (new)
+bm:Tool             a rdfs:Class .
+bm:Execution        a rdfs:Class .
+
+### Metrics (enhanced)
+metr:Metric         a rdfs:Class .
+metr:MetricType     a rdfs:Class .
+metr:Threshold      a rdfs:Class .
+metr:Measurement    a rdfs:Class .
+
+### DDD
+ddd:BoundedContext  a rdfs:Class .
+ddd:ULTerm          a rdfs:Class .   # ubiquitous language term
+
+### Spores
+spore:Spore         a rdfs:Class .
+spore:Evidence      a rdfs:Class .
+
+### --- Object properties ---
+bm:satisfies        a rdf:Property ; rdfs:domain bm:Artifact ; rdfs:range bm:Requirement .
+bm:tracesTo         a rdf:Property ; rdfs:domain bm:Artifact ; rdfs:range bm:Requirement .
+bm:derivesFrom      a rdf:Property ; rdfs:domain bm:Projection ; rdfs:range bm:Specification .
+bm:projects         a rdf:Property ; rdfs:domain bm:Projection ; rdfs:range bm:Artifact .
+bm:hasConvergence   a rdf:Property ; rdfs:domain bm:Specification ; rdfs:range bm:Convergence .
+bm:constrains       a rdf:Property ; rdfs:domain bm:Convergence ; rdfs:range bm:ConstraintSet .
+bm:hasConstraint    a rdf:Property ; rdfs:domain bm:ConstraintSet ; rdfs:range bm:Constraint .
+bm:hasConstraintType a rdf:Property ; rdfs:domain bm:Constraint ; rdfs:range bm:ConstraintType .
+bm:hasOperator      a rdf:Property ; rdfs:domain bm:Constraint ; rdfs:range bm:ConstraintOperator .
+bm:hasValue         a rdf:Property ; rdfs:domain bm:Constraint ; rdfs:range rdfs:Resource .
+
+bm:explains         a rdf:Property ; rdfs:domain bm:RCAFinding ; rdfs:range bm:Convergence .
+bm:hasState         a rdf:Property ; rdfs:domain bm:PDCACycle ; rdfs:range bm:PDCAState .
+bm:nextState        a rdf:Property ; rdfs:domain bm:PDCAState ; rdfs:range bm:PDCAState .
+
+# Process/workflow
+bm:hasStep          a rdf:Property ; rdfs:domain bm:Workflow ; rdfs:range bm:Step .
+bm:nextStep         a rdf:Property ; rdfs:domain bm:Step ; rdfs:range bm:Step .
+bm:executes         a rdf:Property ; rdfs:domain bm:Execution ; rdfs:range rdfs:Resource .
+bm:usesTool         a rdf:Property ; rdfs:domain bm:Execution ; rdfs:range bm:Tool .
+bm:withinProcess    a rdf:Property ; rdfs:domain bm:Workflow ; rdfs:range bm:Process .
+
+# Quality gates
+bm:hasQualityGate   a rdf:Property ; rdfs:domain rdfs:Resource ; rdfs:range bm:QualityGate .
+bm:validates        a rdf:Property ; rdfs:domain bm:Validation ; rdfs:range rdfs:Resource .
+
+# Metrics
+metr:measures       a rdf:Property ; rdfs:domain metr:Measurement ; rdfs:range rdfs:Resource .
+metr:ofMetric       a rdf:Property ; rdfs:domain metr:Measurement ; rdfs:range metr:Metric .
+metr:affects        a rdf:Property ; rdfs:domain metr:Measurement ; rdfs:range bm:ConstraintSet .
+metr:hasThreshold   a rdf:Property ; rdfs:domain metr:Metric ; rdfs:range metr:Threshold .
+metr:correlatesWith a rdf:Property ; rdfs:domain metr:Metric ; rdfs:range metr:Metric .
+metr:dependsOn      a rdf:Property ; rdfs:domain metr:Metric ; rdfs:range metr:Metric .
+metr:aggregates     a rdf:Property ; rdfs:domain metr:Metric ; rdfs:range metr:Metric .
+metr:hasType        a rdf:Property ; rdfs:domain metr:Metric ; rdfs:range metr:MetricType .
+
+# DDD
+ddd:withinContext   a rdf:Property ; rdfs:domain rdf:Resource ; rdfs:range ddd:BoundedContext .
+ddd:mapsTo          a rdf:Property ; rdfs:domain ddd:ULTerm ; rdfs:range rdfs:Resource .
+
+# Spores
+spore:proposes      a rdf:Property ; rdfs:domain spore:Spore ; rdfs:range rdfs:Resource .
+spore:hasEvidence   a rdf:Property ; rdfs:domain spore:Spore ; rdfs:range spore:Evidence .
+spore:lineage       a rdf:Property ; rdfs:domain spore:Spore ; rdfs:range prov:Entity .
+spore:license       a rdf:Property .
+
+### --- Datatype properties ---
+metr:value          a rdf:Property ; rdfs:domain metr:Measurement ; rdfs:range xsd:double .
+metr:unit           a rdf:Property ; rdfs:domain metr:Metric ; rdfs:range xsd:string .
+metr:timestamp      a rdf:Property ; rdfs:domain metr:Measurement ; rdfs:range xsd:dateTime .
+
+bm:phase            a rdf:Property ; rdfs:domain bm:PDCAState ; rdfs:range xsd:string .
+bm:status           a rdf:Property ; rdfs:range xsd:string .
+
+# Traceability strength/confidence (new)
+bm:tracesToStrength   a rdf:Property ; rdfs:domain bm:Artifact ; rdfs:range xsd:double .
+bm:tracesToConfidence a rdf:Property ; rdfs:domain bm:Artifact ; rdfs:range xsd:double .
+bm:tracesToReason     a rdf:Property ; rdfs:domain bm:Artifact ; rdfs:range xsd:string .
+bm:hasTraceabilityType a rdf:Property ; rdfs:domain bm:Artifact ; rdfs:range bm:TraceabilityType .
+bm:TraceabilityType   a rdfs:Class .
+bm:directTrace        a bm:TraceabilityType .
+bm:indirectTrace      a bm:TraceabilityType .
+bm:derivedTrace       a bm:TraceabilityType .
