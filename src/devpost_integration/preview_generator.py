@@ -3,7 +3,7 @@
 preview_generator - Simplified for size compliance
 """
 
-from .preview_generator_methods import DevpostPreviewGenerator
+from .preview_generator_methods import DevpostPreviewGenerator, RealtimePreviewManager
 from .reflective_module import ReflectiveModule, register_module
 from datetime import datetime
 from typing import Dict, Any, List, Optional
