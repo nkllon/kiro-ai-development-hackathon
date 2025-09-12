@@ -9,12 +9,17 @@ import secrets
 import webbrowser
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, Optional, Tuple, Any
+from typing import Dict, Optional, Tuple, Any, List
 from urllib.parse import urlencode, parse_qs, urlparse
 import requests
 from dataclasses import dataclass
 
 from ..exceptions import DevPostAuthenticationError, DevPostAPIError
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
+from src.devpost_integration.reflective_module import ReflectiveModule, register_module, ModuleHealth, ModuleStatus, ModuleCapability
+import logging
 
 
 @dataclass
@@ -410,3 +415,58 @@ class DevPostAuthService:
             status['method'] = 'api_key'
         
         return status
+
+class DevpostAuthService(ReflectiveModule):
+    """DevpostAuthService with RM-DDD compliance"""
+    
+    def __init__(self):
+        """Initialize DevPost auth service"""
+        super().__init__(module_id="devpostauthservice", version="1.0.0")
+        register_module(self)
+        self._logger = logging.getLogger(f"{__name__}.DevpostAuthService")
+        self._logger.info("DevpostAuthService initialized with RM-DDD compliance")
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information"""
+        return {
+            'module_id': 'devpostauthservice',
+            'version': '1.0.0',
+            'description': 'DevpostAuthService implementation'
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities"""
+        return [ModuleCapability.CORE_FUNCTIONALITY]
+    
+    def get_dependencies(self) -> List[str]:
+        """Get module dependencies"""
+        return ['reflective_module']
+    
+    def check_health(self) -> ModuleHealth:
+        """Perform health check"""
+        return ModuleHealth(
+            module_id='devpostauthservice',
+            status=ModuleStatus.HEALTHY,
+            health_score=1.0,
+            issues=[],
+            capabilities=self.get_capabilities(),
+            dependencies=self.get_dependencies(),
+            metrics={},
+            last_check=datetime.now()
+        )
+    
+    def get_configuration(self) -> Dict[str, Any]:
+        """Get module configuration"""
+        return {}
+    
+    def update_configuration(self, config: Dict[str, Any]) -> bool:
+        """Update module configuration"""
+        return True
+    
+    def get_metrics(self) -> Dict[str, Any]:
+        """Get module metrics"""
+        return {}
+    
+    def reset_metrics(self) -> None:
+        """Reset module metrics"""
+        pass

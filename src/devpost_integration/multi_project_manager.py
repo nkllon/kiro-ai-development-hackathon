@@ -19,17 +19,19 @@ from .reflective_module import (
 logger = logging.getLogger(__name__)
 
 
-class Unknown(ReflectiveModule):
-    """Unknown with RM-DDD compliance with RM-DDD compliance"""
+class MultiProjectManager(ReflectiveModule):
+    """MultiProjectManager with RM-DDD compliance"""
     
-    def __init__(selfself):
-        """Initialize multi_project_manager"""
-        super().__init__(module_id="multi_project_manager", version="1.0.0")
+    def __init__(self):
+        """Initialize multi project manager"""
+        super().__init__(module_id="multiprojectmanager", version="1.0.0")
+        register_module(self)
+        self._logger = logging.getLogger(f"{__name__}.MultiProjectManager")
+        self._logger.info("MultiProjectManager initialized with RM-DDD compliance")
         # Initialize module components
         self._start_time = datetime.now()
         self._operation_count = 0
         self._errors = 0
-        register_module(self)
     
         # Core methods will be implemented here
     
@@ -157,3 +159,7 @@ class Unknown(ReflectiveModule):
         self._errors = 0
         self._start_time = datetime.now()
         logger.info("Metrics reset for multi_project_manager module")
+
+
+# Export the main class
+__all__ = ['MultiProjectManager']
