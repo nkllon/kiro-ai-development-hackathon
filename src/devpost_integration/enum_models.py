@@ -89,3 +89,4 @@ class NotificationTiming(Enum):
     MONTHLY = "monthly"
     CUSTOM = "custom"
     NEVER = "never"
+

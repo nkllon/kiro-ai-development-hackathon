@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class Unknown(ReflectiveModule):
     """Unknown with RM-DDD compliance with RM-DDD compliance"""
     
-    def __init__(selfself):
+    def __init__(self):
         """Initialize project_context_manager"""
         super().__init__(module_id="project_context_manager", version="1.0.0")
         # Initialize module components

@@ -1,66 +1,33 @@
-#!/usr/bin/env python3
-"""ReflectiveModule methods implementation - no circular imports"""
+"""
+DEPRECATED: This ReflectiveModule interface is deprecated.
 
-from typing import Dict, List, Any, Optional
-from pathlib import Path
-from datetime import datetime
+RDI Compliance Notice:
+This file contains a duplicate ReflectiveModule interface that violates
+Requirements-Driven Implementation (RDI) principles.
 
-# Import from the main module to avoid circular imports
-from .reflective_module import ReflectiveModule, ModuleHealth, ModuleStatus, ModuleCapability, register_module
+MIGRATION REQUIRED:
+- Use the unified interface: src/rm_ddd/core/unified_reflective_module.py
+- Update all imports to use the unified interface
+- This file will be removed in a future version
 
-class ReflectiveModuleImplementation(ReflectiveModule):
-    """Concrete implementation of ReflectiveModule"""
-    
-    def __init__(self, module_id: str = "reflective_module"):
-        """Initialize the reflective module"""
-        self.module_id = module_id
-        register_module(self)
-    
-    def get_module_info(self) -> Dict[str, Any]:
-        """Get module information"""
-        return {
-            'module_id': self.module_id,
-            'version': '1.0.0',
-            'description': 'ReflectiveModule implementation',
-            'author': 'DevPost Integration Team'
-        }
-    
-    def get_capabilities(self) -> List[ModuleCapability]:
-        """Get module capabilities"""
-        return [ModuleCapability.CORE_FUNCTIONALITY]
-    
-    def get_dependencies(self) -> List[str]:
-        """Get module dependencies"""
-        return []
-    
-    def check_health(self) -> ModuleHealth:
-        """Perform health check"""
-        return ModuleHealth(
-            module_id=self.module_id,
-            status=ModuleStatus.HEALTHY,
-            health_score=1.0,
-            issues=[],
-            capabilities=self.get_capabilities(),
-            dependencies=self.get_dependencies(),
-            metrics={},
-            last_check=datetime.now()
-        )
-    
-    def get_configuration(self) -> Dict[str, Any]:
-        """Get module configuration"""
-        return {}
-    
-    def update_configuration(self, config: Dict[str, Any]) -> bool:
-        """Update module configuration"""
-        return True
-    
-    def get_metrics(self) -> Dict[str, Any]:
-        """Get module metrics"""
-        return {}
-    
-    def reset_metrics(self) -> None:
-        """Reset module metrics"""
-        pass
+Original file backed up to: src/devpost_integration/reflective_module_methods.py.backup_20250912_105305
+Deprecated on: 2025-09-12T10:53:05.795816
+"""
 
-# Create a default instance
-default_reflective_module = ReflectiveModuleImplementation()
+# Import the unified interface
+from rm_ddd.core.unified_reflective_module import (
+    ReflectiveModule,
+    ModuleHealth, 
+    ModuleStatus,
+    ModuleCapability,
+    GracefulDegradationResult
+)
+
+# Re-export for backward compatibility (temporary)
+__all__ = [
+    'ReflectiveModule',
+    'ModuleHealth',
+    'ModuleStatus', 
+    'ModuleCapability',
+    'GracefulDegradationResult'
+]

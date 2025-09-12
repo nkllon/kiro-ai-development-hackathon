@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class TeamValidationRule(ReflectiveModule):
     """TeamValidationRule with RM-DDD compliance with RM-DDD compliance"""
     
-    def __init__(selfself):
+    def __init__(self):
         """Initialize team_validation_rule"""
         super().__init__(module_id="team_validation_rule", version="1.0.0")
         # Initialize module components

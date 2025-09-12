@@ -1,114 +1,33 @@
-#!/usr/bin/env python3
-"""ReflectiveModule - Core RM-DDD base classes and interfaces"""
+"""
+DEPRECATED: This ReflectiveModule interface is deprecated.
 
-from abc import ABC, abstractmethod
-from typing import Dict, List, Any, Optional
-from datetime import datetime
-from enum import Enum
-from dataclasses import dataclass
+RDI Compliance Notice:
+This file contains a duplicate ReflectiveModule interface that violates
+Requirements-Driven Implementation (RDI) principles.
 
-class ModuleCapability(Enum):
-    """Module capability types"""
-    CORE_FUNCTIONALITY = "core_functionality"
-    DATA_PROCESSING = "data_processing"
-    API_INTEGRATION = "api_integration"
-    FILE_OPERATIONS = "file_operations"
-    VALIDATION = "validation"
-    MONITORING = "monitoring"
+MIGRATION REQUIRED:
+- Use the unified interface: src/rm_ddd/core/unified_reflective_module.py
+- Update all imports to use the unified interface
+- This file will be removed in a future version
 
-class ModuleStatus(Enum):
-    """Module health status"""
-    HEALTHY = "healthy"
-    WARNING = "warning"
-    ERROR = "error"
-    UNKNOWN = "unknown"
+Original file backed up to: src/devpost_integration/reflective_module.py.backup_20250912_105104
+Deprecated on: 2025-09-12T10:51:04.491478
+"""
 
-@dataclass
-class ModuleConfiguration:
-    """Module configuration"""
-    module_id: str
-    settings: Dict[str, Any]
-    last_updated: datetime
+# Import the unified interface
+from rm_ddd.core.unified_reflective_module import (
+    ReflectiveModule,
+    ModuleHealth, 
+    ModuleStatus,
+    ModuleCapability,
+    GracefulDegradationResult
+)
 
-@dataclass
-class ModuleHealth:
-    """Module health information"""
-    module_id: str
-    status: ModuleStatus
-    health_score: float
-    issues: List[str]
-    capabilities: List[ModuleCapability]
-    dependencies: List[str]
-    metrics: Dict[str, Any]
-    last_check: datetime
-
-class ReflectiveModule(ABC):
-    """Abstract base class for reflective modules"""
-    
-    @abstractmethod
-    def get_module_info(self) -> Dict[str, Any]:
-        """Get module information"""
-        pass
-    
-    @abstractmethod
-    def get_capabilities(self) -> List[ModuleCapability]:
-        """Get module capabilities"""
-        pass
-    
-    @abstractmethod
-    def get_dependencies(self) -> List[str]:
-        """Get module dependencies"""
-        pass
-    
-    @abstractmethod
-    def check_health(self) -> ModuleHealth:
-        """Perform health check"""
-        pass
-    
-    @abstractmethod
-    def get_configuration(self) -> Dict[str, Any]:
-        """Get module configuration"""
-        pass
-    
-    @abstractmethod
-    def update_configuration(self, config: Dict[str, Any]) -> bool:
-        """Update module configuration"""
-        pass
-    
-    @abstractmethod
-    def get_metrics(self) -> Dict[str, Any]:
-        """Get module metrics"""
-        pass
-    
-    @abstractmethod
-    def reset_metrics(self) -> None:
-        """Reset module metrics"""
-        pass
-
-# Global registry for modules
-_module_registry: Dict[str, ReflectiveModule] = {}
-
-def register_module(module: ReflectiveModule) -> None:
-    """Register a module in the global registry"""
-    module_info = module.get_module_info()
-    module_id = module_info.get('module_id', 'unknown')
-    _module_registry[module_id] = module
-
-def get_registered_modules() -> Dict[str, ReflectiveModule]:
-    """Get all registered modules"""
-    return _module_registry.copy()
-
-def get_module(module_id: str) -> Optional[ReflectiveModule]:
-    """Get a specific module by ID"""
-    return _module_registry.get(module_id)
-
+# Re-export for backward compatibility (temporary)
 __all__ = [
-    'ReflectiveModule',
-    'ModuleHealth', 
-    'ModuleStatus',
-    'ModuleCapability',
-    'ModuleConfiguration',
-    'register_module',
-    'get_registered_modules',
-    'get_module'
+    "ReflectiveModule",
+    "ModuleHealth",
+    "ModuleStatus", 
+    "ModuleCapability",
+    "GracefulDegradationResult"
 ]

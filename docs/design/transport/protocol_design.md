@@ -853,3 +853,4 @@ class TestProtocolIntegration:
 - **Custom Serializers**: Support for custom serialization formats
 - **Protocol Adapters**: Support for protocol adapters
 - **Custom Handlers**: Support for custom message handlers
+

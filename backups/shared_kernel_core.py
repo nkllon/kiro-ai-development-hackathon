@@ -1,0 +1,858 @@
+"""
+Shared Kernel Core
+
+This module was extracted from shared_kernel.py
+as part of RM-DDD compliance refactoring.
+"""
+
+import logging
+from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
+from datetime import datetime
+from enum import Enum
+from typing import Any, Dict, List, Optional, Set, Type, Union
+from uuid import UUID, uuid4
+from ..core.base import DomainReflectiveModule
+from ..core.compliance import ValidationResult
+from ..models import DomainException, DomainBoundaries, ModuleStatus, ModuleCapability
+from ..core.health import ModuleHealth
+from ..core.health import ModuleHealth
+
+class SharedElementType(Enum):
+    """Types of elements that can be shared in a kernel."""
+    VALUE_OBJECT = 'value_object'
+    ENTITY = 'entity'
+    DOMAIN_SERVICE = 'domain_service'
+    DOMAIN_EVENT = 'domain_event'
+    SPECIFICATION = 'specification'
+    POLICY = 'policy'
+
+class ChangeImpact(Enum):
+    """Impact levels for changes to shared elements."""
+    BREAKING = 'breaking'
+    NON_BREAKING = 'non_breaking'
+    ADDITIVE = 'additive'
+    DEPRECATION = 'deprecation'
+
+@dataclass
+class SharedElement:
+    """Represents an element in the shared kernel."""
+    element_id: UUID = field(default_factory=uuid4)
+    name: str = ''
+    element_type: SharedElementType = SharedElementType.VALUE_OBJECT
+    description: str = ''
+    version: str = '1.0.0'
+    owner_context: str = ''
+    consumer_contexts: Set[str] = field(default_factory=set)
+    definition: Dict[str, Any] = field(default_factory=dict)
+    constraints: List[str] = field(default_factory=list)
+    created_at: datetime = field(default_factory=datetime.now)
+    updated_at: datetime = field(default_factory=datetime.now)
+
+    def add_consumer(self, context_name: str):
+        """Add a consumer context."""
+        self.consumer_contexts.add(context_name)
+        self.updated_at = datetime.now()
+
+    def remove_consumer(self, context_name: str):
+        """Remove a consumer context."""
+        self.consumer_contexts.discard(context_name)
+        self.updated_at = datetime.now()
+
+    def validate_element(self) -> ValidationResult:
+        """Validate the shared element."""
+        result = ValidationResult(is_valid=True)
+        if not self.name:
+            result.add_error('Shared element name is required')
+        if not self.description:
+            result.add_warning('Shared element description is recommended')
+        if not self.owner_context:
+            result.add_error('Shared element must have an owner context')
+        if not self.consumer_contexts:
+            result.add_warning('Shared element has no consumer contexts')
+        return result
+
+@dataclass
+class SharedKernelChange:
+    """Represents a change to a shared kernel element."""
+    change_id: UUID = field(default_factory=uuid4)
+    element_id: UUID = field(default_factory=uuid4)
+    change_type: str = ''
+    impact_level: ChangeImpact = ChangeImpact.NON_BREAKING
+    description: str = ''
+    rationale: str = ''
+    affected_contexts: Set[str] = field(default_factory=set)
+    migration_guide: str = ''
+    proposed_by: str = ''
+    approved_by: Optional[str] = None
+    implemented_at: Optional[datetime] = None
+    created_at: datetime = field(default_factory=datetime.now)
+
+    def validate_change(self) -> ValidationResult:
+        """Validate the change proposal."""
+        result = ValidationResult(is_valid=True)
+        if not self.change_type:
+            result.add_error('Change type is required')
+        if not self.description:
+            result.add_error('Change description is required')
+        if self.impact_level == ChangeImpact.BREAKING and (not self.migration_guide):
+            result.add_error('Breaking changes must include migration guide')
+        if not self.proposed_by:
+            result.add_error('Change must specify who proposed it')
+        return result
+
+class SharedKernelGovernance(ABC):
+    """
+    Abstract base class for shared kernel governance policies.
+    
+    Defines the interface for implementing governance policies
+    that control how shared kernel elements are managed, versioned,
+    and evolved across bounded contexts.
+    """
+
+    @abstractmethod
+    def can_modify_element(self, element: SharedElement, modifier_context: str) -> bool:
+        """
+        Check if a context can modify a shared element.
+        
+        Args:
+            element: Shared element to modify
+            modifier_context: Context requesting modification
+            
+        Returns:
+            bool: True if modification is allowed
+        """
+        pass
+
+    @abstractmethod
+    def requires_approval(self, change: SharedKernelChange) -> bool:
+        """
+        Check if a change requires approval.
+        
+        Args:
+            change: Proposed change
+            
+        Returns:
+            bool: True if approval is required
+        """
+        pass
+
+    @abstractmethod
+    def get_required_approvers(self, change: SharedKernelChange) -> List[str]:
+        """
+        Get list of required approvers for a change.
+        
+        Args:
+            change: Proposed change
+            
+        Returns:
+            List[str]: List of required approver contexts
+        """
+        pass
+
+class DefaultSharedKernelGovernance(SharedKernelGovernance):
+    """
+    Default implementation of shared kernel governance.
+    
+    Implements conservative governance policies that prioritize
+    stability and backward compatibility.
+    """
+
+    def can_modify_element(self, element: SharedElement, modifier_context: str) -> bool:
+        """Check modification permissions."""
+        if element.owner_context == modifier_context:
+            return True
+        return False
+
+    def requires_approval(self, change: SharedKernelChange) -> bool:
+        """Check if approval is required."""
+        if change.impact_level == ChangeImpact.BREAKING:
+            return True
+        if len(change.affected_contexts) > 1:
+            return True
+        return False
+
+    def get_required_approvers(self, change: SharedKernelChange) -> List[str]:
+        """Get required approvers."""
+        approvers = []
+        if change.impact_level == ChangeImpact.BREAKING:
+            approvers.extend(change.affected_contexts)
+        return list(set(approvers))
+
+class SharedKernel(DomainReflectiveModule):
+    """
+    Manages shared kernel elements between bounded contexts.
+    
+    Provides systematic management of shared domain elements including
+    versioning, governance, change management, and impact analysis.
+    """
+
+    def __init__(self, kernel_name: str, participating_contexts: List[str], governance: Optional[SharedKernelGovernance]=None):
+        super().__init__(f'shared_kernel_{kernel_name}')
+        self.kernel_name = kernel_name
+        self.participating_contexts = set(participating_contexts)
+        self.governance = governance or DefaultSharedKernelGovernance()
+        self._elements: Dict[UUID, SharedElement] = {}
+        self._changes: Dict[UUID, SharedKernelChange] = {}
+        self._version_history: Dict[UUID, List[str]] = {}
+        self._usage_metrics: Dict[str, int] = {}
+
+    def add_element(self, name: str, element_type: SharedElementType, owner_context: str, description: str='', definition: Optional[Dict[str, Any]]=None) -> SharedElement:
+        """
+        Add a new element to the shared kernel.
+        
+        Args:
+            name: Name of the element
+            element_type: Type of the element
+            owner_context: Context that owns this element
+            description: Description of the element
+            definition: Element definition/specification
+            
+        Returns:
+            SharedElement: Created shared element
+            
+        Raises:
+            DomainException: If element creation fails
+        """
+        if owner_context not in self.participating_contexts:
+            raise DomainException(f'Owner context {owner_context} is not participating in shared kernel {self.kernel_name}', error_code='INVALID_OWNER_CONTEXT')
+        element = SharedElement(name=name, element_type=element_type, description=description, owner_context=owner_context, definition=definition or {})
+        validation_result = element.validate_element()
+        if not validation_result.is_valid:
+            raise DomainException(f'Invalid shared element: {validation_result.errors}', error_code='INVALID_SHARED_ELEMENT')
+        self._elements[element.element_id] = element
+        self._version_history[element.element_id] = [element.version]
+        logger.info(f'Added shared element {name} to kernel {self.kernel_name}')
+        return element
+
+    def add_consumer(self, element_id: UUID, consumer_context: str):
+        """
+        Add a consumer context to a shared element.
+        
+        Args:
+            element_id: ID of the shared element
+            consumer_context: Context that will consume the element
+            
+        Raises:
+            DomainException: If element not found or context invalid
+        """
+        if element_id not in self._elements:
+            raise DomainException(f'Shared element {element_id} not found', error_code='ELEMENT_NOT_FOUND')
+        if consumer_context not in self.participating_contexts:
+            raise DomainException(f'Consumer context {consumer_context} is not participating in shared kernel', error_code='INVALID_CONSUMER_CONTEXT')
+        element = self._elements[element_id]
+        element.add_consumer(consumer_context)
+        self._usage_metrics[consumer_context] = self._usage_metrics.get(consumer_context, 0) + 1
+        logger.info(f'Added consumer {consumer_context} to element {element.name}')
+
+    def propose_change(self, element_id: UUID, change_type: str, impact_level: ChangeImpact, description: str, proposed_by: str, rationale: str='', migration_guide: str='') -> SharedKernelChange:
+        """
+        Propose a change to a shared element.
+        
+        Args:
+            element_id: ID of the element to change
+            change_type: Type of change
+            impact_level: Impact level of the change
+            description: Description of the change
+            proposed_by: Context proposing the change
+            rationale: Rationale for the change
+            migration_guide: Migration guide for breaking changes
+            
+        Returns:
+            SharedKernelChange: Created change proposal
+            
+        Raises:
+            DomainException: If change proposal is invalid
+        """
+        if element_id not in self._elements:
+            raise DomainException(f'Shared element {element_id} not found', error_code='ELEMENT_NOT_FOUND')
+        element = self._elements[element_id]
+        change = SharedKernelChange(element_id=element_id, change_type=change_type, impact_level=impact_level, description=description, rationale=rationale, affected_contexts=element.consumer_contexts.copy(), migration_guide=migration_guide, proposed_by=proposed_by)
+        validation_result = change.validate_change()
+        if not validation_result.is_valid:
+            raise DomainException(f'Invalid change proposal: {validation_result.errors}', error_code='INVALID_CHANGE_PROPOSAL')
+        if not self.governance.can_modify_element(element, proposed_by):
+            logger.info(f'Change proposed by non-owner {proposed_by} for element {element.name}')
+        self._changes[change.change_id] = change
+        logger.info(f'Change proposed for element {element.name}: {change_type}')
+        return change
+
+    def approve_change(self, change_id: UUID, approver: str):
+        """
+        Approve a change proposal.
+        
+        Args:
+            change_id: ID of the change to approve
+            approver: Context approving the change
+            
+        Raises:
+            DomainException: If change not found or approval invalid
+        """
+        if change_id not in self._changes:
+            raise DomainException(f'Change {change_id} not found', error_code='CHANGE_NOT_FOUND')
+        change = self._changes[change_id]
+        if not self.governance.requires_approval(change):
+            logger.warning(f'Change {change_id} does not require approval')
+            return
+        required_approvers = self.governance.get_required_approvers(change)
+        if approver not in required_approvers:
+            raise DomainException(f'Context {approver} is not authorized to approve this change', error_code='UNAUTHORIZED_APPROVER')
+        change.approved_by = approver
+        logger.info(f'Change {change_id} approved by {approver}')
+
+    def implement_change(self, change_id: UUID) -> bool:
+        """
+        Implement an approved change.
+        
+        Args:
+            change_id: ID of the change to implement
+            
+        Returns:
+            bool: True if change was implemented
+            
+        Raises:
+            DomainException: If change cannot be implemented
+        """
+        if change_id not in self._changes:
+            raise DomainException(f'Change {change_id} not found', error_code='CHANGE_NOT_FOUND')
+        change = self._changes[change_id]
+        if self.governance.requires_approval(change) and (not change.approved_by):
+            raise DomainException(f'Change {change_id} requires approval before implementation', error_code='CHANGE_NOT_APPROVED')
+        element = self._elements[change.element_id]
+        if change.impact_level == ChangeImpact.BREAKING:
+            version_parts = element.version.split('.')
+            major_version = int(version_parts[0]) + 1
+            element.version = f'{major_version}.0.0'
+        elif change.impact_level == ChangeImpact.ADDITIVE:
+            version_parts = element.version.split('.')
+            minor_version = int(version_parts[1]) + 1
+            element.version = f'{version_parts[0]}.{minor_version}.0'
+        else:
+            version_parts = element.version.split('.')
+            patch_version = int(version_parts[2]) + 1
+            element.version = f'{version_parts[0]}.{version_parts[1]}.{patch_version}'
+        self._version_history[element.element_id].append(element.version)
+        change.implemented_at = datetime.now()
+        element.updated_at = datetime.now()
+        logger.info(f'Implemented change {change_id} for element {element.name}')
+        return True
+
+    def get_element_usage(self, element_id: UUID) -> Dict[str, Any]:
+        """
+        Get usage information for a shared element.
+        
+        Args:
+            element_id: ID of the element
+            
+        Returns:
+            Dict[str, Any]: Usage information
+        """
+        if element_id not in self._elements:
+            return {}
+        element = self._elements[element_id]
+        return {'element_name': element.name, 'owner_context': element.owner_context, 'consumer_contexts': list(element.consumer_contexts), 'consumer_count': len(element.consumer_contexts), 'version': element.version, 'version_history': self._version_history.get(element_id, []), 'created_at': element.created_at.isoformat(), 'updated_at': element.updated_at.isoformat()}
+
+    def analyze_change_impact(self, change_id: UUID) -> Dict[str, Any]:
+        """
+        Analyze the impact of a proposed change.
+        
+        Args:
+            change_id: ID of the change to analyze
+            
+        Returns:
+            Dict[str, Any]: Impact analysis
+        """
+        if change_id not in self._changes:
+            return {}
+        change = self._changes[change_id]
+        element = self._elements[change.element_id]
+        return {'change_type': change.change_type, 'impact_level': change.impact_level.value, 'affected_contexts': list(change.affected_contexts), 'requires_approval': self.governance.requires_approval(change), 'required_approvers': self.governance.get_required_approvers(change), 'migration_required': bool(change.migration_guide), 'consumer_count': len(element.consumer_contexts), 'version_impact': self._predict_version_impact(change.impact_level)}
+
+    def _predict_version_impact(self, impact_level: ChangeImpact) -> str:
+        """Predict version number impact."""
+        if impact_level == ChangeImpact.BREAKING:
+            return 'major_version_bump'
+        elif impact_level == ChangeImpact.ADDITIVE:
+            return 'minor_version_bump'
+        else:
+            return 'patch_version_bump'
+
+    def get_kernel_health(self) -> Dict[str, Any]:
+        """Get health information for the shared kernel."""
+        total_elements = len(self._elements)
+        total_changes = len(self._changes)
+        pending_changes = len([c for c in self._changes.values() if not c.implemented_at])
+        context_usage = {}
+        for element in self._elements.values():
+            for context in element.consumer_contexts:
+                context_usage[context] = context_usage.get(context, 0) + 1
+        return {'kernel_name': self.kernel_name, 'participating_contexts': list(self.participating_contexts), 'total_elements': total_elements, 'total_changes': total_changes, 'pending_changes': pending_changes, 'context_usage': context_usage, 'governance_type': self.governance.__class__.__name__}
+
+    async def get_module_status(self):
+        """Get module status."""
+        from ..core.health import ModuleHealth
+        health_info = self.get_kernel_health()
+        pending_changes = health_info['pending_changes']
+        status = ModuleStatus.AVAILABLE
+        if pending_changes > 10:
+            status = ModuleStatus.DEGRADED
+        return ModuleHealth(status=status, message=f'Shared kernel: {self.kernel_name}', capabilities=await self.get_module_capabilities(), health_indicators=health_info)
+
+    async def get_module_capabilities(self):
+        """Get module capabilities."""
+        return [ModuleCapability(name=f'shared_kernel_{self.kernel_name}', description=f'Shared kernel management for {self.kernel_name}', available=True, version='1.0.0')]
+
+    async def is_healthy(self) -> bool:
+        """Check if shared kernel is healthy."""
+        health_info = self.get_kernel_health()
+        return health_info['pending_changes'] < 10
+
+    async def get_health_indicators(self):
+        """Get health indicators."""
+        return {'kernel_health': self.get_kernel_health(), 'domain_context': self.domain_context}
+
+    def get_domain_boundaries(self):
+        """Get domain boundaries."""
+        return DomainBoundaries(context=self.domain_context, invariants=['Shared elements must have clear ownership', 'Breaking changes must be approved by all consumers', 'Version history must be maintained'])
+
+    def validate_domain_invariants(self):
+        """Validate domain invariants."""
+        result = ValidationResult(is_valid=True)
+        for element in self._elements.values():
+            element_result = element.validate_element()
+            if not element_result.is_valid:
+                result.add_error(f'Invalid element {element.name}: {element_result.errors}')
+        for change in self._changes.values():
+            change_result = change.validate_change()
+            if not change_result.is_valid:
+                result.add_error(f'Invalid change {change.change_id}: {change_result.errors}')
+        return result
+
+class SharedKernelRegistry(DomainReflectiveModule):
+    """
+    Registry for managing multiple shared kernels.
+    
+    Provides centralized management and discovery of shared kernels
+    across the system, including conflict detection and governance
+    coordination.
+    """
+
+    def __init__(self):
+        super().__init__('shared_kernel_registry')
+        self._kernels: Dict[str, SharedKernel] = {}
+        self._context_participation: Dict[str, Set[str]] = {}
+
+    def register_kernel(self, kernel: SharedKernel):
+        """
+        Register a shared kernel.
+        
+        Args:
+            kernel: Shared kernel to register
+        """
+        self._kernels[kernel.kernel_name] = kernel
+        for context in kernel.participating_contexts:
+            if context not in self._context_participation:
+                self._context_participation[context] = set()
+            self._context_participation[context].add(kernel.kernel_name)
+        logger.info(f'Registered shared kernel: {kernel.kernel_name}')
+
+    def get_kernels_for_context(self, context_name: str) -> List[SharedKernel]:
+        """
+        Get all shared kernels that a context participates in.
+        
+        Args:
+            context_name: Name of the context
+            
+        Returns:
+            List[SharedKernel]: Shared kernels for the context
+        """
+        kernel_names = self._context_participation.get(context_name, set())
+        return [self._kernels[name] for name in kernel_names if name in self._kernels]
+
+    def detect_conflicts(self) -> List[Dict[str, Any]]:
+        """
+        Detect conflicts between shared kernels.
+        
+        Returns:
+            List[Dict[str, Any]]: List of detected conflicts
+        """
+        conflicts = []
+        all_elements = {}
+        for kernel_name, kernel in self._kernels.items():
+            for element in kernel._elements.values():
+                element_key = f'{element.element_type.value}:{element.name}'
+                if element_key in all_elements:
+                    conflicts.append({'type': 'name_conflict', 'element_name': element.name, 'element_type': element.element_type.value, 'kernels': [all_elements[element_key], kernel_name], 'severity': 'high'})
+                else:
+                    all_elements[element_key] = kernel_name
+        return conflicts
+
+    def get_registry_summary(self) -> Dict[str, Any]:
+        """Get summary of the shared kernel registry."""
+        return {'total_kernels': len(self._kernels), 'kernel_names': list(self._kernels.keys()), 'participating_contexts': list(self._context_participation.keys()), 'context_participation': {context: list(kernels) for context, kernels in self._context_participation.items()}, 'conflicts': self.detect_conflicts()}
+
+    async def get_module_status(self):
+        """Get module status."""
+        from ..core.health import ModuleHealth
+        conflicts = self.detect_conflicts()
+        status = ModuleStatus.AVAILABLE if not conflicts else ModuleStatus.DEGRADED
+        return ModuleHealth(status=status, message=f'Shared kernel registry with {len(self._kernels)} kernels', capabilities=await self.get_module_capabilities(), health_indicators={'kernels_count': len(self._kernels), 'conflicts_count': len(conflicts)})
+
+    async def get_module_capabilities(self):
+        """Get module capabilities."""
+        return [ModuleCapability(name='shared_kernel_registry', description='Manages shared kernel registration and discovery', available=True, version='1.0.0')]
+
+    async def is_healthy(self) -> bool:
+        """Check if registry is healthy."""
+        conflicts = self.detect_conflicts()
+        return len(conflicts) == 0
+
+    async def get_health_indicators(self):
+        """Get health indicators."""
+        return {'registry_summary': self.get_registry_summary(), 'domain_context': self.domain_context}
+
+    def get_domain_boundaries(self):
+        """Get domain boundaries."""
+        return DomainBoundaries(context=self.domain_context, invariants=['Shared kernel names must be unique', 'Element names within type must be unique across kernels', 'Context participation must be consistent'])
+
+    def validate_domain_invariants(self):
+        """Validate domain invariants."""
+        result = ValidationResult(is_valid=True)
+        conflicts = self.detect_conflicts()
+        if conflicts:
+            result.add_error(f'Conflicts detected: {len(conflicts)} conflicts found')
+        return result
+
+def add_consumer(self, context_name: str):
+    """Add a consumer context."""
+    self.consumer_contexts.add(context_name)
+    self.updated_at = datetime.now()
+
+def remove_consumer(self, context_name: str):
+    """Remove a consumer context."""
+    self.consumer_contexts.discard(context_name)
+    self.updated_at = datetime.now()
+
+@abstractmethod
+def can_modify_element(self, element: SharedElement, modifier_context: str) -> bool:
+    """
+        Check if a context can modify a shared element.
+        
+        Args:
+            element: Shared element to modify
+            modifier_context: Context requesting modification
+            
+        Returns:
+            bool: True if modification is allowed
+        """
+    pass
+
+@abstractmethod
+def requires_approval(self, change: SharedKernelChange) -> bool:
+    """
+        Check if a change requires approval.
+        
+        Args:
+            change: Proposed change
+            
+        Returns:
+            bool: True if approval is required
+        """
+    pass
+
+@abstractmethod
+def get_required_approvers(self, change: SharedKernelChange) -> List[str]:
+    """
+        Get list of required approvers for a change.
+        
+        Args:
+            change: Proposed change
+            
+        Returns:
+            List[str]: List of required approver contexts
+        """
+    pass
+
+def can_modify_element(self, element: SharedElement, modifier_context: str) -> bool:
+    """Check modification permissions."""
+    if element.owner_context == modifier_context:
+        return True
+    return False
+
+def requires_approval(self, change: SharedKernelChange) -> bool:
+    """Check if approval is required."""
+    if change.impact_level == ChangeImpact.BREAKING:
+        return True
+    if len(change.affected_contexts) > 1:
+        return True
+    return False
+
+def get_required_approvers(self, change: SharedKernelChange) -> List[str]:
+    """Get required approvers."""
+    approvers = []
+    if change.impact_level == ChangeImpact.BREAKING:
+        approvers.extend(change.affected_contexts)
+    return list(set(approvers))
+
+def __init__(self, kernel_name: str, participating_contexts: List[str], governance: Optional[SharedKernelGovernance]=None):
+    super().__init__(f'shared_kernel_{kernel_name}')
+    self.kernel_name = kernel_name
+    self.participating_contexts = set(participating_contexts)
+    self.governance = governance or DefaultSharedKernelGovernance()
+    self._elements: Dict[UUID, SharedElement] = {}
+    self._changes: Dict[UUID, SharedKernelChange] = {}
+    self._version_history: Dict[UUID, List[str]] = {}
+    self._usage_metrics: Dict[str, int] = {}
+
+def add_element(self, name: str, element_type: SharedElementType, owner_context: str, description: str='', definition: Optional[Dict[str, Any]]=None) -> SharedElement:
+    """
+        Add a new element to the shared kernel.
+        
+        Args:
+            name: Name of the element
+            element_type: Type of the element
+            owner_context: Context that owns this element
+            description: Description of the element
+            definition: Element definition/specification
+            
+        Returns:
+            SharedElement: Created shared element
+            
+        Raises:
+            DomainException: If element creation fails
+        """
+    if owner_context not in self.participating_contexts:
+        raise DomainException(f'Owner context {owner_context} is not participating in shared kernel {self.kernel_name}', error_code='INVALID_OWNER_CONTEXT')
+    element = SharedElement(name=name, element_type=element_type, description=description, owner_context=owner_context, definition=definition or {})
+    validation_result = element.validate_element()
+    if not validation_result.is_valid:
+        raise DomainException(f'Invalid shared element: {validation_result.errors}', error_code='INVALID_SHARED_ELEMENT')
+    self._elements[element.element_id] = element
+    self._version_history[element.element_id] = [element.version]
+    logger.info(f'Added shared element {name} to kernel {self.kernel_name}')
+    return element
+
+def add_consumer(self, element_id: UUID, consumer_context: str):
+    """
+        Add a consumer context to a shared element.
+        
+        Args:
+            element_id: ID of the shared element
+            consumer_context: Context that will consume the element
+            
+        Raises:
+            DomainException: If element not found or context invalid
+        """
+    if element_id not in self._elements:
+        raise DomainException(f'Shared element {element_id} not found', error_code='ELEMENT_NOT_FOUND')
+    if consumer_context not in self.participating_contexts:
+        raise DomainException(f'Consumer context {consumer_context} is not participating in shared kernel', error_code='INVALID_CONSUMER_CONTEXT')
+    element = self._elements[element_id]
+    element.add_consumer(consumer_context)
+    self._usage_metrics[consumer_context] = self._usage_metrics.get(consumer_context, 0) + 1
+    logger.info(f'Added consumer {consumer_context} to element {element.name}')
+
+def propose_change(self, element_id: UUID, change_type: str, impact_level: ChangeImpact, description: str, proposed_by: str, rationale: str='', migration_guide: str='') -> SharedKernelChange:
+    """
+        Propose a change to a shared element.
+        
+        Args:
+            element_id: ID of the element to change
+            change_type: Type of change
+            impact_level: Impact level of the change
+            description: Description of the change
+            proposed_by: Context proposing the change
+            rationale: Rationale for the change
+            migration_guide: Migration guide for breaking changes
+            
+        Returns:
+            SharedKernelChange: Created change proposal
+            
+        Raises:
+            DomainException: If change proposal is invalid
+        """
+    if element_id not in self._elements:
+        raise DomainException(f'Shared element {element_id} not found', error_code='ELEMENT_NOT_FOUND')
+    element = self._elements[element_id]
+    change = SharedKernelChange(element_id=element_id, change_type=change_type, impact_level=impact_level, description=description, rationale=rationale, affected_contexts=element.consumer_contexts.copy(), migration_guide=migration_guide, proposed_by=proposed_by)
+    validation_result = change.validate_change()
+    if not validation_result.is_valid:
+        raise DomainException(f'Invalid change proposal: {validation_result.errors}', error_code='INVALID_CHANGE_PROPOSAL')
+    if not self.governance.can_modify_element(element, proposed_by):
+        logger.info(f'Change proposed by non-owner {proposed_by} for element {element.name}')
+    self._changes[change.change_id] = change
+    logger.info(f'Change proposed for element {element.name}: {change_type}')
+    return change
+
+def approve_change(self, change_id: UUID, approver: str):
+    """
+        Approve a change proposal.
+        
+        Args:
+            change_id: ID of the change to approve
+            approver: Context approving the change
+            
+        Raises:
+            DomainException: If change not found or approval invalid
+        """
+    if change_id not in self._changes:
+        raise DomainException(f'Change {change_id} not found', error_code='CHANGE_NOT_FOUND')
+    change = self._changes[change_id]
+    if not self.governance.requires_approval(change):
+        logger.warning(f'Change {change_id} does not require approval')
+        return
+    required_approvers = self.governance.get_required_approvers(change)
+    if approver not in required_approvers:
+        raise DomainException(f'Context {approver} is not authorized to approve this change', error_code='UNAUTHORIZED_APPROVER')
+    change.approved_by = approver
+    logger.info(f'Change {change_id} approved by {approver}')
+
+def implement_change(self, change_id: UUID) -> bool:
+    """
+        Implement an approved change.
+        
+        Args:
+            change_id: ID of the change to implement
+            
+        Returns:
+            bool: True if change was implemented
+            
+        Raises:
+            DomainException: If change cannot be implemented
+        """
+    if change_id not in self._changes:
+        raise DomainException(f'Change {change_id} not found', error_code='CHANGE_NOT_FOUND')
+    change = self._changes[change_id]
+    if self.governance.requires_approval(change) and (not change.approved_by):
+        raise DomainException(f'Change {change_id} requires approval before implementation', error_code='CHANGE_NOT_APPROVED')
+    element = self._elements[change.element_id]
+    if change.impact_level == ChangeImpact.BREAKING:
+        version_parts = element.version.split('.')
+        major_version = int(version_parts[0]) + 1
+        element.version = f'{major_version}.0.0'
+    elif change.impact_level == ChangeImpact.ADDITIVE:
+        version_parts = element.version.split('.')
+        minor_version = int(version_parts[1]) + 1
+        element.version = f'{version_parts[0]}.{minor_version}.0'
+    else:
+        version_parts = element.version.split('.')
+        patch_version = int(version_parts[2]) + 1
+        element.version = f'{version_parts[0]}.{version_parts[1]}.{patch_version}'
+    self._version_history[element.element_id].append(element.version)
+    change.implemented_at = datetime.now()
+    element.updated_at = datetime.now()
+    logger.info(f'Implemented change {change_id} for element {element.name}')
+    return True
+
+def get_element_usage(self, element_id: UUID) -> Dict[str, Any]:
+    """
+        Get usage information for a shared element.
+        
+        Args:
+            element_id: ID of the element
+            
+        Returns:
+            Dict[str, Any]: Usage information
+        """
+    if element_id not in self._elements:
+        return {}
+    element = self._elements[element_id]
+    return {'element_name': element.name, 'owner_context': element.owner_context, 'consumer_contexts': list(element.consumer_contexts), 'consumer_count': len(element.consumer_contexts), 'version': element.version, 'version_history': self._version_history.get(element_id, []), 'created_at': element.created_at.isoformat(), 'updated_at': element.updated_at.isoformat()}
+
+def analyze_change_impact(self, change_id: UUID) -> Dict[str, Any]:
+    """
+        Analyze the impact of a proposed change.
+        
+        Args:
+            change_id: ID of the change to analyze
+            
+        Returns:
+            Dict[str, Any]: Impact analysis
+        """
+    if change_id not in self._changes:
+        return {}
+    change = self._changes[change_id]
+    element = self._elements[change.element_id]
+    return {'change_type': change.change_type, 'impact_level': change.impact_level.value, 'affected_contexts': list(change.affected_contexts), 'requires_approval': self.governance.requires_approval(change), 'required_approvers': self.governance.get_required_approvers(change), 'migration_required': bool(change.migration_guide), 'consumer_count': len(element.consumer_contexts), 'version_impact': self._predict_version_impact(change.impact_level)}
+
+def _predict_version_impact(self, impact_level: ChangeImpact) -> str:
+    """Predict version number impact."""
+    if impact_level == ChangeImpact.BREAKING:
+        return 'major_version_bump'
+    elif impact_level == ChangeImpact.ADDITIVE:
+        return 'minor_version_bump'
+    else:
+        return 'patch_version_bump'
+
+def get_kernel_health(self) -> Dict[str, Any]:
+    """Get health information for the shared kernel."""
+    total_elements = len(self._elements)
+    total_changes = len(self._changes)
+    pending_changes = len([c for c in self._changes.values() if not c.implemented_at])
+    context_usage = {}
+    for element in self._elements.values():
+        for context in element.consumer_contexts:
+            context_usage[context] = context_usage.get(context, 0) + 1
+    return {'kernel_name': self.kernel_name, 'participating_contexts': list(self.participating_contexts), 'total_elements': total_elements, 'total_changes': total_changes, 'pending_changes': pending_changes, 'context_usage': context_usage, 'governance_type': self.governance.__class__.__name__}
+
+def get_domain_boundaries(self):
+    """Get domain boundaries."""
+    return DomainBoundaries(context=self.domain_context, invariants=['Shared elements must have clear ownership', 'Breaking changes must be approved by all consumers', 'Version history must be maintained'])
+
+def __init__(self):
+    super().__init__('shared_kernel_registry')
+    self._kernels: Dict[str, SharedKernel] = {}
+    self._context_participation: Dict[str, Set[str]] = {}
+
+def register_kernel(self, kernel: SharedKernel):
+    """
+        Register a shared kernel.
+        
+        Args:
+            kernel: Shared kernel to register
+        """
+    self._kernels[kernel.kernel_name] = kernel
+    for context in kernel.participating_contexts:
+        if context not in self._context_participation:
+            self._context_participation[context] = set()
+        self._context_participation[context].add(kernel.kernel_name)
+    logger.info(f'Registered shared kernel: {kernel.kernel_name}')
+
+def get_kernels_for_context(self, context_name: str) -> List[SharedKernel]:
+    """
+        Get all shared kernels that a context participates in.
+        
+        Args:
+            context_name: Name of the context
+            
+        Returns:
+            List[SharedKernel]: Shared kernels for the context
+        """
+    kernel_names = self._context_participation.get(context_name, set())
+    return [self._kernels[name] for name in kernel_names if name in self._kernels]
+
+def detect_conflicts(self) -> List[Dict[str, Any]]:
+    """
+        Detect conflicts between shared kernels.
+        
+        Returns:
+            List[Dict[str, Any]]: List of detected conflicts
+        """
+    conflicts = []
+    all_elements = {}
+    for kernel_name, kernel in self._kernels.items():
+        for element in kernel._elements.values():
+            element_key = f'{element.element_type.value}:{element.name}'
+            if element_key in all_elements:
+                conflicts.append({'type': 'name_conflict', 'element_name': element.name, 'element_type': element.element_type.value, 'kernels': [all_elements[element_key], kernel_name], 'severity': 'high'})
+            else:
+                all_elements[element_key] = kernel_name
+    return conflicts
+
+def get_registry_summary(self) -> Dict[str, Any]:
+    """Get summary of the shared kernel registry."""
+    return {'total_kernels': len(self._kernels), 'kernel_names': list(self._kernels.keys()), 'participating_contexts': list(self._context_participation.keys()), 'context_participation': {context: list(kernels) for context, kernels in self._context_participation.items()}, 'conflicts': self.detect_conflicts()}
+
+def get_domain_boundaries(self):
+    """Get domain boundaries."""
+    return DomainBoundaries(context=self.domain_context, invariants=['Shared kernel names must be unique', 'Element names within type must be unique across kernels', 'Context participation must be consistent'])

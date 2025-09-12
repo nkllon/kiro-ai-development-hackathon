@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class ContentType(ReflectiveModule):
     """ContentType with RM-DDD compliance with RM-DDD compliance"""
     
-    def __init__(selfself):
+    def __init__(self):
         """Initialize enums"""
         super().__init__(module_id="enums", version="1.0.0")
         # Initialize module components

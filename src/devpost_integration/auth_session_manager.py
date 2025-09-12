@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class AuthSessionManager(ReflectiveModule):
     """Unknown with RM-DDD compliance with RM-DDD compliance"""
     
-    def __init__(selfself):
+    def __init__(self):
         """Initialize auth_session_manager"""
         super().__init__(module_id="auth_session_manager", version="1.0.0")
         # Initialize module components

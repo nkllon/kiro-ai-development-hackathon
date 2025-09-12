@@ -1,0 +1,150 @@
+"""
+Hackathon Demo Controller Handlers
+
+This module was extracted from hackathon_demo_controller.py
+as part of RM-DDD compliance refactoring.
+"""
+
+from datetime import datetime
+from typing import Dict, List, Any, Optional
+from dataclasses import dataclass
+from ..models import SpecToCodeModel, SystematicSuperiorityModel, MultiAgentCollaborationModel, ProductionInfrastructureModel, Task, HumanInput, GKEConfig
+from ..views import HackathonDemoView, DemoPhase, DemoContent
+
+class HackathonDemoController:
+    """
+    Main controller for hackathon demo orchestration.
+    
+    Coordinates between models and views, implementing proper MVC separation
+    with update and create functions following Beast Mode principles.
+    """
+
+    def __init__(self):
+        self.spec_model = SpecToCodeModel()
+        self.superiority_model = SystematicSuperiorityModel()
+        self.agent_model = MultiAgentCollaborationModel()
+        self.infra_model = ProductionInfrastructureModel()
+        self.demo_view = HackathonDemoView()
+        self.active_sessions: Dict[str, DemoSession] = {}
+        self.transformation_history: List[TransformationResult] = []
+        self.collaboration_history: List[CollaborationResult] = []
+        self.systematic_scores: List[float] = []
+        self.learning_patterns: List[Dict[str, Any]] = []
+
+    def create_demo_session(self, judge_id: str) -> DemoSession:
+        """Create a new demo session for a judge"""
+        session_id = f"SESSION-{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        session = DemoSession(session_id=session_id, judge_id=judge_id, start_time=datetime.now(), current_phase=DemoPhase.HOOK, progress=0.0, interactions=[], systematic_score=0.908, learning_patterns=[])
+        self.active_sessions[session_id] = session
+        self._log_interaction(session_id, 'session_created', {'judge_id': judge_id, 'session_id': session_id, 'timestamp': datetime.now().isoformat()})
+        return session
+
+    def create_spec_transformation(self, session_id: str, spec: str) -> TransformationResult:
+        """Create a new spec-to-code transformation"""
+        if session_id not in self.active_sessions:
+            raise ValueError(f'Session {session_id} not found')
+        model_result = self.spec_model.transform_spec_to_code(spec)
+        transformation = TransformationResult(transformation_id=f"TRANS-{datetime.now().strftime('%Y%m%d%H%M%S')}", spec=spec, generated_code=model_result.generated_code, systematic_score=model_result.systematic_score, quality_metrics={'quality_level': model_result.quality_level.value, 'test_coverage': model_result.test_coverage, 'security_validation': model_result.security_validation, 'performance_metrics': model_result.performance_metrics}, learning_patterns=[{'pattern_id': pattern.pattern_id, 'pattern_type': pattern.pattern_type, 'confidence_score': pattern.confidence_score, 'improvement_factor': pattern.improvement_factor} for pattern in model_result.learning_patterns], created_at=datetime.now())
+        self.transformation_history.append(transformation)
+        self._update_session_progress(session_id, 0.1)
+        self._log_interaction(session_id, 'transformation_created', {'transformation_id': transformation.transformation_id, 'spec': spec, 'systematic_score': model_result.systematic_score})
+        return transformation
+
+    def create_agent_collaboration(self, session_id: str, task_description: str, human_input: Optional[str]=None) -> CollaborationResult:
+        """Create a new multi-agent collaboration"""
+        if session_id not in self.active_sessions:
+            raise ValueError(f'Session {session_id} not found')
+        task = Task(task_id=f"TASK-{datetime.now().strftime('%Y%m%d%H%M%S')}", description=task_description, complexity=0.8, required_agents=[agent.agent_type for agent in self.agent_model.agents], human_input=human_input, created_at=datetime.now())
+        model_result = self.agent_model.coordinate_agents(task)
+        collaboration = CollaborationResult(collaboration_id=model_result.collaboration_id, task_description=task_description, participating_agents=[agent.agent_id for agent in model_result.participating_agents], coordination_events=model_result.coordination_events, conflicts_resolved=model_result.conflicts_resolved, human_amplification=model_result.human_amplification, final_output=model_result.final_output, created_at=datetime.now())
+        self.collaboration_history.append(collaboration)
+        self._update_session_progress(session_id, 0.15)
+        self._log_interaction(session_id, 'collaboration_created', {'collaboration_id': collaboration.collaboration_id, 'task_description': task_description, 'participating_agents': collaboration.participating_agents})
+        return collaboration
+
+    def create_infrastructure_deployment(self, session_id: str) -> Dict[str, Any]:
+        """Create a new infrastructure deployment"""
+        if session_id not in self.active_sessions:
+            raise ValueError(f'Session {session_id} not found')
+        config = GKEConfig(cluster_name=f"demo-cluster-{datetime.now().strftime('%Y%m%d%H%M%S')}", node_count=3, machine_type='e2-medium', region='us-central1', auto_scaling=True, security_policies=['network-policy', 'pod-security-policy'], monitoring_enabled=True, cost_optimization=model_result.cost_optimization)
+        model_result = self.infra_model.deploy_gke_cluster(config)
+        self._update_session_progress(session_id, 0.2)
+        self._log_interaction(session_id, 'deployment_created', {'deployment_id': model_result.deployment_id, 'cluster_name': config.cluster_name, 'status': model_result.status.value})
+        return {'deployment_id': model_result.deployment_id, 'status': model_result.status.value, 'health_metrics': model_result.health_metrics, 'cost_metrics': model_result.cost_metrics, 'security_metrics': model_result.security_metrics, 'performance_metrics': model_result.performance_metrics}
+
+    def update_demo_progress(self, session_id: str, progress: float) -> None:
+        """Update demo progress for a session"""
+        if session_id not in self.active_sessions:
+            raise ValueError(f'Session {session_id} not found')
+        session = self.active_sessions[session_id]
+        session.progress = min(progress, 1.0)
+        self._log_interaction(session_id, 'progress_updated', {'progress': progress, 'timestamp': datetime.now().isoformat()})
+
+    def update_systematic_score(self, session_id: str, new_score: float) -> None:
+        """Update systematic score for a session"""
+        if session_id not in self.active_sessions:
+            raise ValueError(f'Session {session_id} not found')
+        session = self.active_sessions[session_id]
+        session.systematic_score = new_score
+        self.systematic_scores.append(new_score)
+        self._log_interaction(session_id, 'systematic_score_updated', {'old_score': session.systematic_score, 'new_score': new_score, 'timestamp': datetime.now().isoformat()})
+
+    def update_learning_patterns(self, session_id: str, patterns: List[Dict[str, Any]]) -> None:
+        """Update learning patterns for a session"""
+        if session_id not in self.active_sessions:
+            raise ValueError(f'Session {session_id} not found')
+        session = self.active_sessions[session_id]
+        session.learning_patterns.extend(patterns)
+        self.learning_patterns.extend(patterns)
+        self._log_interaction(session_id, 'learning_patterns_updated', {'pattern_count': len(patterns), 'total_patterns': len(session.learning_patterns), 'timestamp': datetime.now().isoformat()})
+
+    def update_demo_phase(self, session_id: str, phase: DemoPhase) -> None:
+        """Update current demo phase for a session"""
+        if session_id not in self.active_sessions:
+            raise ValueError(f'Session {session_id} not found')
+        session = self.active_sessions[session_id]
+        old_phase = session.current_phase
+        session.current_phase = phase
+        self.demo_view.current_phase = phase
+        self._log_interaction(session_id, 'phase_updated', {'old_phase': old_phase.value, 'new_phase': phase.value, 'timestamp': datetime.now().isoformat()})
+
+    def update_session_interaction(self, session_id: str, interaction_type: str, details: Dict[str, Any]) -> None:
+        """Update session with new interaction"""
+        if session_id not in self.active_sessions:
+            raise ValueError(f'Session {session_id} not found')
+        self._log_interaction(session_id, interaction_type, details)
+        self.demo_view.log_interaction(interaction_type, details)
+
+    def _log_interaction(self, session_id: str, interaction_type: str, details: Dict[str, Any]) -> None:
+        """Log interaction for a session"""
+        if session_id in self.active_sessions:
+            session = self.active_sessions[session_id]
+            interaction = {'timestamp': datetime.now().isoformat(), 'interaction_type': interaction_type, 'details': details}
+            session.interactions.append(interaction)
+
+    def _update_session_progress(self, session_id: str, progress_increment: float) -> None:
+        """Update session progress by increment"""
+        if session_id in self.active_sessions:
+            session = self.active_sessions[session_id]
+            session.progress = min(session.progress + progress_increment, 1.0)
+
+    def run_complete_demo(self, judge_id: str) -> Dict[str, Any]:
+        """Run complete 3-minute demo for a judge"""
+        session = self.create_demo_session(judge_id)
+        demo_result = self.demo_view.render_complete_demo()
+        self.update_demo_progress(session.session_id, 1.0)
+        self.update_demo_phase(session.session_id, DemoPhase.NEXT_STEPS)
+        demo_analytics = self.demo_view.get_demo_analytics()
+        complete_result = {'session': {'session_id': session.session_id, 'judge_id': judge_id, 'start_time': session.start_time.isoformat(), 'progress': session.progress, 'systematic_score': session.systematic_score, 'interactions': len(session.interactions)}, 'demo_content': demo_result, 'analytics': demo_analytics, 'model_health': {'spec_model': self.spec_model.check_health().health_score, 'superiority_model': self.superiority_model.check_health().health_score, 'agent_model': self.agent_model.check_health().health_score, 'infra_model': self.infra_model.check_health().health_score}, 'beast_mode_metrics': {'systematic_scores': self.systematic_scores, 'learning_patterns': len(self.learning_patterns), 'transformations_completed': len(self.transformation_history), 'collaborations_completed': len(self.collaboration_history)}}
+        return complete_result
+
+    def get_session_analytics(self, session_id: str) -> Dict[str, Any]:
+        """Get analytics for a specific session"""
+        if session_id not in self.active_sessions:
+            raise ValueError(f'Session {session_id} not found')
+        session = self.active_sessions[session_id]
+        return {'session_id': session_id, 'judge_id': session.judge_id, 'duration_minutes': (datetime.now() - session.start_time).total_seconds() / 60, 'progress': session.progress, 'current_phase': session.current_phase.value, 'interactions': len(session.interactions), 'systematic_score': session.systematic_score, 'learning_patterns': len(session.learning_patterns), 'interaction_breakdown': {interaction['interaction_type']: len([i for i in session.interactions if i['interaction_type'] == interaction['interaction_type']]) for interaction in session.interactions}}
+
+    def get_controller_health(self) -> Dict[str, Any]:
+        """Get overall controller health"""
+        return {'active_sessions': len(self.active_sessions), 'total_transformations': len(self.transformation_history), 'total_collaborations': len(self.collaboration_history), 'systematic_scores': {'count': len(self.systematic_scores), 'average': sum(self.systematic_scores) / len(self.systematic_scores) if self.systematic_scores else 0, 'latest': self.systematic_scores[-1] if self.systematic_scores else 0}, 'learning_patterns': {'count': len(self.learning_patterns), 'unique_types': len(set((pattern.get('pattern_type', 'unknown') for pattern in self.learning_patterns)))}, 'model_health': {'spec_model': self.spec_model.check_health().health_score, 'superiority_model': self.superiority_model.check_health().health_score, 'agent_model': self.agent_model.check_health().health_score, 'infra_model': self.infra_model.check_health().health_score}}

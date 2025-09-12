@@ -55,10 +55,10 @@ class ValidationResult(ReflectiveModule):
     def get_capabilities(self) -> List[ModuleCapability]:
         """Get module capabilities."""
         return [
-            ModuleCapability("validation", "Validate data and configurations"),
-            ModuleCapability("error_tracking", "Track validation errors"),
-            ModuleCapability("warning_management", "Manage validation warnings"),
-            ModuleCapability("reporting", "Generate validation reports")
+            ModuleCapability.VALIDATION,
+            ModuleCapability.ERROR_HANDLING,
+            ModuleCapability.MONITORING,
+            ModuleCapability.REPORTING
         ]
     
     def get_dependencies(self) -> List[str]:

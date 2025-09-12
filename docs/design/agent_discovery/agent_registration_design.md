@@ -715,3 +715,4 @@ class TestAgentRegistrationIntegration:
 - **Custom Discovery**: Support for custom discovery algorithms
 - **Custom Health Checks**: Support for custom health check implementations
 - **Custom Security**: Support for custom security implementations
+

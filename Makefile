@@ -335,3 +335,135 @@ devpost-status: ## Show project status overview
 devpost-status-json: ## Show project status (JSON format)
 	@echo "$(CYAN)📊 Project status overview (JSON)...$(RESET)"
 	@uv run devpost-cli status --format json
+
+# Repository Refactoring Targets - Extend models.py approach to entire repository
+refactor-analyze: ## Analyze repository for refactoring opportunities
+	@echo "$(BLUE)🔍 Analyzing repository for refactoring opportunities...$(RESET)"
+	@uv run python scripts/repository_refactoring_engine.py
+	@echo "$(GREEN)✅ Repository analysis complete!$(RESET)"
+	@echo "$(CYAN)📊 Check repository_analysis_report.json for details$(RESET)"
+
+refactor-plan: refactor-analyze ## Generate refactoring plans
+	@echo "$(BLUE)📋 Generating refactoring plans...$(RESET)"
+	@uv run python scripts/repository_refactoring_engine.py
+	@echo "$(GREEN)✅ Refactoring plans generated!$(RESET)"
+	@echo "$(CYAN)📋 Check refactoring_plans.json for details$(RESET)"
+
+refactor-dry-run: refactor-plan ## Execute refactoring in dry-run mode
+	@echo "$(BLUE)🔍 Executing refactoring dry-run...$(RESET)"
+	@uv run python scripts/refactoring_executor.py --dry-run
+	@echo "$(GREEN)✅ Dry-run complete!$(RESET)"
+	@echo "$(CYAN)🔍 No files were modified - this was a dry run$(RESET)"
+
+refactor-execute: refactor-plan ## Execute refactoring (WARNING: modifies files)
+	@echo "$(YELLOW)⚠️  WARNING: This will modify files in your repository!$(RESET)"
+	@echo "$(YELLOW)   Make sure you have committed your changes first.$(RESET)"
+	@echo "$(YELLOW)   Press Ctrl+C to cancel, or wait 5 seconds to continue...$(RESET)"
+	@sleep 5
+	@echo "$(BLUE)🔄 Executing refactoring...$(RESET)"
+	@uv run python scripts/refactoring_executor.py
+	@echo "$(GREEN)✅ Refactoring execution complete!$(RESET)"
+
+refactor-validate: ## Validate refactored modules
+	@echo "$(BLUE)🔍 Validating refactored modules...$(RESET)"
+	@uv run python scripts/refactoring_validator.py --execution-report refactoring_execution_report.json
+	@echo "$(GREEN)✅ Validation complete!$(RESET)"
+	@echo "$(CYAN)📊 Check validation_report.json for details$(RESET)"
+
+refactor-orchestrate: ## Run complete refactoring orchestration (dry-run)
+	@echo "$(BLUE)🚀 Running complete refactoring orchestration (dry-run)...$(RESET)"
+	@uv run python scripts/repository_refactoring_orchestrator.py --dry-run
+	@echo "$(GREEN)✅ Refactoring orchestration complete!$(RESET)"
+
+refactor-orchestrate-execute: ## Run complete refactoring orchestration (EXECUTES CHANGES)
+	@echo "$(YELLOW)⚠️  WARNING: This will modify files in your repository!$(RESET)"
+	@echo "$(YELLOW)   Make sure you have committed your changes first.$(RESET)"
+	@echo "$(YELLOW)   Press Ctrl+C to cancel, or wait 5 seconds to continue...$(RESET)"
+	@sleep 5
+	@echo "$(BLUE)🚀 Running complete refactoring orchestration...$(RESET)"
+	@uv run python scripts/repository_refactoring_orchestrator.py
+	@echo "$(GREEN)✅ Refactoring orchestration complete!$(RESET)"
+
+refactor-status: ## Show refactoring status and reports
+	@echo "$(CYAN)📊 Repository Refactoring Status$(RESET)"
+	@echo ""
+	@if [ -f "repository_analysis_report.json" ]; then \
+		echo "$(GREEN)✅ Analysis report: repository_analysis_report.json$(RESET)"; \
+	else \
+		echo "$(RED)❌ Analysis report: Not found$(RESET)"; \
+	fi
+	@if [ -f "refactoring_plans.json" ]; then \
+		echo "$(GREEN)✅ Refactoring plans: refactoring_plans.json$(RESET)"; \
+	else \
+		echo "$(RED)❌ Refactoring plans: Not found$(RESET)"; \
+	fi
+	@if [ -f "refactoring_execution_report.json" ]; then \
+		echo "$(GREEN)✅ Execution report: refactoring_execution_report.json$(RESET)"; \
+	else \
+		echo "$(RED)❌ Execution report: Not found$(RESET)"; \
+	fi
+	@if [ -f "validation_report.json" ]; then \
+		echo "$(GREEN)✅ Validation report: validation_report.json$(RESET)"; \
+	else \
+		echo "$(RED)❌ Validation report: Not found$(RESET)"; \
+	fi
+	@if [ -d "reports" ]; then \
+		echo "$(GREEN)✅ Reports directory: reports/$(RESET)"; \
+		@echo "$(CYAN)   Reports available:$(RESET)"; \
+		@ls -la reports/ | grep -E '\.(json|md)$' | awk '{print "     " $$9}'; \
+	else \
+		echo "$(RED)❌ Reports directory: Not found$(RESET)"; \
+	fi
+	@echo ""
+	@echo "$(YELLOW)Next Steps:$(RESET)"
+	@echo "  1. Run '$(CYAN)make refactor-analyze$(RESET)' to analyze repository"
+	@echo "  2. Run '$(CYAN)make refactor-dry-run$(RESET)' to test refactoring"
+	@echo "  3. Run '$(CYAN)make refactor-execute$(RESET)' to execute refactoring"
+	@echo "  4. Run '$(CYAN)make refactor-validate$(RESET)' to validate results"
+	@echo ""
+	@echo "$(GREEN)SYSTEMATIC REFACTORING - RM-DDD COMPLIANCE ACHIEVED! 🎯$(RESET)"
+# Interface Governance Targets - RDI Compliance
+interface-registry-init: ## Initialize interface registry
+	@echo "$(BLUE)🔧 Initializing Interface Registry...$(RESET)"
+	@uv run python -c "from src.rm_ddd.core.interface_registry import InterfaceRegistry; registry = InterfaceRegistry(); print('✅ Interface registry initialized')"
+	@echo "$(GREEN)✅ Interface registry ready!$(RESET)"
+
+interface-registry-status: ## Show interface registry status
+	@echo "$(CYAN)📊 Interface Registry Status$(RESET)"
+	@uv run python -c "from src.rm_ddd.core.interface_registry import InterfaceRegistry; registry = InterfaceRegistry(); report = registry.get_interface_governance_report(); print(f'Total interfaces: {report[\"total_interfaces\"]}'); print(f'Active interfaces: {report[\"active_interfaces\"]}'); print(f'Deprecated interfaces: {report[\"deprecated_interfaces\"]}')"
+
+interface-governance-check: ## Check interface governance for staged files
+	@echo "$(BLUE)🔍 Checking Interface Governance...$(RESET)"
+	@git diff --cached --name-only --diff-filter=ACMR | grep '\.py$' | xargs uv run python scripts/interface_governance_hook.py
+	@echo "$(GREEN)✅ Interface governance check complete!$(RESET)"
+
+interface-search: ## Search interfaces by ubiquitous language terms
+	@echo "$(CYAN)🔍 Interface Search$(RESET)"
+	@echo "Usage: make interface-search TERMS='term1 term2'"
+	@if [ -z "$(TERMS)" ]; then \
+		echo "$(YELLOW)Please provide search terms: make interface-search TERMS='reflective module health'$(RESET)"; \
+	else \
+		uv run python -c "from src.rm_ddd.core.interface_registry import InterfaceRegistry; registry = InterfaceRegistry(); results = registry.search_by_ubiquitous_language('$(TERMS)'.split()); [print(f'✅ {r.interface.interface_name} ({r.interface.interface_type.value}) - Score: {r.relevance_score:.2f}') for r in results[:10]]"; \
+	fi
+
+interface-suggest: ## Suggest interface names for new interfaces
+	@echo "$(CYAN)💡 Interface Name Suggestions$(RESET)"
+	@echo "Usage: make interface-suggest PURPOSE='health monitoring' DOMAIN='health status' TYPE='reflective_module'"
+	@if [ -z "$(PURPOSE)" ] || [ -z "$(DOMAIN)" ] || [ -z "$(TYPE)" ]; then \
+		echo "$(YELLOW)Please provide all parameters:$(RESET)"; \
+		echo "  PURPOSE='health monitoring'"; \
+		echo "  DOMAIN='health status'"; \
+		echo "  TYPE='reflective_module'"; \
+	else \
+		uv run python -c "from src.rm_ddd.core.interface_registry import InterfaceRegistry, InterfaceType; registry = InterfaceRegistry(); suggestions = registry.suggest_interface_name('$(PURPOSE)', '$(DOMAIN)'.split(), InterfaceType.$(TYPE.upper())); [print(f'💡 {s}') for s in suggestions]"; \
+	fi
+
+interface-register-existing: ## Register existing interfaces in the registry
+	@echo "$(BLUE)📝 Registering Existing Interfaces...$(RESET)"
+	@uv run python scripts/register_existing_interfaces.py
+	@echo "$(GREEN)✅ Existing interfaces registered!$(RESET)"
+
+interface-governance-report: ## Generate interface governance report
+	@echo "$(CYAN)📊 Interface Governance Report$(RESET)"
+	@uv run python -c "from src.rm_ddd.core.interface_registry import InterfaceRegistry; registry = InterfaceRegistry(); report = registry.get_interface_governance_report(); print('\\n📊 INTERFACE GOVERNANCE REPORT'); print('=' * 40); print(f'Total Interfaces: {report[\"total_interfaces\"]}'); print(f'Active Interfaces: {report[\"active_interfaces\"]}'); print(f'Deprecated Interfaces: {report[\"deprecated_interfaces\"]}'); print('\\n📈 Type Distribution:'); [print(f'  {k}: {v}') for k, v in report['type_distribution'].items()]; print('\\n🏷️  Top Domain Terms:'); [print(f'  {k}: {v}') for k, v in report['most_used_terms'][:10]]"
+

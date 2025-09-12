@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class Unknown(ReflectiveModule):
     """Unknown with RM-DDD compliance with RM-DDD compliance"""
     
-    def __init__(selfself):
+    def __init__(self):
         """Initialize multi_project_orchestrator"""
         super().__init__(module_id="multi_project_orchestrator", version="1.0.0")
         # Initialize module components

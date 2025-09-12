@@ -832,3 +832,4 @@ class TestCapabilityVerificationIntegration:
 - **Custom Test Frameworks**: Support for custom test frameworks
 - **Custom Certificates**: Support for custom certificate formats
 - **Custom Security**: Support for custom security implementations
+
