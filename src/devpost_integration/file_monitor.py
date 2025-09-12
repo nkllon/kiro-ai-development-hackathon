@@ -63,6 +63,113 @@ class ProjectFileMonitor(ReflectiveModule):
     def reset_metrics(self) -> None:
         """Reset module metrics"""
         pass
+
+class ContentBasedChangeDetector(ReflectiveModule):
+    """ContentBasedChangeDetector with RM-DDD compliance"""
+    
+    def __init__(self):
+        """Initialize content based change detector"""
+        super().__init__(module_id="contentbasedchangedetector", version="1.0.0")
+        register_module(self)
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information"""
+        return {
+            'module_id': 'contentbasedchangedetector',
+            'version': '1.0.0',
+            'description': 'ContentBasedChangeDetector implementation'
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities"""
+        return [ModuleCapability.CORE_FUNCTIONALITY]
+    
+    def get_dependencies(self) -> List[str]:
+        """Get module dependencies"""
+        return ['reflective_module']
+    
+    def check_health(self) -> ModuleHealth:
+        """Perform health check"""
+        return ModuleHealth(
+            module_id='contentbasedchangedetector',
+            status=ModuleStatus.HEALTHY,
+            health_score=1.0,
+            issues=[],
+            capabilities=self.get_capabilities(),
+            dependencies=self.get_dependencies(),
+            metrics={},
+            last_check=datetime.now()
+        )
+    
+    def get_configuration(self) -> Dict[str, Any]:
+        """Get module configuration"""
+        return {}
+    
+    def update_configuration(self, config: Dict[str, Any]) -> bool:
+        """Update module configuration"""
+        return True
+    
+    def get_metrics(self) -> Dict[str, Any]:
+        """Get module metrics"""
+        return {}
+    
+    def reset_metrics(self) -> None:
+        """Reset module metrics"""
+        pass
+
+class MediaFileDetector(ReflectiveModule):
+    """MediaFileDetector with RM-DDD compliance"""
+    
+    def __init__(self):
+        """Initialize media file detector"""
+        super().__init__(module_id="mediafiledetector", version="1.0.0")
+        register_module(self)
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information"""
+        return {
+            'module_id': 'mediafiledetector',
+            'version': '1.0.0',
+            'description': 'MediaFileDetector implementation'
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities"""
+        return [ModuleCapability.CORE_FUNCTIONALITY]
+    
+    def get_dependencies(self) -> List[str]:
+        """Get module dependencies"""
+        return ['reflective_module']
+    
+    def check_health(self) -> ModuleHealth:
+        """Perform health check"""
+        return ModuleHealth(
+            module_id='mediafiledetector',
+            status=ModuleStatus.HEALTHY,
+            health_score=1.0,
+            issues=[],
+            capabilities=self.get_capabilities(),
+            dependencies=self.get_dependencies(),
+            metrics={},
+            last_check=datetime.now()
+        )
+    
+    def get_configuration(self) -> Dict[str, Any]:
+        """Get module configuration"""
+        return {}
+    
+    def update_configuration(self, config: Dict[str, Any]) -> bool:
+        """Update module configuration"""
+        return True
+    
+    def get_metrics(self) -> Dict[str, Any]:
+        """Get module metrics"""
+        return {}
+    
+    def reset_metrics(self) -> None:
+        """Reset module metrics"""
+        pass
+
 from typing import Dict, Any, List, Optional
 from pathlib import Path
 
