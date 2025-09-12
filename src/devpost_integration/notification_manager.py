@@ -11,5 +11,5 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# Export the main class
-__all__ = ['NotificationConfig']
+# Export the main classes
+__all__ = ['NotificationConfig', 'NotificationManager']
