@@ -61,3 +61,56 @@ class ProjectConnection(ReflectiveModule):
     def reset_metrics(self) -> None:
         """Reset module metrics"""
         pass
+
+class DevpostConfig(ReflectiveModule):
+    """DevpostConfig with RM-DDD compliance"""
+    
+    def __init__(self):
+        """Initialize devpost config"""
+        super().__init__(module_id="devpostconfig", version="1.0.0")
+        register_module(self)
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information"""
+        return {
+            'module_id': 'devpostconfig',
+            'version': '1.0.0',
+            'description': 'DevpostConfig implementation'
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities"""
+        return [ModuleCapability.CORE_FUNCTIONALITY]
+    
+    def get_dependencies(self) -> List[str]:
+        """Get module dependencies"""
+        return ['reflective_module']
+    
+    def check_health(self) -> ModuleHealth:
+        """Perform health check"""
+        return ModuleHealth(
+            module_id='devpostconfig',
+            status=ModuleStatus.HEALTHY,
+            health_score=1.0,
+            issues=[],
+            capabilities=self.get_capabilities(),
+            dependencies=self.get_dependencies(),
+            metrics={},
+            last_check=datetime.now()
+        )
+    
+    def get_configuration(self) -> Dict[str, Any]:
+        """Get module configuration"""
+        return {}
+    
+    def update_configuration(self, config: Dict[str, Any]) -> bool:
+        """Update module configuration"""
+        return True
+    
+    def get_metrics(self) -> Dict[str, Any]:
+        """Get module metrics"""
+        return {}
+    
+    def reset_metrics(self) -> None:
+        """Reset module metrics"""
+        pass

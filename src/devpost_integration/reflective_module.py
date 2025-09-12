@@ -1,6 +1,114 @@
 #!/usr/bin/env python3
-"""reflective_module - Main module file"""
+"""ReflectiveModule - Core RM-DDD base classes and interfaces"""
 
-from .reflective_module_methods import ModuleStatus
+from abc import ABC, abstractmethod
+from typing import Dict, List, Any, Optional
+from datetime import datetime
+from enum import Enum
+from dataclasses import dataclass
 
-__all__ = ['ModuleStatus']
+class ModuleCapability(Enum):
+    """Module capability types"""
+    CORE_FUNCTIONALITY = "core_functionality"
+    DATA_PROCESSING = "data_processing"
+    API_INTEGRATION = "api_integration"
+    FILE_OPERATIONS = "file_operations"
+    VALIDATION = "validation"
+    MONITORING = "monitoring"
+
+class ModuleStatus(Enum):
+    """Module health status"""
+    HEALTHY = "healthy"
+    WARNING = "warning"
+    ERROR = "error"
+    UNKNOWN = "unknown"
+
+@dataclass
+class ModuleConfiguration:
+    """Module configuration"""
+    module_id: str
+    settings: Dict[str, Any]
+    last_updated: datetime
+
+@dataclass
+class ModuleHealth:
+    """Module health information"""
+    module_id: str
+    status: ModuleStatus
+    health_score: float
+    issues: List[str]
+    capabilities: List[ModuleCapability]
+    dependencies: List[str]
+    metrics: Dict[str, Any]
+    last_check: datetime
+
+class ReflectiveModule(ABC):
+    """Abstract base class for reflective modules"""
+    
+    @abstractmethod
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information"""
+        pass
+    
+    @abstractmethod
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities"""
+        pass
+    
+    @abstractmethod
+    def get_dependencies(self) -> List[str]:
+        """Get module dependencies"""
+        pass
+    
+    @abstractmethod
+    def check_health(self) -> ModuleHealth:
+        """Perform health check"""
+        pass
+    
+    @abstractmethod
+    def get_configuration(self) -> Dict[str, Any]:
+        """Get module configuration"""
+        pass
+    
+    @abstractmethod
+    def update_configuration(self, config: Dict[str, Any]) -> bool:
+        """Update module configuration"""
+        pass
+    
+    @abstractmethod
+    def get_metrics(self) -> Dict[str, Any]:
+        """Get module metrics"""
+        pass
+    
+    @abstractmethod
+    def reset_metrics(self) -> None:
+        """Reset module metrics"""
+        pass
+
+# Global registry for modules
+_module_registry: Dict[str, ReflectiveModule] = {}
+
+def register_module(module: ReflectiveModule) -> None:
+    """Register a module in the global registry"""
+    module_info = module.get_module_info()
+    module_id = module_info.get('module_id', 'unknown')
+    _module_registry[module_id] = module
+
+def get_registered_modules() -> Dict[str, ReflectiveModule]:
+    """Get all registered modules"""
+    return _module_registry.copy()
+
+def get_module(module_id: str) -> Optional[ReflectiveModule]:
+    """Get a specific module by ID"""
+    return _module_registry.get(module_id)
+
+__all__ = [
+    'ReflectiveModule',
+    'ModuleHealth', 
+    'ModuleStatus',
+    'ModuleCapability',
+    'ModuleConfiguration',
+    'register_module',
+    'get_registered_modules',
+    'get_module'
+]
