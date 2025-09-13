@@ -12,7 +12,6 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, TYPE_CHECKING
 from uuid import uuid4
 from ..models import ModuleStatus, HealthIndicator, PerformanceMetrics
-from .base import ReflectiveModuleBase
 
 @dataclass
 class ModuleHealth:
