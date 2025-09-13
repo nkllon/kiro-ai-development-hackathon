@@ -569,3 +569,15 @@ consistency-crisis-resolver: ## Resolve the 0.00 consistency score crisis
 	@echo "   - Provides priority actions for crisis resolution"
 	@echo "   - Based on actual integrated analysis findings"
 
+accurate-interface-analysis: ## Perform accurate interface analysis (not text matches)
+	@echo "$(CYAN)🎯 Accurate Interface Analysis$(RESET)"
+	@cd src/rm_ddd/core && uv run python accurate_interface_analyzer.py
+	@echo "$(GREEN)✅ Accurate interface analysis complete!$(RESET)"
+	@echo "$(YELLOW)💡 Key Features:$(RESET)"
+	@echo "   - Finds actual interface definitions, not text matches"
+	@echo "   - Distinguishes between real definitions and fallback code"
+	@echo "   - Analyzes HubrisPattern, Snapshot, Entity, AggregateRoot"
+	@echo "   - Identifies actual ambiguity vs false positives"
+	@echo "   - Provides accurate consolidation recommendations"
+	@echo "   - Addresses the '45 requirements' false positive issue"
+
