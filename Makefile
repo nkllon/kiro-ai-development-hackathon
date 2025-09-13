@@ -581,3 +581,15 @@ accurate-interface-analysis: ## Perform accurate interface analysis (not text ma
 	@echo "   - Provides accurate consolidation recommendations"
 	@echo "   - Addresses the '45 requirements' false positive issue"
 
+beast-mode-consolidation: ## BEAST MODE: Burn down the core_core_core mess! 🔥
+	@echo "$(RED)🔥🔥🔥 BEAST MODE CONSOLIDATION 🔥🔥🔥$(RESET)"
+	@cd src/rm_ddd/core && uv run python beast_mode_consolidator.py
+	@echo "$(GREEN)✅ BEAST MODE consolidation complete!$(RESET)"
+	@echo "$(YELLOW)💡 Key Features:$(RESET)"
+	@echo "   - Finds all core_core_core files in the codebase"
+	@echo "   - Identifies the most authoritative version for each interface"
+	@echo "   - Consolidates into clean, single definitions"
+	@echo "   - Updates all imports to reference consolidated versions"
+	@echo "   - BURNS DOWN duplicate core_core_core files"
+	@echo "   - NO MERCY. NO QUARTER. CLEAN CODE OR DEATH."
+
