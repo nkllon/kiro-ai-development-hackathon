@@ -59,7 +59,20 @@ class AccurateInterfaceAnalyzer:
     """Analyzes interfaces accurately by finding actual definitions, not text matches"""
     
     def __init__(self, codebase_path: str = "src"):
-        self.codebase_path = Path(codebase_path)
+        # Always use the project root's src directory
+        # Find the project root by looking for the Makefile
+        current_path = Path.cwd()
+        while current_path != current_path.parent:
+            if (current_path / "Makefile").exists():
+                self.codebase_path = current_path / "src"
+                break
+            current_path = current_path.parent
+        else:
+            # Fallback to relative path
+            self.codebase_path = Path(codebase_path)
+        
+        print(f"🔍 Analyzer initialized with codebase_path: {self.codebase_path}")
+        print(f"🔍 Path exists: {self.codebase_path.exists()}")
         self.interface_analyses: Dict[str, InterfaceAnalysis] = {}
         self.target_interfaces = ["HubrisPattern", "Snapshot", "Entity", "AggregateRoot"]
     
@@ -97,6 +110,8 @@ class AccurateInterfaceAnalyzer:
     def _find_actual_definitions(self, interface_name: str) -> List[ActualInterfaceDefinition]:
         """Find actual interface definitions (not text matches)"""
         definitions = []
+        print(f"    🔍 Searching in: {self.codebase_path}")
+        print(f"    🔍 Path exists: {self.codebase_path.exists()}")
         
         for py_file in self.codebase_path.rglob("*.py"):
             try:
@@ -105,6 +120,8 @@ class AccurateInterfaceAnalyzer:
                 
                 tree = ast.parse(content)
                 file_definitions = self._extract_interface_definitions(py_file, content, tree, interface_name)
+                if file_definitions:
+                    print(f"    ✅ Found {len(file_definitions)} definitions in {py_file}")
                 definitions.extend(file_definitions)
                 
             except Exception as e:
