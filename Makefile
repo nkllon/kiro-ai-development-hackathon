@@ -443,6 +443,61 @@ enhanced-registry-analysis: ## Analyze interface implementations with full integ
 	@echo "   - Integration with existing InterfaceRegistry system"
 	@echo "   - Unified registry status reporting"
 
+requirements-analysis: ## Analyze requirements for ambiguous interfaces
+	@echo "$(CYAN)📋 Requirements Analysis for Interface Ambiguity Resolution$(RESET)"
+	@uv run python src/rm_ddd/core/requirements_analyzer.py
+	@echo "$(GREEN)✅ Requirements analysis complete!$(RESET)"
+	@echo "$(YELLOW)💡 Key Features:$(RESET)"
+	@echo "   - Trace ambiguous interfaces back to their requirements"
+	@echo "   - Identify conflicting requirements and specifications"
+	@echo "   - Generate resolution suggestions for each interface"
+	@echo "   - Calculate consistency scores for requirement quality"
+	@echo "   - Provide actionable recommendations for consolidation"
+
+integrated-analysis: ## Run integrated requirements and interface analysis
+	@echo "$(CYAN)🔗 Integrated Requirements and Interface Analysis$(RESET)"
+	@uv run python src/rm_ddd/core/integrated_requirements_analyzer.py
+	@echo "$(GREEN)✅ Integrated analysis complete!$(RESET)"
+	@echo "$(YELLOW)💡 Key Features:$(RESET)"
+	@echo "   - Combines enhanced registry with requirements analysis"
+	@echo "   - Identifies root causes of interface ambiguity"
+	@echo "   - Provides priority actions for resolution"
+	@echo "   - Generates integration insights and recommendations"
+	@echo "   - Saves comprehensive results to JSON file"
+
+duplication-detection: ## Check for interface duplications and overlaps
+	@echo "$(CYAN)🔍 Interface Duplication Detection and Prevention$(RESET)"
+	@cd src/rm_ddd/core && uv run python interface_duplication_detector.py
+	@echo "$(GREEN)✅ Duplication detection complete!$(RESET)"
+	@echo "$(YELLOW)💡 Key Features:$(RESET)"
+	@echo "   - Detects exact duplicates by signature hash"
+	@echo "   - Identifies similar interfaces by method signatures"
+	@echo "   - Finds semantic overlaps in naming patterns"
+	@echo "   - Detects structural similarities in base classes"
+	@echo "   - Provides registration recommendations"
+
+proactive-registry: ## Run proactive interface registry with duplication prevention
+	@echo "$(CYAN)🛡️ Proactive Interface Registry with Duplication Prevention$(RESET)"
+	@cd src/rm_ddd/core && uv run python proactive_interface_registry.py
+	@echo "$(GREEN)✅ Proactive registry analysis complete!$(RESET)"
+	@echo "$(YELLOW)💡 Key Features:$(RESET)"
+	@echo "   - Prevents duplicate interface registration"
+	@echo "   - Checks for similar/overlapping interfaces"
+	@echo "   - Provides registration warnings and requirements"
+	@echo "   - Tracks registration history and success rates"
+	@echo "   - Suggests interface consolidation opportunities"
+
+interface-governance: ## Run comprehensive interface governance system
+	@echo "$(CYAN)🔍 Comprehensive Interface Governance System$(RESET)"
+	@cd src/rm_ddd/core && uv run python interface_governance_system.py
+	@echo "$(GREEN)✅ Interface governance analysis complete!$(RESET)"
+	@echo "$(YELLOW)💡 Key Features:$(RESET)"
+	@echo "   - End-to-end interface governance and compliance"
+	@echo "   - Proactive duplication prevention and validation"
+	@echo "   - Requirements consistency checking and reporting"
+	@echo "   - Governance scoring and compliance status"
+	@echo "   - Comprehensive dashboard and recommendations"
+
 interface-governance-check: ## Check interface governance for staged files
 	@echo "$(BLUE)🔍 Checking Interface Governance...$(RESET)"
 	@git diff --cached --name-only --diff-filter=ACMR | grep '\.py$' | xargs uv run python scripts/interface_governance_hook.py
