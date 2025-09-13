@@ -1,13 +1,14 @@
 """
-Enhanced Interface Registry - Minimal Viable Implementation
+Enhanced Interface Registry - Iteration 2 Implementation
 
-This is a practical implementation that solves the core problem:
-- Can discover interface implementations
-- Can detect interface conflicts
+This enhanced implementation builds on the existing InterfaceRegistry system:
+- Can discover interface implementations with actual method signatures
+- Can detect interface conflicts and ambiguities
 - Can resolve circular dependencies
-- Integrates with existing RM-DDD framework
+- Integrates with existing RM-DDD InterfaceRegistry system
+- Provides ubiquitous language search capabilities
 
-No galactic complexity, just working code.
+Built incrementally on proven foundation.
 """
 
 import ast
@@ -16,8 +17,16 @@ import os
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple, Any
 from pathlib import Path
+
+# Import existing InterfaceRegistry system for integration
+try:
+    from .interface_registry import InterfaceRegistry, InterfaceMetadata, InterfaceType, InterfaceStatus as BaseInterfaceStatus
+    EXISTING_REGISTRY_AVAILABLE = True
+except ImportError:
+    EXISTING_REGISTRY_AVAILABLE = False
+    print("Warning: Existing InterfaceRegistry not available - running in standalone mode")
 
 
 class InterfaceStatus(Enum):
@@ -86,6 +95,13 @@ class EnhancedInterfaceRegistry:
         self.conflicts: List[InterfaceConflict] = []
         self.ambiguities: List[AmbiguityIssue] = []
         self.circular_deps: List[List[str]] = []
+        
+        # Integration with existing InterfaceRegistry
+        if EXISTING_REGISTRY_AVAILABLE:
+            self.base_registry = InterfaceRegistry(registry_file)
+        else:
+            self.base_registry = None
+            
         self.load_registry()
     
     def load_registry(self) -> None:
@@ -533,6 +549,130 @@ class EnhancedInterfaceRegistry:
             suggestions.append(f"AMBIGUITY: {ambiguity.interface_name} ({ambiguity.issue_type}) - {ambiguity.resolution_suggestion}")
         
         return suggestions
+    
+    def integrate_with_base_registry(self) -> Dict[str, Any]:
+        """
+        Integrate enhanced registry findings with existing InterfaceRegistry.
+        
+        This bridges the gap between discovery and governance.
+        """
+        if not self.base_registry:
+            return {"status": "no_base_registry", "message": "Existing InterfaceRegistry not available"}
+        
+        integration_results = {
+            "status": "success",
+            "interfaces_registered": 0,
+            "conflicts_detected": 0,
+            "ambiguities_resolved": 0,
+            "details": []
+        }
+        
+        # Register discovered interfaces with base registry
+        for name, impl in self.implementations.items():
+            if impl.status == InterfaceStatus.IMPLEMENTED:
+                # Convert to InterfaceMetadata for base registry
+                interface_metadata = InterfaceMetadata(
+                    interface_id=f"{name}_{hash(impl.implementation_path)}",
+                    interface_name=name,
+                    interface_type=InterfaceType.API_INTERFACE,  # Default type
+                    file_path=impl.implementation_path,
+                    domain_terms=self._extract_domain_terms(name),
+                    status=BaseInterfaceStatus.ACTIVE,
+                    created_at=datetime.now().isoformat(),
+                    last_modified=datetime.now().isoformat(),
+                    description=f"Enhanced registry discovery: {name}",
+                    version="1.0.0"
+                )
+                
+                success = self.base_registry.register_interface(interface_metadata)
+                if success:
+                    integration_results["interfaces_registered"] += 1
+                    integration_results["details"].append(f"Registered interface: {name}")
+                else:
+                    integration_results["conflicts_detected"] += 1
+                    integration_results["details"].append(f"Conflict detected: {name}")
+        
+        # Report ambiguities to base registry
+        for ambiguity in self.ambiguities:
+            integration_results["details"].append(f"Ambiguity: {ambiguity.interface_name} - {ambiguity.resolution_suggestion}")
+        
+        return integration_results
+    
+    def _extract_domain_terms(self, interface_name: str) -> List[str]:
+        """Extract domain terms from interface name"""
+        # Simple extraction - in a full system, this would use NLP
+        terms = []
+        
+        # Split on common patterns
+        import re
+        words = re.findall(r'[A-Z][a-z]*|[a-z]+', interface_name)
+        
+        for word in words:
+            if len(word) > 2:  # Skip very short words
+                terms.append(word.lower())
+        
+        return terms
+    
+    def search_by_ubiquitous_language(self, terms: List[str], context: str = "") -> List[Dict[str, Any]]:
+        """
+        Enhanced ubiquitous language search using both registries.
+        
+        This provides the missing capability identified in the original requirements.
+        """
+        results = []
+        
+        # Search in base registry if available
+        if self.base_registry:
+            base_results = self.base_registry.search_by_ubiquitous_language(terms, context)
+            for result in base_results:
+                results.append({
+                    "source": "base_registry",
+                    "interface_name": result.interface_name,
+                    "matched_terms": result.matched_terms,
+                    "search_context": result.search_context,
+                    "file_path": result.interface_id  # Base registry uses interface_id
+                })
+        
+        # Search in enhanced registry
+        for name, impl in self.implementations.items():
+            matched_terms = []
+            for term in terms:
+                if term.lower() in name.lower():
+                    matched_terms.append(term)
+                elif any(term.lower() in method.lower() for method in impl.implemented_methods):
+                    matched_terms.append(term)
+            
+            if matched_terms:
+                results.append({
+                    "source": "enhanced_registry",
+                    "interface_name": name,
+                    "matched_terms": matched_terms,
+                    "search_context": context,
+                    "file_path": impl.implementation_path,
+                    "implementation_status": impl.status.value,
+                    "signature_mismatches": impl.signature_mismatches
+                })
+        
+        return results
+    
+    def get_unified_registry_status(self) -> Dict[str, Any]:
+        """Get unified status from both registries"""
+        status = {
+            "enhanced_registry": {
+                "implementations": len(self.implementations),
+                "conflicts": len(self.conflicts),
+                "ambiguities": len(self.ambiguities),
+                "circular_dependencies": len(self.circular_deps)
+            }
+        }
+        
+        if self.base_registry:
+            status["base_registry"] = {
+                "interfaces": len(self.base_registry.interfaces),
+                "domain_terms": len(self.base_registry.domain_index)
+            }
+        
+        return status
 
 
 # Simple CLI interface
@@ -578,6 +718,35 @@ def main():
             print(f"    Signature mismatches: {len(impl.signature_mismatches)}")
             for mismatch in impl.signature_mismatches:
                 print(f"      - {mismatch}")
+    
+    # Show integration capabilities
+    print("\n🔗 Integration Capabilities:")
+    
+    # Test ubiquitous language search
+    print("\n  🔍 Ubiquitous Language Search Test:")
+    search_results = registry.search_by_ubiquitous_language(["interface", "registry"], "testing")
+    print(f"    Found {len(search_results)} matches for 'interface' and 'registry'")
+    for result in search_results[:3]:  # Show first 3 results
+        print(f"      - {result['interface_name']} ({result['source']})")
+    
+    # Show unified registry status
+    print("\n  📊 Unified Registry Status:")
+    unified_status = registry.get_unified_registry_status()
+    for registry_name, stats in unified_status.items():
+        print(f"    {registry_name}:")
+        for key, value in stats.items():
+            print(f"      - {key}: {value}")
+    
+    # Test base registry integration
+    if EXISTING_REGISTRY_AVAILABLE:
+        print("\n  🔄 Base Registry Integration:")
+        integration_results = registry.integrate_with_base_registry()
+        print(f"    Status: {integration_results['status']}")
+        if integration_results['status'] == 'success':
+            print(f"    Interfaces registered: {integration_results['interfaces_registered']}")
+            print(f"    Conflicts detected: {integration_results['conflicts_detected']}")
+    else:
+        print("\n  ⚠️  Base Registry Integration: Not available (standalone mode)")
 
 
 if __name__ == "__main__":
