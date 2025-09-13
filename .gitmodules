@@ -1,3 +1,6 @@
 [submodule "hackathons/gke-ai-microservices"]
 	path = hackathons/gke-ai-microservices
 	url = https://github.com/louspringer/gke-ai-microservices-hackathon.git
+[submodule "kiro_simone_adapter"]
+	path = kiro_simone_adapter
+	url = https://github.com/Helmi/claude-simone.git

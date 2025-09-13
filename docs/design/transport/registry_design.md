@@ -1,4 +1,4 @@
-# Registry Design
+# Proceed.Registry Design
 
 ## Document Information
 - **Version**: 1.0.0

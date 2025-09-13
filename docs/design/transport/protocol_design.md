@@ -854,3 +854,5 @@ class TestProtocolIntegration:
 - **Protocol Adapters**: Support for protocol adapters
 - **Custom Handlers**: Support for custom message handlers
 
+
+

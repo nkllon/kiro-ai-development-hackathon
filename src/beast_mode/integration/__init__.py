@@ -1,25 +1,27 @@
 """
-Beast Mode Framework - Integration Module
-Implements UC-25: Self-Consistency Validation through infrastructure integration
+Beast Mode Integration Module
+
+This module provides integration capabilities for external tools and
+methodologies with the Beast Mode systematic development framework.
+
+Maintains zero technical debt through systematic implementation following
+Beast Mode quality standards and RM-DDD compliance.
 """
 
-from .infrastructure_integration_manager import (
-    InfrastructureIntegrationManager,
-    IntegrationStatus,
-    ValidationResult
+from .simone_adapter import (
+    SimoneIntegrationAdapter,
+    DemoEnhancement,
+    SystematicEvidence,
+    SimoneMethodology
 )
 
-from .self_consistency_validator import (
-    SelfConsistencyValidator,
-    ConsistencyCheck,
-    ConsistencyResult
-)
+from .enhanced_demo import EnhancedDemo, run_enhanced_demo
 
 __all__ = [
-    'InfrastructureIntegrationManager',
-    'IntegrationStatus',
-    'ValidationResult',
-    'SelfConsistencyValidator',
-    'ConsistencyCheck',
-    'ConsistencyResult'
+    'SimoneIntegrationAdapter',
+    'DemoEnhancement',
+    'SystematicEvidence',
+    'SimoneMethodology',
+    'EnhancedDemo',
+    'run_enhanced_demo'
 ]

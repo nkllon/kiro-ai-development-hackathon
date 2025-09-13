@@ -358,3 +358,5 @@ The RM-DDD CLI system provides:
 - Stdin/stdout pipes will be used for data exchange
 - Module capabilities will be discoverable and introspectable
 
+
+
