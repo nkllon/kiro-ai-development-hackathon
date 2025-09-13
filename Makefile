@@ -533,3 +533,39 @@ interface-governance-report: ## Generate interface governance report
 	@echo "$(CYAN)📊 Interface Governance Report$(RESET)"
 	@uv run python -c "from src.rm_ddd.core.interface_registry import InterfaceRegistry; registry = InterfaceRegistry(); report = registry.get_interface_governance_report(); print('\\n📊 INTERFACE GOVERNANCE REPORT'); print('=' * 40); print(f'Total Interfaces: {report[\"total_interfaces\"]}'); print(f'Active Interfaces: {report[\"active_interfaces\"]}'); print(f'Deprecated Interfaces: {report[\"deprecated_interfaces\"]}'); print('\\n📈 Type Distribution:'); [print(f'  {k}: {v}') for k, v in report['type_distribution'].items()]; print('\\n🏷️  Top Domain Terms:'); [print(f'  {k}: {v}') for k, v in report['most_used_terms'][:10]]"
 
+requirements-consolidation: ## Analyze and consolidate scattered interface requirements
+	@echo "$(CYAN)🔧 Requirements Consolidation Analysis$(RESET)"
+	@cd src/rm_ddd/core && uv run python requirements_consolidator.py
+	@echo "$(GREEN)✅ Requirements consolidation analysis complete!$(RESET)"
+	@echo "$(YELLOW)💡 Key Features:$(RESET)"
+	@echo "   - Discovers all interface specifications across codebase"
+	@echo "   - Identifies interfaces with 40-50+ duplicate specifications"
+	@echo "   - Analyzes consolidation candidates and priority"
+	@echo "   - Suggests authoritative interface definitions"
+	@echo "   - Creates consolidation plans for each interface"
+	@echo "   - Addresses the 0.00 consistency score crisis"
+
+interface-consolidation: ## Consolidate duplicated interface specifications
+	@echo "$(CYAN)🔧 Interface Consolidation Engine$(RESET)"
+	@cd src/rm_ddd/core && uv run python interface_consolidation_engine.py
+	@echo "$(GREEN)✅ Interface consolidation analysis complete!$(RESET)"
+	@echo "$(YELLOW)💡 Key Features:$(RESET)"
+	@echo "   - Discovers all interface duplications across codebase"
+	@echo "   - Identifies interfaces with 40-50+ duplicate definitions"
+	@echo "   - Creates consolidation plans with authoritative files"
+	@echo "   - Suggests which duplicates to remove"
+	@echo "   - Estimates impact of consolidation actions"
+	@echo "   - Directly addresses the 0.00 consistency score crisis"
+
+consistency-crisis-resolver: ## Resolve the 0.00 consistency score crisis
+	@echo "$(CYAN)🚨 Consistency Crisis Resolver$(RESET)"
+	@cd src/rm_ddd/core && uv run python consistency_crisis_resolver.py
+	@echo "$(GREEN)✅ Consistency crisis resolution analysis complete!$(RESET)"
+	@echo "$(YELLOW)💡 Key Features:$(RESET)"
+	@echo "   - Directly addresses the 0.00 consistency score crisis"
+	@echo "   - Identifies interfaces with 40-50+ conflicting specifications"
+	@echo "   - Creates consolidation plans for HubrisPattern and Snapshot"
+	@echo "   - Suggests authoritative interface definitions"
+	@echo "   - Provides priority actions for crisis resolution"
+	@echo "   - Based on actual integrated analysis findings"
+
