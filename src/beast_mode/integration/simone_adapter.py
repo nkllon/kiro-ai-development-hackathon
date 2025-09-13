@@ -137,12 +137,13 @@ class SimoneIntegrationAdapter(ReflectiveModule):
             }
         }
     
-    def enhance_demo_presentation(self, demo_context: Dict[str, Any]) -> DemoEnhancement:
+    def enhance_demo_presentation(self, title: str, description: str) -> DemoEnhancement:
         """
         Enhance demo presentation with Simone methodologies.
         
         Args:
-            demo_context: Context for demo enhancement
+            title: Demo title
+            description: Demo description
             
         Returns:
             Enhanced demo presentation data
@@ -230,7 +231,7 @@ class SimoneIntegrationAdapter(ReflectiveModule):
             "timestamp": datetime.now().isoformat()
         }
     
-    def generate_systematic_proof(self) -> SystematicEvidence:
+    def generate_systematic_proof(self, methodology: str, proof_type: str, confidence: float) -> SystematicEvidence:
         """
         Generate additional systematic superiority evidence.
         
