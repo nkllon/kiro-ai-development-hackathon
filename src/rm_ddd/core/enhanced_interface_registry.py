@@ -29,13 +29,25 @@ class InterfaceStatus(Enum):
 
 
 @dataclass
+class MethodSignature:
+    """Represents a method signature"""
+    name: str
+    parameters: List[str]
+    return_type: Optional[str] = None
+    is_abstract: bool = False
+    is_property: bool = False
+
+@dataclass
 class InterfaceImplementation:
-    """Simple interface implementation record"""
+    """Enhanced interface implementation record"""
     interface_name: str
     implementation_path: str
     implemented_methods: List[str]
     missing_methods: List[str]
     status: InterfaceStatus
+    interface_signatures: List[MethodSignature] = field(default_factory=list)
+    implementation_signatures: List[MethodSignature] = field(default_factory=list)
+    signature_mismatches: List[str] = field(default_factory=list)
     dependencies: List[str] = field(default_factory=list)
     conflicts: List[str] = field(default_factory=list)
 
@@ -46,6 +58,14 @@ class InterfaceConflict:
     interface_name: str
     conflict_type: str
     conflicting_files: List[str]
+    resolution_suggestion: str
+
+@dataclass
+class AmbiguityIssue:
+    """Interface ambiguity issue record"""
+    interface_name: str
+    issue_type: str
+    conflicting_references: List[str]
     resolution_suggestion: str
 
 
@@ -64,6 +84,7 @@ class EnhancedInterfaceRegistry:
         self.registry_file = registry_file
         self.implementations: Dict[str, InterfaceImplementation] = {}
         self.conflicts: List[InterfaceConflict] = []
+        self.ambiguities: List[AmbiguityIssue] = []
         self.circular_deps: List[List[str]] = []
         self.load_registry()
     
@@ -149,25 +170,51 @@ class EnhancedInterfaceRegistry:
     
     def _analyze_implementation(self, interface_name: str, file_path: str, 
                                class_node: ast.ClassDef, content: str) -> Optional[InterfaceImplementation]:
-        """Analyze a class implementation"""
+        """Analyze a class implementation with enhanced signature validation"""
         
-        # Get interface methods (simplified - in reality would parse interface)
+        # Get interface methods and signatures
         expected_methods = self._get_interface_methods(interface_name, content)
+        interface_signatures = self._parse_interface_signatures(interface_name, content)
         
-        # Get implemented methods
+        # Get implemented methods and their signatures
         implemented_methods = []
+        implementation_signatures = []
+        
         for node in ast.walk(class_node):
             if isinstance(node, ast.FunctionDef) and not node.name.startswith('_'):
                 implemented_methods.append(node.name)
+                
+                # Parse implementation method signature
+                params = []
+                for arg in node.args.args:
+                    params.append(arg.arg)
+                
+                return_type = None
+                if node.returns:
+                    if isinstance(node.returns, ast.Name):
+                        return_type = node.returns.id
+                    elif isinstance(node.returns, ast.Constant):
+                        return_type = str(node.returns.value)
+                
+                implementation_signatures.append(MethodSignature(
+                    name=node.name,
+                    parameters=params,
+                    return_type=return_type
+                ))
         
         # Find missing methods
         missing_methods = [method for method in expected_methods 
                           if method not in implemented_methods]
         
+        # Validate signature matches
+        signature_mismatches = self._validate_signature_matches(
+            interface_signatures, implementation_signatures
+        )
+        
         # Determine status
-        if not missing_methods:
+        if not missing_methods and not signature_mismatches:
             status = InterfaceStatus.IMPLEMENTED
-        elif len(missing_methods) < len(expected_methods):
+        elif len(missing_methods) < len(expected_methods) or signature_mismatches:
             status = InterfaceStatus.PARTIAL
         else:
             status = InterfaceStatus.MISSING
@@ -177,20 +224,102 @@ class EnhancedInterfaceRegistry:
             implementation_path=file_path,
             implemented_methods=implemented_methods,
             missing_methods=missing_methods,
+            interface_signatures=interface_signatures,
+            implementation_signatures=implementation_signatures,
+            signature_mismatches=signature_mismatches,
             status=status
         )
     
-    def _get_interface_methods(self, interface_name: str, content: str) -> List[str]:
-        """Get expected methods for an interface (simplified)"""
-        # This is simplified - in reality would parse the actual interface
-        # For now, return common interface patterns
-        common_interfaces = {
-            'ReflectiveModule': ['get_capabilities', 'get_dependencies', 'check_health'],
-            'ReflectiveModuleBase': ['get_capabilities', 'get_dependencies', 'check_health'],
-            'DomainReflectiveModule': ['get_capabilities', 'get_dependencies', 'check_health'],
-        }
+    def _validate_signature_matches(self, interface_sigs: List[MethodSignature], 
+                                   impl_sigs: List[MethodSignature]) -> List[str]:
+        """Validate that implementation signatures match interface signatures"""
+        mismatches = []
         
-        return common_interfaces.get(interface_name, [])
+        # Create lookup for implementation signatures
+        impl_lookup = {sig.name: sig for sig in impl_sigs}
+        
+        for interface_sig in interface_sigs:
+            if interface_sig.name in impl_lookup:
+                impl_sig = impl_lookup[interface_sig.name]
+                
+                # Check parameter count
+                if len(interface_sig.parameters) != len(impl_sig.parameters):
+                    mismatches.append(f"{interface_sig.name}: parameter count mismatch (interface: {len(interface_sig.parameters)}, implementation: {len(impl_sig.parameters)})")
+                
+                # Check return type (if specified)
+                if interface_sig.return_type and impl_sig.return_type:
+                    if interface_sig.return_type != impl_sig.return_type:
+                        mismatches.append(f"{interface_sig.name}: return type mismatch (interface: {interface_sig.return_type}, implementation: {impl_sig.return_type})")
+        
+        return mismatches
+    
+    def _get_interface_methods(self, interface_name: str, content: str) -> List[str]:
+        """Get expected methods for an interface (enhanced parsing)"""
+        try:
+            tree = ast.parse(content)
+            
+            for node in ast.walk(tree):
+                if isinstance(node, ast.ClassDef):
+                    if node.name == interface_name:
+                        methods = []
+                        for item in node.body:
+                            if isinstance(item, ast.FunctionDef):
+                                methods.append(item.name)
+                        return methods
+            
+            # Fallback to common interface patterns if not found
+            common_interfaces = {
+                'ReflectiveModule': ['get_capabilities', 'get_dependencies', 'check_health'],
+                'ReflectiveModuleBase': ['get_capabilities', 'get_dependencies', 'check_health'],
+                'DomainReflectiveModule': ['get_capabilities', 'get_dependencies', 'check_health'],
+            }
+            
+            return common_interfaces.get(interface_name, [])
+            
+        except Exception as e:
+            print(f"Warning: Could not parse interface {interface_name}: {e}")
+            return []
+    
+    def _parse_interface_signatures(self, interface_name: str, content: str) -> List[MethodSignature]:
+        """Parse actual interface method signatures"""
+        signatures = []
+        
+        try:
+            tree = ast.parse(content)
+            
+            for node in ast.walk(tree):
+                if isinstance(node, ast.ClassDef):
+                    if node.name == interface_name:
+                        for item in node.body:
+                            if isinstance(item, ast.FunctionDef):
+                                # Parse method parameters
+                                params = []
+                                for arg in item.args.args:
+                                    params.append(arg.arg)
+                                
+                                # Get return type annotation
+                                return_type = None
+                                if item.returns:
+                                    if isinstance(item.returns, ast.Name):
+                                        return_type = item.returns.id
+                                    elif isinstance(item.returns, ast.Constant):
+                                        return_type = str(item.returns.value)
+                                
+                                # Check if abstract method
+                                is_abstract = any(isinstance(decorator, ast.Name) and decorator.id == 'abstractmethod'
+                                                for decorator in item.decorator_list)
+                                
+                                signatures.append(MethodSignature(
+                                    name=item.name,
+                                    parameters=params,
+                                    return_type=return_type,
+                                    is_abstract=is_abstract
+                                ))
+            
+        except Exception as e:
+            print(f"Warning: Could not parse signatures for {interface_name}: {e}")
+        
+        return signatures
     
     def detect_conflicts(self) -> List[InterfaceConflict]:
         """
@@ -222,6 +351,88 @@ class EnhancedInterfaceRegistry:
         self.conflicts = conflicts
         self.save_registry()
         return conflicts
+    
+    def detect_ambiguities(self, codebase_path: str = "src") -> List[AmbiguityIssue]:
+        """
+        Detect interface ambiguity issues.
+        
+        This solves the "ambiguous interface references" problem.
+        """
+        ambiguities = []
+        interface_references = {}
+        
+        # Scan for interface references
+        for py_file in Path(codebase_path).rglob("*.py"):
+            try:
+                with open(py_file, 'r') as f:
+                    content = f.read()
+                
+                tree = ast.parse(content)
+                file_refs = []
+                
+                for node in ast.walk(tree):
+                    if isinstance(node, ast.ClassDef):
+                        # Check class inheritance
+                        for base in node.bases:
+                            if isinstance(base, ast.Name):
+                                interface_name = base.id
+                                file_refs.append(interface_name)
+                    
+                    elif isinstance(node, ast.FunctionDef):
+                        # Check function parameters and return types
+                        for arg in node.args.args:
+                            if hasattr(arg, 'annotation') and arg.annotation:
+                                if isinstance(arg.annotation, ast.Name):
+                                    file_refs.append(arg.annotation.id)
+                        
+                        if node.returns and isinstance(node.returns, ast.Name):
+                            file_refs.append(node.returns.id)
+                
+                # Store references by interface name
+                for ref in file_refs:
+                    if ref not in interface_references:
+                        interface_references[ref] = []
+                    interface_references[ref].append(str(py_file))
+                
+            except Exception as e:
+                print(f"Warning: Could not parse {py_file}: {e}")
+        
+        # Find ambiguities
+        for interface_name, files in interface_references.items():
+            if len(files) > 1:
+                # Check if there are multiple different definitions
+                definitions = []
+                for file in files:
+                    try:
+                        with open(file, 'r') as f:
+                            content = f.read()
+                        
+                        tree = ast.parse(content)
+                        for node in ast.walk(tree):
+                            if isinstance(node, ast.ClassDef) and node.name == interface_name:
+                                definitions.append(file)
+                                break
+                    except:
+                        continue
+                
+                if len(definitions) > 1:
+                    ambiguities.append(AmbiguityIssue(
+                        interface_name=interface_name,
+                        issue_type="multiple_definitions",
+                        conflicting_references=definitions,
+                        resolution_suggestion=f"Rename conflicting classes or consolidate definitions"
+                    ))
+                elif len(files) > len(definitions):
+                    ambiguities.append(AmbiguityIssue(
+                        interface_name=interface_name,
+                        issue_type="unclear_references",
+                        conflicting_references=files,
+                        resolution_suggestion=f"Clarify interface references or ensure proper imports"
+                    ))
+        
+        self.ambiguities = ambiguities
+        self.save_registry()
+        return ambiguities
     
     def resolve_circular_dependencies(self, codebase_path: str = "src") -> List[List[str]]:
         """
@@ -310,13 +521,23 @@ class EnhancedInterfaceRegistry:
         for impl in self.implementations.values():
             if impl.status == InterfaceStatus.MISSING:
                 suggestions.append(f"MISSING IMPLEMENTATION: {impl.interface_name} - Implement missing methods: {', '.join(impl.missing_methods)}")
+            elif impl.status == InterfaceStatus.PARTIAL:
+                if impl.missing_methods:
+                    suggestions.append(f"PARTIAL IMPLEMENTATION: {impl.interface_name} - Implement missing methods: {', '.join(impl.missing_methods)}")
+                if impl.signature_mismatches:
+                    for mismatch in impl.signature_mismatches:
+                        suggestions.append(f"SIGNATURE MISMATCH: {impl.interface_name} - {mismatch}")
+        
+        # Suggest fixes for ambiguities
+        for ambiguity in self.ambiguities:
+            suggestions.append(f"AMBIGUITY: {ambiguity.interface_name} ({ambiguity.issue_type}) - {ambiguity.resolution_suggestion}")
         
         return suggestions
 
 
 # Simple CLI interface
 def main():
-    """Simple CLI for the enhanced interface registry"""
+    """Enhanced CLI for the enhanced interface registry"""
     registry = EnhancedInterfaceRegistry()
     
     print("🔍 Discovering interface implementations...")
@@ -327,17 +548,36 @@ def main():
     conflicts = registry.detect_conflicts()
     print(f"Found {len(conflicts)} conflicts")
     
+    print("\n❓ Detecting ambiguities...")
+    ambiguities = registry.detect_ambiguities()
+    print(f"Found {len(ambiguities)} ambiguities")
+    
     print("\n🔄 Detecting circular dependencies...")
     cycles = registry.resolve_circular_dependencies()
     print(f"Found {len(cycles)} circular dependencies")
     
-    print("\n💡 Suggestions:")
+    print("\n💡 Enhanced Suggestions:")
     suggestions = registry.suggest_fixes()
     for suggestion in suggestions:
         print(f"  - {suggestion}")
     
     if not suggestions:
         print("  ✅ No issues found!")
+    
+    # Show detailed signature information for implementations
+    print("\n📋 Detailed Implementation Analysis:")
+    for name, impl in implementations.items():
+        print(f"\n  Interface: {name}")
+        print(f"    Status: {impl.status.value}")
+        print(f"    File: {impl.implementation_path}")
+        if impl.interface_signatures:
+            print(f"    Expected methods: {len(impl.interface_signatures)}")
+            for sig in impl.interface_signatures:
+                print(f"      - {sig.name}({', '.join(sig.parameters)}) -> {sig.return_type or 'Any'}")
+        if impl.signature_mismatches:
+            print(f"    Signature mismatches: {len(impl.signature_mismatches)}")
+            for mismatch in impl.signature_mismatches:
+                print(f"      - {mismatch}")
 
 
 if __name__ == "__main__":
