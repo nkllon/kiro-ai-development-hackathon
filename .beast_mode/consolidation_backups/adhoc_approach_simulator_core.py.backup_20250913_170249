@@ -40,8 +40,7 @@ class AdhocApproachSimulator(ReflectiveModule):
     Used to measure what Beast Mode systematic approach is competing against
     """
 
-    def __init__(self) -> Any:
-        """__init__ - Enhanced for compliance"""
+    def __init__(self):
         super().__init__('adhoc_approach_simulator')
         self.simulation_count = 0
         self.total_simulations = 0
@@ -171,8 +170,7 @@ class AdhocApproachSimulator(ReflectiveModule):
         """
         return {'decision_making_baseline': {'uses_data': False, 'consults_registry': False, 'performs_analysis': False, 'validates_results': False, 'typical_success_rate': 0.45, 'typical_quality_score': 0.35}, 'problem_solving_baseline': {'performs_rca': False, 'fixes_root_causes': False, 'implements_workarounds': True, 'documents_patterns': False, 'typical_resolution_time': 1.5, 'typical_rework_rate': 0.85}, 'tool_management_baseline': {'monitors_health': False, 'systematic_repair': False, 'accepts_broken_tools': True, 'uses_prevention': False, 'typical_tool_success_rate': 0.35, 'typical_repair_effectiveness': 0.25}}
 
-def __init__(self) -> Any:
-        """__init__ - Enhanced for compliance"""
+def __init__(self):
     super().__init__('adhoc_approach_simulator')
     self.simulation_count = 0
     self.total_simulations = 0

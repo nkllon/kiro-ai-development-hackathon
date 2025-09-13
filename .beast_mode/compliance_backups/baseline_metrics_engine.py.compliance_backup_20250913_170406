@@ -49,8 +49,7 @@ class BaselineMetricsEngine(ReflectiveModule):
     Addresses UK-05 (Unknown performance baseline) and UC-04 (Measurable superiority)
     """
     
-    def __init__(self) -> Any:
-        """__init__ - Enhanced for compliance"""
+    def __init__(self):
         super().__init__("baseline_metrics_engine")
         self.measurement_categories = {
             'problem_resolution_speed': MeasurementCategory(
@@ -203,7 +202,7 @@ class BaselineMetricsEngine(ReflectiveModule):
             with self.measurement_lock:
                 self.concurrent_measurements -= 1
                 
-    def _persist_measurement(self, category -> Any: str, approach_type -> Any: str, value -> Any: float) -> Any:
+    def _persist_measurement(self, category: str, approach_type: str, value: float):
         """Persist measurement to storage for analysis"""
         measurement_data = {
             "timestamp": datetime.now().isoformat(),

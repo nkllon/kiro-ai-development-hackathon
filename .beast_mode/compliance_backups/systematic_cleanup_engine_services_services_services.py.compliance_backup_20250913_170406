@@ -27,8 +27,7 @@ class SystematicCleanupEngine(ReflectiveModule):
     - Vibe coding compensation through systematic cleanup
     """
 
-    def __init__(self, name -> Any: str='systematic_cleanup_engine') -> Any:
-        """__init__ - Enhanced for compliance"""
+    def __init__(self, name: str='systematic_cleanup_engine'):
         super().__init__(name)
         self.logger = self._setup_cleanup_logging()
         self.systematic_structure = self._load_systematic_structure()

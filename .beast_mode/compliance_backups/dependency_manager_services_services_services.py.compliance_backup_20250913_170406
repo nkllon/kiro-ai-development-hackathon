@@ -26,8 +26,7 @@ class BacklogDependencyManager(ReflectiveModule):
     - Provide dependency impact analysis
     """
 
-    def __init__(self) -> Any:
-        """__init__ - Enhanced for compliance"""
+    def __init__(self):
         super().__init__('BacklogDependencyManager')
         self._dependencies: Dict[str, DependencySpec] = {}
         self._graph_cache: Optional[DependencyGraph] = None
@@ -225,7 +224,7 @@ class BacklogDependencyManager(ReflectiveModule):
                 reverse_edges[source_item].add(target_item)
         return DependencyGraph(nodes=nodes, edges=dict(edges), reverse_edges=dict(reverse_edges), dependency_specs=self._dependencies.copy())
 
-    def _invalidate_cache(self) -> Any:
+    def _invalidate_cache(self):
         """Invalidate the dependency graph cache"""
         self._graph_cache = None
         self._cache_timestamp = 0.0
@@ -417,7 +416,7 @@ class BacklogDependencyManager(ReflectiveModule):
             sub_reverse_edges[node] = full_graph.reverse_edges.get(node, set()) & reachable_nodes
         return DependencyGraph(nodes=reachable_nodes, edges=sub_edges, reverse_edges=sub_reverse_edges, dependency_specs=full_graph.dependency_specs)
 
-    def _record_operation_time(self, operation_time -> Any: float) -> Any:
+    def _record_operation_time(self, operation_time: float):
         """Record operation time for performance monitoring"""
         self._operation_times.append(operation_time * 1000)
         if len(self._operation_times) > self._max_operation_history:

@@ -27,8 +27,7 @@ class RCAEngine(ReflectiveModule):
     Enforces Constraint C-07: Scalable pattern library with <1 second matching
     """
 
-    def __init__(self, pattern_library_path -> Any: Optional[str]=None) -> Any:
-        """__init__ - Enhanced for compliance"""
+    def __init__(self, pattern_library_path: Optional[str]=None):
         super().__init__('rca_engine')
         self.pattern_library_path = pattern_library_path or 'patterns/rca_patterns.json'
         self.pattern_library: Dict[str, PreventionPattern] = {}
@@ -469,7 +468,7 @@ class RCAEngine(ReflectiveModule):
         signature_parts = [failure.component, failure.category.value, failure.error_message[:100] if failure.error_message else '', str(sorted(failure.context.keys())) if failure.context else '']
         return '|'.join(signature_parts)
 
-    def _add_pattern_to_library(self, pattern -> Any: PreventionPattern) -> Any:
+    def _add_pattern_to_library(self, pattern: PreventionPattern):
         """Add pattern to library with hash-based indexing for fast lookup"""
         self.pattern_library[pattern.pattern_id] = pattern
         if pattern.pattern_hash not in self.pattern_index:
@@ -495,7 +494,7 @@ class RCAEngine(ReflectiveModule):
         validation_confidence = sum((vr.confidence_score for vr in validations)) / max(1, len(validations))
         return (analysis_confidence + root_cause_confidence + validation_confidence) / 3
 
-    def _load_pattern_library(self) -> Any:
+    def _load_pattern_library(self):
         """Load existing pattern library from disk"""
         try:
             if Path(self.pattern_library_path).exists():
@@ -511,7 +510,7 @@ class RCAEngine(ReflectiveModule):
         except Exception as e:
             self.logger.warning(f'Failed to load pattern library: {e}')
 
-    def _save_pattern_library(self) -> Any:
+    def _save_pattern_library(self):
         """Save pattern library to disk"""
         try:
             Path(self.pattern_library_path).parent.mkdir(parents=True, exist_ok=True)
@@ -816,7 +815,7 @@ class RCAEngine(ReflectiveModule):
         signature_parts = [failure.component, failure.category.value, failure.error_message[:100] if failure.error_message else '', failure.context.get('test_file', '') if failure.context else '', failure.context.get('failure_type', '') if failure.context else '', str(sorted(failure.context.keys())) if failure.context else '']
         return '|'.join(signature_parts)
 
-    def _add_test_pattern_to_library(self, pattern -> Any: PreventionPattern) -> Any:
+    def _add_test_pattern_to_library(self, pattern: PreventionPattern):
         """Add test-specific pattern to library with enhanced indexing"""
         self._add_pattern_to_library(pattern)
         self.logger.info(f'Added test-specific pattern to library: {pattern.pattern_id}')

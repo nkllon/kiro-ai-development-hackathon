@@ -20,8 +20,7 @@ class ComparativeAnalysisEngine(ReflectiveModule):
     Generates concrete evidence of Beast Mode superiority
     """
 
-    def __init__(self) -> Any:
-        """__init__ - Enhanced for compliance"""
+    def __init__(self):
         super().__init__('comparative_analysis_engine')
         self.analysis_count = 0
         self.total_analyses = 0

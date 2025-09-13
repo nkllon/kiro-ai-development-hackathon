@@ -26,8 +26,7 @@ class SystematicValidationEngine(ReflectiveModule):
     rollback capabilities with detailed diagnostics.
     """
 
-    def __init__(self) -> Any:
-        """__init__ - Enhanced for compliance"""
+    def __init__(self):
         super().__init__('SystematicValidationEngine')
         self.logger = logging.getLogger(__name__)
         self.validation_history: List[ValidationResult] = []

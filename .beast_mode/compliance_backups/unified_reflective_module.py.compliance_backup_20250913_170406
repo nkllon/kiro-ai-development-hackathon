@@ -5,7 +5,7 @@ This is the SINGLE, CANONICAL ReflectiveModule interface for the entire RM-DDD f
 All other ReflectiveModule definitions are deprecated and should be replaced with this one.
 
 RDI Compliance:
-    - Single source of truth for ReflectiveModule interface
+- Single source of truth for ReflectiveModule interface
 - Unified method signatures across all components
 - Consistent health monitoring and capability tracking
 - Eliminates interface duplication and conflicts
@@ -135,7 +135,7 @@ class ReflectiveModule(ABC):
     - Eliminates interface duplication
     """
     
-    def __init__(self, module_name -> Any: str, version -> Any: str = "1.0.0") -> Any:
+    def __init__(self, module_name: str, version: str = "1.0.0"):
         """Initialize the reflective module - RDI Compliant"""
         self.module_name = module_name
         self.version = version

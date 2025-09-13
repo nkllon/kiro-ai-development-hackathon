@@ -655,3 +655,78 @@ validate-integrations: ## Validate all integrations (GitHub MCP, Simone, etc.) -
 	@echo ""
 	@uv run python scripts/validate_integrations.py
 
+# Enhanced Interface Registry Targets
+enhanced-registry: ## Create enhanced interface registry with method signatures and domain vocabulary
+	@echo "$(CYAN)🚀 Enhanced Interface Registry Creation$(RESET)"
+	@echo "$(YELLOW)Creating comprehensive interface metadata$(RESET)"
+	@echo ""
+	@uv run python scripts/enhanced_interface_registry.py
+	@echo "$(GREEN)✅ Enhanced registry created with comprehensive metadata!$(RESET)"
+
+analyze-enhanced-registry: ## Analyze enhanced registry with detailed metrics
+	@echo "$(CYAN)🔍 Enhanced Registry Analysis$(RESET)"
+	@echo "$(YELLOW)Analyzing method signatures, compliance, and vocabulary$(RESET)"
+	@echo ""
+	@uv run python scripts/analyze_enhanced_registry.py
+	@echo "$(GREEN)✅ Enhanced registry analysis complete!$(RESET)"
+
+expand-domain-vocabulary: ## Expand domain vocabulary and ubiquitous language indexing
+	@echo "$(CYAN)📚 Domain Vocabulary Expansion$(RESET)"
+	@echo "$(YELLOW)Building comprehensive domain and ubiquitous language index$(RESET)"
+	@echo ""
+	@uv run python scripts/simple_domain_expansion.py
+	@echo "$(GREEN)✅ Domain vocabulary expansion complete!$(RESET)"
+
+validate-enhanced-registry: ## Validate all enhanced registry features
+	@echo "$(CYAN)✅ Enhanced Registry Validation$(RESET)"
+	@echo "$(YELLOW)Validating method signatures, file tracking, and vocabulary$(RESET)"
+	@echo ""
+	@uv run python scripts/validate_enhanced_registry.py
+	@echo "$(GREEN)✅ Enhanced registry validation complete!$(RESET)"
+
+registry-summary: ## Generate comprehensive enhanced registry summary
+	@echo "$(CYAN)📊 Enhanced Registry Summary$(RESET)"
+	@echo "$(YELLOW)Mission accomplished report$(RESET)"
+	@echo ""
+	@uv run python scripts/beast_mode_registry_summary.py
+	@echo "$(GREEN)✅ Enhanced registry summary generated!$(RESET)"
+
+# Complete enhanced registry workflow
+enhanced-registry-workflow: ## Run complete enhanced registry workflow
+	@echo "$(CYAN)🚀 Enhanced Registry Workflow$(RESET)"
+	@echo "$(YELLOW)Complete enhanced registry creation and validation$(RESET)"
+	@echo ""
+	@$(MAKE) enhanced-registry
+	@$(MAKE) expand-domain-vocabulary
+	@$(MAKE) validate-enhanced-registry
+	@$(MAKE) registry-summary
+	@echo "$(GREEN)🏆 Complete enhanced registry workflow finished!$(RESET)"
+
+# Integrated Registry Targets
+test-integrated-registry: ## Test integrated registry functionality with ReflectiveModule base class
+	@echo "$(CYAN)🧪 Integrated Registry Test$(RESET)"
+	@echo "$(YELLOW)Testing automatic registry integration with introspection$(RESET)"
+	@echo ""
+	@uv run python scripts/test_integrated_registry.py
+	@echo "$(GREEN)✅ Integrated registry test complete!$(RESET)"
+
+integrated-registry-demo: ## Demonstrate integrated registry with zero-configuration ReflectiveModule
+	@echo "$(CYAN)🎯 Integrated Registry Demo$(RESET)"
+	@echo "$(YELLOW)Zero-configuration registry integration demonstration$(RESET)"
+	@echo ""
+	@uv run python scripts/test_integrated_registry.py
+	@echo "$(GREEN)✅ Integrated registry demo complete!$(RESET)"
+
+# Complete integrated registry workflow
+integrated-registry-workflow: ## Run complete integrated registry workflow
+	@echo "$(CYAN)🚀 Integrated Registry Workflow$(RESET)"
+	@echo "$(YELLOW)Complete integrated registry creation, testing, and validation$(RESET)"
+	@echo ""
+	@$(MAKE) enhanced-registry
+	@$(MAKE) expand-domain-vocabulary
+	@$(MAKE) test-integrated-registry
+	@$(MAKE) integrated-registry-demo
+	@$(MAKE) validate-enhanced-registry
+	@$(MAKE) registry-summary
+	@echo "$(GREEN)🏆 Complete integrated registry workflow finished!$(RESET)"
+

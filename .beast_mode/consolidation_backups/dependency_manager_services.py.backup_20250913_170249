@@ -22,8 +22,7 @@ class DependencyFirstManager(ReflectiveModule):
     Beast Mode to refactor Beast Mode.
     """
 
-    def __init__(self) -> Any:
-        """__init__ - Enhanced for compliance"""
+    def __init__(self):
         super().__init__('DependencyFirstManager')
         self.logger = logging.getLogger(__name__)
         self.dependency_graph: Dict[str, DependencyNode] = {}
@@ -84,7 +83,7 @@ class DependencyFirstManager(ReflectiveModule):
                 dfs(spec, [])
         return cycles
 
-    def _calculate_dependency_layers(self) -> Any:
+    def _calculate_dependency_layers(self):
         """Calculate dependency layers for topological ordering"""
         current_layer = 0
         remaining_specs = set(self.dependency_graph.keys())

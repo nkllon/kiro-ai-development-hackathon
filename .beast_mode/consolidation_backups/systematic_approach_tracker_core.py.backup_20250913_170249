@@ -29,8 +29,7 @@ class SystematicApproachTracker(ReflectiveModule):
     Measures actual Beast Mode methodology execution
     """
 
-    def __init__(self) -> Any:
-        """__init__ - Enhanced for compliance"""
+    def __init__(self):
         super().__init__('systematic_approach_tracker')
         self.tracking_count = 0
         self.total_tracked = 0
@@ -171,8 +170,7 @@ class SystematicApproachTracker(ReflectiveModule):
         """
         return {'decision_making_systematic': {'uses_data': True, 'consults_registry': True, 'performs_analysis': True, 'validates_results': True, 'typical_success_rate': 0.85, 'typical_quality_score': 0.8}, 'problem_solving_systematic': {'performs_rca': True, 'fixes_root_causes': True, 'avoids_workarounds': True, 'documents_patterns': True, 'typical_resolution_time': 3.0, 'typical_rework_rate': 0.05}, 'tool_management_systematic': {'monitors_health': True, 'systematic_repair': True, 'validates_fixes': True, 'uses_prevention': True, 'typical_tool_success_rate': 0.9, 'typical_repair_effectiveness': 0.85}}
 
-def __init__(self) -> Any:
-        """__init__ - Enhanced for compliance"""
+def __init__(self):
     super().__init__('systematic_approach_tracker')
     self.tracking_count = 0
     self.total_tracked = 0

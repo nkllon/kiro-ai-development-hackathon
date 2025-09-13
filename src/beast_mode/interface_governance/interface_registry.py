@@ -113,7 +113,7 @@ class BeastModeInterfaceRegistry:
                         'methods': interface.methods,
                         'domain_terms': interface.domain_terms,
                         'status': interface.status.value if hasattr(interface.status, 'value') else str(interface.status),
-                        'registered_at': interface.registered_at.isoformat(),
+                        'registered_at': interface.registered_at.isoformat() if hasattr(interface.registered_at, 'isoformat') else str(interface.registered_at),
                         'conflicts': interface.conflicts
                     }
                     for interface_id, interface in self.interfaces.items()
@@ -125,13 +125,13 @@ class BeastModeInterfaceRegistry:
                 'duplicates': [
                     {
                         'interface_name': dup.interface_name,
-                        'interface_type': dup.interface_type.value,
+                        'interface_type': dup.interface_type.value if hasattr(dup.interface_type, 'value') else str(dup.interface_type),
                         'file_path': dup.file_path,
                         'line_number': dup.line_number,
                         'methods': dup.methods,
                         'domain_terms': dup.domain_terms,
-                        'status': dup.status.value,
-                        'registered_at': dup.registered_at.isoformat(),
+                        'status': dup.status.value if hasattr(dup.status, 'value') else str(dup.status),
+                        'registered_at': dup.registered_at.isoformat() if hasattr(dup.registered_at, 'isoformat') else str(dup.registered_at),
                         'conflicts': dup.conflicts
                     }
                     for dup in self.duplicates
@@ -139,13 +139,13 @@ class BeastModeInterfaceRegistry:
                 'conflicts': [
                     {
                         'interface_name': conf.interface_name,
-                        'interface_type': conf.interface_type.value,
+                        'interface_type': conf.interface_type.value if hasattr(conf.interface_type, 'value') else str(conf.interface_type),
                         'file_path': conf.file_path,
                         'line_number': conf.line_number,
                         'methods': conf.methods,
                         'domain_terms': conf.domain_terms,
-                        'status': conf.status.value,
-                        'registered_at': conf.registered_at.isoformat(),
+                        'status': conf.status.value if hasattr(conf.status, 'value') else str(conf.status),
+                        'registered_at': conf.registered_at.isoformat() if hasattr(conf.registered_at, 'isoformat') else str(conf.registered_at),
                         'conflicts': conf.conflicts
                     }
                     for conf in self.conflicts

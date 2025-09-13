@@ -21,7 +21,7 @@ class ModelRegistry(ReflectiveModule):
     model registry for domain-specific requirements, patterns, and tools.
     """
 
-    def __init__(self, registry_path -> Any: str='project_model_registry.json') -> Any:
+    def __init__(self, registry_path: str='project_model_registry.json'):
         """Initialize model registry with project intelligence"""
         self.registry_path = Path(registry_path)
         self.logger = logging.getLogger(__name__)
@@ -54,7 +54,7 @@ class ModelRegistry(ReflectiveModule):
         """Create default registry structure when file is missing"""
         return {'description': 'Default Beast Mode Registry', 'domain_architecture': {'overview': {'total_domains': 0, 'compliance_standard': 'Reflective Module (RM)'}}, 'domains': {}}
 
-    def _build_domain_cache(self) -> Any:
+    def _build_domain_cache(self):
         """Build domain information cache from registry data"""
         self.domain_cache.clear()
         domain_arch = self.registry_data.get('domain_architecture', {})
@@ -171,7 +171,7 @@ class ModelRegistry(ReflectiveModule):
                 merged_steps.append(step)
         return Pattern(pattern_id=base_pattern.pattern_id, name=base_pattern.name, domain=base_pattern.domain, description=f'{base_pattern.description} (enhanced with learning)', implementation_steps=merged_steps, success_metrics=merged_metrics, confidence_score=max(old_pattern.confidence_score, new_pattern.confidence_score))
 
-    def _persist_learning_update(self, domain -> Any: str, pattern -> Any: Pattern) -> Any:
+    def _persist_learning_update(self, domain: str, pattern: Pattern):
         """Persist learning updates to file system"""
         try:
             learning_dir = Path('learning_patterns')

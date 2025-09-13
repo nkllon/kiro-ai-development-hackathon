@@ -57,8 +57,7 @@ class SimoneIntegrationAdapter(ReflectiveModule):
     following Beast Mode quality standards and RM-DDD compliance.
     """
     
-    def __init__(self) -> Any:
-        """__init__ - Enhanced for compliance"""
+    def __init__(self):
         super().__init__()
         self.module_name = 'simone_adapter'
         self.methodologies = self._load_simone_methodologies()
@@ -71,7 +70,7 @@ class SimoneIntegrationAdapter(ReflectiveModule):
         # Initialize health indicators
         self.health_indicators = {}
     
-    def _update_health_indicator(self, component -> Any: str, status -> Any: str) -> Any:
+    def _update_health_indicator(self, component: str, status: str):
         """Update health indicator for a component."""
         self.health_indicators[component] = {
             'status': status,

@@ -28,8 +28,7 @@ class EvaluationEvidenceGenerator(ReflectiveModule):
     Addresses Evaluator perspective concerns from multi-stakeholder analysis
     """
     
-    def __init__(self) -> Any:
-        """__init__ - Enhanced for compliance"""
+    def __init__(self):
         super().__init__("evaluation_evidence_generator")
         
         # Hackathon evaluation criteria

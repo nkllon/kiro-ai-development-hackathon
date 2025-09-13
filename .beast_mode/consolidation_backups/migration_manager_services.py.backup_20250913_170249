@@ -23,8 +23,7 @@ class LiveMigrationManager(ReflectiveModule):
     while it's running and coordinating its own refactoring?
     """
 
-    def __init__(self) -> Any:
-        """__init__ - Enhanced for compliance"""
+    def __init__(self):
         super().__init__('LiveMigrationManager')
         self.logger = logging.getLogger(__name__)
         self.migration_states: Dict[str, MigrationState] = {}
