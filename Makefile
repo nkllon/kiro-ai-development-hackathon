@@ -432,10 +432,16 @@ interface-registry-status: ## Show interface registry status
 	@echo "$(CYAN)📊 Interface Registry Status$(RESET)"
 	@uv run python -c "from src.rm_ddd.core.interface_registry import InterfaceRegistry; registry = InterfaceRegistry(); report = registry.get_interface_governance_report(); print(f'Total interfaces: {report[\"total_interfaces\"]}'); print(f'Active interfaces: {report[\"active_interfaces\"]}'); print(f'Deprecated interfaces: {report[\"deprecated_interfaces\"]}')"
 
-enhanced-registry-analysis: ## Analyze interface implementations and circular dependencies
-	@echo "$(CYAN)🔍 Enhanced Registry Analysis$(RESET)"
-	@uv run python scripts/analyze_circular_deps.py
+enhanced-registry-analysis: ## Analyze interface implementations with full integration
+	@echo "$(CYAN)🔍 Enhanced Registry Analysis with Integration$(RESET)"
+	@uv run python src/rm_ddd/core/enhanced_interface_registry.py
 	@echo "$(GREEN)✅ Enhanced registry analysis complete!$(RESET)"
+	@echo "$(YELLOW)💡 Key Features:$(RESET)"
+	@echo "   - Interface implementation discovery with signature validation"
+	@echo "   - Interface ambiguity detection and conflict resolution"
+	@echo "   - Ubiquitous language search capabilities"
+	@echo "   - Integration with existing InterfaceRegistry system"
+	@echo "   - Unified registry status reporting"
 
 interface-governance-check: ## Check interface governance for staged files
 	@echo "$(BLUE)🔍 Checking Interface Governance...$(RESET)"
