@@ -160,7 +160,10 @@ class EnhancedDemo:
             "time_limit": 10
         }
         
-        enhancement = self.adapter.enhance_demo_presentation(demo_context)
+        enhancement = self.adapter.enhance_demo_presentation(
+            "Beast Mode + Simone Integration Demo",
+            "Demonstrating systematic superiority with AI-assisted development"
+        )
         
         print("✅ Enhanced Demo Presentation")
         print(f"   - Title: {enhancement.title}")
@@ -258,7 +261,11 @@ class EnhancedDemo:
         efficiency = (total_phase_duration / total_duration) * 100 if total_duration > 0 else 0
         
         # Generate systematic evidence
-        systematic_evidence = self.adapter.generate_systematic_proof()
+        systematic_evidence = self.adapter.generate_systematic_proof(
+            "beast_mode_simone_integration",
+            "velocity_advantage",
+            0.95
+        )
         
         results = {
             "status": "success",
@@ -293,25 +300,30 @@ class EnhancedDemo:
         print("🎉 ENHANCED DEMO COMPLETED SUCCESSFULLY")
         print("=" * 60)
         
-        print(f"⏱️  Total Duration: {results['total_duration']:.2f} seconds")
-        print(f"📊 Efficiency: {results['performance_metrics']['efficiency']:.1f}%")
-        print(f"✅ Phases Completed: {results['performance_metrics']['phases_completed']}")
+        # Safely access results with fallbacks
+        total_duration = results.get('total_duration', 0)
+        performance_metrics = results.get('performance_metrics', {})
+        competitive_advantages = results.get('competitive_advantages', [])
+        systematic_evidence = results.get('systematic_evidence', {})
+        integration_status = results.get('integration_status', {})
+        
+        print(f"⏱️  Total Duration: {total_duration:.2f} seconds")
+        print(f"📊 Efficiency: {performance_metrics.get('efficiency', 0):.1f}%")
+        print(f"✅ Phases Completed: {performance_metrics.get('phases_completed', 0)}")
         
         print("\n🏆 Competitive Advantages Demonstrated:")
-        for advantage in results['competitive_advantages']:
+        for advantage in competitive_advantages:
             print(f"   ✅ {advantage}")
         
         print(f"\n📈 Systematic Evidence:")
-        evidence = results['systematic_evidence']
-        print(f"   - Methodology: {evidence['methodology']}")
-        print(f"   - Confidence: {evidence['confidence_level']}")
-        print(f"   - Proof Type: {evidence['proof_type']}")
+        print(f"   - Methodology: {systematic_evidence.get('methodology', 'N/A')}")
+        print(f"   - Confidence: {systematic_evidence.get('confidence_level', 'N/A')}")
+        print(f"   - Proof Type: {systematic_evidence.get('proof_type', 'N/A')}")
         
         print(f"\n🔗 Integration Status:")
-        status = results['integration_status']
-        print(f"   - Status: {status['status']}")
-        print(f"   - Methodologies: {status['methodologies_loaded']}")
-        print(f"   - Enhancements: {status['competitive_enhancements']}")
+        print(f"   - Status: {integration_status.get('status', 'N/A')}")
+        print(f"   - Methodologies: {integration_status.get('methodologies_loaded', 0)}")
+        print(f"   - Enhancements: {integration_status.get('competitive_enhancements', 0)}")
 
 
 def run_enhanced_demo():

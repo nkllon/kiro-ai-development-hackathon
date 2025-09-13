@@ -1,0 +1,158 @@
+# Cursor AI Project Rules for Interface Governance
+
+## Interface Duplication Prevention
+
+### CRITICAL RULE: No Interface Duplication
+- NEVER create duplicate interface definitions
+- ALWAYS check existing interfaces before creating new ones
+- Use the Interface Registry as the single source of truth
+- Run duplication detection before any interface changes
+
+### Interface Creation Process
+1. Check `src/rm_ddd/core/interface_registry.py` for existing interfaces
+2. Run `uv run python src/rm_ddd/core/interface_duplication_detector.py`
+3. If no conflicts, proceed with interface creation
+4. Register new interface in the central registry
+5. Update all imports to use centralized interface
+
+### Interface Standards
+- All interfaces MUST inherit from `ABC` and use `@abstractmethod`
+- Comprehensive type hints required for all methods
+- Docstrings must follow Google style format
+- Interfaces must be registered in `src/rm_ddd/core/interface_registry.py`
+
+### File Organization Rules
+- Single interface per file in most cases
+- Group related interfaces in same module
+- Use `__all__` exports for public interfaces
+- Maintain clear import hierarchy
+
+### Quality Gates
+- All interfaces must pass linting (flake8, black, mypy)
+- 100% test coverage for interface definitions
+- Comprehensive documentation with examples
+- Integration tests for interface implementations
+
+## RM-DDD Compliance
+
+### Requirements-Driven Implementation
+- Each interface must trace to specific requirements
+- Interface specifications must be validated against requirements
+- Implementation must follow established patterns
+- Changes must be tracked and documented
+
+### Domain-Driven Design
+- Interfaces must reflect domain concepts clearly
+- Ubiquitous language must be consistent across interfaces
+- Domain boundaries must be respected
+- Cross-cutting concerns must be properly abstracted
+
+### Governance and Validation
+- All interface changes must go through governance process
+- Duplication detection must be automated
+- Consistency validation must be continuous
+- Documentation must be kept current
+
+## Existing Interface Files (DO NOT DUPLICATE)
+
+### Authoritative Sources
+- `src/rm_ddd/core/interface_registry.py` - Central interface registry
+- `src/rm_ddd/core/interface_consolidation_engine.py` - Consolidation tools
+- `src/rm_ddd/core/interface_duplication_detector.py` - Duplication detection
+
+### Consolidated Interfaces
+- `src/beast_mode/domain_index/interfaces.py` - Domain interfaces (consolidated)
+- `src/ghostbusters/core/interfaces_core.py` - Ghostbusters interfaces
+- `src/visual_diagram_validation/core/interfaces.py` - Validation interfaces
+- `src/beast_mode/integration/devpost/interfaces.py` - DevPost integration interfaces
+
+### Deprecated/Duplicate Files (TO BE REMOVED)
+- `src/beast_mode/domain_index/interfaces_core_core_core.py` - Duplicate
+- `migration_backups/*/src/beast_mode/domain_index/interfaces.py` - Migration artifacts
+- `backups/interfaces.py` - Backup duplicates
+
+## Interface Consolidation Status
+
+### Current Crisis
+- 48+ duplicate interface classes across 11+ files
+- 0.00 consistency score indicating complete conflicts
+- Multiple "authoritative" sources claiming single source of truth
+
+### Consolidation Tools Available
+- Interface Consolidation Engine
+- Interface Duplication Detector
+- Unification Scripts
+- RM-DDD Framework
+
+### Next Steps
+1. Run interface consolidation engine
+2. Identify authoritative sources
+3. Create consolidated interface definitions
+4. Update all imports
+5. Remove duplicate files
+6. Implement governance prevention
+
+## Development Workflow
+
+### Before Creating Interfaces
+1. Check existing interfaces in registry
+2. Run duplication detection
+3. Verify no conflicts exist
+4. Plan interface hierarchy
+
+### During Interface Development
+1. Follow interface standards strictly
+2. Add comprehensive documentation
+3. Include type hints for all methods
+4. Create corresponding tests
+
+### After Interface Creation
+1. Register in central registry
+2. Update import statements
+3. Run full test suite
+4. Validate integration
+
+## Emergency Procedures
+
+### If Duplication Detected
+1. STOP all interface work immediately
+2. Run consolidation analysis
+3. Identify authoritative source
+4. Plan consolidation strategy
+5. Execute consolidation plan
+6. Verify no regressions
+
+### If Integration Breaks
+1. Check interface consistency
+2. Verify import statements
+3. Run interface validation
+4. Fix inconsistencies
+5. Test integration thoroughly
+
+## Success Metrics
+
+### Interface Quality
+- Zero interface duplications
+- 100% consistency score
+- All interfaces properly documented
+- Complete test coverage
+
+### Development Efficiency
+- Clear interface discovery
+- Automated duplication prevention
+- Streamlined development workflow
+- Reduced integration issues
+
+### Architectural Integrity
+- Single source of truth for interfaces
+- Clear interface hierarchy
+- Proper domain boundaries
+- Consistent ubiquitous language
+
+---
+
+**Remember: Interface duplication is the enemy of maintainable code. Always check before creating, always consolidate when found, always prevent future duplications.**
+
+
+
+

@@ -63,6 +63,19 @@ class SimoneIntegrationAdapter(ReflectiveModule):
         self.methodologies = self._load_simone_methodologies()
         self.competitive_enhancements = self._load_competitive_enhancements()
         self.integration_status = 'initialized'
+        # Initialize logger if not present
+        if not hasattr(self, 'logger'):
+            import logging
+            self.logger = logging.getLogger(self.__class__.__name__)
+        # Initialize health indicators
+        self.health_indicators = {}
+    
+    def _update_health_indicator(self, component: str, status: str):
+        """Update health indicator for a component."""
+        self.health_indicators[component] = {
+            'status': status,
+            'timestamp': datetime.now().isoformat()
+        }
     
     def _load_simone_methodologies(self) -> List[SimoneMethodology]:
         """Load Simone methodologies from documentation."""

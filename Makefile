@@ -649,3 +649,9 @@ prevent-duplicates: ## Demonstrate interface duplication prevention
 	@echo ""
 	@echo "$(GREEN)✅ Duplication prevention demo completed!$(RESET)"
 
+validate-integrations: ## Validate all integrations (GitHub MCP, Simone, etc.) - FAILURE MODE PREVENTION
+	@echo "$(CYAN)🔍 Integration Validation Suite$(RESET)"
+	@echo "$(YELLOW)Preventing failure modes through comprehensive validation$(RESET)"
+	@echo ""
+	@uv run python scripts/validate_integrations.py
+

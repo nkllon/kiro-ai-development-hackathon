@@ -856,3 +856,9 @@ def _update_metrics(self, operation: str) -> None:
     logger.debug(f'File change event: {operation}')
 
 
+
+
+
+
+
+
