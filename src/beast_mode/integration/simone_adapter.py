@@ -14,78 +14,8 @@ from datetime import datetime
 import json
 import os
 
-# RM-DDD Compliant ReflectiveModule Interface
-from abc import ABC, abstractmethod
-from enum import Enum
-from dataclasses import dataclass
-
-class ModuleStatus(Enum):
-    """Module operational status - RDI Compliant"""
-    HEALTHY = "healthy"
-    WARNING = "warning"
-    ERROR = "error"
-    UNKNOWN = "unknown"
-    DEGRADED = "degraded"
-    MAINTENANCE = "maintenance"
-
-class ModuleCapability(Enum):
-    """Module capability types - RDI Compliant"""
-    PROJECT_MANAGEMENT = "project_management"
-    SYSTEMATIC_ANALYSIS = "systematic_analysis"
-    QUALITY_ASSURANCE = "quality_assurance"
-    MONITORING = "monitoring"
-    VALIDATION = "validation"
-
-@dataclass
-class ModuleHealth:
-    """Module health status - RDI Compliant"""
-    status: ModuleStatus
-    health_score: float
-    issues: List[str]
-    uptime_seconds: float
-    error_count: int
-    warning_count: int
-
-class ReflectiveModule(ABC):
-    """RM-DDD Compliant ReflectiveModule Interface"""
-    
-    def __init__(self, module_name: str, version: str = "1.0.0"):
-        """Initialize the reflective module - RDI Compliant"""
-        self.module_name = module_name
-        self.version = version
-        self._start_time = datetime.now()
-        self._error_count = 0
-        self._warning_count = 0
-    
-    @abstractmethod
-    def get_module_info(self) -> Dict[str, Any]:
-        """Get module information - RDI Compliant"""
-        pass
-    
-    @abstractmethod
-    def get_capabilities(self) -> List[ModuleCapability]:
-        """Get module capabilities - RDI Compliant"""
-        pass
-    
-    @abstractmethod
-    def get_dependencies(self) -> List[str]:
-        """Get module dependencies - RDI Compliant"""
-        pass
-    
-    @abstractmethod
-    def check_health(self) -> ModuleHealth:
-        """Check module health - RDI Compliant"""
-        pass
-    
-    @abstractmethod
-    def get_configuration(self) -> Dict[str, Any]:
-        """Get module configuration - RDI Compliant"""
-        pass
-    
-    @abstractmethod
-    def get_metrics(self) -> Dict[str, Any]:
-        """Get module metrics - RDI Compliant"""
-        pass
+# Use existing Beast Mode ReflectiveModule interface
+from src.beast_mode.core.interfaces import ReflectiveModule
 
 
 @dataclass
@@ -128,7 +58,8 @@ class SimoneIntegrationAdapter(ReflectiveModule):
     """
     
     def __init__(self):
-        super().__init__('simone_adapter', '1.0.0')
+        super().__init__()
+        self.module_name = 'simone_adapter'
         self.methodologies = self._load_simone_methodologies()
         self.competitive_enhancements = self._load_competitive_enhancements()
         self.integration_status = 'initialized'
@@ -325,79 +256,29 @@ class SimoneIntegrationAdapter(ReflectiveModule):
         """Get health indicator names."""
         return ['integration_status', 'demo_enhancement', 'systematic_proof']
     
-    # RM-DDD Required Abstract Methods
-    def get_module_info(self) -> Dict[str, Any]:
-        """Get module information - RDI Compliant."""
+    # Beast Mode ReflectiveModule Required Methods
+    def get_health_status(self) -> Dict[str, Any]:
+        """Get current health status of the module."""
         return {
-            "id": self.module_name,
-            "version": self.version,
-            "description": "Lightweight integration adapter for Simone methodologies with Beast Mode",
-            "primary_responsibility": self._get_primary_responsibility(),
+            "status": "healthy" if self.is_healthy() else "degraded",
             "integration_status": self.integration_status,
-            "methodologies_count": len(self.methodologies),
-            "competitive_enhancements_count": len(self.competitive_enhancements)
-        }
-    
-    def get_capabilities(self) -> List[ModuleCapability]:
-        """Get module capabilities - RDI Compliant."""
-        return [
-            ModuleCapability.PROJECT_MANAGEMENT,
-            ModuleCapability.SYSTEMATIC_ANALYSIS,
-            ModuleCapability.QUALITY_ASSURANCE,
-            ModuleCapability.MONITORING,
-            ModuleCapability.VALIDATION
-        ]
-    
-    def get_dependencies(self) -> List[str]:
-        """Get module dependencies - RDI Compliant."""
-        return [
-            "beast_mode_core",
-            "pdca_orchestrator", 
-            "quality_gates",
-            "simone_documentation"
-        ]
-    
-    def check_health(self) -> ModuleHealth:
-        """Check module health - RDI Compliant."""
-        from datetime import datetime
-        uptime = (datetime.now() - self._start_time).total_seconds()
-        
-        # Simple health check based on integration status
-        if self.integration_status == 'initialized' and len(self.methodologies) > 0:
-            status = ModuleStatus.HEALTHY
-            health_score = 0.95
-            issues = []
-        else:
-            status = ModuleStatus.ERROR
-            health_score = 0.0
-            issues = ["Integration not properly initialized"]
-        
-        return ModuleHealth(
-            status=status,
-            health_score=health_score,
-            issues=issues,
-            uptime_seconds=uptime,
-            error_count=self._error_count,
-            warning_count=self._warning_count
-        )
-    
-    def get_configuration(self) -> Dict[str, Any]:
-        """Get module configuration - RDI Compliant."""
-        return {
-            "integration_approach": "lightweight_adapter",
-            "methodologies": [m.name for m in self.methodologies],
-            "competitive_enhancements": list(self.competitive_enhancements.keys()),
-            "zero_technical_debt": True,
-            "rm_ddd_compliant": True
+            "methodologies_loaded": len(self.methodologies),
+            "competitive_enhancements_available": len(self.competitive_enhancements),
+            "primary_responsibility": self._get_primary_responsibility()
         }
     
     def get_metrics(self) -> Dict[str, Any]:
-        """Get module metrics - RDI Compliant."""
+        """Get performance and operational metrics."""
         return {
             "methodologies_loaded": len(self.methodologies),
             "competitive_enhancements_available": len(self.competitive_enhancements),
             "integration_status": self.integration_status,
-            "uptime_seconds": (datetime.now() - self._start_time).total_seconds(),
-            "error_count": self._error_count,
-            "warning_count": self._warning_count
+            "zero_technical_debt": True,
+            "beast_mode_compliant": True
         }
+    
+    def is_healthy(self) -> bool:
+        """Check if module is healthy."""
+        return (self.integration_status == 'initialized' and 
+                len(self.methodologies) > 0 and 
+                len(self.competitive_enhancements) > 0)
