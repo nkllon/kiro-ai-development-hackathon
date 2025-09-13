@@ -1,0 +1,146 @@
+"""
+Beast Mode Transport Abstraction
+
+Defines the abstract interface for pluggable transport implementations.
+"""
+
+from abc import ABC, abstractmethod
+from typing import Callable, Dict, Any, Optional, List
+from .models import BeastModeMessage
+
+
+class BeastModeTransport(ABC):
+    """Abstract base class for Beast Mode transport implementations"""
+    
+    @abstractmethod
+    async def initialize(self, config: Dict[str, Any]) -> bool:
+        """
+        Initialize the transport with configuration.
+        
+        Args:
+            config: Transport-specific configuration parameters
+            
+        Returns:
+            True if initialization successful, False otherwise
+        """
+        pass
+    
+    @abstractmethod
+    async def send_message(self, message: BeastModeMessage) -> bool:
+        """
+        Send a message through this transport.
+        
+        Args:
+            message: The message to send
+            
+        Returns:
+            True if sent successfully, False otherwise
+        """
+        pass
+    
+    @abstractmethod
+    async def subscribe(self, handler: Callable[[BeastModeMessage], None]) -> bool:
+        """
+        Subscribe to messages with the provided handler.
+        
+        Args:
+            handler: Function to call when messages are received
+            
+        Returns:
+            True if subscription successful, False otherwise
+        """
+        pass
+    
+    @abstractmethod
+    async def start_daemon(self) -> bool:
+        """
+        Start background daemon for message processing.
+        
+        Returns:
+            True if daemon started successfully, False otherwise
+        """
+        pass
+    
+    @abstractmethod
+    async def stop_daemon(self) -> None:
+        """Stop background daemon gracefully."""
+        pass
+    
+    @abstractmethod
+    def get_status(self) -> Dict[str, Any]:
+        """
+        Get current transport status and metrics.
+        
+        Returns:
+            Dictionary containing status information
+        """
+        pass
+    
+    @abstractmethod
+    def get_capabilities(self) -> Dict[str, Any]:
+        """
+        Get transport-specific capabilities and features.
+        
+        Returns:
+            Dictionary describing transport capabilities
+        """
+        pass
+
+
+class TransportFactory:
+    """Factory for creating transport instances"""
+    
+    _transports: Dict[str, type] = {}
+    
+    @classmethod
+    def create_transport(cls, transport_type: str, **config) -> BeastModeTransport:
+        """
+        Create a transport instance of the specified type.
+        
+        Args:
+            transport_type: Type of transport to create ('redis', 'nats', etc.)
+            **config: Configuration parameters for the transport
+            
+        Returns:
+            Transport instance
+            
+        Raises:
+            ValueError: If transport type is not registered
+        """
+        if transport_type not in cls._transports:
+            available = list(cls._transports.keys())
+            raise ValueError(f"Unknown transport type: {transport_type}. Available: {available}")
+        
+        transport_class = cls._transports[transport_type]
+        return transport_class(**config)
+    
+    @classmethod
+    def register_transport(cls, name: str, transport_class: type):
+        """
+        Register a new transport implementation.
+        
+        Args:
+            name: Name to register the transport under
+            transport_class: Transport class that implements BeastModeTransport
+        """
+        if not issubclass(transport_class, BeastModeTransport):
+            raise ValueError(f"Transport class must inherit from BeastModeTransport")
+        
+        cls._transports[name] = transport_class
+    
+    @classmethod
+    def get_available_transports(cls) -> List[str]:
+        """Get list of available transport types."""
+        return list(cls._transports.keys())
+
+
+# Configuration data class
+from dataclasses import dataclass, field
+
+@dataclass
+class TransportConfig:
+    """Configuration for transport implementations"""
+    transport_type: str = 'redis'
+    connection_params: Dict[str, Any] = field(default_factory=dict)
+    daemon_config: Dict[str, Any] = field(default_factory=dict)
+    retry_config: Dict[str, Any] = field(default_factory=dict)

@@ -1,0 +1,416 @@
+#!/usr/bin/env python3
+"""
+Requirements Analyzer for Interface Ambiguity Resolution
+
+This tool uses the enhanced registry to trace ambiguous interfaces back to their
+requirements and identify inconsistencies that need to be resolved.
+"""
+
+import ast
+import json
+import re
+import sys
+from pathlib import Path
+from typing import Dict, List, Set, Optional, Any, Tuple
+from dataclasses import dataclass, field
+from datetime import datetime
+from collections import defaultdict
+
+@dataclass
+class RequirementSource:
+    """Represents a requirement source for an interface"""
+    file_path: str
+    line_number: int
+    requirement_type: str  # 'interface', 'specification', 'documentation', 'test'
+    content: str
+    context: str
+    confidence: float = 0.0
+
+@dataclass
+class InterfaceRequirement:
+    """Represents requirements for a specific interface"""
+    interface_name: str
+    requirement_sources: List[RequirementSource]
+    ambiguity_type: str
+    conflicting_requirements: List[RequirementSource]
+    resolution_suggestions: List[str]
+    consistency_score: float = 0.0
+
+@dataclass
+class RequirementsAnalysisResult:
+    """Results of requirements analysis"""
+    analyzed_interfaces: int
+    ambiguous_interfaces: int
+    inconsistent_requirements: int
+    interface_requirements: List[InterfaceRequirement]
+    recommendations: List[str]
+    analysis_timestamp: str
+
+class RequirementsAnalyzer:
+    """Analyzes requirements for ambiguous interfaces"""
+    
+    def __init__(self, codebase_path: str = "src"):
+        self.codebase_path = Path(codebase_path)
+        self.requirement_patterns = {
+            'interface': [
+                r'class\s+(\w+)\s*\([^)]*Interface[^)]*\)',
+                r'interface\s+(\w+)',
+                r'protocol\s+(\w+)',
+                r'abstract\s+class\s+(\w+)\s*\([^)]*ABC[^)]*\)'
+            ],
+            'specification': [
+                r'def\s+(\w+)\s*\([^)]*\)\s*->\s*[^:]+:',
+                r'@abstractmethod\s+def\s+(\w+)',
+                r'@property\s+def\s+(\w+)'
+            ],
+            'documentation': [
+                r'"""([^"]*interface[^"]*)"""',
+                r'#\s*Interface:\s*(\w+)',
+                r'#\s*Requires:\s*(\w+)'
+            ],
+            'test': [
+                r'def\s+test_\w*interface\w*',
+                r'def\s+test_\w*(\w+)\w*',
+                r'class\s+Test\w*(\w+)\w*'
+            ]
+        }
+        
+    def analyze_requirements(self, ambiguous_interfaces: List[str]) -> RequirementsAnalysisResult:
+        """Analyze requirements for ambiguous interfaces"""
+        print(f"🔍 Analyzing requirements for {len(ambiguous_interfaces)} ambiguous interfaces...")
+        
+        interface_requirements = []
+        total_analyzed = 0
+        total_ambiguous = 0
+        total_inconsistent = 0
+        
+        for interface_name in ambiguous_interfaces:
+            print(f"  📋 Analyzing requirements for: {interface_name}")
+            
+            # Find all requirement sources for this interface
+            requirement_sources = self._find_requirement_sources(interface_name)
+            
+            if not requirement_sources:
+                print(f"    ⚠️  No requirements found for {interface_name}")
+                continue
+                
+            total_analyzed += 1
+            
+            # Analyze consistency
+            conflicting_requirements = self._find_conflicting_requirements(requirement_sources)
+            if conflicting_requirements:
+                total_ambiguous += 1
+                total_inconsistent += len(conflicting_requirements)
+            
+            # Generate resolution suggestions
+            resolution_suggestions = self._generate_resolution_suggestions(
+                interface_name, requirement_sources, conflicting_requirements
+            )
+            
+            # Calculate consistency score
+            consistency_score = self._calculate_consistency_score(requirement_sources, conflicting_requirements)
+            
+            interface_req = InterfaceRequirement(
+                interface_name=interface_name,
+                requirement_sources=requirement_sources,
+                ambiguity_type=self._classify_ambiguity_type(conflicting_requirements),
+                conflicting_requirements=conflicting_requirements,
+                resolution_suggestions=resolution_suggestions,
+                consistency_score=consistency_score
+            )
+            
+            interface_requirements.append(interface_req)
+            
+            print(f"    ✅ Found {len(requirement_sources)} requirement sources")
+            print(f"    📊 Consistency score: {consistency_score:.2f}")
+            if conflicting_requirements:
+                print(f"    ⚠️  {len(conflicting_requirements)} conflicting requirements")
+        
+        # Generate overall recommendations
+        recommendations = self._generate_overall_recommendations(interface_requirements)
+        
+        return RequirementsAnalysisResult(
+            analyzed_interfaces=total_analyzed,
+            ambiguous_interfaces=total_ambiguous,
+            inconsistent_requirements=total_inconsistent,
+            interface_requirements=interface_requirements,
+            recommendations=recommendations,
+            analysis_timestamp=datetime.now().isoformat()
+        )
+    
+    def _find_requirement_sources(self, interface_name: str) -> List[RequirementSource]:
+        """Find all requirement sources for an interface"""
+        sources = []
+        
+        for file_path in self.codebase_path.rglob("*.py"):
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                
+                # Parse AST to find interface definitions
+                tree = ast.parse(content)
+                
+                for node in ast.walk(tree):
+                    if isinstance(node, ast.ClassDef):
+                        if interface_name in node.name or self._is_interface_class(node):
+                            # Find line number
+                            line_number = node.lineno
+                            
+                            # Extract context
+                            context = self._extract_context(content, line_number)
+                            
+                            # Determine requirement type
+                            req_type = self._classify_requirement_type(node, content, line_number)
+                            
+                            # Calculate confidence
+                            confidence = self._calculate_confidence(node, interface_name, content)
+                            
+                            source = RequirementSource(
+                                file_path=str(file_path),
+                                line_number=line_number,
+                                requirement_type=req_type,
+                                content=context,
+                                context=context,
+                                confidence=confidence
+                            )
+                            sources.append(source)
+                            
+            except Exception as e:
+                continue
+                
+        return sources
+    
+    def _is_interface_class(self, node: ast.ClassDef) -> bool:
+        """Check if a class is an interface"""
+        # Check for interface indicators
+        interface_indicators = [
+            'Interface', 'Protocol', 'ABC', 'Abstract', 'Base'
+        ]
+        
+        for indicator in interface_indicators:
+            if indicator in node.name:
+                return True
+                
+        # Check for abstract methods
+        for item in node.body:
+            if isinstance(item, ast.FunctionDef) and any(
+                isinstance(decorator, ast.Name) and decorator.id == 'abstractmethod'
+                for decorator in item.decorator_list
+            ):
+                return True
+                
+        return False
+    
+    def _classify_requirement_type(self, node: ast.ClassDef, content: str, line_number: int) -> str:
+        """Classify the type of requirement"""
+        # Check for interface patterns
+        if 'Interface' in node.name or 'Protocol' in node.name:
+            return 'interface'
+        elif 'ABC' in node.name or 'Abstract' in node.name:
+            return 'interface'
+        elif 'Test' in node.name:
+            return 'test'
+        else:
+            return 'specification'
+    
+    def _extract_context(self, content: str, line_number: int) -> str:
+        """Extract context around a line"""
+        lines = content.split('\n')
+        start = max(0, line_number - 3)
+        end = min(len(lines), line_number + 3)
+        return '\n'.join(lines[start:end])
+    
+    def _calculate_confidence(self, node: ast.ClassDef, interface_name: str, content: str) -> float:
+        """Calculate confidence score for a requirement source"""
+        confidence = 0.0
+        
+        # Exact name match
+        if interface_name in node.name:
+            confidence += 0.4
+            
+        # Interface indicators
+        if 'Interface' in node.name or 'Protocol' in node.name:
+            confidence += 0.3
+            
+        # Abstract methods
+        abstract_methods = sum(
+            1 for item in node.body
+            if isinstance(item, ast.FunctionDef) and any(
+                isinstance(decorator, ast.Name) and decorator.id == 'abstractmethod'
+                for decorator in item.decorator_list
+            )
+        )
+        confidence += min(0.3, abstract_methods * 0.1)
+        
+        return min(1.0, confidence)
+    
+    def _find_conflicting_requirements(self, sources: List[RequirementSource]) -> List[RequirementSource]:
+        """Find conflicting requirements"""
+        conflicts = []
+        
+        # Group by requirement type
+        by_type = defaultdict(list)
+        for source in sources:
+            by_type[source.requirement_type].append(source)
+        
+        # Check for conflicts between types
+        if len(by_type) > 1:
+            # Interface vs specification conflict
+            if 'interface' in by_type and 'specification' in by_type:
+                conflicts.extend(by_type['specification'])
+            
+            # Test vs implementation conflict
+            if 'test' in by_type and 'specification' in by_type:
+                conflicts.extend(by_type['test'])
+        
+        return conflicts
+    
+    def _classify_ambiguity_type(self, conflicting_requirements: List[RequirementSource]) -> str:
+        """Classify the type of ambiguity"""
+        if not conflicting_requirements:
+            return 'none'
+        
+        types = set(req.requirement_type for req in conflicting_requirements)
+        
+        if 'interface' in types and 'specification' in types:
+            return 'interface_specification_mismatch'
+        elif 'test' in types and 'specification' in types:
+            return 'test_implementation_mismatch'
+        elif len(types) > 2:
+            return 'multiple_conflicts'
+        else:
+            return 'unclear_references'
+    
+    def _generate_resolution_suggestions(self, interface_name: str, sources: List[RequirementSource], 
+                                       conflicts: List[RequirementSource]) -> List[str]:
+        """Generate resolution suggestions"""
+        suggestions = []
+        
+        if not conflicts:
+            suggestions.append(f"✅ {interface_name} has consistent requirements")
+            return suggestions
+        
+        # Interface vs specification conflicts
+        interface_sources = [s for s in sources if s.requirement_type == 'interface']
+        spec_sources = [s for s in sources if s.requirement_type == 'specification']
+        
+        if interface_sources and spec_sources:
+            suggestions.append(f"🔧 Merge interface definition with specification for {interface_name}")
+            suggestions.append(f"📋 Ensure interface methods match specification requirements")
+            suggestions.append(f"🔍 Review {len(spec_sources)} specification sources for consistency")
+        
+        # Test vs implementation conflicts
+        test_sources = [s for s in sources if s.requirement_type == 'test']
+        if test_sources and spec_sources:
+            suggestions.append(f"🧪 Align test expectations with implementation for {interface_name}")
+            suggestions.append(f"📝 Update test cases to match current specification")
+        
+        # Multiple interface definitions
+        if len(interface_sources) > 1:
+            suggestions.append(f"🔄 Consolidate {len(interface_sources)} interface definitions for {interface_name}")
+            suggestions.append(f"📋 Create single authoritative interface definition")
+        
+        return suggestions
+    
+    def _calculate_consistency_score(self, sources: List[RequirementSource], 
+                                   conflicts: List[RequirementSource]) -> float:
+        """Calculate consistency score"""
+        if not sources:
+            return 0.0
+        
+        # Base score from source quality
+        base_score = sum(source.confidence for source in sources) / len(sources)
+        
+        # Penalty for conflicts
+        conflict_penalty = len(conflicts) * 0.2
+        
+        return max(0.0, base_score - conflict_penalty)
+    
+    def _generate_overall_recommendations(self, interface_requirements: List[InterfaceRequirement]) -> List[str]:
+        """Generate overall recommendations"""
+        recommendations = []
+        
+        total_interfaces = len(interface_requirements)
+        ambiguous_interfaces = sum(1 for req in interface_requirements if req.ambiguity_type != 'none')
+        avg_consistency = sum(req.consistency_score for req in interface_requirements) / total_interfaces if total_interfaces > 0 else 0
+        
+        recommendations.append(f"📊 Overall Analysis: {total_interfaces} interfaces analyzed")
+        recommendations.append(f"⚠️  Ambiguous interfaces: {ambiguous_interfaces}")
+        recommendations.append(f"📈 Average consistency score: {avg_consistency:.2f}")
+        
+        if ambiguous_interfaces > 0:
+            recommendations.append("🔧 Priority Actions:")
+            recommendations.append("  1. Consolidate interface definitions")
+            recommendations.append("  2. Align specifications with interfaces")
+            recommendations.append("  3. Update test cases to match implementations")
+            recommendations.append("  4. Create single source of truth for each interface")
+        
+        return recommendations
+
+def main():
+    """Main CLI function"""
+    print("🔍 Requirements Analyzer for Interface Ambiguity Resolution")
+    print("=" * 60)
+    
+    # Get ambiguous interfaces from enhanced registry
+    print("📋 Loading ambiguous interfaces from enhanced registry...")
+    
+    # For now, use a sample set of ambiguous interfaces
+    # In production, this would come from the enhanced registry
+    ambiguous_interfaces = [
+        "DomainIndexError",
+        "BeastModeError", 
+        "ReflectiveModuleBase",
+        "DomainReflectiveModule",
+        "ValueObject",
+        "CodeTemplate",
+        "TaskCommand",
+        "BaseMessageHandler",
+        "DomainEvent",
+        "DomainService"
+    ]
+    
+    print(f"🎯 Analyzing {len(ambiguous_interfaces)} ambiguous interfaces...")
+    
+    # Create analyzer
+    analyzer = RequirementsAnalyzer()
+    
+    # Analyze requirements
+    result = analyzer.analyze_requirements(ambiguous_interfaces)
+    
+    # Display results
+    print("\n📊 Requirements Analysis Results:")
+    print("=" * 40)
+    print(f"✅ Interfaces analyzed: {result.analyzed_interfaces}")
+    print(f"⚠️  Ambiguous interfaces: {result.ambiguous_interfaces}")
+    print(f"🔧 Inconsistent requirements: {result.inconsistent_requirements}")
+    
+    print("\n🔍 Detailed Interface Analysis:")
+    print("-" * 40)
+    
+    for req in result.interface_requirements:
+        print(f"\n📋 Interface: {req.interface_name}")
+        print(f"   📊 Consistency: {req.consistency_score:.2f}")
+        print(f"   🔍 Ambiguity: {req.ambiguity_type}")
+        print(f"   📝 Sources: {len(req.requirement_sources)}")
+        
+        if req.conflicting_requirements:
+            print(f"   ⚠️  Conflicts: {len(req.conflicting_requirements)}")
+            for conflict in req.conflicting_requirements:
+                print(f"      - {conflict.requirement_type} in {conflict.file_path}:{conflict.line_number}")
+        
+        if req.resolution_suggestions:
+            print(f"   💡 Suggestions:")
+            for suggestion in req.resolution_suggestions:
+                print(f"      {suggestion}")
+    
+    print("\n🎯 Overall Recommendations:")
+    print("-" * 40)
+    for recommendation in result.recommendations:
+        print(f"  {recommendation}")
+    
+    print(f"\n⏰ Analysis completed at: {result.analysis_timestamp}")
+    print("✅ Requirements analysis complete!")
+
+if __name__ == "__main__":
+    main()

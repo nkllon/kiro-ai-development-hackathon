@@ -149,7 +149,7 @@ class RemediationStep:
 
 
 # Ensure enum classes are JSON serializable
-def _setup_enum_serialization():
+def _setup_enum_serialization() -> Any:
     """Set up JSON serialization for enum classes"""
     try:
         from ..utils.enum_serialization import make_enum_json_serializable

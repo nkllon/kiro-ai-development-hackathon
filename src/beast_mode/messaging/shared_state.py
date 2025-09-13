@@ -44,7 +44,7 @@ class BeastModeSharedState:
     - Performance metrics
     """
 
-    def __init__(self, config: Optional[SharedStateConfig]=None):
+    def __init__(self, config -> Any: Optional[SharedStateConfig]=None) -> Any:
         """Initialize shared state manager"""
         self.config = config or SharedStateConfig()
         self.redis_client: Optional[redis.Redis] = None
@@ -410,7 +410,7 @@ class BeastModeSharedState:
             await self.redis_client.close()
             self.logger.info('Shared state manager shutdown complete')
 
-def __init__(self, config: Optional[SharedStateConfig]=None):
+def __init__(self, config -> Any: Optional[SharedStateConfig]=None) -> Any:
     """Initialize shared state manager"""
     self.config = config or SharedStateConfig()
     self.redis_client: Optional[redis.Redis] = None
@@ -433,7 +433,7 @@ def _deserialize_state(self, redis_data: Dict[str, Any]) -> Dict[str, Any]:
             result[key] = value
     return result
 
-def __init__(self, config: Optional[SharedStateConfig]=None):
+def __init__(self, config -> Any: Optional[SharedStateConfig]=None) -> Any:
     """Initialize shared state manager"""
     self.config = config or SharedStateConfig()
     self.redis_client: Optional[redis.Redis] = None
@@ -456,7 +456,7 @@ def _deserialize_state(self, redis_data: Dict[str, Any]) -> Dict[str, Any]:
             result[key] = value
     return result
 
-def __init__(self, config: Optional[SharedStateConfig]=None):
+def __init__(self, config -> Any: Optional[SharedStateConfig]=None) -> Any:
     """Initialize shared state manager"""
     self.config = config or SharedStateConfig()
     self.redis_client: Optional[redis.Redis] = None

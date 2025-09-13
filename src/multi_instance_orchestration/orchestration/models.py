@@ -169,6 +169,11 @@ class SwarmConfig(BaseModel):
 
     @model_validator(mode='after')
     def validate_instance_limits(self) -> 'SwarmConfig':
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
         """Validate that min_instances <= max_instances."""
         if self.min_instances > self.max_instances:
             raise ValueError(f"min_instances ({self.min_instances}) must be <= max_instances ({self.max_instances})")

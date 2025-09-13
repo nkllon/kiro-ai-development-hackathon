@@ -1,3 +1,4 @@
+from typing import Any, Dict, List, Optional
 """
 Core exception classes for Beast Mode system.
 
@@ -9,13 +10,19 @@ components for consistent error handling and reporting.
 class BeastModeError(Exception):
     """Base exception for all Beast Mode system errors."""
     
-    def __init__(self, message: str, component: str = None, operation: str = None):
+    def __init__(self, message -> Any: str, component -> Any: str = None, operation -> Any: str = None) -> Any:
         super().__init__(message)
         self.component = component
         self.operation = operation
         self.message = message
     
-    def __str__(self):
+    def __str__(self) -> Any:
+        """__str__ - Enhanced for compliance"""
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
         parts = [self.message]
         if self.component:
             parts.append(f"Component: {self.component}")

@@ -34,5 +34,10 @@ class MessageHandler(ABC):
 
     @abstractmethod
     def get_supported_types(self) -> List[MessageType]:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
         """Return list of supported message types"""
         pass

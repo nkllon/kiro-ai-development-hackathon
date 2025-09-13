@@ -1,0 +1,288 @@
+"""
+Core data models and types for RM-DDD SDK.
+
+This module defines the fundamental data structures used throughout
+the RM-DDD framework for domain modeling and systematic development.
+"""
+
+from abc import ABC
+from dataclasses import dataclass, field
+from datetime import datetime
+from enum import Enum
+from typing import Any, Dict, List, Optional, Union
+from uuid import UUID, uuid4
+from decimal import Decimal
+
+
+class ModuleStatus(Enum):
+    """Status of an RM module."""
+    AVAILABLE = "available"
+    DEGRADED = "degraded"
+    UNAVAILABLE = "unavailable"
+    INITIALIZING = "initializing"
+    SHUTTING_DOWN = "shutting_down"
+
+
+@dataclass
+class ModuleCapability:
+    """Represents a capability provided by an RM module."""
+    name: str
+    description: str
+    available: bool
+    version: str
+    dependencies: List[str] = field(default_factory=list)
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class DomainBoundaries:
+    """Defines the boundaries of a domain context."""
+    context: str
+    invariants: List[str] = field(default_factory=list)
+    ubiquitous_language: Dict[str, str] = field(default_factory=dict)
+    external_dependencies: List[str] = field(default_factory=list)
+    integration_patterns: List[str] = field(default_factory=list)
+
+
+@dataclass
+class AggregateBoundaries:
+    """Defines the consistency boundaries of an aggregate."""
+    aggregate_type: str
+    max_size: Optional[int] = None
+    consistency_rules: List[str] = field(default_factory=list)
+    invariants: List[str] = field(default_factory=list)
+    external_references: List[str] = field(default_factory=list)
+
+
+@dataclass
+class DomainCriteria:
+    """Criteria for domain-specific queries."""
+    filters: Dict[str, Any] = field(default_factory=dict)
+    sorting: List[Dict[str, str]] = field(default_factory=list)
+    pagination: Optional[Dict[str, int]] = None
+    domain_context: Optional[str] = None
+
+
+@dataclass
+class Money:
+    """Value object representing monetary amounts."""
+    amount: Decimal
+    currency: str
+    
+    def __post_init__(self) -> Any:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        if not isinstance(self.amount, Decimal):
+            self.amount = Decimal(str(self.amount))
+        
+        if not self.currency or len(self.currency) != 3:
+            raise ValueError("Currency must be a 3-letter ISO code")
+    
+    def __add__(self, other: 'Money') -> 'Money':
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        if self.currency != other.currency:
+            raise ValueError(f"Cannot add {self.currency} and {other.currency}")
+        return Money(self.amount + other.amount, self.currency)
+    
+    def __sub__(self, other: 'Money') -> 'Money':
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        if self.currency != other.currency:
+            raise ValueError(f"Cannot subtract {other.currency} from {self.currency}")
+        return Money(self.amount - other.amount, self.currency)
+    
+    def __mul__(self, multiplier: Union[int, float, Decimal]) -> 'Money':
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        return Money(self.amount * Decimal(str(multiplier)), self.currency)
+    
+    def __eq__(self, other: Any) -> bool:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        if not isinstance(other, Money):
+            return False
+        return self.amount == other.amount and self.currency == other.currency
+    
+    def __str__(self) -> str:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        return f"{self.amount} {self.currency}"
+
+
+class DomainException(Exception):
+    """Base exception for domain-related errors."""
+    
+    def __init__(self, message -> Any: str, error_code -> Any: Optional[str] = None, 
+                 context: Optional[Dict[str, Any]] = None):
+        super().__init__(message)
+        self.message = message
+        self.error_code = error_code
+        self.context = context or {}
+        self.timestamp = datetime.now()
+
+
+class ValidationException(DomainException):
+    """Exception raised when domain validation fails."""
+    
+    def __init__(self, validation_errors -> Any: List[str], 
+                 context: Optional[Dict[str, Any]] = None):
+        message = f"Validation failed: {'; '.join(validation_errors)}"
+        super().__init__(message, "VALIDATION_FAILED", context)
+        self.validation_errors = validation_errors
+
+
+class InvariantViolationException(DomainException):
+    """Exception raised when domain invariants are violated."""
+    
+    def __init__(self, invariant -> Any: str, current_state -> Any: Dict[str, Any],
+                 context: Optional[Dict[str, Any]] = None):
+        message = f"Invariant violation: {invariant}"
+        super().__init__(message, "INVARIANT_VIOLATION", context)
+        self.invariant = invariant
+        self.current_state = current_state
+
+
+@dataclass
+class EventMetadata:
+    """Metadata for domain events."""
+    event_id: UUID = field(default_factory=uuid4)
+    correlation_id: Optional[UUID] = None
+    causation_id: Optional[UUID] = None
+    timestamp: datetime = field(default_factory=datetime.now)
+    version: int = 1
+    source: Optional[str] = None
+    user_id: Optional[str] = None
+    session_id: Optional[str] = None
+
+
+@dataclass
+class HealthIndicator:
+    """Individual health indicator for monitoring."""
+    name: str
+    status: str
+    value: Any
+    threshold: Optional[Any] = None
+    message: Optional[str] = None
+    timestamp: datetime = field(default_factory=datetime.now)
+
+
+@dataclass
+class PerformanceMetrics:
+    """Performance metrics for RM components."""
+    response_time_ms: float
+    throughput_per_second: float
+    error_rate: float
+    cpu_usage_percent: float
+    memory_usage_mb: float
+    timestamp: datetime = field(default_factory=datetime.now)
+
+
+@dataclass
+class ComplianceReport:
+    """Report on compliance status."""
+    component_id: str
+    compliance_standards: List[str]
+    violations: List[str] = field(default_factory=list)
+    warnings: List[str] = field(default_factory=list)
+    score: float = 100.0
+    timestamp: datetime = field(default_factory=datetime.now)
+    
+    @property
+    def is_compliant(self) -> bool:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        return len(self.violations) == 0
+
+
+@dataclass
+class MigrationStep:
+    """Represents a step in a systematic migration process."""
+    step_id: str
+    name: str
+    description: str
+    prerequisites: List[str] = field(default_factory=list)
+    validation_criteria: List[str] = field(default_factory=list)
+    rollback_procedure: Optional[str] = None
+    estimated_duration: Optional[str] = None
+    risk_level: str = "medium"
+
+
+@dataclass
+class ContextMap:
+    """Represents relationships between bounded contexts."""
+    upstream_context: str
+    downstream_context: str
+    relationship_type: str  # partnership, customer_supplier, conformist, etc.
+    integration_pattern: str  # events, api, shared_database, etc.
+    data_flow: str  # bidirectional, upstream_to_downstream, etc.
+    communication_protocol: Optional[str] = None
+    
+    def __post_init__(self) -> Any:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        valid_relationships = [
+            "partnership", "customer_supplier", "conformist", 
+            "anticorruption_layer", "shared_kernel", "separate_ways"
+        ]
+        if self.relationship_type not in valid_relationships:
+            raise ValueError(f"Invalid relationship type: {self.relationship_type}")
+
+
+@dataclass
+class DeploymentStrategy:
+    """Represents a deployment strategy decision."""
+    strategy_type: str  # modular_monolith, microservices, hybrid
+    rationale: str
+    triggers: List[str] = field(default_factory=list)
+    constraints: List[str] = field(default_factory=list)
+    migration_path: Optional[str] = None
+    review_date: Optional[datetime] = None
+    
+    def __post_init__(self) -> Any:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        valid_strategies = ["modular_monolith", "microservices", "hybrid"]
+        if self.strategy_type not in valid_strategies:
+            raise ValueError(f"Invalid strategy type: {self.strategy_type}")
+
+
+# Type aliases for common patterns
+EntityId = Union[str, int, UUID]
+AggregateId = Union[str, int, UUID]
+EventId = UUID
+CorrelationId = UUID
+CausationId = UUID
+
+# Constants
+DEFAULT_CURRENCY = "USD"
+MAX_AGGREGATE_SIZE = 100
+DEFAULT_PAGE_SIZE = 20
+MAX_PAGE_SIZE = 1000

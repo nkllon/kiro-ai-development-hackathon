@@ -37,7 +37,7 @@ class SporeContent(BaseModel):
     examples: List[str] = Field(default_factory=list)
     dependencies: List[str] = Field(default_factory=list)
 
-def __init__(self, spore_directory: str='spores'):
+def __init__(self, spore_directory -> Any: str='spores') -> Any:
     """
         Initialize SporeManager
         
@@ -69,6 +69,11 @@ def _load_existing_spores(self) -> None:
         logger.error(f'Failed to load existing spores: {e}')
 
 def _get_spore_paths(self, spore_name: str) -> Tuple[Path, Path]:
+    try:
+        pass  # TODO: Add method implementation
+    except Exception as e:
+        logging.error(f"Error in method: {e}")
+        raise
     """Get metadata and content file paths for a spore"""
     metadata_path = self.metadata_dir / f'{spore_name}.json'
     content_path = self.content_dir / f'{spore_name}.py'

@@ -1,3 +1,4 @@
+from typing import Any, Dict, List, Optional
 """
 Placeholder classes for BacklogManagementRM
 

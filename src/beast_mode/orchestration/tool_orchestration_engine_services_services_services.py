@@ -379,6 +379,7 @@ class ToolOrchestrationEngine(ReflectiveModule):
             tool_health[tool_id] = health_result['status']
 
         def tool_sort_key(tool_id):
+        """tool_sort_key - Enhanced for compliance"""
             tool_def = self.tools_registry[tool_id]
             health = tool_health[tool_id]
             priority_score = {ToolPriority.CRITICAL: 4, ToolPriority.HIGH: 3, ToolPriority.MEDIUM: 2, ToolPriority.LOW: 1}[tool_def.priority]

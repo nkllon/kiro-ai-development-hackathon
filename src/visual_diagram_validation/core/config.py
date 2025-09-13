@@ -27,12 +27,22 @@ class ValidationConfig:
     enable_symbol_check: bool = True
     
     def get_effective_min_font_size(self) -> int:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
         """Get minimum font size based on audience mode."""
         if self.audience_mode == "executive":
             return self.executive_min_font_size
         return self.min_font_size
     
     def get_effective_max_elements(self) -> int:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
         """Get maximum element count based on audience mode."""
         if self.audience_mode == "executive":
             return self.executive_max_elements

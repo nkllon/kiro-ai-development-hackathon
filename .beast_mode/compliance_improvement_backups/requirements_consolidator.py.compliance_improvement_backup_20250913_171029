@@ -1,0 +1,517 @@
+#!/usr/bin/env python3
+"""
+Requirements Consolidator - Tackle the 0.00 consistency score crisis
+
+This tool addresses the massive interface duplication and requirements inconsistency
+discovered in the integrated analysis. Every interface has 40-50+ conflicting
+specifications with 0.00 consistency score.
+
+The goal: Create authoritative interface definitions and consolidate requirements.
+"""
+
+import json
+import ast
+from pathlib import Path
+from typing import Dict, List, Set, Tuple, Optional
+from dataclasses import dataclass, field
+from collections import defaultdict, Counter
+import re
+from datetime import datetime
+
+
+@dataclass
+class InterfaceSpecification:
+    """Represents a single interface specification found in the codebase"""
+    interface_name: str
+    file_path: str
+    line_number: int
+    content: str
+    context: str
+    spec_type: str  # 'class', 'interface', 'protocol', 'abc', 'typing'
+    methods: List[str] = field(default_factory=list)
+    properties: List[str] = field(default_factory=list)
+    imports: List[str] = field(default_factory=list)
+    domain: str = ""
+
+
+@dataclass
+class ConsolidationCandidate:
+    """Represents a candidate for interface consolidation"""
+    interface_name: str
+    total_specifications: int
+    unique_methods: Set[str]
+    unique_properties: Set[str]
+    common_patterns: List[str]
+    domain_distribution: Dict[str, int]
+    consolidation_priority: float
+    suggested_authoritative_file: str
+    consolidation_plan: List[str]
+
+
+class RequirementsConsolidator:
+    """Consolidates scattered interface specifications into authoritative definitions"""
+    
+    def __init__(self, codebase_path -> Any: str = "src") -> Any:
+        self.codebase_path = Path(codebase_path)
+        self.specifications: Dict[str, List[InterfaceSpecification]] = defaultdict(list)
+        self.consolidation_candidates: List[ConsolidationCandidate] = []
+        self.domain_patterns = {
+            'beast_mode': r'beast_mode',
+            'rm_ddd': r'rm_ddd',
+            'ghostbusters': r'ghostbusters',
+            'visual_diagram': r'visual_diagram',
+            'gitkraken': r'gitkraken',
+            'devpost': r'devpost',
+            'hackathon': r'hackathon'
+        }
+    
+    def discover_interface_specifications(self) -> Dict[str, List[InterfaceSpecification]]:
+        """Discover all interface specifications in the codebase"""
+        print("🔍 Discovering interface specifications...")
+        
+        for py_file in self.codebase_path.rglob("*.py"):
+            try:
+                with open(py_file, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                
+                # Parse AST to find interface definitions
+                tree = ast.parse(content)
+                specifications = self._extract_interface_specifications(py_file, content, tree)
+                
+                for spec in specifications:
+                    self.specifications[spec.interface_name].append(spec)
+                    
+            except Exception as e:
+                print(f"⚠️  Error parsing {py_file}: {e}")
+                continue
+        
+        print(f"✅ Found {len(self.specifications)} unique interfaces")
+        return self.specifications
+    
+    def _extract_interface_specifications(self, file_path: Path, content: str, tree: ast.AST) -> List[InterfaceSpecification]:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Extract interface specifications from a Python file"""
+        specifications = []
+        lines = content.split('\n')
+        
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef):
+                # Check if it's an interface-like class
+                if self._is_interface_class(node, content):
+                    spec = InterfaceSpecification(
+                        interface_name=node.name,
+                        file_path=str(file_path),
+                        line_number=node.lineno,
+                        content=lines[node.lineno - 1].strip(),
+                        context=self._get_context(lines, node.lineno),
+                        spec_type=self._classify_interface_type(node, content),
+                        methods=self._extract_methods(node),
+                        properties=self._extract_properties(node),
+                        imports=self._extract_imports(node, content),
+                        domain=self._identify_domain(str(file_path))
+                    )
+                    specifications.append(spec)
+        
+        return specifications
+    
+    def _is_interface_class(self, node: ast.ClassDef, content: str) -> bool:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Determine if a class is interface-like"""
+        # Check for common interface patterns
+        interface_indicators = [
+            'Interface', 'Protocol', 'ABC', 'Abstract', 'Base',
+            'Contract', 'Spec', 'Definition', 'Model', 'Mixin'
+        ]
+        
+        # Check class name
+        if any(indicator in node.name for indicator in interface_indicators):
+            return True
+        
+        # Check for abstract methods
+        for item in node.body:
+            if isinstance(item, ast.FunctionDef) and any(
+                decorator.id == 'abstractmethod' if isinstance(decorator, ast.Name) else False
+                for decorator in item.decorator_list
+            ):
+                return True
+        
+        # Check for typing.Protocol inheritance
+        for base in node.bases:
+            if isinstance(base, ast.Name) and base.id in ['Protocol', 'ABC']:
+                return True
+        
+        return False
+    
+    def _classify_interface_type(self, node: ast.ClassDef, content: str) -> str:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Classify the type of interface"""
+        if any('Protocol' in str(base) for base in node.bases):
+            return 'protocol'
+        elif any('ABC' in str(base) for base in node.bases):
+            return 'abc'
+        elif 'interface' in node.name.lower():
+            return 'interface'
+        else:
+            return 'class'
+    
+    def _extract_methods(self, node: ast.ClassDef) -> List[str]:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Extract method names from a class"""
+        methods = []
+        for item in node.body:
+            if isinstance(item, ast.FunctionDef):
+                methods.append(item.name)
+        return methods
+    
+    def _extract_properties(self, node: ast.ClassDef) -> List[str]:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Extract property names from a class"""
+        properties = []
+        for item in node.body:
+            if isinstance(item, ast.FunctionDef):
+                for decorator in item.decorator_list:
+                    if isinstance(decorator, ast.Name) and decorator.id == 'property':
+                        properties.append(item.name)
+        return properties
+    
+    def _extract_imports(self, node: ast.ClassDef, content: str) -> List[str]:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Extract relevant imports for the interface"""
+        imports = []
+        lines = content.split('\n')
+        
+        # Look for imports in the file
+        for line in lines:
+            if line.strip().startswith(('import ', 'from ')):
+                imports.append(line.strip())
+        
+        return imports[:5]  # Limit to first 5 imports
+    
+    def _get_context(self, lines: List[str], line_number: int) -> str:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Get context around a line"""
+        start = max(0, line_number - 3)
+        end = min(len(lines), line_number + 2)
+        return '\n'.join(lines[start:end])
+    
+    def _identify_domain(self, file_path: str) -> str:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Identify the domain based on file path"""
+        for domain, pattern in self.domain_patterns.items():
+            if re.search(pattern, file_path):
+                return domain
+        return 'unknown'
+    
+    def analyze_consolidation_candidates(self) -> List[ConsolidationCandidate]:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Analyze which interfaces need consolidation"""
+        print("📊 Analyzing consolidation candidates...")
+        
+        for interface_name, specs in self.specifications.items():
+            if len(specs) > 5:  # Only analyze interfaces with many specifications
+                candidate = self._create_consolidation_candidate(interface_name, specs)
+                self.consolidation_candidates.append(candidate)
+        
+        # Sort by priority (most problematic first)
+        self.consolidation_candidates.sort(key=lambda x: x.consolidation_priority, reverse=True)
+        
+        print(f"✅ Found {len(self.consolidation_candidates)} consolidation candidates")
+        return self.consolidation_candidates
+    
+    def _create_consolidation_candidate(self, interface_name: str, specs: List[InterfaceSpecification]) -> ConsolidationCandidate:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Create a consolidation candidate for an interface"""
+        # Collect all unique methods and properties
+        all_methods = set()
+        all_properties = set()
+        domain_counts = Counter()
+        
+        for spec in specs:
+            all_methods.update(spec.methods)
+            all_properties.update(spec.properties)
+            domain_counts[spec.domain] += 1
+        
+        # Find common patterns
+        common_patterns = self._find_common_patterns(specs)
+        
+        # Calculate consolidation priority
+        priority = self._calculate_consolidation_priority(specs, all_methods, all_properties)
+        
+        # Suggest authoritative file (most complete specification)
+        authoritative_file = self._suggest_authoritative_file(specs)
+        
+        # Create consolidation plan
+        consolidation_plan = self._create_consolidation_plan(interface_name, specs, all_methods, all_properties)
+        
+        return ConsolidationCandidate(
+            interface_name=interface_name,
+            total_specifications=len(specs),
+            unique_methods=all_methods,
+            unique_properties=all_properties,
+            common_patterns=common_patterns,
+            domain_distribution=dict(domain_counts),
+            consolidation_priority=priority,
+            suggested_authoritative_file=authoritative_file,
+            consolidation_plan=consolidation_plan
+        )
+    
+    def _find_common_patterns(self, specs: List[InterfaceSpecification]) -> List[str]:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Find common patterns across specifications"""
+        patterns = []
+        
+        # Check for common method patterns
+        method_patterns = Counter()
+        for spec in specs:
+            for method in spec.methods:
+                if method.startswith('get_'):
+                    method_patterns['getter_methods'] += 1
+                elif method.startswith('set_'):
+                    method_patterns['setter_methods'] += 1
+                elif method.startswith('is_'):
+                    method_patterns['boolean_methods'] += 1
+                elif method.startswith('has_'):
+                    method_patterns['has_methods'] += 1
+        
+        # Add patterns that appear in >50% of specs
+        for pattern, count in method_patterns.items():
+            if count > len(specs) * 0.5:
+                patterns.append(pattern)
+        
+        return patterns
+    
+    def _calculate_consolidation_priority(self, specs -> Any: List[InterfaceSpecification], 
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+                                        all_methods: Set[str], all_properties: Set[str]) -> float:
+        """Calculate consolidation priority (higher = more urgent)"""
+        # Base priority on number of specifications
+        base_priority = len(specs) * 0.1
+        
+        # Add penalty for high method/property diversity
+        diversity_penalty = (len(all_methods) + len(all_properties)) * 0.05
+        
+        # Add penalty for domain fragmentation
+        domains = set(spec.domain for spec in specs)
+        fragmentation_penalty = len(domains) * 0.2
+        
+        return base_priority + diversity_penalty + fragmentation_penalty
+    
+    def _suggest_authoritative_file(self, specs: List[InterfaceSpecification]) -> str:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Suggest the most authoritative file for an interface"""
+        # Score each specification
+        scored_specs = []
+        for spec in specs:
+            score = 0
+            
+            # Prefer files in core/domain directories
+            if 'core' in spec.file_path or 'domain' in spec.file_path:
+                score += 10
+            
+            # Prefer files with more methods
+            score += len(spec.methods) * 2
+            
+            # Prefer files with more properties
+            score += len(spec.properties) * 3
+            
+            # Prefer files with 'interface' in the name
+            if 'interface' in spec.file_path.lower():
+                score += 5
+            
+            scored_specs.append((score, spec))
+        
+        # Return the highest scoring file
+        scored_specs.sort(key=lambda x: x[0], reverse=True)
+        return scored_specs[0][1].file_path if scored_specs else ""
+    
+    def _create_consolidation_plan(self, interface_name -> Any: str, specs -> Any: List[InterfaceSpecification],
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+                                 all_methods: Set[str], all_properties: Set[str]) -> List[str]:
+        """Create a consolidation plan for an interface"""
+        plan = [
+            f"🎯 Consolidate {interface_name} from {len(specs)} specifications",
+            f"📋 Create authoritative interface with {len(all_methods)} methods and {len(all_properties)} properties",
+            "🔧 Remove duplicate specifications from other files",
+            "📝 Update all imports to reference the authoritative definition",
+            "✅ Validate that all implementations conform to the authoritative interface"
+        ]
+        return plan
+    
+    def generate_consolidation_report(self) -> Dict:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Generate a comprehensive consolidation report"""
+        report = {
+            "analysis_timestamp": datetime.now().isoformat(),
+            "total_interfaces": len(self.specifications),
+            "interfaces_needing_consolidation": len(self.consolidation_candidates),
+            "consolidation_candidates": [],
+            "priority_actions": [],
+            "consolidation_strategy": {
+                "phase_1": "Consolidate top 10 most problematic interfaces",
+                "phase_2": "Create authoritative interface definitions",
+                "phase_3": "Remove duplicate specifications",
+                "phase_4": "Update all imports and references",
+                "phase_5": "Validate consistency across codebase"
+            }
+        }
+        
+        # Add top consolidation candidates
+        for candidate in self.consolidation_candidates[:10]:
+            report["consolidation_candidates"].append({
+                "interface_name": candidate.interface_name,
+                "total_specifications": candidate.total_specifications,
+                "unique_methods": len(candidate.unique_methods),
+                "unique_properties": len(candidate.unique_properties),
+                "consolidation_priority": candidate.consolidation_priority,
+                "suggested_authoritative_file": candidate.suggested_authoritative_file,
+                "consolidation_plan": candidate.consolidation_plan
+            })
+        
+        # Add priority actions
+        report["priority_actions"] = [
+            "🚨 CRITICAL: Address 0.00 consistency score crisis",
+            "🎯 Focus on top 10 most duplicated interfaces first",
+            "📋 Create single authoritative interface definitions",
+            "🔧 Remove 40-50+ duplicate specifications per interface",
+            "📝 Establish clear interface ownership and governance",
+            "✅ Implement interface registration validation to prevent future duplication"
+        ]
+        
+        return report
+    
+    def run_consolidation_analysis(self) -> Dict:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Run the complete consolidation analysis"""
+        print("🚀 Starting Requirements Consolidation Analysis")
+        print("=" * 60)
+        
+        # Step 1: Discover all interface specifications
+        self.discover_interface_specifications()
+        
+        # Step 2: Analyze consolidation candidates
+        self.analyze_consolidation_candidates()
+        
+        # Step 3: Generate report
+        report = self.generate_consolidation_report()
+        
+        # Step 4: Display results
+        self._display_consolidation_results(report)
+        
+        return report
+    
+    def _display_consolidation_results(self, report -> Any: Dict) -> Any:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Display consolidation analysis results"""
+        print("\n🎯 CONSOLIDATION ANALYSIS RESULTS")
+        print("=" * 60)
+        
+        print(f"📊 Total Interfaces Found: {report['total_interfaces']}")
+        print(f"🚨 Interfaces Needing Consolidation: {report['interfaces_needing_consolidation']}")
+        
+        print(f"\n🔥 TOP 10 MOST PROBLEMATIC INTERFACES:")
+        print("-" * 60)
+        
+        for i, candidate in enumerate(report['consolidation_candidates'][:10], 1):
+            print(f"{i:2d}. {candidate['interface_name']}")
+            print(f"    📊 Specifications: {candidate['total_specifications']}")
+            print(f"    🔧 Methods: {candidate['unique_methods']}, Properties: {candidate['unique_properties']}")
+            print(f"    ⚡ Priority: {candidate['consolidation_priority']:.2f}")
+            print(f"    📁 Suggested File: {candidate['suggested_authoritative_file']}")
+            print()
+        
+        print("🎯 PRIORITY ACTIONS:")
+        print("-" * 60)
+        for action in report['priority_actions']:
+            print(f"  {action}")
+        
+        print(f"\n💾 Full report saved to: requirements_consolidation_report.json")
+
+
+def main() -> Any:
+    try:
+        pass  # TODO: Add method implementation
+    except Exception as e:
+        logging.error(f"Error in method: {e}")
+        raise
+    """Main entry point for requirements consolidation"""
+    consolidator = RequirementsConsolidator()
+    report = consolidator.run_consolidation_analysis()
+    
+    # Save detailed report
+    with open('requirements_consolidation_report.json', 'w') as f:
+        json.dump(report, f, indent=2)
+    
+    print(f"\n✅ Requirements consolidation analysis complete!")
+    print(f"🎯 Next step: Start consolidating the top 10 most problematic interfaces")
+
+
+if __name__ == "__main__":
+    main()

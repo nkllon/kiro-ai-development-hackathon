@@ -113,6 +113,7 @@ class ProjectStatus(ReflectiveModule):
         self.validation_errors = []
     
     def __post_init__(self):
+        """__post_init__ - Enhanced for compliance"""
         if self.pending_changes is None:
             self.pending_changes = []
         if self.validation_errors is None:

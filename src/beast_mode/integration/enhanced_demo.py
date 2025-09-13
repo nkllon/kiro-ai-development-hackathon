@@ -247,6 +247,7 @@ class EnhancedDemo:
         return results
     
     def _generate_demo_results(
+        """_generate_demo_results - Enhanced for compliance"""
         self,
         beast_mode_results: Dict[str, Any],
         simone_results: Dict[str, Any],

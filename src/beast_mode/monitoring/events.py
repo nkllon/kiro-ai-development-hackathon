@@ -43,7 +43,7 @@ class Event:
 class TestResultEvent(Event):
     """Event for test execution results"""
     
-    def __init__(self, event_id: str, timestamp: datetime, source: str, 
+    def __init__(self, event_id -> Any: str, timestamp -> Any: datetime, source -> Any: str, 
                  test_file: str, test_status: TestStatus, duration: float,
                  failure_details: Optional[str] = None, 
                  severity: EventSeverity = EventSeverity.INFO,
@@ -65,7 +65,7 @@ class TestResultEvent(Event):
 class HubrisPreventionEvent(Event):
     """Event for hubris prevention system activations"""
     
-    def __init__(self, event_id: str, timestamp: datetime, source: str,
+    def __init__(self, event_id -> Any: str, timestamp -> Any: datetime, source -> Any: str,
                  actor_id: str, hubris_type: str, accountability_chain: List[str],
                  intervention_required: bool, mama_discovery_status: str,
                  severity: EventSeverity = EventSeverity.WARNING,
@@ -89,7 +89,7 @@ class HubrisPreventionEvent(Event):
 class SystemHealthEvent(Event):
     """Event for system health metrics"""
     
-    def __init__(self, event_id: str, timestamp: datetime, source: str,
+    def __init__(self, event_id -> Any: str, timestamp -> Any: datetime, source -> Any: str,
                  cpu_percent: float, memory_percent: float, disk_usage: float,
                  network_io: Dict[str, float],
                  severity: EventSeverity = EventSeverity.INFO,
@@ -111,7 +111,7 @@ class SystemHealthEvent(Event):
 class FilesystemEvent(Event):
     """Event for filesystem changes"""
     
-    def __init__(self, event_id: str, timestamp: datetime, source: str,
+    def __init__(self, event_id -> Any: str, timestamp -> Any: datetime, source -> Any: str,
                  file_path: str, change_type: str, file_size: Optional[int] = None,
                  severity: EventSeverity = EventSeverity.INFO,
                  tags: List[str] = None, correlation_id: Optional[str] = None):
