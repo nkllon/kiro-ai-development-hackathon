@@ -75,6 +75,49 @@ class InterfaceSearchResult:
 
 class InterfaceRegistry:
     """Interface Registry - Requirements-Driven Implementation"""
+    @classmethod
+    def _initialize_registry_integration(cls):
+        """Initialize registry integration at class level"""
+        if hasattr(cls, '_registry_initialized'):
+            return
+        
+        # Class-level introspection for registry integration
+        cls._registry_initialized = True
+        
+        # Register class with interface registry
+        from .interface_registry import InterfaceRegistry
+        registry = InterfaceRegistry.get_instance()
+        registry.register_class(cls)
+        
+        # Extract interface information
+        interface_info = cls._extract_interface_info()
+        registry.register_interface(cls.__name__, interface_info)
+    
+    @classmethod
+    def _extract_interface_info(cls):
+        """Extract interface information from class"""
+        interface_info = {
+            'class_name': cls.__name__,
+            'methods': [],
+            'properties': [],
+            'inheritance': [base.__name__ for base in cls.__bases__]
+        }
+        
+        # Extract methods
+        for name, method in cls.__dict__.items():
+            if callable(method) and not name.startswith('_'):
+                interface_info['methods'].append({
+                    'name': name,
+                    'signature': str(method.__annotations__) if hasattr(method, '__annotations__') else None
+                })
+        
+        # Extract properties
+        for name, prop in cls.__dict__.items():
+            if isinstance(prop, property):
+                interface_info['properties'].append(name)
+        
+        return interface_info
+
     
     def __init__(self, registry_file: str = "interface_registry.json"):
         self.registry_file = registry_file
