@@ -1,6 +1,11 @@
 """
-Basic tests for Code with Kiro Hackathon
+RDI Enhanced Test Module
+
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:24:55.849311
 """
+
 
 import pytest
 import sys

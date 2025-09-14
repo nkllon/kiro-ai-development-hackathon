@@ -1,17 +1,11 @@
-"""Unit tests for PNG processing utilities."""
+"""
+RDI Enhanced Test Module
 
-import pytest
-import io
-from PIL import Image
+Requirements Traceability:
 
-from src.visual_diagram_validation.rendering.png_utils import PNGProcessor
-from src.visual_diagram_validation.core.models import PNGImage
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+Enhanced: 2025-09-14T06:24:55.822565
+"""
 
-
-
-class TestPNGProcessor(ReflectiveModule):
-    """Test PNG processing functionality."""
     
     def create_test_png_bytes(self, width=100, height=100, mode='RGB'):
         """Helper to create test PNG bytes."""
