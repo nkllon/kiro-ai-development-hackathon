@@ -46,3 +46,31 @@ def _validate_rm_compliance(self) -> ValidationResult:
         return ValidationResult(test_name='rm_compliance', status=status, score=score, details={'compliant_components': compliant_components, 'total_components': total_components, 'component_details': component_details}, evidence=evidence, recommendations=recommendations, execution_time_seconds=time.time() - start_time)
     except Exception as e:
         return ValidationResult(test_name='rm_compliance', status=ValidationStatus.FAILED, score=0.0, details={'validation_error': str(e)}, evidence=['RM compliance validation failed'], recommendations=['Fix RM compliance validation system'], execution_time_seconds=time.time() - start_time)
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+

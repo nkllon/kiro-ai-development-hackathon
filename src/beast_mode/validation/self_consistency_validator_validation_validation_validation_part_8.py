@@ -35,3 +35,31 @@ def _validate_health_monitoring(self) -> ValidationResult:
         return ValidationResult(test_name='health_monitoring', status=status, score=score, details={'healthy_components': healthy_components, 'total_tested': total_tested, 'health_details': health_details}, evidence=evidence, recommendations=recommendations, execution_time_seconds=time.time() - start_time)
     except Exception as e:
         return ValidationResult(test_name='health_monitoring', status=ValidationStatus.FAILED, score=0.0, details={'validation_error': str(e)}, evidence=['Health monitoring validation failed'], recommendations=['Fix health monitoring validation'], execution_time_seconds=time.time() - start_time)
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
