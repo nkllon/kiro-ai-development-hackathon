@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_event_details(self) -> Dict[str, Any]:
         """Get detailed event information."""

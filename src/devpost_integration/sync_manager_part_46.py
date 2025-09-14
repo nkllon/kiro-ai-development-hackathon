@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def sync_project(self, force: bool = False) -> SyncResult:
         """Sync project with Devpost."""

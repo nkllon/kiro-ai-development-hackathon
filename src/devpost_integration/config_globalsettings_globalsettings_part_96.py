@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def reset_to_defaults(self) -> bool:
     """Reset configuration to defaults."""

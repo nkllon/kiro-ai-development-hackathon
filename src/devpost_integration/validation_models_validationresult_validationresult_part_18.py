@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def add_warning(self, warning_message: str, field: str = None) -> None:
         """Add validation warning."""

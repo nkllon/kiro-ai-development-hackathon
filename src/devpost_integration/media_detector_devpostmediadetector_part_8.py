@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def is_media_file(self, file_path: Path) -> bool:
         """Check if file is a media file"""

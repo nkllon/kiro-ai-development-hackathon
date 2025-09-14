@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_team_member_data(member_data: Dict[str, Any]) -> Dict[str, Any]:
     """Validate team member data with comprehensive validation"""

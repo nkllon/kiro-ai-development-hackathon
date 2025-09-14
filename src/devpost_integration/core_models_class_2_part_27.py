@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def update_progress(self, progress: float) -> bool:
     """Update operation progress."""
