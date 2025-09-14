@@ -3,3 +3,20 @@ from src.rm_ddd.core.health import ModuleHealth
     def get_metrics(self) -> Dict[str, Any]:
         """Get module metrics."""
         return {'operation_count': self._operation_count, 'error_count': self._errors, 'success': self.success, 'records_processed': self.records_processed, 'records_failed': self.records_failed, 'sync_time': self.sync_time.isoformat(), 'success_rate': (self.records_processed - self.records_failed) / max(1, self.records_processed)}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
