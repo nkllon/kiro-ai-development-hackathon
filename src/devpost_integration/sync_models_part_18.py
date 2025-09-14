@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def add_processed_record(self) -> None:
         """Increment processed records count."""

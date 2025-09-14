@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def update_metadata(self, updates: Dict[str, Any]) -> bool:
         """Update multiple metadata values"""

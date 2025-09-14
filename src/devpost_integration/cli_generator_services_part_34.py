@@ -1,3 +1,5 @@
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def generate_cli_entry_point(self, module: ReflectiveModule) -> str:
         """Generate CLI entry point script"""

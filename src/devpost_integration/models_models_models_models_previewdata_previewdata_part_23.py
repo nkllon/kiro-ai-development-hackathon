@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def set_expiration(self, expires_at: datetime) -> bool:
         """Set preview expiration time"""

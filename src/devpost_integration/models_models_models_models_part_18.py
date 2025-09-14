@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_metadata(self, key: str=None) -> Any:
         """Get metadata value or all metadata"""

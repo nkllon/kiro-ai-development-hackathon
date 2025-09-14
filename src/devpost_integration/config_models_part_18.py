@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_config_value(self, key: str, default: Any=None) -> Any:
         """Get configuration value by key."""

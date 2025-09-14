@@ -105,3 +105,4 @@ from .core_projectconnection_projectconnection_part_104 import *
 from .core_projectconnection_projectconnection_part_105 import *
 from .core_projectconnection_projectconnection_part_106 import *
 from .core_projectconnection_projectconnection_part_107 import *
+from src.rm_ddd.core.health import ModuleHealth
