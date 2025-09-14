@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def calculate_competitive_advantage(self) -> Dict[str, Any]:
     """

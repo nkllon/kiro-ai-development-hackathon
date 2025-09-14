@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_systematic_metrics(self) -> SystematicMetrics:
     """Calculate systematic superiority metrics."""

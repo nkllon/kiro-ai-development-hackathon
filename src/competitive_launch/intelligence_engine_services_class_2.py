@@ -33,3 +33,4 @@ from .intelligence_engine_services_class_2_part_32 import *
 from .intelligence_engine_services_class_2_part_33 import *
 from .intelligence_engine_services_class_2_part_34 import *
 from .intelligence_engine_services_class_2_part_35 import *
+from src.rm_ddd.core.health import ModuleHealth

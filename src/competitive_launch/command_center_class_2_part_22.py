@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _deploy_multi_platform(self, allocation_plan: AllocationPlan) -> Dict[str, Any]:
     """Deploy across all platforms with coordination."""

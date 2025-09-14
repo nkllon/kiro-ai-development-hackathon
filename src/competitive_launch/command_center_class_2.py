@@ -59,3 +59,4 @@ from .command_center_class_2_part_58 import *
 from .command_center_class_2_part_59 import *
 from .command_center_class_2_part_60 import *
 from .command_center_class_2_part_61 import *
+from src.rm_ddd.core.health import ModuleHealth

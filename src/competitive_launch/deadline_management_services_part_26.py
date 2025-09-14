@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _build_dependency_graph(self, tasks: List[HackathonTask]) -> Dict[str, List[str]]:
         """Build dependency graph from tasks."""

@@ -10,3 +10,5 @@ from .real_time_monitor import CompetitorAnnouncement
 from src.competitive_launch.real_time_monitor import CompetitorAnnouncement, ThreatLevel
 from .response_automation_core_core import *
 from .response_automation_core_processing import *
+from src.rm_ddd.core.health import ModuleHealth
+

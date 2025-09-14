@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _estimate_time_savings(self, strategies: List[str]) -> float:
         """Estimate time savings from acceleration strategies."""

@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _analyze_cost_efficiency(self, metrics: Dict[str, Any]) -> Dict[str, Any]:
     """Analyze cost efficiency and identify optimization opportunities."""

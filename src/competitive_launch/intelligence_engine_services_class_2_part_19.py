@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _identify_differentiation_opportunities(self, analysis: Dict[str, Any]) -> Dict[str, Any]:
         """Identify opportunities for differentiation."""

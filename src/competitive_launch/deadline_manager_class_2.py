@@ -89,3 +89,4 @@ from .deadline_manager_class_2_part_88 import *
 from .deadline_manager_class_2_part_89 import *
 from .deadline_manager_class_2_part_90 import *
 from .deadline_manager_class_2_part_91 import *
+from src.rm_ddd.core.health import ModuleHealth

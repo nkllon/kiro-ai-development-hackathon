@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_requirements_metrics(self) -> RequirementsDrivenEvidence:
     """Calculate requirements-driven development evidence."""

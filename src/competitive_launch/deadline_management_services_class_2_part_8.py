@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def get_deadline_status(self) -> DeadlineStatus:
         """Get current deadline status and recommendations."""

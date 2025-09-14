@@ -25,3 +25,4 @@ from .superiority_engine_services_class_2_part_24 import *
 from .superiority_engine_services_class_2_part_25 import *
 from .superiority_engine_services_class_2_part_26 import *
 from .superiority_engine_services_class_2_part_27 import *
+from src.rm_ddd.core.health import ModuleHealth

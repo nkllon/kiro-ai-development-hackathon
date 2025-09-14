@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def generate_differentiation_strategy(self, competitor_move: CompetitorMove) -> Dict[str, Any]:
         """

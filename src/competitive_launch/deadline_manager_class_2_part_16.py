@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _reallocate_resources_emergency(self, delay_risk: Dict[str, Any]) -> Dict[str, Any]:
         """Reallocate resources for emergency acceleration."""

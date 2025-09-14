@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _identify_risk_factors(self, critical_tasks: List[HackathonTask], time_remaining: float) -> List[str]:
         """Identify risk factors for critical path."""

@@ -53,6 +53,8 @@ import random
 import random
 import random
 import random
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _process_competitive_response(self, response: CompetitiveResponse):
     """Process a competitive response."""

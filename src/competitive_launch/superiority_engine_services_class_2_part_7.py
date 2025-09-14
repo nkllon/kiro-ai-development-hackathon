@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def generate_evidence_package(self, package_title: str='Systematic Development Superiority') -> EvidencePackage:
         """Generate comprehensive evidence package for marketing/sales."""

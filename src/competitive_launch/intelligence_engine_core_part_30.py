@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_competitive_insights(self, competitor_analysis: Dict[str, Any], trend_analysis: Dict[str, Any], feedback_analysis: Dict[str, Any]) -> List[str]:
     """Generate competitive insights from analysis."""

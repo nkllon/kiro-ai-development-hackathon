@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_trend_alignment(self, trends: List[MarketTrend]) -> Dict[str, Any]:
     """Analyze how well trends align with systematic approach."""

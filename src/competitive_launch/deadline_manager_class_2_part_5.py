@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def calculate_critical_path(self, tasks: List[Dict[str, Any]]) -> Dict[str, Any]:
         """

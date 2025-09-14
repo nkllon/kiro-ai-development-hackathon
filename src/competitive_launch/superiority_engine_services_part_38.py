@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _calculate_competitive_advantage_level(self) -> str:
         """Calculate overall competitive advantage level."""

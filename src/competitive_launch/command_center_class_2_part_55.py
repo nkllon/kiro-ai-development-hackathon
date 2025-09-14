@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _create_evidence_packages(self, metrics: Dict[str, Any]) -> List[Dict[str, Any]]:
     """Create evidence packages for marketing and sales."""

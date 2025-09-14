@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def respond_to_competitive_threat(self, threat: CompetitiveThreat) -> ResponsePlan:
     """

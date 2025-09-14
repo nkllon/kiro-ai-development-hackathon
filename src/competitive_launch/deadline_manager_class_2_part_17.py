@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _optimize_scope_emergency(self, delay_risk: Dict[str, Any]) -> Dict[str, Any]:
         """Optimize scope for emergency acceleration."""

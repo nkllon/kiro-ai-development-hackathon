@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _analyze_competitor_move(self, move: CompetitorMove) -> Dict[str, Any]:
         """Analyze a specific competitor move."""

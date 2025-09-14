@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _analyze_competitor_moves(self, moves: List[CompetitorMove]) -> Dict[str, Any]:
         """Analyze competitor moves for patterns and threats."""

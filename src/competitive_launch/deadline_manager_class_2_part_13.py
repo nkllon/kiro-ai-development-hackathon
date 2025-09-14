@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _identify_scope_reduction_options(self, tasks: List[Dict[str, Any]], critical_path: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """Identify scope reduction options with competitive impact analysis."""

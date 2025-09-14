@@ -9,6 +9,8 @@ from datetime import datetime
 from typing import Dict, Any, List, Optional
 import logging
 from .models import GKEResources, TiDBResources, KiroResources, PlatformType
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _configure_spec_processing(self, resources: KiroResources) -> Dict[str, Any]:
     """Configure spec processing capabilities."""

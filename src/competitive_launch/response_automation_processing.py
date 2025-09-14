@@ -15,6 +15,8 @@ from pathlib import Path
 from .models import CompetitorMove, ThreatLevel, CompetitiveAdvantage, SystematicMetrics, FMHImplementation, RequirementsDrivenEvidence
 from .real_time_monitor import CompetitorAnnouncement
 from src.competitive_launch.real_time_monitor import CompetitorAnnouncement, ThreatLevel
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _convert_announcement_to_move(self, announcement: CompetitorAnnouncement) -> CompetitorMove:
     """Convert competitor announcement to competitor move."""

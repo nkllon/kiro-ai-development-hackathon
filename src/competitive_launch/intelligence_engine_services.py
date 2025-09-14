@@ -46,3 +46,4 @@ from .intelligence_engine_services_part_45 import *
 from .intelligence_engine_services_part_46 import *
 from .intelligence_engine_services_part_47 import *
 from .intelligence_engine_services_part_48 import *
+from src.rm_ddd.core.health import ModuleHealth

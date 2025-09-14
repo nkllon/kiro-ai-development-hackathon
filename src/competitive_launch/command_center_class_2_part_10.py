@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _generate_competitive_advantage_evidence(self) -> Dict[str, Any]:
         """Generate evidence of competitive advantage."""

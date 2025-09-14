@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _determine_competitive_position(self, advantage: float) -> str:
         """Determine competitive position based on advantage score."""

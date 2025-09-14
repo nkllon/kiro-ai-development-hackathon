@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
 
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -110,8 +110,10 @@ from .models import MarketConditions, CompetitiveThreat, PlatformAllocation, Str
 from .platform_orchestrators import GKEPlatformOrchestrator, TiDBPlatformOrchestrator, KiroPlatformOrchestrator
 from .intelligence_engine import CompetitiveIntelligenceEngine
 from .deadline_manager import DeadlineManagementSystem
+from src.rm_ddd.core.health import ModuleHealth
 
-class ResourceAllocationEngine(ReflectiveModule):
+
+class ResourceAllocationEngine(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {

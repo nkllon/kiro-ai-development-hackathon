@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _analyze_allocation_efficiency(self, resources: PlatformAllocation) -> Dict[str, Any]:
         """Analyze current resource allocation efficiency."""

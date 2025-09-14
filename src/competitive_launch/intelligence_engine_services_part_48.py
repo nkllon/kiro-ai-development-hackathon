@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _generate_recommended_actions(self, insights: List[str], threat_level: str) -> List[Dict[str, Any]]:
         """Generate recommended actions based on insights and threat level."""

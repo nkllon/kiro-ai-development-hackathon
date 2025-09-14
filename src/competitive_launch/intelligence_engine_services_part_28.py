@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _identify_opportunities(self, trends: List[MarketTrend], alignment: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Identify market opportunities based on trends."""

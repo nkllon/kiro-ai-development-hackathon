@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_fmh_metrics(self) -> FMHImplementation:
     """Calculate FMH principles implementation metrics."""

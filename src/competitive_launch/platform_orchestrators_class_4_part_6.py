@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def automate_quality_gates(self, quality_requirements: Dict[str, Any]) -> Dict[str, Any]:
         """

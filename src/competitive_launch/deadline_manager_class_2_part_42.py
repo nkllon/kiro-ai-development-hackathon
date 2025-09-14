@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _generate_risk_mitigation_plan(self, delay_risk: Dict[str, Any]) -> List[Dict[str, Any]]:
     """Generate risk mitigation plan for deadline management."""

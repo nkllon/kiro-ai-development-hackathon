@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _generate_scope_optimization_plan(self, opportunities: List[Dict[str, Any]]) -> Dict[str, Any]:
     """Generate scope optimization plan."""

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _identify_optimization_opportunities(self, resources: PlatformAllocation, efficiency: Dict[str, Any]) -> Dict[str, Any]:
     """Identify resource allocation optimization opportunities."""

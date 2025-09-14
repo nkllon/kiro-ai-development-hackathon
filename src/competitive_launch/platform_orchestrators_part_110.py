@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _generate_feature_specifications(self, analysis: Dict[str, Any]) -> List[Dict[str, Any]]:
     """Generate feature specifications based on market gap analysis."""

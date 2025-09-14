@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _generate_cost_recommendations(self, analysis: Dict[str, Any]) -> List[str]:
     """Generate cost optimization recommendations."""

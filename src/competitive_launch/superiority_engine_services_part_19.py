@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def calculate_roi(self, project_duration_months: int=12) -> ROICalculation:
         """Calculate ROI for systematic vs ad-hoc approach."""

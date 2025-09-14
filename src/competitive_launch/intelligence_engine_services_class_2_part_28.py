@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _calculate_overall_advantage(self, systematic: SystematicMetrics, fmh: FMHImplementation, accountability: AccountabilityImplementation, requirements: RequirementsDrivenEvidence, time_to_market: TimeToMarketAdvantage) -> float:
         """Calculate overall competitive advantage score."""

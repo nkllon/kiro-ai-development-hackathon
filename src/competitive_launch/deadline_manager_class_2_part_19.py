@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _calculate_expected_completion(self, parallel_plan: Dict[str, Any], scope_optimization: Dict[str, Any]) -> datetime:
         """Calculate expected completion time with acceleration."""

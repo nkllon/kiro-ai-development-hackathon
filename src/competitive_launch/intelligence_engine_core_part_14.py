@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_opportunity_score(self, opportunities: List[Dict[str, Any]]) -> float:
     """Calculate overall market opportunity score."""
