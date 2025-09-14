@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def disable_notifications(self) -> bool:
         """Disable notifications."""

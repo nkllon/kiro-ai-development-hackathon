@@ -44,3 +44,4 @@ from .sync_manager_part_43 import *
 from .sync_manager_part_44 import *
 from .sync_manager_part_45 import *
 from .sync_manager_part_46 import *
+from src.rm_ddd.core.health import ModuleHealth

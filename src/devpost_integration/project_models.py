@@ -134,3 +134,4 @@ from .project_models_part_133 import *
 from .project_models_part_134 import *
 from .project_models_part_135 import *
 from .project_models_part_136 import *
+from src.rm_ddd.core.health import ModuleHealth

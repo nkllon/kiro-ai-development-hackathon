@@ -34,3 +34,4 @@ from .models_models_models_core_part_33 import *
 from .models_models_models_core_part_34 import *
 from .models_models_models_core_part_35 import *
 from .models_models_models_core_part_36 import *
+from src.rm_ddd.core.health import ModuleHealth

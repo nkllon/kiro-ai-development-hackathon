@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _get_default_config(self) -> Dict[str, Any]:
         """Get default configuration values."""

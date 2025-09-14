@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def delete_project(self, project_id: str) -> Dict[str, Any]:
         """Delete a project"""

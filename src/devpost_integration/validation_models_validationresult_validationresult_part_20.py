@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def clear_warnings(self) -> None:
         """Clear all validation warnings."""
