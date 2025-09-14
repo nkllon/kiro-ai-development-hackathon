@@ -41,3 +41,4 @@ from .gke_service_provider_services_services_core_part_40 import *
 from .gke_service_provider_services_services_core_part_41 import *
 from .gke_service_provider_services_services_core_part_42 import *
 from .gke_service_provider_services_services_core_part_43 import *
+from src.rm_ddd.core.health import ModuleHealth

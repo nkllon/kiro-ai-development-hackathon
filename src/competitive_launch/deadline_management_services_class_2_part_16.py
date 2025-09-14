@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _find_acceleration_opportunities(self, critical_tasks: List[HackathonTask]) -> List[str]:
         """Find opportunities to accelerate critical path."""

@@ -102,3 +102,4 @@ from .deadline_manager_part_101 import *
 from .deadline_manager_part_102 import *
 from .deadline_manager_part_103 import *
 from .deadline_manager_part_104 import *
+from src.rm_ddd.core.health import ModuleHealth

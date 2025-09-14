@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def analyze_competitive_landscape(self, market_conditions: MarketConditions) -> Dict[str, Any]:
     """

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_accountability_metrics(self) -> AccountabilityImplementation:
     """Calculate accountability implementation metrics."""

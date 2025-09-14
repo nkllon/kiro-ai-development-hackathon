@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _generate_acceleration_plan(self, risk_analysis: Dict[str, Any], critical_path: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Generate acceleration plan based on risk analysis."""

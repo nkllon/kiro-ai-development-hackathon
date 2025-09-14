@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _optimize_data_distribution(self, resources: TiDBResources) -> Dict[str, Any]:
         """Optimize data distribution across TiDB cluster."""

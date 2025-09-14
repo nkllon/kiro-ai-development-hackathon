@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _activate_ai_agents(self, resources: KiroResources) -> Dict[str, Any]:
     """Activate AI agents for development acceleration."""

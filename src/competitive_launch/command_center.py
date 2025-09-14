@@ -72,3 +72,4 @@ from .command_center_part_71 import *
 from .command_center_part_72 import *
 from .command_center_part_73 import *
 from .command_center_part_74 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_configuration_schema(self) -> Dict[str, Any]:
     """Get configuration schema for the provider"""

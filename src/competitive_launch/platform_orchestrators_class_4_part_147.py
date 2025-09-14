@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _analyze_market_gap(self, market_gap: Dict[str, Any]) -> Dict[str, Any]:
     """Analyze market gap for feature generation."""

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def generate_superiority_metrics(self) -> List[SuperiorityMetric]:
     """Generate comprehensive superiority metrics."""

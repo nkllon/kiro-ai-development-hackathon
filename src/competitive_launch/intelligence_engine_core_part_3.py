@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def analyze_market_trends(self) -> Dict[str, Any]:
     """

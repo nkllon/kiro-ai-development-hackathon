@@ -7,3 +7,4 @@ from .self_consistency_validator_validation_validation_validation_part_6 import 
 from .self_consistency_validator_validation_validation_validation_part_7 import *
 from .self_consistency_validator_validation_validation_validation_part_8 import *
 from .self_consistency_validator_validation_validation_validation_part_9 import *
+from src.rm_ddd.core.health import ModuleHealth

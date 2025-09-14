@@ -43,3 +43,4 @@ from .gcp_integration_part_42 import *
 from .gcp_integration_part_43 import *
 from .gcp_integration_part_44 import *
 from .gcp_integration_part_45 import *
+from src.rm_ddd.core.health import ModuleHealth

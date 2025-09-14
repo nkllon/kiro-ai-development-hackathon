@@ -4,6 +4,8 @@ def _validate_quality_gates_enforcement(self) -> ValidationResult:
     start_time = time.time()
     try:
         from ..quality.automated_quality_gates import AutomatedQualityGates
+from src.rm_ddd.core.health import ModuleHealth
+
         gates = AutomatedQualityGates()
         is_healthy = gates.is_healthy()
         status_info = gates.get_module_status()

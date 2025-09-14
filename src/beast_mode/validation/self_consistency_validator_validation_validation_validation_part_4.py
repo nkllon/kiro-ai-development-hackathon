@@ -4,6 +4,8 @@ def _validate_model_driven_decisions(self) -> ValidationResult:
     start_time = time.time()
     try:
         from ..intelligence.model_driven_intelligence_engine import ModelDrivenIntelligenceEngine
+from src.rm_ddd.core.health import ModuleHealth
+
         engine = ModelDrivenIntelligenceEngine()
         is_healthy = engine.is_healthy()
         status_info = engine.get_module_status()

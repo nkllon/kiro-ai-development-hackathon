@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def generate_evidence_package(self, package_title: str='Systematic Development Superiority') -> EvidencePackage:
         """Generate comprehensive evidence package for marketing/sales."""

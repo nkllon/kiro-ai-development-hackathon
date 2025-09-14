@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _enable_feature_generation(self, resources: KiroResources) -> Dict[str, Any]:
     """Enable competitive feature generation."""

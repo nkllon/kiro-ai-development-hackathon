@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def optimize_allocation(self, constraints: Any, competitive_analysis: Dict[str, Any]) -> AllocationPlan:
     """Optimize resource allocation based on constraints and competitive analysis."""

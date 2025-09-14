@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _init_openflow_bridge(self):
         """Initialize using OpenFlow asset bridge"""

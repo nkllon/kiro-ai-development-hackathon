@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def update_task_status(self, task_id: str, status: TaskStatus, **kwargs) -> bool:
         """Update task status and progress."""

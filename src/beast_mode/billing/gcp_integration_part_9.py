@@ -2,6 +2,8 @@
     def _get_mock_metrics(self) -> BillingMetrics:
         """Get mock GCP metrics for multi-service model with proper correlation"""
         import random
+from src.rm_ddd.core.health import ModuleHealth
+
         requests_today = random.randint(1200, 3500)
         avg_cpu_per_request = random.uniform(0.1, 0.8)
         avg_memory_mb = random.randint(128, 512)

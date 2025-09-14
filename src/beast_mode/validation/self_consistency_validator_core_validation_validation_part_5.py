@@ -4,6 +4,8 @@ def _validate_systematic_tool_repair(self) -> ValidationResult:
     start_time = time.time()
     try:
         from ..tool_health.makefile_health_manager import MakefileHealthManager
+from src.rm_ddd.core.health import ModuleHealth
+
         manager = MakefileHealthManager()
         is_healthy = manager.is_healthy()
         status_info = manager.get_module_status()

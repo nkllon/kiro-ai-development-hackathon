@@ -19,3 +19,5 @@ from ..assessment.evidence_package_generator import EvidencePackageGenerator
 from ..core.reflective_module import ReflectiveModule
 from .self_consistency_validator_core import *
 from .self_consistency_validator_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_threat_alerts(self, threats: List[CompetitiveThreat]) -> List[Dict[str, Any]]:
     """Generate alerts for competitive threats."""

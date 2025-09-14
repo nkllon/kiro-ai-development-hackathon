@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _update_priorities_for_acceleration(self):
         """Update task priorities for emergency acceleration."""

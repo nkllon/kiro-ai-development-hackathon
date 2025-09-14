@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _update_priorities_for_acceleration(self):
         """Update task priorities for emergency acceleration."""

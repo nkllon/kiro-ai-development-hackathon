@@ -9,3 +9,5 @@ from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .rdi_chain_orchestrator_validation import *
 from .rdi_chain_orchestrator_processing import *
 from .rdi_chain_orchestrator_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

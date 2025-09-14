@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_makefile_works(self) -> ValidationResult:
     """Validate that Beast Mode's own Makefile works flawlessly"""

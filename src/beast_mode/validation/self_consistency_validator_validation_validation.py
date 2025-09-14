@@ -36,3 +36,5 @@ from ..metrics.baseline_metrics_engine import BaselineMetricsEngine
 from ..assessment.evidence_package_generator import EvidencePackageGenerator
 from ..core.reflective_module import ReflectiveModule
 from .self_consistency_validator_validation_validation_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

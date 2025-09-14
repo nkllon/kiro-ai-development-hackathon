@@ -13,6 +13,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from enum import Enum
 from .models import MarketConditions, CompetitiveThreat, SystematicMetrics, FMHImplementation, AccountabilityImplementation, RequirementsDrivenEvidence
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _generate_customer_testimonials(self) -> List[str]:
     """Generate customer testimonials."""

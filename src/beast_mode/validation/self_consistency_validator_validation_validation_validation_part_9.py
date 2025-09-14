@@ -35,6 +35,8 @@ def _validate_superiority_evidence(self) -> ValidationResult:
             evidence_details['metrics_collection'] = False
         try:
             from ..assessment.evidence_package_generator import EvidencePackageGenerator
+from src.rm_ddd.core.health import ModuleHealth
+
             generator = EvidencePackageGenerator()
             evidence_sources += 1
             evidence_details['evidence_package_generation'] = True

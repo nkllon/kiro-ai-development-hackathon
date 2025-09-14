@@ -10,3 +10,5 @@ import requests
 from bs4 import BeautifulSoup
 from .models import CompetitorMove, ThreatLevel, MarketTrend
 from .real_time_monitor_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def enable_real_time_analytics(self, metrics: Dict[str, Any]) -> Dict[str, Any]:
         """

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _init_gcp_sdk_fallback(self):
         """Initialize using direct GCP SDK (fallback)"""

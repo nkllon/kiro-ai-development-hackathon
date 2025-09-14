@@ -38,3 +38,4 @@ from .superiority_engine_services_part_37 import *
 from .superiority_engine_services_part_38 import *
 from .superiority_engine_services_part_39 import *
 from .superiority_engine_services_part_40 import *
+from src.rm_ddd.core.health import ModuleHealth

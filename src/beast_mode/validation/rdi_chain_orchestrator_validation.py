@@ -13,6 +13,8 @@ import subprocess
 import json
 from ..autonomous.pdca_langgraph_orchestrator import PDCALangGraphOrchestrator
 from ..core.reflective_module import ReflectiveModule, HealthStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _discover_test_files(self) -> List[str]:
     """Discover all test files for analysis"""

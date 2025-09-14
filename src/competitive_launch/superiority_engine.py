@@ -9,3 +9,5 @@ from .models import MarketConditions, CompetitiveThreat, SystematicMetrics, FMHI
 from .superiority_engine_core import *
 from .superiority_engine_validation import *
 from .superiority_engine_services import *
+from src.rm_ddd.core.health import ModuleHealth
+

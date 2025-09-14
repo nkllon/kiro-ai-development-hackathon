@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def enable_real_time_analytics(self, metrics: Dict[str, Any]) -> Dict[str, Any]:
     """

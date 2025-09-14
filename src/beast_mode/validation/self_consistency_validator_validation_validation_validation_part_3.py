@@ -4,6 +4,8 @@ def _validate_beast_mode_uses_pdca(self) -> ValidationResult:
     start_time = time.time()
     try:
         from ..core.pdca_orchestrator import PDCAOrchestrator
+from src.rm_ddd.core.health import ModuleHealth
+
         orchestrator = PDCAOrchestrator()
         is_healthy = orchestrator.is_healthy()
         status_info = orchestrator.get_module_status()

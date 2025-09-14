@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _create_implementation_plan(self, strategy: Dict[str, Any]) -> Dict[str, Any]:
         """Create implementation plan for counter-strategy."""

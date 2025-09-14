@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_differentiation_advantage(self, strategy: Dict[str, Any]) -> Dict[str, Any]:
     """Calculate competitive advantage of differentiation strategy."""

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def auto_scale_agents(self, demand: Dict[str, Any]) -> Dict[str, Any]:
     """

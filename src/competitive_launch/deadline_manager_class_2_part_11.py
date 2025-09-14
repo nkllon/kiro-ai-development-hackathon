@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _calculate_deadline_risk(self, critical_path: List[Dict[str, Any]], analysis: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
         """Calculate deadline risk based on critical path."""

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _analyze_task_durations(self, tasks: List[Dict[str, Any]], graph: Dict[str, List[str]]) -> Dict[str, Dict[str, Any]]:
     """Analyze task durations and calculate slack."""

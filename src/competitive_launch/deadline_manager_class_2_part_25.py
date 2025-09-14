@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _calculate_scope_impact(self, plan: Dict[str, Any]) -> Dict[str, Any]:
         """Calculate impact of scope optimization plan."""

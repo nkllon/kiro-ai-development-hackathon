@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_customer_feedback(self, feedback: List[CustomerFeedback]) -> Dict[str, Any]:
     """Analyze customer feedback for competitive insights."""

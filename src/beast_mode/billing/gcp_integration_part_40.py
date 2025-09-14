@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _is_cache_valid(self) -> bool:
     """Check if cached metrics are still valid"""

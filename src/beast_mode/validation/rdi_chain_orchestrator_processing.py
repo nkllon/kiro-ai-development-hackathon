@@ -13,6 +13,8 @@ import subprocess
 import json
 from ..autonomous.pdca_langgraph_orchestrator import PDCALangGraphOrchestrator
 from ..core.reflective_module import ReflectiveModule, HealthStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _convert_pdca_to_rdi_result(self, pdca_result: Dict[str, Any], chain_id: str) -> RDIValidationResult:
     """Convert PDCA execution result to RDI validation result"""

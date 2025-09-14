@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def calculate_roi(self, project_duration_months: int=12) -> ROICalculation:
         """Calculate ROI for systematic vs ad-hoc approach."""

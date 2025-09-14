@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _identify_critical_path(self, analysis: Dict[str, Dict[str, Any]], graph: Dict[str, List[str]]) -> List[Dict[str, Any]]:
         """Identify critical path through task analysis."""

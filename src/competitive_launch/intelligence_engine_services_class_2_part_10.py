@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _detect_competitor_moves(self) -> List[CompetitorMove]:
         """Detect recent competitor moves (simulated)."""

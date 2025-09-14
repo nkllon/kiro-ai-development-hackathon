@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_cost_optimization_recommendations(self) -> List[Dict[str, Any]]:
     """Get multi-service cost optimization recommendations"""
