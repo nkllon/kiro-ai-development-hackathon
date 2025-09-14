@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class FormatRouter(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -22,6 +23,7 @@ def get_health_indicators(self) -> Dict[str, any]:
     """Routes input data to appropriate format processors."""
     
     def __init__(self):
+        register_module(self.__class__.__name__, self)
         """Initialize the format router."""
         self.processors: Dict[str, ProcessorInterface] = {}
         self._mime_to_format = {

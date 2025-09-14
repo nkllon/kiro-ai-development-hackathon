@@ -1,0 +1,30 @@
+from datetime import datetime
+from typing import Dict, List, Any
+
+    def convert_enums_to_values(data: Any) -> Any:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """
+        Recursively convert enum objects to their values in data structures.
+        
+        Args:
+            data: Data structure that may contain enums
+            
+        Returns:
+            Data structure with enums converted to values
+        """
+        if isinstance(data, Enum):
+            return data.value
+        elif isinstance(data, dict):
+            return {key: SerializationHandler.convert_enums_to_values(value) 
+                   for key, value in data.items()}
+        elif isinstance(data, (list, tuple)):
+            return type(data)(SerializationHandler.convert_enums_to_values(item) 
+                            for item in data)
+        else:
+            return data
+    
+    @staticmethod

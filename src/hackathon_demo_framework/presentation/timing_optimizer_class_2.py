@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class PacingStrategy(Enum, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -25,3 +26,6 @@ def get_health_indicators(self) -> Dict[str, any]:
     CRESCENDO = 'crescendo'
     DEMO_FOCUSED = 'demo_focused'
     SYSTEMATIC_EMPHASIS = 'systematic_emphasis'
+
+    def __init__(self):
+        register_module('PacingStrategy', self)

@@ -1,0 +1,21 @@
+from datetime import datetime
+from typing import Dict, List, Any
+
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
+    """RDI validation types"""
+    REQUIREMENTS_TRACEABILITY = 'requirements_traceability'
+    IMPLEMENTATION_QUALITY = 'implementation_quality'
+    SYSTEMATIC_APPROACH = 'systematic_approach'
+    PREVENTION_MEASURES = 'prevention_measures'
+    CONTINUOUS_IMPROVEMENT = 'continuous_improvement'
+
+@dataclass

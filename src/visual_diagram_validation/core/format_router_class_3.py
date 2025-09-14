@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class BaseProcessor(ProcessorInterface, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -22,6 +23,7 @@ def get_health_indicators(self) -> Dict[str, any]:
     """Base implementation of ProcessorInterface with common functionality."""
     
     def __init__(self, supported_formats: List[str]):
+        register_module(self.__class__.__name__, self)
         """Initialize with supported format list."""
         self._supported_formats = [fmt.lower() for fmt in supported_formats]
     

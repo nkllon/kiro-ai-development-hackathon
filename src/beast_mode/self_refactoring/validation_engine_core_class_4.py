@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class ValidationFramework(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -80,6 +81,7 @@ def get_health_indicators(self) -> Dict[str, any]:
         self.add_rule("is_valid_name", lambda x: isinstance(x, str) and len(x) > 2 and x[0].isupper(), 
                      "Name must be a string starting with uppercase and longer than 2 characters")
 
+        register_module(self.__class__.__name__, self)
 # Global validation framework instance
 validation_framework = ValidationFramework()
 validation_framework._setup_default_rules()

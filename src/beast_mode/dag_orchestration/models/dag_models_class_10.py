@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class ResourceRequirements(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -39,3 +40,5 @@ def get_health_indicators(self) -> Dict[str, any]:
 
 
 @dataclass
+    def __init__(self):
+        register_module('ResourceRequirements', self)

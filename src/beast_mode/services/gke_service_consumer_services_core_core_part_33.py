@@ -1,0 +1,11 @@
+
+def _identify_improvement_areas(self, qa_results: Dict[str, Any], validation_results: Dict[str, Any]) -> List[str]:
+    """Identify areas for quality improvement"""
+    areas = []
+    if qa_results.get('coverage_percentage', 1.0) < 0.9:
+        areas.append('Test coverage improvement needed')
+    if validation_results.get('code_quality_score', 1.0) < 0.8:
+        areas.append('Code quality patterns need attention')
+    if not validation_results.get('security_validation', {}).get('passed', True):
+        areas.append('Security validation requires improvement')
+    return areas if areas else ['Continue maintaining high quality standards']

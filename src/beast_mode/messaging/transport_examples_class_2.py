@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class ExampleTransport(BeastModeTransport, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -110,6 +111,7 @@ def get_health_indicators(self) -> Dict[str, any]:
         }
 
 
+        register_module(self.__class__.__name__, self)
 # Register the example transport
 TransportFactory.register_transport('example', ExampleTransport)
 

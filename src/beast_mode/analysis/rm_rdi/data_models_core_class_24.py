@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class AnalysisResult(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -65,3 +66,6 @@ def __post_init__(self) -> Any:
         raise ValueError('Analysis result failed safety validation')
     if not self.operator_notes:
         object.__setattr__(self, 'operator_notes', ['This analysis is READ-ONLY and cannot impact existing systems', "Use 'make analysis-kill' for emergency shutdown", 'Analysis can be safely ignored or disabled at any time'])
+
+    def __init__(self):
+        register_module('AnalysisResult', self)

@@ -1,0 +1,12 @@
+
+    def detect_format(self, input_data: bytes) -> str:
+        """Auto-detect input format"""
+        try:
+            json.loads(input_data.decode('utf-8'))
+            return 'json'
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            try:
+                input_data.decode('utf-8')
+                return 'text'
+            except UnicodeDecodeError:
+                return 'binary'

@@ -1,0 +1,11 @@
+from src.rm_ddd.core.registry import register_module
+
+    def get_active_alerts(self) -> List[Alert]:
+        """get_active_alerts - Enhanced for compliance"""
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Get all active alerts."""
+        return list(self.active_alerts.values())

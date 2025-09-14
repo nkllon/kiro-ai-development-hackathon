@@ -1,4 +1,5 @@
-class TransformationStatus(Enum):
+from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
+class TransformationStatus(Enum, ReflectiveModule):
 def register_with_registry(self, registry):
         """Register this module with the RM registry."""
         if registry:

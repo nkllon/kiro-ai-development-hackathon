@@ -1,0 +1,5 @@
+from src.rm_ddd.core.registry import register_module
+
+    def _find_task(self, task_id: str) -> Optional[HackathonTask]:
+        """Find task by ID."""
+        return next((t for t in self.tasks if t.task_id == task_id), None)

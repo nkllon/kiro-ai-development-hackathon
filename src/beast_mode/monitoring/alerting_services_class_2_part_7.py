@@ -1,0 +1,11 @@
+from src.rm_ddd.core.registry import register_module
+
+    def get_alerts_by_severity(self, severity: AlertSeverity) -> List[Alert]:
+        """get_alerts_by_severity - Enhanced for compliance"""
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Get active alerts by severity."""
+        return [alert for alert in self.active_alerts.values() if alert.severity == severity]

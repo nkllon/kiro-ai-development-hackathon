@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class ValidationRule(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -28,3 +29,5 @@ def get_health_indicators(self) -> Dict[str, any]:
     fix_suggestion: Optional[str] = None
 
 @dataclass
+    def __init__(self):
+        register_module('ValidationRule', self)

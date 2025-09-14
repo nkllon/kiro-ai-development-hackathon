@@ -1,0 +1,4 @@
+
+def _initialize_component_health_entry(self, component_name: str) -> None:
+    """Initialize health tracking for a specific component"""
+    self.component_health[component_name] = HealthMonitoringMetrics(component_name=component_name, last_check_timestamp=datetime.now(), is_healthy=True, error_count_last_hour=0, error_count_last_day=0, success_rate_last_hour=1.0, success_rate_last_day=1.0, average_response_time_ms=0.0, resource_usage={}, degradation_level=DegradationLevel.NONE)

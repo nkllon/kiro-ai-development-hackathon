@@ -1,0 +1,10 @@
+
+def _analyze_installation_integrity(self, failure: Failure) -> Dict[str, Any]:
+    """Analyze installation integrity"""
+    installation_analysis = {}
+    try:
+        installation_analysis['platform'] = os.uname().sysname
+        installation_analysis['python_version'] = subprocess.run(['python3', '--version'], capture_output=True, text=True).stdout.strip()
+    except Exception as e:
+        installation_analysis['system_analysis_error'] = str(e)
+    return installation_analysis

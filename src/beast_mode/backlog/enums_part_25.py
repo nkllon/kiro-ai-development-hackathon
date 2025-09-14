@@ -1,0 +1,22 @@
+from datetime import datetime
+from typing import Dict, List, Any
+
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
+    """Status levels for beast-readiness of backlog items"""
+    DRAFT = "draft"
+    MPM_REVIEW = "mpm_review"
+    GHOSTBUSTERS_VALIDATION = "ghostbusters_validation"
+    BEAST_READY = "beast_ready"
+    IN_EXECUTION = "in_execution"
+    COMPLETED = "completed"
+    BLOCKED = "blocked"
+

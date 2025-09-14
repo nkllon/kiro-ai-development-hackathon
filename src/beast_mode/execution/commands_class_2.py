@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class TaskCommand(ABC, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -22,6 +23,7 @@ def get_health_indicators(self) -> Dict[str, any]:
     """Abstract base class for executable task commands."""
     
     def __init__(self, task_id: str, name: str, description: str):
+        register_module(self.__class__.__name__, self)
         self.task_id = task_id
         self.name = name
         self.description = description

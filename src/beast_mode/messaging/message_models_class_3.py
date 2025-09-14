@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class AgentCapability(str, Enum, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -44,3 +45,6 @@ def get_health_indicators(self) -> Dict[str, any]:
     PERFORMANCE_TUNING = 'performance_tuning'
     DISASTER_RECOVERY = 'disaster_recovery'
     DATA_ANALYSIS = 'data_analysis'
+
+    def __init__(self):
+        register_module('AgentCapability', self)

@@ -1,6 +1,15 @@
+from src.rm_ddd.core.health import ModuleHealth, ModuleStatus
         class OrderCalculationService(DomainService):
             def calculate_total(self, order: Order) -> Money:
                 return sum(item.price * item.quantity for item in order.items)
+    ModuleHealth = ModuleHealth.HEALTHY
+    ModuleStatus = ModuleStatus.ACTIVE
+
+    def check_health(self):
+        return {
+            'status': self.ModuleStatus,
+            'health': self.ModuleHealth
+        }
     """
 
     def decorator(cls: Type[T]) -> Type[T]:

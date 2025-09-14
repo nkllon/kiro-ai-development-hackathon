@@ -1,7 +1,18 @@
+from src.rm_ddd.core.health import ModuleHealth, ModuleStatus
+from src.rm_ddd.core.registry import register_module
         class Money(ValueObject):
             def __init__(self, amount: Decimal, currency: str):
+        register_module(self.__class__.__name__, self)
                 self.amount = amount
                 self.currency = currency
+    ModuleHealth = ModuleHealth.HEALTHY
+    ModuleStatus = ModuleStatus.ACTIVE
+
+    def check_health(self):
+        return {
+            'status': self.ModuleStatus,
+            'health': self.ModuleHealth
+        }
     """
 
     def decorator(cls: Type[T]) -> Type[T]:

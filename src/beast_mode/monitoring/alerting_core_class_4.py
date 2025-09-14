@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class AlertRule(BaseModel, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -41,6 +42,7 @@ def __init__(self) -> Any:
     self.alerting_task: Optional[asyncio.Task] = None
     self.alert_handlers: List[Callable] = []
 
+        register_module(self.__class__.__name__, self)
 def add_alert_handler(self, handler: Callable) -> None:
     try:
         pass  # TODO: Add method implementation

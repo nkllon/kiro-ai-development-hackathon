@@ -1,0 +1,24 @@
+from datetime import datetime
+from typing import Dict, List, Any
+
+    def export_validation_report(self, file_path: str):
+        """Export validation report to file"""
+        report_data = {
+            'timestamp': datetime.now().isoformat(),
+            'validation_summary': self.get_validation_summary(),
+            'validation_history': [
+                {
+                    'component_name': report.component_name,
+                    'timestamp': report.timestamp.isoformat(),
+                    'overall_score': report.overall_score,
+                    'results': report.results
+                }
+                for report in self.validation_history
+            ]
+        }
+        
+        with open(file_path, 'w') as f:
+            json.dump(report_data, f, indent=2)
+
+# Global instance for easy access
+enhanced_validator = EnhancedValidationFramework()

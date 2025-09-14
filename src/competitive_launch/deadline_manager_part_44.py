@@ -1,0 +1,22 @@
+from datetime import datetime
+from typing import Dict, List, Any
+
+def _analyze_task_durations(self, tasks: List[Dict[str, Any]], graph: Dict[str, List[str]]) -> Dict[str, Dict[str, Any]]:
+    """Analyze task durations and calculate slack."""
+    analysis = {}
+    for task in tasks:
+        task_id = task.get('id', f'task_{len(analysis)}')
+        duration = task.get('estimated_duration_days', 1)
+        dependencies = task.get('dependencies', [])
+        earliest_start = 0
+        if dependencies:
+            dependency_durations = []
+            for dep in dependencies:
+                if dep in analysis:
+                    dependency_durations.append(analysis[dep].get('earliest_finish', 0))
+                else:
+                    dependency_durations.append(0)
+            earliest_start = max(dependency_durations) if dependency_durations else 0
+        earliest_finish = earliest_start + duration
+        analysis[task_id] = {'duration_days': duration, 'earliest_start': earliest_start, 'earliest_finish': earliest_finish, 'dependencies': dependencies, 'priority': task.get('priority', 'medium'), 'competitive_impact': task.get('competitive_impact', 0.5)}
+    return analysis

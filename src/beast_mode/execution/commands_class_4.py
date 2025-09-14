@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class LoggingInfrastructureCommand(TaskCommand, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -42,3 +43,6 @@ def get_health_indicators(self) -> Dict[str, any]:
             self.end_time = datetime.now()
             self.logger.error(f"Logging infrastructure fix failed: {e}")
             return False
+
+    def __init__(self):
+        register_module('LoggingInfrastructureCommand', self)

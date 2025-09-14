@@ -1,0 +1,12 @@
+
+def _update_service_metrics(self, status: str, execution_time_ms: int):
+    """Update service performance metrics"""
+    self.service_metrics['total_requests'] += 1
+    if status == 'success':
+        self.service_metrics['successful_requests'] += 1
+    else:
+        self.service_metrics['failed_requests'] += 1
+    current_avg = self.service_metrics['average_response_time_ms']
+    total_requests = self.service_metrics['total_requests']
+    new_avg = (current_avg * (total_requests - 1) + execution_time_ms) / total_requests
+    self.service_metrics['average_response_time_ms'] = int(new_avg)

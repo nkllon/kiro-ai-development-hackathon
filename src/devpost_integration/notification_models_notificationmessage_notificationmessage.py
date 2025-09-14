@@ -1,1079 +1,124 @@
-"""
-NotificationMessage Module
-
-Extracted from notification_models_notificationmessage.py for RDI compliance.
-This module contains the NotificationMessage class implementation.
-"""
-
-import logging
-from datetime import datetime
-from .reflective_module import ReflectiveModule, register_module, ModuleHealth, ModuleStatus, ModuleCapability
-from typing import Dict, List, Any, Optional
-
-class NotificationMessage(ReflectiveModule):
-def register_with_registry(self, registry):
-        """Register this module with the RM registry."""
-        if registry:
-            registry.register_module(self)
-            self.add_capability("registry_registered")
-    
-    def get_module_metadata(self) -> Dict[str, any]:
-        """Get module metadata for registry."""
-        return {
-            "module_id": self.module_id,
-            "module_type": self.module_type,
-            "capabilities": self.capabilities,
-            "dependencies": self.dependencies,
-            "health_status": self.health_status,
-            "last_updated": self.last_updated
-        }
-def get_health_indicators(self) -> Dict[str, any]:
-        """Get health indicators for this module."""
-        return {
-            "module_id": self.module_id,
-            "status": self.health_status,
-            "last_updated": self.last_updated,
-            "capabilities_count": len(self.capabilities),
-            "dependencies_count": len(self.dependencies)
-        }
-    
-    def get_status_report(self) -> Dict[str, any]:
-        """Get comprehensive status report for this module."""
-        return {
-            "module_id": self.module_id,
-            "health_status": self.health_status,
-            "capabilities": self.capabilities,
-            "dependencies": self.dependencies,
-            "last_updated": self.last_updated,
-            "performance_metrics": self.get_metrics()
-        }
-    """
-    Manages notification messages and delivery.
-    
-    This class handles individual notification messages
-    including content, recipients, and delivery status.
-    """
-
-    def __init__(self, message_data: Dict[str, Any]=None):
-        """Initialize notification message."""
-        super().__init__()
-        self.module_id = 'notification_message'
-        self.version = '1.0.0'
-        self.message_data = message_data or {}
-        self.message_id = self.message_data.get('id', '')
-        self.title = self.message_data.get('title', '')
-        self.content = self.message_data.get('content', '')
-        self.recipients = self.message_data.get('recipients', [])
-        self.priority = self.message_data.get('priority', 'normal')
-        self.status = self.message_data.get('status', 'pending')
-        self.created_at = datetime.now()
-        self.sent_at = None
-        self._operation_count = 0
-        self._errors = 0
-        register_module(self)
-
-    def get_module_info(self) -> Dict[str, Any]:
-        """Get module information."""
-        return {'module_id': self.module_id, 'version': self.version, 'message_id': self.message_id, 'title': self.title, 'status': self.status, 'recipient_count': len(self.recipients)}
-
-    def get_capabilities(self) -> List[ModuleCapability]:
-        """Get module capabilities."""
-        return [ModuleCapability.MESSAGE_MANAGEMENT, ModuleCapability.DELIVERY_TRACKING, ModuleCapability.RECIPIENT_MANAGEMENT]
-
-    def get_dependencies(self) -> List[str]:
-        """Get module dependencies."""
-        return ['reflective_module', 'datetime', 'typing']
-
-    def check_health(self) -> ModuleHealth:
-        """Check module health."""
-        issues = []
-        health_score = self._calculate_health_score()
-        if self._errors > 0:
-            issues.append(f'{self._errors} internal errors occurred')
-        if not self.message_id:
-            issues.append('No message ID specified')
-        if not self.title:
-            issues.append('No message title specified')
-        if not self.content:
-            issues.append('No message content specified')
-        if not self.recipients:
-            issues.append('No recipients specified')
-        status = ModuleStatus.HEALTHY if health_score >= 0.9 else ModuleStatus.WARNING
-        return ModuleHealth(module_id=self.module_id, status=status, health_score=health_score, issues=issues, capabilities=self.get_capabilities(), dependencies=self.get_dependencies(), metrics=self.get_metrics(), last_check=datetime.now())
-
-    def _calculate_health_score(self) -> float:
-        """Calculate health score."""
-        score = 1.0
-        if self._errors > 0:
-            score -= min(0.5, self._errors * 0.1)
-        if not self.message_id:
-            score -= 0.3
-        if not self.title:
-            score -= 0.2
-        if not self.content:
-            score -= 0.2
-        if not self.recipients:
-            score -= 0.2
-        return max(0.0, score)
-
-    def _identify_health_issues(self) -> List[str]:
-        """Identify health issues."""
-        issues = []
-        if self._errors > 0:
-            issues.append(f'Internal errors: {self._errors}')
-        if not self.message_id:
-            issues.append('Missing message ID')
-        if not self.title:
-            issues.append('Missing message title')
-        if not self.content:
-            issues.append('Missing message content')
-        if not self.recipients:
-            issues.append('Missing recipients')
-        return issues
-
-    def get_configuration(self) -> Dict[str, Any]:
-        """Get module configuration."""
-        return {'max_title_length': 200, 'max_content_length': 5000, 'max_recipients': 100, 'valid_priorities': ['low', 'normal', 'high', 'urgent'], 'valid_statuses': ['pending', 'sent', 'failed', 'cancelled']}
-
-    def update_configuration(self, config: Dict[str, Any]) -> bool:
-        """Update module configuration."""
-        try:
-            return True
-        except Exception as e:
-            logger.error(f'Failed to update configuration: {e}')
-            return False
-
-    def get_metrics(self) -> Dict[str, Any]:
-        """Get module metrics."""
-        return {'operation_count': self._operation_count, 'error_count': self._errors, 'message_id': self.message_id, 'status': self.status, 'recipient_count': len(self.recipients), 'priority': self.priority, 'created_at': self.created_at.isoformat(), 'sent_at': self.sent_at.isoformat() if self.sent_at else None}
-
-    def reset_metrics(self) -> None:
-        """Reset module metrics."""
-        self._operation_count = 0
-        self._errors = 0
-
-    def mark_as_sent(self) -> bool:
-        """Mark message as sent."""
-        try:
-            self.status = 'sent'
-            self.sent_at = datetime.now()
-            self._operation_count += 1
-            return True
-        except Exception as e:
-            logger.error(f'Failed to mark as sent: {e}')
-            self._errors += 1
-            return False
-
-    def mark_as_failed(self) -> bool:
-        """Mark message as failed."""
-        try:
-            self.status = 'failed'
-            self._operation_count += 1
-            return True
-        except Exception as e:
-            logger.error(f'Failed to mark as failed: {e}')
-            self._errors += 1
-            return False
-
-    def add_recipient(self, recipient: str) -> bool:
-        """Add recipient to message."""
-        try:
-            if recipient not in self.recipients:
-                self.recipients.append(recipient)
-                self._operation_count += 1
-            return True
-        except Exception as e:
-            logger.error(f'Failed to add recipient: {e}')
-            self._errors += 1
-            return False
-
-    def remove_recipient(self, recipient: str) -> bool:
-        """Remove recipient from message."""
-        try:
-            if recipient in self.recipients:
-                self.recipients.remove(recipient)
-                self._operation_count += 1
-            return True
-        except Exception as e:
-            logger.error(f'Failed to remove recipient: {e}')
-            self._errors += 1
-            return False
-
-    def get_message_summary(self) -> Dict[str, Any]:
-        """Get message summary."""
-        return {'message_id': self.message_id, 'title': self.title, 'content': self.content[:100] + '...' if len(self.content) > 100 else self.content, 'status': self.status, 'priority': self.priority, 'recipient_count': len(self.recipients), 'created_at': self.created_at.isoformat(), 'sent_at': self.sent_at.isoformat() if self.sent_at else None}
-
-    def _update_metrics(self, operation: str) -> None:
-        """Update internal metrics."""
-        self._operation_count += 1
-        logger.debug(f'Notification message: {operation}')
-
-def __init__(self, settings_data: Dict[str, Any]=None):
-    """Initialize notification settings."""
-    super().__init__()
-    self.module_id = 'notification_settings'
-    self.version = '1.0.0'
-    self.settings_data = settings_data or self._get_default_settings()
-    self.enabled = self.settings_data.get('enabled', True)
-    self.timing = self.settings_data.get('timing', NotificationTiming.DAILY)
-    self.channels = self.settings_data.get('channels', ['email'])
-    self.quiet_hours = self.settings_data.get('quiet_hours', {'start': '22:00', 'end': '08:00'})
-    self._operation_count = 0
-    self._errors = 0
-    register_module(self)
-
-def _get_default_settings(self) -> Dict[str, Any]:
-    """Get default notification settings."""
-    return {'enabled': True, 'timing': NotificationTiming.DAILY, 'channels': ['email'], 'quiet_hours': {'start': '22:00', 'end': '08:00'}, 'max_notifications_per_day': 10, 'digest_mode': True}
-
-def get_module_info(self) -> Dict[str, Any]:
-    """Get module information."""
-    return {'module_id': self.module_id, 'version': self.version, 'enabled': self.enabled, 'timing': self.timing.value if hasattr(self.timing, 'value') else str(self.timing), 'channel_count': len(self.channels)}
-
-def get_capabilities(self) -> List[ModuleCapability]:
-    """Get module capabilities."""
-    return [ModuleCapability.SETTINGS_MANAGEMENT, ModuleCapability.TIMING_CONTROL, ModuleCapability.CHANNEL_MANAGEMENT, ModuleCapability.PREFERENCE_CONTROL]
-
-def get_dependencies(self) -> List[str]:
-    """Get module dependencies."""
-    return ['reflective_module', 'datetime', 'typing', 'enum_models']
-
-def _calculate_health_score(self) -> float:
-    """Calculate health score."""
-    score = 1.0
-    if self._errors > 0:
-        score -= min(0.5, self._errors * 0.1)
-    if not self.channels:
-        score -= 0.3
-    if self.enabled and (not self.channels):
-        score -= 0.2
-    return max(0.0, score)
-
-def _identify_health_issues(self) -> List[str]:
-    """Identify health issues."""
-    issues = []
-    if self._errors > 0:
-        issues.append(f'Internal errors: {self._errors}')
-    if not self.channels:
-        issues.append('No notification channels')
-    if self.enabled and (not self.channels):
-        issues.append('Enabled but no channels')
-    return issues
-
-def get_configuration(self) -> Dict[str, Any]:
-    """Get module configuration."""
-    return self.settings_data.copy()
-
-def update_configuration(self, config: Dict[str, Any]) -> bool:
-    """Update module configuration."""
-    try:
-        self.settings_data.update(config)
-        if 'enabled' in config:
-            self.enabled = config['enabled']
-        if 'timing' in config:
-            self.timing = config['timing']
-        if 'channels' in config:
-            self.channels = config['channels']
-        if 'quiet_hours' in config:
-            self.quiet_hours = config['quiet_hours']
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to update configuration: {e}')
-        self._errors += 1
-        return False
-
-def get_metrics(self) -> Dict[str, Any]:
-    """Get module metrics."""
-    return {'operation_count': self._operation_count, 'error_count': self._errors, 'enabled': self.enabled, 'channel_count': len(self.channels), 'timing': self.timing.value if hasattr(self.timing, 'value') else str(self.timing)}
-
-def reset_metrics(self) -> None:
-    """Reset module metrics."""
-    self._operation_count = 0
-    self._errors = 0
-
-def enable_notifications(self) -> bool:
-    """Enable notifications."""
-    try:
-        self.enabled = True
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to enable notifications: {e}')
-        self._errors += 1
-        return False
-
-def disable_notifications(self) -> bool:
-    """Disable notifications."""
-    try:
-        self.enabled = False
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to disable notifications: {e}')
-        self._errors += 1
-        return False
-
-def add_channel(self, channel: str) -> bool:
-    """Add notification channel."""
-    try:
-        if channel not in self.channels:
-            self.channels.append(channel)
-            self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to add channel: {e}')
-        self._errors += 1
-        return False
-
-def remove_channel(self, channel: str) -> bool:
-    """Remove notification channel."""
-    try:
-        if channel in self.channels:
-            self.channels.remove(channel)
-            self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to remove channel: {e}')
-        self._errors += 1
-        return False
-
-def set_timing(self, timing: NotificationTiming) -> bool:
-    """Set notification timing."""
-    try:
-        self.timing = timing
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to set timing: {e}')
-        self._errors += 1
-        return False
-
-def get_settings_summary(self) -> Dict[str, Any]:
-    """Get settings summary."""
-    return {'enabled': self.enabled, 'timing': self.timing.value if hasattr(self.timing, 'value') else str(self.timing), 'channels': self.channels, 'quiet_hours': self.quiet_hours}
-
-def _update_metrics(self, operation: str) -> None:
-    """Update internal metrics."""
-    self._operation_count += 1
-    logger.debug(f'Notification settings: {operation}')
-
-def __init__(self, message_data: Dict[str, Any]=None):
-    """Initialize notification message."""
-    super().__init__()
-    self.module_id = 'notification_message'
-    self.version = '1.0.0'
-    self.message_data = message_data or {}
-    self.message_id = self.message_data.get('id', '')
-    self.title = self.message_data.get('title', '')
-    self.content = self.message_data.get('content', '')
-    self.recipients = self.message_data.get('recipients', [])
-    self.priority = self.message_data.get('priority', 'normal')
-    self.status = self.message_data.get('status', 'pending')
-    self.created_at = datetime.now()
-    self.sent_at = None
-    self._operation_count = 0
-    self._errors = 0
-    register_module(self)
-
-def get_module_info(self) -> Dict[str, Any]:
-    """Get module information."""
-    return {'module_id': self.module_id, 'version': self.version, 'message_id': self.message_id, 'title': self.title, 'status': self.status, 'recipient_count': len(self.recipients)}
-
-def get_capabilities(self) -> List[ModuleCapability]:
-    """Get module capabilities."""
-    return [ModuleCapability.MESSAGE_MANAGEMENT, ModuleCapability.DELIVERY_TRACKING, ModuleCapability.RECIPIENT_MANAGEMENT]
-
-def get_dependencies(self) -> List[str]:
-    """Get module dependencies."""
-    return ['reflective_module', 'datetime', 'typing']
-
-def _calculate_health_score(self) -> float:
-    """Calculate health score."""
-    score = 1.0
-    if self._errors > 0:
-        score -= min(0.5, self._errors * 0.1)
-    if not self.message_id:
-        score -= 0.3
-    if not self.title:
-        score -= 0.2
-    if not self.content:
-        score -= 0.2
-    if not self.recipients:
-        score -= 0.2
-    return max(0.0, score)
-
-def _identify_health_issues(self) -> List[str]:
-    """Identify health issues."""
-    issues = []
-    if self._errors > 0:
-        issues.append(f'Internal errors: {self._errors}')
-    if not self.message_id:
-        issues.append('Missing message ID')
-    if not self.title:
-        issues.append('Missing message title')
-    if not self.content:
-        issues.append('Missing message content')
-    if not self.recipients:
-        issues.append('Missing recipients')
-    return issues
-
-def get_configuration(self) -> Dict[str, Any]:
-    """Get module configuration."""
-    return {'max_title_length': 200, 'max_content_length': 5000, 'max_recipients': 100, 'valid_priorities': ['low', 'normal', 'high', 'urgent'], 'valid_statuses': ['pending', 'sent', 'failed', 'cancelled']}
-
-def update_configuration(self, config: Dict[str, Any]) -> bool:
-    """Update module configuration."""
-    try:
-        return True
-    except Exception as e:
-        logger.error(f'Failed to update configuration: {e}')
-        return False
-
-def get_metrics(self) -> Dict[str, Any]:
-    """Get module metrics."""
-    return {'operation_count': self._operation_count, 'error_count': self._errors, 'message_id': self.message_id, 'status': self.status, 'recipient_count': len(self.recipients), 'priority': self.priority, 'created_at': self.created_at.isoformat(), 'sent_at': self.sent_at.isoformat() if self.sent_at else None}
-
-def reset_metrics(self) -> None:
-    """Reset module metrics."""
-    self._operation_count = 0
-    self._errors = 0
-
-def mark_as_sent(self) -> bool:
-    """Mark message as sent."""
-    try:
-        self.status = 'sent'
-        self.sent_at = datetime.now()
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to mark as sent: {e}')
-        self._errors += 1
-        return False
-
-def mark_as_failed(self) -> bool:
-    """Mark message as failed."""
-    try:
-        self.status = 'failed'
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to mark as failed: {e}')
-        self._errors += 1
-        return False
-
-def add_recipient(self, recipient: str) -> bool:
-    """Add recipient to message."""
-    try:
-        if recipient not in self.recipients:
-            self.recipients.append(recipient)
-            self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to add recipient: {e}')
-        self._errors += 1
-        return False
-
-def remove_recipient(self, recipient: str) -> bool:
-    """Remove recipient from message."""
-    try:
-        if recipient in self.recipients:
-            self.recipients.remove(recipient)
-            self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to remove recipient: {e}')
-        self._errors += 1
-        return False
-
-def get_message_summary(self) -> Dict[str, Any]:
-    """Get message summary."""
-    return {'message_id': self.message_id, 'title': self.title, 'content': self.content[:100] + '...' if len(self.content) > 100 else self.content, 'status': self.status, 'priority': self.priority, 'recipient_count': len(self.recipients), 'created_at': self.created_at.isoformat(), 'sent_at': self.sent_at.isoformat() if self.sent_at else None}
-
-def _update_metrics(self, operation: str) -> None:
-    """Update internal metrics."""
-    self._operation_count += 1
-    logger.debug(f'Notification message: {operation}')
-
-def __init__(self, settings_data: Dict[str, Any]=None):
-    """Initialize notification settings."""
-    super().__init__()
-    self.module_id = 'notification_settings'
-    self.version = '1.0.0'
-    self.settings_data = settings_data or self._get_default_settings()
-    self.enabled = self.settings_data.get('enabled', True)
-    self.timing = self.settings_data.get('timing', NotificationTiming.DAILY)
-    self.channels = self.settings_data.get('channels', ['email'])
-    self.quiet_hours = self.settings_data.get('quiet_hours', {'start': '22:00', 'end': '08:00'})
-    self._operation_count = 0
-    self._errors = 0
-    register_module(self)
-
-def _get_default_settings(self) -> Dict[str, Any]:
-    """Get default notification settings."""
-    return {'enabled': True, 'timing': NotificationTiming.DAILY, 'channels': ['email'], 'quiet_hours': {'start': '22:00', 'end': '08:00'}, 'max_notifications_per_day': 10, 'digest_mode': True}
-
-def get_module_info(self) -> Dict[str, Any]:
-    """Get module information."""
-    return {'module_id': self.module_id, 'version': self.version, 'enabled': self.enabled, 'timing': self.timing.value if hasattr(self.timing, 'value') else str(self.timing), 'channel_count': len(self.channels)}
-
-def get_capabilities(self) -> List[ModuleCapability]:
-    """Get module capabilities."""
-    return [ModuleCapability.SETTINGS_MANAGEMENT, ModuleCapability.TIMING_CONTROL, ModuleCapability.CHANNEL_MANAGEMENT, ModuleCapability.PREFERENCE_CONTROL]
-
-def get_dependencies(self) -> List[str]:
-    """Get module dependencies."""
-    return ['reflective_module', 'datetime', 'typing', 'enum_models']
-
-def _calculate_health_score(self) -> float:
-    """Calculate health score."""
-    score = 1.0
-    if self._errors > 0:
-        score -= min(0.5, self._errors * 0.1)
-    if not self.channels:
-        score -= 0.3
-    if self.enabled and (not self.channels):
-        score -= 0.2
-    return max(0.0, score)
-
-def _identify_health_issues(self) -> List[str]:
-    """Identify health issues."""
-    issues = []
-    if self._errors > 0:
-        issues.append(f'Internal errors: {self._errors}')
-    if not self.channels:
-        issues.append('No notification channels')
-    if self.enabled and (not self.channels):
-        issues.append('Enabled but no channels')
-    return issues
-
-def get_configuration(self) -> Dict[str, Any]:
-    """Get module configuration."""
-    return self.settings_data.copy()
-
-def update_configuration(self, config: Dict[str, Any]) -> bool:
-    """Update module configuration."""
-    try:
-        self.settings_data.update(config)
-        if 'enabled' in config:
-            self.enabled = config['enabled']
-        if 'timing' in config:
-            self.timing = config['timing']
-        if 'channels' in config:
-            self.channels = config['channels']
-        if 'quiet_hours' in config:
-            self.quiet_hours = config['quiet_hours']
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to update configuration: {e}')
-        self._errors += 1
-        return False
-
-def get_metrics(self) -> Dict[str, Any]:
-    """Get module metrics."""
-    return {'operation_count': self._operation_count, 'error_count': self._errors, 'enabled': self.enabled, 'channel_count': len(self.channels), 'timing': self.timing.value if hasattr(self.timing, 'value') else str(self.timing)}
-
-def reset_metrics(self) -> None:
-    """Reset module metrics."""
-    self._operation_count = 0
-    self._errors = 0
-
-def enable_notifications(self) -> bool:
-    """Enable notifications."""
-    try:
-        self.enabled = True
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to enable notifications: {e}')
-        self._errors += 1
-        return False
-
-def disable_notifications(self) -> bool:
-    """Disable notifications."""
-    try:
-        self.enabled = False
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to disable notifications: {e}')
-        self._errors += 1
-        return False
-
-def add_channel(self, channel: str) -> bool:
-    """Add notification channel."""
-    try:
-        if channel not in self.channels:
-            self.channels.append(channel)
-            self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to add channel: {e}')
-        self._errors += 1
-        return False
-
-def remove_channel(self, channel: str) -> bool:
-    """Remove notification channel."""
-    try:
-        if channel in self.channels:
-            self.channels.remove(channel)
-            self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to remove channel: {e}')
-        self._errors += 1
-        return False
-
-def set_timing(self, timing: NotificationTiming) -> bool:
-    """Set notification timing."""
-    try:
-        self.timing = timing
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to set timing: {e}')
-        self._errors += 1
-        return False
-
-def get_settings_summary(self) -> Dict[str, Any]:
-    """Get settings summary."""
-    return {'enabled': self.enabled, 'timing': self.timing.value if hasattr(self.timing, 'value') else str(self.timing), 'channels': self.channels, 'quiet_hours': self.quiet_hours}
-
-def _update_metrics(self, operation: str) -> None:
-    """Update internal metrics."""
-    self._operation_count += 1
-    logger.debug(f'Notification settings: {operation}')
-
-def __init__(self, message_data: Dict[str, Any]=None):
-    """Initialize notification message."""
-    super().__init__()
-    self.module_id = 'notification_message'
-    self.version = '1.0.0'
-    self.message_data = message_data or {}
-    self.message_id = self.message_data.get('id', '')
-    self.title = self.message_data.get('title', '')
-    self.content = self.message_data.get('content', '')
-    self.recipients = self.message_data.get('recipients', [])
-    self.priority = self.message_data.get('priority', 'normal')
-    self.status = self.message_data.get('status', 'pending')
-    self.created_at = datetime.now()
-    self.sent_at = None
-    self._operation_count = 0
-    self._errors = 0
-    register_module(self)
-
-def get_module_info(self) -> Dict[str, Any]:
-    """Get module information."""
-    return {'module_id': self.module_id, 'version': self.version, 'message_id': self.message_id, 'title': self.title, 'status': self.status, 'recipient_count': len(self.recipients)}
-
-def get_capabilities(self) -> List[ModuleCapability]:
-    """Get module capabilities."""
-    return [ModuleCapability.MESSAGE_MANAGEMENT, ModuleCapability.DELIVERY_TRACKING, ModuleCapability.RECIPIENT_MANAGEMENT]
-
-def get_dependencies(self) -> List[str]:
-    """Get module dependencies."""
-    return ['reflective_module', 'datetime', 'typing']
-
-def _calculate_health_score(self) -> float:
-    """Calculate health score."""
-    score = 1.0
-    if self._errors > 0:
-        score -= min(0.5, self._errors * 0.1)
-    if not self.message_id:
-        score -= 0.3
-    if not self.title:
-        score -= 0.2
-    if not self.content:
-        score -= 0.2
-    if not self.recipients:
-        score -= 0.2
-    return max(0.0, score)
-
-def _identify_health_issues(self) -> List[str]:
-    """Identify health issues."""
-    issues = []
-    if self._errors > 0:
-        issues.append(f'Internal errors: {self._errors}')
-    if not self.message_id:
-        issues.append('Missing message ID')
-    if not self.title:
-        issues.append('Missing message title')
-    if not self.content:
-        issues.append('Missing message content')
-    if not self.recipients:
-        issues.append('Missing recipients')
-    return issues
-
-def get_configuration(self) -> Dict[str, Any]:
-    """Get module configuration."""
-    return {'max_title_length': 200, 'max_content_length': 5000, 'max_recipients': 100, 'valid_priorities': ['low', 'normal', 'high', 'urgent'], 'valid_statuses': ['pending', 'sent', 'failed', 'cancelled']}
-
-def update_configuration(self, config: Dict[str, Any]) -> bool:
-    """Update module configuration."""
-    try:
-        return True
-    except Exception as e:
-        logger.error(f'Failed to update configuration: {e}')
-        return False
-
-def get_metrics(self) -> Dict[str, Any]:
-    """Get module metrics."""
-    return {'operation_count': self._operation_count, 'error_count': self._errors, 'message_id': self.message_id, 'status': self.status, 'recipient_count': len(self.recipients), 'priority': self.priority, 'created_at': self.created_at.isoformat(), 'sent_at': self.sent_at.isoformat() if self.sent_at else None}
-
-def reset_metrics(self) -> None:
-    """Reset module metrics."""
-    self._operation_count = 0
-    self._errors = 0
-
-def mark_as_sent(self) -> bool:
-    """Mark message as sent."""
-    try:
-        self.status = 'sent'
-        self.sent_at = datetime.now()
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to mark as sent: {e}')
-        self._errors += 1
-        return False
-
-def mark_as_failed(self) -> bool:
-    """Mark message as failed."""
-    try:
-        self.status = 'failed'
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to mark as failed: {e}')
-        self._errors += 1
-        return False
-
-def add_recipient(self, recipient: str) -> bool:
-    """Add recipient to message."""
-    try:
-        if recipient not in self.recipients:
-            self.recipients.append(recipient)
-            self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to add recipient: {e}')
-        self._errors += 1
-        return False
-
-def remove_recipient(self, recipient: str) -> bool:
-    """Remove recipient from message."""
-    try:
-        if recipient in self.recipients:
-            self.recipients.remove(recipient)
-            self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to remove recipient: {e}')
-        self._errors += 1
-        return False
-
-def get_message_summary(self) -> Dict[str, Any]:
-    """Get message summary."""
-    return {'message_id': self.message_id, 'title': self.title, 'content': self.content[:100] + '...' if len(self.content) > 100 else self.content, 'status': self.status, 'priority': self.priority, 'recipient_count': len(self.recipients), 'created_at': self.created_at.isoformat(), 'sent_at': self.sent_at.isoformat() if self.sent_at else None}
-
-def _update_metrics(self, operation: str) -> None:
-    """Update internal metrics."""
-    self._operation_count += 1
-    logger.debug(f'Notification message: {operation}')
-
-def __init__(self, settings_data: Dict[str, Any]=None):
-    """Initialize notification settings."""
-    super().__init__()
-    self.module_id = 'notification_settings'
-    self.version = '1.0.0'
-    self.settings_data = settings_data or self._get_default_settings()
-    self.enabled = self.settings_data.get('enabled', True)
-    self.timing = self.settings_data.get('timing', NotificationTiming.DAILY)
-    self.channels = self.settings_data.get('channels', ['email'])
-    self.quiet_hours = self.settings_data.get('quiet_hours', {'start': '22:00', 'end': '08:00'})
-    self._operation_count = 0
-    self._errors = 0
-    register_module(self)
-
-def _get_default_settings(self) -> Dict[str, Any]:
-    """Get default notification settings."""
-    return {'enabled': True, 'timing': NotificationTiming.DAILY, 'channels': ['email'], 'quiet_hours': {'start': '22:00', 'end': '08:00'}, 'max_notifications_per_day': 10, 'digest_mode': True}
-
-def get_module_info(self) -> Dict[str, Any]:
-    """Get module information."""
-    return {'module_id': self.module_id, 'version': self.version, 'enabled': self.enabled, 'timing': self.timing.value if hasattr(self.timing, 'value') else str(self.timing), 'channel_count': len(self.channels)}
-
-def get_capabilities(self) -> List[ModuleCapability]:
-    """Get module capabilities."""
-    return [ModuleCapability.SETTINGS_MANAGEMENT, ModuleCapability.TIMING_CONTROL, ModuleCapability.CHANNEL_MANAGEMENT, ModuleCapability.PREFERENCE_CONTROL]
-
-def get_dependencies(self) -> List[str]:
-    """Get module dependencies."""
-    return ['reflective_module', 'datetime', 'typing', 'enum_models']
-
-def _calculate_health_score(self) -> float:
-    """Calculate health score."""
-    score = 1.0
-    if self._errors > 0:
-        score -= min(0.5, self._errors * 0.1)
-    if not self.channels:
-        score -= 0.3
-    if self.enabled and (not self.channels):
-        score -= 0.2
-    return max(0.0, score)
-
-def _identify_health_issues(self) -> List[str]:
-    """Identify health issues."""
-    issues = []
-    if self._errors > 0:
-        issues.append(f'Internal errors: {self._errors}')
-    if not self.channels:
-        issues.append('No notification channels')
-    if self.enabled and (not self.channels):
-        issues.append('Enabled but no channels')
-    return issues
-
-def get_configuration(self) -> Dict[str, Any]:
-    """Get module configuration."""
-    return self.settings_data.copy()
-
-def update_configuration(self, config: Dict[str, Any]) -> bool:
-    """Update module configuration."""
-    try:
-        self.settings_data.update(config)
-        if 'enabled' in config:
-            self.enabled = config['enabled']
-        if 'timing' in config:
-            self.timing = config['timing']
-        if 'channels' in config:
-            self.channels = config['channels']
-        if 'quiet_hours' in config:
-            self.quiet_hours = config['quiet_hours']
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to update configuration: {e}')
-        self._errors += 1
-        return False
-
-def get_metrics(self) -> Dict[str, Any]:
-    """Get module metrics."""
-    return {'operation_count': self._operation_count, 'error_count': self._errors, 'enabled': self.enabled, 'channel_count': len(self.channels), 'timing': self.timing.value if hasattr(self.timing, 'value') else str(self.timing)}
-
-def reset_metrics(self) -> None:
-    """Reset module metrics."""
-    self._operation_count = 0
-    self._errors = 0
-
-def enable_notifications(self) -> bool:
-    """Enable notifications."""
-    try:
-        self.enabled = True
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to enable notifications: {e}')
-        self._errors += 1
-        return False
-
-def disable_notifications(self) -> bool:
-    """Disable notifications."""
-    try:
-        self.enabled = False
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to disable notifications: {e}')
-        self._errors += 1
-        return False
-
-def add_channel(self, channel: str) -> bool:
-    """Add notification channel."""
-    try:
-        if channel not in self.channels:
-            self.channels.append(channel)
-            self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to add channel: {e}')
-        self._errors += 1
-        return False
-
-def remove_channel(self, channel: str) -> bool:
-    """Remove notification channel."""
-    try:
-        if channel in self.channels:
-            self.channels.remove(channel)
-            self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to remove channel: {e}')
-        self._errors += 1
-        return False
-
-def set_timing(self, timing: NotificationTiming) -> bool:
-    """Set notification timing."""
-    try:
-        self.timing = timing
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to set timing: {e}')
-        self._errors += 1
-        return False
-
-def get_settings_summary(self) -> Dict[str, Any]:
-    """Get settings summary."""
-    return {'enabled': self.enabled, 'timing': self.timing.value if hasattr(self.timing, 'value') else str(self.timing), 'channels': self.channels, 'quiet_hours': self.quiet_hours}
-
-def _update_metrics(self, operation: str) -> None:
-    """Update internal metrics."""
-    self._operation_count += 1
-    logger.debug(f'Notification settings: {operation}')
-
-def __init__(self, message_data: Dict[str, Any]=None):
-    """Initialize notification message."""
-    super().__init__()
-    self.module_id = 'notification_message'
-    self.version = '1.0.0'
-    self.message_data = message_data or {}
-    self.message_id = self.message_data.get('id', '')
-    self.title = self.message_data.get('title', '')
-    self.content = self.message_data.get('content', '')
-    self.recipients = self.message_data.get('recipients', [])
-    self.priority = self.message_data.get('priority', 'normal')
-    self.status = self.message_data.get('status', 'pending')
-    self.created_at = datetime.now()
-    self.sent_at = None
-    self._operation_count = 0
-    self._errors = 0
-    register_module(self)
-
-def get_module_info(self) -> Dict[str, Any]:
-    """Get module information."""
-    return {'module_id': self.module_id, 'version': self.version, 'message_id': self.message_id, 'title': self.title, 'status': self.status, 'recipient_count': len(self.recipients)}
-
-def get_capabilities(self) -> List[ModuleCapability]:
-    """Get module capabilities."""
-    return [ModuleCapability.MESSAGE_MANAGEMENT, ModuleCapability.DELIVERY_TRACKING, ModuleCapability.RECIPIENT_MANAGEMENT]
-
-def get_dependencies(self) -> List[str]:
-    """Get module dependencies."""
-    return ['reflective_module', 'datetime', 'typing']
-
-def _calculate_health_score(self) -> float:
-    """Calculate health score."""
-    score = 1.0
-    if self._errors > 0:
-        score -= min(0.5, self._errors * 0.1)
-    if not self.message_id:
-        score -= 0.3
-    if not self.title:
-        score -= 0.2
-    if not self.content:
-        score -= 0.2
-    if not self.recipients:
-        score -= 0.2
-    return max(0.0, score)
-
-def _identify_health_issues(self) -> List[str]:
-    """Identify health issues."""
-    issues = []
-    if self._errors > 0:
-        issues.append(f'Internal errors: {self._errors}')
-    if not self.message_id:
-        issues.append('Missing message ID')
-    if not self.title:
-        issues.append('Missing message title')
-    if not self.content:
-        issues.append('Missing message content')
-    if not self.recipients:
-        issues.append('Missing recipients')
-    return issues
-
-def get_configuration(self) -> Dict[str, Any]:
-    """Get module configuration."""
-    return {'max_title_length': 200, 'max_content_length': 5000, 'max_recipients': 100, 'valid_priorities': ['low', 'normal', 'high', 'urgent'], 'valid_statuses': ['pending', 'sent', 'failed', 'cancelled']}
-
-def update_configuration(self, config: Dict[str, Any]) -> bool:
-    """Update module configuration."""
-    try:
-        return True
-    except Exception as e:
-        logger.error(f'Failed to update configuration: {e}')
-        return False
-
-def get_metrics(self) -> Dict[str, Any]:
-    """Get module metrics."""
-    return {'operation_count': self._operation_count, 'error_count': self._errors, 'message_id': self.message_id, 'status': self.status, 'recipient_count': len(self.recipients), 'priority': self.priority, 'created_at': self.created_at.isoformat(), 'sent_at': self.sent_at.isoformat() if self.sent_at else None}
-
-def reset_metrics(self) -> None:
-    """Reset module metrics."""
-    self._operation_count = 0
-    self._errors = 0
-
-def mark_as_sent(self) -> bool:
-    """Mark message as sent."""
-    try:
-        self.status = 'sent'
-        self.sent_at = datetime.now()
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to mark as sent: {e}')
-        self._errors += 1
-        return False
-
-def mark_as_failed(self) -> bool:
-    """Mark message as failed."""
-    try:
-        self.status = 'failed'
-        self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to mark as failed: {e}')
-        self._errors += 1
-        return False
-
-def add_recipient(self, recipient: str) -> bool:
-    """Add recipient to message."""
-    try:
-        if recipient not in self.recipients:
-            self.recipients.append(recipient)
-            self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to add recipient: {e}')
-        self._errors += 1
-        return False
-
-def remove_recipient(self, recipient: str) -> bool:
-    """Remove recipient from message."""
-    try:
-        if recipient in self.recipients:
-            self.recipients.remove(recipient)
-            self._operation_count += 1
-        return True
-    except Exception as e:
-        logger.error(f'Failed to remove recipient: {e}')
-        self._errors += 1
-        return False
-
-def get_message_summary(self) -> Dict[str, Any]:
-    """Get message summary."""
-    return {'message_id': self.message_id, 'title': self.title, 'content': self.content[:100] + '...' if len(self.content) > 100 else self.content, 'status': self.status, 'priority': self.priority, 'recipient_count': len(self.recipients), 'created_at': self.created_at.isoformat(), 'sent_at': self.sent_at.isoformat() if self.sent_at else None}
-
-def _update_metrics(self, operation: str) -> None:
-    """Update internal metrics."""
-    self._operation_count += 1
-    logger.debug(f'Notification message: {operation}')
-
-
-
-
-
-
-
-
-
+from .notification_models_notificationmessage_notificationmessage_part_1 import *
+from .notification_models_notificationmessage_notificationmessage_part_2 import *
+from .notification_models_notificationmessage_notificationmessage_part_3 import *
+from .notification_models_notificationmessage_notificationmessage_part_4 import *
+from .notification_models_notificationmessage_notificationmessage_part_5 import *
+from .notification_models_notificationmessage_notificationmessage_part_6 import *
+from .notification_models_notificationmessage_notificationmessage_part_7 import *
+from .notification_models_notificationmessage_notificationmessage_part_8 import *
+from .notification_models_notificationmessage_notificationmessage_part_9 import *
+from .notification_models_notificationmessage_notificationmessage_part_10 import *
+from .notification_models_notificationmessage_notificationmessage_part_11 import *
+from .notification_models_notificationmessage_notificationmessage_part_12 import *
+from .notification_models_notificationmessage_notificationmessage_part_13 import *
+from .notification_models_notificationmessage_notificationmessage_part_14 import *
+from .notification_models_notificationmessage_notificationmessage_part_15 import *
+from .notification_models_notificationmessage_notificationmessage_part_16 import *
+from .notification_models_notificationmessage_notificationmessage_part_17 import *
+from .notification_models_notificationmessage_notificationmessage_part_18 import *
+from .notification_models_notificationmessage_notificationmessage_part_19 import *
+from .notification_models_notificationmessage_notificationmessage_part_20 import *
+from .notification_models_notificationmessage_notificationmessage_part_21 import *
+from .notification_models_notificationmessage_notificationmessage_part_22 import *
+from .notification_models_notificationmessage_notificationmessage_part_23 import *
+from .notification_models_notificationmessage_notificationmessage_part_24 import *
+from .notification_models_notificationmessage_notificationmessage_part_25 import *
+from .notification_models_notificationmessage_notificationmessage_part_26 import *
+from .notification_models_notificationmessage_notificationmessage_part_27 import *
+from .notification_models_notificationmessage_notificationmessage_part_28 import *
+from .notification_models_notificationmessage_notificationmessage_part_29 import *
+from .notification_models_notificationmessage_notificationmessage_part_30 import *
+from .notification_models_notificationmessage_notificationmessage_part_31 import *
+from .notification_models_notificationmessage_notificationmessage_part_32 import *
+from .notification_models_notificationmessage_notificationmessage_part_33 import *
+from .notification_models_notificationmessage_notificationmessage_part_34 import *
+from .notification_models_notificationmessage_notificationmessage_part_35 import *
+from .notification_models_notificationmessage_notificationmessage_part_36 import *
+from .notification_models_notificationmessage_notificationmessage_part_37 import *
+from .notification_models_notificationmessage_notificationmessage_part_38 import *
+from .notification_models_notificationmessage_notificationmessage_part_39 import *
+from .notification_models_notificationmessage_notificationmessage_part_40 import *
+from .notification_models_notificationmessage_notificationmessage_part_41 import *
+from .notification_models_notificationmessage_notificationmessage_part_42 import *
+from .notification_models_notificationmessage_notificationmessage_part_43 import *
+from .notification_models_notificationmessage_notificationmessage_part_44 import *
+from .notification_models_notificationmessage_notificationmessage_part_45 import *
+from .notification_models_notificationmessage_notificationmessage_part_46 import *
+from .notification_models_notificationmessage_notificationmessage_part_47 import *
+from .notification_models_notificationmessage_notificationmessage_part_48 import *
+from .notification_models_notificationmessage_notificationmessage_part_49 import *
+from .notification_models_notificationmessage_notificationmessage_part_50 import *
+from .notification_models_notificationmessage_notificationmessage_part_51 import *
+from .notification_models_notificationmessage_notificationmessage_part_52 import *
+from .notification_models_notificationmessage_notificationmessage_part_53 import *
+from .notification_models_notificationmessage_notificationmessage_part_54 import *
+from .notification_models_notificationmessage_notificationmessage_part_55 import *
+from .notification_models_notificationmessage_notificationmessage_part_56 import *
+from .notification_models_notificationmessage_notificationmessage_part_57 import *
+from .notification_models_notificationmessage_notificationmessage_part_58 import *
+from .notification_models_notificationmessage_notificationmessage_part_59 import *
+from .notification_models_notificationmessage_notificationmessage_part_60 import *
+from .notification_models_notificationmessage_notificationmessage_part_61 import *
+from .notification_models_notificationmessage_notificationmessage_part_62 import *
+from .notification_models_notificationmessage_notificationmessage_part_63 import *
+from .notification_models_notificationmessage_notificationmessage_part_64 import *
+from .notification_models_notificationmessage_notificationmessage_part_65 import *
+from .notification_models_notificationmessage_notificationmessage_part_66 import *
+from .notification_models_notificationmessage_notificationmessage_part_67 import *
+from .notification_models_notificationmessage_notificationmessage_part_68 import *
+from .notification_models_notificationmessage_notificationmessage_part_69 import *
+from .notification_models_notificationmessage_notificationmessage_part_70 import *
+from .notification_models_notificationmessage_notificationmessage_part_71 import *
+from .notification_models_notificationmessage_notificationmessage_part_72 import *
+from .notification_models_notificationmessage_notificationmessage_part_73 import *
+from .notification_models_notificationmessage_notificationmessage_part_74 import *
+from .notification_models_notificationmessage_notificationmessage_part_75 import *
+from .notification_models_notificationmessage_notificationmessage_part_76 import *
+from .notification_models_notificationmessage_notificationmessage_part_77 import *
+from .notification_models_notificationmessage_notificationmessage_part_78 import *
+from .notification_models_notificationmessage_notificationmessage_part_79 import *
+from .notification_models_notificationmessage_notificationmessage_part_80 import *
+from .notification_models_notificationmessage_notificationmessage_part_81 import *
+from .notification_models_notificationmessage_notificationmessage_part_82 import *
+from .notification_models_notificationmessage_notificationmessage_part_83 import *
+from .notification_models_notificationmessage_notificationmessage_part_84 import *
+from .notification_models_notificationmessage_notificationmessage_part_85 import *
+from .notification_models_notificationmessage_notificationmessage_part_86 import *
+from .notification_models_notificationmessage_notificationmessage_part_87 import *
+from .notification_models_notificationmessage_notificationmessage_part_88 import *
+from .notification_models_notificationmessage_notificationmessage_part_89 import *
+from .notification_models_notificationmessage_notificationmessage_part_90 import *
+from .notification_models_notificationmessage_notificationmessage_part_91 import *
+from .notification_models_notificationmessage_notificationmessage_part_92 import *
+from .notification_models_notificationmessage_notificationmessage_part_93 import *
+from .notification_models_notificationmessage_notificationmessage_part_94 import *
+from .notification_models_notificationmessage_notificationmessage_part_95 import *
+from .notification_models_notificationmessage_notificationmessage_part_96 import *
+from .notification_models_notificationmessage_notificationmessage_part_97 import *
+from .notification_models_notificationmessage_notificationmessage_part_98 import *
+from .notification_models_notificationmessage_notificationmessage_part_99 import *
+from .notification_models_notificationmessage_notificationmessage_part_100 import *
+from .notification_models_notificationmessage_notificationmessage_part_101 import *
+from .notification_models_notificationmessage_notificationmessage_part_102 import *
+from .notification_models_notificationmessage_notificationmessage_part_103 import *
+from .notification_models_notificationmessage_notificationmessage_part_104 import *
+from .notification_models_notificationmessage_notificationmessage_part_105 import *
+from .notification_models_notificationmessage_notificationmessage_part_106 import *
+from .notification_models_notificationmessage_notificationmessage_part_107 import *
+from .notification_models_notificationmessage_notificationmessage_part_108 import *
+from .notification_models_notificationmessage_notificationmessage_part_109 import *
+from .notification_models_notificationmessage_notificationmessage_part_110 import *
+from .notification_models_notificationmessage_notificationmessage_part_111 import *
+from .notification_models_notificationmessage_notificationmessage_part_112 import *
+from .notification_models_notificationmessage_notificationmessage_part_113 import *
+from .notification_models_notificationmessage_notificationmessage_part_114 import *
+from .notification_models_notificationmessage_notificationmessage_part_115 import *
+from .notification_models_notificationmessage_notificationmessage_part_116 import *
+from .notification_models_notificationmessage_notificationmessage_part_117 import *
+from .notification_models_notificationmessage_notificationmessage_part_118 import *
+from .notification_models_notificationmessage_notificationmessage_part_119 import *
+from .notification_models_notificationmessage_notificationmessage_part_120 import *
+from .notification_models_notificationmessage_notificationmessage_part_121 import *
+from .notification_models_notificationmessage_notificationmessage_part_122 import *
+from .notification_models_notificationmessage_notificationmessage_part_123 import *
+from .notification_models_notificationmessage_notificationmessage_part_124 import *

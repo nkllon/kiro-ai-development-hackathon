@@ -1,0 +1,4 @@
+
+def get_dependencies(self) -> List[str]:
+    """Get module dependencies."""
+    return ['reflective_module', 'typing']

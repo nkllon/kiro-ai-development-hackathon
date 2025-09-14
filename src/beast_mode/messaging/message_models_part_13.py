@@ -1,0 +1,36 @@
+from datetime import datetime
+from typing import Dict, List, Any
+
+    def update_health_status(self, status: str):
+        """Update module health status."""
+        self.health_status = status
+        self.last_updated = datetime.now().isoformat()
+
+"""
+Message Models Core Core Core
+
+This module was extracted from message_models_core_core.py
+as part of RM-DDD compliance refactoring.
+"""
+
+"""
+Message_Models - Consolidated Interface Definition
+
+This file was consolidated from the core_core_core refactoring mess.
+All duplicate definitions have been removed and this is now the single
+authoritative source for message_models.
+
+Consolidated from: /Users/lou/kiro-2/kiro-ai-development-hackathon/src/beast_mode/messaging/message_models_core_core_core.py
+Consolidation date: 2025-09-13T10:15:07.486622
+"""
+
+
+
+import json
+import time
+from datetime import datetime
+from enum import Enum
+from typing import Dict, List, Optional, Any, Union
+from dataclasses import dataclass, field
+from uuid import uuid4
+from pydantic import BaseModel, Field, validator

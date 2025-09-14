@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class CommandFactory(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -53,3 +54,5 @@ def get_health_indicators(self) -> Dict[str, any]:
             raise
         """Register a new command type."""
         cls._command_registry[command_type] = command_class
+    def __init__(self):
+        register_module('CommandFactory', self)

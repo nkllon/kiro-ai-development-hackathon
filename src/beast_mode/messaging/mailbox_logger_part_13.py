@@ -1,0 +1,39 @@
+from datetime import datetime
+from typing import Dict, List, Any
+
+    def update_health_status(self, status: str):
+        """Update module health status."""
+        self.health_status = status
+        self.last_updated = datetime.now().isoformat()
+
+"""
+Mailbox Logger Core Core Core
+
+This module was extracted from mailbox_logger_core_core.py
+as part of RM-DDD compliance refactoring.
+"""
+
+"""
+Mailbox_Logger - Consolidated Interface Definition
+
+This file was consolidated from the core_core_core refactoring mess.
+All duplicate definitions have been removed and this is now the single
+authoritative source for mailbox_logger.
+
+Consolidated from: /Users/lou/kiro-2/kiro-ai-development-hackathon/src/beast_mode/messaging/mailbox_logger_core_core_core.py
+Consolidation date: 2025-09-13T10:15:07.482406
+"""
+
+
+
+import asyncio
+import json
+import logging
+import os
+import threading
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Set
+import redis.asyncio as redis
+from redis.exceptions import ConnectionError, TimeoutError
+from .models import BeastModeMessage, MessageType

@@ -1,7 +1,18 @@
+from src.rm_ddd.core.health import ModuleHealth, ModuleStatus
+from src.rm_ddd.core.registry import register_module
         class OrderCreated(DomainEvent):
             def __init__(self, order_id: str, customer_id: str):
+        register_module(self.__class__.__name__, self)
                 super().__init__(order_id)
                 self.customer_id = customer_id
+    ModuleHealth = ModuleHealth.HEALTHY
+    ModuleStatus = ModuleStatus.ACTIVE
+
+    def check_health(self):
+        return {
+            'status': self.ModuleStatus,
+            'health': self.ModuleHealth
+        }
     """
 
     def decorator(cls: Type[T]) -> Type[T]:

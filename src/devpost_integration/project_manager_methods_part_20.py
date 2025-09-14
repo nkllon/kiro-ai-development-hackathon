@@ -1,0 +1,19 @@
+from .reflective_module import ReflectiveModule, register_module, ModuleCapability, ModuleHealth, ModuleStatus, ModuleConfiguration
+from datetime import datetime
+from typing import Dict, Any, List, Optional
+from pathlib import Pathfrom ..interfaces.projectstatus_interface import ProjectStatusfrom ..interfaces.devpostprojectmanager_interface import DevpostProjectManager
+import logging
+
+    def __init__(self, connected: bool = False):
+        super().__init__(module_id="project_status", version="1.0.0")
+        self._start_time = datetime.now()
+        register_module(self)
+        
+        self.connected = connected
+        self.project_id = None
+        self.project_name = None
+        self.local_path = None
+        self.last_sync = None
+        self.pending_changes = []
+        self.validation_errors = []
+    

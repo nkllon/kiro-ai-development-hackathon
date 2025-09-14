@@ -1,0 +1,25 @@
+from datetime import datetime
+from typing import Dict, List, Any
+
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
+    """Technical debt analysis results - READ-ONLY"""
+    analysis_id: str
+    timestamp: datetime
+    total_debt_score: float
+    size_violations: List[SizeViolation]
+    refactoring_opportunities: List[RefactoringOpportunity]
+    performance_debt: List[PerformanceDebt]
+    documentation_debt: List[DocumentationDebt]
+    total_files_analyzed: int
+    debt_trend: str
+
+@dataclass(frozen=True)

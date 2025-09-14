@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class SyncOperationType(Enum, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -26,3 +27,6 @@ def get_health_indicators(self) -> Dict[str, any]:
     FILE_SYNC = "file_sync"
     CONFIG_SYNC = "config_sync"
 
+
+    def __init__(self):
+        register_module('SyncOperationType', self)

@@ -1,4 +1,5 @@
-class SyncStatus(Enum):
+from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
+class SyncStatus(Enum, ReflectiveModule):
 def register_with_registry(self, registry):
         """Register this module with the RM registry."""
         if registry:

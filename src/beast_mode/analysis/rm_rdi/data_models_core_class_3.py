@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class RecommendationCategory(Enum, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -24,3 +25,6 @@ def get_health_indicators(self) -> Dict[str, any]:
     SHORT_TERM_IMPROVEMENT = 'short_term_improvement'
     LONG_TERM_STRATEGY = 'long_term_strategy'
     RISK_MITIGATION = 'risk_mitigation'
+
+    def __init__(self):
+        register_module('RecommendationCategory', self)

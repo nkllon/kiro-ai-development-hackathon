@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class InterfaceMetadata(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -28,3 +29,6 @@ def get_health_indicators(self) -> Dict[str, any]:
     methods: List[str]
     created_at: datetime
     compliance_score: float
+
+    def __init__(self):
+        register_module('InterfaceMetadata', self)

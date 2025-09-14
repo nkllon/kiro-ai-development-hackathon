@@ -1,0 +1,8 @@
+
+        def domain_loader(domain_name: str) -> Optional[Domain]:
+            return self._domains.get(domain_name)
+        priority_domains = domain_names[:20]
+        warmed_count = self._domain_cache.warm_domains(domain_loader, priority_domains)
+        self.logger.debug(f'Warmed cache with {warmed_count} domains')
+    except Exception as e:
+        self.logger.warning(f'Failed to warm cache: {e}')

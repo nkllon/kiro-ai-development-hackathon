@@ -1,0 +1,11 @@
+from src.rm_ddd.core.registry import register_module
+
+    def _check_sql_injection(self, content: str, file_path: Path) -> List[Finding]:
+        """Check for SQL injection vulnerabilities"""
+        findings = []
+        lines = content.splitlines()
+        for line_num, line in enumerate(lines, 1):
+            for pattern in self.sql_injection_patterns:
+                if re.search(pattern, line, re.IGNORECASE):
+                    findings.append(Finding(type=FindingType.SECURITY_VULNERABILITY, severity=Severity.HIGH, location=CodeLocation(str(file_path), line_num), description='Potential SQL injection vulnerability detected', confidence=0.8, evidence={'vulnerability_type': 'sql_injection', 'pattern_matched': pattern, 'line_content': line.strip()}))
+        return findings

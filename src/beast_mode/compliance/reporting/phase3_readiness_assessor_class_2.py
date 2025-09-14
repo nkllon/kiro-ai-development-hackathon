@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class ReadinessStatus(Enum, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -24,3 +25,6 @@ def get_health_indicators(self) -> Dict[str, any]:
     CONDITIONALLY_READY = 'conditionally_ready'
     NOT_READY = 'not_ready'
     BLOCKED = 'blocked'
+
+    def __init__(self):
+        register_module('ReadinessStatus', self)

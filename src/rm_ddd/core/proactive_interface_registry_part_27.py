@@ -1,0 +1,28 @@
+from datetime import datetime
+from typing import Dict, List, Any
+
+    def register_interface(self, interface: InterfaceMetadata) -> bool:
+        """Enhanced interface registration with proactive checks"""
+        # Run proactive checks before registration
+        health_check = self.run_interface_health_check(interface)
+        
+        if health_check.health_score < 0.7:
+            print(f"⚠️  Interface health score below threshold: {health_check.health_score}")
+            for issue in health_check.issues:
+                print(f"   - {issue}")
+            for recommendation in health_check.recommendations:
+                print(f"   - {recommendation}")
+        
+        # Check for potential duplicates using rules
+        duplicate_warnings = self.check_duplicate_prevention_rules(interface)
+        for warning in duplicate_warnings:
+            print(f"⚠️  {warning}")
+        
+        # Proceed with registration
+        success = super().register_interface(interface)
+        if success:
+            self.health_checks[interface.interface_id] = health_check
+            self.save_health_checks()
+        
+        return success
+    

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class ComplianceSystem(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -138,5 +139,6 @@ def get_health_indicators(self) -> Dict[str, any]:
         
         return standards_checks
 
+        register_module(self.__class__.__name__, self)
 # Global compliance system instance
 compliance_system = ComplianceSystem()

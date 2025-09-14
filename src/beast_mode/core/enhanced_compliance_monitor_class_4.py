@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class EnhancedComplianceMonitor(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -161,6 +162,7 @@ def get_health_indicators(self) -> Dict[str, any]:
         with open(file_path, 'w') as f:
             json.dump(report_data, f, indent=2)
 
+        register_module(self.__class__.__name__, self)
 # Global instance
 def get_compliance_monitor() -> EnhancedComplianceMonitor:
     """Get global compliance monitor instance"""

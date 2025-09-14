@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class Agent(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -26,3 +27,6 @@ def get_health_indicators(self) -> Dict[str, any]:
     max_concurrent_tasks: int = 1
     current_tasks: int = 0
     is_available: bool = True
+
+    def __init__(self):
+        register_module('Agent', self)

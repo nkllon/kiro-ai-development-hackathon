@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class ContentType(Enum, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -29,3 +30,6 @@ def get_health_indicators(self) -> Dict[str, any]:
     XML = "xml"
     BINARY = "binary"
 
+
+    def __init__(self):
+        register_module('ContentType', self)

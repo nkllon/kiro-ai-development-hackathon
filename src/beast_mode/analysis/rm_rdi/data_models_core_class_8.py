@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class ArchitectureAnalysis(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -32,3 +33,5 @@ def get_health_indicators(self) -> Dict[str, any]:
     safety_validated: bool = True
 
 @dataclass(frozen=True)
+    def __init__(self):
+        register_module('ArchitectureAnalysis', self)

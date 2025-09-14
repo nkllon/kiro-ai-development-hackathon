@@ -1,4 +1,5 @@
-class AgentType(Enum):
+from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
+class AgentType(Enum, ReflectiveModule):
 def register_with_registry(self, registry):
         """Register this module with the RM registry."""
         if registry:

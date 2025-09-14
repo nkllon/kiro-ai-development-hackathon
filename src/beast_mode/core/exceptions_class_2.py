@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class InterfaceType(Enum, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -24,3 +25,6 @@ def get_health_indicators(self) -> Dict[str, any]:
     DOMAIN_SERVICE = "domain_service"
     INFRASTRUCTURE = "infrastructure"
     APPLICATION_SERVICE = "application_service"
+
+    def __init__(self):
+        register_module('InterfaceType', self)

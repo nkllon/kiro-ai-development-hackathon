@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class EnhancedInterfaceRegistry(InterfaceRegistry, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -175,5 +176,6 @@ def get_health_indicators(self) -> Dict[str, any]:
         recommendations.sort(key=lambda x: x['recommendation_score'], reverse=True)
         return recommendations[:10]
 
+        register_module(self.__class__.__name__, self)
 # Global enhanced registry instance
 enhanced_registry = EnhancedInterfaceRegistry()

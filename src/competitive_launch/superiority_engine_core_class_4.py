@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class ROICalculation(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -30,3 +31,5 @@ def get_health_indicators(self) -> Dict[str, any]:
     calculation_date: datetime = field(default_factory=datetime.now)
 
 @dataclass
+    def __init__(self):
+        register_module('ROICalculation', self)

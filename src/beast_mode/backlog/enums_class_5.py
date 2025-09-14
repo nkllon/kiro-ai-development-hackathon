@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class BeastReadinessStatus(Enum, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -28,3 +29,6 @@ def get_health_indicators(self) -> Dict[str, any]:
     COMPLETED = "completed"
     BLOCKED = "blocked"
 
+
+    def __init__(self):
+        register_module('BeastReadinessStatus', self)

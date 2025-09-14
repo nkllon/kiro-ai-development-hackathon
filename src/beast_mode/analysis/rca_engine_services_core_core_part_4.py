@@ -1,0 +1,4 @@
+
+def get_health_indicators(self) -> Dict[str, Any]:
+    """Detailed health metrics for operational visibility"""
+    return {'rca_capability': {'status': 'healthy' if not self._degradation_active else 'degraded', 'analyses_completed': self.rca_count, 'fix_success_rate': self.successful_fixes / max(1, self.rca_count)}, 'pattern_library': {'status': 'healthy' if len(self.pattern_library) > 0 else 'degraded', 'pattern_count': len(self.pattern_library), 'pattern_match_rate': self.pattern_matches / max(1, self.rca_count)}, 'performance': {'status': 'healthy' if self.total_analysis_time / max(1, self.rca_count) < 30 else 'degraded', 'average_analysis_time': self.total_analysis_time / max(1, self.rca_count), 'pattern_matching_performance': 'sub_second' if len(self.pattern_library) < 10000 else 'optimized'}}

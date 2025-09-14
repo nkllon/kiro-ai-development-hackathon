@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class ValidationError(Exception, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -21,3 +22,6 @@ def get_health_indicators(self) -> Dict[str, any]:
         }
     """Validation error exception"""
     pass
+
+    def __init__(self):
+        register_module('ValidationError', self)

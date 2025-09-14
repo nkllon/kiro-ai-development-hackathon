@@ -1,0 +1,21 @@
+
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
+    """Represents a sync conflict."""
+    conflict_id: str
+    file_path: str
+    conflict_type: str
+    local_version: str
+    remote_version: str
+    resolution_strategy: str
+
+
+@dataclass

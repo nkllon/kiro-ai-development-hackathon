@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class PubSubManager(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -22,6 +23,7 @@ def get_health_indicators(self) -> Dict[str, any]:
     """Advanced pub/sub manager with handlers and queuing"""
 
     def __init__(self, redis_url: str='redis://localhost:6379'):
+        register_module(self.__class__.__name__, self)
         self.redis_url = redis_url
         self.client: Optional[redis.Redis] = None
         self.pubsub: Optional[redis.client.PubSub] = None

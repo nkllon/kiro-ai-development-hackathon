@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class ApprovalStatus(Enum, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -25,3 +26,6 @@ def get_health_indicators(self) -> Dict[str, any]:
     REJECTED = "rejected"
     NEEDS_REVISION = "needs_revision"
 
+
+    def __init__(self):
+        register_module('ApprovalStatus', self)

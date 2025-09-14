@@ -1,0 +1,20 @@
+from datetime import datetime
+from typing import Dict, List, Any
+
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
+    """Types of synchronization operations."""
+    FULL_SYNC = "full_sync"
+    INCREMENTAL_SYNC = "incremental_sync"
+    METADATA_SYNC = "metadata_sync"
+    FILE_SYNC = "file_sync"
+    CONFIG_SYNC = "config_sync"
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class SubmissionStatus(Enum, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -27,3 +28,6 @@ def get_health_indicators(self) -> Dict[str, any]:
     REJECTED = "rejected"
     WITHDRAWN = "withdrawn"
 
+
+    def __init__(self):
+        register_module('SubmissionStatus', self)

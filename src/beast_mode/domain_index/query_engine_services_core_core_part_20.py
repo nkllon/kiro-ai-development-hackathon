@@ -1,0 +1,19 @@
+
+def _generate_completion_suggestions(self, partial_query: str) -> List[str]:
+    """Generate word completion suggestions"""
+    suggestions = []
+    self._ensure_indexes_built()
+    last_word = partial_query.split()[-1] if partial_query.split() else partial_query
+    for pattern in self._pattern_index.keys():
+        if pattern.startswith(last_word.lower()):
+            completed_query = partial_query.rsplit(' ', 1)[0] + f' {pattern}' if ' ' in partial_query else pattern
+            suggestions.append(completed_query)
+    for indicator in self._content_index.keys():
+        if indicator.startswith(last_word.lower()):
+            completed_query = partial_query.rsplit(' ', 1)[0] + f' {indicator}' if ' ' in partial_query else indicator
+            suggestions.append(completed_query)
+    for capability in self._capability_index.keys():
+        if capability.startswith(last_word.lower()):
+            completed_query = partial_query.rsplit(' ', 1)[0] + f' {capability}' if ' ' in partial_query else capability
+            suggestions.append(completed_query)
+    return suggestions

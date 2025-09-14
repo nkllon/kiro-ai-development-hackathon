@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class ValidationFramework(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -22,6 +23,7 @@ def get_health_indicators(self) -> Dict[str, any]:
     """Validation Framework - Requirements-Driven Implementation"""
     
     def __init__(self):
+        register_module(self.__class__.__name__, self)
         self.rules: Dict[str, ValidationRule] = {}
         self.validation_history: List[Dict[str, Any]] = []
     

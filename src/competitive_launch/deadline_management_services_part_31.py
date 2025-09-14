@@ -1,0 +1,16 @@
+from datetime import datetime
+from typing import Dict, List, Any
+
+    def _estimate_time_savings(self, strategies: List[str]) -> float:
+        """Estimate time savings from acceleration strategies."""
+        time_savings = 0.0
+        for strategy in strategies:
+            if '24/7' in strategy:
+                time_savings += 8.0
+            elif 'parallel' in strategy.lower():
+                time_savings += 4.0
+            elif 'eliminate' in strategy.lower():
+                time_savings += 2.0
+            elif 'simplify' in strategy.lower():
+                time_savings += 1.0
+        return min(time_savings, 24.0)

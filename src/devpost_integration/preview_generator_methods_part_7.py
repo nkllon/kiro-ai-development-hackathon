@@ -1,0 +1,14 @@
+
+    def get_module_info(self) -> Any:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """Get module information"""
+        return {
+            'module_id': 'devpost_preview_generator',
+            'version': '1.0.0',
+            'description': 'DevPost Preview Generator implementation'
+        }
+    

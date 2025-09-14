@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class BeastReadinessValidator(ValidationFramework, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -54,6 +55,7 @@ def get_health_indicators(self) -> Dict[str, any]:
         readiness_rules = ["beast_mode_ready", "interface_registry_ready", "compliance_system_ready", "validation_framework_ready"]
         return self.validate(system_data, readiness_rules)
 
+        register_module(self.__class__.__name__, self)
 # Global Beast readiness validator instance
 beast_readiness_validator = BeastReadinessValidator()
 validation_framework = beast_readiness_validator

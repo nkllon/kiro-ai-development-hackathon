@@ -1,0 +1,13 @@
+
+def _apply_query_filters(self, domain: Domain, filters: Dict[str, Any]) -> bool:
+    """Apply filters to query results"""
+    for filter_key, filter_value in filters.items():
+        if filter_key == 'category':
+            if domain.metadata.demo_role != filter_value:
+                return False
+        elif filter_key == 'status':
+            if domain.metadata.status != filter_value:
+                return False
+        elif filter_key == 'min_complexity':
+            pass
+    return True

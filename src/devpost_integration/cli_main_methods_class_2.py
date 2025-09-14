@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class CleanImplementation(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -22,6 +23,7 @@ def get_health_indicators(self) -> Dict[str, any]:
     """Clean implementation for RM-DDD compliance"""
     
     def __init__(self) -> Any:
+        register_module(self.__class__.__name__, self)
         """Initialize clean implementation"""
         pass
     

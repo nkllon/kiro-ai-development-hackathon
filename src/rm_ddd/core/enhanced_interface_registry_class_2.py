@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class InterfaceMetrics(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -26,3 +27,6 @@ def get_health_indicators(self) -> Dict[str, any]:
     performance_score: float
     error_count: int
     success_rate: float
+
+    def __init__(self):
+        register_module('InterfaceMetrics', self)

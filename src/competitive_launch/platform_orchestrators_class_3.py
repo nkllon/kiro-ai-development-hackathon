@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class TiDBPlatformOrchestrator(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -27,6 +28,7 @@ def get_health_indicators(self) -> Dict[str, any]:
     """
 
     def __init__(self):
+        register_module(self.__class__.__name__, self)
         """Initialize TiDB orchestrator."""
         self.platform_type = PlatformType.TIDB
         self.htap_enabled = False

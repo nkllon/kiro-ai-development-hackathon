@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class GitSession(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -22,6 +23,7 @@ def get_health_indicators(self) -> Dict[str, any]:
     """Manages Git operations for task execution sessions."""
     
     def __init__(self, base_branch: str = "main"):
+        register_module(self.__class__.__name__, self)
         self.base_branch = base_branch
         self.branch_name: Optional[str] = None
         self.changes_made = False

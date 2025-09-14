@@ -1,0 +1,37 @@
+from datetime import datetime
+from typing import Dict, List, Any
+
+    def __init__(self, name: str, version: str='1.0.0'):
+        self.name = name
+        self.version = version
+
+    @abstractmethod
+    async def build_consensus(self, agents: List[GhostbustersExpertAgent], context: AnalysisContext, confidence_threshold: float=0.8) -> ConsensusResult:
+        """
+        Orchestrate multiple agents to build consensus on analysis.
+        
+        Args:
+            agents: List of expert agents to coordinate
+            context: Analysis context for all agents
+            confidence_threshold: Minimum confidence required for consensus
+            
+        Returns:
+            ConsensusResult with unified analysis or conflict information
+        """
+        pass
+
+    @abstractmethod
+    async def resolve_conflicts(self, conflicting_results: List[AnalysisResult]) -> AnalysisResult:
+        """
+        Resolve conflicts between agent analyses using systematic methods.
+        
+        Args:
+            conflicting_results: Analysis results that conflict with each other
+            
+        Returns:
+            Unified AnalysisResult that resolves the conflicts
+            
+        Raises:
+            ConsensusError: If conflicts cannot be resolved systematically
+        """
+        pass

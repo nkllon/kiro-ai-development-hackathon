@@ -1,0 +1,5 @@
+from src.rm_ddd.core.health import ModuleHealth, ModuleStatus
+
+def get_ubiquitous_language_mapping(cls: Type) -> Dict[str, str]:
+    """Get the ubiquitous language mapping for a decorated class."""
+    return getattr(cls, '_ubiquitous_language_mapping', {})

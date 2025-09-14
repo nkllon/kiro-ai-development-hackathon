@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class ExecutionResult(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -37,3 +38,5 @@ def get_health_indicators(self) -> Dict[str, any]:
         """Validate execution result."""
         if not (0.0 <= self.systematic_quality_score <= 1.0):
             raise ValueError("Systematic quality score must be between 0.0 and 1.0")
+    def __init__(self):
+        register_module('ExecutionResult', self)

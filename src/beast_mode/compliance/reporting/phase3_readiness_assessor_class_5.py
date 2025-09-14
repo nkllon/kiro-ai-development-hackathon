@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class Phase3ReadinessReport(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -31,3 +32,6 @@ def get_health_indicators(self) -> Dict[str, any]:
     estimated_time_to_ready: str
     risk_assessment: Dict[str, Any]
     go_no_go_decision: Dict[str, Any]
+
+    def __init__(self):
+        register_module('Phase3ReadinessReport', self)

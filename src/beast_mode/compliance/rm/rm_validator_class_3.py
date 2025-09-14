@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class ComplianceResult(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -26,3 +27,6 @@ def get_health_indicators(self) -> Dict[str, any]:
     issues: List[str]
     recommendations: List[str]
     validated_at: datetime
+
+    def __init__(self):
+        register_module('ComplianceResult', self)

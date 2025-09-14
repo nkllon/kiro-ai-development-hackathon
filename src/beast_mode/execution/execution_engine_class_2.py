@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class ExecutionEngine(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -22,6 +23,7 @@ def get_health_indicators(self) -> Dict[str, any]:
     """Main engine for orchestrating task execution."""
     
     def __init__(self, auto_merge: bool = False, auto_revert_on_failure: bool = False):
+        register_module(self.__class__.__name__, self)
         self.task_manager = TaskManager()
         self.agent_manager = AgentManager()
         self.git_session: Optional[GitSession] = None

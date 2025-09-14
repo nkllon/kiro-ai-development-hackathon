@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class AgentCapabilities(BaseModel, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -54,3 +55,6 @@ def get_health_indicators(self) -> Dict[str, any]:
         if not v or len(v) < 3:
             raise ValueError('Agent ID must be at least 3 characters')
         return v
+
+    def __init__(self):
+        register_module('AgentCapabilities', self)

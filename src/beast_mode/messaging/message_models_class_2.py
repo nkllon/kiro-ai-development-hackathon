@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class MessageType(str, Enum, ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -46,3 +47,6 @@ def get_health_indicators(self) -> Dict[str, any]:
     SCHEDULE_CONFIRMATION = 'schedule_confirmation'
     DIRECT_MESSAGE = 'direct_message'
     BROADCAST_MESSAGE = 'broadcast_message'
+
+    def __init__(self):
+        register_module('MessageType', self)

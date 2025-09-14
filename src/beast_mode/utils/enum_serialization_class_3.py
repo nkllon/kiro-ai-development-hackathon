@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class SerializationHandler(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -159,3 +160,5 @@ def safe_dumps(data: Any, **kwargs) -> str:
         raise
     """Shorthand for SerializationHandler.safe_serialize"""
     return SerializationHandler.safe_serialize(data, **kwargs)
+    def __init__(self):
+        register_module('SerializationHandler', self)

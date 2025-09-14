@@ -1,3 +1,4 @@
+from src.rm_ddd.core.registry import register_module
 class InterfaceRegistry(ReflectiveModule):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
@@ -95,5 +96,6 @@ def get_health_indicators(self) -> Dict[str, any]:
             for name, metadata in self.interfaces.items()
         }
 
+        register_module(self.__class__.__name__, self)
 # Global registry instance
 registry = InterfaceRegistry()

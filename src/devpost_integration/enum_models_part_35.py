@@ -1,0 +1,34 @@
+from datetime import datetime
+from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth, ModuleStatus
+from src.rm_ddd.core.registry import register_module
+
+class NotificationTiming(Enum, ReflectiveModule):
+    """Timing for notifications."""
+    IMMEDIATE = "immediate"
+    DAILY = "daily"
+    WEEKLY = "weekly"
+    MONTHLY = "monthly"
+    CUSTOM = "custom"
+    NEVER = "never"
+
+
+
+
+
+
+
+
+
+
+
+    ModuleHealth = ModuleHealth.HEALTHY
+    ModuleStatus = ModuleStatus.ACTIVE
+
+    def check_health(self):
+        return {
+            'status': self.ModuleStatus,
+            'health': self.ModuleHealth
+        }
+    def __init__(self):
+        register_module('NotificationTiming', self)

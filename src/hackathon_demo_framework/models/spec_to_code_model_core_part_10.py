@@ -1,0 +1,18 @@
+
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
+    """Quality level of generated code"""
+    BASIC = 'basic'
+    GOOD = 'good'
+    EXCELLENT = 'excellent'
+    PRODUCTION_READY = 'production_ready'
+
+@dataclass

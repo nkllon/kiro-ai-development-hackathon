@@ -1,0 +1,10 @@
+
+def _build_temp_graph(self, temp_deps: Dict[str, DependencySpec]) -> Dict[str, Set[str]]:
+    """Build temporary graph for cycle detection"""
+    graph = defaultdict(set)
+    for dep_spec in temp_deps.values():
+        if '_depends_on_' in dep_spec.dependency_id:
+            source_item = dep_spec.dependency_id.split('_depends_on_')[0]
+            target_item = dep_spec.target_item_id
+            graph[target_item].add(source_item)
+    return dict(graph)

@@ -1,0 +1,27 @@
+from src.rm_ddd.core.registry import register_module
+
+    def _detect_graphical_elements(self, image: Image.Image) -> List[Dict[str, Any]]:
+        try:
+            pass  # TODO: Add method implementation
+        except Exception as e:
+            logging.error(f"Error in method: {e}")
+            raise
+        """
+        Detect graphical elements that need contrast checking.
+        
+        Args:
+            image: PIL Image to analyze
+            
+        Returns:
+            List of graphical element dictionaries
+        """
+        elements = []
+        img_array = np.array(image)
+        height, width = img_array.shape[:2]
+        for y in range(0, height - 40, 50):
+            for x in range(0, width - 40, 50):
+                region_bbox = BoundingBox(x=x, y=y, width=40, height=40)
+                region = img_array[y:y + 40, x:x + 40]
+                if self._looks_like_graphical_element(region):
+                    elements.append({'type': 'shape', 'bbox': region_bbox})
+        return elements[:5]
