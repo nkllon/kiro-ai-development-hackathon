@@ -2,24 +2,39 @@
   "mcpServers": {
     "voice-mode": {
       "command": "uvx",
-      "args": ["voice-mode"],
+      "args": [
+        "voice-mode"
+      ],
       "env": {
-        "OPENAI_API_KEY": "your-openai-key-here"
-      }
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}"
+      },
+      "timeout": 30000,
+      "retries": 3
     },
     "github": {
       "command": "docker",
-      "args": ["run", "--rm", "-i", "ghcr.io/github/github-mcp-server"],
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "ghcr.io/github/github-mcp-server"
+      ],
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "ghp_2BqBqBqBqBqBqBqBqBqBqBqBqBqBqBqBq"
-      }
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      },
+      "timeout": 30000,
+      "retries": 3
     },
     "simone": {
       "command": "node",
-      "args": ["kiro_simone_adapter/mcp-server/dist/index.js"],
+      "args": [
+        "kiro_simone_adapter/mcp-server/dist/index.js"
+      ],
       "env": {
         "PROJECT_PATH": "/Users/lou/kiro-2/kiro-ai-development-hackathon"
-      }
+      },
+      "timeout": 30000,
+      "retries": 3
     }
   }
 }
