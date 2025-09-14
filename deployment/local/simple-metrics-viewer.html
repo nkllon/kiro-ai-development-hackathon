@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beast Mode Metrics Viewer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .metric-card {
+            background: #2d2d2d;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #444;
+        }
+        .metric-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .chart-container {
+            background: #2d2d2d;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #444;
+        }
+        .status {
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .status.connected {
+            background: #4CAF50;
+            color: white;
+        }
+        .status.error {
+            background: #f44336;
+            color: white;
+        }
+        .refresh-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .refresh-btn:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Beast Mode Metrics Viewer</h1>
+            <p>Real-time monitoring for your Beast Mode framework</p>
+            <div id="status" class="status">Connecting...</div>
+            <button class="refresh-btn" onclick="loadMetrics()">🔄 Refresh Metrics</button>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-title">Framework Status</div>
+                <div class="metric-value" id="framework-status">Loading...</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Uptime (seconds)</div>
+                <div class="metric-value" id="uptime">Loading...</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Platform</div>
+                <div class="metric-value" id="platform">Loading...</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Restricted Mode</div>
+                <div class="metric-value" id="restricted-mode">Loading...</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h3>📈 Uptime Over Time</h3>
+            <canvas id="uptimeChart" width="400" height="200"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <h3>📊 Request Count</h3>
+            <canvas id="requestChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+    <script>
+        let uptimeChart, requestChart;
+        let uptimeData = [];
+        let requestData = [];
+
+        // Initialize charts
+        function initCharts() {
+            const ctx1 = document.getElementById('uptimeChart').getContext('2d');
+            uptimeChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Uptime (seconds)',
+                        data: [],
+                        borderColor: '#4CAF50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            const ctx2 = document.getElementById('requestChart').getContext('2d');
+            requestChart = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Requests',
+                        data: [],
+                        borderColor: '#2196F3',
+                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Load metrics from Prometheus
+        async function loadMetrics() {
+            try {
+                const response = await fetch('http://localhost:9090/api/v1/query?query=beast_mode_info');
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.data.result.length > 0) {
+                    document.getElementById('status').textContent = '✅ Connected to Prometheus';
+                    document.getElementById('status').className = 'status connected';
+                    
+                    // Load individual metrics
+                    await loadMetric('beast_mode_info', 'framework-status', 'Framework Active');
+                    await loadMetric('beast_mode_uptime_seconds', 'uptime', 'seconds');
+                    await loadMetric('beast_mode_platform_info', 'platform', 'Platform');
+                    await loadMetric('beast_mode_restricted_mode', 'restricted-mode', 'Restricted');
+                    
+                    // Update charts
+                    updateCharts();
+                } else {
+                    throw new Error('No metrics found');
+                }
+            } catch (error) {
+                document.getElementById('status').textContent = '❌ Error: ' + error.message;
+                document.getElementById('status').className = 'status error';
+                console.error('Error loading metrics:', error);
+            }
+        }
+
+        // Load individual metric
+        async function loadMetric(query, elementId, label) {
+            try {
+                const response = await fetch(`http://localhost:9090/api/v1/query?query=${query}`);
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.data.result.length > 0) {
+                    const value = data.data.result[0].value[1];
+                    const timestamp = new Date(data.data.result[0].value[0] * 1000);
+                    
+                    document.getElementById(elementId).textContent = `${label}: ${value}`;
+                    
+                    // Store data for charts
+                    if (query === 'beast_mode_uptime_seconds') {
+                        uptimeData.push({time: timestamp, value: parseFloat(value)});
+                    } else if (query === 'beast_mode_requests_total') {
+                        requestData.push({time: timestamp, value: parseFloat(value)});
+                    }
+                }
+            } catch (error) {
+                console.error(`Error loading ${query}:`, error);
+            }
+        }
+
+        // Update charts
+        function updateCharts() {
+            // Update uptime chart
+            if (uptimeData.length > 0) {
+                const latest = uptimeData[uptimeData.length - 1];
+                uptimeChart.data.labels.push(latest.time.toLocaleTimeString());
+                uptimeChart.data.datasets[0].data.push(latest.value);
+                
+                // Keep only last 20 data points
+                if (uptimeChart.data.labels.length > 20) {
+                    uptimeChart.data.labels.shift();
+                    uptimeChart.data.datasets[0].data.shift();
+                }
+                uptimeChart.update();
+            }
+        }
+
+        // Initialize and start loading
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            loadMetrics();
+            
+            // Auto-refresh every 5 seconds
+            setInterval(loadMetrics, 5000);
+        });
+    </script>
+</body>
+</html>

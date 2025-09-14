@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grafana Login Helper</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 500px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .credentials {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #007bff;
+        }
+        .credential-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #e9ecef;
+        }
+        .label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .value {
+            font-family: monospace;
+            background: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 3px;
+            color: #007bff;
+        }
+        .button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+        .button.secondary {
+            background: #6c757d;
+        }
+        .button.secondary:hover {
+            background: #545b62;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Grafana Access Helper</h1>
+        
+        <div class="credentials">
+            <h3>🔑 Login Credentials</h3>
+            <div class="credential-item">
+                <span class="label">Username:</span>
+                <span class="value">admin</span>
+            </div>
+            <div class="credential-item">
+                <span class="label">Password:</span>
+                <span class="value">systematic</span>
+            </div>
+        </div>
+
+        <div>
+            <a href="http://localhost:3000" class="button" target="_blank">
+                🚀 Open Grafana
+            </a>
+            <a href="http://localhost:3000/d/770bf50d-fe07-4368-829c-dec6bf8db739/beast-mode-framework" class="button secondary" target="_blank">
+                📊 Beast Mode Dashboard
+            </a>
+        </div>
+
+        <div class="status">
+            ✅ Grafana is running and ready!<br>
+            ✅ Prometheus data source connected<br>
+            ✅ Beast Mode metrics available<br>
+            ✅ Time series graphs configured
+        </div>
+
+        <div style="margin-top: 30px; font-size: 14px; color: #666;">
+            <p><strong>Instructions:</strong></p>
+            <ol style="text-align: left;">
+                <li>Click "Open Grafana" above</li>
+                <li>Use the credentials shown above to log in</li>
+                <li>Navigate to the Beast Mode dashboard</li>
+                <li>Enjoy your time series graphs! 📈</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Auto-focus on the first button for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstButton = document.querySelector('.button');
+            if (firstButton) {
+                firstButton.focus();
+            }
+        });
+    </script>
+</body>
+</html>

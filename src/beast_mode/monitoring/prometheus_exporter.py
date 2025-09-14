@@ -326,7 +326,7 @@ class PrometheusExporter:
     def stop_metrics_export(self):
         """Stop metrics export thread."""
         self.export_active = False
-        if self.export_thread:
+        if hasattr(self, 'export_thread') and self.export_thread:
             self.export_thread.join(timeout=5)
         self.logger.info("Metrics export stopped")
     
@@ -352,17 +352,30 @@ class PrometheusExporter:
         try:
             import psutil
             import socket
+            import platform
             
             hostname = socket.gethostname()
+            system = platform.system().lower()
+            
+            # Skip system metrics on macOS if restricted
+            if system == 'darwin' and os.getenv('BEAST_MODE_RESTRICTED_MODE', 'false').lower() == 'true':
+                self.logger.debug("Skipping system metrics collection on restricted macOS")
+                return
             
             # CPU metrics
-            cpu_percent = psutil.cpu_percent(interval=1)
-            self.system_cpu_percent.labels(host=hostname).set(cpu_percent)
+            try:
+                cpu_percent = psutil.cpu_percent(interval=0.1)  # Reduced interval for macOS
+                self.system_cpu_percent.labels(host=hostname).set(cpu_percent)
+            except (PermissionError, OSError) as e:
+                self.logger.debug(f"CPU metrics collection failed on macOS: {e}")
             
             # Memory metrics
-            memory = psutil.virtual_memory()
-            self.system_memory_percent.labels(host=hostname).set(memory.percent)
-            self.system_memory_used_bytes.labels(host=hostname).set(memory.used)
+            try:
+                memory = psutil.virtual_memory()
+                self.system_memory_percent.labels(host=hostname).set(memory.percent)
+                self.system_memory_used_bytes.labels(host=hostname).set(memory.used)
+            except (PermissionError, OSError) as e:
+                self.logger.debug(f"Memory metrics collection failed on macOS: {e}")
             
             # Disk metrics
             disk = psutil.disk_usage('/')
