@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def add_test_specific_patterns_to_library(self, failure: Failure, root_causes: List[RootCause], fixes: List[SystematicFix]) -> List[PreventionPattern]:
     """

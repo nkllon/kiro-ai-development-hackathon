@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def generate_test_specific_systematic_fixes(self, root_causes: List[RootCause]) -> List[SystematicFix]:
     """

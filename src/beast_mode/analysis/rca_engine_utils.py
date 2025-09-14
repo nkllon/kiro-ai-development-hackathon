@@ -17,6 +17,8 @@ from datetime import datetime
 from enum import Enum
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 import shutil
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _analyze_tool_health(self, failure: Failure) -> Dict[str, Any]:
     """Analyze tool health status"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def analyze_test_failure_categorization(self, failure: Failure) -> Dict[str, Any]:
     """

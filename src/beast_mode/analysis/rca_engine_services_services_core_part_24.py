@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_analysis_confidence(self, analysis_results: Dict[str, Any]) -> float:
     """Calculate confidence score for comprehensive analysis"""

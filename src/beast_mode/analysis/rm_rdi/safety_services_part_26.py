@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def validate_workflow_safety(self, workflow_id: str, workflow_config: Dict[str, Any]=None) -> bool:
         """Validate that a workflow is safe to execute"""

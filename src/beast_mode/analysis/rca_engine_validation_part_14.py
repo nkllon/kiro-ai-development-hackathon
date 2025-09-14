@@ -1,3 +1,5 @@
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _identify_test_specific_root_causes(self, failure: Failure, analysis: ComprehensiveAnalysisResult) -> List[RootCause]:
     """Identify test-specific root causes"""

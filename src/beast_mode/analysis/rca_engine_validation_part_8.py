@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _is_pytest_failure(self, failure: Failure) -> bool:
     """Check if failure is pytest-related"""

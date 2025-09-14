@@ -39,6 +39,8 @@ def _detect_test_environment(self) -> bool:
     if any((var in os.environ for var in test_env_vars)):
         return True
     import inspect
+from src.rm_ddd.core.health import ModuleHealth
+
     for frame_info in inspect.stack():
         filename = frame_info.filename
         if 'test_' in Path(filename).name or '/tests/' in filename:

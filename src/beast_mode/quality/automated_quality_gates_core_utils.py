@@ -15,6 +15,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from ..core.reflective_module import ReflectiveModule, HealthStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _execute_formatting_gate(self, config: QualityGateConfig, target_path: Path, start_time: float) -> QualityGateResult:
     """Execute formatting quality gate using black"""

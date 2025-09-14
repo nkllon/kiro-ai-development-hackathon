@@ -13,6 +13,8 @@ from datetime import datetime
 from enum import Enum
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .registry_intelligence_engine import RegistryIntelligenceEngine
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def get_domain_tools(self, domain: str='general') -> List[str]:
     """Get tools available for a specific domain"""

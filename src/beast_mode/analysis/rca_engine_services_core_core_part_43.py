@@ -4,6 +4,8 @@ def _analyze_infrastructure_environment(self, failure: Failure) -> Dict[str, Any
     infra_env = {}
     try:
         import shutil
+from src.rm_ddd.core.health import ModuleHealth
+
         total, used, free = shutil.disk_usage('.')
         infra_env['disk_space_gb'] = free // 1024 ** 3
         infra_env['disk_usage_percent'] = used / total * 100

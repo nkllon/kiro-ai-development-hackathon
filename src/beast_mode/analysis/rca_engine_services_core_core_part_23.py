@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _add_pattern_to_library(self, pattern: PreventionPattern):
     """Add pattern to library with hash-based indexing for fast lookup"""

@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def shutdown_safety_systems(self) -> None:
         """Shutdown all safety systems"""

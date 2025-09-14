@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_test_specific_factors(self, failure: Failure) -> Dict[str, Any]:
     """Analyze test-specific factors for comprehensive analysis"""

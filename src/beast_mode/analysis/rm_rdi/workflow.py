@@ -30,3 +30,4 @@ from .workflow_part_29 import *
 from .workflow_part_30 import *
 from .workflow_part_31 import *
 from .workflow_part_32 import *
+from src.rm_ddd.core.health import ModuleHealth

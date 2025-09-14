@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_systematic_fix(self, root_cause: RootCause) -> SystematicFix:
     """Generate systematic fix for root cause including test-specific fixes"""

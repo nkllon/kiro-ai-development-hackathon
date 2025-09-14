@@ -26,3 +26,4 @@ from .registry_intelligence_engine_part_25 import *
 from .registry_intelligence_engine_part_26 import *
 from .registry_intelligence_engine_part_27 import *
 from .registry_intelligence_engine_part_28 import *
+from src.rm_ddd.core.health import ModuleHealth

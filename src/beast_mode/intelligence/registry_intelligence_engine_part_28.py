@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def analyze_project_requirements(self, requirements: list, domain_context: str) -> Dict[str, Any]:
         """analyze_project_requirements - Enhanced for compliance"""

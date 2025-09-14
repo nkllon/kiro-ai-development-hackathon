@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _execute_validation_criteria(self, criteria: str, original_failure: Failure) -> Dict[str, Any]:
     """Execute validation criteria to verify fix"""

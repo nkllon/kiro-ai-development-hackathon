@@ -36,3 +36,4 @@ from .enhanced_validation_framework_part_35 import *
 from .enhanced_validation_framework_part_36 import *
 from .enhanced_validation_framework_part_37 import *
 from .enhanced_validation_framework_part_38 import *
+from src.rm_ddd.core.health import ModuleHealth

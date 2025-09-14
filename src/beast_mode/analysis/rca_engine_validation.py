@@ -16,3 +16,4 @@ from .rca_engine_validation_part_15 import *
 from .rca_engine_validation_part_16 import *
 from .rca_engine_validation_part_17 import *
 from .rca_engine_validation_part_18 import *
+from src.rm_ddd.core.health import ModuleHealth

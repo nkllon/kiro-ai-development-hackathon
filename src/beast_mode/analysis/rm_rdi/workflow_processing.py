@@ -13,6 +13,8 @@ import json
 from pathlib import Path
 from .data_models import AnalysisResult, AnalysisStatus
 from .safety import get_safety_manager
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _post_process_results(self, aggregated_result: AggregatedResult) -> None:
     """Post-process aggregated results"""

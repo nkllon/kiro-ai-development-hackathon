@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def document_prevention_patterns(self, failure: Failure, root_causes: List[RootCause], fixes: List[SystematicFix]) -> List[PreventionPattern]:
     """

@@ -13,6 +13,8 @@ import json
 from pathlib import Path
 from .data_models import AnalysisResult, AnalysisStatus
 from .safety import get_safety_manager
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _validate_dependencies(self, steps: List[WorkflowStep]) -> None:
     """Validate step dependencies are valid"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def perform_systematic_rca(self, failure: Failure) -> RCAResult:
     """

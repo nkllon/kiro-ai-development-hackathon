@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def analyze_comprehensive_factors(self, failure: Failure) -> ComprehensiveAnalysisResult:
     """

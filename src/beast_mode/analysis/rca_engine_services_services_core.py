@@ -45,3 +45,4 @@ from .rca_engine_services_services_core_part_44 import *
 from .rca_engine_services_services_core_part_45 import *
 from .rca_engine_services_services_core_part_46 import *
 from .rca_engine_services_services_core_part_47 import *
+from src.rm_ddd.core.health import ModuleHealth

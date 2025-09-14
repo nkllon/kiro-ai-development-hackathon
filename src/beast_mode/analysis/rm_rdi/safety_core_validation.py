@@ -15,6 +15,8 @@ from datetime import datetime
 from pathlib import Path
 import logging
 import psutil
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def check_limits(self) -> List[str]:
     """Check if resource usage exceeds limits"""

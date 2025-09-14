@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _save_pattern_library(self):
     """Save pattern library to disk"""

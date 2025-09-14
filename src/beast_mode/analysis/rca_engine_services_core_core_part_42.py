@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_permissions(self, failure: Failure) -> Dict[str, Any]:
     """Analyze permission-related issues"""

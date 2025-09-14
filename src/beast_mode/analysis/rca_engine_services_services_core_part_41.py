@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_system_configuration(self, failure: Failure) -> Dict[str, Any]:
     """Analyze system configuration for infrastructure failures"""

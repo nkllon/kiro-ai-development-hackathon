@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def query_intelligence(self, query: IntelligenceQuery) -> Dict[str, Any]:
         """query_intelligence - Enhanced for compliance"""

@@ -9,3 +9,5 @@ from .model_registry_models import *
 from .model_registry_core import *
 from .model_registry_utils import *
 from .model_registry_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

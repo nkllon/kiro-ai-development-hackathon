@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_installation_integrity(self, failure: Failure) -> Dict[str, Any]:
     """Analyze installation integrity"""

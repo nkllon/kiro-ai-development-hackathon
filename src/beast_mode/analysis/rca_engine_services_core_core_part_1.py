@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def __init__(self, pattern_library_path: Optional[str]=None):
     super().__init__('rca_engine')

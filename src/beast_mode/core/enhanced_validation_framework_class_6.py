@@ -11,3 +11,4 @@ from .enhanced_validation_framework_class_6_part_10 import *
 from .enhanced_validation_framework_class_6_part_11 import *
 from .enhanced_validation_framework_class_6_part_12 import *
 from .enhanced_validation_framework_class_6_part_13 import *
+from src.rm_ddd.core.health import ModuleHealth

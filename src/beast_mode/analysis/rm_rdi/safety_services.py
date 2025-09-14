@@ -24,3 +24,4 @@ from .safety_services_part_23 import *
 from .safety_services_part_24 import *
 from .safety_services_part_25 import *
 from .safety_services_part_26 import *
+from src.rm_ddd.core.health import ModuleHealth

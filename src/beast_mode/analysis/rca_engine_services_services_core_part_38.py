@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_missing_files(self, failure: Failure) -> Dict[str, Any]:
     """Analyze missing file issues in make context"""

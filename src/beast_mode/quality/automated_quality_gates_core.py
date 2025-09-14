@@ -11,3 +11,5 @@ from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .automated_quality_gates_core_validation import *
 from .automated_quality_gates_core_utils import *
 from .automated_quality_gates_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

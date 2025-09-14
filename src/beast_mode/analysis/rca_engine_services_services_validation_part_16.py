@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _create_test_specific_pattern(self, failure: Failure, root_cause: RootCause, fix: SystematicFix) -> PreventionPattern:
     """Create test-specific prevention pattern"""

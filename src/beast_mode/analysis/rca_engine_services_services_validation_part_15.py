@@ -1,3 +1,5 @@
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _generate_pytest_specific_fix(self, root_cause: RootCause) -> SystematicFix:
     """Generate pytest-specific systematic fix"""

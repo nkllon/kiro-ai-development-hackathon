@@ -82,3 +82,4 @@ from .data_models_core_part_81 import *
 from .data_models_core_part_82 import *
 from .data_models_core_part_83 import *
 from .data_models_core_part_84 import *
+from src.rm_ddd.core.health import ModuleHealth

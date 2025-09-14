@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def analyze_systematic_failure(self, failure_context: Dict[str, Any], systematic_constraints: bool=True) -> Dict[str, Any]:
     """Legacy method - converts to new RCA format"""

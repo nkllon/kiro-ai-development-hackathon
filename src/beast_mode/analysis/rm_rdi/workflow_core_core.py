@@ -9,3 +9,5 @@ from .safety import get_safety_manager
 from .workflow_core_core_processing import *
 from .workflow_core_core_validation import *
 from .workflow_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

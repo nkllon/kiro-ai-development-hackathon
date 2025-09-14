@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _verify_pattern_match(self, failure: Failure, pattern: PreventionPattern) -> bool:
     """Verify if failure matches existing pattern"""

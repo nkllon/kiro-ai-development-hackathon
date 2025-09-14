@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_dependencies(self, failure: Failure) -> Dict[str, Any]:
     """Analyze dependency issues"""

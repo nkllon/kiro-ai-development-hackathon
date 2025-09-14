@@ -30,3 +30,4 @@ from .exceptions_part_29 import *
 from .exceptions_part_30 import *
 from .exceptions_part_31 import *
 from .exceptions_part_32 import *
+from src.rm_ddd.core.health import ModuleHealth

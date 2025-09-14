@@ -13,6 +13,8 @@ from datetime import datetime
 from enum import Enum
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .registry_intelligence_engine import RegistryIntelligenceEngine
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def __init__(self):
     super().__init__('model_driven_intelligence_engine')

@@ -12,6 +12,8 @@ from typing import Dict, List, Optional, Any
 from datetime import datetime
 from dataclasses import dataclass, field
 from .pdca_models import ModelIntelligence, Requirement, Pattern, Tool, ValidationLevel, ReflectiveModule
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def get_tool_mappings(self, domain: str) -> Dict[str, Tool]:
     """Get domain-specific tool mappings"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_pytest_subcategory(self, failure: Failure) -> str:
     """Get pytest failure subcategory"""

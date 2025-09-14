@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_root_cause_addressed(self, fix: SystematicFix, original_failure: Failure) -> ValidationResult:
     """

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_infrastructure_subcategory(self, failure: Failure) -> str:
     """Get infrastructure failure subcategory"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_infrastructure_specific_fix(self, root_cause: RootCause) -> SystematicFix:
     """Generate infrastructure-specific systematic fix"""

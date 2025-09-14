@@ -30,3 +30,4 @@ from .safety_utils_part_29 import *
 from .safety_utils_part_30 import *
 from .safety_utils_part_31 import *
 from .safety_utils_part_32 import *
+from src.rm_ddd.core.health import ModuleHealth

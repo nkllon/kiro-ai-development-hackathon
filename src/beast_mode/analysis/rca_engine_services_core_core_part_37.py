@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_makefile_issues(self, failure: Failure) -> Dict[str, Any]:
     """Analyze Makefile-specific issues"""

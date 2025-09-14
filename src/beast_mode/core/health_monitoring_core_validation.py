@@ -16,6 +16,8 @@ import json
 from pathlib import Path
 from .reflective_module import ReflectiveModule, HealthStatus, HealthIndicator
 from ..utils.enum_serialization import SerializationHandler, make_enum_json_serializable
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _check_component_health(self, component: ReflectiveModule):
     """Check individual component health"""

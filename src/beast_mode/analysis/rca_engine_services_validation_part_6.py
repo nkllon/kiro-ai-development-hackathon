@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_pytest_failures(self, failure: Failure) -> Dict[str, Any]:
     """Analyze pytest-specific failures - Requirement 5.1"""

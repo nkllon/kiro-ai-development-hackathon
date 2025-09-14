@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_pytest_details(self, failure: Failure) -> Dict[str, Any]:
     """Analyze pytest failure details"""

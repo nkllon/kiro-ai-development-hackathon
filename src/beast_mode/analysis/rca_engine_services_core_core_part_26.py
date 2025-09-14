@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _load_pattern_library(self):
     """Load existing pattern library from disk"""

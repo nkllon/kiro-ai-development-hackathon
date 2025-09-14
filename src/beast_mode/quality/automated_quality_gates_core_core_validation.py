@@ -15,6 +15,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from ..core.reflective_module import ReflectiveModule, HealthStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _check_beast_mode_compliance(self, gate_results: List[QualityGateResult]) -> Dict[str, bool]:
     """Check compliance with Beast Mode specific requirements"""

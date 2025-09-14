@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_test_environment(self, failure: Failure) -> Dict[str, Any]:
     """Analyze test environment factors"""

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def get_validation_summary(self) -> Dict[str, Any]:
         """Get validation summary"""
