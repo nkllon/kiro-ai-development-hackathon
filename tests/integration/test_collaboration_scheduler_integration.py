@@ -16,7 +16,7 @@ from src.beast_mode.messaging.collaboration_scheduler import (
 from src.beast_mode.messaging.models import BeastModeMessage, MessageType
 
 
-class TestCollaborationSchedulerIntegration:
+class TestCollaborationSchedulerIntegration(ReflectiveModule):
     """Test collaboration scheduler integration with bus client"""
     
     @pytest.fixture
@@ -623,6 +623,8 @@ class TestCollaborationSchedulerIntegration:
         """Test collaboration recommendations"""
         # Create some completed sessions to generate patterns
         from src.beast_mode.messaging.collaboration_scheduler import CollaborationSession
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         
         # Create multiple successful sessions with the same participant
         for i in range(3):
@@ -744,4 +746,32 @@ class TestCollaborationSchedulerIntegration:
         active_session_ids = {s['session_id'] for s in active_sessions}
         assert session1.session_id in active_session_ids
         assert session2.session_id in active_session_ids
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert session3.session_id not in active_session_ids

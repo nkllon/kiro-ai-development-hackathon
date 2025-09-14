@@ -29,3 +29,20 @@ def _analyze_current_timing(self, demo_script: DemoScript, hackathon_config: Hac
     pacing_score = self._calculate_overall_pacing_score(section_ratios)
     buffer_time = max(0, time_limit - total_duration)
     return TimingAnalysis(total_duration=total_duration, section_durations=demo_script.timing_breakdown.copy(), pacing_score=pacing_score, timing_issues=timing_issues, optimization_suggestions=optimization_suggestions, buffer_time=buffer_time)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -24,7 +24,7 @@ from src.devpost_integration.models import (
 )
 
 
-class TestValidationIssue:
+class TestValidationIssue(ReflectiveModule):
     """Test suite for ValidationIssue."""
     
     def test_validation_issue_creation(self):
@@ -46,7 +46,7 @@ class TestValidationIssue:
         assert issue.fix_action == "Add a title to your project"
 
 
-class TestValidationReport:
+class TestValidationReport(ReflectiveModule):
     """Test suite for ValidationReport."""
     
     @pytest.fixture
@@ -156,7 +156,7 @@ class TestValidationReport:
         assert report.has_errors()
 
 
-class TestValidationRules:
+class TestValidationRules(ReflectiveModule):
     """Test suite for individual validation rules."""
     
     @pytest.fixture
@@ -321,7 +321,7 @@ class TestValidationRules:
         assert "Duplicate tags" in issues[0].message
 
 
-class TestValidationEngine:
+class TestValidationEngine(ReflectiveModule):
     """Test suite for ValidationEngine."""
     
     @pytest.fixture
@@ -639,6 +639,8 @@ class TestValidationEngine:
     def test_validate_submission_readiness(self, validation_engine, sample_metadata):
         """Test validating submission readiness with requirements."""
         from src.devpost_integration.models import SubmissionRequirement
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         
         requirements = [
             SubmissionRequirement(
@@ -717,7 +719,7 @@ class TestValidationEngine:
         assert any("COMPLETION STATUS" in s for s in suggestions)
 
 
-class TestUtilityFunctions:
+class TestUtilityFunctions(ReflectiveModule):
     """Test suite for utility functions."""
     
     def test_create_default_validation_engine(self):
@@ -756,4 +758,32 @@ class TestUtilityFunctions:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__])

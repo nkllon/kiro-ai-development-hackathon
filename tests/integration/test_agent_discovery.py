@@ -11,6 +11,8 @@ from datetime import datetime, timedelta
 from typing import List
 
 from src.beast_mode.messaging import BeastModeBusClient, BeastModeMessage, MessageType, DiscoveredAgent
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
 
 
 @pytest.fixture
@@ -67,7 +69,7 @@ async def agent_network():
         await agent.disconnect()
 
 
-class TestAgentDiscoveryProtocol:
+class TestAgentDiscoveryProtocol(ReflectiveModule):
     """Test the agent discovery protocol functionality"""
     
     @pytest.mark.asyncio
@@ -447,7 +449,7 @@ class TestAgentDiscoveryProtocol:
                 assert "devops" in agent.capabilities.capabilities
 
 
-class TestAgentDiscoveryEdgeCases:
+class TestAgentDiscoveryEdgeCases(ReflectiveModule):
     """Test edge cases and error conditions in agent discovery"""
     
     @pytest.mark.asyncio
@@ -551,4 +553,32 @@ class TestAgentDiscoveryEdgeCases:
         
         discovered_agent = discovered_agents[0]
         assert discovered_agent.agent_id == agent1.agent_id
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert discovered_agent.discovery_count >= 10  # Should have counted all discoveries

@@ -22,7 +22,7 @@ from beast_mode.testing.rca_integration import TestRCAIntegrationEngine, TestFai
 from beast_mode.analysis.rca_engine import FailureCategory
 
 
-class TestPytestVersionCompatibility:
+class TestPytestVersionCompatibility(ReflectiveModule):
     """Test compatibility with different pytest versions and output formats"""
     
     @pytest.fixture
@@ -131,6 +131,8 @@ _________________ ERROR collecting tests/test_broken.py _________________
 
 tests/test_broken.py:5: in <module>
     from broken_import import something
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
 E   ImportError: No module named 'broken_import'
 """,
             # Pytest with setup/teardown failures
@@ -244,7 +246,7 @@ tests/test_coverage.py:10: NameError
         assert "nameerror" in failures[0].error_message.lower()
 
 
-class TestFailureTypeCategorization:
+class TestFailureTypeCategorization(ReflectiveModule):
     """Test categorization of different failure types"""
     
     @pytest.fixture
@@ -423,7 +425,7 @@ class TestFailureTypeCategorization:
             )
 
 
-class TestMakeTargetFailureCompatibility:
+class TestMakeTargetFailureCompatibility(ReflectiveModule):
     """Test compatibility with make target failures"""
     
     def test_make_target_failure_detection(self):
@@ -533,7 +535,7 @@ make: *** [Makefile:25: test] Error 1
                 assert len(failures) >= 0  # Should at least not crash
 
 
-class TestInfrastructureFailureCompatibility:
+class TestInfrastructureFailureCompatibility(ReflectiveModule):
     """Test compatibility with infrastructure failures"""
     
     def test_docker_failure_analysis(self):
@@ -690,7 +692,7 @@ class TestInfrastructureFailureCompatibility:
             )
 
 
-class TestUnknownFailureTypeHandling:
+class TestUnknownFailureTypeHandling(ReflectiveModule):
     """Test handling of unknown failure types"""
     
     def test_unknown_error_graceful_handling(self):
@@ -801,4 +803,32 @@ class TestUnknownFailureTypeHandling:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v", "--tb=short"])

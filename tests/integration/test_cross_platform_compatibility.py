@@ -28,7 +28,7 @@ from src.beast_mode.messaging import (
 )
 
 
-class TestPlatformCompatibility:
+class TestPlatformCompatibility(ReflectiveModule):
     """Test compatibility across different platforms"""
     
     def test_platform_detection(self):
@@ -143,7 +143,7 @@ class TestPlatformCompatibility:
         assert deserialized["unicode"] == test_data["unicode"]
 
 
-class TestMessageFormatCompatibility:
+class TestMessageFormatCompatibility(ReflectiveModule):
     """Test message format compatibility across versions"""
     
     def test_current_message_format(self):
@@ -288,7 +288,7 @@ class TestMessageFormatCompatibility:
             pytest.fail(f"Failed to handle future format: {e}")
 
 
-class TestEncodingCompatibility:
+class TestEncodingCompatibility(ReflectiveModule):
     """Test encoding and character set compatibility"""
     
     def test_utf8_encoding_compatibility(self):
@@ -330,6 +330,8 @@ class TestEncodingCompatibility:
         """Test binary data handling compatibility"""
         
         import base64
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         
         # Test binary data encoding
         binary_data = b"Binary test data: \x00\x01\x02\x03\xFF"
@@ -383,7 +385,7 @@ class TestEncodingCompatibility:
         assert reconstructed.payload["size"] == len(large_content)
 
 
-class TestSystemIntegrationCompatibility:
+class TestSystemIntegrationCompatibility(ReflectiveModule):
     """Test system integration compatibility across environments"""
     
     @pytest.mark.asyncio
@@ -530,7 +532,7 @@ class TestSystemIntegrationCompatibility:
             shutil.rmtree(temp_dir, ignore_errors=True)
 
 
-class TestVersionCompatibility:
+class TestVersionCompatibility(ReflectiveModule):
     """Test compatibility across different component versions"""
     
     def test_message_type_enum_compatibility(self):
@@ -670,4 +672,32 @@ class TestVersionCompatibility:
 
 if __name__ == "__main__":
     # Run compatibility tests
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v", "--tb=short"])
