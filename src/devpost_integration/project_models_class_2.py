@@ -113,3 +113,4 @@ from .project_models_class_2_part_112 import *
 from .project_models_class_2_part_113 import *
 from .project_models_class_2_part_114 import *
 from .project_models_class_2_part_115 import *
+from src.rm_ddd.core.health import ModuleHealth

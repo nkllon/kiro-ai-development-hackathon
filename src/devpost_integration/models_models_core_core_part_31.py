@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def increment_access_count(self) -> bool:
     """Increment preview access count"""

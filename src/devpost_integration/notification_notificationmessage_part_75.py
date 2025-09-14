@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def __init__(self, message_data: Dict[str, Any]=None):
     """Initialize notification message."""

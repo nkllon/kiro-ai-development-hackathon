@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def output_json(self, data: Any) -> bytes:
         """Output data as JSON"""

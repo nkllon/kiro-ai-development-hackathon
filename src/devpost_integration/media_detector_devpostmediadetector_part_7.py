@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def detect_media_files(self, directory: Path, recursive: bool = True) -> List[MediaFile]:
         """Detect media files in directory"""

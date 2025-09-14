@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def is_expired(self) -> bool:
     """Check if preview is expired"""

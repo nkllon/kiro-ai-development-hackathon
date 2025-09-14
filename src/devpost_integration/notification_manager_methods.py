@@ -26,3 +26,4 @@ from .notification_manager_methods_part_25 import *
 from .notification_manager_methods_part_26 import *
 from .notification_manager_methods_part_27 import *
 from .notification_manager_methods_part_28 import *
+from src.rm_ddd.core.health import ModuleHealth

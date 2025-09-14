@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def __init__(self, metadata: Dict[str, Any]=None):
         """Initialize project metadata with comprehensive functionality"""

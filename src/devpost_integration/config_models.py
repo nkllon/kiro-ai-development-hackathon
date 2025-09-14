@@ -135,3 +135,4 @@ from .config_models_part_134 import *
 from .config_models_part_135 import *
 from .config_models_part_136 import *
 from .config_models_part_137 import *
+from src.rm_ddd.core.health import ModuleHealth
