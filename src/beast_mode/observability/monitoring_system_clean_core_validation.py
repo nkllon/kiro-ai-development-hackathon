@@ -15,6 +15,7 @@ from enum import Enum
 from collections import deque, defaultdict
 import statistics
 from ..core.reflective_module import ReflectiveModule, HealthStatus
+from .metrics import Metric, MetricType
 from src.rm_ddd.core.health import ModuleHealth
 
 
