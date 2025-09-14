@@ -14,3 +14,20 @@ def __init__(self, module: 'ReflectiveModuleBase'):
     self._monitoring_task: Optional[asyncio.Task] = None
     self._check_interval = timedelta(seconds=30)
     logger.info(f'HealthMonitor initialized for module: {self.module_id}')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

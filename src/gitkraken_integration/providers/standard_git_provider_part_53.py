@@ -21,3 +21,20 @@ def _run_git_command(self, args: List[str], input_data: str=None, timeout: int=3
         """
     cmd = [self.git_executable] + args
     return subprocess.run(cmd, cwd=self.repo_path, capture_output=True, text=True, input=input_data, timeout=timeout, check=True)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

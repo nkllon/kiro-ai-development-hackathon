@@ -39,3 +39,20 @@
                 else:
                     overall_status = 'unhealthy'
             return {'registry_id': self._registry_id, 'overall_status': overall_status, 'health_percentage': health_percentage, 'total_modules': total_modules, 'healthy_modules': healthy_modules, 'degraded_modules': total_modules - healthy_modules, 'total_capabilities': len(self._capabilities), 'uptime': (datetime.now() - self._created_at).total_seconds(), 'last_health_check': datetime.now().isoformat()}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

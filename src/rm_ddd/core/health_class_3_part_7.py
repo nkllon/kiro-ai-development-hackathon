@@ -29,3 +29,20 @@ from src.rm_ddd.core.health import ModuleHealth
         current_health = await self.get_current_health()
         health_indicators = await self.get_health_indicators()
         return {'module_id': self.module_id, 'uptime': self._calculate_uptime(), 'current_health': current_health.to_dict() if current_health else None, 'health_indicators': {name: {'status': indicator.status, 'value': indicator.value, 'threshold': indicator.threshold, 'message': indicator.message, 'timestamp': indicator.timestamp.isoformat()} for name, indicator in health_indicators.items()}, 'health_history_count': len(self._health_history), 'monitoring_active': self._monitoring_active, 'check_interval_seconds': self._check_interval.total_seconds()}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

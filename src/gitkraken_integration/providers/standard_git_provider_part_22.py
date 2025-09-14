@@ -18,3 +18,20 @@ from src.rm_ddd.core.health import ModuleHealth
         except subprocess.CalledProcessError as e:
             execution_time = int((time.time() - start_time) * 1000)
             return self._create_result(success=False, message=f'Failed to get repository status: {e.stderr}', error_code='GIT_STATUS_FAILED', suggestions=["Ensure you're in a valid git repository", 'Check git installation and permissions'], execution_time_ms=execution_time)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

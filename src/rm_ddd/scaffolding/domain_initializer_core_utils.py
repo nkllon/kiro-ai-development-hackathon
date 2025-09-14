@@ -31,3 +31,20 @@ def _format_ubiquitous_language(self, language_mapping: Dict[str, str]) -> str:
     for term, definition in language_mapping.items():
         formatted_items.append(f'                "{term}": "{definition}"')
     return ',\n'.join(formatted_items)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

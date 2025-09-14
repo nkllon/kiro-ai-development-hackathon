@@ -20,3 +20,20 @@ def add_dependency(self, dependent_id: str, dependency_id: str):
         self._modules[dependent_id].dependencies.add(dependency_id)
         self._modules[dependency_id].dependents.add(dependent_id)
         logger.debug(f'Added dependency: {dependent_id} -> {dependency_id}')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

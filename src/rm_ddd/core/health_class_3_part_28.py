@@ -14,4 +14,21 @@ def _calculate_uptime(self) -> Dict[str, Any]:
     uptime_percentage = healthy_checks / total_checks * 100 if total_checks > 0 else 0.0
     return {'uptime_percentage': uptime_percentage, 'total_checks': total_checks, 'healthy_checks': healthy_checks, 'degraded_checks': total_checks - healthy_checks}
 
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
 @property

@@ -20,3 +20,20 @@ def get_modules_by_capability(self, capability_name: str) -> List[RegisteredModu
             return []
         module_ids = self._capabilities[capability_name]
         return [self._modules[module_id] for module_id in module_ids if module_id in self._modules]
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

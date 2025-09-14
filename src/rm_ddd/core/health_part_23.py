@@ -121,3 +121,20 @@
             return {'module_id': self.module_id, 'status': 'unknown', 'message': 'No health data available'}
         health_trend = self._calculate_health_trend()
         return {'module_id': self.module_id, 'current_status': current_health.status.value, 'is_healthy': current_health.is_healthy, 'message': current_health.message, 'health_trend': health_trend, 'health_indicators': {name: {'status': indicator.status, 'value': indicator.value, 'message': indicator.message} for name, indicator in self._health_indicators.items()}, 'domain_health': current_health.domain_health.to_dict() if current_health.domain_health else None, 'last_check': current_health.timestamp.isoformat(), 'monitoring_active': self._monitoring_active}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
