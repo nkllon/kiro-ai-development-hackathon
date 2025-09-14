@@ -70,3 +70,20 @@ def update_test_results(self, results: Dict[str, Any]) -> None:
     self.test_metrics.skipped_tests = results.get('skipped', 0)
     self.test_metrics.execution_time = results.get('duration', 0.0)
     self.test_metrics.last_run = datetime.now()
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

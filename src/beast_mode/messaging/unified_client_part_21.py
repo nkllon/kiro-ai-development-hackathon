@@ -12,3 +12,20 @@ from src.rm_ddd.core.health import ModuleHealth
         """Send a spore (backward compatibility)."""
         message = BeastModeMessage(type=MessageType.SPORE_DELIVERY, source=self.agent_id, payload={'spore_type': 'systematic_pattern', 'spore_data': spore_data, 'shared_at': datetime.now().isoformat()})
         asyncio.create_task(self.send_message(message))
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -11,3 +11,20 @@ def get_alerts_by_severity(self, severity: AlertSeverity) -> List[Alert]:
         raise
     """Get active alerts by severity."""
     return [alert for alert in self.active_alerts.values() if alert.severity == severity]
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -144,3 +144,20 @@ def get_stats(self) -> Dict[str, Any]:
 def get_health_status(self) -> Dict[str, Any]:
     """Get health status of the message history manager"""
     return {'status': 'healthy' if self.is_running else 'stopped', 'is_running': self.is_running, 'log_directory': str(self.log_directory), 'status_file': str(self.status_file), 'stats': self.get_stats()}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

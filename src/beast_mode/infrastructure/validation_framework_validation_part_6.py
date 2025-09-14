@@ -15,3 +15,20 @@ def _validate_documentation_infrastructure(self) -> ValidationResult:
     status = 'PASS' if compliance_score >= 0.8 else 'WARNING'
     recommendations.extend(['Implement systematic documentation standards', 'Setup automated documentation generation', 'Add systematic knowledge management capabilities'])
     return ValidationResult(component=InfrastructureComponent.DOCUMENTATION, status=status, issues=issues, systematic_compliance_score=compliance_score, recommendations=recommendations, validation_timestamp=datetime.now())
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -200,3 +200,20 @@ from src.rm_ddd.core.health import ModuleHealth
         response = BeastModeMessage(type=MessageType.AGENT_RESPONSE, source=self.agent_id, target=message.source, payload={'agent_capabilities': AgentCapabilities(agent_id=self.agent_id, capabilities=self.capabilities, availability='ready_for_business').model_dump(), 'response_to': message.id}, correlation_id=message.id, priority=3)
         await self.send_message(response)
         logger.info(f'Responded to discovery from {message.source}')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

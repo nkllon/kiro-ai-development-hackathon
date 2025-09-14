@@ -63,3 +63,20 @@ from src.rm_ddd.core.health import ModuleHealth
         compliance_score = 1.0
     status = 'PASS' if compliance_score >= 0.8 else 'FAIL' if compliance_score < 0.5 else 'WARNING'
     return ValidationResult(component=InfrastructureComponent.PROFILING, status=status, issues=issues, systematic_compliance_score=compliance_score, recommendations=recommendations, validation_timestamp=datetime.now())
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
