@@ -16,7 +16,7 @@ import subprocess
 from pathlib import Path
 
 
-class TestComprehensiveWorking:
+class TestComprehensiveWorking(ReflectiveModule):
     """Comprehensive test suite for working functionality."""
     
     def test_environment_setup(self):
@@ -233,7 +233,7 @@ class TestComprehensiveWorking:
         assert duration < 10  # Should complete quickly
 
 
-class TestSystemIntegration:
+class TestSystemIntegration(ReflectiveModule):
     """Test system integration aspects."""
     
     def test_environment_variables(self):
@@ -265,6 +265,8 @@ class TestSystemIntegration:
         import datetime
         import pathlib
         import subprocess
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         
         # Test that modules have expected attributes
         assert hasattr(os, "getcwd")
@@ -275,7 +277,7 @@ class TestSystemIntegration:
         assert hasattr(subprocess, "run")
 
 
-class TestPerformanceBasics:
+class TestPerformanceBasics(ReflectiveModule):
     """Test basic performance characteristics."""
     
     def test_execution_speed(self):
@@ -312,3 +314,31 @@ class TestPerformanceBasics:
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+

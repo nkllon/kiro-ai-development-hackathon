@@ -17,3 +17,20 @@ def _generate_validation_criteria(self, issue_type: ComplianceIssueType, issues:
     elif issue_type == ComplianceIssueType.RDI_VIOLATION:
         criteria.extend(['Requirements traceability established', 'Design-implementation alignment verified', 'Documentation updated'])
     return criteria
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

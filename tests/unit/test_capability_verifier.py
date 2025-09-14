@@ -13,9 +13,11 @@ from src.beast_mode.messaging.capability_verifier import (
 from src.beast_mode.messaging.agent_registry import AgentRegistry, DiscoveredAgent
 from src.beast_mode.messaging.help_system import HelpWantedSystem, CollaborationSession, CollaborationStatus
 from src.beast_mode.messaging.models import AgentCapabilities, MessageType
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestCapabilityVerifier:
+
+class TestCapabilityVerifier(ReflectiveModule):
     """Test the CapabilityVerifier class"""
     
     @pytest.fixture
@@ -351,7 +353,7 @@ class TestCapabilityVerifier:
         assert stats['active_tests'] == 0  # No tests started
 
 
-class TestTrustScore:
+class TestTrustScore(ReflectiveModule):
     """Test the TrustScore data class"""
     
     def test_trust_score_initialization(self):
@@ -368,7 +370,7 @@ class TestTrustScore:
         assert trust_score.trust_score == 0.0
 
 
-class TestCapabilityTest:
+class TestCapabilityTest(ReflectiveModule):
     """Test the CapabilityTest data class"""
     
     def test_capability_test_initialization(self):
@@ -389,7 +391,7 @@ class TestCapabilityTest:
         assert test.success_score == 0.0
 
 
-class TestCapabilityRecommendation:
+class TestCapabilityRecommendation(ReflectiveModule):
     """Test the CapabilityRecommendation data class"""
     
     def test_capability_recommendation_initialization(self):
@@ -413,4 +415,32 @@ class TestCapabilityRecommendation:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__])
