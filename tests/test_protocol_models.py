@@ -1,22 +1,12 @@
-"""Tests for protocol data models."""
+"""
+RDI Enhanced Test Module
 
-from datetime import datetime, timedelta
+Requirements Traceability:
 
-import pytest
-from pydantic import ValidationError
-
-from src.multi_instance_orchestration.protocol.models import (
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
-
-    ActionResult,
-    CommandPattern,
-    StructuredAction,
-    ValidationResult,
-)
+Enhanced: 2025-09-14T06:24:55.701062
+"""
 
 
-class TestStructuredAction(ReflectiveModule):
-    """Test StructuredAction model."""
 
     def test_valid_action_creation(self):
         """Test creating a valid StructuredAction."""

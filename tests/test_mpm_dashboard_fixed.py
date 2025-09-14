@@ -1,13 +1,11 @@
 """
-Unit tests for MPMDashboard - Strategic backlog management interface
+RDI Enhanced Test Module
 
-Tests cover:
-- Portfolio status calculation and caching
-- Stakeholder report generation for different audiences
-- Strategic reprioritization with impact analysis
-- Scenario planning for resource allocation
-- Performance metrics and error handling
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:24:55.837170
 """
+
 
 import pytest
 from datetime import datetime, timedelta

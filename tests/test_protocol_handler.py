@@ -1,18 +1,12 @@
-"""Tests for TextProtocolHandler."""
+"""
+RDI Enhanced Test Module
 
-from datetime import timedelta
+Requirements Traceability:
 
-import pytest
-
-from src.multi_instance_orchestration.protocol.models import (
-    ActionResult,
-    CommandPattern,
-    StructuredAction,
-)
+Enhanced: 2025-09-14T06:24:55.697416
+"""
 
 
-class TestTextProtocolHandler(ModuleHealth):
-    """Test TextProtocolHandler class."""
 
     def test_handler_initialization(self, protocol_handler):
         """Test handler initialization."""

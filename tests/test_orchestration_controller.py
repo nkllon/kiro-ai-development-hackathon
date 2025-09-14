@@ -1,24 +1,12 @@
-"""Tests for OrchestrationController."""
+"""
+RDI Enhanced Test Module
 
-from datetime import datetime, timedelta
-from pathlib import Path
+Requirements Traceability:
 
-import pytest
-
-from src.multi_instance_orchestration.orchestration.controller import OrchestrationController
-from src.multi_instance_orchestration.orchestration.models import (
-    DistributionStrategy,
-    InstanceFailure,
-    IntegrationPolicy,
-    SwarmConfig,
-    Task,
-    TaskStatus,
-)
+Enhanced: 2025-09-14T06:24:55.658396
+"""
 
 
-@pytest.fixture
-def basic_config():
-    """Basic swarm configuration for testing."""
     return SwarmConfig(
         instance_count=3,
         task_distribution_strategy=DistributionStrategy.DEPENDENCY_AWARE,

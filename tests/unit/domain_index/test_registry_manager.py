@@ -1,8 +1,12 @@
 """
-Test Domain Registry Manager
+RDI Enhanced Test Module
 
-Tests for the core domain registry management functionality.
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:24:55.656981
 """
+
+
 
 import pytest
 import json

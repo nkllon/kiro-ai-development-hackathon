@@ -1,0 +1,379 @@
+"""
+RDI Enhanced Test Module
+
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:24:50.697944
+"""
+
+
+import pytest
+import asyncio
+from unittest.mock import Mock, patch, AsyncMock
+from datetime import datetime
+
+from src.beast_mode.messaging.unified_client import BeastModeClient
+from src.beast_mode.messaging.models import BeastModeMessage, MessageType
+from src.beast_mode.messaging.shared_state import SharedStateConfig
+from src.rm_ddd.core.health import ModuleHealth
+
+
+
+@pytest.fixture
+def mock_transport():
+    """Mock transport for testing"""
+    transport = AsyncMock()
+    transport.initialize.return_value = True
+    transport.start_daemon.return_value = True
+    transport.stop_daemon.return_value = None
+    transport.send_message.return_value = True
+    transport.subscribe.return_value = True
+    transport.get_status.return_value = {'transport_type': 'mock', 'connected': True}
+    transport.get_capabilities.return_value = {'reliable_delivery': True}
+    return transport
+
+
+@pytest.fixture
+def mock_shared_state():
+    """Mock shared state for testing"""
+    shared_state = AsyncMock()
+    shared_state.initialize.return_value = True
+    shared_state.update_agent_state.return_value = True
+    shared_state.remove_agent_state.return_value = True
+    shared_state.increment_counter.return_value = 1
+    shared_state.get_active_agents.return_value = ['agent1', 'agent2']
+    shared_state.get_agent_state.return_value = {'status': 'online'}
+    shared_state.shutdown.return_value = None
+    return shared_state
+
+
+@pytest.fixture
+def unified_client(mock_transport, mock_shared_state):
+    """Create unified client with mocked dependencies"""
+    with patch('src.beast_mode.messaging.unified_client.TransportFactory') as mock_factory:
+        with patch('src.beast_mode.messaging.unified_client.BeastModeSharedState') as mock_state_class:
+            mock_factory.create_transport.return_value = mock_transport
+            mock_state_class.return_value = mock_shared_state
+            
+            client = BeastModeClient(
+                agent_id='test_agent',
+                transport_type='redis',
+                capabilities=['testing', 'mocking'],
+                specializations=['unit_tests']
+            )
+            
+            return client
+
+
+@pytest.mark.asyncio
+async def test_client_initialization(unified_client):
+    """Test client initialization"""
+    assert unified_client.agent_id == 'test_agent'
+    assert unified_client.transport_type == 'redis'
+    assert unified_client.capabilities == ['testing', 'mocking']
+    assert unified_client.specializations == ['unit_tests']
+    assert not unified_client.is_started
+
+
+@pytest.mark.asyncio
+async def test_client_start(unified_client, mock_transport, mock_shared_state):
+    """Test starting the client"""
+    result = await unified_client.start()
+    
+    assert result is True
+    assert unified_client.is_started is True
+    
+    # Verify initialization sequence
+    mock_shared_state.initialize.assert_called_once()
+    mock_transport.initialize.assert_called_once()
+    mock_transport.subscribe.assert_called_once()
+    mock_transport.start_daemon.assert_called_once()
+    mock_shared_state.update_agent_state.assert_called()
+
+
+@pytest.mark.asyncio
+async def test_client_stop(unified_client, mock_transport, mock_shared_state):
+    """Test stopping the client"""
+    # Start first
+    await unified_client.start()
+    
+    # Then stop
+    await unified_client.stop()
+    
+    assert unified_client.is_started is False
+    
+    # Verify shutdown sequence
+    mock_shared_state.remove_agent_state.assert_called_with('test_agent')
+    mock_transport.stop_daemon.assert_called_once()
+    mock_shared_state.shutdown.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_send_message(unified_client, mock_transport, mock_shared_state):
+    """Test sending messages"""
+    await unified_client.start()
+    
+    message = BeastModeMessage(
+        type=MessageType.SIMPLE_MESSAGE,
+        source='test_agent',
+        payload={'text': 'test message'}
+    )
+    
+    result = await unified_client.send_message(message)
+    
+    assert result is True
+    mock_transport.send_message.assert_called_once_with(message)
+    mock_shared_state.increment_counter.assert_called_with('messages_sent', 'test_agent')
+    mock_shared_state.update_agent_state.assert_called()
+
+
+@pytest.mark.asyncio
+async def test_message_handling(unified_client):
+    """Test message handling with registered handlers"""
+    handler_calls = []
+    
+    def test_handler(message):
+        handler_calls.append(message)
+    
+    # Register handler
+    unified_client.register_handler(MessageType.SIMPLE_MESSAGE, test_handler)
+    
+    # Simulate receiving a message
+    test_message = BeastModeMessage(
+        type=MessageType.SIMPLE_MESSAGE,
+        source='other_agent',
+        payload={'text': 'incoming message'}
+    )
+    
+    await unified_client._handle_message(test_message)
+    
+    # Verify handler was called
+    assert len(handler_calls) == 1
+    assert handler_calls[0].payload['text'] == 'incoming message'
+
+
+@pytest.mark.asyncio
+async def test_async_message_handler(unified_client):
+    """Test async message handlers"""
+    handler_calls = []
+    
+    async def async_handler(message):
+        handler_calls.append(message)
+    
+    # Register async handler
+    unified_client.register_handler(MessageType.SIMPLE_MESSAGE, async_handler)
+    
+    # Simulate receiving a message
+    test_message = BeastModeMessage(
+        type=MessageType.SIMPLE_MESSAGE,
+        source='other_agent',
+        payload={'text': 'async message'}
+    )
+    
+    await unified_client._handle_message(test_message)
+    
+    # Verify async handler was called
+    assert len(handler_calls) == 1
+    assert handler_calls[0].payload['text'] == 'async message'
+
+
+@pytest.mark.asyncio
+async def test_builtin_agent_discovery(unified_client, mock_transport):
+    """Test built-in agent discovery response"""
+    await unified_client.start()
+    
+    # Simulate agent discovery message
+    discovery_message = BeastModeMessage(
+        type=MessageType.AGENT_DISCOVERY,
+        source='discovering_agent',
+        payload={'requesting_info': True}
+    )
+    
+    await unified_client._handle_message(discovery_message)
+    
+    # Verify response was sent
+    assert mock_transport.send_message.call_count >= 1
+    
+    # Check the response message
+    sent_calls = mock_transport.send_message.call_args_list
+    response_call = sent_calls[-1]  # Last call should be the response
+    response_message = response_call[0][0]
+    
+    assert response_message.type == MessageType.AGENT_RESPONSE
+    assert response_message.target == 'discovering_agent'
+    assert response_message.payload['agent_id'] == 'test_agent'
+
+
+def test_get_status(unified_client):
+    """Test getting client status"""
+    status = unified_client.get_status()
+    
+    assert status['agent_id'] == 'test_agent'
+    assert status['transport_type'] == 'redis'
+    assert status['capabilities'] == ['testing', 'mocking']
+    assert status['specializations'] == ['unit_tests']
+    assert 'transport_status' in status
+    assert 'stats' in status
+
+
+def test_get_capabilities(unified_client):
+    """Test getting client capabilities"""
+    capabilities = unified_client.get_capabilities()
+    
+    assert capabilities['agent_capabilities'] == ['testing', 'mocking']
+    assert capabilities['agent_specializations'] == ['unit_tests']
+    assert 'transport_capabilities' in capabilities
+    assert 'client_features' in capabilities
+    assert 'unified_interface' in capabilities['client_features']
+
+
+@pytest.mark.asyncio
+async def test_discover_agents(unified_client, mock_shared_state):
+    """Test agent discovery"""
+    agents = await unified_client.discover_agents()
+    
+    assert agents == ['agent1', 'agent2']
+    mock_shared_state.get_active_agents.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_get_agent_info(unified_client, mock_shared_state):
+    """Test getting agent information"""
+    info = await unified_client.get_agent_info('other_agent')
+    
+    assert info == {'status': 'online'}
+    mock_shared_state.get_agent_state.assert_called_once_with('other_agent')
+
+
+@pytest.mark.asyncio
+async def test_send_simple_message(unified_client, mock_transport):
+    """Test convenience method for simple messages"""
+    await unified_client.start()
+    
+    result = await unified_client.send_simple_message('target_agent', 'Hello!')
+    
+    assert result is True
+    
+    # Verify message was sent with correct structure
+    sent_call = mock_transport.send_message.call_args_list[-1]
+    sent_message = sent_call[0][0]
+    
+    assert sent_message.type == MessageType.SIMPLE_MESSAGE
+    assert sent_message.target == 'target_agent'
+    assert sent_message.payload['text'] == 'Hello!'
+
+
+@pytest.mark.asyncio
+async def test_broadcast_message(unified_client, mock_transport):
+    """Test broadcasting messages"""
+    await unified_client.start()
+    
+    result = await unified_client.broadcast_message('Broadcast message!')
+    
+    assert result is True
+    
+    # Verify broadcast message structure
+    sent_call = mock_transport.send_message.call_args_list[-1]
+    sent_message = sent_call[0][0]
+    
+    assert sent_message.type == MessageType.SIMPLE_MESSAGE
+    assert sent_message.target is None  # Broadcast
+    assert sent_message.payload['text'] == 'Broadcast message!'
+
+
+@pytest.mark.asyncio
+async def test_request_help(unified_client, mock_transport):
+    """Test help request functionality"""
+    await unified_client.start()
+    
+    result = await unified_client.request_help('debugging', 'Need help with tests')
+    
+    assert result is True
+    
+    # Verify help request message
+    sent_call = mock_transport.send_message.call_args_list[-1]
+    sent_message = sent_call[0][0]
+    
+    assert sent_message.type == MessageType.HELP_WANTED
+    assert sent_message.payload['topic'] == 'debugging'
+    assert sent_message.payload['details'] == 'Need help with tests'
+
+
+def test_backward_compatibility_methods(unified_client):
+    """Test backward compatibility methods"""
+    # Test send_spore (should not raise)
+    unified_client.send_spore({'pattern': 'test_pattern'})
+    
+    # Test announce_presence (should not raise)
+    unified_client.announce_presence()
+    
+    # These methods use asyncio.create_task internally, so we just verify they don't crash
+
+
+@pytest.mark.asyncio
+async def test_error_handling(unified_client, mock_transport, mock_shared_state):
+    """Test error handling scenarios"""
+    # Test start failure when shared state fails
+    mock_shared_state.initialize.return_value = False
+    
+    result = await unified_client.start()
+    assert result is False
+    assert not unified_client.is_started
+    
+    # Reset for transport failure test
+    mock_shared_state.initialize.return_value = True
+    mock_transport.initialize.return_value = False
+    
+    result = await unified_client.start()
+    assert result is False
+    assert not unified_client.is_started
+
+
+@pytest.mark.asyncio
+async def test_message_handler_error_handling(unified_client):
+    """Test error handling in message handlers"""
+    def failing_handler(message):
+        raise Exception("Handler error")
+    
+    # Register failing handler
+    unified_client.register_handler(MessageType.SIMPLE_MESSAGE, failing_handler)
+    
+    # This should not raise, just log the error
+    test_message = BeastModeMessage(
+        type=MessageType.SIMPLE_MESSAGE,
+        source='test',
+        payload={}
+    )
+    
+    await unified_client._handle_message(test_message)
+    # Should complete without raising
+
+
+@pytest.mark.asyncio
+async def test_client_not_started_error(unified_client):
+    """Test operations when client not started"""
+    message = BeastModeMessage(
+        type=MessageType.SIMPLE_MESSAGE,
+        source='test',
+        payload={}
+    )
+    
+    result = await unified_client.send_message(message)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
+    assert result is False

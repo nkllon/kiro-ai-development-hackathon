@@ -1,7 +1,12 @@
 """
-Tests for Tool Orchestration Engine
-Tests UC-03: Model-Driven Decision Making with confidence-based routing
+RDI Enhanced Test Module
+
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:24:55.694929
 """
+
+
 
 import pytest
 import time

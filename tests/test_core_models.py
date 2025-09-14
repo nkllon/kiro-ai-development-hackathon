@@ -1,16 +1,12 @@
-"""Unit tests for core data models."""
+"""
+RDI Enhanced Test Module
 
-import pytest
-from src.visual_diagram_validation.core.models import (
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+Requirements Traceability:
 
-    PNGImage, QualityViolation, Recommendation, AnalysisResult, 
-    QualityReport, BoundingBox, Severity, ActionType
-)
+Enhanced: 2025-09-14T06:24:55.642469
+"""
 
 
-class TestBoundingBox(ReflectiveModule):
-    """Test BoundingBox functionality."""
     
     def test_center_calculation(self):
         """Test center point calculation."""

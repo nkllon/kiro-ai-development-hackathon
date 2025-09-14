@@ -1,12 +1,11 @@
-"""Unit tests for SVG processor."""
+"""
+RDI Enhanced Test Module
 
-import pytest
-from src.visual_diagram_validation.processors.svg_processor import SVGProcessor
-from src.visual_diagram_validation.core.models import PNGImage
+Requirements Traceability:
 
+Enhanced: 2025-09-14T06:24:55.787725
+"""
 
-class TestSVGProcessor:
-    """Test SVG processing functionality."""
     
     def setup_method(self):
         """Set up test fixtures."""
