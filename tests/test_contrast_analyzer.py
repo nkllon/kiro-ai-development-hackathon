@@ -7,9 +7,11 @@ import numpy as np
 
 from src.visual_diagram_validation.analyzers.contrast_analyzer import ContrastAnalyzer
 from src.visual_diagram_validation.core.models import PNGImage, BoundingBox
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestContrastAnalyzer:
+
+class TestContrastAnalyzer(ReflectiveModule):
     """Test contrast analysis functionality."""
     
     def setup_method(self):
@@ -249,4 +251,32 @@ class TestContrastAnalyzer:
         
         # Should detect low overall contrast
         overall_violations = [v for v in result.violations if v.rule_id == 'overall_contrast']
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert len(overall_violations) > 0
