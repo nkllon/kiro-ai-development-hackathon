@@ -19,11 +19,14 @@ from src.rm_ddd.core.health import ModuleHealth
 
 
 @abstractmethod
-def get_supported_types(self) -> List[MessageType]:
+class GetsupportedtypesClass:
+    """Auto-generated class for functions."""
+
+    def get_supported_types(self) -> List[MessageType]:
     """Return list of supported message types"""
     pass
 
-def __init__(self, redis_url: str='redis://localhost:6379'):
+    def __init__(self, redis_url: str='redis://localhost:6379'):
     self.redis_url = redis_url
     self.client: Optional[redis.Redis] = None
     self.pubsub: Optional[redis.client.PubSub] = None
@@ -34,30 +37,30 @@ def __init__(self, redis_url: str='redis://localhost:6379'):
     self.metrics = {'messages_sent': 0, 'messages_received': 0, 'messages_processed': 0, 'processing_errors': 0, 'last_activity': None}
     self.listener_task: Optional[asyncio.Task] = None
 
-def register_handler(self, handler: MessageHandler, channel: str) -> None:
+    def register_handler(self, handler: MessageHandler, channel: str) -> None:
     """Register a message handler for a channel"""
     if channel not in self.handlers:
-        self.handlers[channel] = []
+    self.handlers[channel] = []
     self.handlers[channel].append(handler)
     logger.info(f'Registered handler for channel {channel}')
 
-def get_health_status(self) -> Dict[str, Any]:
+    def get_health_status(self) -> Dict[str, Any]:
     """Get health status and metrics"""
     return {'status': 'healthy' if self.is_initialized else 'not_initialized', 'is_listening': self.is_listening, 'listening_channels': list(self.listening_channels), 'registered_handlers': {channel: len(handlers) for channel, handlers in self.handlers.items()}, 'metrics': self.metrics.copy()}
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

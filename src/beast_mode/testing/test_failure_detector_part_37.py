@@ -1,6 +1,9 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def __init__(self, error_handler: Optional[RCAErrorHandler]=None):
+class InitClass:
+    """Auto-generated class for functions."""
+
+    def __init__(self, error_handler: Optional[RCAErrorHandler]=None):
     super().__init__('test_failure_detector')
     self.error_handler = error_handler or RCAErrorHandler()
     self.total_test_runs_monitored = 0
@@ -10,18 +13,18 @@ def __init__(self, error_handler: Optional[RCAErrorHandler]=None):
     self._update_health_indicator('test_failure_detection_readiness', HealthStatus.HEALTHY, 'ready', 'Test failure detector ready for pytest monitoring')
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

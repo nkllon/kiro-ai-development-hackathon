@@ -21,7 +21,10 @@ from ..orchestration.tool_orchestration_engine import ToolOrchestrationEngine
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def create_parser(self) -> argparse.ArgumentParser:
+class CreateparserClass:
+    """Auto-generated class for functions."""
+
+    def create_parser(self) -> argparse.ArgumentParser:
     """Create argument parser for CLI"""
     parser = argparse.ArgumentParser(description='Beast Mode Framework CLI - Operational Interface', formatter_class=argparse.RawDescriptionHelpFormatter, epilog='\nExamples:\n  beast-mode status                    # Show system status\n  beast-mode health                    # Health check\n  beast-mode validate                  # Complete validation\n  beast-mode pdca cycle               # Run PDCA cycle\n  beast-mode debug system             # Debug information\n  beast-mode unknown-risks list       # List unknown risks\n            ')
     parser.add_argument('command', choices=['status', 'health', 'validate', 'pdca', 'orchestrate', 'metrics', 'debug', 'unknown-risks'], help='Command to execute')
@@ -29,18 +32,18 @@ def create_parser(self) -> argparse.ArgumentParser:
     return parser
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

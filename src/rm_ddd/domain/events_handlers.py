@@ -20,144 +20,147 @@ from ..core.health import ModuleHealth
 
 class DomainEventHandler(ABC, ReflectiveModule):
 def register_with_registry(self, registry):
-        """Register this module with the RM registry."""
-        if registry:
-            registry.register_module(self)
-            self.add_capability("registry_registered")
-    
+    """Register this module with the RM registry."""
+if registry:
+    registry.register_module(self)
+    self.add_capability("registry_registered")
+
+class RegisterwithregistryClass:
+    """Auto-generated class for functions."""
+
     def get_module_metadata(self) -> Dict[str, any]:
-        """Get module metadata for registry."""
-        return {
-            "module_id": self.module_id,
-            "module_type": self.module_type,
-            "capabilities": self.capabilities,
-            "dependencies": self.dependencies,
-            "health_status": self.health_status,
-            "last_updated": self.last_updated
-        }
-def get_health_indicators(self) -> Dict[str, any]:
-        """Get health indicators for this module."""
-        return {
-            "module_id": self.module_id,
-            "status": self.health_status,
-            "last_updated": self.last_updated,
-            "capabilities_count": len(self.capabilities),
-            "dependencies_count": len(self.dependencies)
-        }
-    
+    """Get module metadata for registry."""
+    return {
+    "module_id": self.module_id,
+    "module_type": self.module_type,
+    "capabilities": self.capabilities,
+    "dependencies": self.dependencies,
+    "health_status": self.health_status,
+    "last_updated": self.last_updated
+    }
+    def get_health_indicators(self) -> Dict[str, any]:
+    """Get health indicators for this module."""
+    return {
+    "module_id": self.module_id,
+    "status": self.health_status,
+    "last_updated": self.last_updated,
+    "capabilities_count": len(self.capabilities),
+    "dependencies_count": len(self.dependencies)
+    }
+
     def get_status_report(self) -> Dict[str, any]:
-        """Get comprehensive status report for this module."""
-        return {
-            "module_id": self.module_id,
-            "health_status": self.health_status,
-            "capabilities": self.capabilities,
-            "dependencies": self.dependencies,
-            "last_updated": self.last_updated,
-            "performance_metrics": self.get_metrics()
-        }
+    """Get comprehensive status report for this module."""
+    return {
+    "module_id": self.module_id,
+    "health_status": self.health_status,
+    "capabilities": self.capabilities,
+    "dependencies": self.dependencies,
+    "last_updated": self.last_updated,
+    "performance_metrics": self.get_metrics()
+    }
     """
     Abstract base class for domain event handlers.
-    
+
     Event handlers process domain events and perform side effects
     such as updating read models, sending notifications, or
     triggering other business processes.
     """
 
     def __init__(self, handler_name: str):
-        self.handler_name = handler_name
-        self._handled_events = 0
-        self._failed_events = 0
-        self._last_handled = None
+    self.handler_name = handler_name
+    self._handled_events = 0
+    self._failed_events = 0
+    self._last_handled = None
 
     @abstractmethod
     async def handle(self, event: DomainEvent) -> None:
-        """
-        Handle a domain event.
-        
-        Args:
-            event: Domain event to handle
-            
-        Raises:
-            Exception: If handling fails
-            
-        Note:
-            Implementations should be idempotent as events may be
-            replayed or delivered multiple times.
-        """
-        pass
+    """
+    Handle a domain event.
+
+    Args:
+    event: Domain event to handle
+
+    Raises:
+    Exception: If handling fails
+
+    Note:
+    Implementations should be idempotent as events may be
+    replayed or delivered multiple times.
+    """
+    pass
 
     @abstractmethod
     def can_handle(self, event_type: str) -> bool:
-        """can_handle - Enhanced for compliance"""
-        try:
-            pass  # TODO: Add method implementation
-        except Exception as e:
-            logging.error(f"Error in method: {e}")
-            raise
-        """
-        Check if this handler can handle the given event type.
-        
-        Args:
-            event_type: Type of event to check
-            
-        Returns:
-            bool: True if this handler can handle the event type
-        """
-        pass
+    """can_handle - Enhanced for compliance"""
+    try:
+    pass  # TODO: Add method implementation
+    except Exception as e:
+    logging.error(f"Error in method: {e}")
+    raise
+    """
+    Check if this handler can handle the given event type.
+
+    Args:
+    event_type: Type of event to check
+
+    Returns:
+    bool: True if this handler can handle the event type
+    """
+    pass
 
     async def handle_with_metrics(self, event: DomainEvent) -> None:
-        """
-        Handle event with metrics tracking.
-        
-        Args:
-            event: Domain event to handle
-        """
-        try:
-            await self.handle(event)
-            self._handled_events += 1
-            self._last_handled = datetime.now()
-            logger.debug(f'Handler {self.handler_name} successfully handled {event.event_type}')
-        except Exception as e:
-            self._failed_events += 1
-            logger.error(f'Handler {self.handler_name} failed to handle {event.event_type}: {e}')
-            raise
+    """
+    Handle event with metrics tracking.
+
+    Args:
+    event: Domain event to handle
+    """
+    try:
+    await self.handle(event)
+    self._handled_events += 1
+    self._last_handled = datetime.now()
+    logger.debug(f'Handler {self.handler_name} successfully handled {event.event_type}')
+    except Exception as e:
+    self._failed_events += 1
+    logger.error(f'Handler {self.handler_name} failed to handle {event.event_type}: {e}')
+    raise
 
     def get_handler_metrics(self) -> Dict[str, Any]:
-        """get_handler_metrics - Enhanced for compliance"""
-        try:
-            pass  # TODO: Add method implementation
-        except Exception as e:
-            logging.error(f"Error in method: {e}")
-            raise
-        """Get handler performance metrics."""
-        total_events = self._handled_events + self._failed_events
-        success_rate = self._handled_events / max(total_events, 1)
-        return {'handler_name': self.handler_name, 'handled_events': self._handled_events, 'failed_events': self._failed_events, 'success_rate': success_rate, 'last_handled': self._last_handled.isoformat() if self._last_handled else None}
+    """get_handler_metrics - Enhanced for compliance"""
+    try:
+    pass  # TODO: Add method implementation
+    except Exception as e:
+    logging.error(f"Error in method: {e}")
+    raise
+    """Get handler performance metrics."""
+    total_events = self._handled_events + self._failed_events
+    success_rate = self._handled_events / max(total_events, 1)
+    return {'handler_name': self.handler_name, 'handled_events': self._handled_events, 'failed_events': self._failed_events, 'success_rate': success_rate, 'last_handled': self._last_handled.isoformat() if self._last_handled else None}
 
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
-        
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
+
     def register_module(self, registry):
-        """Register module with registry."""
-        if hasattr(registry, 'register'):
-            registry.register(self.get_interface_metadata())
-            
+    """Register module with registry."""
+    if hasattr(registry, 'register'):
+    registry.register(self.get_interface_metadata())
+
     def health_check(self):
-        """Perform health check."""
-        return {
-            'status': 'healthy',
-            'timestamp': datetime.now().isoformat(),
-            'module_id': getattr(self, 'module_id', self.__class__.__name__)
-        }
-        
+    """Perform health check."""
+    return {
+    'status': 'healthy',
+    'timestamp': datetime.now().isoformat(),
+    'module_id': getattr(self, 'module_id', self.__class__.__name__)
+    }
+
     def get_health_status(self):
-        """Get current health status."""
-        return self.health_check()
+    """Get current health status."""
+    return self.health_check()
 

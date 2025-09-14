@@ -2,24 +2,27 @@ from src.rm_ddd.core.registry import register_module
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def optimize_demo_timing(self, demo_script: DemoScript, hackathon_config: HackathonConfig, pacing_strategy: PacingStrategy=PacingStrategy.DEMO_FOCUSED, template_name: str='devpost_standard') -> TimingOptimization:
+class OptimizedemotimingClass:
+    """Auto-generated class for functions."""
+
+    def optimize_demo_timing(self, demo_script: DemoScript, hackathon_config: HackathonConfig, pacing_strategy: PacingStrategy=PacingStrategy.DEMO_FOCUSED, template_name: str='devpost_standard') -> TimingOptimization:
     try:
-        pass  # TODO: Add method implementation
+    pass  # TODO: Add method implementation
     except Exception as e:
-        logging.error(f"Error in method: {e}")
-        raise
+    logging.error(f"Error in method: {e}")
+    raise
     """
-        Optimize demo timing for maximum impact.
-        
-        Args:
-            demo_script: Original demo script
-            hackathon_config: Hackathon configuration with time limits
-            pacing_strategy: Desired pacing strategy
-            template_name: Timing template to use
-            
-        Returns:
-            Complete timing optimization results
-        """
+    Optimize demo timing for maximum impact.
+
+    Args:
+    demo_script: Original demo script
+    hackathon_config: Hackathon configuration with time limits
+    pacing_strategy: Desired pacing strategy
+    template_name: Timing template to use
+
+    Returns:
+    Complete timing optimization results
+    """
     self.logger.info(f'Optimizing demo timing with {pacing_strategy.value} strategy')
     current_analysis = self._analyze_current_timing(demo_script, hackathon_config)
     recommendations = self._generate_pacing_recommendations(demo_script, hackathon_config, pacing_strategy, template_name)

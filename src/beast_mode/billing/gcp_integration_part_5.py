@@ -1,38 +1,41 @@
 from src.rm_ddd.core.health import ModuleHealth
 
+class GetstatusreportClass:
+    """Auto-generated class for functions."""
+
     def get_status_report(self) -> Dict[str, any]:
-        """Get comprehensive status report for this module."""
-        return {
-            "module_id": self.module_id,
-            "health_status": self.health_status,
-            "capabilities": self.capabilities,
-            "dependencies": self.dependencies,
-            "last_updated": self.last_updated,
-            "performance_metrics": self.get_metrics()
-        }
+    """Get comprehensive status report for this module."""
+    return {
+    "module_id": self.module_id,
+    "health_status": self.health_status,
+    "capabilities": self.capabilities,
+    "dependencies": self.dependencies,
+    "last_updated": self.last_updated,
+    "performance_metrics": self.get_metrics()
+    }
     """
     GCP Billing Monitor for Beast Mode
-    
+
     Integrates GCP billing data using either:
     1. OpenFlow asset bridge (preferred)
     2. Direct GCP SDK integration (fallback)
-    
+
     Follows Beast Mode's Reflective Module (RM) pattern
     """
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

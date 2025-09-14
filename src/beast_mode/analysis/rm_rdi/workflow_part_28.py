@@ -3,24 +3,26 @@ from typing import Dict, List, Any
 from src.rm_ddd.core.health import ModuleHealth
 
 
+class GetmetadataClass:
+    """Auto-generated class for functions."""
+
     def get_metadata(self, name: str) -> Optional[InterfaceMetadata]:
-        """Get interface metadata"""
-        return self.interfaces.get(name)
+    """Get interface metadata"""
+    return self.interfaces.get(name)
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
-    def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
 
-    
+    def get_interface_metadata(self):
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
+

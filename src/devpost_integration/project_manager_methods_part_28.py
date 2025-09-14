@@ -4,13 +4,15 @@ from typing import Dict, Any, List, Optional
 from pathlib import Pathfrom ..interfaces.projectstatus_interface import ProjectStatusfrom ..interfaces.devpostprojectmanager_interface import DevpostProjectManager
 import logging
 
+class GetmetricsClass:
+    """Auto-generated class for functions."""
+
     def get_metrics(self) -> Dict[str, Any]:
-        """Get module metrics."""
-        uptime = (datetime.now() - self._start_time).total_seconds()
-        
-        return {
-            'uptime_seconds': uptime,
-            'uptime_hours': uptime / 3600,
-            'last_check': datetime.now().isoformat()
-        }
-    
+    """Get module metrics."""
+    uptime = (datetime.now() - self._start_time).total_seconds()
+
+    return {
+    'uptime_seconds': uptime,
+    'uptime_hours': uptime / 3600,
+    'last_check': datetime.now().isoformat()
+    }

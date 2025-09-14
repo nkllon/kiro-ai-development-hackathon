@@ -22,66 +22,69 @@ from ..core.health import ModuleHealth
 from ..core.health import ModuleHealth
 from ..core.health import ModuleHealth
 
-def validate_element(self) -> ValidationResult:
+class ValidateelementClass:
+    """Auto-generated class for functions."""
+
+    def validate_element(self) -> ValidationResult:
     """Validate the shared element."""
     result = ValidationResult(is_valid=True)
     if not self.name:
-        result.add_error('Shared element name is required')
+    result.add_error('Shared element name is required')
     if not self.description:
-        result.add_warning('Shared element description is recommended')
+    result.add_warning('Shared element description is recommended')
     if not self.owner_context:
-        result.add_error('Shared element must have an owner context')
+    result.add_error('Shared element must have an owner context')
     if not self.consumer_contexts:
-        result.add_warning('Shared element has no consumer contexts')
+    result.add_warning('Shared element has no consumer contexts')
     return result
 
-def validate_change(self) -> ValidationResult:
+    def validate_change(self) -> ValidationResult:
     """Validate the change proposal."""
     result = ValidationResult(is_valid=True)
     if not self.change_type:
-        result.add_error('Change type is required')
+    result.add_error('Change type is required')
     if not self.description:
-        result.add_error('Change description is required')
+    result.add_error('Change description is required')
     if self.impact_level == ChangeImpact.BREAKING and (not self.migration_guide):
-        result.add_error('Breaking changes must include migration guide')
+    result.add_error('Breaking changes must include migration guide')
     if not self.proposed_by:
-        result.add_error('Change must specify who proposed it')
+    result.add_error('Change must specify who proposed it')
     return result
 
-def validate_domain_invariants(self):
+    def validate_domain_invariants(self):
     """Validate domain invariants."""
     result = ValidationResult(is_valid=True)
     for element in self._elements.values():
-        element_result = element.validate_element()
-        if not element_result.is_valid:
-            result.add_error(f'Invalid element {element.name}: {element_result.errors}')
+    element_result = element.validate_element()
+    if not element_result.is_valid:
+    result.add_error(f'Invalid element {element.name}: {element_result.errors}')
     for change in self._changes.values():
-        change_result = change.validate_change()
-        if not change_result.is_valid:
-            result.add_error(f'Invalid change {change.change_id}: {change_result.errors}')
+    change_result = change.validate_change()
+    if not change_result.is_valid:
+    result.add_error(f'Invalid change {change.change_id}: {change_result.errors}')
     return result
 
-def validate_domain_invariants(self):
+    def validate_domain_invariants(self):
     """Validate domain invariants."""
     result = ValidationResult(is_valid=True)
     conflicts = self.detect_conflicts()
     if conflicts:
-        result.add_error(f'Conflicts detected: {len(conflicts)} conflicts found')
+    result.add_error(f'Conflicts detected: {len(conflicts)} conflicts found')
     return result
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

@@ -1,16 +1,19 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def resolve_alert(self, alert_id: str, resolved_by: str, resolution_notes: str='') -> Dict[str, Any]:
+class ResolvealertClass:
+    """Auto-generated class for functions."""
+
+    def resolve_alert(self, alert_id: str, resolved_by: str, resolution_notes: str='') -> Dict[str, Any]:
     try:
-        pass  # TODO: Add method implementation
+    pass  # TODO: Add method implementation
     except Exception as e:
-        logging.error(f"Error in method: {e}")
-        raise
+    logging.error(f"Error in method: {e}")
+    raise
     """
-        Resolve active alert
-        """
+    Resolve active alert
+    """
     if alert_id not in self.active_alerts:
-        return {'error': 'Alert not found'}
+    return {'error': 'Alert not found'}
     alert = self.active_alerts[alert_id]
     alert.status = AlertStatus.RESOLVED
     alert.resolved_at = datetime.now()
@@ -23,18 +26,18 @@ def resolve_alert(self, alert_id: str, resolved_by: str, resolution_notes: str='
     return {'success': True, 'alert_id': alert_id, 'resolved_by': resolved_by, 'resolution_time_seconds': resolution_time}
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

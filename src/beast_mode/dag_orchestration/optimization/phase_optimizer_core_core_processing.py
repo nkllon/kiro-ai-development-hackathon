@@ -14,46 +14,49 @@ from ..models.enums import TaskStatus, RiskType, RiskImpact
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def process_task(task: TaskNode):
+class ProcesstaskClass:
+    """Auto-generated class for functions."""
+
+    def process_task(task: TaskNode):
     if task.task_id in processed:
-        return
+    return
     for dep_id in task.dependencies:
-        if dep_id in task_lookup and dep_id not in processed:
-            process_task(task_lookup[dep_id])
+    if dep_id in task_lookup and dep_id not in processed:
+    process_task(task_lookup[dep_id])
     sorted_tasks.append(task)
     processed.add(task.task_id)
 
-def process_task(task: TaskNode):
+    def process_task(task: TaskNode):
     if task.task_id in processed:
-        return
+    return
     for dep_id in task.dependencies:
-        if dep_id in task_lookup and dep_id not in processed:
-            process_task(task_lookup[dep_id])
+    if dep_id in task_lookup and dep_id not in processed:
+    process_task(task_lookup[dep_id])
     sorted_tasks.append(task)
     processed.add(task.task_id)
 
-def process_task(task: TaskNode):
+    def process_task(task: TaskNode):
     if task.task_id in processed:
-        return
+    return
     for dep_id in task.dependencies:
-        if dep_id in task_lookup and dep_id not in processed:
-            process_task(task_lookup[dep_id])
+    if dep_id in task_lookup and dep_id not in processed:
+    process_task(task_lookup[dep_id])
     sorted_tasks.append(task)
     processed.add(task.task_id)
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

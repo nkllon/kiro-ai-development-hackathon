@@ -3,29 +3,32 @@ from typing import Dict, List, Any
 from src.rm_ddd.core.health import ModuleHealth
 
 
+class CheckcryptoissuesClass:
+    """Auto-generated class for functions."""
+
     def _check_crypto_issues(self, content: str, file_path: Path) -> List[Finding]:
-        """Check for cryptographic issues"""
-        findings = []
-        lines = content.splitlines()
-        for line_num, line in enumerate(lines, 1):
-            for pattern, crypto_issue in self.crypto_patterns:
-                if re.search(pattern, line, re.IGNORECASE):
-                    findings.append(Finding(type=FindingType.SECURITY_VULNERABILITY, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), line_num), description=f"Insecure cryptographic practice: {crypto_issue.replace('_', ' ')}", confidence=0.8, evidence={'vulnerability_type': 'crypto_issue', 'issue_type': crypto_issue, 'line_content': line.strip()}))
-        return findings
+    """Check for cryptographic issues"""
+    findings = []
+    lines = content.splitlines()
+    for line_num, line in enumerate(lines, 1):
+    for pattern, crypto_issue in self.crypto_patterns:
+    if re.search(pattern, line, re.IGNORECASE):
+    findings.append(Finding(type=FindingType.SECURITY_VULNERABILITY, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), line_num), description=f"Insecure cryptographic practice: {crypto_issue.replace('_', ' ')}", confidence=0.8, evidence={'vulnerability_type': 'crypto_issue', 'issue_type': crypto_issue, 'line_content': line.strip()}))
+    return findings
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

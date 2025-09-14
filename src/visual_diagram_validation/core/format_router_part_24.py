@@ -3,59 +3,62 @@ from typing import Dict, List, Any
 from src.rm_ddd.core.health import ModuleHealth
 
 
+class DetectfromcontentClass:
+    """Auto-generated class for functions."""
+
     def _detect_from_content(self, data: bytes) -> Optional[str]:
-        """Detect format from content analysis."""
-        try:
-            # Try to decode as text for text-based formats
-            text_content = data.decode('utf-8', errors='ignore')
-            text_lower = text_content.lower().strip()
-            
-            # SVG detection
-            if text_lower.startswith('<?xml') and '<svg' in text_lower:
-                return 'svg'
-            if text_lower.startswith('<svg'):
-                return 'svg'
-            
-            # HTML detection
-            if text_lower.startswith('<!doctype html') or text_lower.startswith('<html'):
-                return 'html'
-            
-            # Mermaid detection (look for common Mermaid keywords)
-            mermaid_keywords = ['graph', 'flowchart', 'sequencediagram', 'classDiagram', 
-                              'stateDiagram', 'erDiagram', 'journey', 'gantt']
-            
-            # Check if content starts with mermaid syntax
-            first_line = text_content.split('\n')[0].strip().lower()
-            for keyword in mermaid_keywords:
-                if first_line.startswith(keyword.lower()):
-                    return 'mermaid'
-            
-            # Check for mermaid syntax patterns
-            if any(keyword in text_lower for keyword in mermaid_keywords):
-                # Additional validation - look for arrow syntax
-                if '-->' in text_content or '--->' in text_content or '-.->' in text_content:
-                    return 'mermaid'
-        
-        except UnicodeDecodeError:
-            # Not a text-based format
-            pass
-        
-        return None
+    """Detect format from content analysis."""
+    try:
+    # Try to decode as text for text-based formats
+    text_content = data.decode('utf-8', errors='ignore')
+    text_lower = text_content.lower().strip()
+
+    # SVG detection
+    if text_lower.startswith('<?xml') and '<svg' in text_lower:
+    return 'svg'
+    if text_lower.startswith('<svg'):
+    return 'svg'
+
+    # HTML detection
+    if text_lower.startswith('<!doctype html') or text_lower.startswith('<html'):
+    return 'html'
+
+    # Mermaid detection (look for common Mermaid keywords)
+    mermaid_keywords = ['graph', 'flowchart', 'sequencediagram', 'classDiagram',
+    'stateDiagram', 'erDiagram', 'journey', 'gantt']
+
+    # Check if content starts with mermaid syntax
+    first_line = text_content.split('\n')[0].strip().lower()
+    for keyword in mermaid_keywords:
+    if first_line.startswith(keyword.lower()):
+    return 'mermaid'
+
+    # Check for mermaid syntax patterns
+    if any(keyword in text_lower for keyword in mermaid_keywords):
+    # Additional validation - look for arrow syntax
+    if '-->' in text_content or '--->' in text_content or '-.->' in text_content:
+    return 'mermaid'
+
+    except UnicodeDecodeError:
+    # Not a text-based format
+    pass
+
+    return None
 
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

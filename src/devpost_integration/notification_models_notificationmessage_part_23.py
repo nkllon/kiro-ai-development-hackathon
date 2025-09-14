@@ -1,6 +1,9 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def __init__(self, settings_data: Dict[str, Any]=None):
+class InitClass:
+    """Auto-generated class for functions."""
+
+    def __init__(self, settings_data: Dict[str, Any]=None):
     """Initialize notification settings."""
     super().__init__()
     self.module_id = 'notification_settings'

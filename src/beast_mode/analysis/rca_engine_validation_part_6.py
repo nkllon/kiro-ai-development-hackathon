@@ -1,36 +1,39 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def _analyze_pytest_failures(self, failure: Failure) -> Dict[str, Any]:
+class AnalyzepytestfailuresClass:
+    """Auto-generated class for functions."""
+
+    def _analyze_pytest_failures(self, failure: Failure) -> Dict[str, Any]:
     """Analyze pytest-specific failures - Requirement 5.1"""
     pytest_analysis = {}
     try:
-        if self._is_pytest_failure(failure):
-            pytest_analysis['python_issues'] = self._analyze_python_issues(failure)
-            pytest_analysis['import_analysis'] = self._analyze_import_issues(failure)
-            pytest_analysis['dependency_analysis'] = self._analyze_test_dependencies(failure)
-            pytest_analysis['syntax_analysis'] = self._analyze_syntax_issues(failure)
-            pytest_analysis['test_structure'] = self._analyze_test_structure(failure)
-            pytest_analysis['analysis_confidence'] = 0.9
-        else:
-            pytest_analysis['applicable'] = False
-            pytest_analysis['reason'] = 'Not a pytest failure'
+    if self._is_pytest_failure(failure):
+    pytest_analysis['python_issues'] = self._analyze_python_issues(failure)
+    pytest_analysis['import_analysis'] = self._analyze_import_issues(failure)
+    pytest_analysis['dependency_analysis'] = self._analyze_test_dependencies(failure)
+    pytest_analysis['syntax_analysis'] = self._analyze_syntax_issues(failure)
+    pytest_analysis['test_structure'] = self._analyze_test_structure(failure)
+    pytest_analysis['analysis_confidence'] = 0.9
+    else:
+    pytest_analysis['applicable'] = False
+    pytest_analysis['reason'] = 'Not a pytest failure'
     except Exception as e:
-        pytest_analysis['analysis_error'] = str(e)
+    pytest_analysis['analysis_error'] = str(e)
     return pytest_analysis
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

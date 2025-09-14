@@ -3,41 +3,44 @@ from typing import Dict, List, Any
 from src.rm_ddd.core.health import ModuleHealth
 
 
+class UpdatetaskstatusClass:
+    """Auto-generated class for functions."""
+
     def update_task_status(self, task_id: str, status: TaskStatus, **kwargs) -> bool:
-        """Update task status and progress."""
-        try:
-            task = self._find_task(task_id)
-            if not task:
-                logger.error(f'Task {task_id} not found')
-                return False
-            old_status = task.status
-            task.status = status
-            if status == TaskStatus.IN_PROGRESS and (not task.started_at):
-                task.started_at = datetime.now()
-            elif status == TaskStatus.COMPLETED and (not task.completed_at):
-                task.completed_at = datetime.now()
-            for key, value in kwargs.items():
-                if hasattr(task, key):
-                    setattr(task, key, value)
-            logger.info(f'Task {task_id} status updated: {old_status.value} -> {status.value}')
-            return True
-        except Exception as e:
-            logger.error(f'Failed to update task {task_id}: {e}')
-            return False
+    """Update task status and progress."""
+    try:
+    task = self._find_task(task_id)
+    if not task:
+    logger.error(f'Task {task_id} not found')
+    return False
+    old_status = task.status
+    task.status = status
+    if status == TaskStatus.IN_PROGRESS and (not task.started_at):
+    task.started_at = datetime.now()
+    elif status == TaskStatus.COMPLETED and (not task.completed_at):
+    task.completed_at = datetime.now()
+    for key, value in kwargs.items():
+    if hasattr(task, key):
+    setattr(task, key, value)
+    logger.info(f'Task {task_id} status updated: {old_status.value} -> {status.value}')
+    return True
+    except Exception as e:
+    logger.error(f'Failed to update task {task_id}: {e}')
+    return False
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

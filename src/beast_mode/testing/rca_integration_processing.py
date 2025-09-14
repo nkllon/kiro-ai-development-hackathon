@@ -21,33 +21,36 @@ from .error_handler import RCAErrorHandler, DegradationLevel
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def convert_to_rca_failure(self, test_failure: TestFailureData) -> Failure:
+class ConverttorcafailureClass:
+    """Auto-generated class for functions."""
+
+    def convert_to_rca_failure(self, test_failure: TestFailureData) -> Failure:
     """
-        Convert TestFailure object to RCA-compatible Failure object
-        Requirements: 4.1 - Integration with existing RCAEngine
-        """
+    Convert TestFailure object to RCA-compatible Failure object
+    Requirements: 4.1 - Integration with existing RCAEngine
+    """
     try:
-        failure_id = f'test_{hashlib.md5(test_failure.pytest_node_id.encode()).hexdigest()[:8]}'
-        category = self._categorize_test_failure(test_failure)
-        context = {'test_file': test_failure.test_file, 'test_function': test_failure.test_function, 'test_class': test_failure.test_class, 'pytest_node_id': test_failure.pytest_node_id, 'failure_type': test_failure.failure_type, 'test_context': test_failure.test_context, 'analysis_source': 'test_rca_integrator'}
-        return Failure(failure_id=failure_id, timestamp=test_failure.failure_timestamp, component=f'test:{test_failure.test_file}', error_message=test_failure.error_message, stack_trace=test_failure.stack_trace, context=context, category=category)
+    failure_id = f'test_{hashlib.md5(test_failure.pytest_node_id.encode()).hexdigest()[:8]}'
+    category = self._categorize_test_failure(test_failure)
+    context = {'test_file': test_failure.test_file, 'test_function': test_failure.test_function, 'test_class': test_failure.test_class, 'pytest_node_id': test_failure.pytest_node_id, 'failure_type': test_failure.failure_type, 'test_context': test_failure.test_context, 'analysis_source': 'test_rca_integrator'}
+    return Failure(failure_id=failure_id, timestamp=test_failure.failure_timestamp, component=f'test:{test_failure.test_file}', error_message=test_failure.error_message, stack_trace=test_failure.stack_trace, context=context, category=category)
     except Exception as e:
-        self.logger.error(f'Failed to convert test failure to RCA failure: {e}')
-        return Failure(failure_id=f'test_conversion_failed_{int(time.time())}', timestamp=datetime.now(), component='test:unknown', error_message=f'Conversion failed: {e}', stack_trace=None, context={'conversion_error': str(e)}, category=FailureCategory.UNKNOWN)
+    self.logger.error(f'Failed to convert test failure to RCA failure: {e}')
+    return Failure(failure_id=f'test_conversion_failed_{int(time.time())}', timestamp=datetime.now(), component='test:unknown', error_message=f'Conversion failed: {e}', stack_trace=None, context={'conversion_error': str(e)}, category=FailureCategory.UNKNOWN)
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

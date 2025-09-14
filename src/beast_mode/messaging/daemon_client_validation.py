@@ -19,30 +19,33 @@ from .models import BeastModeMessage, MessageType
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def check_mail(self) -> List[QueuedMessage]:
+class CheckmailClass:
+    """Auto-generated class for functions."""
+
+    def check_mail(self) -> List[QueuedMessage]:
     """Check for new messages (non-blocking)."""
     messages = []
     while self.inbox:
-        messages.append(self.inbox.popleft())
+    messages.append(self.inbox.popleft())
     return messages
 
-def check_messages(self) -> List[QueuedMessage]:
+    def check_messages(self) -> List[QueuedMessage]:
     """Check for new messages (non-blocking)."""
     return self.daemon.check_mail()
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

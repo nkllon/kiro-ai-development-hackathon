@@ -2,17 +2,20 @@ from src.rm_ddd.core.registry import register_module
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def _calculate_risk_level(self, findings: List[Finding]) -> str:
+class CalculaterisklevelClass:
+    """Auto-generated class for functions."""
+
+    def _calculate_risk_level(self, findings: List[Finding]) -> str:
     """Calculate overall risk level based on findings"""
     if not findings:
-        return 'low'
+    return 'low'
     critical_count = sum((1 for f in findings if f.severity == Severity.CRITICAL))
     high_count = sum((1 for f in findings if f.severity == Severity.HIGH))
     if critical_count > 0:
-        return 'critical'
+    return 'critical'
     elif high_count > 2:
-        return 'high'
+    return 'high'
     elif high_count > 0:
-        return 'medium'
+    return 'medium'
     else:
-        return 'low'
+    return 'low'

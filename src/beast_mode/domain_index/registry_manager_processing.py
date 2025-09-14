@@ -21,32 +21,35 @@ from .domain_validator import DomainValidator
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def _parse_domains(self) -> None:
+class ParsedomainsClass:
+    """Auto-generated class for functions."""
+
+    def _parse_domains(self) -> None:
     """Parse domains from raw registry data"""
     self._domains = {}
     domain_arch = self._raw_registry_data.get('domain_architecture', {})
     for category_name, category_data in domain_arch.items():
-        if category_name == 'overview':
-            continue
-        if isinstance(category_data, dict) and 'domains' in category_data:
-            for domain_name in category_data['domains']:
-                domain = self._create_domain_from_registry(domain_name, category_name, category_data)
-                if domain:
-                    self._domains[domain_name] = domain
+    if category_name == 'overview':
+    continue
+    if isinstance(category_data, dict) and 'domains' in category_data:
+    for domain_name in category_data['domains']:
+    domain = self._create_domain_from_registry(domain_name, category_name, category_data)
+    if domain:
+    self._domains[domain_name] = domain
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

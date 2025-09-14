@@ -17,31 +17,34 @@ import re
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def validate_content(self, content: str) -> Tuple[bool, str]:
+class ValidatecontentClass:
+    """Auto-generated class for functions."""
+
+    def validate_content(self, content: str) -> Tuple[bool, str]:
     """Validate content against this rule"""
     try:
-        if self.rule_type == 'terminology':
-            forbidden_patterns = self.rule_expression.split('|')
-            for pattern in forbidden_patterns:
-                if re.search(pattern, content, re.IGNORECASE):
-                    return (False, self.error_message)
-        return (True, '')
+    if self.rule_type == 'terminology':
+    forbidden_patterns = self.rule_expression.split('|')
+    for pattern in forbidden_patterns:
+    if re.search(pattern, content, re.IGNORECASE):
+    return (False, self.error_message)
+    return (True, '')
     except Exception as e:
-        return (False, f'Validation error: {e}')
+    return (False, f'Validation error: {e}')
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

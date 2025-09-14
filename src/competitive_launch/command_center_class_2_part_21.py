@@ -2,16 +2,19 @@ from src.rm_ddd.core.registry import register_module
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def optimize_platform_allocation(self, resources: PlatformAllocation) -> AllocationPlan:
+class OptimizeplatformallocationClass:
+    """Auto-generated class for functions."""
+
+    def optimize_platform_allocation(self, resources: PlatformAllocation) -> AllocationPlan:
     """
-        Optimize resource allocation across GKE, TiDB, and Kiro.
-        
-        Args:
-            resources: Current platform resource allocation
-            
-        Returns:
-            AllocationPlan: Optimized allocation plan
-        """
+    Optimize resource allocation across GKE, TiDB, and Kiro.
+
+    Args:
+    resources: Current platform resource allocation
+
+    Returns:
+    AllocationPlan: Optimized allocation plan
+    """
     logger.info('Optimizing platform resource allocation')
     efficiency_analysis = self._analyze_allocation_efficiency(resources)
     optimization_opportunities = self._identify_optimization_opportunities(resources, efficiency_analysis)
@@ -21,18 +24,18 @@ def optimize_platform_allocation(self, resources: PlatformAllocation) -> Allocat
     return plan
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

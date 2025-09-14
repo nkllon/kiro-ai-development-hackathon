@@ -1,28 +1,30 @@
 from src.rm_ddd.core.health import ModuleHealth
 
+class ClearwarningsClass:
+    """Auto-generated class for functions."""
+
     def clear_warnings(self) -> None:
-        """Clear all validation warnings."""
-        try:
-            self.warnings.clear()
-            self._operation_count += 1
-        except Exception as e:
-            logger.error(f"Failed to clear warnings: {e}")
-            self._errors += 1
+    """Clear all validation warnings."""
+    try:
+    self.warnings.clear()
+    self._operation_count += 1
+    except Exception as e:
+    logger.error(f"Failed to clear warnings: {e}")
+    self._errors += 1
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
-    def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
 
-    
+    def get_interface_metadata(self):
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
+

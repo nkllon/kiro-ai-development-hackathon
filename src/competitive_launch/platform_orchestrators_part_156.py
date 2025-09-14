@@ -3,7 +3,10 @@ from typing import Dict, List, Any
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def __init__(self):
+class InitClass:
+    """Auto-generated class for functions."""
+
+    def __init__(self):
     """Initialize GKE orchestrator."""
     self.platform_type = PlatformType.GKE
     self.auto_scaling_enabled = True
@@ -11,18 +14,18 @@ def __init__(self):
     logger.info('GKE Platform Orchestrator initialized')
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

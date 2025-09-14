@@ -1,31 +1,34 @@
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def _generate_pytest_specific_fix(self, root_cause: RootCause) -> SystematicFix:
+class GeneratepytestspecificfixClass:
+    """Auto-generated class for functions."""
+
+    def _generate_pytest_specific_fix(self, root_cause: RootCause) -> SystematicFix:
     """Generate pytest-specific systematic fix"""
     fix_id = f'fix_{root_cause.cause_type.value}_{int(time.time())}'
     if root_cause.cause_type == RootCauseType.TEST_IMPORT_ERROR:
-        return SystematicFix(fix_id=fix_id, root_cause=root_cause, fix_description='Fix test import errors by resolving dependencies and Python path issues', implementation_steps=['Identify missing modules from error message', 'Check if modules are installed: pip list | grep <module>', 'Install missing dependencies: pip install <module>', 'Verify Python path includes necessary directories', 'Check for circular imports in test modules', 'Validate import statements in test files'], validation_criteria=['Import statements execute without errors', 'Test modules can be imported successfully', 'pytest --collect-only succeeds', 'No ImportError in test execution'], rollback_plan='Revert dependency installations and Python path changes', estimated_time_minutes=10)
+    return SystematicFix(fix_id=fix_id, root_cause=root_cause, fix_description='Fix test import errors by resolving dependencies and Python path issues', implementation_steps=['Identify missing modules from error message', 'Check if modules are installed: pip list | grep <module>', 'Install missing dependencies: pip install <module>', 'Verify Python path includes necessary directories', 'Check for circular imports in test modules', 'Validate import statements in test files'], validation_criteria=['Import statements execute without errors', 'Test modules can be imported successfully', 'pytest --collect-only succeeds', 'No ImportError in test execution'], rollback_plan='Revert dependency installations and Python path changes', estimated_time_minutes=10)
     elif root_cause.cause_type == RootCauseType.TEST_ASSERTION_FAILURE:
-        return SystematicFix(fix_id=fix_id, root_cause=root_cause, fix_description='Fix test assertion failures by analyzing test logic and expected behavior', implementation_steps=['Analyze assertion failure details from stack trace', 'Review test logic and expected vs actual values', 'Check if test data or fixtures are correct', 'Verify implementation matches test expectations', 'Update test assertions or fix implementation', 'Run specific test to validate fix'], validation_criteria=['Test assertions pass with correct values', 'Test logic matches implementation behavior', 'No assertion errors in test execution', 'Test provides meaningful validation'], rollback_plan='Revert test or implementation changes', estimated_time_minutes=15)
+    return SystematicFix(fix_id=fix_id, root_cause=root_cause, fix_description='Fix test assertion failures by analyzing test logic and expected behavior', implementation_steps=['Analyze assertion failure details from stack trace', 'Review test logic and expected vs actual values', 'Check if test data or fixtures are correct', 'Verify implementation matches test expectations', 'Update test assertions or fix implementation', 'Run specific test to validate fix'], validation_criteria=['Test assertions pass with correct values', 'Test logic matches implementation behavior', 'No assertion errors in test execution', 'Test provides meaningful validation'], rollback_plan='Revert test or implementation changes', estimated_time_minutes=15)
     elif root_cause.cause_type == RootCauseType.TEST_FIXTURE_ERROR:
-        return SystematicFix(fix_id=fix_id, root_cause=root_cause, fix_description='Fix test fixture errors by resolving setup and teardown issues', implementation_steps=['Identify failing fixture from error message', 'Check fixture definition and scope', 'Verify fixture dependencies and parameters', 'Test fixture setup and teardown independently', 'Fix fixture implementation or dependencies', 'Validate fixture works with dependent tests'], validation_criteria=['Fixture setup completes without errors', 'Fixture provides expected test data/resources', 'Fixture teardown cleans up properly', 'Tests using fixture execute successfully'], rollback_plan='Revert fixture changes and restore original implementation', estimated_time_minutes=12)
+    return SystematicFix(fix_id=fix_id, root_cause=root_cause, fix_description='Fix test fixture errors by resolving setup and teardown issues', implementation_steps=['Identify failing fixture from error message', 'Check fixture definition and scope', 'Verify fixture dependencies and parameters', 'Test fixture setup and teardown independently', 'Fix fixture implementation or dependencies', 'Validate fixture works with dependent tests'], validation_criteria=['Fixture setup completes without errors', 'Fixture provides expected test data/resources', 'Fixture teardown cleans up properly', 'Tests using fixture execute successfully'], rollback_plan='Revert fixture changes and restore original implementation', estimated_time_minutes=12)
     else:
-        return SystematicFix(fix_id=fix_id, root_cause=root_cause, fix_description=f'Generic pytest fix for {root_cause.cause_type.value}', implementation_steps=[f'Analyze {root_cause.cause_type.value} systematically', 'Review pytest documentation for issue type', 'Implement appropriate fix', 'Validate fix resolves root cause'], validation_criteria=['Pytest error no longer occurs', 'Test execution completes successfully'], rollback_plan='Revert changes if fix fails', estimated_time_minutes=10)
+    return SystematicFix(fix_id=fix_id, root_cause=root_cause, fix_description=f'Generic pytest fix for {root_cause.cause_type.value}', implementation_steps=[f'Analyze {root_cause.cause_type.value} systematically', 'Review pytest documentation for issue type', 'Implement appropriate fix', 'Validate fix resolves root cause'], validation_criteria=['Pytest error no longer occurs', 'Test execution completes successfully'], rollback_plan='Revert changes if fix fails', estimated_time_minutes=10)
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

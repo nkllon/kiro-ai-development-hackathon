@@ -1,33 +1,36 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def _find_best_template(self, issue: ComplianceIssue) -> Optional[RemediationTemplate]:
+class FindbesttemplateClass:
+    """Auto-generated class for functions."""
+
+    def _find_best_template(self, issue: ComplianceIssue) -> Optional[RemediationTemplate]:
     try:
-        pass  # TODO: Add method implementation
+    pass  # TODO: Add method implementation
     except Exception as e:
-        logging.error(f"Error in method: {e}")
-        raise
+    logging.error(f"Error in method: {e}")
+    raise
     """Find the best remediation template for an issue."""
     for template in self.remediation_templates.values():
-        if template.issue_type == issue.issue_type and template.severity == issue.severity:
-            return template
+    if template.issue_type == issue.issue_type and template.severity == issue.severity:
+    return template
     for template in self.remediation_templates.values():
-        if template.issue_type == issue.issue_type:
-            return template
+    if template.issue_type == issue.issue_type:
+    return template
     return None
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

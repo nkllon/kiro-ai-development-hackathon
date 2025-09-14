@@ -3,7 +3,10 @@ from typing import Dict, List, Any
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def __init__(self):
+class InitClass:
+    """Auto-generated class for functions."""
+
+    def __init__(self):
     """Initialize the competitive command center with all orchestrators."""
     self.gke_orchestrator = GKEPlatformOrchestrator()
     self.tidb_orchestrator = TiDBPlatformOrchestrator()
@@ -15,18 +18,18 @@ def __init__(self):
     logger.info('Competitive Command Center initialized')
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

@@ -1,47 +1,50 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def start_service(self, service_name: str) -> bool:
+class StartserviceClass:
+    """Auto-generated class for functions."""
+
+    def start_service(self, service_name: str) -> bool:
     """Start a monitored service"""
     if service_name not in self.services:
-        self.logger.error(f'Service not found: {service_name}')
-        return False
+    self.logger.error(f'Service not found: {service_name}')
+    return False
     service = self.services[service_name]
     if service.status == ServiceStatus.RUNNING:
-        self.logger.warning(f'Service {service_name} is already running')
-        return True
+    self.logger.warning(f'Service {service_name} is already running')
+    return True
     try:
-        service.status = ServiceStatus.STARTING
-        self.logger.info(f'Starting service: {service_name}')
-        env = service.environment.copy()
-        process = subprocess.Popen(service.command, cwd=service.working_directory, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, preexec_fn=None if hasattr(subprocess, 'CREATE_NEW_PROCESS_GROUP') else lambda: None)
-        service.process = process
-        service.pid = process.pid
-        service.status = ServiceStatus.RUNNING
-        service.started_at = time.time()
-        service.metrics.restart_count += 1
-        service.metrics.last_restart = time.strftime('%Y-%m-%d %H:%M:%S')
-        self.logger.info(f'Service {service_name} started with PID {service.pid}')
-        self._trigger_callbacks('service_started', service)
-        return True
+    service.status = ServiceStatus.STARTING
+    self.logger.info(f'Starting service: {service_name}')
+    env = service.environment.copy()
+    process = subprocess.Popen(service.command, cwd=service.working_directory, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, preexec_fn=None if hasattr(subprocess, 'CREATE_NEW_PROCESS_GROUP') else lambda: None)
+    service.process = process
+    service.pid = process.pid
+    service.status = ServiceStatus.RUNNING
+    service.started_at = time.time()
+    service.metrics.restart_count += 1
+    service.metrics.last_restart = time.strftime('%Y-%m-%d %H:%M:%S')
+    self.logger.info(f'Service {service_name} started with PID {service.pid}')
+    self._trigger_callbacks('service_started', service)
+    return True
     except Exception as e:
-        service.status = ServiceStatus.FAILED
-        self.logger.error(f'Failed to start service {service_name}: {e}')
-        self._trigger_callbacks('service_failed', service)
-        return False
+    service.status = ServiceStatus.FAILED
+    self.logger.error(f'Failed to start service {service_name}: {e}')
+    self._trigger_callbacks('service_failed', service)
+    return False
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

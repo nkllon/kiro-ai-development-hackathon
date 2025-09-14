@@ -2,12 +2,15 @@ from src.rm_ddd.core.registry import register_module
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def _calculate_quality_improvement_metric(self) -> SuperiorityMetric:
+class CalculatequalityimprovementmetricClass:
+    """Auto-generated class for functions."""
+
+    def _calculate_quality_improvement_metric(self) -> SuperiorityMetric:
     try:
-        pass  # TODO: Add method implementation
+    pass  # TODO: Add method implementation
     except Exception as e:
-        logging.error(f"Error in method: {e}")
-        raise
+    logging.error(f"Error in method: {e}")
+    raise
     """Calculate quality improvement metric."""
     systematic_quality = 95.0
     adhoc_quality = 65.0

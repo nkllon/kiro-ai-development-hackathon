@@ -2,33 +2,36 @@ from src.rm_ddd.core.registry import register_module
 from src.rm_ddd.core.health import ModuleHealth
 
 
-    def check_mail(self):
-        """check_mail - Enhanced for compliance"""
-        try:
-            pass  # TODO: Add method implementation
-        except Exception as e:
-            logging.error(f"Error in method: {e}")
-            raise
-        """Direct access to daemon's check_mail for backward compatibility."""
-        return self.daemon.check_mail()
+class CheckmailClass:
+    """Auto-generated class for functions."""
 
-        register_module(self.__class__.__name__, self)
-# Register Redis transport with factory
+    def check_mail(self):
+    """check_mail - Enhanced for compliance"""
+    try:
+    pass  # TODO: Add method implementation
+    except Exception as e:
+    logging.error(f"Error in method: {e}")
+    raise
+    """Direct access to daemon's check_mail for backward compatibility."""
+    return self.daemon.check_mail()
+
+    register_module(self.__class__.__name__, self)
+    # Register Redis transport with factory
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
-    def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
 
-TransportFactory.register_transport('redis', RedisTransport)
+    def get_interface_metadata(self):
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
+
+    TransportFactory.register_transport('redis', RedisTransport)

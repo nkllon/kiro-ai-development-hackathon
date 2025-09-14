@@ -2,7 +2,10 @@ from src.rm_ddd.core.registry import register_module
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def _create_evidence_packages(self, metrics: Dict[str, Any]) -> List[Dict[str, Any]]:
+class CreateevidencepackagesClass:
+    """Auto-generated class for functions."""
+
+    def _create_evidence_packages(self, metrics: Dict[str, Any]) -> List[Dict[str, Any]]:
     """Create evidence packages for marketing and sales."""
     packages = []
     packages.append({'type': 'systematic_superiority', 'title': 'Systematic vs Ad-hoc Development Comparison', 'metrics': metrics.get('systematic_metrics', {}), 'evidence': 'Quantitative demonstration of systematic superiority'})

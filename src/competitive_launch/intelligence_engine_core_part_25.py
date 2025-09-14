@@ -1,6 +1,9 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def _calculate_overall_advantage(self, systematic: SystematicMetrics, fmh: FMHImplementation, accountability: AccountabilityImplementation, requirements: RequirementsDrivenEvidence, time_to_market: TimeToMarketAdvantage) -> float:
+class CalculateoveralladvantageClass:
+    """Auto-generated class for functions."""
+
+    def _calculate_overall_advantage(self, systematic: SystematicMetrics, fmh: FMHImplementation, accountability: AccountabilityImplementation, requirements: RequirementsDrivenEvidence, time_to_market: TimeToMarketAdvantage) -> float:
     """Calculate overall competitive advantage score."""
     weights = {'systematic': 0.3, 'fmh': 0.2, 'accountability': 0.2, 'requirements': 0.15, 'time_to_market': 0.15}
     systematic_score = (systematic.development_speed + systematic.quality_score + systematic.reliability_score + systematic.maintainability_score) / 4
@@ -12,18 +15,18 @@ def _calculate_overall_advantage(self, systematic: SystematicMetrics, fmh: FMHIm
     return overall
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

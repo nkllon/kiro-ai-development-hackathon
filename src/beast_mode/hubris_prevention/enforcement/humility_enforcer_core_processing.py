@@ -14,30 +14,33 @@ from ..models import SuccessMetrics, RequirementScaling, GrowthRate, ProtocolImp
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def _identify_affected_processes(self, scaling_factor: float) -> List[str]:
+class IdentifyaffectedprocessesClass:
+    """Auto-generated class for functions."""
+
+    def _identify_affected_processes(self, scaling_factor: float) -> List[str]:
     """Identify processes affected by accountability scaling."""
     processes = ['decision_approval', 'governance_review']
     if scaling_factor > 1.5:
-        processes.extend(['audit_procedures', 'stakeholder_communication'])
+    processes.extend(['audit_procedures', 'stakeholder_communication'])
     if scaling_factor > 2.0:
-        processes.extend(['executive_oversight', 'board_reporting', 'regulatory_compliance'])
+    processes.extend(['executive_oversight', 'board_reporting', 'regulatory_compliance'])
     if scaling_factor > 2.5:
-        processes.extend(['independent_monitoring', 'external_validation'])
+    processes.extend(['independent_monitoring', 'external_validation'])
     return processes
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

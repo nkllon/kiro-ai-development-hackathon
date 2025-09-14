@@ -3,46 +3,49 @@ from typing import Dict, List, Any
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def is_safe_path(path: Union[str, Path], base: Union[str, Path]) -> bool:
+class IssafepathClass:
+    """Auto-generated class for functions."""
+
+    def is_safe_path(path: Union[str, Path], base: Union[str, Path]) -> bool:
     """
-        Check if a path is safe relative to a base directory.
-        
-        This method validates that a path doesn't attempt to escape
-        the base directory using ".." or other techniques.
-        
-        Args:
-            path: Path to validate
-            base: Base directory that should contain the path
-            
-        Returns:
-            bool: True if path is safe, False otherwise
-        """
+    Check if a path is safe relative to a base directory.
+
+    This method validates that a path doesn't attempt to escape
+    the base directory using ".." or other techniques.
+
+    Args:
+    path: Path to validate
+    base: Base directory that should contain the path
+
+    Returns:
+    bool: True if path is safe, False otherwise
+    """
     try:
-        normalized_path = PathNormalizer.normalize_path(path)
-        normalized_base = PathNormalizer.normalize_path(base)
-        normalized_path.relative_to(normalized_base)
-        path_str = str(normalized_path)
-        if '..' in path_str or path_str.startswith('/..'):
-            return False
-        return True
+    normalized_path = PathNormalizer.normalize_path(path)
+    normalized_base = PathNormalizer.normalize_path(base)
+    normalized_path.relative_to(normalized_base)
+    path_str = str(normalized_path)
+    if '..' in path_str or path_str.startswith('/..'):
+    return False
+    return True
     except (ValueError, OSError):
-        return False
+    return False
 
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
-    def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
 
-@staticmethod
+    def get_interface_metadata(self):
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
+
+    @staticmethod

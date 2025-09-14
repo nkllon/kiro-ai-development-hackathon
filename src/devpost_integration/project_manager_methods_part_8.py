@@ -4,11 +4,13 @@ from typing import Dict, Any, List, Optional
 from pathlib import Pathfrom ..interfaces.projectstatus_interface import ProjectStatusfrom ..interfaces.devpostprojectmanager_interface import DevpostProjectManager
 import logging
 
+class GetcapabilitiesClass:
+    """Auto-generated class for functions."""
+
     def get_capabilities(self) -> List[ModuleCapability]:
-        """Get module capabilities."""
-        return [
-            ModuleCapability.PROJECT_MANAGEMENT,
-            ModuleCapability.FILE_MONITORING,
-            ModuleCapability.VALIDATION
-        ]
-    
+    """Get module capabilities."""
+    return [
+    ModuleCapability.PROJECT_MANAGEMENT,
+    ModuleCapability.FILE_MONITORING,
+    ModuleCapability.VALIDATION
+    ]

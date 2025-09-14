@@ -3,18 +3,21 @@ from typing import Dict, List, Any
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def __init__(self, agent_id: str, transport_type: str='redis', transport_config: Optional[Dict[str, Any]]=None, shared_state_config: Optional[SharedStateConfig]=None, capabilities: Optional[List[str]]=None, specializations: Optional[List[str]]=None):
+class InitClass:
+    """Auto-generated class for functions."""
+
+    def __init__(self, agent_id: str, transport_type: str='redis', transport_config: Optional[Dict[str, Any]]=None, shared_state_config: Optional[SharedStateConfig]=None, capabilities: Optional[List[str]]=None, specializations: Optional[List[str]]=None):
     """
-        Initialize unified Beast Mode client.
-        
-        Args:
-            agent_id: Unique agent identifier
-            transport_type: Type of transport ('redis', 'nats', etc.)
-            transport_config: Transport-specific configuration
-            shared_state_config: Shared state configuration
-            capabilities: Agent capabilities list
-            specializations: Agent specializations list
-        """
+    Initialize unified Beast Mode client.
+
+    Args:
+    agent_id: Unique agent identifier
+    transport_type: Type of transport ('redis', 'nats', etc.)
+    transport_config: Transport-specific configuration
+    shared_state_config: Shared state configuration
+    capabilities: Agent capabilities list
+    specializations: Agent specializations list
+    """
     self.agent_id = agent_id
     self.transport_type = transport_type
     self.capabilities = capabilities or []
@@ -27,18 +30,18 @@ def __init__(self, agent_id: str, transport_type: str='redis', transport_config:
     self.logger = logging.getLogger(__name__)
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

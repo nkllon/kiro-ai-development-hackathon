@@ -3,36 +3,39 @@ from typing import Dict, List, Any
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def delete_branch(self, name: str, force: bool=False) -> GitOperationResult:
+class DeletebranchClass:
+    """Auto-generated class for functions."""
+
+    def delete_branch(self, name: str, force: bool=False) -> GitOperationResult:
     """Delete a branch"""
     start_time = time.time()
     try:
-        args = ['branch']
-        args.append('-D' if force else '-d')
-        args.append(name)
-        self._run_git_command(args)
-        execution_time = int((time.time() - start_time) * 1000)
-        return self._create_result(success=True, message=f"Deleted branch '{name}'", data={'branch_name': name, 'forced': force}, execution_time_ms=execution_time)
+    args = ['branch']
+    args.append('-D' if force else '-d')
+    args.append(name)
+    self._run_git_command(args)
+    execution_time = int((time.time() - start_time) * 1000)
+    return self._create_result(success=True, message=f"Deleted branch '{name}'", data={'branch_name': name, 'forced': force}, execution_time_ms=execution_time)
     except subprocess.CalledProcessError as e:
-        execution_time = int((time.time() - start_time) * 1000)
-        suggestions = []
-        if 'not fully merged' in e.stderr:
-            suggestions.extend([f"Branch '{name}' is not fully merged", 'Use force=True to delete anyway', 'Merge the branch first if you want to keep changes'])
-        return self._create_result(success=False, message=f"Failed to delete branch '{name}': {e.stderr}", error_code='GIT_DELETE_BRANCH_FAILED', suggestions=suggestions, execution_time_ms=execution_time)
+    execution_time = int((time.time() - start_time) * 1000)
+    suggestions = []
+    if 'not fully merged' in e.stderr:
+    suggestions.extend([f"Branch '{name}' is not fully merged", 'Use force=True to delete anyway', 'Merge the branch first if you want to keep changes'])
+    return self._create_result(success=False, message=f"Failed to delete branch '{name}': {e.stderr}", error_code='GIT_DELETE_BRANCH_FAILED', suggestions=suggestions, execution_time_ms=execution_time)
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

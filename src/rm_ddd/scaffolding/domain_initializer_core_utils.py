@@ -23,28 +23,31 @@ from ..models import ModuleStatus
 from ..models import ModuleCapability
 from ..models import DomainBoundaries
 
-def _format_ubiquitous_language(self, language_mapping: Dict[str, str]) -> str:
+class FormatubiquitouslanguageClass:
+    """Auto-generated class for functions."""
+
+    def _format_ubiquitous_language(self, language_mapping: Dict[str, str]) -> str:
     """Format ubiquitous language mapping for code generation."""
     if not language_mapping:
-        return '                # TODO: Define ubiquitous language terms'
+    return '                # TODO: Define ubiquitous language terms'
     formatted_items = []
     for term, definition in language_mapping.items():
-        formatted_items.append(f'                "{term}": "{definition}"')
+    formatted_items.append(f'                "{term}": "{definition}"')
     return ',\n'.join(formatted_items)
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

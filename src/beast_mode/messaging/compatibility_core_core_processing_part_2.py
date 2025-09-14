@@ -1,56 +1,59 @@
 
-def _convert_from_version(self, message_data: Dict[str, Any], source_version: MessageVersion) -> Dict[str, Any]:
+class ConvertfromversionClass:
+    """Auto-generated class for functions."""
+
+    def _convert_from_version(self, message_data: Dict[str, Any], source_version: MessageVersion) -> Dict[str, Any]:
     """Convert message from specific version to current format"""
     converted = message_data.copy()
     if source_version == MessageVersion.V1_0:
-        converted = self._convert_from_v1_0(converted)
+    converted = self._convert_from_v1_0(converted)
     elif source_version == MessageVersion.V1_1:
-        converted = self._convert_from_v1_1(converted)
+    converted = self._convert_from_v1_1(converted)
     elif source_version == MessageVersion.V1_2:
-        converted = self._convert_from_v1_2(converted)
+    converted = self._convert_from_v1_2(converted)
     elif source_version == MessageVersion.UNKNOWN:
-        if 'from' in converted or 'content' in converted:
-            converted = self._convert_from_v1_0(converted)
+    if 'from' in converted or 'content' in converted:
+    converted = self._convert_from_v1_0(converted)
     if 'id' not in converted:
-        import uuid
-from src.rm_ddd.core.health import ModuleHealth
+    import uuid
+    from src.rm_ddd.core.health import ModuleHealth
 
-        converted['id'] = str(uuid.uuid4())
+    converted['id'] = str(uuid.uuid4())
     if 'timestamp' not in converted:
-        converted['timestamp'] = datetime.now()
+    converted['timestamp'] = datetime.now()
     elif isinstance(converted['timestamp'], str):
-        try:
-            converted['timestamp'] = datetime.fromisoformat(converted['timestamp'].replace('Z', '+00:00'))
-        except ValueError:
-            converted['timestamp'] = datetime.now()
+    try:
+    converted['timestamp'] = datetime.fromisoformat(converted['timestamp'].replace('Z', '+00:00'))
+    except ValueError:
+    converted['timestamp'] = datetime.now()
     if 'priority' not in converted:
-        converted['priority'] = 5
+    converted['priority'] = 5
     if 'payload' not in converted:
-        converted['payload'] = {}
+    converted['payload'] = {}
     if 'type' in converted:
-        try:
-            MessageType(converted['type'])
-        except ValueError:
-            converted['type'] = self.translator.translate_to_current(converted['type']).value
+    try:
+    MessageType(converted['type'])
+    except ValueError:
+    converted['type'] = self.translator.translate_to_current(converted['type']).value
     else:
-        converted['type'] = MessageType.SIMPLE_MESSAGE.value
+    converted['type'] = MessageType.SIMPLE_MESSAGE.value
     if 'source' not in converted:
-        converted['source'] = 'unknown_agent'
+    converted['source'] = 'unknown_agent'
     return converted
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

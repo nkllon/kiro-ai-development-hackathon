@@ -1,29 +1,32 @@
 from src.rm_ddd.core.health import ModuleHealth
 
+class CalculatehealthscoreClass:
+    """Auto-generated class for functions."""
+
     def _calculate_health_score(self) -> float:
-        """Calculate health score based on various factors."""
-        score = 1.0
-        if self._errors > 0:
-            score -= min(0.5, self._errors * 0.1)
-        if self.status == 'failed':
-            score -= 0.3
-        if self.progress < 0 or self.progress > 1:
-            score -= 0.2
-        return max(0.0, score)
+    """Calculate health score based on various factors."""
+    score = 1.0
+    if self._errors > 0:
+    score -= min(0.5, self._errors * 0.1)
+    if self.status == 'failed':
+    score -= 0.3
+    if self.progress < 0 or self.progress > 1:
+    score -= 0.2
+    return max(0.0, score)
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

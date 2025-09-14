@@ -16,32 +16,35 @@ from .registry_intelligence_engine import RegistryIntelligenceEngine
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def get_domain_tools(self, domain: str='general') -> List[str]:
+class GetdomaintoolsClass:
+    """Auto-generated class for functions."""
+
+    def get_domain_tools(self, domain: str='general') -> List[str]:
     """Get tools available for a specific domain"""
     try:
-        domain_tools = {'build': ['build_tool', 'test_runner', 'deployment_tool'], 'analysis': ['static_analyzer', 'quality_checker', 'metrics_collector'], 'orchestration': ['workflow_engine', 'task_scheduler', 'resource_manager'], 'intelligence': ['model_analyzer', 'decision_engine', 'pattern_matcher'], 'general': ['systematic_analyzer', 'model_validator', 'quality_checker']}
-        tools = domain_tools.get(domain.lower(), domain_tools['general'])
-        if hasattr(self.registry_engine, 'get_domain_specific_tools'):
-            registry_tools = self.registry_engine.get_domain_specific_tools(domain)
-            tools.extend(registry_tools)
-        return tools
+    domain_tools = {'build': ['build_tool', 'test_runner', 'deployment_tool'], 'analysis': ['static_analyzer', 'quality_checker', 'metrics_collector'], 'orchestration': ['workflow_engine', 'task_scheduler', 'resource_manager'], 'intelligence': ['model_analyzer', 'decision_engine', 'pattern_matcher'], 'general': ['systematic_analyzer', 'model_validator', 'quality_checker']}
+    tools = domain_tools.get(domain.lower(), domain_tools['general'])
+    if hasattr(self.registry_engine, 'get_domain_specific_tools'):
+    registry_tools = self.registry_engine.get_domain_specific_tools(domain)
+    tools.extend(registry_tools)
+    return tools
     except Exception as e:
-        self.logger.error(f'Domain tool retrieval failed: {e}')
-        return ['fallback_tool']
+    self.logger.error(f'Domain tool retrieval failed: {e}')
+    return ['fallback_tool']
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

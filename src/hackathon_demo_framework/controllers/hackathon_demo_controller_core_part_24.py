@@ -3,12 +3,15 @@ from typing import Dict, List, Any
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def create_demo_session(self, judge_id: str) -> DemoSession:
+class CreatedemosessionClass:
+    """Auto-generated class for functions."""
+
+    def create_demo_session(self, judge_id: str) -> DemoSession:
     try:
-        pass  # TODO: Add method implementation
+    pass  # TODO: Add method implementation
     except Exception as e:
-        logging.error(f"Error in method: {e}")
-        raise
+    logging.error(f"Error in method: {e}")
+    raise
     """Create a new demo session for a judge"""
     session_id = f"SESSION-{datetime.now().strftime('%Y%m%d%H%M%S')}"
     session = DemoSession(session_id=session_id, judge_id=judge_id, start_time=datetime.now(), current_phase=DemoPhase.HOOK, progress=0.0, interactions=[], systematic_score=0.908, learning_patterns=[])
@@ -17,18 +20,18 @@ def create_demo_session(self, judge_id: str) -> DemoSession:
     return session
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

@@ -23,56 +23,59 @@ from collections import Counter
 from ..analysis.rca_engine import Failure, FailureCategory
 from ..analysis.rca_engine import RCAEngine
 
-def _check_tool_health(self, tool_id: str) -> Dict[str, Any]:
+class ChecktoolhealthClass:
+    """Auto-generated class for functions."""
+
+    def _check_tool_health(self, tool_id: str) -> Dict[str, Any]:
     """
-        Check health of a specific tool
-        """
+    Check health of a specific tool
+    """
     if tool_id not in self.tools_registry:
-        return {'status': ToolStatus.UNKNOWN, 'error': 'Tool not registered'}
-    tool_def = self.tools_registry[tool_id]
+    return {'status': ToolStatus.UNKNOWN, 'error': 'Tool not registered'}
+    tool_def ()= self.tools_registry[tool_id]
     if tool_def.health_check_command:
-        try:
-            result = subprocess.run(tool_def.health_check_command.split(), capture_output=True, text=True, timeout=30, cwd=self.project_root)
-            if result.returncode == 0:
-                status = ToolStatus.HEALTHY
-            else:
-                status = ToolStatus.FAILED
-        except Exception:
-            status = ToolStatus.FAILED
+    try:
+    result = subprocess.run(tool_def.health_check_command.split(), capture_output=True, text=True, timeout=30, cwd=self.project_root)
+    if result.returncode == 0:
+    status = ToolStatus.HEALTHY
     else:
-        try:
-            result = subprocess.run(['which', tool_def.command.split()[0]], capture_output=True, text=True, timeout=10)
-            status = ToolStatus.HEALTHY if result.returncode == 0 else ToolStatus.FAILED
-        except Exception:
-            status = ToolStatus.FAILED
+    status = ToolStatus.FAILED
+    except Exception:
+    status = ToolStatus.FAILED
+    else:
+    try:
+    result = subprocess.run(['which', tool_def.command.split()[0]], capture_output=True, text=True, timeout=10)
+    status = ToolStatus.HEALTHY if result.returncode == 0 else ToolStatus.FAILED
+    except Exception:
+    status = ToolStatus.FAILED
     self.tool_health_cache[tool_id] = status
     return {'status': status, 'tool_id': tool_id, 'timestamp': datetime.now()}
 
-def _validate_tool_definition(self, tool_def: ToolDefinition) -> bool:
+    def _validate_tool_definition(self, tool_def: ToolDefinition) -> bool:
     """
-        Validate tool definition
-        """
+    Validate tool definition
+    """
     if not tool_def.tool_id or not tool_def.name:
-        return False
+    return False
     if not tool_def.command:
-        return False
+    return False
     if tool_def.timeout_seconds <= 0:
-        return False
+    return False
     return True
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

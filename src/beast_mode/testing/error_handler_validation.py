@@ -22,26 +22,29 @@ from .rca_integration import TestRCAReportData
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def _check_component_health(self, component: str) -> None:
+class CheckcomponenthealthClass:
+    """Auto-generated class for functions."""
+
+    def _check_component_health(self, component: str) -> None:
     """Check health of specific component"""
     if component in self.component_health:
-        metrics = self.component_health[component]
-        if not metrics.is_healthy:
-            self.logger.warning(f'Component {component} is unhealthy')
+    metrics = self.component_health[component]
+    if not metrics.is_healthy:
+    self.logger.warning(f'Component {component} is unhealthy')
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

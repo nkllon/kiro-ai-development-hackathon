@@ -18,52 +18,55 @@ from .models import BeastModeMessage, MessageType
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def _calculate_checksum(self, content: str) -> str:
+class CalculatechecksumClass:
+    """Auto-generated class for functions."""
+
+    def _calculate_checksum(self, content: str) -> str:
     """Calculate SHA-256 checksum of content"""
     return hashlib.sha256(content.encode('utf-8')).hexdigest()
 
-def validate_spore(self, spore_content: str) -> bool:
+    def validate_spore(self, spore_content: str) -> bool:
     """
-        Validate spore content for basic syntax and structure
-        
-        Args:
-            spore_content: The spore implementation content
-            
-        Returns:
-            bool: True if valid, False otherwise
-        """
+    Validate spore content for basic syntax and structure
+
+    Args:
+    spore_content: The spore implementation content
+
+    Returns:
+    bool: True if valid, False otherwise
+    """
     try:
-        compile(spore_content, '<spore>', 'exec')
-        required_elements = ['def execute(', 'class']
-        has_required = any((element in spore_content for element in required_elements))
-        if not has_required:
-            logger.warning('Spore missing required structure (execute function or class)')
-            return False
-        dangerous_patterns = ['import os', 'import subprocess', 'exec(', 'eval(', '__import__', 'open(']
-        for pattern in dangerous_patterns:
-            if pattern in spore_content:
-                logger.warning(f'Spore contains potentially dangerous pattern: {pattern}')
-        return True
+    compile(spore_content, '<spore>', 'exec')
+    required_elements = ['def execute(', 'class']
+    has_required = any((element in spore_content for element in required_elements))
+    if not has_required:
+    logger.warning('Spore missing required structure (execute function or class)')
+    return False
+    dangerous_patterns = ['import os', 'import subprocess', 'exec(', 'eval(', '__import__', 'open(']
+    for pattern in dangerous_patterns:
+    if pattern in spore_content:
+    logger.warning(f'Spore contains potentially dangerous pattern: {pattern}')
+    return True
     except SyntaxError as e:
-        logger.error(f'Spore syntax error: {e}')
-        return False
+    logger.error(f'Spore syntax error: {e}')
+    return False
     except Exception as e:
-        logger.error(f'Spore validation error: {e}')
-        return False
+    logger.error(f'Spore validation error: {e}')
+    return False
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

@@ -2,7 +2,10 @@ from src.rm_ddd.core.registry import register_module
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def _is_documentation_file(self, file_path: Path) -> bool:
+class IsdocumentationfileClass:
+    """Auto-generated class for functions."""
+
+    def _is_documentation_file(self, file_path: Path) -> bool:
     """Check if file is a documentation file."""
     doc_patterns = ['readme', 'changelog', 'license', 'contributing', 'docs']
     filename_lower = file_path.name.lower()

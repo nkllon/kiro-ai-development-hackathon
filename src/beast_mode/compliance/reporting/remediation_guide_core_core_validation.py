@@ -12,16 +12,19 @@ from ..models import ComplianceAnalysisResult, ComplianceIssue, ComplianceIssueT
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def get_phase2_test_remediations(self) -> List[FailingTestRemediation]:
+class Getphase2TestremediationsClass:
+    """Auto-generated class for functions."""
+
+    def get_phase2_test_remediations(self) -> List[FailingTestRemediation]:
     """
-        Get specific remediations for Phase 2 failing tests.
-        
-        Returns:
-            List of remediation plans for known failing tests
-        """
+    Get specific remediations for Phase 2 failing tests.
+
+    Returns:
+    List of remediation plans for known failing tests
+    """
     return list(self.phase2_failing_tests.values())
 
-def _initialize_phase2_failing_tests(self) -> Dict[str, FailingTestRemediation]:
+    def _initialize_phase2_failing_tests(self) -> Dict[str, FailingTestRemediation]:
     """Initialize specific remediations for Phase 2 failing tests."""
     failing_tests = {}
     failing_tests['test_auth_validation'] = FailingTestRemediation(test_name='test_auth_validation', failure_reason='Authentication validation logic not properly handling edge cases', remediation_steps=['Review authentication validation requirements', 'Analyze test failure logs for specific edge case', 'Update validation logic to handle null/empty inputs', 'Add proper error handling for invalid credentials', 'Update test assertions to match corrected behavior', 'Add additional test cases for edge cases'], affected_components=['src/auth/validator.py', 'tests/test_auth.py'], estimated_effort='medium', priority=IssueSeverity.HIGH)
@@ -33,30 +36,30 @@ def _initialize_phase2_failing_tests(self) -> Dict[str, FailingTestRemediation]:
     failing_tests['test_health_monitoring'] = FailingTestRemediation(test_name='test_health_monitoring', failure_reason='Health monitoring system not properly reporting component status', remediation_steps=['Debug health check execution and reporting', 'Verify health check registration and discovery', 'Fix health status aggregation logic', 'Update health monitoring to handle component failures', 'Add proper timeout handling for health checks', 'Verify health monitoring dashboard integration'], affected_components=['src/health/monitor.py', 'src/health/dashboard.py', 'tests/test_health.py'], estimated_effort='high', priority=IssueSeverity.HIGH)
     return failing_tests
 
-def _generate_test_failure_remediations(self, failing_tests: List[str]) -> List[FailingTestRemediation]:
+    def _generate_test_failure_remediations(self, failing_tests: List[str]) -> List[FailingTestRemediation]:
     """Generate specific remediations for failing tests."""
     remediations = []
     for test_name in failing_tests:
-        if test_name in self.phase2_failing_tests:
-            remediations.append(self.phase2_failing_tests[test_name])
-        else:
-            generic_remediation = FailingTestRemediation(test_name=test_name, failure_reason='Test failure requires investigation', remediation_steps=[f'Analyze {test_name} failure logs', 'Identify root cause of test failure', 'Fix implementation or test logic as needed', 'Verify test passes consistently', 'Check for test environment issues'], affected_components=[f'tests/{test_name}.py'], estimated_effort='medium', priority=IssueSeverity.HIGH)
-            remediations.append(generic_remediation)
+    if test_name in self.phase2_failing_tests:
+    remediations.append(self.phase2_failing_tests[test_name])
+    else:
+    generic_remediation = FailingTestRemediation(test_name=test_name, failure_reason='Test failure requires investigation', remediation_steps=[f'Analyze {test_name} failure logs', 'Identify root cause of test failure', 'Fix implementation or test logic as needed', 'Verify test passes consistently', 'Check for test environment issues'], affected_components=[f'tests/{test_name}.py'], estimated_effort='medium', priority=IssueSeverity.HIGH)
+    remediations.append(generic_remediation)
     return remediations
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

@@ -2,6 +2,9 @@ from src.rm_ddd.core.registry import register_module
 from src.rm_ddd.core.health import ModuleHealth
 
 
+class FindtaskClass:
+    """Auto-generated class for functions."""
+
     def _find_task(self, task_id: str) -> Optional[HackathonTask]:
-        """Find task by ID."""
-        return next((t for t in self.tasks if t.task_id == task_id), None)
+    """Find task by ID."""
+    return next((t for t in self.tasks if t.task_id == task_id), None)

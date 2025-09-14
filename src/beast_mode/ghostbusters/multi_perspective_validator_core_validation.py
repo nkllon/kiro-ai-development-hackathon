@@ -12,24 +12,27 @@ from ..core.reflective_module import ReflectiveModule, HealthStatus
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def validate_c7_multi_stakeholder_perspectives(self, decision_context: str, initial_confidence: float) -> MultiPerspectiveAnalysis:
+class Validatec7MultistakeholderperspectivesClass:
+    """Auto-generated class for functions."""
+
+    def validate_c7_multi_stakeholder_perspectives(self, decision_context: str, initial_confidence: float) -> MultiPerspectiveAnalysis:
     """
-        C7: Multi-Stakeholder Perspective Validation
-        Validates decisions from all stakeholder perspectives
-        """
+    C7: Multi-Stakeholder Perspective Validation
+    Validates decisions from all stakeholder perspectives
+    """
     self.validation_count += 1
     try:
-        if initial_confidence >= self.confidence_thresholds['high_confidence']:
-            return self._minimal_validation(decision_context, initial_confidence)
-        elif initial_confidence >= self.confidence_thresholds['medium_confidence']:
-            return self._basic_multi_perspective_check(decision_context, initial_confidence)
-        else:
-            return self._full_ghostbusters_analysis(decision_context, initial_confidence)
+    if initial_confidence >= self.confidence_thresholds['high_confidence']:
+    return self._minimal_validation(decision_context, initial_confidence)
+    elif initial_confidence >= self.confidence_thresholds['medium_confidence']:
+    return self._basic_multi_perspective_check(decision_context, initial_confidence)
+    else:
+    return self._full_ghostbusters_analysis(decision_context, initial_confidence)
     finally:
-        self.validation_count -= 1
-        self.total_validations += 1
+    self.validation_count -= 1
+    self.total_validations += 1
 
-def _basic_multi_perspective_check(self, decision_context: str, confidence: float) -> MultiPerspectiveAnalysis:
+    def _basic_multi_perspective_check(self, decision_context: str, confidence: float) -> MultiPerspectiveAnalysis:
     """Medium confidence decisions - basic multi-perspective validation"""
     perspectives = {}
     perspectives[StakeholderType.BEAST_MODE_SYSTEM] = StakeholderPerspective(stakeholder_type=StakeholderType.BEAST_MODE_SYSTEM, confidence_score=0.75, assessment='Decision supports systematic superiority but needs validation', concerns=['Medium confidence requires additional validation'], recommendations=['Validate against systematic methodology principles'], approval_status=True)
@@ -40,18 +43,18 @@ def _basic_multi_perspective_check(self, decision_context: str, confidence: floa
     return MultiPerspectiveAnalysis(decision_context=decision_context, overall_confidence=overall_confidence, stakeholder_perspectives=perspectives, consensus_reached=consensus, final_recommendation='Approved with conditions - implement with stakeholder recommendations', risk_factors=['Medium confidence requires monitoring during implementation'])
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

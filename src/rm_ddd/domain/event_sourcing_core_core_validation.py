@@ -20,26 +20,29 @@ from ..core.health import ModuleHealth
 from ..core.health import ModuleHealth
 from ..core.health import ModuleHealth
 
-def validate_domain_invariants(self):
+class ValidatedomaininvariantsClass:
+    """Auto-generated class for functions."""
+
+    def validate_domain_invariants(self):
     """Validate domain invariants."""
     result = ValidationResult(is_valid=True)
     if self.snapshot_frequency <= 0:
-        result.add_error('Snapshot frequency must be positive')
+    result.add_error('Snapshot frequency must be positive')
     return result
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

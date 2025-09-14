@@ -1,6 +1,9 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def __init__(self):
+class InitClass:
+    """Auto-generated class for functions."""
+
+    def __init__(self):
     super().__init__('gke_service_consumer')
     self.pdca_orchestrator = PDCAOrchestrator()
     self.registry_intelligence = RegistryIntelligenceEngine()
@@ -15,18 +18,18 @@ def __init__(self):
     self._update_health_indicator('gke_service_consumer', HealthStatus.HEALTHY, 'ready', 'GKE service consumer ready to serve teams')
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

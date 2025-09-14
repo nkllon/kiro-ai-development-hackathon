@@ -46,49 +46,52 @@ import uuid
 import uuid
 import uuid
 
-def mark_processed(self) -> bool:
+class MarkprocessedClass:
+    """Auto-generated class for functions."""
+
+    def mark_processed(self) -> bool:
     """Mark event as processed"""
     try:
-        self._update_metrics('mark_processed')
-        self.event_data['processed'] = True
-        self.updated_at = datetime.now()
-        self._metrics['events_processed'] += 1
-        self._logger.info(f'Event {self.event_id} marked as processed')
-        return True
+    self._update_metrics('mark_processed')
+    self.event_data['processed'] = True
+    self.updated_at = datetime.now()
+    self._metrics['events_processed'] += 1
+    self._logger.info(f'Event {self.event_id} marked as processed')
+    return True
     except Exception as e:
-        self._logger.error(f'Failed to mark as processed: {e}')
-        self._metrics['error_count'] += 1
-        return False
+    self._logger.error(f'Failed to mark as processed: {e}')
+    self._metrics['error_count'] += 1
+    return False
 
-def is_processed(self) -> bool:
+    def is_processed(self) -> bool:
     """Check if event is processed"""
     try:
-        self._update_metrics('is_processed')
-        return self.event_data.get('processed', False)
+    self._update_metrics('is_processed')
+    return self.event_data.get('processed', False)
     except Exception as e:
-        self._logger.error(f'Failed to check processed status: {e}')
-        self._metrics['error_count'] += 1
-        return False
+    self._logger.error(f'Failed to check processed status: {e}')
+    self._metrics['error_count'] += 1
+    return False
 
-@classmethod
-def get_processing_requirements(cls, media_type: str) -> List[str]:
+    @classmethod
+    def get_processing_requirements(cls, media_type: str) -> List[str]:
     """Get processing requirements for media type"""
     requirements_map = {cls.IMAGE.value: ['resize', 'optimize', 'thumbnail_generation'], cls.VIDEO.value: ['transcode', 'thumbnail_generation', 'metadata_extraction'], cls.AUDIO.value: ['transcode', 'metadata_extraction', 'waveform_generation'], cls.DOCUMENT.value: ['text_extraction', 'metadata_extraction'], cls.CODE.value: ['syntax_highlighting', 'linting', 'formatting'], cls.DATA.value: ['validation', 'parsing', 'analysis'], cls.PRESENTATION.value: ['slide_extraction', 'thumbnail_generation'], cls.SPREADSHEET.value: ['data_extraction', 'validation'], cls.TEXT.value: ['encoding_detection', 'line_ending_normalization'], cls.ARCHIVE.value: ['extraction', 'validation', 'virus_scanning'], cls.UNKNOWN.value: ['basic_validation']}
     return requirements_map.get(media_type, [])
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

@@ -1,31 +1,34 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def _apply_group_size_limits(self, groups: Dict[str, List[TestFailureData]]) -> Dict[str, List[TestFailureData]]:
+class ApplygroupsizelimitsClass:
+    """Auto-generated class for functions."""
+
+    def _apply_group_size_limits(self, groups: Dict[str, List[TestFailureData]]) -> Dict[str, List[TestFailureData]]:
     """Apply size limits and create overflow groups"""
     limited_groups = {}
     for group_name, group_failures in groups.items():
-        if len(group_failures) <= self.max_failures_per_group:
-            limited_groups[group_name] = group_failures
-        else:
-            for i in range(0, len(group_failures), self.max_failures_per_group):
-                chunk = group_failures[i:i + self.max_failures_per_group]
-                chunk_name = f'{group_name}_chunk_{i // self.max_failures_per_group}'
-                limited_groups[chunk_name] = chunk
+    if len(group_failures) <= self.max_failures_per_group:
+    limited_groups[group_name] = group_failures
+    else:
+    for i in range(0, len(group_failures), self.max_failures_per_group):
+    chunk = group_failures[i:i + self.max_failures_per_group]
+    chunk_name = f'{group_name}_chunk_{i // self.max_failures_per_group}'
+    limited_groups[chunk_name] = chunk
     return limited_groups
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

@@ -1,29 +1,32 @@
 from src.rm_ddd.core.health import ModuleHealth
 
+class ResettodefaultsClass:
+    """Auto-generated class for functions."""
+
     def reset_to_defaults(self) -> bool:
-        """Reset configuration to defaults."""
-        try:
-            self.config_data = self._get_default_config()
-            self._operation_count += 1
-            return True
-        except Exception as e:
-            logger.error(f'Failed to reset to defaults: {e}')
-            self._errors += 1
-            return False
+    """Reset configuration to defaults."""
+    try:
+    self.config_data = self._get_default_config()
+    self._operation_count += 1
+    return True
+    except Exception as e:
+    logger.error(f'Failed to reset to defaults: {e}')
+    self._errors += 1
+    return False
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

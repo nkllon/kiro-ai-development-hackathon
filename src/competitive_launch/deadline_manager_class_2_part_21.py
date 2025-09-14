@@ -2,6 +2,9 @@ from src.rm_ddd.core.registry import register_module
 from src.rm_ddd.core.health import ModuleHealth
 
 
+class AnalyzecurrentprogressClass:
+    """Auto-generated class for functions."""
+
     def _analyze_current_progress(self, progress: Dict[str, Any]) -> Dict[str, Any]:
-        """Analyze current progress against deadline."""
-        return {'completion_percentage': progress.get('completion_percentage', 0), 'tasks_completed': progress.get('tasks_completed', 0), 'tasks_remaining': progress.get('tasks_remaining', 0), 'behind_schedule': progress.get('behind_schedule', False), 'quality_issues': progress.get('quality_issues', [])}
+    """Analyze current progress against deadline."""
+    return {'completion_percentage': progress.get('completion_percentage', 0), 'tasks_completed': progress.get('tasks_completed', 0), 'tasks_remaining': progress.get('tasks_remaining', 0), 'behind_schedule': progress.get('behind_schedule', False), 'quality_issues': progress.get('quality_issues', [])}

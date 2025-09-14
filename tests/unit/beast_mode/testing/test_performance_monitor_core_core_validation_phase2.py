@@ -1,3 +1,4 @@
+from src.beast_mode.observability.metrics import Metric, MetricType
 """
 Performance test module for PerformanceMonitorCoreCoreValidation.
 

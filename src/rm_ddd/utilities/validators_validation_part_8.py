@@ -1,29 +1,32 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def validate_service(self, service: DomainService) -> ValidationResult:
+class ValidateserviceClass:
+    """Auto-generated class for functions."""
+
+    def validate_service(self, service: DomainService) -> ValidationResult:
     """Validate a domain service."""
     result = ValidationResult(is_valid=True)
     for rule in self._rules['service']:
-        rule_result = rule.validate(service)
-        result.merge(rule_result)
+    rule_result = rule.validate(service)
+    result.merge(rule_result)
     for rule in self._rules['general']:
-        rule_result = rule.validate(service)
-        result.merge(rule_result)
+    rule_result = rule.validate(service)
+    result.merge(rule_result)
     return result
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

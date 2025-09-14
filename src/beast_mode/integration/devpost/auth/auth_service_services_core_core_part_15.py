@@ -1,6 +1,9 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def __init__(self):
+class InitClass:
+    """Auto-generated class for functions."""
+
+    def __init__(self):
     """Initialize DevPost auth service"""
     super().__init__(module_id='devpostauthservice', version='1.0.0')
     register_module(self)

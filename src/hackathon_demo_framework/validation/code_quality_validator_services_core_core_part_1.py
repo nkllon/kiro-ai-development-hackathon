@@ -1,12 +1,15 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def __init__(self, project_path: Path):
+class InitClass:
+    """Auto-generated class for functions."""
+
+    def __init__(self, project_path: Path):
     """
-        Initialize the code quality assessment engine.
-        
-        Args:
-            project_path: Path to the project being analyzed
-        """
+    Initialize the code quality assessment engine.
+
+    Args:
+    project_path: Path to the project being analyzed
+    """
     self.project_path = Path(project_path)
     self.logger = logging.getLogger(__name__)
     self.thresholds = {'complexity_max': 10, 'function_length_max': 50, 'class_length_max': 200, 'documentation_min': 80, 'maintainability_min': 7.0}
@@ -15,18 +18,18 @@ def __init__(self, project_path: Path):
     self.logger.info(f'Code quality engine initialized for {self.project_path}')
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

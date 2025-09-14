@@ -1,30 +1,33 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def remove_permission(self, permission: str) -> bool:
+class RemovepermissionClass:
+    """Auto-generated class for functions."""
+
+    def remove_permission(self, permission: str) -> bool:
     """Remove permission from member."""
     try:
-        if permission in self.permissions:
-            self.permissions.remove(permission)
-            self._operation_count += 1
-        return True
+    if permission in self.permissions:
+    self.permissions.remove(permission)
+    self._operation_count += 1
+    return True
     except Exception as e:
-        logger.error(f'Failed to remove permission: {e}')
-        self._errors += 1
-        return False
+    logger.error(f'Failed to remove permission: {e}')
+    self._errors += 1
+    return False
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

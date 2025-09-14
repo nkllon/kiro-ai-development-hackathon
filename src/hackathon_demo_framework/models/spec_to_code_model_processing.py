@@ -14,7 +14,10 @@ from beast_mode.core.model_registry import ModelRegistry
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def transform_spec_to_code(self, spec: str) -> TransformationResult:
+class TransformspectocodeClass:
+    """Auto-generated class for functions."""
+
+    def transform_spec_to_code(self, spec: str) -> TransformationResult:
     """Core functionality: Transform specification to executable code"""
     start_time = datetime.now()
     systematic_score = self.calculate_systematic_score()
@@ -30,18 +33,18 @@ def transform_spec_to_code(self, spec: str) -> TransformationResult:
     return result
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

@@ -1,23 +1,26 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def validate_domain_service_purity(service: DomainService) -> ValidationResult:
+class ValidatedomainservicepurityClass:
+    """Auto-generated class for functions."""
+
+    def validate_domain_service_purity(service: DomainService) -> ValidationResult:
     """Validate domain service contains only domain logic."""
     validator = DomainValidator()
     return validator.validate_service(service)
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

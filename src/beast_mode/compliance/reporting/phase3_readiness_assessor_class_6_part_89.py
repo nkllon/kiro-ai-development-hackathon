@@ -2,21 +2,24 @@ from src.rm_ddd.core.registry import register_module
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def get_readiness_summary(self, analysis_result: ComplianceAnalysisResult) -> Dict[str, Any]:
+class GetreadinesssummaryClass:
+    """Auto-generated class for functions."""
+
+    def get_readiness_summary(self, analysis_result: ComplianceAnalysisResult) -> Dict[str, Any]:
     try:
-        pass  # TODO: Add method implementation
+    pass  # TODO: Add method implementation
     except Exception as e:
-        logging.error(f"Error in method: {e}")
-        raise
+    logging.error(f"Error in method: {e}")
+    raise
     """
-        Get a quick readiness summary.
-        
-        Args:
-            analysis_result: The compliance analysis results
-            
-        Returns:
-            Dictionary with key readiness indicators
-        """
+    Get a quick readiness summary.
+
+    Args:
+    analysis_result: The compliance analysis results
+
+    Returns:
+    Dictionary with key readiness indicators
+    """
     readiness_metrics = self._evaluate_readiness_metrics(analysis_result)
     overall_score = self._calculate_overall_readiness_score(readiness_metrics)
     overall_status = self._determine_overall_readiness_status(readiness_metrics, overall_score)
@@ -24,18 +27,18 @@ def get_readiness_summary(self, analysis_result: ComplianceAnalysisResult) -> Di
     return {'readiness_status': overall_status.value, 'readiness_score': overall_score, 'blocking_issues_count': len(blocking_issues), 'critical_blockers': [issue.description for issue in blocking_issues if issue.severity == IssueSeverity.CRITICAL][:3], 'ready_for_phase3': overall_status in [ReadinessStatus.READY, ReadinessStatus.CONDITIONALLY_READY] and len(blocking_issues) == 0, 'key_metrics': {metric.criteria.value: {'current': metric.current_value, 'required': metric.required_value, 'status': metric.status.value} for metric in readiness_metrics}}
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

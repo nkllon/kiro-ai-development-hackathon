@@ -1,6 +1,9 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def __init__(self, timeout_config: Optional[TimeoutConfiguration]=None):
+class InitClass:
+    """Auto-generated class for functions."""
+
+    def __init__(self, timeout_config: Optional[TimeoutConfiguration]=None):
     super().__init__('rca_timeout_handler')
     self.timeout_config = timeout_config or TimeoutConfiguration()
     self.active_timeouts: Dict[str, threading.Timer] = {}
@@ -15,18 +18,18 @@ def __init__(self, timeout_config: Optional[TimeoutConfiguration]=None):
     self._update_health_indicator('timeout_handler_readiness', HealthStatus.HEALTHY, 'ready', 'RCA timeout handler ready for operation management')
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

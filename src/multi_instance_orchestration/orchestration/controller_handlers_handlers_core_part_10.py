@@ -1,11 +1,14 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def _create_distribution_plan(self, tasks: List[Task], instance_count: int, parallel_groups: List[List[str]]) -> DistributionPlan:
+class CreatedistributionplanClass:
+    """Auto-generated class for functions."""
+
+    def _create_distribution_plan(self, tasks: List[Task], instance_count: int, parallel_groups: List[List[str]]) -> DistributionPlan:
     """Create distribution plan based on strategy."""
     task_assignments = {f'instance-{i}': [] for i in range(instance_count)}
     for i, task in enumerate(tasks):
-        instance_id = f'instance-{i % instance_count}'
-        task_assignments[instance_id].append(task.id)
+    instance_id = f'instance-{i % instance_count}'
+    task_assignments[instance_id].append(task.id)
     max_tasks_per_instance = max((len(task_list) for task_list in task_assignments.values())) if task_assignments else 0
     avg_task_duration = sum((task.estimated_duration.total_seconds() for task in tasks)) / len(tasks) if tasks else 0
     estimated_completion_time = timedelta(seconds=max_tasks_per_instance * avg_task_duration)
@@ -13,18 +16,18 @@ def _create_distribution_plan(self, tasks: List[Task], instance_count: int, para
     return plan
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

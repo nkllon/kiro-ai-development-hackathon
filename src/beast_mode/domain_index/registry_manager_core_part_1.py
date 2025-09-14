@@ -1,6 +1,9 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def __init__(self, registry_path: Optional[str]=None, config: Optional[Dict[str, Any]]=None):
+class InitClass:
+    """Auto-generated class for functions."""
+
+    def __init__(self, registry_path: Optional[str]=None, config: Optional[Dict[str, Any]]=None):
     super().__init__('domain_registry_manager', config)
     self.config_obj = get_config()
     self.registry_path = Path(registry_path or self.config_obj.get('registry_path'))
@@ -23,18 +26,18 @@ def __init__(self, registry_path: Optional[str]=None, config: Optional[Dict[str,
     self.logger.info('Initialized caching, indexing, and validation systems')
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

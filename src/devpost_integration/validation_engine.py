@@ -13,19 +13,22 @@ from src.rm_ddd.core.health import ModuleHealth
 
 logger = logging.getLogger(__name__)
 
-def create_default_validation_engine() -> ValidationEngine:
+class CreatedefaultvalidationengineClass:
+    """Auto-generated class for functions."""
+
+    def create_default_validation_engine() -> ValidationEngine:
     """Create a default validation engine instance"""
     return ValidationEngine()
 
-def validate_project_metadata(metadata: Dict[str, Any]) -> ValidationReport:
+    def validate_project_metadata(metadata: Dict[str, Any]) -> ValidationReport:
     """Validate project metadata and return validation report"""
     engine = create_default_validation_engine()
     return engine.validate_project(metadata)
 
-# Export all classes and functions
-__all__ = [
+    # Export all classes and functions
+    __all__ = [
     'ValidationEngine',
-    'ValidationRule', 
+    'ValidationRule',
     'ValidationReport',
     'ValidationIssue',
     'ValidationContext',
@@ -38,4 +41,4 @@ __all__ = [
     'TagValidationRule',
     'create_default_validation_engine',
     'validate_project_metadata'
-]
+    ]

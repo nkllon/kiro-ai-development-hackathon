@@ -11,50 +11,53 @@ from .reflective_module import ReflectiveModule, register_module, ModuleHealth, 
 from typing import Dict, List, Any, Optional
 from enum import Enum
 
-def check_health(self) -> ModuleHealth:
+class CheckhealthClass:
+    """Auto-generated class for functions."""
+
+    def check_health(self) -> ModuleHealth:
     """Check module health with comprehensive monitoring."""
     issues = []
     health_score = self._calculate_health_score()
     if self._errors > 0:
-        issues.append(f'{self._errors} errors occurred')
+    issues.append(f'{self._errors} errors occurred')
     if self.status == 'failed' and (not self.error_message):
-        issues.append('Failed operation without error message')
+    issues.append('Failed operation without error message')
     if self.progress < 0 or self.progress > 1:
-        issues.append('Invalid progress value')
+    issues.append('Invalid progress value')
     if health_score >= 0.9:
-        status = ModuleStatus.HEALTHY
+    status = ModuleStatus.HEALTHY
     elif health_score >= 0.7:
-        status = ModuleStatus.WARNING
+    status = ModuleStatus.WARNING
     else:
-        status = ModuleStatus.ERROR
+    status = ModuleStatus.ERROR
     return ModuleHealth(module_id=self.module_id, status=status, health_score=health_score, issues=issues, capabilities=self.get_capabilities(), dependencies=self.get_dependencies(), metrics=self.get_metrics(), last_check=datetime.now())
 
-def check_health(self) -> ModuleHealth:
+    def check_health(self) -> ModuleHealth:
     """Check module health."""
     issues = []
     health_score = 1.0
     if self._errors > 0:
-        issues.append(f'{self._errors} errors occurred')
-        health_score -= 0.2
+    issues.append(f'{self._errors} errors occurred')
+    health_score -= 0.2
     if not self.connected:
-        issues.append('Not connected to project')
-        health_score -= 0.3
+    issues.append('Not connected to project')
+    health_score -= 0.3
     status = ModuleStatus.HEALTHY if health_score >= 0.9 else ModuleStatus.WARNING
     return ModuleHealth(module_id=self.module_id, status=status, health_score=health_score, issues=issues, capabilities=self.get_capabilities(), dependencies=self.get_dependencies(), metrics=self.get_metrics(), last_check=datetime.now())
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

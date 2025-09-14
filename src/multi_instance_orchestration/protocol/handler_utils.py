@@ -13,23 +13,26 @@ from .models import ActionResult, CommandPattern, StructuredAction, ValidationRe
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def format_response(self, result: ActionResult) -> str:
+class FormatresponseClass:
+    """Auto-generated class for functions."""
+
+    def format_response(self, result: ActionResult) -> str:
     """Format result as human-readable text."""
     return result.to_response_string()
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

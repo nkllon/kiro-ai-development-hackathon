@@ -1,6 +1,9 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-def _calculate_domain_similarity(self, domain1: Domain, domain2: Domain) -> float:
+class CalculatedomainsimilarityClass:
+    """Auto-generated class for functions."""
+
+    def _calculate_domain_similarity(self, domain1: Domain, domain2: Domain) -> float:
     """Calculate similarity score between two domains"""
     patterns1 = set(domain1.patterns)
     patterns2 = set(domain2.patterns)
@@ -14,18 +17,18 @@ def _calculate_domain_similarity(self, domain1: Domain, domain2: Domain) -> floa
     return pattern_jaccard * 0.4 + indicator_jaccard * 0.3 + requirement_jaccard * 0.3
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

@@ -4,7 +4,9 @@ from typing import Dict, Any, List, Optional
 from pathlib import Pathfrom ..interfaces.projectstatus_interface import ProjectStatusfrom ..interfaces.devpostprojectmanager_interface import DevpostProjectManager
 import logging
 
+class GetdependenciesClass:
+    """Auto-generated class for functions."""
+
     def get_dependencies(self) -> List[str]:
-        """Get module dependencies."""
-        return ['validation_engine', 'file_watcher_core']
-    
+    """Get module dependencies."""
+    return ['validation_engine', 'file_watcher_core']

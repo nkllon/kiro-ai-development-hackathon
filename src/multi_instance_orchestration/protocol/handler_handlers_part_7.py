@@ -1,24 +1,27 @@
 from src.rm_ddd.core.health import ModuleHealth
 
+class RegisterdefaultpatternsClass:
+    """Auto-generated class for functions."""
+
     def _register_default_patterns(self) -> None:
-        """Register default command patterns."""
-        patterns = [CommandPattern(verb='run', noun='task', allowed_modifiers=['beast-mode', 'parallel', 'sequential', 'debug'], required_parameters=['task_id'], optional_parameters=['timeout', 'priority', 'workspace'], description='Execute a task with specified mode', examples=['run task abc beast-mode', 'run task xyz parallel timeout=300']), CommandPattern(verb='stop', noun='instance', allowed_modifiers=['graceful', 'immediate', 'force'], required_parameters=['instance_id'], optional_parameters=['timeout', 'preserve_state'], description='Stop a running instance', examples=['stop instance kiro-3 graceful', 'stop instance kiro-1 immediate']), CommandPattern(verb='sync', noun='branch', allowed_modifiers=['upstream', 'downstream', 'bidirectional'], required_parameters=['branch_name'], optional_parameters=['conflict_strategy', 'merge_strategy'], description='Synchronize git branch', examples=['sync branch feature/task-1 upstream', 'sync branch main bidirectional']), CommandPattern(verb='status', noun='swarm', allowed_modifiers=['detailed', 'summary', 'health', 'performance'], required_parameters=[], optional_parameters=['format', 'filter'], description='Get swarm status information', examples=['status swarm detailed', 'status swarm health']), CommandPattern(verb='scale', noun='instances', allowed_modifiers=['up', 'down', 'auto'], required_parameters=['count'], optional_parameters=['resource_type', 'deployment_target'], description='Scale instance count', examples=['scale instances up count=5', 'scale instances auto count=3'])]
-        for pattern in patterns:
-            self.register_pattern(pattern)
+    """Register default command patterns."""
+    patterns = [CommandPattern(verb='run', noun='task', allowed_modifiers=['beast-mode', 'parallel', 'sequential', 'debug'], required_parameters=['task_id'], optional_parameters=['timeout', 'priority', 'workspace'], description='Execute a task with specified mode', examples=['run task abc beast-mode', 'run task xyz parallel timeout=300']), CommandPattern(verb='stop', noun='instance', allowed_modifiers=['graceful', 'immediate', 'force'], required_parameters=['instance_id'], optional_parameters=['timeout', 'preserve_state'], description='Stop a running instance', examples=['stop instance kiro-3 graceful', 'stop instance kiro-1 immediate']), CommandPattern(verb='sync', noun='branch', allowed_modifiers=['upstream', 'downstream', 'bidirectional'], required_parameters=['branch_name'], optional_parameters=['conflict_strategy', 'merge_strategy'], description='Synchronize git branch', examples=['sync branch feature/task-1 upstream', 'sync branch main bidirectional']), CommandPattern(verb='status', noun='swarm', allowed_modifiers=['detailed', 'summary', 'health', 'performance'], required_parameters=[], optional_parameters=['format', 'filter'], description='Get swarm status information', examples=['status swarm detailed', 'status swarm health']), CommandPattern(verb='scale', noun='instances', allowed_modifiers=['up', 'down', 'auto'], required_parameters=['count'], optional_parameters=['resource_type', 'deployment_target'], description='Scale instance count', examples=['scale instances up count=5', 'scale instances auto count=3'])]
+    for pattern in patterns:
+    self.register_pattern(pattern)
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

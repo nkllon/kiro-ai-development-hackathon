@@ -12,36 +12,39 @@ from src.rm_ddd.core.health import ModuleHealth
 
 
 @abstractmethod
-def validate_confidence(self, result: AnalysisResult) -> bool:
+class ValidateconfidenceClass:
+    """Auto-generated class for functions."""
+
+    def validate_confidence(self, result: AnalysisResult) -> bool:
     """
-        Validate that confidence score accurately reflects analysis quality.
-        
-        Args:
-            result: Analysis result to validate
-            
-        Returns:
-            True if confidence score is accurate, False otherwise
-        """
+    Validate that confidence score accurately reflects analysis quality.
+
+    Args:
+    result: Analysis result to validate
+
+    Returns:
+    True if confidence score is accurate, False otherwise
+    """
     pass
 
-@abstractmethod
-def validate_extension(self, extension: Any) -> ValidationResult:
+    @abstractmethod
+    def validate_extension(self, extension: Any) -> ValidationResult:
     """Validate that extension meets framework requirements"""
     pass
 
     def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
+    """Register module with registry."""
+    metadata = self.get_interface_metadata()
+    if hasattr(registry, 'register'):
+    registry.register(metadata)
+
     def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
+    """Get interface metadata for registry."""
+    return {
+    'module_id': getattr(self, 'module_id', self.__class__.__name__),
+    'interface_type': self.__class__.__name__,
+    'version': '1.0.0',
+    'dependencies': [],
+    'capabilities': []
+    }
 

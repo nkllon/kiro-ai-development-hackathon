@@ -2,7 +2,10 @@ from src.rm_ddd.core.registry import register_module
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def _init_security_patterns(self):
+class InitsecuritypatternsClass:
+    """Auto-generated class for functions."""
+
+    def _init_security_patterns(self):
     """Initialize security vulnerability patterns"""
     self.sql_injection_patterns = ['execute\\s*\\(\\s*["\\\'].*\\+.*["\\\']', 'query\\s*\\(\\s*["\\\'].*\\+.*["\\\']', 'SELECT\\s+.*\\+.*FROM', 'INSERT\\s+.*\\+.*VALUES', 'UPDATE\\s+.*SET.*\\+', 'DELETE\\s+.*WHERE.*\\+']
     self.xss_patterns = ['innerHTML\\s*=\\s*.*\\+', 'document\\.write\\s*\\(', 'eval\\s*\\(', 'setTimeout\\s*\\(\\s*["\\\'].*\\+', 'setInterval\\s*\\(\\s*["\\\'].*\\+']

@@ -2,7 +2,10 @@ from src.rm_ddd.core.registry import register_module
 from src.rm_ddd.core.health import ModuleHealth
 
 
-def _calculate_days_remaining(self) -> int:
+class CalculatedaysremainingClass:
+    """Auto-generated class for functions."""
+
+    def _calculate_days_remaining(self) -> int:
     """Calculate days remaining until hackathon deadline."""
     now = datetime.now()
     delta = self.hackathon_deadline - now
