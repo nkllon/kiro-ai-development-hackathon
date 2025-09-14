@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _is_documentation_file(self, file_path: Path) -> bool:
     """Check if file is a documentation file."""

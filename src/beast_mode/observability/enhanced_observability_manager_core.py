@@ -38,3 +38,4 @@ from .enhanced_observability_manager_core_part_37 import *
 from .enhanced_observability_manager_core_part_38 import *
 from .enhanced_observability_manager_core_part_39 import *
 from .enhanced_observability_manager_core_part_40 import *
+from src.rm_ddd.core.health import ModuleHealth

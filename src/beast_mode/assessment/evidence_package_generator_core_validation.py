@@ -22,6 +22,8 @@ from ..quality.automated_quality_gates import AutomatedQualityGates
 from ..services.gke_service_interface import GKEServiceInterface
 from ..validation.self_consistency_validator import SelfConsistencyValidator
 from ..quality.automated_quality_gates import AutomatedQualityGates
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _generate_test_coverage_report(self) -> Dict[str, float]:
     """Generate test coverage report"""

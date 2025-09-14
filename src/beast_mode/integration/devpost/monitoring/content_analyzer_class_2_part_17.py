@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _is_release_tag(self, tag_name: str) -> bool:
         """Check if tag name indicates a release."""

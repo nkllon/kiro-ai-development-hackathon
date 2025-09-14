@@ -7,3 +7,5 @@ from pathlib import Path
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .gke_service_impact_measurer_core import *
 from .gke_service_impact_measurer_services import *
+from src.rm_ddd.core.health import ModuleHealth
+

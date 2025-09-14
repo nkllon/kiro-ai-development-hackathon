@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def validate_path_consistency(paths: List[Union[str, Path]], base: Optional[Union[str, Path]]=None) -> bool:
         """

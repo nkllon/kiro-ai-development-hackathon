@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_project_registry_integration(self) -> ValidationResult:
     """Validate project model registry integration"""

@@ -21,6 +21,8 @@ from PIL import Image
 from PIL import Image
 from PIL import Image
 from PIL import Image
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _parse_image_dimensions_basic(self, file_path: Path) -> Optional[Tuple[int, int]]:
     """Basic image dimension parsing without external libraries."""

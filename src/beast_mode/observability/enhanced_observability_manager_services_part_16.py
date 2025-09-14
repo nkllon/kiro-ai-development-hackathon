@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def finish_trace(self, span_id: str, status: str='ok', tags: Dict[str, Any]=None) -> Dict[str, Any]:
         """finish_trace - Enhanced for compliance"""

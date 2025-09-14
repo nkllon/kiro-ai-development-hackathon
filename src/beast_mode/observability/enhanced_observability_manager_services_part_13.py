@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def acknowledge_alert(self, alert_id: str, acknowledged_by: str, notes: str='') -> Dict[str, Any]:
         """acknowledge_alert - Enhanced for compliance"""

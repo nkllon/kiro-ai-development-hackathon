@@ -9,3 +9,5 @@ from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .infrastructure_integration_manager_services_services_services import *
 from .infrastructure_integration_manager_services_services_validation import *
 from .infrastructure_integration_manager_services_services_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

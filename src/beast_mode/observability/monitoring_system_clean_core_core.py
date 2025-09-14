@@ -10,3 +10,5 @@ import statistics
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .monitoring_system_clean_core_core_validation import *
 from .monitoring_system_clean_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_observability_analytics(self) -> Dict[str, Any]:
     try:

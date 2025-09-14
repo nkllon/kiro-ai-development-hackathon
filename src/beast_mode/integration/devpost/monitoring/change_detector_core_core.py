@@ -16,3 +16,5 @@ from PIL import Image
 from PIL import Image
 from .change_detector_core_core_core import *
 from .change_detector_core_core_processing import *
+from src.rm_ddd.core.health import ModuleHealth
+

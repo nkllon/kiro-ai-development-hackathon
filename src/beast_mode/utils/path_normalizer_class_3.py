@@ -26,3 +26,4 @@ from .path_normalizer_class_3_part_25 import *
 from .path_normalizer_class_3_part_26 import *
 from .path_normalizer_class_3_part_27 import *
 from .path_normalizer_class_3_part_28 import *
+from src.rm_ddd.core.health import ModuleHealth

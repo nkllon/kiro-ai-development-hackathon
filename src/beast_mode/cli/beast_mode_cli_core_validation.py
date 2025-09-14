@@ -18,6 +18,8 @@ from ..core.reflective_module import ReflectiveModule, HealthStatus
 from ..integration.infrastructure_integration_manager import InfrastructureIntegrationManager
 from ..integration.self_consistency_validator import SelfConsistencyValidator
 from ..orchestration.tool_orchestration_engine import ToolOrchestrationEngine
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _execute_validate_command(self, args: List[str]) -> CLIResult:
     """Execute validation command"""

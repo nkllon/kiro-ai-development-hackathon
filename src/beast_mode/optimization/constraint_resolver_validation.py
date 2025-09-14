@@ -14,6 +14,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
 from queue import Queue, PriorityQueue
 from ..core.reflective_module import ReflectiveModule, HealthStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _check_constraint_compliance(self) -> bool:
     """Check overall constraint compliance"""

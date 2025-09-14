@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_cursor_rules_integration(self) -> ValidationResult:
     """Validate cursor rules integration"""

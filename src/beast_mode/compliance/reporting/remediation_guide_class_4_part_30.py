@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _identify_risk_factors(self, remediation_steps: List[RemediationStep], test_remediations: List[FailingTestRemediation]) -> List[str]:
         try:

@@ -70,3 +70,4 @@ from .content_analyzer_part_69 import *
 from .content_analyzer_part_70 import *
 from .content_analyzer_part_71 import *
 from .content_analyzer_part_72 import *
+from src.rm_ddd.core.health import ModuleHealth

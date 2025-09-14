@@ -1,4 +1,4 @@
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -105,4 +105,6 @@ Requirements: 6.1, 6.4 - Fix enum serialization and JSON compatibility
 import json
 from enum import Enum
 from typing import Any, Type, Dict, Union
+from src.rm_ddd.core.health import ModuleHealth
+
 

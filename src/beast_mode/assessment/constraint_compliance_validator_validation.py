@@ -10,6 +10,8 @@ from dataclasses import dataclass, asdict
 from datetime import datetime
 from enum import Enum
 from ..core.reflective_module import ReflectiveModule, HealthStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_all_constraints(self) -> ComplianceReport:
     """

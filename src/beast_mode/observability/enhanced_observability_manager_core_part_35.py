@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def start_trace(self, operation_name: str, service_name: str, parent_span_id: Optional[str]=None, tags: Dict[str, Any]=None) -> str:
     try:

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def trigger_alert(self, rule_id: str, metric_value: float, context: Dict[str, Any]=None) -> Dict[str, Any]:
     try:

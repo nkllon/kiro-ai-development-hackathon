@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _determine_overall_readiness_status(self, readiness_metrics: List[ReadinessMetric], overall_score: float) -> ReadinessStatus:
         try:

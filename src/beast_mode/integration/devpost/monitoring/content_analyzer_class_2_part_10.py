@@ -17,6 +17,8 @@ from src.rm_ddd.core.registry import register_module
                     result = subprocess.run(['ffprobe', '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', str(file_path)], capture_output=True, text=True, timeout=10)
                     if result.returncode == 0:
                         import json
+from src.rm_ddd.core.health import ModuleHealth
+
                         video_info = json.loads(result.stdout)
                         if 'format' in video_info:
                             metadata['duration'] = float(video_info['format'].get('duration', 0))

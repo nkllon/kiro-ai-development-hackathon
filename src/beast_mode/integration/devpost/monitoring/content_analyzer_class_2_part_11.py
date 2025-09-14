@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _get_git_info(self, file_path: Path) -> Optional[Dict[str, Any]]:
         """Get Git information for a file."""

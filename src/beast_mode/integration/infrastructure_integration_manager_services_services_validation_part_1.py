@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_complete_integration(self) -> Dict[str, Any]:
     """

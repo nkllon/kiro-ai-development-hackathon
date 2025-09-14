@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def resolve_alert(self, alert_id: str, resolved_by: str, resolution_notes: str='') -> Dict[str, Any]:
     try:

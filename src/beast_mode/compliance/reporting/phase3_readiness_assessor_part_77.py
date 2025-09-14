@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _perform_risk_assessment(self, analysis_result: ComplianceAnalysisResult, readiness_metrics: List[ReadinessMetric]) -> Dict[str, Any]:
     try:

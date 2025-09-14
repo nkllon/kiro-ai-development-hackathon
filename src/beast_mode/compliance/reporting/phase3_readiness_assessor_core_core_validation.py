@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from enum import Enum
 from datetime import datetime
 from ..models import ComplianceAnalysisResult, ComplianceIssue, IssueSeverity, ComplianceIssueType
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _evaluate_test_coverage_metric(self, test_status) -> ReadinessMetric:
     """Evaluate test coverage readiness metric."""

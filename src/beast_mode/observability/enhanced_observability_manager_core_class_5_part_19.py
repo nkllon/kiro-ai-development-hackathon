@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_dashboard_data(self, dashboard_id: str) -> Dict[str, Any]:
     try:

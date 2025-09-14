@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def is_safe_path(path: Union[str, Path], base: Union[str, Path]) -> bool:
     """

@@ -14,6 +14,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
 from queue import Queue, PriorityQueue
 from ..core.reflective_module import ReflectiveModule, HealthStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _parallel_systematic_processing(self, context: Dict[str, Any]) -> Dict[str, Any]:
     """Parallel processing to maintain systematic approach while improving speed"""

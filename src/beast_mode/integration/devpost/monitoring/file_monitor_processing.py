@@ -84,6 +84,8 @@ def _process_change_event(self, event: FileChangeEvent) -> None:
         if event.affects_sync and self.sync_manager:
             try:
                 from ..models import SyncOperation, SyncOperationType
+from src.rm_ddd.core.health import ModuleHealth
+
                 if event.is_documentation_file():
                     operation_type = SyncOperationType.DOCUMENTATION_UPDATE
                 elif event.is_media_file():

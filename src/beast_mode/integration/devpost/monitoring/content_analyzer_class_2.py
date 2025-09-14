@@ -57,3 +57,4 @@ from .content_analyzer_class_2_part_56 import *
 from .content_analyzer_class_2_part_57 import *
 from .content_analyzer_class_2_part_58 import *
 from .content_analyzer_class_2_part_59 import *
+from src.rm_ddd.core.health import ModuleHealth

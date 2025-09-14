@@ -14,3 +14,5 @@ from ..orchestration.tool_orchestration_engine import ToolOrchestrationEngine
 from .beast_mode_cli_core_core_validation import *
 from .beast_mode_cli_core_core_processing import *
 from .beast_mode_cli_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

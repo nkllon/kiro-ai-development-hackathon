@@ -1,4 +1,4 @@
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -117,3 +117,5 @@ import os
 from pathlib import Path
 from typing import Union, Optional, List
 import logging
+from src.rm_ddd.core.health import ModuleHealth
+

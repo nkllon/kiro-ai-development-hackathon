@@ -10,6 +10,8 @@ from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_component(self, component_name: str, component_data: Dict[str, Any], validation_types: List[RDIValidationType]=None) -> List[RDIValidationResult]:
     """

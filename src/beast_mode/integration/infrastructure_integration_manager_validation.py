@@ -3,3 +3,4 @@ from .infrastructure_integration_manager_validation_part_2 import *
 from .infrastructure_integration_manager_validation_part_3 import *
 from .infrastructure_integration_manager_validation_part_4 import *
 from .infrastructure_integration_manager_validation_part_5 import *
+from src.rm_ddd.core.health import ModuleHealth

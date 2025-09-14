@@ -92,3 +92,4 @@ from .report_generator_class_4_part_91 import *
 from .report_generator_class_4_part_92 import *
 from .report_generator_class_4_part_93 import *
 from .report_generator_class_4_part_94 import *
+from src.rm_ddd.core.health import ModuleHealth

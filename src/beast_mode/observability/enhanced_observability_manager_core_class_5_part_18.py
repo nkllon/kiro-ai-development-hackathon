@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def create_dashboard(self, dashboard_id: str, name: str, config: Dict[str, Any]) -> Dict[str, Any]:
     try:

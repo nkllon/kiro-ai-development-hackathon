@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def get_project_changes_summary(self, since: datetime) -> Dict[str, Any]:
         """Get summary of project changes since a given time."""

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def analyze_file_change(self, file_path: Path, change_type: str) -> Dict[str, Any]:
     """

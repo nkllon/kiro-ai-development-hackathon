@@ -9,6 +9,8 @@ import os
 from pathlib import Path
 from typing import Union, Optional, List
 import logging
+from src.rm_ddd.core.health import ModuleHealth
+
 
 @staticmethod
 def validate_path_consistency(paths: List[Union[str, Path]], base: Optional[Union[str, Path]]=None) -> bool:

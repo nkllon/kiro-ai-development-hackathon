@@ -18,3 +18,4 @@ from .enhanced_observability_manager_services_part_17 import *
 from .enhanced_observability_manager_services_part_18 import *
 from .enhanced_observability_manager_services_part_19 import *
 from .enhanced_observability_manager_services_part_20 import *
+from src.rm_ddd.core.health import ModuleHealth

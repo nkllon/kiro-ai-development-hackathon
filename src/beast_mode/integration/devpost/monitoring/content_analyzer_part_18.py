@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def analyze_file_change(self, file_path: Path, change_type: str) -> Dict[str, Any]:
         """

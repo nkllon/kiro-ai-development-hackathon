@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_beast_mode_configuration(self) -> ValidationResult:
     """Validate Beast Mode configuration and specs"""

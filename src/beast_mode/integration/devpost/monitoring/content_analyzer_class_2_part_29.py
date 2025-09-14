@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _get_media_category(self, file_path: Path) -> str:
     """Get media file category."""

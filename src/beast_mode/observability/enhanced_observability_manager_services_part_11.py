@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def create_alert_rule(self, rule: AlertRule) -> Dict[str, Any]:
         """create_alert_rule - Enhanced for compliance"""

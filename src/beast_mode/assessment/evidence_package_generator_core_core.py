@@ -26,3 +26,5 @@ from ..validation.self_consistency_validator import SelfConsistencyValidator
 from ..quality.automated_quality_gates import AutomatedQualityGates
 from .evidence_package_generator_core_core_validation import *
 from .evidence_package_generator_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

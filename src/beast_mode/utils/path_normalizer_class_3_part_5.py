@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def validate_file_extension(path: Union[str, Path], allowed_extensions: List[str]) -> bool:
         """

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def detect_git_releases(self) -> List[Dict[str, Any]]:
     """Detect new Git releases and tags."""

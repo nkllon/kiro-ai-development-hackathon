@@ -15,6 +15,8 @@ from enum import Enum
 from collections import deque, defaultdict
 import statistics
 from ..core.reflective_module import ReflectiveModule, HealthStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _check_alert_rules(self, metric: Metric):
     """Check metric against alert rules and trigger alerts if needed"""

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _perform_validation(self, component_name: str, component_data: Dict[str, Any], validation_type: RDIValidationType) -> RDIValidationResult:
         try:

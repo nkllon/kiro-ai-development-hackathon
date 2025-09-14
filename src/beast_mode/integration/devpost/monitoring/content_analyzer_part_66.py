@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _get_git_info(self, file_path: Path) -> Optional[Dict[str, Any]]:
     """Get Git information for a file."""

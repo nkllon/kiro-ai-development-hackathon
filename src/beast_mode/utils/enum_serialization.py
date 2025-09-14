@@ -26,3 +26,4 @@ from .enum_serialization_part_25 import *
 from .enum_serialization_part_26 import *
 from .enum_serialization_part_27 import *
 from .enum_serialization_part_28 import *
+from src.rm_ddd.core.health import ModuleHealth

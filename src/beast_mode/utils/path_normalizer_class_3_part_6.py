@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def validate_path_length(path: Union[str, Path], max_length: int=260) -> bool:
         """

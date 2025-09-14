@@ -11,3 +11,5 @@ from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .comprehensive_monitoring_system import ComprehensiveMonitoringSystem
 from .enhanced_observability_manager_services import *
 from .enhanced_observability_manager_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

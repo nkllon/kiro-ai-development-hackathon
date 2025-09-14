@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def add_trace_log(self, span_id: str, level: str, message: str, fields: Dict[str, Any]=None) -> Dict[str, Any]:
     try:

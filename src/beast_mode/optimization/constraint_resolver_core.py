@@ -11,3 +11,5 @@ from .constraint_resolver_core_validation import *
 from .constraint_resolver_core_utils import *
 from .constraint_resolver_core_processing import *
 from .constraint_resolver_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

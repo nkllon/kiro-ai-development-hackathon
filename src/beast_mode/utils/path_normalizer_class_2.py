@@ -8,3 +8,4 @@ from .path_normalizer_class_2_part_7 import *
 from .path_normalizer_class_2_part_8 import *
 from .path_normalizer_class_2_part_9 import *
 from .path_normalizer_class_2_part_10 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -14,3 +14,5 @@ from ..auth.auth_service import DevpostAuthService
 from ....core.exceptions import NetworkError, AuthenticationError, ValidationError
 from .client_core_validation import *
 from .client_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+
