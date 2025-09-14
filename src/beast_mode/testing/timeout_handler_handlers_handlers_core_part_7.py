@@ -22,3 +22,20 @@ def apply_graceful_degradation(self, operation_id: str, degradation_level: int=1
     except Exception as e:
         self.logger.error(f'Graceful degradation failed for operation {operation_id}: {e}')
         return {'success': False, 'error': str(e), 'degradation_level': degradation_level, 'fallback_applied': 'hard_timeout'}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

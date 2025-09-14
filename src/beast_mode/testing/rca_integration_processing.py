@@ -34,3 +34,20 @@ def convert_to_rca_failure(self, test_failure: TestFailureData) -> Failure:
     except Exception as e:
         self.logger.error(f'Failed to convert test failure to RCA failure: {e}')
         return Failure(failure_id=f'test_conversion_failed_{int(time.time())}', timestamp=datetime.now(), component='test:unknown', error_message=f'Conversion failed: {e}', stack_trace=None, context={'conversion_error': str(e)}, category=FailureCategory.UNKNOWN)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

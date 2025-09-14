@@ -21,3 +21,20 @@ def _check_architectural_patterns(self, module_path: str, complexity_indicators:
             issues.append(ComplianceIssue(issue_type=ComplianceIssueType.ARCHITECTURAL_VIOLATION, severity=IssueSeverity.LOW, description='No module-level docstring found', affected_files=[module_path], remediation_steps=['Add module-level docstring describing purpose', 'Document all public classes and methods', 'Follow PEP 257 docstring conventions'], blocking_merge=False))
     except Exception as e:
         issues.append(ComplianceIssue(issue_type=ComplianceIssueType.ARCHITECTURAL_VIOLATION, severity=IssueSeverity.LOW, description=f'Could not perform architectural pattern analysis: {str(e)}', affected_files=[module_path], remediation_steps=['Ensure module is syntactically valid', 'Check file permissions and accessibility'], blocking_merge=False))
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

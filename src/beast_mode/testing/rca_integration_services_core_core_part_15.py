@@ -13,3 +13,20 @@ def _detect_failure_correlations(self, basic_groups: Dict[str, List[TestFailureD
             subgroup_name = f'{group_name}_corr_{i}' if len(subgroups) > 1 else group_name
             correlated_groups[subgroup_name] = subgroup
     return correlated_groups
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

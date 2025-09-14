@@ -52,3 +52,20 @@ def _parse_requirements_file(self, file_path: Path) -> Dict[str, RequirementDefi
         current_requirement.acceptance_criteria = current_acceptance_criteria.copy()
         requirements[current_requirement.requirement_id] = current_requirement
     return requirements
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

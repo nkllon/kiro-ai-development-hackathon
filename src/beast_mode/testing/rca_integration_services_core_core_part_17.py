@@ -12,3 +12,20 @@ def _apply_group_size_limits(self, groups: Dict[str, List[TestFailureData]]) -> 
                 chunk_name = f'{group_name}_chunk_{i // self.max_failures_per_group}'
                 limited_groups[chunk_name] = chunk
     return limited_groups
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

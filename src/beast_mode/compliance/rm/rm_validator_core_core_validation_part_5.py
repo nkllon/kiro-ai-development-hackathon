@@ -22,3 +22,20 @@ def validate_rm_compliance(self, module_path: str) -> RMComplianceStatus:
     scores = [interface_result.interface_compliance_score, 1.0 if size_result.meets_size_constraint else 0.0, health_result.health_monitoring_score, registry_result.registry_compliance_score]
     overall_score = sum(scores) / len(scores) if scores else 0.0
     return RMComplianceStatus(interface_implemented=interface_result.implements_rm_interface, size_constraints_met=size_result.meets_size_constraint, health_monitoring_present=health_result.has_health_monitoring, registry_integrated=registry_result.properly_registered, compliance_score=overall_score, issues=all_issues)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

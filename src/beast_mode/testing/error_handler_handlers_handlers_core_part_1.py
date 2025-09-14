@@ -15,3 +15,20 @@ def __init__(self, retry_config: Optional[RetryConfiguration]=None):
     self.monitored_components = ['rca_engine', 'test_failure_detector', 'rca_integration_engine', 'report_generator', 'pattern_library']
     self._initialize_component_health()
     self._update_health_indicator('rca_error_handler_readiness', HealthStatus.HEALTHY, 'ready', 'RCA error handler ready for comprehensive error management')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

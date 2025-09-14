@@ -13,3 +13,20 @@ def _generate_basic_recommendations(self, test_failures: List[Any], error: Excep
         recommendations.append('Check test execution timeouts and performance')
     recommendations.extend(['Review test logs for detailed error information', 'Check system resources and configuration', 'Retry RCA analysis when system is stable'])
     return recommendations
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

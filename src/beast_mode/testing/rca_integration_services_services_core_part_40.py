@@ -22,3 +22,20 @@ def _generate_recommendations(self, rca_results: List[RCAResult]) -> List[str]:
     if not recommendations:
         recommendations.append('No specific systematic fixes identified - review test failures manually')
     return recommendations
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

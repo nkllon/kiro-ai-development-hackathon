@@ -27,3 +27,20 @@ def map_changes_to_tasks(self, file_changes: FileChangeAnalysis, task_patterns: 
             task_mapping[task_id] = sorted(list(set(matching_files)))
     self.logger.info(f'Mapped changes to {len(task_mapping)} potential tasks')
     return task_mapping
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -40,3 +40,20 @@ def validate_health_monitoring(self, module_path: str) -> HealthMonitoringResult
     except Exception as e:
         issues.append(ComplianceIssue(issue_type=ComplianceIssueType.RM_NON_COMPLIANCE, severity=IssueSeverity.HIGH, description=f'Failed to validate health monitoring: {str(e)}', affected_files=[module_path], remediation_steps=['Fix syntax errors in the module', 'Ensure module is valid Python code'], blocking_merge=True))
         return HealthMonitoringResult(module_path=module_path, has_health_monitoring=False, health_methods_implemented=[], missing_health_methods=list(self.HEALTH_MONITORING_METHODS.keys()), health_monitoring_score=0.0, issues=issues)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

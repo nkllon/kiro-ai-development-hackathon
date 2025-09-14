@@ -15,3 +15,20 @@ def __init__(self, rca_engine: Optional[RCAEngine]=None, performance_monitor: Op
     self.max_failures_per_group = 10
     self.analysis_timeout_seconds = 30
     self._update_health_indicator('test_rca_integration_readiness', HealthStatus.HEALTHY, 'ready', 'Test RCA integration layer ready for failure analysis')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

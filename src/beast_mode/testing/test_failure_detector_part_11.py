@@ -49,3 +49,20 @@ from src.rm_ddd.core.health import ModuleHealth
             self.logger.error(f'Test monitoring failed: {e}')
             self.error_handler.monitor_component_health('test_monitoring', False, 1000.0)
             return [self._create_monitoring_failure(test_command, str(e))]
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

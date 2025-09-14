@@ -16,3 +16,20 @@ def group_related_failures(self, failures: List[TestFailureData]) -> Dict[str, L
     except Exception as e:
         self.logger.error(f'Advanced failure grouping failed: {e}')
         return {f'failure_{i}': [failure] for i, failure in enumerate(failures)}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

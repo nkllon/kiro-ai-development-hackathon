@@ -12,3 +12,20 @@ def _apply_level_3_degradation(self, operation_id: str) -> Dict[str, Any]:
     except Exception as e:
         self.logger.error(f'Level 3 degradation failed for operation {operation_id}: {e}')
         return {'success': False, 'error': str(e)}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

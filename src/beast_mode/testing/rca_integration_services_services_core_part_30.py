@@ -11,3 +11,20 @@ def _analyze_temporal_correlations(self, failures: List[TestFailureData]) -> Lis
         if time_diff < 60:
             correlations.append({'type': 'temporal', 'failures': [current.test_name, next_failure.test_name], 'time_difference_seconds': time_diff, 'correlation_strength': max(0.0, 1.0 - time_diff / 60.0)})
     return correlations
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

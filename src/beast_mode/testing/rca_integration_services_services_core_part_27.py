@@ -12,3 +12,20 @@ def _detect_common_failure_patterns(self, failures: List[TestFailureData]) -> Li
     for pattern in common_file_patterns:
         patterns.append({'type': 'test_file_pattern', 'pattern': pattern, 'frequency': common_file_patterns[pattern]})
     return patterns
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

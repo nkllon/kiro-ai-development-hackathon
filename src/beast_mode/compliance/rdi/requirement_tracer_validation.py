@@ -30,3 +30,20 @@ def validate(self, target: str) -> List[ComplianceIssue]:
         self.requirements_cache = self._load_requirements()
     traceability_result = self._analyze_traceability(target_path)
     return traceability_result.issues
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -11,3 +11,20 @@ def _calculate_cross_group_correlation(self, group_a: List[TestFailureData], gro
             total_similarity += self._calculate_failure_similarity(failure_a, failure_b)
             comparisons += 1
     return total_similarity / comparisons if comparisons > 0 else 0.0
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
