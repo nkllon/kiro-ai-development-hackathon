@@ -1,1 +1,0 @@
-"""Multi-Instance Kiro Orchestration System."""
