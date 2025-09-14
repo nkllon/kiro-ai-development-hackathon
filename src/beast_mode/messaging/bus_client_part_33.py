@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def find_agents_for_capabilities(self, required_capabilities: List[str]) -> List[Dict]:
         """

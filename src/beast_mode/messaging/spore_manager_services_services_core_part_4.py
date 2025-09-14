@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def save_spore(self, spore_content: str, metadata: Dict[str, Any]) -> str:
     """

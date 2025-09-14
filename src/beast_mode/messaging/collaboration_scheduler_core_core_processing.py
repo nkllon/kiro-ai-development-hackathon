@@ -15,6 +15,8 @@ from dataclasses import dataclass, field
 from pydantic import BaseModel, Field
 import uuid
 from .models import BeastModeMessage, MessageType, AgentCapabilities
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def process_offline_collaboration_queue(self, agent_id: str) -> List[Dict[str, Any]]:
     """

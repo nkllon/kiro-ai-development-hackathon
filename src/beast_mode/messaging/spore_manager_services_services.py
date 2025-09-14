@@ -11,3 +11,5 @@ from .models import BeastModeMessage, MessageType
 from .spore_manager_services_services_validation import *
 from .spore_manager_services_services_core import *
 from .spore_manager_services_services_services import *
+from src.rm_ddd.core.health import ModuleHealth
+

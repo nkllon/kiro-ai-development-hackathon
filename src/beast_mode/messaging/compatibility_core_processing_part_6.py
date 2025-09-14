@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def convert_to_legacy(self, message: BeastModeMessage, target_version: MessageVersion=MessageVersion.V1_0) -> Dict[str, Any]:
     """

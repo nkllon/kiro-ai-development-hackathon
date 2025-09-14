@@ -9,3 +9,5 @@ from .models import BeastModeMessage, MessageType, AgentCapabilities
 from .message_handlers_core_core_core import *
 from .message_handlers_core_core_processing import *
 from .message_handlers_core_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

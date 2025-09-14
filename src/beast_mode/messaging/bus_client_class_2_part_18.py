@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_active_help_requests(self) -> List:
         """Get all active help requests"""

@@ -6,3 +6,5 @@ from .transport import TransportFactory, BeastModeTransport
 from .shared_state import BeastModeSharedState, SharedStateConfig
 from .models import BeastModeMessage, MessageType, AgentCapabilities
 from .unified_client_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

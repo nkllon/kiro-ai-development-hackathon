@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def create_help_request(sender_id: str, required_capabilities: List[AgentCapability], description: str, priority: str='normal') -> BeastModeMessage:
     try:

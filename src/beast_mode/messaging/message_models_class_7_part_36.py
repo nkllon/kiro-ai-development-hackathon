@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def create_reply(self, sender_id: str, content: Dict[str, Any], message_type: MessageType=MessageType.DIRECT_MESSAGE) -> 'BeastModeMessage':
     try:

@@ -8,3 +8,4 @@ from .redis_transport_class_2_part_7 import *
 from .redis_transport_class_2_part_8 import *
 from .redis_transport_class_2_part_9 import *
 from .redis_transport_class_2_part_10 import *
+from src.rm_ddd.core.health import ModuleHealth

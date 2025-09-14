@@ -78,3 +78,4 @@ from .message_models_part_77 import *
 from .message_models_part_78 import *
 from .message_models_part_79 import *
 from .message_models_part_80 import *
+from src.rm_ddd.core.health import ModuleHealth

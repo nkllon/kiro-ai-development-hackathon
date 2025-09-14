@@ -10,3 +10,5 @@ import uuid
 from .models import BeastModeMessage, MessageType, AgentCapabilities
 from .collaboration_scheduler_core_core_processing import *
 from .collaboration_scheduler_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

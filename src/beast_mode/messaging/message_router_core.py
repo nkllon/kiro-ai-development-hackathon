@@ -6,3 +6,5 @@ from .models import BeastModeMessage, MessageType, AgentCapabilities
 from .message_handlers import MessageRouter, BaseMessageHandler, SimpleMessageHandler, PromptRequestHandler, PromptResponseHandler, AgentDiscoveryHandler, AgentResponseHandler, HelpWantedHandler, HelpResponseHandler, SporeDeliveryHandler, SporeRequestHandler, SporeSpawnHandler, TechnicalExchangeHandler, SystemHealthHandler, MessageValidationError, MessageCompatibilityError
 from .message_router_core_core import *
 from .message_router_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

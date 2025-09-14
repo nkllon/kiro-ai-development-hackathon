@@ -22,6 +22,8 @@ import uuid
 import uuid
 import uuid
 import uuid
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_message_compatibility(self, message: BeastModeMessage, target_agents: List[str]=None) -> List[str]:
     """

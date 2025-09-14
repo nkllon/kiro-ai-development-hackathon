@@ -14,3 +14,5 @@ import uuid
 from .compatibility_core_validation import *
 from .compatibility_core_processing import *
 from .compatibility_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

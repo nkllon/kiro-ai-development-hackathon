@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_active_collaboration_sessions(self) -> List:
     """Get active collaboration sessions"""

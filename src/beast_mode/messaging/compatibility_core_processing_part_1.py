@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def convert_to_current(self, message_data: Union[Dict[str, Any], str]) -> ConversionResult:
     """

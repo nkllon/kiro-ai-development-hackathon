@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _convert_from_v1_0(self, message_data: Dict[str, Any]) -> Dict[str, Any]:
     """Convert from V1.0 format"""

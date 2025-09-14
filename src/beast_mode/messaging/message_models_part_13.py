@@ -34,3 +34,5 @@ from typing import Dict, List, Optional, Any, Union
 from dataclasses import dataclass, field
 from uuid import uuid4
 from pydantic import BaseModel, Field, validator
+from src.rm_ddd.core.health import ModuleHealth
+

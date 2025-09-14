@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_all_capabilities(self) -> Set[str]:
         """Get all unique capabilities across all discovered agents"""

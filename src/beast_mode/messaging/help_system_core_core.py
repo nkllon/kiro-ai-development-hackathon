@@ -9,3 +9,5 @@ from .models import BeastModeMessage, MessageType, AgentCapabilities
 from .agent_registry import AgentRegistry, DiscoveredAgent
 from .help_system_core_core_core import *
 from .help_system_core_core_processing import *
+from src.rm_ddd.core.health import ModuleHealth
+

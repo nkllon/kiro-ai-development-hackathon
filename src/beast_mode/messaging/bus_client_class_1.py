@@ -1,4 +1,4 @@
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -126,3 +126,5 @@ from .agent_registry import AgentRegistry, DiscoveredAgent
 from .help_system import HelpWantedSystem, HelpUrgency
 from .message_router import StandardMessageRouter
 from .collaboration_scheduler import CollaborationScheduler, CollaborationType, OfficeHoursPattern
+from src.rm_ddd.core.health import ModuleHealth
+

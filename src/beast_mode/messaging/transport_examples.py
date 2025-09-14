@@ -17,3 +17,4 @@ from .transport_examples_part_16 import *
 from .transport_examples_part_17 import *
 from .transport_examples_part_18 import *
 from .transport_examples_part_19 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -15,6 +15,8 @@ from enum import Enum
 from .models import BeastModeMessage, MessageType, AgentCapabilities
 from .agent_registry import AgentRegistry, DiscoveredAgent
 from .help_system import HelpWantedSystem, CollaborationSession, CollaborationStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def create_capability_test(self, agent_id: str, capability: str, test_type: str='interaction', test_description: str='', timeout_minutes: int=30, success_criteria: Optional[Dict[str, Any]]=None) -> CapabilityTest:
     """

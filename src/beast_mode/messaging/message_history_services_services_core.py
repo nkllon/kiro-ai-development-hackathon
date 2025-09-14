@@ -15,6 +15,8 @@ from typing import Any, Dict, List, Optional, Set, Tuple, Union
 from dataclasses import dataclass, field
 from enum import Enum
 from .models import BeastModeMessage, MessageType, AgentCapabilities
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def __init__(self, log_directory: str='beast_mode_mailbox', status_file: str='message_status.json', cache_size: int=1000, auto_save_interval: int=300):
     self.log_directory = Path(log_directory)

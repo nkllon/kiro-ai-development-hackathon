@@ -11,3 +11,4 @@ from .spore_manager_services_core_core_part_10 import *
 from .spore_manager_services_core_core_part_11 import *
 from .spore_manager_services_core_core_part_12 import *
 from .spore_manager_services_core_core_part_13 import *
+from src.rm_ddd.core.health import ModuleHealth

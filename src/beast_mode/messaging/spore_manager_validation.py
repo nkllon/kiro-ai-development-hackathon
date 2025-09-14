@@ -15,6 +15,8 @@ from typing import Any, Dict, List, Optional, Tuple
 from pydantic import BaseModel, Field, ValidationError
 import yaml
 from .models import BeastModeMessage, MessageType
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _calculate_checksum(self, content: str) -> str:
     """Calculate SHA-256 checksum of content"""

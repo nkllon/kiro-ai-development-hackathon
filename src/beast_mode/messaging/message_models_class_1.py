@@ -1,4 +1,4 @@
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -121,3 +121,5 @@ from typing import Dict, List, Optional, Any, Union
 from dataclasses import dataclass, field
 from uuid import uuid4
 from pydantic import BaseModel, Field, validator
+from src.rm_ddd.core.health import ModuleHealth
+

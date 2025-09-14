@@ -15,6 +15,8 @@ import uuid
 import redis.asyncio as redis
 from redis.exceptions import ConnectionError, TimeoutError
 from .models import BeastModeMessage, MessageType
+from src.rm_ddd.core.health import ModuleHealth
+
 
 @abstractmethod
 def get_supported_types(self) -> List[MessageType]:

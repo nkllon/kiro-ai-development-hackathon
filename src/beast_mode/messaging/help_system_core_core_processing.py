@@ -14,6 +14,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from .models import BeastModeMessage, MessageType, AgentCapabilities
 from .agent_registry import AgentRegistry, DiscoveredAgent
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def process_help_request(self, message: BeastModeMessage, responder_id: str) -> Optional[HelpResponse]:
     """

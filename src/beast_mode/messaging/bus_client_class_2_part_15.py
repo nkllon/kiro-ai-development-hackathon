@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_discovery_stats(self) -> Dict:
         """Get agent discovery statistics"""

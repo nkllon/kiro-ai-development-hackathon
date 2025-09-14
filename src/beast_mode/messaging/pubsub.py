@@ -11,3 +11,5 @@ from .models import BeastModeMessage, MessageType
 from .pubsub_core import *
 from .pubsub_services import *
 from .pubsub_handlers import *
+from src.rm_ddd.core.health import ModuleHealth
+

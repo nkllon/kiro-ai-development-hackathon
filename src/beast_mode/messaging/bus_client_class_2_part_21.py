@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_help_system_stats(self) -> Dict[str, Any]:
         """Get help system statistics"""

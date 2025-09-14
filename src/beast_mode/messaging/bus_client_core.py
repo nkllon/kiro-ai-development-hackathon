@@ -13,3 +13,5 @@ from .message_router import StandardMessageRouter
 from .collaboration_scheduler import CollaborationScheduler, CollaborationType, OfficeHoursPattern
 from .bus_client_core_validation import *
 from .bus_client_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

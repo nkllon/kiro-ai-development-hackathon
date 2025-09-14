@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_spore_paths(self, spore_name: str) -> Tuple[Path, Path]:
     """Get metadata and content file paths for a spore"""

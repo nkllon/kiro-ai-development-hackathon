@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def is_agent_available_for_collaboration(self, agent_id: str, at_time: Optional[datetime]=None) -> bool:
         """Check if an agent is available for collaboration"""

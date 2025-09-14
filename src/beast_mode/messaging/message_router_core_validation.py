@@ -11,6 +11,8 @@ from typing import Any, Dict, List, Optional, Callable, Union
 from datetime import datetime
 from .models import BeastModeMessage, MessageType, AgentCapabilities
 from .message_handlers import MessageRouter, BaseMessageHandler, SimpleMessageHandler, PromptRequestHandler, PromptResponseHandler, AgentDiscoveryHandler, AgentResponseHandler, HelpWantedHandler, HelpResponseHandler, SporeDeliveryHandler, SporeRequestHandler, SporeSpawnHandler, TechnicalExchangeHandler, SystemHealthHandler, MessageValidationError, MessageCompatibilityError
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_message_compatibility(self, message_data: Dict[str, Any]) -> Dict[str, Any]:
     """

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def validate_message_format(self, message_data: Dict[str, Any]) -> Dict[str, Any]:
         """

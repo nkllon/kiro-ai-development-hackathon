@@ -23,3 +23,5 @@ from examples.beast_mode_collaboration_agents import CostOptimizationAgent, Depl
 from ..examples.beast_mode_collaboration_agents import demonstrate_beast_mode_collaboration
 import traceback
 from .cli_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -6,3 +6,4 @@ from .compatibility_processing_part_5 import *
 from .compatibility_processing_part_6 import *
 from .compatibility_processing_part_7 import *
 from .compatibility_processing_part_8 import *
+from src.rm_ddd.core.health import ModuleHealth

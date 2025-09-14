@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def __init__(self, redis_url: str='redis://localhost:6379', agent_id: str='beast_mode_agent', capabilities: Optional[List[str]]=None, channel: str='beast_mode_network'):
     self.redis_url = redis_url

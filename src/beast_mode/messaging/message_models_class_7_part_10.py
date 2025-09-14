@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def create_heartbeat(agent_id: str, status_info: Dict[str, Any]) -> BeastModeMessage:
     try:

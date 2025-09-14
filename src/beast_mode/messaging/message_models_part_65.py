@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def create_reply(self, sender_id: str, content: Dict[str, Any], message_type: MessageType=MessageType.DIRECT_MESSAGE) -> 'BeastModeMessage':
     try:

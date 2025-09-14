@@ -17,3 +17,4 @@ from .pubsub_services_part_16 import *
 from .pubsub_services_part_17 import *
 from .pubsub_services_part_18 import *
 from .pubsub_services_part_19 import *
+from src.rm_ddd.core.health import ModuleHealth

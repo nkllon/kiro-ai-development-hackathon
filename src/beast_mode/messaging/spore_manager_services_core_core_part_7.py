@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _create_version_backup(self, spore_name: str) -> None:
     """Create a versioned backup of an existing spore"""

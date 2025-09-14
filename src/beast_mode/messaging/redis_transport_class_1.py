@@ -1,4 +1,4 @@
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -106,4 +106,6 @@ from typing import Callable, Dict, Any, List
 from .transport import BeastModeTransport, TransportFactory
 from .models import BeastModeMessage
 from .daemon_client import BeastModeDaemon
+from src.rm_ddd.core.health import ModuleHealth
+
 

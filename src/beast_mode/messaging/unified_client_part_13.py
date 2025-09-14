@@ -33,3 +33,5 @@ from datetime import datetime
 from .transport import TransportFactory, BeastModeTransport
 from .shared_state import BeastModeSharedState, SharedStateConfig
 from .models import BeastModeMessage, MessageType, AgentCapabilities
+from src.rm_ddd.core.health import ModuleHealth
+

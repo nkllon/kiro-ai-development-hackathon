@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def update_spore_stats(self, spore_name: str, success: bool) -> None:
     """

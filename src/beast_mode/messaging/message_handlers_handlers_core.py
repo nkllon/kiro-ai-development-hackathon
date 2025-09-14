@@ -13,6 +13,8 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Callable, Union
 from enum import Enum
 from .models import BeastModeMessage, MessageType, AgentCapabilities
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def __init__(self, agent_id: str):
     self.agent_id = agent_id

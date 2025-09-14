@@ -10,3 +10,5 @@ from .agent_registry import AgentRegistry, DiscoveredAgent
 from .help_system import HelpWantedSystem, CollaborationSession, CollaborationStatus
 from .capability_verifier_core_core_core import *
 from .capability_verifier_core_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

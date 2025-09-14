@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def process_message(self, message_data: Union[Dict[str, Any], str, BeastModeMessage]) -> ConversionResult:
     """

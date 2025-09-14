@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_discovered_agents(self) -> List[DiscoveredAgent]:
     """Get all discovered agents"""

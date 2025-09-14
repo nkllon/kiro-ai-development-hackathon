@@ -17,6 +17,8 @@ from .transport import BeastModeTransport, TransportFactory
 from .models import BeastModeMessage
 import asyncio
 import logging
+from src.rm_ddd.core.health import ModuleHealth
+
 
 logger = logging.getLogger(__name__)
 

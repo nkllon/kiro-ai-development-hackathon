@@ -38,3 +38,4 @@ from .unified_client_part_37 import *
 from .unified_client_part_38 import *
 from .unified_client_part_39 import *
 from .unified_client_part_40 import *
+from src.rm_ddd.core.health import ModuleHealth
