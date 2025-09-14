@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def __init__(self, api_key: str, base_url: str = "https://devpost.com"):
         super().__init__(module_id="api_client", version="1.0.0")

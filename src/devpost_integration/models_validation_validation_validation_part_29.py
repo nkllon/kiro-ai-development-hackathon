@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_notification_settings(self) -> bool:
     """Validate notification settings"""

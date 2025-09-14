@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def create_media_file(self, file_path: Path) -> Optional[MediaFile]:
         """Create MediaFile object from path"""
