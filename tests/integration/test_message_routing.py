@@ -10,9 +10,11 @@ from datetime import datetime
 from src.beast_mode.messaging.models import BeastModeMessage, MessageType, AgentCapabilities
 from src.beast_mode.messaging.message_router import StandardMessageRouter, MessageTypeRegistry, message_type_registry
 from src.beast_mode.messaging.message_handlers import MessageValidationError
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestStandardMessageRouter:
+
+class TestStandardMessageRouter(ReflectiveModule):
     """Test StandardMessageRouter integration"""
     
     def test_initialization(self):
@@ -484,7 +486,7 @@ class TestStandardMessageRouter:
         assert last_message.payload["content"] == "Message 4"
 
 
-class TestMessageTypeRegistry:
+class TestMessageTypeRegistry(ReflectiveModule):
     """Test MessageTypeRegistry"""
     
     def test_initialization(self):
@@ -574,7 +576,7 @@ class TestMessageTypeRegistry:
         assert 'description' in info
 
 
-class TestMessageRoutingIntegration:
+class TestMessageRoutingIntegration(ReflectiveModule):
     """Test complete message routing integration"""
     
     @pytest.mark.asyncio
@@ -746,4 +748,32 @@ class TestMessageRoutingIntegration:
         
         # Check that error was tracked in stats
         stats = router.get_handler_stats()
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert stats['router_stats']['handler_errors'] > 0

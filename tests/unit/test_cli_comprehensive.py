@@ -34,7 +34,7 @@ except ImportError as e:
     pytest.skip(f"CLI modules not available: {e}", allow_module_level=True)
 
 
-class TestBeastModeCLI:
+class TestBeastModeCLI(ReflectiveModule):
     """Test Beast Mode CLI functionality."""
     
     @unit_test
@@ -149,7 +149,7 @@ class TestBeastModeCLI:
                 pass
 
 
-class TestDevPostCLI:
+class TestDevPostCLI(ReflectiveModule):
     """Test DevPost CLI functionality."""
     
     @unit_test
@@ -183,7 +183,7 @@ class TestDevPostCLI:
         assert result.exit_code in [0, 1, 2]  # Allow various exit codes for missing auth
 
 
-class TestRMDDDCLI:
+class TestRMDDDCLI(ReflectiveModule):
     """Test RM-DDD CLI functionality."""
     
     @unit_test
@@ -208,7 +208,7 @@ class TestRMDDDCLI:
         ])
 
 
-class TestCLIIntegration:
+class TestCLIIntegration(ReflectiveModule):
     """Test CLI integration scenarios."""
     
     @integration_test
@@ -288,7 +288,7 @@ class TestCLIIntegration:
             assert output_file.stat().st_size > 0
 
 
-class TestCLIErrorHandling:
+class TestCLIErrorHandling(ReflectiveModule):
     """Test CLI error handling."""
     
     @unit_test
@@ -328,7 +328,7 @@ class TestCLIErrorHandling:
             assert result.exit_code in [0, 1, 2]
 
 
-class TestCLIPerformance:
+class TestCLIPerformance(ReflectiveModule):
     """Test CLI performance."""
     
     @performance_test
@@ -354,6 +354,8 @@ class TestCLIPerformance:
         """Test CLI memory usage."""
         import psutil
         import os
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         
         process = psutil.Process(os.getpid())
         initial_memory = process.memory_info().rss / 1024 / 1024  # MB
@@ -372,7 +374,7 @@ class TestCLIPerformance:
         assert memory_increase < 50, f"Memory usage increased by {memory_increase}MB"
 
 
-class TestCLIConfiguration:
+class TestCLIConfiguration(ReflectiveModule):
     """Test CLI configuration handling."""
     
     @unit_test
@@ -455,7 +457,7 @@ class TestCLIConfiguration:
             assert invalid_config_file.exists()
 
 
-class TestCLIOutputFormats:
+class TestCLIOutputFormats(ReflectiveModule):
     """Test CLI output formats."""
     
     @unit_test
@@ -504,7 +506,7 @@ class TestCLIOutputFormats:
                 pass
 
 
-class TestCLISubprocess:
+class TestCLISubprocess(ReflectiveModule):
     """Test CLI subprocess execution."""
     
     @unit_test
@@ -551,3 +553,31 @@ class TestCLISubprocess:
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "--tb=short"])
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+

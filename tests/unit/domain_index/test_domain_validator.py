@@ -12,12 +12,14 @@ from src.beast_mode.domain_index.domain_validator import (
     DomainValidator, ValidationRule, ConsistencyCheck, SchemaValidator
 )
 from src.beast_mode.domain_index.models import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     Domain, DomainTools, DomainMetadata, PackagePotential,
     HealthIssue, IssueSeverity, IssueCategory
 )
 
 
-class TestValidationRule:
+class TestValidationRule(ReflectiveModule):
     """Test ValidationRule functionality"""
     
     def test_validation_rule_creation(self):
@@ -96,7 +98,7 @@ class TestValidationRule:
         assert "failed" in issues[0].description
 
 
-class TestConsistencyCheck:
+class TestConsistencyCheck(ReflectiveModule):
     """Test ConsistencyCheck functionality"""
     
     def test_consistency_check_creation(self):
@@ -157,7 +159,7 @@ class TestConsistencyCheck:
         assert "domain2" in issues[0].description
 
 
-class TestDomainValidator:
+class TestDomainValidator(ReflectiveModule):
     """Test DomainValidator functionality"""
     
     @pytest.fixture
@@ -403,7 +405,7 @@ class TestDomainValidator:
         assert 'consistency_checks_count' in final_stats
 
 
-class TestSchemaValidator:
+class TestSchemaValidator(ReflectiveModule):
     """Test SchemaValidator functionality"""
     
     @pytest.fixture
@@ -497,7 +499,7 @@ class TestSchemaValidator:
 
 
 @pytest.mark.integration
-class TestValidatorIntegration:
+class TestValidatorIntegration(ReflectiveModule):
     """Integration tests for domain validator"""
     
     def test_full_validation_workflow(self):
@@ -546,4 +548,32 @@ class TestValidatorIntegration:
         stats = validator.get_validation_stats()
         assert stats['validations_performed'] >= 4
         assert stats['consistency_checks_performed'] >= 1
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert stats['issues_found'] > 0

@@ -9,6 +9,8 @@ import asyncio
 
 from src.beast_mode.messaging.models import BeastModeMessage, MessageType, AgentCapabilities
 from src.beast_mode.messaging.message_handlers import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     SimpleMessageHandler, PromptRequestHandler, PromptResponseHandler,
     AgentDiscoveryHandler, AgentResponseHandler, HelpWantedHandler,
     HelpResponseHandler, SporeDeliveryHandler, SporeRequestHandler,
@@ -17,7 +19,7 @@ from src.beast_mode.messaging.message_handlers import (
 )
 
 
-class TestSimpleMessageHandler:
+class TestSimpleMessageHandler(ReflectiveModule):
     """Test SimpleMessageHandler"""
     
     def test_supported_types(self):
@@ -78,7 +80,7 @@ class TestSimpleMessageHandler:
         assert handler.handled_count == 1
 
 
-class TestPromptRequestHandler:
+class TestPromptRequestHandler(ReflectiveModule):
     """Test PromptRequestHandler"""
     
     def test_supported_types(self):
@@ -150,7 +152,7 @@ class TestPromptRequestHandler:
         assert result.payload["response"] == "Prompt received"
 
 
-class TestAgentDiscoveryHandler:
+class TestAgentDiscoveryHandler(ReflectiveModule):
     """Test AgentDiscoveryHandler"""
     
     def test_supported_types(self):
@@ -224,7 +226,7 @@ class TestAgentDiscoveryHandler:
         assert isinstance(args[1], AgentCapabilities)
 
 
-class TestHelpWantedHandler:
+class TestHelpWantedHandler(ReflectiveModule):
     """Test HelpWantedHandler"""
     
     def test_supported_types(self):
@@ -341,7 +343,7 @@ class TestHelpWantedHandler:
         )
 
 
-class TestSporeDeliveryHandler:
+class TestSporeDeliveryHandler(ReflectiveModule):
     """Test SporeDeliveryHandler"""
     
     def test_supported_types(self):
@@ -416,7 +418,7 @@ class TestSporeDeliveryHandler:
         assert "delivered_at" in spore_data
 
 
-class TestSporeRequestHandler:
+class TestSporeRequestHandler(ReflectiveModule):
     """Test SporeRequestHandler"""
     
     def test_supported_types(self):
@@ -472,7 +474,7 @@ class TestSporeRequestHandler:
         assert result is None  # No response when spore not found
 
 
-class TestMessageRouter:
+class TestMessageRouter(ReflectiveModule):
     """Test MessageRouter"""
     
     def test_initialization(self):
@@ -720,4 +722,32 @@ class TestMessageRouter:
         assert "router_stats" in stats
         assert "handler_stats" in stats
         assert "supported_types" in stats
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert MessageType.SIMPLE_MESSAGE.value in stats["handler_stats"]

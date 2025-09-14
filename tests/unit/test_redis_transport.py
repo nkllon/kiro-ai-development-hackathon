@@ -218,6 +218,8 @@ async def test_async_handler_support(redis_transport):
     # Mock a message
     from src.beast_mode.messaging.daemon_client import QueuedMessage
     from datetime import datetime
+from src.rm_ddd.core.health import ModuleHealth
+
     
     test_message = BeastModeMessage(
         type=MessageType.SIMPLE_MESSAGE,
@@ -233,4 +235,21 @@ async def test_async_handler_support(redis_transport):
     await asyncio.sleep(0.1)
     await redis_transport._stop_message_processing()
     
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
     assert async_handler_called

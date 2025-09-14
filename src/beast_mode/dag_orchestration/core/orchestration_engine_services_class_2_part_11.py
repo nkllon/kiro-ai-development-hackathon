@@ -35,3 +35,20 @@ from src.rm_ddd.core.health import ModuleHealth
         avg_quality = sum(quality_scores) / len(quality_scores) if quality_scores else 0.0
         avg_timeline = sum(mvp_timelines) / len(mvp_timelines) if mvp_timelines else 0.0
         return {'total_orchestrations': total_orchestrations, 'active_orchestrations': active_count, 'average_systematic_quality': avg_quality, 'average_mvp_timeline': avg_timeline, 'systematic_superiority_demonstrated': avg_quality > 0.8 and total_orchestrations > 0}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

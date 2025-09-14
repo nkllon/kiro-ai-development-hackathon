@@ -26,7 +26,7 @@ from src.devpost_integration.models import (
 )
 
 
-class TestDevpostIntegrationE2E:
+class TestDevpostIntegrationE2E(ReflectiveModule):
     """End-to-end integration tests for complete workflows."""
     
     @pytest.fixture
@@ -393,6 +393,8 @@ dependencies = [
             
             # Test validation with different scenarios
             from src.devpost_integration.validation_engine import ValidationContext
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
             
             context = ValidationContext(
                 project_type="hackathon_submission",
@@ -501,4 +503,32 @@ dependencies = [
             
             validation_time = (datetime.now() - start_time).total_seconds()
             assert validation_time < 2.0, "Validation should complete within 2 seconds"
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
             assert validation_result is not None

@@ -10,3 +10,20 @@ def _identify_parallel_opportunities(self, task_layers: Dict[int, List[str]], co
         raise
     """Identify parallel execution opportunities."""
     return self.identify_parallel_execution_opportunities(task_layers, constraint_graph)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

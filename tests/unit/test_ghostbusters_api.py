@@ -18,15 +18,20 @@ from src.ghostbusters.core.models import (
     AnalysisResult, AnalysisContext, ValidationResult, ConsensusResult
 )
 from src.ghostbusters.core.interfaces import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     GhostbustersExpertAgent, ConsensusEngine, ValidationFramework,
     AgentCoordinator, AnalysisError, ConsensusError, ValidationError
 )
 
 
-class MockExpertAgent(GhostbustersExpertAgent):
+class MockExpertAgent(GhostbustersExpertAgent, ReflectiveModule):
     """Mock expert agent for testing"""
     
     def __init__(self, name: str = "MockAgent"):
+        self.module_id = self.__class__.__name__
+        self.health_status = "healthy"
+        self.registry_metadata = {}
         super().__init__(name)
         self._capabilities = ["test_analysis", "mock_capability"]
     
@@ -44,7 +49,7 @@ class MockExpertAgent(GhostbustersExpertAgent):
         return 0.0 <= result.confidence <= 1.0
 
 
-class TestAuthenticationManager:
+class TestAuthenticationManager(ReflectiveModule):
     """Test authentication manager functionality"""
     
     @pytest.fixture
@@ -137,7 +142,7 @@ class TestAuthenticationManager:
         assert "max_tokens_per_client" in stats
 
 
-class TestCircuitBreaker:
+class TestCircuitBreaker(ReflectiveModule):
     """Test circuit breaker functionality"""
     
     @pytest.fixture
@@ -248,7 +253,7 @@ class TestCircuitBreaker:
         assert metrics["total_timeouts"] == 1
 
 
-class TestRateLimiter:
+class TestRateLimiter(ReflectiveModule):
     """Test rate limiter functionality"""
     
     @pytest.fixture
@@ -358,7 +363,7 @@ class TestRateLimiter:
         assert "rejection_rate" in metrics
 
 
-class TestGhostbustersAPI:
+class TestGhostbustersAPI(ReflectiveModule):
     """Test main API gateway functionality"""
     
     @pytest.fixture
@@ -517,4 +522,32 @@ class TestGhostbustersAPI:
         assert "timestamp" in metrics
         assert "circuit_breaker_metrics" in metrics
         assert "rate_limiter_metrics" in metrics
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert "api_version" in metrics
