@@ -18,3 +18,4 @@ from .api_client_methods_part_17 import *
 from .api_client_methods_part_18 import *
 from .api_client_methods_part_19 import *
 from .api_client_methods_part_20 import *
+from src.rm_ddd.core.health import ModuleHealth

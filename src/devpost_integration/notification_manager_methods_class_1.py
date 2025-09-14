@@ -12,3 +12,4 @@ from .notification_manager_methods_class_1_part_11 import *
 from .notification_manager_methods_class_1_part_12 import *
 from .notification_manager_methods_class_1_part_13 import *
 from .notification_manager_methods_class_1_part_14 import *
+from src.rm_ddd.core.health import ModuleHealth

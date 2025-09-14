@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_result_summary(self) -> Dict[str, Any]:
     """Get sync result summary."""

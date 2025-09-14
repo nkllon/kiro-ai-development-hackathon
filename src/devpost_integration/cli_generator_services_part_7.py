@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def process_input(self, input_data: bytes, format_type: str='auto') -> ProcessedInput:
         """Process stdin input based on format"""

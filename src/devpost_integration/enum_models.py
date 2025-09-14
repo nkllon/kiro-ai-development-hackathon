@@ -33,3 +33,4 @@ from .enum_models_part_32 import *
 from .enum_models_part_33 import *
 from .enum_models_part_34 import *
 from .enum_models_part_35 import *
+from src.rm_ddd.core.health import ModuleHealth

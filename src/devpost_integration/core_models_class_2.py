@@ -105,3 +105,4 @@ from .core_models_class_2_part_104 import *
 from .core_models_class_2_part_105 import *
 from .core_models_class_2_part_106 import *
 from .core_models_class_2_part_107 import *
+from src.rm_ddd.core.health import ModuleHealth

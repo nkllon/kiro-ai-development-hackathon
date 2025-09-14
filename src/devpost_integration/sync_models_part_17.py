@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def set_success(self, success: bool, error_message: str=None) -> None:
         """Set sync success status."""
