@@ -54,7 +54,7 @@ def mock_analyzer():
 def mock_analysis_result():
     """Mock analysis result for testing"""
     from src.beast_mode.analysis.rm_rdi.data_models import AnalysisResult, AnalysisStatus
-from src.rm_ddd.core.health import ModuleHealth
+    from src.rm_ddd.core.health import ModuleHealth
 
     
     return AnalysisResult(
