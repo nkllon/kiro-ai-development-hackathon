@@ -27,3 +27,20 @@ def _detect_graphical_elements(self, image: Image.Image) -> List[Dict[str, Any]]
             if self._looks_like_graphical_element(region):
                 elements.append({'type': 'shape', 'bbox': region_bbox})
     return elements[:5]
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

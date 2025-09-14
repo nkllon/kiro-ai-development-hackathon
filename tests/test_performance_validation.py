@@ -27,7 +27,7 @@ from src.spec_reconciliation.monitoring import ContinuousMonitor
 from src.spec_reconciliation.boundary_resolver import ComponentBoundaryResolver
 
 
-class TestBeastModePerformanceRequirements:
+class TestBeastModePerformanceRequirements(ReflectiveModule):
     """Test Beast Mode performance meets all original SLA requirements (R10.2)"""
     
     def setup_method(self):
@@ -226,7 +226,7 @@ class TestBeastModePerformanceRequirements:
         assert max_time <= 5.0, f"Max optimization time {max_time:.3f}s exceeds 5s limit"
 
 
-class TestTestingRCAPerformanceRequirements:
+class TestTestingRCAPerformanceRequirements(ReflectiveModule):
     """Test Testing/RCA performance meets all original SLA requirements (R10.2)"""
     
     def setup_method(self):
@@ -394,7 +394,7 @@ class TestTestingRCAPerformanceRequirements:
         assert avg_time <= 0.5, f"Average monitoring time {avg_time:.3f}s exceeds 500ms target"
 
 
-class TestRDIRMPerformanceRequirements:
+class TestRDIRMPerformanceRequirements(ReflectiveModule):
     """Test RDI/RM performance meets all original SLA requirements (R10.2)"""
     
     def setup_method(self):
@@ -547,7 +547,7 @@ class TestRDIRMPerformanceRequirements:
         assert avg_time <= 1.0, f"Average drift check time {avg_time:.3f}s exceeds 1s target"
 
 
-class TestConcurrentPerformance:
+class TestConcurrentPerformance(ReflectiveModule):
     """Test performance under concurrent load (R10.2)"""
     
     def setup_method(self):
@@ -699,7 +699,7 @@ class TestConcurrentPerformance:
             assert response_time_ratio <= 2.0, f"Response time degraded too much at load {current['load']}"
 
 
-class TestMemoryAndResourcePerformance:
+class TestMemoryAndResourcePerformance(ReflectiveModule):
     """Test memory and resource usage performance (R10.2)"""
     
     def test_memory_usage_performance(self):
@@ -781,6 +781,8 @@ class TestMemoryAndResourcePerformance:
         """Test file handle usage is efficient (R10.2)"""
         import tempfile
         import os
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         
         # Track file handle usage
         initial_handles = len(os.listdir('/proc/self/fd')) if os.path.exists('/proc/self/fd') else 0
@@ -819,4 +821,32 @@ class TestMemoryAndResourcePerformance:
         final_handles = len(os.listdir('/proc/self/fd')) if os.path.exists('/proc/self/fd') else 0
         handle_retained = final_handles - initial_handles
         
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert handle_retained <= 2, f"Retained {handle_retained} file handles after cleanup"

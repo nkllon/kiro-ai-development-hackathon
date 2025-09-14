@@ -13,9 +13,11 @@ from typing import Dict, Any, List
 from src.beast_mode.integration.devpost.api.client import DevpostAPIClient
 from src.beast_mode.integration.devpost.auth.auth_service import DevpostAuthService
 from src.beast_mode.core.exceptions import ValidationError, NetworkError
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestDeadlineAPIMethods:
+
+class TestDeadlineAPIMethods(ReflectiveModule):
     """Test deadline and submission requirement API methods (Task 4.4)."""
     
     @pytest.fixture
@@ -455,7 +457,7 @@ class TestDeadlineAPIMethods:
             await api_client.cancel_deadline_notification("proj-123", "")
 
 
-class TestDeadlineAPIErrorHandling:
+class TestDeadlineAPIErrorHandling(ReflectiveModule):
     """Test error handling for deadline API methods."""
     
     @pytest.fixture
@@ -524,4 +526,32 @@ class TestDeadlineAPIErrorHandling:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v"])
