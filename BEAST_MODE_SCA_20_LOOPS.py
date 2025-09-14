@@ -23,12 +23,14 @@ from typing import Dict, List, Tuple, Any, Optional
 import re
 import glob
 import statistics
+from src.rm_ddd.core.base_reflective_module import ReflectiveModule, ModuleCapability, ModuleStatus, ModuleHealth
 
-class BeastModeSCA20Loops:
+class BeastModeSCA20Loops(ReflectiveModule):
     """Beast Mode SCA system with 20 loops or early termination on diminishing returns."""
     
     def __init__(self, max_loops: int = 20, random_subset_size: int = 1000, 
                  diminishing_returns_threshold: float = 0.6):
+        super().__init__("BeastModeSCA20Loops", "1.0.0")
         self.max_loops = max_loops
         self.random_subset_size = random_subset_size
         self.diminishing_returns_threshold = diminishing_returns_threshold
@@ -383,7 +385,7 @@ class BeastModeSCA20Loops:
                 return True
                 
             # Add ReflectiveModule import
-            import_line = "from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule\n"
+            import_line = "from src.rm_ddd.core.base_reflective_module import ReflectiveModule, ModuleCapability, ModuleStatus, ModuleHealth\n"
             if 'import ' in content:
                 lines = content.split('\n')
                 import_end = 0
@@ -822,6 +824,77 @@ class BeastModeSCA20Loops:
         print("\n🎯 LOOP SUMMARY:")
         for loop in self.attack_log['loops']:
             print(f"   Loop {loop['loop_number']}: {loop['status']}")
+    
+    # ReflectiveModule abstract method implementations
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information - RDI Compliant"""
+        return {
+            'module_id': self.module_id,
+            'module_name': self.module_name,
+            'version': self.version,
+            'class_name': self.__class__.__name__,
+            'description': 'Beast Mode SCA system with 20 loops or early termination on diminishing returns',
+            'max_loops': self.max_loops,
+            'random_subset_size': self.random_subset_size,
+            'diminishing_returns_threshold': self.diminishing_returns_threshold
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities - RDI Compliant"""
+        return [
+            ModuleCapability.SCA_ANALYSIS,
+            ModuleCapability.COMPLIANCE_CHECKING,
+            ModuleCapability.BEAST_MODE,
+            ModuleCapability.DATA_PROCESSING,
+            ModuleCapability.VALIDATION,
+            ModuleCapability.MONITORING
+        ]
+    
+    def get_dependencies(self) -> List[str]:
+        """Get module dependencies - RDI Compliant"""
+        return [
+            'git',
+            'python3',
+            'src.rm_ddd.core.base_reflective_module'
+        ]
+    
+    def check_health(self) -> ModuleHealth:
+        """Check module health - RDI Compliant"""
+        issues = []
+        health_score = 1.0
+        
+        # Check if early termination occurred
+        if self.early_termination:
+            issues.append(f"Early termination triggered: {self.termination_reason}")
+            health_score -= 0.2
+        
+        # Check error count
+        error_count = len(self.attack_log.get('errors', []))
+        if error_count > 0:
+            issues.append(f"Errors detected: {error_count}")
+            health_score -= min(0.5, error_count * 0.1)
+        
+        # Determine status
+        if health_score >= 0.9:
+            status = ModuleStatus.HEALTHY
+        elif health_score >= 0.7:
+            status = ModuleStatus.WARNING
+        else:
+            status = ModuleStatus.ERROR
+        
+        return ModuleHealth(
+            module_id=self.module_id,
+            status=status,
+            health_score=health_score,
+            issues=issues,
+            capabilities=self.get_capabilities(),
+            dependencies=self.get_dependencies(),
+            metrics=self.get_metrics(),
+            last_check=datetime.now(),
+            uptime_seconds=self.get_uptime_seconds(),
+            error_count=error_count,
+            warning_count=len([issue for issue in issues if 'warning' in issue.lower()])
+        )
 
 if __name__ == "__main__":
     attacker = BeastModeSCA20Loops(max_loops=20, random_subset_size=1000, diminishing_returns_threshold=0.6)

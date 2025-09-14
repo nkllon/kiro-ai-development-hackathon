@@ -23,8 +23,9 @@ from typing import Dict, List, Tuple, Any, Optional
 import re
 import glob
 import statistics
+from src.rm_ddd.core.base_reflective_module import ReflectiveModule, ModuleCapability, ModuleStatus, ModuleHealth
 
-class SCAEfficiencyAnalysisSystem:
+class SCAEfficiencyAnalysisSystem(ReflectiveModule):
     """SCA system with comprehensive efficiency analysis and diminishing returns detection."""
     
     def __init__(self, total_loops: int = 5, random_subset_size: int = 1000):
@@ -461,7 +462,7 @@ class SCAEfficiencyAnalysisSystem:
                 return True
                 
             # Add ReflectiveModule import
-            import_line = "from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule\n"
+            import_line = "from src.rm_ddd.core.base_reflective_module import ReflectiveModule, ModuleCapability, ModuleStatus, ModuleHealth\n"
             if 'import ' in content:
                 lines = content.split('\n')
                 import_end = 0

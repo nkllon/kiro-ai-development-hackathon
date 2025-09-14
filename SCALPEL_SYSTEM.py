@@ -19,8 +19,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Tuple, Any, Optional
 import re
+from src.rm_ddd.core.base_reflective_module import ReflectiveModule, ModuleCapability, ModuleStatus, ModuleHealth
 
-class SCALPELSystem:
+class SCALPELSystem(ReflectiveModule):
     """SCALPEL System for attacking any repository subset."""
     
     def __init__(self, target_dirs: List[str], attack_name: str = "SCALPEL", mode: str = "BEAST MODE"):
@@ -179,7 +180,7 @@ class SCALPELSystem:
                 return True
                 
             # Add ReflectiveModule import
-            import_line = "from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule\n"
+            import_line = "from src.rm_ddd.core.base_reflective_module import ReflectiveModule, ModuleCapability, ModuleStatus, ModuleHealth\n"
             if 'import ' in content:
                 lines = content.split('\n')
                 import_end = 0

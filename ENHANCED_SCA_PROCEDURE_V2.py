@@ -32,8 +32,9 @@ import re
 import glob
 import statistics
 import numpy as np
+from src.rm_ddd.core.base_reflective_module import ReflectiveModule, ModuleCapability, ModuleStatus, ModuleHealth
 
-class EnhancedSCAProcedureV2:
+class EnhancedSCAProcedureV2(ReflectiveModule):
     """Enhanced SCA system with adaptive intelligence and lessons learned integration."""
     
     def __init__(self, max_loops: int = 15, base_subset_size: int = 1000, 
@@ -628,7 +629,7 @@ class EnhancedSCAProcedureV2:
                 return True
                 
             # Add ReflectiveModule import
-            import_line = "from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule\n"
+            import_line = "from src.rm_ddd.core.base_reflective_module import ReflectiveModule, ModuleCapability, ModuleStatus, ModuleHealth\n"
             if 'import ' in content:
                 lines = content.split('\n')
                 import_end = 0
