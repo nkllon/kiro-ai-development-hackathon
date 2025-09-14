@@ -21,3 +21,20 @@ def _execute_single_tool(self, tool_id: str, context: DecisionContext, operation
         execution_time = int((time.time() - start_time) * 1000)
         self.tool_health_cache[tool_id] = ToolStatus.FAILED
         return ToolExecutionResult(tool_id=tool_id, success=False, output='', error=f'Tool execution failed: {str(e)}', execution_time_ms=execution_time, health_status=ToolStatus.FAILED)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

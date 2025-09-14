@@ -170,3 +170,20 @@ def _verify_implementation(self, result: Dict) -> Dict[str, Any]:
 def _check_rdi_compliance(self) -> Dict[str, Any]:
     """Check RDI compliance across test execution"""
     return {'requirements_traceability': 0.85, 'design_validation_coverage': 0.9, 'implementation_verification': 0.88, 'overall_rdi_score': 0.88}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

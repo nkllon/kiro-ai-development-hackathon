@@ -14,3 +14,20 @@ def _check_process_running(self, process_name: str) -> ValidationResult:
     except Exception as e:
         duration_ms = (time.time() - start_time) * 1000
         return ValidationResult(name=f'Process running: {process_name}', passed=False, message=f'Process check failed: {str(e)}', duration_ms=duration_ms)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

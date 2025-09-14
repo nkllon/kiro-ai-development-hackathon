@@ -87,3 +87,20 @@ from src.rm_ddd.core.health import ModuleHealth
     async def _check_resource_usage_alert(self, rule: AlertRule) -> Dict[str, Any]:
         """Check system resource usage for alerting."""
         return {'should_alert': False, 'should_resolve': True, 'message': 'System resource usage normal', 'component': 'system'}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

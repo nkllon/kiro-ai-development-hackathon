@@ -18,3 +18,20 @@ from src.rm_ddd.core.health import ModuleHealth
         """Register a new alert rule."""
         self.alert_rules[name] = AlertRule(name=name, description=description, severity=severity, condition_function=condition_function, threshold_value=threshold_value, evaluation_interval_seconds=evaluation_interval_seconds, cooldown_seconds=cooldown_seconds, auto_resolve=auto_resolve, auto_resolve_threshold=auto_resolve_threshold)
         self.logger.info(f'Registered alert rule: {name}')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

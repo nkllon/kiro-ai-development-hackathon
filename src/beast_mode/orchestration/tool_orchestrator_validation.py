@@ -39,3 +39,20 @@ def _validate_optimization_impact(self, optimization_results: List[Dict[str, Any
     successful_optimizations = [r for r in optimization_results if r.get('success', False)]
     total_performance_improvement = sum((r.get('improvement_percentage', 0) for r in successful_optimizations))
     return {'successful_optimizations': len(successful_optimizations), 'systematic_compliance': True, 'improvements': {'performance': total_performance_improvement, 'compliance': 0.0}}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

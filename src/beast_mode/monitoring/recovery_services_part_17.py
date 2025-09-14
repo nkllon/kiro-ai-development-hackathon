@@ -19,3 +19,20 @@ from src.rm_ddd.core.health import ModuleHealth
         """Register a recovery action."""
         self.recovery_actions[name] = RecoveryAction(name=name, action_type=action_type, description=description, action_function=action_function, max_attempts=max_attempts, retry_delay_seconds=retry_delay_seconds, timeout_seconds=timeout_seconds, prerequisites=prerequisites or [], escalation_action=escalation_action)
         self.logger.info(f'Registered recovery action: {name}')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

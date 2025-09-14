@@ -17,3 +17,20 @@ def _validate_message_flow(self, config: DeploymentConfig) -> List[ValidationRes
         duration_ms = (time.time() - start_time) * 1000
         results.append(ValidationResult(name='Message publishing', passed=False, message=f'Message publishing failed: {str(e)}', duration_ms=duration_ms))
     return results
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

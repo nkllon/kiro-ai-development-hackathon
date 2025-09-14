@@ -29,3 +29,20 @@ def handle_unknown_tool_failure(self, failure_context: Dict[str, Any]) -> Dict[s
     except Exception as e:
         self.logger.error(f'Unknown tool failure handling failed: {e}')
         return {'unknown_failure_handled': False, 'error': str(e), 'fallback': 'escalate_to_manual_intervention'}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

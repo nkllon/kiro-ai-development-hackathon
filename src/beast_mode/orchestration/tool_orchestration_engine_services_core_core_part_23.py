@@ -11,3 +11,20 @@ def _update_adaptive_pattern_learning(self, pattern: Dict[str, Any], response_ou
         pattern['response_strategy'] = 'escalate_to_rca'
         pattern['pattern_evolution'] = 'evolved_due_to_low_success_rate'
     self.logger.info(f"Updated adaptive pattern learning: {pattern['failure_type']} (success rate: {success_rate:.2f})")
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -26,3 +26,20 @@ def validate_deployment(self, deployment_id: str, environment: str, level: Valid
     report = ValidationReport(deployment_id=deployment_id, environment=environment, validation_level=level, overall_passed=overall_passed, total_checks=len(results), passed_checks=passed_checks, failed_checks=failed_checks, results=results, started_at=started_at, completed_at=completed_at, total_duration_ms=total_duration_ms)
     self.logger.info(f'Validation completed: {passed_checks}/{len(results)} checks passed')
     return report
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

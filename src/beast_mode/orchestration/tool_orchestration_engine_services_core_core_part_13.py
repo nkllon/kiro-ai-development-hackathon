@@ -23,3 +23,20 @@ def _generate_orchestration_recommendations(self, execution_result: Dict[str, An
     if decision_method == 'full_multi_stakeholder_analysis':
         recommendations.append('Low confidence required full analysis - consider expanding domain intelligence')
     return recommendations
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

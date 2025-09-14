@@ -13,3 +13,20 @@ def _route_decision_by_confidence(self, context: DecisionContext, confidence_lev
         return self._make_medium_confidence_decision(context, preferred_tools)
     else:
         return self._make_low_confidence_decision(context, preferred_tools)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

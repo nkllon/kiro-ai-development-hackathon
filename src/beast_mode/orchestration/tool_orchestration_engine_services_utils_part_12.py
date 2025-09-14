@@ -9,3 +9,20 @@ def force_tool_health_refresh(self) -> Dict[str, Any]:
         health_result = self._check_tool_health(tool_id)
         refresh_results[tool_id] = health_result['status'].value
     return {'refreshed_tools': len(refresh_results), 'health_status': refresh_results, 'timestamp': datetime.now()}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

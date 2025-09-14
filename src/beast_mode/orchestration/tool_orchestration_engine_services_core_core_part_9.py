@@ -18,3 +18,20 @@ def _make_medium_confidence_decision(self, context: DecisionContext, preferred_t
     else:
         selected_tools = preferred_tools or []
     return {'selected_tools': selected_tools, 'rationale': f'Medium confidence ({context.confidence_score:.1%}) - escalated to stakeholder validation', 'decision_method': 'stakeholder_validation_escalation', 'confidence_factors': ['Model registry consulted', 'Multi-stakeholder perspectives analyzed', 'Stakeholder validation escalation applied'], 'decision_path': '50-80% Multi-Perspective → Stakeholder validation escalation', 'validation_required': True, 'multi_perspective_analysis': perspective_analysis, 'systematic_approach': 'registry_plus_stakeholder_validation'}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

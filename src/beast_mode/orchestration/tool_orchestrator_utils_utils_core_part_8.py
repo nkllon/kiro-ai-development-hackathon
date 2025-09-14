@@ -13,3 +13,20 @@ def _apply_decision_framework(self, candidate_tools: List[Dict[str, Any]], task_
     tool_scores.sort(key=lambda x: x[1]['total_score'], reverse=True)
     selected_tool, best_score = tool_scores[0]
     return {'selected_tool': selected_tool, 'confidence': best_score['confidence'], 'rationale': best_score['rationale'], 'systematic_compliance': best_score['systematic_compliance']}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

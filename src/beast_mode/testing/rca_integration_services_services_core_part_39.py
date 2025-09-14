@@ -20,3 +20,20 @@ def _generate_rca_summary(self, rca_results: List[RCAResult], pattern_matches: L
     avg_confidence = sum(confidence_scores) / len(confidence_scores) if confidence_scores else 0.0
     estimated_time = total_fixes * 10
     return TestRCASummaryData(most_common_root_causes=most_common, systematic_fixes_available=total_fixes, pattern_matches_found=len(pattern_matches), estimated_fix_time_minutes=estimated_time, confidence_score=avg_confidence, critical_issues=critical_issues)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

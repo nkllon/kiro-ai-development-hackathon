@@ -16,3 +16,20 @@ def _calculate_performance_score(self) -> float:
         performance = success_rate * 0.7 + time_score * 0.3
         total_performance += performance
     return total_performance / len(self.tool_metrics) if self.tool_metrics else 0.8
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -35,3 +35,20 @@ from src.rm_ddd.core.health import ModuleHealth
     if not available_consensus and preferred_tools:
         available_consensus = [tool for tool in preferred_tools if tool in self.tools_registry]
     return {'selected_tools': available_consensus, 'rationale': f'Low confidence ({context.confidence_score:.1%}) - comprehensive RCA and multi-stakeholder synthesis', 'decision_method': 'comprehensive_rca_and_stakeholder_synthesis', 'confidence_factors': ['Comprehensive RCA performed' if rca_analysis else 'RCA not applicable', 'Multi-stakeholder perspectives analyzed', 'Consensus-based tool selection', 'Systematic approach to uncertainty'], 'decision_path': '<50% Full Analysis → Comprehensive RCA and multi-stakeholder synthesis', 'validation_required': True, 'rca_analysis': rca_analysis, 'multi_perspective_analysis': stakeholder_analysis, 'systematic_approach': 'comprehensive_analysis_with_rca', 'rationale': f'Low confidence decision using comprehensive multi-stakeholder analysis', 'decision_method': 'full_multi_stakeholder_analysis', 'confidence_factors': ['All stakeholder perspectives analyzed', 'Consensus-based tool selection', 'Risk-reduced decision process'], 'stakeholder_analysis': stakeholder_analysis}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

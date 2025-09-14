@@ -22,3 +22,20 @@ def _attempt_systematic_repair(self, tool_id: str, rca_result: Dict[str, Any]) -
             self.logger.warning(f'Repair procedure failed for {tool_id}: {procedure} - {str(e)}')
             continue
     return {'success': False, 'attempted_procedures': repair_procedures, 'rca_result': rca_result}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

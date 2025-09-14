@@ -28,3 +28,20 @@ def _execute_tools_systematically(self, selected_tools: List[str], context: Deci
         else:
             failed_tools.append(tool_id)
     return {'success': False, 'primary_result': None, 'fallback_results': execution_results, 'tools_attempted': tools_attempted, 'failed_tools': failed_tools}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

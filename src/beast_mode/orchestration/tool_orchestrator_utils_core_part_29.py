@@ -17,3 +17,20 @@ def _calculate_compliance_score(self) -> float:
         tool_compliance = constraints_met / total_constraints if total_constraints > 0 else 1.0
         total_compliance += tool_compliance
     return total_compliance / len(self.registered_tools)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

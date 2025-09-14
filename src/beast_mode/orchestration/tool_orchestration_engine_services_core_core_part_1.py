@@ -14,3 +14,20 @@ def __init__(self, project_root: str='.'):
     self.executor = ThreadPoolExecutor(max_workers=5)
     self._initialize_default_tools()
     self._update_health_indicator('tool_orchestration_engine', HealthStatus.HEALTHY, 'operational', 'Tool orchestration engine ready for systematic decision making')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

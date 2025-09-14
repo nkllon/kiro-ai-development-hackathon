@@ -22,3 +22,20 @@ def get_decision_analytics(self) -> Dict[str, Any]:
         else:
             success_rates[level] = 0.0
     return {'total_decisions': total_decisions, 'confidence_distribution': confidence_distribution, 'success_rates_by_confidence': success_rates, 'average_execution_time_ms': self.orchestration_metrics['average_execution_time_ms'], 'tools_repaired': self.orchestration_metrics['tools_repaired'], 'fallbacks_used': self.orchestration_metrics['fallbacks_used'], 'overall_success_rate': self._calculate_success_rate()}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

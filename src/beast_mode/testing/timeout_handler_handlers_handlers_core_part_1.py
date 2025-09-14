@@ -13,3 +13,20 @@ def __init__(self, timeout_config: Optional[TimeoutConfiguration]=None):
     self.successful_degradations = 0
     self.degradation_strategies = {1: self._apply_level_1_degradation, 2: self._apply_level_2_degradation, 3: self._apply_level_3_degradation}
     self._update_health_indicator('timeout_handler_readiness', HealthStatus.HEALTHY, 'ready', 'RCA timeout handler ready for operation management')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

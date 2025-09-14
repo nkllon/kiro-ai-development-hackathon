@@ -38,3 +38,20 @@ def _basic_multi_perspective_check(self, decision_context: str, confidence: floa
     overall_confidence = sum((p.confidence_score for p in perspectives.values())) / len(perspectives)
     consensus = all((p.approval_status for p in perspectives.values()))
     return MultiPerspectiveAnalysis(decision_context=decision_context, overall_confidence=overall_confidence, stakeholder_perspectives=perspectives, consensus_reached=consensus, final_recommendation='Approved with conditions - implement with stakeholder recommendations', risk_factors=['Medium confidence requires monitoring during implementation'])
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

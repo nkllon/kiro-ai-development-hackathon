@@ -17,3 +17,20 @@ def _handle_tool_failures_systematically(self, failed_tools: List[str], context:
             repaired_tools.append(tool_id)
             self.orchestration_metrics['tools_repaired'] += 1
     return {'repairs_successful': len(repaired_tools) > 0, 'repaired_tools': repaired_tools, 'repair_results': repair_results}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

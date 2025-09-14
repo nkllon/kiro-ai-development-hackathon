@@ -13,3 +13,20 @@ def _generate_compliance_improvements(self) -> List[str]:
     if len(suggestions) == 0:
         suggestions.extend(['All tools meet current compliance standards', 'Consider implementing advanced compliance monitoring', 'Review and update systematic constraints regularly'])
     return suggestions[:5]
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
