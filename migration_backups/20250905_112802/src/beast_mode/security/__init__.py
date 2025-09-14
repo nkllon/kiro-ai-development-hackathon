@@ -1,1 +1,0 @@
-# Beast Mode Framework - Security-First Architecture

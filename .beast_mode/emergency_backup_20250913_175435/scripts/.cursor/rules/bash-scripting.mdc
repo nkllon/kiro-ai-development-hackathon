@@ -1,0 +1,45 @@
+---
+description: Bash scripting rules and development guidelines
+globs: ["scripts/*.sh", "*.sh", "*.bash"]
+alwaysApply: true
+---
+
+# Bash Scripting Rules
+
+## Bash Script Development Guidelines
+
+### Security Requirements
+- **Input Validation**: Validate all script inputs
+- **Error Handling**: Implement comprehensive error handling
+- **Secure Execution**: Use proper permissions and ownership
+- **Credential Protection**: Never hardcode credentials
+
+### Script Structure
+- **Shebang**: Always use proper shebang (`#!/bin/bash`)
+- **Exit Codes**: Use meaningful exit codes
+- **Logging**: Implement proper logging
+- **Documentation**: Document all functions and parameters
+
+### Best Practices
+- **Quoting**: Always quote variables
+- **Error Checking**: Check exit codes of commands
+- **Temporary Files**: Use secure temporary file creation
+- **Cleanup**: Implement proper cleanup on exit
+
+### Deployment Scripts
+- **Idempotency**: Scripts should be safely re-runnable
+- **Rollback**: Implement rollback capabilities
+- **Validation**: Validate environment before execution
+- **Monitoring**: Add progress indicators and logging
+
+### Testing
+- **Unit Testing**: Test individual functions
+- **Integration Testing**: Test complete workflows
+- **Error Scenarios**: Test error conditions
+- **Shellcheck**: Use shellcheck for linting
+
+### Documentation
+- **Usage Examples**: Provide clear usage examples
+- **Parameter Documentation**: Document all parameters
+- **Dependencies**: List all dependencies
+- **Prerequisites**: Document prerequisites

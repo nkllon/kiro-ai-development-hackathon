@@ -941,7 +941,7 @@ class ComprehensiveMonitoringSystem(ReflectiveModule):
             'auto_scaling_evaluation_interval_seconds': 300
         }
                     
-                except Exception as e:
+        except Exception as e:
                     self.emit_structured_log(
                         "error",
                         f"Error in monitoring loop: {str(e)}",

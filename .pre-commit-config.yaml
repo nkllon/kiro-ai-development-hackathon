@@ -1,24 +1,21 @@
-
 repos:
   - repo: local
     hooks:
+      - id: syntax-check
+        name: Python Syntax Check
+        entry: python3 scripts/validate_syntax.py
+        language: system
+        files: \.py$
+        pass_filenames: false
+        
       - id: compliance-check
-        name: Compliance Check
-        entry: python scripts/automated_compliance_enforcement.py --pre-commit
+        name: Compliance Validation
+        entry: python3 scripts/honest_compliance_reporter.py
         language: system
         pass_filenames: false
-        always_run: true
-      
-      - id: auto-fix-compliance
-        name: Auto-fix Compliance Issues
-        entry: python scripts/automated_compliance_enforcement.py --auto-fix
+        
+      - id: no-duplicate-interfaces
+        name: Duplicate Interface Check
+        entry: python3 scripts/pre_commit_compliance_check.py
         language: system
         pass_filenames: false
-        always_run: true
-      
-      - id: documentation-check
-        name: Documentation Check
-        entry: python scripts/automated_compliance_enforcement.py --doc-check
-        language: system
-        pass_filenames: false
-        always_run: true

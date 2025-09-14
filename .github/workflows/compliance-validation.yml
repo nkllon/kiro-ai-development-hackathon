@@ -1,0 +1,24 @@
+name: Compliance Validation Pipeline
+
+on:
+  push:
+    branches: [ main, release/* ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  syntax-validation:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Validate Python syntax
+      run: python3 scripts/validate_syntax.py
+    
+    - name: Run honest compliance check
+      run: python3 scripts/honest_compliance_reporter.py

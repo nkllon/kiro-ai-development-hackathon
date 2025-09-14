@@ -1,0 +1,239 @@
+"""
+Tool Orchestration Engine Services Services Utils
+
+This module was extracted from tool_orchestration_engine_services_services.py
+as part of RM-DDD compliance refactoring.
+"""
+
+import time
+import json
+import subprocess
+import asyncio
+from typing import Dict, Any, List, Optional, Union, Callable
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from enum import Enum
+from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from ..core.reflective_module import ReflectiveModule, HealthStatus
+from ..intelligence.model_driven_intelligence_engine import ModelDrivenIntelligenceEngine
+from ..analysis.rca_engine import RCAEngine
+from ..ghostbusters.multi_perspective_validator import MultiPerspectiveValidator as MultiStakeholderPerspectiveEngine
+from collections import Counter
+from ..analysis.rca_engine import Failure, FailureCategory
+from ..analysis.rca_engine import RCAEngine
+from collections import Counter
+from ..analysis.rca_engine import Failure, FailureCategory
+from ..analysis.rca_engine import RCAEngine
+from collections import Counter
+from ..analysis.rca_engine import Failure, FailureCategory
+from ..analysis.rca_engine import RCAEngine
+
+def register_tool(self, tool_definition: ToolDefinition) -> Dict[str, Any]:
+    """
+        Register a tool in the orchestration system
+        """
+    if not self._validate_tool_definition(tool_definition):
+        return {'error': 'Invalid tool definition'}
+    self.tools_registry[tool_definition.tool_id] = tool_definition
+    self.tool_health_cache[tool_definition.tool_id] = ToolStatus.UNKNOWN
+    health_result = self._check_tool_health(tool_definition.tool_id)
+    self.logger.info(f'Tool registered: {tool_definition.name} ({tool_definition.tool_id})')
+    return {'success': True, 'tool_id': tool_definition.tool_id, 'name': tool_definition.name, 'initial_health': health_result['status'], 'priority': tool_definition.priority.value}
+
+def orchestrate_tool_execution(self, decision_context: DecisionContext, preferred_tools: Optional[List[str]]=None) -> OrchestrationResult:
+    """
+        Orchestrate tool execution using confidence-based decision framework
+        Implements UC-03: Model-Driven Decision Making vs Guesswork
+        """
+    start_time = time.time()
+    operation_id = f'ORCH-{int(time.time())}'
+    self.logger.info(f'Starting tool orchestration: {operation_id}')
+    confidence_result = self._assess_decision_confidence(decision_context)
+    confidence_level = confidence_result['confidence_level']
+    confidence_score = confidence_result['confidence_score']
+    self.logger.info(f'Decision confidence: {confidence_level.value} ({confidence_score:.2f})')
+    decision_result = self._route_decision_by_confidence(decision_context, confidence_level, preferred_tools)
+    execution_result = self._execute_tools_systematically(decision_result['selected_tools'], decision_context, operation_id)
+    if not execution_result['success']:
+        repair_result = self._handle_tool_failures_systematically(execution_result['failed_tools'], decision_context, operation_id)
+        if repair_result['repairs_successful']:
+            retry_result = self._execute_tools_systematically(repair_result['repaired_tools'], decision_context, f'{operation_id}-RETRY')
+            execution_result.update(retry_result)
+    total_time = int((time.time() - start_time) * 1000)
+    result = OrchestrationResult(operation_id=operation_id, success=execution_result['success'], primary_result=execution_result.get('primary_result'), fallback_results=execution_result.get('fallback_results', []), decision_confidence=confidence_level, decision_rationale=decision_result['rationale'], tools_attempted=execution_result.get('tools_attempted', []), total_execution_time_ms=total_time, recommendations=self._generate_orchestration_recommendations(execution_result, decision_result, confidence_result))
+    self._update_orchestration_metrics(result)
+    self.decision_history.append({'operation_id': operation_id, 'decision_context': decision_context, 'confidence_level': confidence_level.value, 'confidence_score': confidence_score, 'success': result.success, 'execution_time_ms': total_time, 'timestamp': datetime.now()})
+    self.decision_history = self.decision_history[-100:]
+    self.logger.info(f'Tool orchestration completed: {operation_id} (Success: {result.success})')
+    return result
+
+def _execute_tools_systematically(self, selected_tools: List[str], context: DecisionContext, operation_id: str) -> Dict[str, Any]:
+    """
+        Execute selected tools systematically with health monitoring
+        """
+    if not selected_tools:
+        return {'success': False, 'error': 'No tools selected for execution', 'tools_attempted': [], 'failed_tools': []}
+    execution_results = []
+    failed_tools = []
+    tools_attempted = []
+    for tool_id in selected_tools:
+        if tool_id not in self.tools_registry:
+            self.logger.warning(f'Tool {tool_id} not registered, skipping')
+            continue
+        tools_attempted.append(tool_id)
+        health_result = self._check_tool_health(tool_id)
+        if health_result['status'] == ToolStatus.FAILED:
+            self.logger.warning(f'Tool {tool_id} is unhealthy, attempting repair')
+            repair_result = self._attempt_tool_repair(tool_id)
+            if not repair_result['success']:
+                failed_tools.append(tool_id)
+                continue
+        execution_result = self._execute_single_tool(tool_id, context, operation_id)
+        execution_results.append(execution_result)
+        if execution_result.success:
+            return {'success': True, 'primary_result': execution_result, 'fallback_results': execution_results[:-1], 'tools_attempted': tools_attempted, 'failed_tools': failed_tools}
+        else:
+            failed_tools.append(tool_id)
+    return {'success': False, 'primary_result': None, 'fallback_results': execution_results, 'tools_attempted': tools_attempted, 'failed_tools': failed_tools}
+
+def _execute_single_tool(self, tool_id: str, context: DecisionContext, operation_id: str) -> ToolExecutionResult:
+    """
+        Execute a single tool with comprehensive monitoring
+        """
+    tool_def = self.tools_registry[tool_id]
+    start_time = time.time()
+    try:
+        command = tool_def.command
+        result = subprocess.run(command.split(), capture_output=True, text=True, timeout=tool_def.timeout_seconds, cwd=self.project_root)
+        execution_time = int((time.time() - start_time) * 1000)
+        success = result.returncode == 0
+        self.tool_health_cache[tool_id] = ToolStatus.HEALTHY if success else ToolStatus.DEGRADED
+        return ToolExecutionResult(tool_id=tool_id, success=success, output=result.stdout, error=result.stderr if result.stderr else None, execution_time_ms=execution_time, exit_code=result.returncode, health_status=self.tool_health_cache[tool_id])
+    except subprocess.TimeoutExpired:
+        execution_time = int((time.time() - start_time) * 1000)
+        self.tool_health_cache[tool_id] = ToolStatus.FAILED
+        return ToolExecutionResult(tool_id=tool_id, success=False, output='', error=f'Tool execution timed out after {tool_def.timeout_seconds} seconds', execution_time_ms=execution_time, health_status=ToolStatus.FAILED)
+    except Exception as e:
+        execution_time = int((time.time() - start_time) * 1000)
+        self.tool_health_cache[tool_id] = ToolStatus.FAILED
+        return ToolExecutionResult(tool_id=tool_id, success=False, output='', error=f'Tool execution failed: {str(e)}', execution_time_ms=execution_time, health_status=ToolStatus.FAILED)
+
+def _handle_tool_failures_systematically(self, failed_tools: List[str], context: DecisionContext, operation_id: str) -> Dict[str, Any]:
+    """
+        Handle tool failures using systematic RCA and repair
+        """
+    if not failed_tools:
+        return {'repairs_successful': False, 'repaired_tools': []}
+    repaired_tools = []
+    repair_results = []
+    for tool_id in failed_tools:
+        self.logger.info(f'Attempting systematic repair of tool: {tool_id}')
+        rca_result = self._perform_tool_rca(tool_id, context)
+        repair_result = self._attempt_systematic_repair(tool_id, rca_result)
+        repair_results.append(repair_result)
+        if repair_result['success']:
+            repaired_tools.append(tool_id)
+            self.orchestration_metrics['tools_repaired'] += 1
+    return {'repairs_successful': len(repaired_tools) > 0, 'repaired_tools': repaired_tools, 'repair_results': repair_results}
+
+def _perform_tool_rca(self, tool_id: str, context: DecisionContext) -> Dict[str, Any]:
+    """
+        Perform systematic RCA on tool failure
+        """
+    tool_def = self.tools_registry[tool_id]
+    failure_context = {'tool_id': tool_id, 'tool_name': tool_def.name, 'command': tool_def.command, 'dependencies': tool_def.dependencies, 'decision_context': context, 'health_history': self._get_tool_health_history(tool_id)}
+    rca_result = self.rca_engine.perform_systematic_rca(failure_context)
+    return rca_result
+
+def _select_tools_by_health_and_priority(self, available_tools: List[str]) -> List[str]:
+    """
+        Select tools based on health status and priority
+        """
+    if not available_tools:
+        return []
+    tool_health = {}
+    for tool_id in available_tools:
+        health_result = self._check_tool_health(tool_id)
+        tool_health[tool_id] = health_result['status']
+
+    def tool_sort_key(tool_id):
+        tool_def = self.tools_registry[tool_id]
+        health = tool_health[tool_id]
+        priority_score = {ToolPriority.CRITICAL: 4, ToolPriority.HIGH: 3, ToolPriority.MEDIUM: 2, ToolPriority.LOW: 1}[tool_def.priority]
+        health_score = {ToolStatus.HEALTHY: 3, ToolStatus.DEGRADED: 2, ToolStatus.FAILED: 1, ToolStatus.UNKNOWN: 0}[health]
+        return (priority_score, health_score)
+    sorted_tools = sorted(available_tools, key=tool_sort_key, reverse=True)
+    return sorted_tools[:3]
+
+def _get_tool_health_history(self, tool_id: str) -> List[Dict[str, Any]]:
+    """
+        Get health history for a tool (simplified implementation)
+        """
+    current_status = self.tool_health_cache.get(tool_id, ToolStatus.UNKNOWN)
+    return [{'timestamp': datetime.now(), 'status': current_status.value, 'tool_id': tool_id}]
+
+def _initialize_default_tools(self):
+    """
+        Initialize default tools for common operations
+        """
+    default_tools = [ToolDefinition(tool_id='make_help', name='Make Help', description='Display Makefile help information', command='make help', health_check_command='make --version', priority=ToolPriority.HIGH, repair_procedures=['make --version', 'which make']), ToolDefinition(tool_id='git_status', name='Git Status', description='Check git repository status', command='git status', health_check_command='git --version', priority=ToolPriority.MEDIUM, repair_procedures=['git --version', 'which git']), ToolDefinition(tool_id='python_version', name='Python Version', description='Check Python version', command='python --version', health_check_command='python --version', priority=ToolPriority.HIGH, repair_procedures=['python3 --version', 'which python', 'which python3']), ToolDefinition(tool_id='pip_list', name='Pip List', description='List installed Python packages', command='pip list', health_check_command='pip --version', priority=ToolPriority.MEDIUM, repair_procedures=['pip --version', 'python -m pip --version'])]
+    for tool in default_tools:
+        self.register_tool(tool)
+
+def get_registered_tools(self) -> Dict[str, Dict[str, Any]]:
+    """
+        Get information about all registered tools
+        """
+    tools_info = {}
+    for tool_id, tool_def in self.tools_registry.items():
+        health_status = self.tool_health_cache.get(tool_id, ToolStatus.UNKNOWN)
+        tools_info[tool_id] = {'name': tool_def.name, 'description': tool_def.description, 'priority': tool_def.priority.value, 'health_status': health_status.value, 'dependencies': tool_def.dependencies, 'fallback_tools': tool_def.fallback_tools}
+    return tools_info
+
+def force_tool_health_refresh(self) -> Dict[str, Any]:
+    """
+        Force refresh of all tool health statuses
+        """
+    refresh_results = {}
+    for tool_id in self.tools_registry.keys():
+        health_result = self._check_tool_health(tool_id)
+        refresh_results[tool_id] = health_result['status'].value
+    return {'refreshed_tools': len(refresh_results), 'health_status': refresh_results, 'timestamp': datetime.now()}
+
+def handle_unknown_tool_failure(self, failure_context: Dict[str, Any]) -> Dict[str, Any]:
+    """
+        Handle unknown tool failure using adaptive patterns
+        Implements UK-06: Tool failure diversity unknowns handling
+        """
+    try:
+        failure_signature = self._generate_failure_signature(failure_context)
+        matching_pattern = None
+        if hasattr(self, 'adaptive_patterns'):
+            for pattern_name, pattern in self.adaptive_patterns.items():
+                if self._matches_failure_pattern(failure_signature, pattern):
+                    matching_pattern = pattern
+                    break
+        if matching_pattern:
+            self.logger.info(f"Applying adaptive pattern for unknown failure: {matching_pattern['failure_type']}")
+            response = self._apply_adaptive_response(failure_context, matching_pattern)
+            self._update_adaptive_pattern_learning(matching_pattern, response)
+            return {'unknown_failure_handled': True, 'adaptive_pattern_used': matching_pattern['failure_type'], 'response_strategy': matching_pattern['response_strategy'], 'outcome': response, 'learning_updated': True}
+        else:
+            self.logger.info('No matching adaptive pattern - creating new approach')
+            new_pattern = self._create_adaptive_pattern_for_unknown(failure_context)
+            response = self._apply_adaptive_response(failure_context, new_pattern)
+            if not hasattr(self, 'adaptive_patterns'):
+                self.adaptive_patterns = {}
+            self.adaptive_patterns[new_pattern['failure_type']] = new_pattern
+            return {'unknown_failure_handled': True, 'new_adaptive_pattern_created': True, 'pattern_name': new_pattern['failure_type'], 'response_strategy': new_pattern['response_strategy'], 'outcome': response, 'pattern_stored_for_learning': True}
+    except Exception as e:
+        self.logger.error(f'Unknown tool failure handling failed: {e}')
+        return {'unknown_failure_handled': False, 'error': str(e), 'fallback': 'escalate_to_manual_intervention'}
+
+def tool_sort_key(tool_id):
+    tool_def = self.tools_registry[tool_id]
+    health = tool_health[tool_id]
+    priority_score = {ToolPriority.CRITICAL: 4, ToolPriority.HIGH: 3, ToolPriority.MEDIUM: 2, ToolPriority.LOW: 1}[tool_def.priority]
+    health_score = {ToolStatus.HEALTHY: 3, ToolStatus.DEGRADED: 2, ToolStatus.FAILED: 1, ToolStatus.UNKNOWN: 0}[health]
+    return (priority_score, health_score)

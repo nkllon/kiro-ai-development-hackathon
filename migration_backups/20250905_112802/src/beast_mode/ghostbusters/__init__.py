@@ -1,1 +1,0 @@
-# Beast Mode Framework - Ghostbusters Multi-Perspective Analysis
