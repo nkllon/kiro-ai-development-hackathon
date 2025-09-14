@@ -95,3 +95,20 @@ def _validate_project_data(self, project_data: Dict[str, Any]) -> None:
         if not project_data[field].strip():
             raise ValidationError(f'Required field cannot be empty: {field}')
     self._validate_project_updates(project_data)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

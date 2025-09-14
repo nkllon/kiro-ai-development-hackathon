@@ -127,3 +127,20 @@ def _validate_encryption_constraint(self) -> ConstraintValidationResult:
     violations = ['Encryption implementation not fully validated']
     compliance_percentage = 80.0
     return ConstraintValidationResult(constraint_id='C-10', constraint_description=self.constraints['C-10']['description'], status=ConstraintStatus.PARTIALLY_COMPLIANT, compliance_percentage=compliance_percentage, evidence=evidence, violations=violations, mitigation_actions=['Conduct security audit and encryption validation'], risk_level='HIGH')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -44,3 +44,20 @@ def _validate_project_registry_integration(self) -> ValidationResult:
     except Exception as e:
         self.integration_status['project_registry'] = IntegrationStatus.FAILED.value
         return ValidationResult(component='project_registry', status=IntegrationStatus.FAILED, details=f'Registry validation failed: {str(e)}', issues=[f'Validation error: {str(e)}'], recommendations=['Debug project registry validation process'])
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

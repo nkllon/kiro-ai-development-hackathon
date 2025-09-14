@@ -119,3 +119,20 @@ def _analyze_health_trends(self) -> Dict[str, Any]:
     else:
         trend = 'stable'
     return {'trend': trend, 'current_score': recent_scores[-1], 'recent_average': recent_avg, 'older_average': older_avg, 'change_percentage': (recent_avg - older_avg) / older_avg * 100 if older_avg > 0 else 0}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

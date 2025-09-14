@@ -19,3 +19,20 @@ def __init__(self) -> Any:
     self._initialize_default_alert_rules()
     self._start_alert_evaluation()
     self._update_health_indicator('enhanced_observability_manager', HealthStatus.HEALTHY, 'operational', 'Enhanced observability manager ready for advanced monitoring')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

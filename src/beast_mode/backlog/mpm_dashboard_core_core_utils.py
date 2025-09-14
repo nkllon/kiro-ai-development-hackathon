@@ -20,3 +20,20 @@ from src.rm_ddd.core.health import ModuleHealth
 def _calculate_resource_utilization(self, scenario_params: Dict[str, Any], constraints: ResourceConstraints) -> Dict[str, float]:
     """Calculate resource utilization for scenario"""
     return {'developers': min(1.0, scenario_params['efficiency']), 'time': scenario_params['efficiency'], 'budget': 0.8 if constraints.budget_constraints else 1.0}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

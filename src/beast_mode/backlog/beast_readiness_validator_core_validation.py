@@ -191,3 +191,20 @@ def _check_dependency_satisfaction(self, dep_ref: DependencyReference, item: Bac
         blocking_issues.append('Dependency description is insufficient')
     evidence = dep_ref.description if satisfied else 'No clear satisfaction criteria'
     return DependencyStatus(dependency_id=dep_ref.dependency_id, target_item_id=dep_ref.target_item_id, satisfied=satisfied, satisfaction_evidence=evidence, blocking_issues=blocking_issues, estimated_resolution=None)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -16,3 +16,20 @@ from src.rm_ddd.core.health import ModuleHealth
         log_entry = {'timestamp': datetime.now().isoformat(), 'level': level, 'message': message, 'fields': fields or {}}
         span.logs.append(log_entry)
         return {'success': True, 'log_added': True}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -42,3 +42,20 @@ def _validate_cursor_rules_integration(self) -> ValidationResult:
     except Exception as e:
         self.integration_status['cursor_rules'] = IntegrationStatus.FAILED.value
         return ValidationResult(component='cursor_rules', status=IntegrationStatus.FAILED, details=f'Cursor rules validation failed: {str(e)}', issues=[f'Validation error: {str(e)}'], recommendations=['Debug cursor rules validation process'])
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

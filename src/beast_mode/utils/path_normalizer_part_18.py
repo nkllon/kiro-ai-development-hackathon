@@ -38,4 +38,21 @@ from src.rm_ddd.core.health import ModuleHealth
             else:
                 raise ValueError(f"Path '{path}' cannot be made relative to '{base}'. Normalized path '{normalized_path}' is not under normalized base '{normalized_base}'") from e
 
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
     @staticmethod

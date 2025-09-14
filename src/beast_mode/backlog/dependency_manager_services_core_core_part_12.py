@@ -9,3 +9,20 @@ def _would_create_cycle(self, source_item: str, target_item: str, temp_deps: Dic
         temp_graph[target_item] = set()
     temp_graph[target_item].add(source_item)
     return self._has_path(temp_graph, source_item, target_item)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

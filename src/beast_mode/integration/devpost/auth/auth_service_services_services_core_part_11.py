@@ -15,3 +15,20 @@ def get_auth_headers(self) -> Dict[str, str]:
         return {'X-API-Key': self.credentials.api_key}
     else:
         raise DevPostAuthenticationError('No valid credentials available')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

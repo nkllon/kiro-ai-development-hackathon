@@ -44,3 +44,20 @@ def _validate_beast_mode_configuration(self) -> ValidationResult:
     except Exception as e:
         self.integration_status['beast_mode_config'] = IntegrationStatus.FAILED.value
         return ValidationResult(component='beast_mode_config', status=IntegrationStatus.FAILED, details=f'Beast Mode configuration validation failed: {str(e)}', issues=[f'Validation error: {str(e)}'], recommendations=['Debug Beast Mode configuration validation'])
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -43,3 +43,20 @@ def get_project_metadata(self) -> ProjectMetadata:
     if not metadata.title or metadata.title == 'Untitled Project':
         metadata.title = self.project_root.name.replace('-', ' ').replace('_', ' ').title()
     return metadata
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

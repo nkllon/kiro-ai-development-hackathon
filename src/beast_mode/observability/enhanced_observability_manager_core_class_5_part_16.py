@@ -21,3 +21,20 @@ def finish_trace(self, span_id: str, status: str='ok', tags: Dict[str, Any]=None
     del self.active_traces[span_id]
     self._cleanup_old_traces()
     return {'success': True, 'span_id': span_id, 'duration_ms': span.duration_ms, 'status': status}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -27,3 +27,20 @@ def create_parser(self) -> argparse.ArgumentParser:
     parser.add_argument('command', choices=['status', 'health', 'validate', 'pdca', 'orchestrate', 'metrics', 'debug', 'unknown-risks'], help='Command to execute')
     parser.add_argument('args', nargs='*', help='Command arguments')
     return parser
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -12,3 +12,20 @@ def dfs_longest(node: str, current_path: List[str], current_duration: timedelta)
             dfs_longest(dependent, current_path + [dependent], current_duration + dep_duration)
     visited.remove(node)
     return (path, duration)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
