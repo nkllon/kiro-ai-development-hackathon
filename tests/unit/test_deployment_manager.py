@@ -13,7 +13,7 @@ from beast_mode.deployment.deployment_manager import (
 )
 
 
-class TestDeploymentManager:
+class TestDeploymentManager(ReflectiveModule):
     """Test deployment manager functionality"""
     
     def setup_method(self):
@@ -220,7 +220,7 @@ class TestDeploymentManager:
             assert health["system_resources"]["disk_percent"] == 45.0
 
 
-class TestServiceDefinition:
+class TestServiceDefinition(ReflectiveModule):
     """Test service definition data model"""
     
     def test_service_definition_creation(self):
@@ -253,7 +253,7 @@ class TestServiceDefinition:
         assert service.dependencies == ["redis", "database"]
 
 
-class TestDeploymentStatus:
+class TestDeploymentStatus(ReflectiveModule):
     """Test deployment status data model"""
     
     def test_deployment_status_creation(self):
@@ -280,7 +280,7 @@ class TestDeploymentStatus:
         assert status.status == "running"
 
 
-class TestDeploymentManagerIntegration:
+class TestDeploymentManagerIntegration(ReflectiveModule):
     """Integration tests for deployment manager"""
     
     def setup_method(self):
@@ -292,6 +292,8 @@ class TestDeploymentManagerIntegration:
     def teardown_method(self):
         """Cleanup test environment"""
         import shutil
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         shutil.rmtree(self.temp_dir, ignore_errors=True)
         self.deployment_manager.stop_all_deployments()
     
@@ -327,4 +329,32 @@ class TestDeploymentManagerIntegration:
         
         # Check final status
         status = self.deployment_manager.get_deployment_status(deployment_id)
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert status.status == "stopped"

@@ -59,6 +59,8 @@ def test_ai_development_tools():
     try:
         import openai
         import anthropic
+from src.rm_ddd.core.health import ModuleHealth
+
         # Test that we can access the modules
         assert openai.__version__ is not None
         assert anthropic.__version__ is not None
@@ -69,3 +71,20 @@ def test_ai_development_tools():
 
 if __name__ == "__main__":
     pytest.main([__file__])
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

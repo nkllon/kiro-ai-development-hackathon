@@ -34,11 +34,13 @@ try:
     from beast_mode.core.reflective_module import ReflectiveModule, HealthStatus
     from beast_mode.core.model_registry import ModelRegistry
     from beast_mode.core.pdca_models import PDCACycle, PDCAPhase
+from src.rm_ddd.core.health import ModuleHealth
+
 except ImportError as e:
     pytest.skip(f"Core modules not available: {e}", allow_module_level=True)
 
 
-class PerformanceMetrics:
+class PerformanceMetrics(ModuleHealth):
     """Collect and analyze performance metrics."""
     
     def __init__(self):
@@ -90,7 +92,7 @@ class PerformanceMetrics:
         }
 
 
-class TestModelRegistryPerformance:
+class TestModelRegistryPerformance(ModuleHealth):
     """Test Model Registry performance."""
     
     @performance_test
@@ -197,7 +199,7 @@ class TestModelRegistryPerformance:
         assert len(registry.models) == 1000, "Not all models registered"
 
 
-class TestReflectiveModulePerformance:
+class TestReflectiveModulePerformance(ModuleHealth):
     """Test ReflectiveModule performance."""
     
     @performance_test
@@ -280,7 +282,7 @@ class TestReflectiveModulePerformance:
         assert updates_per_second > 2000, f"Health updates too slow: {updates_per_second:.2f} updates/sec"
 
 
-class TestPDCAPerformance:
+class TestPDCAPerformance(ModuleHealth):
     """Test PDCA performance."""
     
     @performance_test
@@ -353,7 +355,7 @@ class TestPDCAPerformance:
         assert validations_per_second > 500, f"Validations too slow: {validations_per_second:.2f} validations/sec"
 
 
-class TestMemoryPerformance:
+class TestMemoryPerformance(ModuleHealth):
     """Test memory performance and usage."""
     
     @slow_test
@@ -457,7 +459,7 @@ class TestMemoryPerformance:
         tracemalloc.stop()
 
 
-class TestConcurrencyPerformance:
+class TestConcurrencyPerformance(ModuleHealth):
     """Test concurrency and threading performance."""
     
     @performance_test
@@ -560,7 +562,7 @@ class TestConcurrencyPerformance:
         assert operations_per_second > 300, f"Asyncio performance too slow: {operations_per_second:.2f} ops/sec"
 
 
-class TestScalabilityLimits:
+class TestScalabilityLimits(ModuleHealth):
     """Test scalability limits and boundaries."""
     
     @slow_test
@@ -616,7 +618,7 @@ class TestScalabilityLimits:
             assert len(registry.models) >= 5000, f"Memory error too early: only {len(registry.models)} models"
 
 
-class TestPerformanceRegression:
+class TestPerformanceRegression(ModuleHealth):
     """Test for performance regressions."""
     
     @performance_test
@@ -681,3 +683,20 @@ class TestPerformanceRegression:
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "--tb=short"])
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

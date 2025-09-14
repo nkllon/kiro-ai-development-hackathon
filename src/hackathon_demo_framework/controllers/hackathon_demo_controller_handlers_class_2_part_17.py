@@ -14,3 +14,20 @@ from src.rm_ddd.core.health import ModuleHealth
             raise ValueError(f'Session {session_id} not found')
         session = self.active_sessions[session_id]
         return {'session_id': session_id, 'judge_id': session.judge_id, 'duration_minutes': (datetime.now() - session.start_time).total_seconds() / 60, 'progress': session.progress, 'current_phase': session.current_phase.value, 'interactions': len(session.interactions), 'systematic_score': session.systematic_score, 'learning_patterns': len(session.learning_patterns), 'interaction_breakdown': {interaction['interaction_type']: len([i for i in session.interactions if i['interaction_type'] == interaction['interaction_type']]) for interaction in session.interactions}}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
