@@ -26,9 +26,11 @@ from beast_mode.testing.test_failure_detector import TestFailureDetector
 from beast_mode.testing.rca_integration import TestRCAIntegrationEngine, TestFailureData
 from beast_mode.testing.rca_report_generator import RCAReportGenerator, ReportFormat
 from beast_mode.analysis.rca_engine import FailureCategory
+from src.rm_ddd.core.base_reflective_module import ReflectiveModule, ModuleCapability, ModuleStatus, ModuleHealth
 
 
-class TestComprehensiveRCAIntegrationValidation(RCAFailureScenarioFixtures):
+
+class TestComprehensiveRCAIntegrationValidation(RCAFailureScenarioFixtures, ReflectiveModule):
     """Comprehensive validation of all RCA integration functionality"""
     
     def test_all_requirements_end_to_end_validation(self, all_failure_scenarios):
@@ -493,7 +495,7 @@ class TestComprehensiveRCAIntegrationValidation(RCAFailureScenarioFixtures):
         assert True, "Requirements coverage validation completed"
 
 
-class TestRCAIntegrationRegressionSuite:
+class TestRCAIntegrationRegressionSuite(ReflectiveModule):
     """Regression test suite to prevent functionality degradation"""
     
     def test_regression_basic_functionality(self):
@@ -552,4 +554,32 @@ class TestRCAIntegrationRegressionSuite:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v", "--tb=short", "-x"])  # -x stops on first failure

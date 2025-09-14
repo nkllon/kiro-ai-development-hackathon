@@ -17,3 +17,20 @@ from src.rm_ddd.core.health import ModuleHealth
             if 'already exists' in e.stderr:
                 suggestions.append(f"Use 'git checkout {name}' to switch to existing branch")
             return self._create_result(success=False, message=f"Failed to create branch '{name}': {e.stderr}", error_code='GIT_CREATE_BRANCH_FAILED', suggestions=suggestions, execution_time_ms=execution_time)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
