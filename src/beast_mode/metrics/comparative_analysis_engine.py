@@ -9,3 +9,5 @@ from .systematic_approach_tracker import SystematicTrackingResult
 from .comparative_analysis_engine_services import *
 from .comparative_analysis_engine_validation import *
 from .comparative_analysis_engine_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

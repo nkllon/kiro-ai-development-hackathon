@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def collect_systematic_metric(self, metric_name: str, value: float, context: Dict[str, Any]=None) -> None:
         """collect_systematic_metric

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _execute_cleanup_action(self, action: Dict[str, Any], dry_run: bool) -> bool:
     """Execute individual cleanup action"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_placement_rationale(self, file_path: Path, category: FileCategory, location: str) -> str:
     """Generate systematic rationale for file placement"""

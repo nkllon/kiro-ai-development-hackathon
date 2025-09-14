@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_health_indicators(self) -> List[Dict[str, Any]]:
         """get_health_indicators

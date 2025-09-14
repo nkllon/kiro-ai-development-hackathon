@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _serialize_registry(self) -> Dict[str, Any]:
         """Serialize registry for JSON storage"""

@@ -1,4 +1,6 @@
 import logging
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def get_health_indicators(self) -> Dict[str, Any]:
         """get_health_indicators

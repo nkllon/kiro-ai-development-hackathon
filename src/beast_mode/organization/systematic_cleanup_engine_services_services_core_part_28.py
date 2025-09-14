@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _load_file_patterns(self) -> Dict[str, List[str]]:
     """Load file categorization patterns"""

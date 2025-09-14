@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_entropy_metrics(self, file_analyses: List[FileAnalysis]) -> Dict[str, float]:
     """Calculate comprehensive entropy metrics"""

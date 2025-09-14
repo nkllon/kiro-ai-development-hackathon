@@ -8,3 +8,4 @@ from .migration_manager_services_part_7 import *
 from .migration_manager_services_part_8 import *
 from .migration_manager_services_part_9 import *
 from .migration_manager_services_part_10 import *
+from src.rm_ddd.core.health import ModuleHealth

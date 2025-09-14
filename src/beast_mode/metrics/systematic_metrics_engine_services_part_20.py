@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def is_healthy(self) -> bool:
         """Check if Systo's metrics engine is healthy"""

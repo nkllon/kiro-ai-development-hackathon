@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _load_systematic_structure(self) -> Dict[str, Any]:
     """Load systematic organizational structure standards"""

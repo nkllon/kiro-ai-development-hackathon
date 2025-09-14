@@ -13,6 +13,8 @@ from datetime import datetime
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .adhoc_approach_simulator import AdhocSimulationResult
 from .systematic_approach_tracker import SystematicTrackingResult
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_superiority_claims(self, report: SuperiorityReport) -> Dict[str, Any]:
     """

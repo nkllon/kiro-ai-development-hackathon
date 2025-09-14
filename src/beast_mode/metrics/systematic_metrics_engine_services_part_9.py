@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def perform_comparative_analysis(self, metric_name: str) -> ComparativeAnalysisResult:
         """perform_comparative_analysis

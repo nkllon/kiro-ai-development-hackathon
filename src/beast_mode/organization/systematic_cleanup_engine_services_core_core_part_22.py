@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_entropy_reduction(self, cleanup_actions: List[Dict[str, Any]]) -> float:
     """Calculate expected entropy reduction from cleanup actions"""

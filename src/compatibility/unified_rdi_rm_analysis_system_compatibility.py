@@ -30,3 +30,4 @@ from .unified_rdi_rm_analysis_system_compatibility_part_29 import *
 from .unified_rdi_rm_analysis_system_compatibility_part_30 import *
 from .unified_rdi_rm_analysis_system_compatibility_part_31 import *
 from .unified_rdi_rm_analysis_system_compatibility_part_32 import *
+from src.rm_ddd.core.health import ModuleHealth

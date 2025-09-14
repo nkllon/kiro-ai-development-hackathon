@@ -9,3 +9,5 @@ from dataclasses import dataclass, asdict
 from enum import Enum
 from ..core.reflective_module import ReflectiveModule
 from .systematic_cleanup_engine_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _calculate_confidence_interval(self, systematic_values: List[float], adhoc_values: List[float]) -> Tuple[float, float]:
         """_calculate_confidence_interval

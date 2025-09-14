@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _assess_systematic_impact_file(self, file_path: Path, category: FileCategory) -> str:
     """Assess systematic impact of individual file placement"""

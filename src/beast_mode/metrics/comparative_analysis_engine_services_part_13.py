@@ -1,4 +1,6 @@
 import logging
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def validate_superiority_claims(self, report: SuperiorityReport) -> Dict[str, Any]:
         """validate_superiority_claims

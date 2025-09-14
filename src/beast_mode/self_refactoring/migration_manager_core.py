@@ -30,3 +30,4 @@ from .migration_manager_core_part_29 import *
 from .migration_manager_core_part_30 import *
 from .migration_manager_core_part_31 import *
 from .migration_manager_core_part_32 import *
+from src.rm_ddd.core.health import ModuleHealth

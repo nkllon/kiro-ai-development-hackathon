@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _plan_maintenance_procedures(self) -> List[Dict[str, Any]]:
     """Plan ongoing organizational maintenance procedures"""

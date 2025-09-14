@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def analyze_organizational_entropy(self, root_dir: Path=None) -> Dict[str, Any]:
     """

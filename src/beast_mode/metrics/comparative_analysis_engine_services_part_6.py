@@ -1,4 +1,6 @@
 import logging
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def __init__(self) -> Any:
         """__init__ - Enhanced for compliance"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _assess_cleanup_priority(self, file_path: Path, category: FileCategory) -> CleanupPriority:
     """Assess cleanup priority based on systematic impact"""

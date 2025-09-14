@@ -11,3 +11,4 @@ from .comparative_analysis_engine_services_part_10 import *
 from .comparative_analysis_engine_services_part_11 import *
 from .comparative_analysis_engine_services_part_12 import *
 from .comparative_analysis_engine_services_part_13 import *
+from src.rm_ddd.core.health import ModuleHealth

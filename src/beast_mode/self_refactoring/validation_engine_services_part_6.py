@@ -113,6 +113,8 @@
         for check in rm_compliance_checks:
             await asyncio.sleep(0.1)
             import random
+from src.rm_ddd.core.health import ModuleHealth
+
             check_passes = random.random() < 0.9
             rm_results.append({'check': check, 'passed': check_passes, 'compliance_level': 'compliant' if check_passes else 'violation'})
         successful_rm_checks = len([r for r in rm_results if r['passed']])

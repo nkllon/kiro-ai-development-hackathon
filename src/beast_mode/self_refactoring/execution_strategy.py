@@ -30,3 +30,4 @@ from .execution_strategy_part_29 import *
 from .execution_strategy_part_30 import *
 from .execution_strategy_part_31 import *
 from .execution_strategy_part_32 import *
+from src.rm_ddd.core.health import ModuleHealth

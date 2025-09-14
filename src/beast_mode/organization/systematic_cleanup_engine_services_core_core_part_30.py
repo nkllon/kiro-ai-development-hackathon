@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_health_indicators(self) -> Dict[str, Any]:
     """Get health indicators for the cleanup engine"""

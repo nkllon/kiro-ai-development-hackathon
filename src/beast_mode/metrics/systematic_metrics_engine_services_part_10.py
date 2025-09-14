@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def demonstrate_systematic_superiority(self) -> Dict[str, Any]:
         """Demonstrate systematic superiority with Systo's collaborative evidence"""

@@ -30,3 +30,4 @@ from .systematic_cleanup_engine_services_services_core_part_29 import *
 from .systematic_cleanup_engine_services_services_core_part_30 import *
 from .systematic_cleanup_engine_services_services_core_part_31 import *
 from .systematic_cleanup_engine_services_services_core_part_32 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _record_collaboration_event(self, event_type: str, details: Dict[str, Any]) -> None:
         """_record_collaboration_event

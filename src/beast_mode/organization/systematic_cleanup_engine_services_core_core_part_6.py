@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_file_systematic_placement(self, file_path: Path) -> FileAnalysis:
     """Analyze individual file for systematic placement"""

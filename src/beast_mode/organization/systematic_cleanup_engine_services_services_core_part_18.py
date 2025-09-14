@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _plan_directory_creation(self) -> List[Dict[str, Any]]:
     """Plan systematic directory structure creation"""

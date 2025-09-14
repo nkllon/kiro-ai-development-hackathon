@@ -1,4 +1,6 @@
 import logging
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def compare_approaches(self, adhoc_results: List[AdhocSimulationResult], systematic_results: List[SystematicTrackingResult], category: str) -> Optional[ComparisonResult]:
         """

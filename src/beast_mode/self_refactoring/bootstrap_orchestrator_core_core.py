@@ -10,3 +10,5 @@ from .parallel_coordinator import ParallelExecutionCoordinator
 from .migration_manager import LiveMigrationManager
 from .validation_engine import SystematicValidationEngine
 from .bootstrap_orchestrator_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

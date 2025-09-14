@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _determine_systematic_location(self, file_path: Path, category: FileCategory) -> str:
     """Determine systematic location for file based on category"""

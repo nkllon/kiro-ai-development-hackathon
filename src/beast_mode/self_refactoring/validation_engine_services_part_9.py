@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _generate_validation_evidence_package(self, result: SystemValidationResult) -> Dict[str, Any]:
         """_generate_validation_evidence_package

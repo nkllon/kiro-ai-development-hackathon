@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _estimate_cleanup_time(self, cleanup_actions: List[Dict[str, Any]]) -> str:
     """Estimate time required for systematic cleanup"""

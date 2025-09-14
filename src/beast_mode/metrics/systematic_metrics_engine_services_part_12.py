@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def track_beast_mode_performance(self, task_name: str, systematic_time: float, systematic_success: bool) -> None:
         """track_beast_mode_performance

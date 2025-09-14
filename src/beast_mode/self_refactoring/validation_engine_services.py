@@ -11,3 +11,4 @@ from .validation_engine_services_part_10 import *
 from .validation_engine_services_part_11 import *
 from .validation_engine_services_part_12 import *
 from .validation_engine_services_part_13 import *
+from src.rm_ddd.core.health import ModuleHealth

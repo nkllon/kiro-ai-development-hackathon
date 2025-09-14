@@ -10,3 +10,5 @@ from ..core.reflective_module import ReflectiveModule
 from .systematic_metrics_engine_services import *
 from .systematic_metrics_engine_core import *
 from .systematic_metrics_engine_models import *
+from src.rm_ddd.core.health import ModuleHealth
+

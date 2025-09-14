@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def is_healthy(self) -> bool:
         """Check if validation engine is healthy"""

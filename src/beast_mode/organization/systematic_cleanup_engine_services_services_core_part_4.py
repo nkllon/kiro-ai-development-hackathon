@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def create_systematic_cleanup_plan(self, entropy_analysis: Dict[str, Any]) -> CleanupPlan:
     """

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _categorize_file(self, file_path: Path) -> FileCategory:
     """Systematically categorize file based on name, extension, and content patterns"""

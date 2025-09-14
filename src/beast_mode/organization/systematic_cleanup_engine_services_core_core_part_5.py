@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def execute_systematic_cleanup(self, cleanup_plan: CleanupPlan, dry_run: bool=False) -> Dict[str, Any]:
     """

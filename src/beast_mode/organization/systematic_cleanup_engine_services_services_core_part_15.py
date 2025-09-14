@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _identify_systematic_violations(self, file_analyses: List[FileAnalysis]) -> List[Dict[str, Any]]:
     """Identify systematic violations requiring immediate attention"""

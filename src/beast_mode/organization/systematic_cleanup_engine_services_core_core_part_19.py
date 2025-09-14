@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _plan_file_relocations(self, entropy_analysis: Dict[str, Any]) -> List[Dict[str, Any]]:
     """Plan systematic file relocations"""

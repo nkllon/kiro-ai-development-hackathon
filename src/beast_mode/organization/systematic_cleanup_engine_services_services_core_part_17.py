@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _assess_cleanup_urgency(self, entropy_metrics: Dict[str, float]) -> str:
     """Assess urgency of systematic cleanup"""

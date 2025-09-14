@@ -30,3 +30,4 @@ from .bootstrap_orchestrator_part_29 import *
 from .bootstrap_orchestrator_part_30 import *
 from .bootstrap_orchestrator_part_31 import *
 from .bootstrap_orchestrator_part_32 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _plan_file_removals(self, entropy_analysis: Dict[str, Any]) -> List[Dict[str, Any]]:
     """Plan removal of temporary and obsolete files"""

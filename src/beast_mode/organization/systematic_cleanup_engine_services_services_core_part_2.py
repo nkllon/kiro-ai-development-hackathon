@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _setup_cleanup_logging(self) -> logging.Logger:
     """Setup specialized logging for cleanup operations"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_systematic_recommendations(self, file_analyses: List[FileAnalysis], entropy_metrics: Dict[str, float]) -> List[str]:
     """Generate systematic recommendations for organizational improvement"""

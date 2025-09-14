@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _prioritize_files_summary(self, file_analyses: List[FileAnalysis]) -> Dict[str, int]:
     """Summarize files by cleanup priority"""

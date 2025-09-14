@@ -1,4 +1,6 @@
 import logging
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def generate_superiority_report(self, comparison_results: Dict[str, ComparisonResult]) -> SuperiorityReport:
         """generate_superiority_report

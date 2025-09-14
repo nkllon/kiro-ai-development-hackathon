@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _calculate_systo_collaboration_score(self) -> float:
         """_calculate_systo_collaboration_score

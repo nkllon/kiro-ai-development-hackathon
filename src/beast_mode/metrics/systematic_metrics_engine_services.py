@@ -20,3 +20,4 @@ from .systematic_metrics_engine_services_part_19 import *
 from .systematic_metrics_engine_services_part_20 import *
 from .systematic_metrics_engine_services_part_21 import *
 from .systematic_metrics_engine_services_part_22 import *
+from src.rm_ddd.core.health import ModuleHealth
