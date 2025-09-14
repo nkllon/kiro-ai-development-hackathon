@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def __init__(self, connected: bool = False):
         super().__init__(module_id="project_status", version="1.0.0")

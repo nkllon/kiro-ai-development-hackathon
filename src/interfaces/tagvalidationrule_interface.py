@@ -198,3 +198,5 @@ from .tagvalidationrule_interface_part_197 import *
 from .tagvalidationrule_interface_part_198 import *
 from .tagvalidationrule_interface_part_199 import *
 from .tagvalidationrule_interface_part_200 import *
+from src.rm_ddd.core.health import ModuleHealth
+

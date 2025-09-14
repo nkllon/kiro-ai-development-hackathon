@@ -17,3 +17,4 @@ from .devpostmediadetector_interface_part_16 import *
 from .devpostmediadetector_interface_part_17 import *
 from .devpostmediadetector_interface_part_18 import *
 from .devpostmediadetector_interface_part_19 import *
+from src.rm_ddd.core.health import ModuleHealth

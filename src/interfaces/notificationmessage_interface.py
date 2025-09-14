@@ -122,3 +122,4 @@ from .notificationmessage_interface_part_121 import *
 from .notificationmessage_interface_part_122 import *
 from .notificationmessage_interface_part_123 import *
 from .notificationmessage_interface_part_124 import *
+from src.rm_ddd.core.health import ModuleHealth

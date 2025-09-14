@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def remove_recipient(self, recipient: str) -> bool:
         """Remove recipient from message."""

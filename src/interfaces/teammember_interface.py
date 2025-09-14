@@ -113,3 +113,4 @@ from .teammember_interface_part_112 import *
 from .teammember_interface_part_113 import *
 from .teammember_interface_part_114 import *
 from .teammember_interface_part_115 import *
+from src.rm_ddd.core.health import ModuleHealth
