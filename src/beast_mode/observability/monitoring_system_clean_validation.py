@@ -8,6 +8,7 @@ as part of RM-DDD compliance refactoring.
 import time
 import json
 import threading
+from .metrics import Metric, MetricType
 from typing import Dict, Any, List, Optional, Callable
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
