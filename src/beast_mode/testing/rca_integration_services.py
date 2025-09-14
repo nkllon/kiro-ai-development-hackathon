@@ -15,3 +15,5 @@ from .rca_integration_services_validation import *
 from .rca_integration_services_services import *
 from .rca_integration_services_processing import *
 from .rca_integration_services_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

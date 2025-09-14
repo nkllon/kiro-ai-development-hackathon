@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _find_common_text_patterns(self, texts: List[str]) -> Dict[str, int]:
     """Find common patterns in a list of texts"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _initialize_component_health_entry(self, component_name: str) -> None:
     """Initialize health tracking for a specific component"""

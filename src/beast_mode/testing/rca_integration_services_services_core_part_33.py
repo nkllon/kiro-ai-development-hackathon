@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_environmental_correlations(self, failures: List[TestFailureData]) -> List[Dict[str, Any]]:
     """Analyze environment-related correlations"""

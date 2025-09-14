@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _attempt_recovery_with_retry(self, operation: Callable, error_context: ErrorContext, max_retries: int) -> Any:
     """Attempt recovery with retry logic"""

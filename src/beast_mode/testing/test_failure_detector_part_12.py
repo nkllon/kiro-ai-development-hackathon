@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def parse_pytest_output(self, output: str) -> List[TestFailureData]:
         """

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_timeout_recommendations(self, operation_id: str, current_elapsed: float) -> Dict[str, Any]:
     """

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _create_timeout_context(self, operation_id: str) -> Dict[str, Any]:
     """Create timeout context for operation"""

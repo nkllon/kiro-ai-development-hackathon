@@ -20,3 +20,4 @@ from .timeout_handler_handlers_handlers_core_part_19 import *
 from .timeout_handler_handlers_handlers_core_part_20 import *
 from .timeout_handler_handlers_handlers_core_part_21 import *
 from .timeout_handler_handlers_handlers_core_part_22 import *
+from src.rm_ddd.core.health import ModuleHealth

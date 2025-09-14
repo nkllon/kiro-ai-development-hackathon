@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_emergency_fallback(self, failure: Failure, error_message: str) -> FallbackReportData:
     """Generate emergency fallback when all else fails"""

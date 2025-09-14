@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_rca_summary(self, rca_results: List[RCAResult], pattern_matches: List[PreventionPattern]) -> TestRCASummaryData:
     """Generate summary of RCA analysis results"""

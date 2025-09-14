@@ -39,3 +39,4 @@ from .rca_integration_services_services_core_part_38 import *
 from .rca_integration_services_services_core_part_39 import *
 from .rca_integration_services_services_core_part_40 import *
 from .rca_integration_services_services_core_part_41 import *
+from src.rm_ddd.core.health import ModuleHealth

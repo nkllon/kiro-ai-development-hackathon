@@ -15,3 +15,5 @@ import yaml
 from .deployment_manager_services import *
 from .deployment_manager_core import *
 from .deployment_manager_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

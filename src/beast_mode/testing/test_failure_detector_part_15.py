@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _parse_json_output(self, json_file: str) -> List[TestFailureData]:
         """Parse pytest JSON output for failure information"""

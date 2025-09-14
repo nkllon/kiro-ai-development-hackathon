@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _trigger_callbacks(self, event: str, service: MonitoredService):
     """Trigger callbacks for an event"""

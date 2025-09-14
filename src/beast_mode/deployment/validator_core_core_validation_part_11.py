@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _check_dns_resolution(self, hostname: str, name: str) -> ValidationResult:
     """Check DNS resolution"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_failure_priority(self, failure: TestFailureData) -> TestFailurePriorityLevel:
     """Get priority level for failure"""

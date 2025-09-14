@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _check_port_connectivity(self, host: str, port: int, name: str) -> ValidationResult:
     """Check if a port is accessible"""

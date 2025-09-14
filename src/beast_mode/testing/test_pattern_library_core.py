@@ -10,3 +10,5 @@ from ..core.reflective_module import ReflectiveModule, HealthStatus
 from ..analysis.rca_engine import PreventionPattern, Failure, RootCause, SystematicFix
 from .test_pattern_library_core_core import *
 from .test_pattern_library_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

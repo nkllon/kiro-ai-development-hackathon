@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def restart_service(self, service_name: str) -> bool:
     """Restart a monitored service"""

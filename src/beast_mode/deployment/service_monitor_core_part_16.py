@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def cleanup(self):
     """Cleanup resources and stop all services"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _build_correlation_matrix(self, failures: List[TestFailureData]) -> List[List[float]]:
     """Build correlation matrix for failures within a group"""

@@ -13,3 +13,5 @@ from .config_manager import DeploymentConfig, ConfigManager
 from .deployment_manager import DeploymentManager
 from .validator_core_validation import *
 from .validator_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

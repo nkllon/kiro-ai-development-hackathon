@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_failure_similarity(self, failure_a: TestFailureData, failure_b: TestFailureData) -> float:
     """Calculate similarity score between two failures"""

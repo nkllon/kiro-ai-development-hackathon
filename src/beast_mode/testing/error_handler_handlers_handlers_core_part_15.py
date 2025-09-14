@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _create_error_context(self, error: Exception, component: str, operation: str, duration: float=0.0, context_data: Optional[Dict[str, Any]]=None) -> ErrorContext:
     """Create comprehensive error context"""

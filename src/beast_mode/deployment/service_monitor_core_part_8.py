@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def stop_monitoring(self):
     """Stop the monitoring thread"""

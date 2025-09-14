@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _split_by_correlation(self, failures: List[TestFailureData], correlation_matrix: List[List[float]]) -> List[List[TestFailureData]]:
     """Split failures into subgroups based on correlation matrix"""

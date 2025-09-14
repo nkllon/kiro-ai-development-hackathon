@@ -12,6 +12,8 @@ def generate_fallback_report(self, test_failures: List[Any], error: Exception) -
         fallback_summary = TestRCASummaryData(most_common_root_causes=[], systematic_fixes_available=0, pattern_matches_found=0, estimated_fix_time_minutes=30, confidence_score=0.3, critical_issues=[f'RCA analysis failed: {str(error)[:100]}'])
         next_steps = ['Check RCA engine health and configuration', 'Retry analysis with simplified parameters', 'Review test failure patterns manually', 'Check system resources and dependencies', 'Contact support if issues persist']
         from .rca_integration import TestRCAReportData
+from src.rm_ddd.core.health import ModuleHealth
+
         return TestRCAReportData(analysis_timestamp=datetime.now(), total_failures=len(test_failures), failures_analyzed=0, grouped_failures={'fallback_group': test_failures}, rca_results=[], summary=fallback_summary, recommendations=recommendations, prevention_patterns=[], next_steps=next_steps)
     except Exception as fallback_error:
         self.logger.error(f'Fallback report generation failed: {fallback_error}')

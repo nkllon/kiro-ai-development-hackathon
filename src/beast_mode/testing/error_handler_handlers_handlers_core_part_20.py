@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_fallback_report(self, failure: Failure, error_context: ErrorContext) -> FallbackReportData:
     """Generate fallback report for single failure"""

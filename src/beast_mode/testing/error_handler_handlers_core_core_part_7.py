@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def handle_rca_engine_failure(self, failure: Failure, error: Exception, rca_engine: Optional[RCAEngine]=None) -> Union[RCAResult, FallbackReportData]:
     """

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _check_log_file_health(self, log_file: str) -> ValidationResult:
     """Check log file health"""

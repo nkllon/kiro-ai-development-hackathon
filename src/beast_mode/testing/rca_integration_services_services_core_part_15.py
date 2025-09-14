@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _detect_failure_correlations(self, basic_groups: Dict[str, List[TestFailureData]]) -> Dict[str, List[TestFailureData]]:
     """Detect correlations within and across basic groups"""

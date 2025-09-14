@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_failure_impact_score(self, failure: TestFailureData) -> float:
     """Calculate impact score based on failure characteristics"""

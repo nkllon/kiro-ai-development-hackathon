@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def apply_graceful_degradation(self, degradation_level: DegradationLevel, reason: str) -> Dict[str, Any]:
     """

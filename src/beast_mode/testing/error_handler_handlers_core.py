@@ -19,3 +19,5 @@ from .rca_integration import TestRCAReportData, TestRCASummaryData
 from .rca_integration import TestRCASummaryData
 from .rca_integration import TestRCAReportData
 from .error_handler_handlers_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

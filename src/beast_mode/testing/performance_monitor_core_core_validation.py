@@ -15,6 +15,8 @@ from contextlib import contextmanager
 from enum import Enum
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 import psutil
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _check_resource_limits(self) -> None:
     """Check if resource limits are being exceeded"""

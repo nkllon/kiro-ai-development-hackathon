@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_registered_tools(self) -> Dict[str, Dict[str, Any]]:
     try:

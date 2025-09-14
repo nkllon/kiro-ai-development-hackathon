@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _handle_degradation_callback(self, degradation_config: Dict[str, Any]) -> None:
     """

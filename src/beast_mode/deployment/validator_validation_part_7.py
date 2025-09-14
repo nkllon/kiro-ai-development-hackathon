@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_performance(self, config: DeploymentConfig) -> List[ValidationResult]:
     """Performance validation"""

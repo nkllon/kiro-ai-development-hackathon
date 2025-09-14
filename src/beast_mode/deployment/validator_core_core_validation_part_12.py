@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _check_process_running(self, process_name: str) -> ValidationResult:
     """Check if a process is running"""

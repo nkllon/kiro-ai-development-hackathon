@@ -1,4 +1,4 @@
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -99,5 +99,7 @@ Agent management and assignment logic.
 from typing import List, Dict, Optional
 from dataclasses import dataclass
 import logging
+from src.rm_ddd.core.health import ModuleHealth
+
 
 @dataclass

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_failure_priority_score(self, failure: TestFailureData) -> float:
     """Calculate priority score for failure (higher = more important)"""

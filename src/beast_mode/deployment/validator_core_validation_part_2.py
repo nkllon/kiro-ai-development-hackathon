@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_basic_connectivity(self, config: DeploymentConfig) -> List[ValidationResult]:
     """Basic connectivity checks"""

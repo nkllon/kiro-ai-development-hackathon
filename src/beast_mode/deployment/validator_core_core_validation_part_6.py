@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_configuration(self, config: DeploymentConfig) -> List[ValidationResult]:
     """Configuration validation"""

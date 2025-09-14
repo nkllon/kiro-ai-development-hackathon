@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _apply_moderate_degradation(self, reason: str) -> Dict[str, Any]:
     """Apply moderate degradation - skip non-essential analysis"""

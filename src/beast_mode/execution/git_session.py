@@ -20,3 +20,4 @@ from .git_session_part_19 import *
 from .git_session_part_20 import *
 from .git_session_part_21 import *
 from .git_session_part_22 import *
+from src.rm_ddd.core.health import ModuleHealth

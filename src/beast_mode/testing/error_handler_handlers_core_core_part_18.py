@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _should_retry(self, error_context: ErrorContext) -> bool:
     """Determine if error should trigger retry logic"""

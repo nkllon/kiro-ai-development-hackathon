@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _agent_can_handle_task(self, agent: Agent, task) -> bool:
         """_agent_can_handle_task - Enhanced for compliance"""

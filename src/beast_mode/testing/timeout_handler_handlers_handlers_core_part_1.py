@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def __init__(self, timeout_config: Optional[TimeoutConfiguration]=None):
     super().__init__('rca_timeout_handler')

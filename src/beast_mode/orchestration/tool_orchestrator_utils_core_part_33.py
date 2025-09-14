@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_performance_optimizations(self) -> List[str]:
     """Generate suggestions for optimizing tool performance"""

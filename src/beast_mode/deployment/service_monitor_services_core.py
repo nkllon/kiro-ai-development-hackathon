@@ -14,3 +14,4 @@ from .service_monitor_services_core_part_13 import *
 from .service_monitor_services_core_part_14 import *
 from .service_monitor_services_core_part_15 import *
 from .service_monitor_services_core_part_16 import *
+from src.rm_ddd.core.health import ModuleHealth

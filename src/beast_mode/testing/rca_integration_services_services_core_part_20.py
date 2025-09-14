@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_correlation_priority_score(self, failure: TestFailureData, all_failures: List[TestFailureData]) -> float:
     """Calculate priority score based on correlation with other failures"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _cleanup_operation_timeouts(self, operation_id: str) -> None:
     """Clean up timeout handlers for completed operation"""

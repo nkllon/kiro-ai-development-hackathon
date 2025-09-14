@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _create_timeout_failure(self, test_command: str) -> TestFailureData:
         """Create failure object for test execution timeout"""

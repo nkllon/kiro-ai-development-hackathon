@@ -10,3 +10,5 @@ from ..core.reflective_module import ReflectiveModule, HealthStatus
 import psutil
 from .performance_monitor_core_core import *
 from .performance_monitor_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

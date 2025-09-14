@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_component_health_summary(self) -> Dict[str, str]:
     """Get summary of component health status"""

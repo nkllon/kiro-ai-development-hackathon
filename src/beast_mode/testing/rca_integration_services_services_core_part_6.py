@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def group_related_failures(self, failures: List[TestFailureData]) -> Dict[str, List[TestFailureData]]:
     """

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def export_metrics(self, output_file: str):
     """Export service metrics to file"""

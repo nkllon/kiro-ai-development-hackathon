@@ -12,3 +12,5 @@ from .timeout_handler import RCATimeoutHandler, TimeoutConfiguration, TimeoutStr
 from .test_pattern_library import TestPatternLibrary
 from .error_handler import RCAErrorHandler, DegradationLevel
 from .rca_integration_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

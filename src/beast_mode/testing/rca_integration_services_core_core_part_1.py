@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def __init__(self, rca_engine: Optional[RCAEngine]=None, performance_monitor: Optional[RCAPerformanceMonitor]=None, timeout_handler: Optional[RCATimeoutHandler]=None, test_pattern_library: Optional[TestPatternLibrary]=None, error_handler: Optional[RCAErrorHandler]=None):
     super().__init__('test_rca_integrator')

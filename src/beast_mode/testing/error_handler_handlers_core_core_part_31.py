@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _assess_component_health(self, health_metrics: HealthMonitoringMetrics) -> bool:
     """Assess if component is healthy based on metrics"""

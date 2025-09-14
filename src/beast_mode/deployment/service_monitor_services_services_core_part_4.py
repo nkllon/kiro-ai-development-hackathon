@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def start_service(self, service_name: str) -> bool:
     """Start a monitored service"""

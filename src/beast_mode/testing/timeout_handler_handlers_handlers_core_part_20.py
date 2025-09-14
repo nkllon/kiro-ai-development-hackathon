@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _apply_level_3_degradation(self, operation_id: str) -> Dict[str, Any]:
     """Apply level 3 degradation: Basic error reporting only"""

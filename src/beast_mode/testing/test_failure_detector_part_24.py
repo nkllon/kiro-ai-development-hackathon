@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def __init__(self, error_handler: Optional[RCAErrorHandler]=None):
     super().__init__('test_failure_detector')

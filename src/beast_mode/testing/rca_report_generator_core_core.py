@@ -10,3 +10,5 @@ from ..analysis.rca_engine import RCAResult, RootCauseType, PreventionPattern
 from .rca_integration import TestFailureData, TestRCASummaryData, TestRCAReportData
 from .rca_report_generator_core_core_core import *
 from .rca_report_generator_core_core_utils import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _update_error_metrics(self, health_metrics: HealthMonitoringMetrics, current_time: datetime) -> None:
     """Update error metrics for component"""

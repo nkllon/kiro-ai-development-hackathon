@@ -39,3 +39,4 @@ from .commands_part_38 import *
 from .commands_part_39 import *
 from .commands_part_40 import *
 from .commands_part_41 import *
+from src.rm_ddd.core.health import ModuleHealth

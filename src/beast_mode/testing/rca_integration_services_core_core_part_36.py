@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_failure_group_key(self, failure: TestFailureData) -> str:
     """Generate grouping key for related failures"""

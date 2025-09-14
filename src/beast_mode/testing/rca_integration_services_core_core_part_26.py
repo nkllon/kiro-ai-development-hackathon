@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_text_similarity(self, text_a: str, text_b: str) -> float:
     """Calculate similarity between two text strings"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_overall_systematic_compliance(self) -> Dict[str, Any]:
     """Calculate overall systematic compliance metrics"""

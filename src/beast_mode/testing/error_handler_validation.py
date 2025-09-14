@@ -19,6 +19,8 @@ from .rca_integration import TestFailureData, TestRCAReportData, TestRCASummaryD
 from .rca_integration import TestRCAReportData, TestRCASummaryData
 from .rca_integration import TestRCASummaryData
 from .rca_integration import TestRCAReportData
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _check_component_health(self, component: str) -> None:
     """Check health of specific component"""

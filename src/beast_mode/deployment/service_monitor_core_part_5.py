@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def stop_service(self, service_name: str, graceful: bool=True) -> bool:
     """Stop a monitored service"""

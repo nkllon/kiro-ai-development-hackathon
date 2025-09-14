@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _merge_correlated_groups(self, correlated_groups: Dict[str, List[TestFailureData]]) -> Dict[str, List[TestFailureData]]:
     """Merge groups that show high correlation across group boundaries"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def remove_service(self, service_name: str):
     """Remove a service from monitoring"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _apply_hard_timeout(self, operation_id: str) -> Dict[str, Any]:
     """Apply hard timeout termination"""

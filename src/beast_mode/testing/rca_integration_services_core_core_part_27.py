@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _detect_common_failure_patterns(self, failures: List[TestFailureData]) -> List[Dict[str, Any]]:
     """Detect common patterns within a group of failures"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def extract_failure_context(self, failure_info: dict) -> Dict[str, Any]:
         """

@@ -54,6 +54,8 @@ def test_devpost_integration():
     """Test DevPost integration"""
     try:
         from src.devpost_integration.auth_service import DevPostAuthService
+from src.rm_ddd.core.health import ModuleHealth
+
         auth = DevPostAuthService()
         return True
     except Exception as e:

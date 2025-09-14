@@ -16,3 +16,5 @@ import logging
 from .task_manager import TaskManager, Task, TaskStatus
 from .agent_manager import AgentManager, Agent
 from .git_session import GitSession
+from src.rm_ddd.core.health import ModuleHealth
+

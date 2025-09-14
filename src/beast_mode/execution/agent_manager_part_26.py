@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def release_agent(self, agent_id: str) -> bool:
         """release_agent - Enhanced for compliance"""

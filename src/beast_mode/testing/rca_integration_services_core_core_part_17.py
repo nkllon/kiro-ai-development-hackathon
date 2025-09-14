@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _apply_group_size_limits(self, groups: Dict[str, List[TestFailureData]]) -> Dict[str, List[TestFailureData]]:
     """Apply size limits and create overflow groups"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _apply_critical_priority_boosting(self, prioritized_failures: List[TestFailureData]) -> List[TestFailureData]:
     """Apply priority boosting for critical failure patterns"""

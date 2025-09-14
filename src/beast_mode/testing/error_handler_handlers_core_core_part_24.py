@@ -1,3 +1,5 @@
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _generate_basic_recommendations(self, test_failures: List[Any], error: Exception) -> List[str]:
     """Generate basic recommendations when RCA is unavailable"""

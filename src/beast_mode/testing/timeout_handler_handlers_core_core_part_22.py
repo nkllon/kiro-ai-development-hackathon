@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _estimate_completion_time(self, operation_id: str, current_elapsed: float) -> Optional[float]:
     """Estimate completion time based on historical data"""

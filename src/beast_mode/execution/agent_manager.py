@@ -24,3 +24,4 @@ from .agent_manager_part_23 import *
 from .agent_manager_part_24 import *
 from .agent_manager_part_25 import *
 from .agent_manager_part_26 import *
+from src.rm_ddd.core.health import ModuleHealth

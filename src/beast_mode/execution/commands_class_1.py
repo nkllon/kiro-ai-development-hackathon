@@ -1,4 +1,4 @@
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -100,3 +100,5 @@ from abc import ABC, abstractmethod
 from typing import Dict, Any, Optional
 import logging
 from datetime import datetime
+from src.rm_ddd.core.health import ModuleHealth
+

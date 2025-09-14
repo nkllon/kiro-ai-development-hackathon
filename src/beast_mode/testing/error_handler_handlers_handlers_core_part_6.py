@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def handle_rca_operation(self, operation_name: str, component: str='unknown'):
     """

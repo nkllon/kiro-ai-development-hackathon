@@ -12,3 +12,5 @@ from src.competitive_launch.launch_execution import LaunchExecutionSystem
 from src.devpost_integration.auth_service import DevPostAuthService
 from .test_orchestrator_validation import *
 from .test_orchestrator_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

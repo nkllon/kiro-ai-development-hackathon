@@ -104,6 +104,8 @@ def _monitor_test_execution(self):
     """Context manager for monitoring test execution"""
     import psutil
     import threading
+from src.rm_ddd.core.health import ModuleHealth
+
     monitor_data = {'start_time': time.time(), 'peak_memory_mb': 0, 'avg_cpu_percent': 0, 'log_entries': []}
 
     def monitor_resources():

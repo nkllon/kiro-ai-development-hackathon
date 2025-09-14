@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def monitor_component_health(self, component_name: str, operation_result: bool, response_time_ms: float) -> None:
     """

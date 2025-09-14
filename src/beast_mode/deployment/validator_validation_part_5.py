@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_message_flow(self, config: DeploymentConfig) -> List[ValidationResult]:
     """Message flow validation"""

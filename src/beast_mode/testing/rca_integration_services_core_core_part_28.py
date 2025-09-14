@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _build_shared_analysis_context(self, failures: List[TestFailureData], common_patterns: List[Dict[str, Any]]) -> Dict[str, Any]:
     """Build shared context for batch analysis"""

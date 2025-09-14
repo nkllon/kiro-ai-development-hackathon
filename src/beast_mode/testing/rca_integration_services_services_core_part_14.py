@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _create_basic_failure_groups(self, failures: List[TestFailureData]) -> Dict[str, List[TestFailureData]]:
     """Create initial failure groups based on basic characteristics"""

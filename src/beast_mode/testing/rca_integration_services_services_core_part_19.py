@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_failure_urgency_score(self, failure: TestFailureData) -> float:
     """Calculate urgency score based on timing and context"""

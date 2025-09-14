@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_success_rate(self) -> float:
     """Calculate overall success rate"""

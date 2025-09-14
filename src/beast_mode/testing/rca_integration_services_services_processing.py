@@ -18,6 +18,8 @@ from .performance_monitor import RCAPerformanceMonitor, ResourceLimits, Performa
 from .timeout_handler import RCATimeoutHandler, TimeoutConfiguration, TimeoutStrategy
 from .test_pattern_library import TestPatternLibrary
 from .error_handler import RCAErrorHandler, DegradationLevel
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def convert_to_rca_failure(self, test_failure: TestFailureData) -> Failure:
     """

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _create_monitoring_failure(self, test_command: str, error: str) -> TestFailureData:
         """Create failure object for monitoring errors"""

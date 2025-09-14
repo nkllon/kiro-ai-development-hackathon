@@ -12,5 +12,7 @@ Agent management and assignment logic.
 from typing import List, Dict, Optional
 from dataclasses import dataclass
 import logging
+from src.rm_ddd.core.health import ModuleHealth
+
 
 @dataclass

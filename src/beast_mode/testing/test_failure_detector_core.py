@@ -13,3 +13,5 @@ from .error_handler import RCAErrorHandler
 from .test_failure_detector_core_core import *
 from .test_failure_detector_core_processing import *
 from .test_failure_detector_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

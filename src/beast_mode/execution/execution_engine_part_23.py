@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _assign_tasks(self, ready_tasks: List[Task], available_agents: List[Agent]) -> int:
         """Assign ready tasks to available agents."""

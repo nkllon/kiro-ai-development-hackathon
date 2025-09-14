@@ -21,3 +21,5 @@ from .rca_integration import TestRCAReportData
 from .error_handler_handlers_handlers_handlers import *
 from .error_handler_handlers_handlers_validation import *
 from .error_handler_handlers_handlers_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

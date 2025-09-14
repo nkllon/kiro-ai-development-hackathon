@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _update_success_metrics(self, health_metrics: HealthMonitoringMetrics) -> None:
     """Update success metrics for component"""
