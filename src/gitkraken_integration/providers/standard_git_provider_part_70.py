@@ -16,3 +16,20 @@ def set_upstream_branch(self, branch_name: str, upstream: str) -> GitOperationRe
         if 'does not exist' in e.stderr:
             suggestions.extend([f"Upstream branch '{upstream}' does not exist", 'Check available remote branches', 'Fetch from remote first if needed'])
         return self._create_result(success=False, message=f"Failed to set upstream for '{branch_name}': {e.stderr}", error_code='GIT_SET_UPSTREAM_FAILED', suggestions=suggestions, execution_time_ms=execution_time)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -7,3 +7,20 @@ from src.rm_ddd.core.health import ModuleHealth
         """Analyze how well trends align with systematic approach."""
         high_alignment = [t for t in trends if t.alignment_with_systematic > 0.8]
         return {'high_alignment_count': len(high_alignment), 'average_alignment': sum((t.alignment_with_systematic for t in trends)) / len(trends), 'opportunity_score': sum((t.impact_score for t in high_alignment)) / len(high_alignment) if high_alignment else 0}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

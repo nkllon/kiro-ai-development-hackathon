@@ -25,3 +25,20 @@ from src.rm_ddd.core.health import ModuleHealth
             x2 = int((cx + rx) * scale_x)
             y2 = int((cy + ry) * scale_y)
             draw.ellipse([x1, y1, x2, y2], fill='lightgreen', outline='green', width=2)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

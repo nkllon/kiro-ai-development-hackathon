@@ -24,3 +24,20 @@ from src.rm_ddd.core.health import ModuleHealth
         edges = np.abs(np.diff(gray_region, axis=0)).sum() + np.abs(np.diff(gray_region, axis=1)).sum()
         edge_density = edges / region.size
         return 5 < edge_density < 50
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

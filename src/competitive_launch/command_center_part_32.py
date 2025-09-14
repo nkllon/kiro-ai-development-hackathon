@@ -28,3 +28,20 @@ def execute_competitive_strategy(self, market_conditions: MarketConditions) -> S
     except Exception as e:
         logger.error(f'Competitive strategy execution failed: {e}')
         return StrategyExecution(execution_id=execution_id, start_time=start_time, end_time=datetime.now(), platforms_deployed=[], success_metrics={}, issues_encountered=[str(e)], adaptations_made=[])
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

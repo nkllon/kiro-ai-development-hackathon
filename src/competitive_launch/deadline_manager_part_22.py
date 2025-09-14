@@ -22,3 +22,20 @@ from src.rm_ddd.core.health import ModuleHealth
             earliest_finish = earliest_start + duration
             analysis[task_id] = {'duration_days': duration, 'earliest_start': earliest_start, 'earliest_finish': earliest_finish, 'dependencies': dependencies, 'priority': task.get('priority', 'medium'), 'competitive_impact': task.get('competitive_impact', 0.5)}
         return analysis
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

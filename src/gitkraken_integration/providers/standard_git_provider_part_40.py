@@ -16,3 +16,20 @@ from src.rm_ddd.core.health import ModuleHealth
             if 'no upstream' in e.stderr.lower():
                 suggestions.append(f"Branch '{branch_name}' has no upstream branch set")
             return self._create_result(success=False, message=f"Failed to unset upstream for '{branch_name}': {e.stderr}", error_code='GIT_UNSET_UPSTREAM_FAILED', suggestions=suggestions, execution_time_ms=execution_time)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -22,3 +22,20 @@ def _analyze_overall_contrast(self, image: Image.Image) -> None:
     contrast_range = max_val - min_val
     if contrast_range < 100:
         self.add_violation(rule_id='overall_contrast', severity=Severity.WARNING, current_value=contrast_range, expected_value=100, description=f'Overall image contrast range {contrast_range} is low, may affect readability', category='visual_quality')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
