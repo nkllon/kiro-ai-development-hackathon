@@ -23,6 +23,8 @@ from rich.tree import Tree
 from rich.rule import Rule
 from ..core.interfaces import ReflectiveModule
 from .events import Event, TestResultEvent, HubrisPreventionEvent
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _create_test_matrix(self) -> Panel:
     """Create the live test results matrix with animations"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_compliance_score(self) -> float:
     """Calculate overall compliance score for all tools"""

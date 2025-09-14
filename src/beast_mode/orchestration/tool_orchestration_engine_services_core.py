@@ -22,3 +22,5 @@ from collections import Counter
 from ..analysis.rca_engine import Failure, FailureCategory
 from ..analysis.rca_engine import RCAEngine
 from .tool_orchestration_engine_services_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

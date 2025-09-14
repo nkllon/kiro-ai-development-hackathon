@@ -25,3 +25,4 @@ from .unified_client_class_2_part_24 import *
 from .unified_client_class_2_part_25 import *
 from .unified_client_class_2_part_26 import *
 from .unified_client_class_2_part_27 import *
+from src.rm_ddd.core.health import ModuleHealth

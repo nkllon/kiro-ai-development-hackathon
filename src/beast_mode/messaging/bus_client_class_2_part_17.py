@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def complete_collaboration(self, session_id: str, success: bool, metrics: Optional[Dict[str, Any]]=None) -> bool:
         """

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_performance_patterns(self) -> Dict[str, Any]:
     """Analyze performance patterns across all tools"""

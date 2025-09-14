@@ -4,3 +4,4 @@ from .validation_framework_core_validation_part_3 import *
 from .validation_framework_core_validation_part_4 import *
 from .validation_framework_core_validation_part_5 import *
 from .validation_framework_core_validation_part_6 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -16,6 +16,8 @@ from typing import Dict, List, Optional, Callable, Any
 from dataclasses import dataclass, asdict
 import redis.asyncio as redis
 from .models import BeastModeMessage, MessageType
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def process_messages(self):
     """Process all pending messages with registered handlers."""

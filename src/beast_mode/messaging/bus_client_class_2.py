@@ -119,3 +119,4 @@ from .bus_client_class_2_part_118 import *
 from .bus_client_class_2_part_119 import *
 from .bus_client_class_2_part_120 import *
 from .bus_client_class_2_part_121 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def __init__(self, redis_url: str='redis://localhost:6379'):
         register_module(self.__class__.__name__, self)

@@ -5,6 +5,8 @@ def _validate_testing_infrastructure(self) -> ValidationResult:
     recommendations = []
     try:
         import pytest
+from src.rm_ddd.core.health import ModuleHealth
+
         self.logger.debug('✅ pytest testing framework: Available')
     except ImportError:
         issues.append(InfrastructureIssue(component=InfrastructureComponent.TESTING, issue_type='missing_pytest', severity=ValidationSeverity.HIGH, description='pytest testing framework not available', systematic_impact='Cannot execute systematic testing procedures', remediation_steps=['Install pytest: pip install pytest', 'Verify pytest functionality', 'Setup systematic testing configuration'], validation_command='python -m pytest --version', estimated_fix_time='10-15 minutes'))

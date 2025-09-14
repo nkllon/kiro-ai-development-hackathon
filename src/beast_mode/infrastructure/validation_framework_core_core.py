@@ -32,3 +32,5 @@ import queue
 import pytest
 from .validation_framework_core_core_core import *
 from .validation_framework_core_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

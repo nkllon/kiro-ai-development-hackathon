@@ -9,6 +9,8 @@ from typing import Dict, Any, List
 from dataclasses import dataclass
 from enum import Enum
 from ..core.reflective_module import ReflectiveModule, HealthStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_c7_multi_stakeholder_perspectives(self, decision_context: str, initial_confidence: float) -> MultiPerspectiveAnalysis:
     """

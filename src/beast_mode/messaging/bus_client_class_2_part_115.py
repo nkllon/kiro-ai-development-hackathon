@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_message_history(self, limit: Optional[int]=None) -> Dict[str, List[BeastModeMessage]]:
     """

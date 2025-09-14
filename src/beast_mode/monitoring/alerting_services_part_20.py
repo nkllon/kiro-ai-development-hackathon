@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def get_alerts_by_severity(self, severity: AlertSeverity) -> List[Alert]:
         """get_alerts_by_severity - Enhanced for compliance"""

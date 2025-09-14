@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def add_alert_handler(self, handler: Callable) -> None:
         """add_alert_handler - Enhanced for compliance"""

@@ -9,3 +9,5 @@ from pydantic import BaseModel
 import redis.asyncio as redis
 from .recovery_services import *
 from .recovery_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

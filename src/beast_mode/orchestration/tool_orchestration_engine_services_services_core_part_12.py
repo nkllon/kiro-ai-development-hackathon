@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _execute_repair_procedure(self, tool_id: str, procedure: str) -> Dict[str, Any]:
     """

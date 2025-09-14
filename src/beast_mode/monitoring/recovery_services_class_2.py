@@ -6,3 +6,4 @@ from .recovery_services_class_2_part_5 import *
 from .recovery_services_class_2_part_6 import *
 from .recovery_services_class_2_part_7 import *
 from .recovery_services_class_2_part_8 import *
+from src.rm_ddd.core.health import ModuleHealth

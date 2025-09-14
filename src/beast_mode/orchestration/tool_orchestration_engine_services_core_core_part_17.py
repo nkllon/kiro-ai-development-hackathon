@@ -9,6 +9,8 @@ def integrate_with_rca_engine(self, rca_engine_instance: Optional[Any]=None) -> 
             self.rca_engine = rca_engine_instance
         else:
             from ..analysis.rca_engine import RCAEngine
+from src.rm_ddd.core.health import ModuleHealth
+
             self.rca_engine = RCAEngine()
         self.logger.info('Successfully integrated with completed RCA engine')
         return {'integration_successful': True, 'rca_engine_healthy': self.rca_engine.is_healthy(), 'rca_pattern_library_size': len(getattr(self.rca_engine, 'pattern_library', {})), 'systematic_tool_resolution_enabled': True}

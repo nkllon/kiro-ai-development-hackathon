@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def handle_unknown_tool_failure(self, failure_context: Dict[str, Any]) -> Dict[str, Any]:
     """

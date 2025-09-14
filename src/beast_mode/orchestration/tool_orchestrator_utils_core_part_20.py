@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_average_execution_time(self) -> float:
     """Calculate average execution time across all tools"""

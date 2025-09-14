@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def add_recovery_callback(self, callback: Callable) -> None:
         """add_recovery_callback - Enhanced for compliance"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_message_router_info(self) -> Dict[str, Any]:
     """Get message router information"""

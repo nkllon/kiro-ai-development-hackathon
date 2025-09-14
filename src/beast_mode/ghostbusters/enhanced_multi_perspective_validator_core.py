@@ -8,3 +8,5 @@ from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .enhanced_multi_perspective_validator_core_utils import *
 from .enhanced_multi_perspective_validator_core_validation import *
 from .enhanced_multi_perspective_validator_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def add_recovery_callback(self, callback: Callable) -> None:
         """add_recovery_callback - Enhanced for compliance"""

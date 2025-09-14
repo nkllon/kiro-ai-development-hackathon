@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_performance_metrics(self) -> Dict[str, Any]:
     """Get detailed performance metrics"""

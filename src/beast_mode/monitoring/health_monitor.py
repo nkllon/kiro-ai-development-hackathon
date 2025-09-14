@@ -9,3 +9,5 @@ from pydantic import BaseModel
 import redis.asyncio as redis
 import psutil
 from .health_monitor_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

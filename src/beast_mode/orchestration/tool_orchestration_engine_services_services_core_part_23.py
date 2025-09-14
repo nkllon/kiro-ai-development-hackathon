@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _update_adaptive_pattern_learning(self, pattern: Dict[str, Any], response_outcome: Dict[str, Any]):
     """Update adaptive pattern based on learning from outcomes"""

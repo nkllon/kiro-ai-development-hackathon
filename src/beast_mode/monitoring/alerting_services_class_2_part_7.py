@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def get_alerts_by_severity(self, severity: AlertSeverity) -> List[Alert]:
         """get_alerts_by_severity - Enhanced for compliance"""

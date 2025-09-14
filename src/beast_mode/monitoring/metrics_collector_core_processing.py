@@ -14,6 +14,8 @@ from typing import Dict, List, Optional, Any, Union
 from dataclasses import dataclass, field
 from collections import defaultdict, deque
 import json
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _parse_metric_key(self, metric_key: str) -> tuple[str, Dict[str, str]]:
     """Parse a metric key back into name and labels."""

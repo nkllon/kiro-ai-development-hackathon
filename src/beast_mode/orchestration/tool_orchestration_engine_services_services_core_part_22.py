@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _create_adaptive_pattern_for_unknown(self, failure_context: Dict[str, Any]) -> Dict[str, Any]:
     """Create new adaptive pattern for unknown failure"""

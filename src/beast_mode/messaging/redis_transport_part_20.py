@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def send_spore(self, spore_data: Dict[str, Any]):
         """send_spore - Enhanced for compliance"""

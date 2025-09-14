@@ -52,3 +52,4 @@ from .mailbox_logger_part_51 import *
 from .mailbox_logger_part_52 import *
 from .mailbox_logger_part_53 import *
 from .mailbox_logger_part_54 import *
+from src.rm_ddd.core.health import ModuleHealth

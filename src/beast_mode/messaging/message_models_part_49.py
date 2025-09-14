@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def create_heartbeat(agent_id: str, status_info: Dict[str, Any]) -> BeastModeMessage:
     try:

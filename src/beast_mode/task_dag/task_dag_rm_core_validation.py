@@ -16,6 +16,8 @@ from ..core.reflective_module import ReflectiveModule, HealthStatus
 import random
 import random
 import random
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _validate_dag(self) -> bool:
     """Validate that the DAG has no cycles"""

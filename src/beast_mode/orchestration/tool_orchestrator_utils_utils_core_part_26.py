@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_reliability_trends(self) -> Dict[str, Any]:
     """Analyze tool reliability trends"""

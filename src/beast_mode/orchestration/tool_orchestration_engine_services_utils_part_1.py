@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def register_tool(self, tool_definition: ToolDefinition) -> Dict[str, Any]:
     """

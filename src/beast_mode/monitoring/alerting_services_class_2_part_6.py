@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def get_active_alerts(self) -> List[Alert]:
         """get_active_alerts - Enhanced for compliance"""

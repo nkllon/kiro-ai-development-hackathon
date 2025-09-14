@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _apply_adaptive_response(self, failure_context: Dict[str, Any], pattern: Dict[str, Any]) -> Dict[str, Any]:
     """Apply adaptive response strategy"""

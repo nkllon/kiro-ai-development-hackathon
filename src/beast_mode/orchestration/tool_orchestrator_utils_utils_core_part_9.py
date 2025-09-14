@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _update_orchestration_metrics(self, status: str, execution_time_ms: int, systematic_compliance: bool):
     """Update overall orchestration metrics"""

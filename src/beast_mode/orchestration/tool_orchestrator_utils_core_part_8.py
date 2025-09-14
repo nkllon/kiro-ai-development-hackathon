@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _apply_decision_framework(self, candidate_tools: List[Dict[str, Any]], task_requirements: Dict[str, Any], execution_strategy: ExecutionStrategy) -> Dict[str, Any]:
     """Apply decision framework to select optimal tool"""

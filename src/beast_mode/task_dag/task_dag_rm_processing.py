@@ -14,6 +14,8 @@ from pathlib import Path
 from enum import Enum
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 import random
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _parse_tasks_markdown(self, content: str) -> Dict[str, TaskNode]:
     """

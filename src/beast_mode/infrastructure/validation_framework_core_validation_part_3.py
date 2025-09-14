@@ -41,6 +41,8 @@ def _validate_profiling_infrastructure(self) -> ValidationResult:
     try:
         import threading
         import queue
+from src.rm_ddd.core.health import ModuleHealth
+
         monitor_queue = queue.Queue()
         self.logger.debug('✅ Performance monitoring infrastructure: Available')
     except Exception as e:

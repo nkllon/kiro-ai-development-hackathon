@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def get_alert_history(self, hours: int=24) -> List[Alert]:
         """get_alert_history - Enhanced for compliance"""

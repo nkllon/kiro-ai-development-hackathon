@@ -12,6 +12,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from ..core.reflective_module import ReflectiveModule, HealthStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _assess_testing_complexity(self, decision_context: DecisionContext) -> float:
     return 0.5

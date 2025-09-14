@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def get_status(self) -> Dict[str, Any]:
         """get_status - Enhanced for compliance"""

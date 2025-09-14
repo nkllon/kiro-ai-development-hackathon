@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_performance_score(self) -> float:
     """Calculate overall performance score for all tools"""

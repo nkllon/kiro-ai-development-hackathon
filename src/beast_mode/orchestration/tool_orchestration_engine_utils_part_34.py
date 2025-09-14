@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def tool_sort_key(tool_id) -> Any:
     try:

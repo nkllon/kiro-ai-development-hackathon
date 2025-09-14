@@ -25,6 +25,8 @@ def _make_low_confidence_decision(self, context: DecisionContext, preferred_tool
         perspective_tools = perspective.get('recommended_tools', [])
         all_recommendations.extend(perspective_tools)
     from collections import Counter
+from src.rm_ddd.core.health import ModuleHealth
+
     tool_votes = Counter(all_recommendations)
     consensus_tools = [tool for tool, votes in tool_votes.most_common() if votes >= 2]
     if not consensus_tools:

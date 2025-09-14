@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_monitoring_infrastructure(self) -> ValidationResult:
     """Validate monitoring infrastructure for systematic operations"""

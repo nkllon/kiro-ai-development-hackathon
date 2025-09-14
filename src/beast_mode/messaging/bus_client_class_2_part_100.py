@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_discovered_agent(self, agent_id: str) -> Optional[DiscoveredAgent]:
     """Get a specific discovered agent by ID"""

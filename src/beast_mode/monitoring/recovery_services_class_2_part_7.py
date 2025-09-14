@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def get_active_recoveries(self) -> List[RecoveryAttempt]:
         """get_active_recoveries - Enhanced for compliance"""

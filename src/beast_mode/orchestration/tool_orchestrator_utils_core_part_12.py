@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_health_summary(self) -> Dict[str, Any]:
     """Generate overall health summary"""

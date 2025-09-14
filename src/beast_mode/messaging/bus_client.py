@@ -132,3 +132,4 @@ from .bus_client_part_131 import *
 from .bus_client_part_132 import *
 from .bus_client_part_133 import *
 from .bus_client_part_134 import *
+from src.rm_ddd.core.health import ModuleHealth

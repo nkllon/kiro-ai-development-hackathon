@@ -7,3 +7,5 @@ from pathlib import Path
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from langgraph.graph import StateGraph, END
 from .pdca_langgraph_orchestrator_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_task_requirements(self, task_context: Dict[str, Any]) -> Dict[str, Any]:
     """Analyze task requirements to determine tool needs"""

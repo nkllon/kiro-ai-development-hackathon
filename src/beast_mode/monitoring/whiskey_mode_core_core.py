@@ -18,3 +18,5 @@ from ..core.interfaces import ReflectiveModule
 from .events import Event, TestResultEvent, HubrisPreventionEvent
 from .whiskey_mode_core_core_validation import *
 from .whiskey_mode_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

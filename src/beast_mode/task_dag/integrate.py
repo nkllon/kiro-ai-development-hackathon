@@ -109,6 +109,8 @@ make task-info TASK=1.1
         import os
         sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
         from beast_mode.task_dag.task_dag_rm import TaskDAGRM
+from src.rm_ddd.core.health import ModuleHealth
+
         dag_rm = TaskDAGRM(str(spec_path))
         if dag_rm.tasks:
             click.echo(f"✅ Successfully loaded {len(dag_rm.tasks)} tasks")

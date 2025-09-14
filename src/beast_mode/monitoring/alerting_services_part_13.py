@@ -21,3 +21,5 @@ from enum import Enum
 from typing import Dict, List, Optional, Callable, Any, Set
 from dataclasses import dataclass, field
 from pydantic import BaseModel
+from src.rm_ddd.core.health import ModuleHealth
+

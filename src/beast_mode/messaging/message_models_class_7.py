@@ -40,3 +40,4 @@ from .message_models_class_7_part_39 import *
 from .message_models_class_7_part_40 import *
 from .message_models_class_7_part_41 import *
 from .message_models_class_7_part_42 import *
+from src.rm_ddd.core.health import ModuleHealth

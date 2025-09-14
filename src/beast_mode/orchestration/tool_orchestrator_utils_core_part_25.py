@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_optimization_roi(self) -> Dict[str, Any]:
     """Calculate return on investment for optimizations"""

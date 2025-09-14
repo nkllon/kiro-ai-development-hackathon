@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def force_tool_health_refresh(self) -> Dict[str, Any]:
     try:

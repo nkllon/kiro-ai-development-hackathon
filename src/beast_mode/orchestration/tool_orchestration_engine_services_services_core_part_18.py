@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def add_adaptive_patterns_for_unknown_failures(self, unknown_failure_types: List[str]) -> Dict[str, Any]:
     """

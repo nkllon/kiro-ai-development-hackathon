@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _identify_optimization_opportunities(self, performance_analysis: Dict[str, Any], optimization_context: Dict[str, Any]) -> List[Dict[str, Any]]:
     """Identify optimization opportunities"""

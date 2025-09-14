@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_constraint_adherence(self) -> float:
     """Calculate systematic constraint adherence rate"""

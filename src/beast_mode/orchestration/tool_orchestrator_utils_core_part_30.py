@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_compliance_improvements(self) -> List[str]:
     """Generate suggestions for improving tool compliance"""

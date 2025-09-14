@@ -26,3 +26,4 @@ from .alerting_core_part_25 import *
 from .alerting_core_part_26 import *
 from .alerting_core_part_27 import *
 from .alerting_core_part_28 import *
+from src.rm_ddd.core.health import ModuleHealth

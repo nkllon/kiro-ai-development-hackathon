@@ -8,3 +8,5 @@ from dataclasses import dataclass, field
 from pydantic import BaseModel
 from .alerting_core import *
 from .alerting_services import *
+from src.rm_ddd.core.health import ModuleHealth
+

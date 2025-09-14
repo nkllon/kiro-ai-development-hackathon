@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _perform_tool_rca(self, tool_id: str, context: DecisionContext) -> Dict[str, Any]:
     try:

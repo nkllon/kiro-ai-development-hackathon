@@ -19,6 +19,8 @@ def _validate_logging_infrastructure(self) -> ValidationResult:
         issues.append(InfrastructureIssue(component=InfrastructureComponent.LOGGING, issue_type='missing_logging_module', severity=ValidationSeverity.CRITICAL, description='Python logging module not available', systematic_impact='Cannot perform any systematic logging operations', remediation_steps=['Verify Python installation includes logging module', 'Reinstall Python if logging module is missing', 'Check Python environment configuration'], validation_command='python -c \'import logging; print("Logging available")\'', estimated_fix_time='5-10 minutes'))
     try:
         import json
+from src.rm_ddd.core.health import ModuleHealth
+
         test_log = {'timestamp': '2025-01-01', 'level': 'INFO', 'message': 'test'}
         json.dumps(test_log)
         self.logger.debug('✅ Structured logging (JSON): Available')

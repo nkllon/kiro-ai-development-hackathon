@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def update_agent_collaboration_score(self, agent_id: str, score_delta: float) -> None:
     """

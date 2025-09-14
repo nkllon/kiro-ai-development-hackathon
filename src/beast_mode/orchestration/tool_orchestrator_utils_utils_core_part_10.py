@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _update_decision_metrics(self, decision_time_ms: int):
     """Update decision framework metrics"""

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def get_recovery_history(self, hours: int=24) -> List[RecoveryAttempt]:
         """get_recovery_history - Enhanced for compliance"""

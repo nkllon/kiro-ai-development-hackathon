@@ -4,3 +4,5 @@ from enum import Enum
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .multi_perspective_validator_core_validation import *
 from .multi_perspective_validator_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

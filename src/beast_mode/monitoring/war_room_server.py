@@ -12,3 +12,5 @@ import uvicorn
 from ..core.interfaces import ReflectiveModule
 from .events import Event, EventSeverity
 from .war_room_server_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

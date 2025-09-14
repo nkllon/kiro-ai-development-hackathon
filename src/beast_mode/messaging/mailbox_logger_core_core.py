@@ -10,3 +10,5 @@ import redis.asyncio as redis
 from redis.exceptions import ConnectionError, TimeoutError
 from .models import BeastModeMessage, MessageType
 from .mailbox_logger_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _schedule_next_optimization(self) -> Dict[str, Any]:
     """Schedule next optimization cycle"""

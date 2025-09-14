@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _load_existing_spores(self) -> None:
     """Load existing spores from disk into cache"""

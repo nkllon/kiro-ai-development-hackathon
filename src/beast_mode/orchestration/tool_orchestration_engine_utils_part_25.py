@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _handle_tool_failures_systematically(self, failed_tools: List[str], context: DecisionContext, operation_id: str) -> Dict[str, Any]:
     try:

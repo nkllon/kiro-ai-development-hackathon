@@ -22,3 +22,5 @@ from typing import Dict, List, Optional, Callable, Any, Union
 from dataclasses import dataclass, field
 from pydantic import BaseModel
 import redis.asyncio as redis
+from src.rm_ddd.core.health import ModuleHealth
+

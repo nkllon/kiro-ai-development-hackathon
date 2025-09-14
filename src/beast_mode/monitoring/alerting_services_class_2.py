@@ -7,3 +7,4 @@ from .alerting_services_class_2_part_6 import *
 from .alerting_services_class_2_part_7 import *
 from .alerting_services_class_2_part_8 import *
 from .alerting_services_class_2_part_9 import *
+from src.rm_ddd.core.health import ModuleHealth

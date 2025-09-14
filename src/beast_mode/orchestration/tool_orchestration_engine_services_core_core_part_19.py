@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_failure_signature(self, failure_context: Dict[str, Any]) -> str:
     """Generate signature for failure pattern matching"""

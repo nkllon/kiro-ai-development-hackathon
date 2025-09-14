@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def set_message_callback(self, callback_name: str, callback: Callable) -> None:
         """

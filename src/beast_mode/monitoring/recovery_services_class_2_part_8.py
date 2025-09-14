@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def get_recovery_summary(self) -> Dict[str, Any]:
         """get_recovery_summary - Enhanced for compliance"""

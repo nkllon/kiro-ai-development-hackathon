@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_maintenance_recommendations(self) -> List[str]:
     """Generate preventive maintenance recommendations"""

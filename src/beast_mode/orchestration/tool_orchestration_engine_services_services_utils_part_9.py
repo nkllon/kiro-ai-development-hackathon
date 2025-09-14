@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_tool_health_history(self, tool_id: str) -> List[Dict[str, Any]]:
     """

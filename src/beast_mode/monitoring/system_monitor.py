@@ -8,3 +8,5 @@ from .metrics_collector import MetricsCollector, MetricType
 from .alerting import AlertManager, Alert, AlertSeverity
 from .recovery import RecoveryManager, RecoveryResult
 from .system_monitor_core import *
+from src.rm_ddd.core.health import ModuleHealth
+
