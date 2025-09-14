@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _measure_systematic_vs_adhoc_performance(self, tool_name: str, repair_result: ToolRepairResult) -> Dict[str, Any]:
         """Measure systematic repair performance vs ad-hoc approaches"""

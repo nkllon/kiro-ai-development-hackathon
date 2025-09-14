@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _build_search_indexes(self):
     """Build search indexes for efficient querying"""

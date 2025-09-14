@@ -22,3 +22,4 @@ from .domain_validator_core_core_validation_part_21 import *
 from .domain_validator_core_core_validation_part_22 import *
 from .domain_validator_core_core_validation_part_23 import *
 from .domain_validator_core_core_validation_part_24 import *
+from src.rm_ddd.core.health import ModuleHealth

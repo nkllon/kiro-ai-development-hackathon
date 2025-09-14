@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_capability_relevance(self, domain: Domain, capability: str) -> float:
     """Calculate how relevant a domain is for a given capability"""

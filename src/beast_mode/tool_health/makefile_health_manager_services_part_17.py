@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _document_prevention_pattern(self, diagnosis: MakefileDiagnosisResult, fix: str) -> str:
         """

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _check_content_indicators(self, domain: Domain) -> List[HealthIssue]:
     """Check if content indicators are found in domain files"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_cache_info(self, key: str) -> Optional[Dict[str, Any]]:
     """Get detailed cache information for a key"""

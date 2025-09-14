@@ -8,3 +8,5 @@ import json
 from ..core.reflective_module import ReflectiveModule
 from .migration_manager_services import *
 from .migration_manager_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

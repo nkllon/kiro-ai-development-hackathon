@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_relevance_scores(self, domains: List[Domain], keywords: List[str]) -> Dict[str, float]:
     """Calculate enhanced relevance scores for search results"""

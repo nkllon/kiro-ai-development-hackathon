@@ -104,6 +104,8 @@ def _check_rdi_placement(self, doc: RDIDocument) -> bool:
 def _validate_version_format(self, version: str) -> bool:
     """Validate semantic version format"""
     import re
+from src.rm_ddd.core.health import ModuleHealth
+
     pattern = '^\\d+\\.\\d+\\.\\d+$'
     return bool(re.match(pattern, version))
 

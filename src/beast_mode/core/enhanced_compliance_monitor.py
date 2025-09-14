@@ -29,3 +29,4 @@ from .enhanced_compliance_monitor_part_28 import *
 from .enhanced_compliance_monitor_part_29 import *
 from .enhanced_compliance_monitor_part_30 import *
 from .enhanced_compliance_monitor_part_31 import *
+from src.rm_ddd.core.health import ModuleHealth

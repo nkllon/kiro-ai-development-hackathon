@@ -4,3 +4,5 @@ from datetime import datetime
 from .models import Domain, DomainCollection, HealthStatus, HealthStatusCollection, DomainMetrics, MetricsCollection, DependencyGraph, QueryResult, ValidationResult, SyncResult, DomainSuggestion, PatternChange, DomainChange, UpdateResult, ComplexityReport, EvolutionReport, ExtractionCandidate, MakeTarget, ExecutionResult
 from .interfaces_core_core_validation import *
 from .interfaces_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

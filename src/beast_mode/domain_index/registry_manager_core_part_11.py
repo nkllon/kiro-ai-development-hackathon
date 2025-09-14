@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def delete_domain(self, domain_name: str) -> bool:
     """Delete a domain from the registry"""

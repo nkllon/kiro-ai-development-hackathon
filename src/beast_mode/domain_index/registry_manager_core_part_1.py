@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def __init__(self, registry_path: Optional[str]=None, config: Optional[Dict[str, Any]]=None):
     super().__init__('domain_registry_manager', config)

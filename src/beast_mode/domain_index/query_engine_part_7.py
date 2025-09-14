@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _determine_intent(self, query: str) -> str:
     """Determine the intent of the natural language query"""

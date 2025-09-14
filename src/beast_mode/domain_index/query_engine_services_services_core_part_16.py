@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def complex_query(self, query_spec: Dict[str, Any]) -> QueryResult:
     """Execute complex structured queries"""

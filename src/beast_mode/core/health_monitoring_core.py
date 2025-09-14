@@ -12,3 +12,5 @@ from ..utils.enum_serialization import SerializationHandler, make_enum_json_seri
 from .health_monitoring_core_validation import *
 from .health_monitoring_core_processing import *
 from .health_monitoring_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

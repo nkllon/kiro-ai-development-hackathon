@@ -14,6 +14,8 @@ from pathlib import Path
 from .reflective_module import ReflectiveModule, HealthStatus
 from ..intelligence.registry_intelligence_engine import ProjectRegistryIntelligenceEngine, IntelligenceQuery
 from ..tool_health.makefile_health_manager import MakefileHealthManager
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _identify_required_tools(self, task: DevelopmentTask) -> List[str]:
     """Identify tools required for task execution"""

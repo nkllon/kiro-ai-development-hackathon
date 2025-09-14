@@ -13,6 +13,8 @@ from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 from pathlib import Path
 from ..core.reflective_module import ReflectiveModule
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _check_installation_integrity(self, tool_name: str) -> Dict[str, Any]:
     """Check if tool files are missing or corrupted"""

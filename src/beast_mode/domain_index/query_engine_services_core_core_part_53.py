@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def dfs_cycle_detection(current: str, path: List[str], visited: Set[str]) -> None:
     if current in path:

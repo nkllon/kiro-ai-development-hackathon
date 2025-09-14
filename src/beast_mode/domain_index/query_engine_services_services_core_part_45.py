@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_domain_similarity(self, domain1: Domain, domain2: Domain) -> float:
     """Calculate similarity score between two domains"""

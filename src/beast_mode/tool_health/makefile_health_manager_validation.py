@@ -14,6 +14,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from ..metrics.baseline_metrics_engine import BaselineMetricsEngine
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _validate_makefile_repair(self) -> bool:
     """

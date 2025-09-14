@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _extract_relationship_info(self, query: str, entities: Dict[str, List[str]]) -> Dict[str, Any]:
     """Extract relationship information from query"""

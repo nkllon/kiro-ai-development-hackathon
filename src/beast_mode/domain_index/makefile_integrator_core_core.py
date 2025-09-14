@@ -12,3 +12,5 @@ from .config import get_config
 from .makefile_integrator_core_core_core import *
 from .makefile_integrator_core_core_processing import *
 from .makefile_integrator_core_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

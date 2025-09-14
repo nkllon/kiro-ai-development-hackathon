@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_transitive_dependents(self, domain_name: str, all_domains: Dict[str, Domain]) -> List[Domain]:
     """Get all domains that transitively depend on this domain"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate(self, domain: Domain, context: Dict[str, Any]) -> List[HealthIssue]:
     """Execute validation rule"""

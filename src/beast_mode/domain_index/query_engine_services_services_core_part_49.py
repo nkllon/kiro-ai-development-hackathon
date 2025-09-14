@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_coupling_score(self, domain1: Domain, domain2: Domain) -> float:
     """Calculate coupling score between two domains"""

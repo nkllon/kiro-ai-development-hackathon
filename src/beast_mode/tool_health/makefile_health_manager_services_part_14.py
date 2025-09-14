@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _complete_makefile_modules(self, missing_files: List[str]) -> str:
         """Complete missing Makefile modules"""

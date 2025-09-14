@@ -8,3 +8,4 @@ from .health_monitor_validation_part_7 import *
 from .health_monitor_validation_part_8 import *
 from .health_monitor_validation_part_9 import *
 from .health_monitor_validation_part_10 import *
+from src.rm_ddd.core.health import ModuleHealth

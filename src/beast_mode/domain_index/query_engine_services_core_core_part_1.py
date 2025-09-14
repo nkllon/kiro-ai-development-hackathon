@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def __init__(self, registry_manager=None, config: Optional[Dict[str, Any]]=None):
     super().__init__('domain_query_engine', config)

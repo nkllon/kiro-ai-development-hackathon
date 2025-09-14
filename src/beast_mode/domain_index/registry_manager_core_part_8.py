@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_dependencies(self, domain_name: str) -> DependencyGraph:
     """Get dependency graph for a domain"""

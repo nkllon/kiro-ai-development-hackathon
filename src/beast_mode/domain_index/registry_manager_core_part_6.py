@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def search_domains(self, query: str, filters: Optional[Dict[str, Any]]=None) -> List[Domain]:
     """Search domains with optional filters using the index"""

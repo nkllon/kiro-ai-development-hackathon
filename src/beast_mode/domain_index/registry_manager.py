@@ -15,3 +15,5 @@ from .registry_manager_validation import *
 from .registry_manager_core import *
 from .registry_manager_services import *
 from .registry_manager_processing import *
+from src.rm_ddd.core.health import ModuleHealth
+

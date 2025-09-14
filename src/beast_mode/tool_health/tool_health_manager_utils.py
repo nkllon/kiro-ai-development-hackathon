@@ -13,3 +13,4 @@ from .tool_health_manager_utils_part_12 import *
 from .tool_health_manager_utils_part_13 import *
 from .tool_health_manager_utils_part_14 import *
 from .tool_health_manager_utils_part_15 import *
+from src.rm_ddd.core.health import ModuleHealth

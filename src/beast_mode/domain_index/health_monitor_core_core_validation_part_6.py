@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _check_dependencies(self, domain: Domain) -> List[HealthIssue]:
     """Check if domain dependencies exist and are accessible"""

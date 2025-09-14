@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def load_registry(self) -> bool:
     """Load the domain registry from JSON file"""

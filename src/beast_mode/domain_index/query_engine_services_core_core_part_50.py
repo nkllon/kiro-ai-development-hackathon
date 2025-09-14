@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _find_extraction_related_domains(self, target_domain: Domain, all_domains: Dict[str, Domain]) -> List[Domain]:
     """Find domains that would be affected by extracting the target domain"""

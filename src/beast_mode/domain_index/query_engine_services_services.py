@@ -11,3 +11,5 @@ from .config import get_config
 from .query_engine_services_services_services import *
 from .query_engine_services_services_processing import *
 from .query_engine_services_services_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

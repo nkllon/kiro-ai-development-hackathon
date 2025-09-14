@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _parse_compliance_output(self, output: str) -> Dict[str, Any]:
         """Parse compliance reporter output"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def repair_tool_systematically(self, tool_name: str, diagnosis: ToolDiagnosis) -> ToolRepairResult:
         """Repair actual tool problems systematically, not workarounds"""

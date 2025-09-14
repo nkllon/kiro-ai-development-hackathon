@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def reload_registry(self) -> bool:
     """Reload registry from file"""

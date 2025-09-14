@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_dependencies(self, domain_name: Optional[str]=None) -> List[str]:
     """Validate domain dependencies"""

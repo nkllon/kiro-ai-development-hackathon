@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _explain_relevance_factors(self, domain: Domain, parsed_query: Dict[str, Any]) -> List[str]:
     """Explain why a domain has high relevance for a query"""

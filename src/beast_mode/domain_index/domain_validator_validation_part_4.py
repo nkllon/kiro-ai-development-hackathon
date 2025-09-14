@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_domain_collection(self, domains: DomainCollection) -> Dict[str, ValidationResult]:
     """Validate all domains in a collection"""

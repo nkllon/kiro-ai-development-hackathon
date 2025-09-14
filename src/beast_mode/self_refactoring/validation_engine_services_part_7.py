@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _serialize_validation_result(self, result: ValidationResult) -> Dict[str, Any]:
         """_serialize_validation_result

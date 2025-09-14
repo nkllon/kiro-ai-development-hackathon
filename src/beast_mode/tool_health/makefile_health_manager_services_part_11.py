@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def diagnose_makefile_issues(self) -> MakefileDiagnosisResult:
         """

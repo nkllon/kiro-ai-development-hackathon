@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_domain(self, domain: Domain, context: Optional[Dict[str, Any]]=None) -> ValidationResult:
     """Validate a single domain against all rules"""

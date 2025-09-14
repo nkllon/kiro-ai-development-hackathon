@@ -7,3 +7,5 @@ from enum import Enum
 from pathlib import Path
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .adr_system_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

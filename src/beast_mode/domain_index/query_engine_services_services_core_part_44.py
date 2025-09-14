@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _find_similar_domains(self, target_domain: Domain, all_domains: Dict[str, Domain]) -> List[Domain]:
     """Find domains similar to the target domain"""

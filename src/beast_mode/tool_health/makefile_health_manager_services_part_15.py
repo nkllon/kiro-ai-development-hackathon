@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _generic_systematic_repair(self, diagnosis: MakefileDiagnosisResult) -> str:
         """Generic systematic repair for unknown issues"""

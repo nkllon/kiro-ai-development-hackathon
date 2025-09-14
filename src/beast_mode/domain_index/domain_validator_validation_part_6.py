@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_dependencies(self, domains: DomainCollection) -> List[HealthIssue]:
     """Validate all domain dependencies"""

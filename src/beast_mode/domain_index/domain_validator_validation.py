@@ -17,3 +17,4 @@ from .domain_validator_validation_part_16 import *
 from .domain_validator_validation_part_17 import *
 from .domain_validator_validation_part_18 import *
 from .domain_validator_validation_part_19 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _apply_systematic_repair(self, tool_name: str, root_cause: str) -> Dict[str, Any]:
         """Apply systematic repair for specific root cause"""

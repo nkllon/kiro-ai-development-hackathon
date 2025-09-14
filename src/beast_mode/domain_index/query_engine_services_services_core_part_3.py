@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _ensure_indexes_built(self):
     """Ensure search indexes are built"""

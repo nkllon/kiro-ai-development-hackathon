@@ -13,3 +13,5 @@ from .health_reporter import HealthReportGenerator
 from ..utils.path_normalizer import safe_relative_to
 from .health_monitor_core_core_core import *
 from .health_monitor_core_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

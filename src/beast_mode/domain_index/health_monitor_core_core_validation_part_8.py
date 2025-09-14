@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _check_domain_tools(self, domain: Domain) -> List[HealthIssue]:
     """Check if domain tools are available and configured correctly"""

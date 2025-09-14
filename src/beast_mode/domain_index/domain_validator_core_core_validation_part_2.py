@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def check(self, domains: DomainCollection, context: Dict[str, Any]) -> List[HealthIssue]:
     """Execute consistency check"""

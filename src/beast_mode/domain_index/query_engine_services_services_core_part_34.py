@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _determine_query_type(self, query: str) -> str:
     """Determine the type of query being asked"""

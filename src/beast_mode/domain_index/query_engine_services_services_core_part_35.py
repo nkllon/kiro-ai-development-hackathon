@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _extract_query_filters(self, query: str) -> Dict[str, Any]:
     """Extract filters from the query"""

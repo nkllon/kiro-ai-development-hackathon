@@ -22,3 +22,4 @@ from .registry_manager_core_part_21 import *
 from .registry_manager_core_part_22 import *
 from .registry_manager_core_part_23 import *
 from .registry_manager_core_part_24 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _search_by_capabilities(self, keywords: List[str]) -> List[Domain]:
     """Search domains by capability keywords"""

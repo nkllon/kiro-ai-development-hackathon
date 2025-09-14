@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_query_suggestions(self, query: str, keywords: List[str]) -> List[str]:
     """Generate query suggestions based on current query (legacy method)"""

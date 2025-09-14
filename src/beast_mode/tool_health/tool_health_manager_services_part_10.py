@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def fix_makefile_health_systematically(self) -> Dict[str, Any]:
         """Fix Beast Mode's own Makefile to prove 'fix tools first' principle"""

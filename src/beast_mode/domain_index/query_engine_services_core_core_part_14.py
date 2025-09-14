@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _pattern_suggests_capability(self, pattern: str, capability: str) -> bool:
     """Check if a file pattern suggests a particular capability"""

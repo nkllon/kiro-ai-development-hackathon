@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def check_orphaned_dependencies(domains: DomainCollection, context: Dict[str, Any]) -> List[HealthIssue]:
         issues = []

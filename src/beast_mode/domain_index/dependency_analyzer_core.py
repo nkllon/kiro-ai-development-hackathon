@@ -12,3 +12,5 @@ from .exceptions import DependencyAnalysisError
 from .config import get_config
 from ..utils.path_normalizer import PathNormalizer, safe_relative_to, normalize_path
 from .dependency_analyzer_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

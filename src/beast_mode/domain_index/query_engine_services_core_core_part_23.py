@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def suggest_query_corrections(self, query: str) -> List[str]:
     """Suggest corrections for potentially misspelled or ambiguous queries"""

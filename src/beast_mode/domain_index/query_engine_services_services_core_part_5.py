@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def natural_language_query(self, query: str) -> QueryResult:
     """Process natural language queries about domains with advanced NLP"""

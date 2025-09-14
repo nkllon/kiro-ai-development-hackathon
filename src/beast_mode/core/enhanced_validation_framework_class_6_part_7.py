@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def validate_component(self, component_name: str, component_data: Dict[str, Any]) -> ValidationReport:
         """Validate a component against all applicable rules"""

@@ -32,6 +32,8 @@ def invalidate_by_pattern(self, pattern: str) -> int:
     """Invalidate all entries matching a key pattern"""
     with self._lock:
         import fnmatch
+from src.rm_ddd.core.health import ModuleHealth
+
         keys_to_remove = [key for key in self._cache.keys() if fnmatch.fnmatch(key, pattern)]
         for key in keys_to_remove:
             self._remove_entry(key)

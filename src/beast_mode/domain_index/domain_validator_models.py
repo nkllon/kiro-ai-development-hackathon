@@ -2,7 +2,7 @@ import logging
 from datetime import datetime
 from typing import Dict, List, Any
 
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -116,7 +116,7 @@ from .exceptions import DomainValidationError
 import glob
 import jsonschema
 
-class SchemaValidator(ReflectiveModule):
+class SchemaValidator(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -146,6 +146,8 @@ def get_health_indicators(self) -> Dict[str, any]:
         """Validate domain dictionary against schema"""
         try:
             import jsonschema
+from src.rm_ddd.core.health import ModuleHealth
+
             jsonschema.validate(domain_dict, self.domain_schema)
             return []
         except ImportError:

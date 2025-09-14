@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def explain_query_results(self, query: str, results: QueryResult) -> Dict[str, Any]:
     """Explain why certain results were returned for a query"""

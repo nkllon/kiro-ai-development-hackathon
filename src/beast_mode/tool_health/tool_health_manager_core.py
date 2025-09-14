@@ -13,6 +13,8 @@ from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 from pathlib import Path
 from ..core.reflective_module import ReflectiveModule
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def __init__(self):
     super().__init__('ToolHealthManager')

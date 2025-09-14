@@ -52,3 +52,4 @@ from .query_engine_services_core_core_part_51 import *
 from .query_engine_services_core_core_part_52 import *
 from .query_engine_services_core_core_part_53 import *
 from .query_engine_services_core_core_part_54 import *
+from src.rm_ddd.core.health import ModuleHealth

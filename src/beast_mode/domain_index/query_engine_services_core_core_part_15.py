@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def relationship_query(self, domain: str, relationship_type: str) -> List[Domain]:
     """Query domain relationships with advanced analysis"""

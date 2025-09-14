@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _validate_tool_repair(self, tool_name: str) -> Dict[str, Any]:
         """Validate that tool repair actually works"""

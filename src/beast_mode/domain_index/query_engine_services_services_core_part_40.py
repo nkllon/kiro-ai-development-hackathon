@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _rank_and_filter_results(self, domains: List[Domain], parsed_query: Dict[str, Any]) -> List[Domain]:
     """Apply ranking and filtering based on query modifiers"""

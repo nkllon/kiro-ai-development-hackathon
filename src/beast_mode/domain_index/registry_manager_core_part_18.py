@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def search_by_category(self, category: str) -> List[Domain]:
     """Search domains by category"""

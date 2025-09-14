@@ -18,6 +18,8 @@ from .config import get_config
 from .domain_cache import DomainCache, DomainSpecificCache
 from .domain_index import DomainIndex
 from .domain_validator import DomainValidator
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _parse_domains(self) -> None:
     """Parse domains from raw registry data"""

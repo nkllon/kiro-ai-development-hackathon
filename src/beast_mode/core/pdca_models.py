@@ -30,3 +30,4 @@ from .pdca_models_part_29 import *
 from .pdca_models_part_30 import *
 from .pdca_models_part_31 import *
 from .pdca_models_part_32 import *
+from src.rm_ddd.core.health import ModuleHealth

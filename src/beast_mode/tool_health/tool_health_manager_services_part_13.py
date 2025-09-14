@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _check_dependencies_and_config(self, tool_name: str) -> Dict[str, Any]:
         """Check tool dependencies and configuration"""

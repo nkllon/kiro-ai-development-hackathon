@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _determine_enhanced_intent(self, query: str, entities: Dict[str, List[str]]) -> str:
     """Determine query intent with enhanced logic"""

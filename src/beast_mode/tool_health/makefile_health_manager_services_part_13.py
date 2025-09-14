@@ -1,3 +1,5 @@
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _create_modular_makefile_system(self) -> str:
         """Create complete modular Makefile system as per registry specification"""

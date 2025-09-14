@@ -9,3 +9,5 @@ from .models import Domain, QueryResult
 from .exceptions import QueryEngineError, InvalidQueryError, QueryTimeoutError
 from .config import get_config
 from .query_engine_services_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

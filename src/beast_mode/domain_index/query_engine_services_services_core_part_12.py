@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _capability_matches(self, search_capability: str, target_capability: str) -> bool:
     """Check if a search capability matches a target capability"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _calculate_diagnosis_confidence(self, issues: List[str], root_causes: List[str]) -> float:
         """Calculate confidence in diagnosis accuracy"""

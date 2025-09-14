@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def capability_search(self, capability: str) -> List[Domain]:
     """Find domains by capability or functionality with advanced matching"""

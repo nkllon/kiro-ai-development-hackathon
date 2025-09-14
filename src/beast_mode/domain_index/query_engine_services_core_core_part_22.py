@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_popular_query_templates(self) -> List[str]:
     """Get popular query templates for empty queries"""

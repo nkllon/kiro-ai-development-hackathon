@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_domain(self, domain_name: str) -> Optional[Domain]:
     """Retrieve a specific domain by name"""

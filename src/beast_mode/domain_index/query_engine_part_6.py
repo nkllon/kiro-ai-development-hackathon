@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _extract_keywords(self, query: str) -> List[str]:
     """Extract keywords from natural language query"""

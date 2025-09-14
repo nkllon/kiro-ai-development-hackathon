@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_registry_stats(self) -> Dict[str, Any]:
     """Get comprehensive registry statistics"""

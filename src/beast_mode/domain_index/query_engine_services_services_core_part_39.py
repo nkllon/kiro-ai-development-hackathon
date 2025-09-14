@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_enhanced_relevance_scores(self, domains: List[Domain], parsed_query: Dict[str, Any]) -> Dict[str, float]:
     """Calculate relevance scores using parsed query information"""

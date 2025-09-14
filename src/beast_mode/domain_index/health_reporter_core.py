@@ -15,3 +15,5 @@ from ..utils.enum_serialization import make_enum_json_serializable
 from ..utils.enum_serialization import make_enum_json_serializable
 from .health_reporter_core_core import *
 from .health_reporter_core_processing import *
+from src.rm_ddd.core.health import ModuleHealth
+

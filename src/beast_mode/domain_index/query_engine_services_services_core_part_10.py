@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def content_search(self, content_indicator: str) -> List[Domain]:
     """Search domains by content indicators"""

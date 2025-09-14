@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _create_domain_from_registry(self, domain_name: str, category: str, category_data: Dict) -> Optional[Domain]:
     """Create a Domain object from registry data"""

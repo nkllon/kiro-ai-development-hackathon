@@ -15,6 +15,8 @@ from .interfaces import QueryEngineInterface
 from .models import Domain, QueryResult
 from .exceptions import QueryEngineError, InvalidQueryError, QueryTimeoutError
 from .config import get_config
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _parse_partial_query(self, partial_query: str) -> Dict[str, Any]:
     """Parse partial query to understand user intent"""

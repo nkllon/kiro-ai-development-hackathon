@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _check_file_patterns(self, domain: Domain) -> List[HealthIssue]:
     """Check if domain file patterns match actual files"""

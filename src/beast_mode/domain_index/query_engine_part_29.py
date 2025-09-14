@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _combined_search(self, keywords: List[str]) -> List[Domain]:
     """Perform combined search across all indexes"""

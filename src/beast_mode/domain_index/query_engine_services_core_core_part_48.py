@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _find_high_coupling_domains(self, target_domain: Domain, all_domains: Dict[str, Domain]) -> List[Domain]:
     """Find domains with high coupling to the target domain"""

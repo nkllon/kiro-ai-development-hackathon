@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def advanced_relationship_analysis(self, domain_name: str) -> Dict[str, Any]:
     """Perform comprehensive relationship analysis for a domain"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def create_domain(self, domain: Domain) -> bool:
     """Create a new domain in the registry"""

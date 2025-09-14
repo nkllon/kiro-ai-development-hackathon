@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _extract_enhanced_keywords(self, query: str) -> List[str]:
     """Extract keywords with improved processing"""

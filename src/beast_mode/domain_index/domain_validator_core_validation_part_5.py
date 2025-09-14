@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def check_consistency(self, domains: DomainCollection) -> List[HealthIssue]:
     """Check cross-domain consistency"""

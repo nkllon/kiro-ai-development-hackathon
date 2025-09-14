@@ -8,3 +8,5 @@ from .base import DomainSystemComponent
 from .interfaces import IndexInterface
 from .models import Domain, DomainCollection, QueryResult
 from .domain_index_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

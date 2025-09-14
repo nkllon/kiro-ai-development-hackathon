@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def fix_makefile_systematically(self, diagnosis: MakefileDiagnosisResult) -> MakefileRepairResult:
         """

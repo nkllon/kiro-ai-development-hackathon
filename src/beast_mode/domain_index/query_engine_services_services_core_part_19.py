@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_contextual_suggestions(self, partial_query: str, partial_info: Dict[str, Any]) -> List[str]:
     """Generate suggestions based on query context"""

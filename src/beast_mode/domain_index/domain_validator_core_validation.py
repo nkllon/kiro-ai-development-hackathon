@@ -19,3 +19,4 @@ from .domain_validator_core_validation_part_18 import *
 from .domain_validator_core_validation_part_19 import *
 from .domain_validator_core_validation_part_20 import *
 from .domain_validator_core_validation_part_21 import *
+from src.rm_ddd.core.health import ModuleHealth

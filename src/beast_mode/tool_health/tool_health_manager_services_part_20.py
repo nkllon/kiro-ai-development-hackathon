@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _assess_tool_health(self, tool_name: str) -> Dict[str, Any]:
         """Assess current health of a specific tool"""

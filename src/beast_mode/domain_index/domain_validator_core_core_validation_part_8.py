@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def add_consistency_check(self, check: ConsistencyCheck) -> None:
     """Add custom consistency check"""

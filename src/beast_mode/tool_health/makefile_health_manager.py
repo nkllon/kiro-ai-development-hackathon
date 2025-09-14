@@ -10,3 +10,5 @@ from ..metrics.baseline_metrics_engine import BaselineMetricsEngine
 from .makefile_health_manager_services import *
 from .makefile_health_manager_validation import *
 from .makefile_health_manager_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def diagnose_tool_systematically(self, tool_name: str) -> ToolDiagnosis:
     try:

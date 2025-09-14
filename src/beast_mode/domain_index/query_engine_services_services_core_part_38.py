@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_intelligent_suggestions(self, original_query: str, parsed_query: Dict[str, Any], results: List[Domain]) -> List[str]:
     """Generate intelligent query suggestions"""

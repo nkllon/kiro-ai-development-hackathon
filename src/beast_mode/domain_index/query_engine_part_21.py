@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_template_suggestions(self, partial_query: str, partial_info: Dict[str, Any]) -> List[str]:
     """Generate template-based suggestions"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _extract_entities(self, query: str) -> Dict[str, List[str]]:
     """Extract named entities from the query"""

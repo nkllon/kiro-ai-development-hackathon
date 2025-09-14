@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_file_patterns(self, domain: Domain, context: Dict[str, Any]) -> List[HealthIssue]:
     """Validate domain file patterns"""

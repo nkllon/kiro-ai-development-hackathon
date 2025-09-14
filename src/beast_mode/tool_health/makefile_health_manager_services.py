@@ -16,3 +16,4 @@ from .makefile_health_manager_services_part_15 import *
 from .makefile_health_manager_services_part_16 import *
 from .makefile_health_manager_services_part_17 import *
 from .makefile_health_manager_services_part_18 import *
+from src.rm_ddd.core.health import ModuleHealth

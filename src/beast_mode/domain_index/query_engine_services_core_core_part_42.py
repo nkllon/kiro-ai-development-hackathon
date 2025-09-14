@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_transitive_dependencies(self, domain_name: str, all_domains: Dict[str, Domain], visited: Optional[Set[str]]=None) -> List[Domain]:
     """Get all transitive dependencies using depth-first search"""

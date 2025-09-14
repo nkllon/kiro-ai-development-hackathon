@@ -19,6 +19,8 @@ from .exceptions import HealthReportError, AlertingError
 from .config import get_config
 from ..utils.enum_serialization import SerializationHandler
 from ..utils.enum_serialization import make_enum_json_serializable
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _process_alerts(self, alerts: List[Alert]):
     """Process generated alerts through configured channels"""

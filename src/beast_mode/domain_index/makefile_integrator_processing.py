@@ -16,6 +16,8 @@ from .interfaces import MakefileIntegratorInterface
 from .models import Domain, MakeTarget, ExecutionResult, ValidationResult
 from .exceptions import MakefileIntegrationError, MakefileNotFoundError, MakeTargetExecutionError
 from .config import get_config
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _parse_makefile(self, makefile_path: Path) -> List[MakeTarget]:
     """Parse a makefile and extract targets"""

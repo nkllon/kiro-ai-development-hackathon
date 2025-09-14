@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def suggest_queries(self, partial_query: str) -> List[str]:
     """Suggest query completions with advanced NLP"""

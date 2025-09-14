@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _extract_query_modifiers(self, query: str) -> List[str]:
     """Extract query modifiers (sorting, limiting, etc.)"""

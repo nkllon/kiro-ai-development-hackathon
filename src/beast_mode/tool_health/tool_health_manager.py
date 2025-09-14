@@ -10,3 +10,5 @@ from .tool_health_manager_utils import *
 from .tool_health_manager_core import *
 from .tool_health_manager_validation import *
 from .tool_health_manager_services import *
+from src.rm_ddd.core.health import ModuleHealth
+

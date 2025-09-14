@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def monitor_tool_health_continuously(self) -> Dict[str, Any]:
         """Continuously monitor tool health and detect degradation"""

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def get_status_report(self) -> Dict[str, any]:
         """Get comprehensive status report for this module."""

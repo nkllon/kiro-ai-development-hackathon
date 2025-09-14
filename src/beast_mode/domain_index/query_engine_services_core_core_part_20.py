@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_completion_suggestions(self, partial_query: str) -> List[str]:
     """Generate word completion suggestions"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_tools(domain: Domain, context: Dict[str, Any]) -> List[HealthIssue]:
     issues = []

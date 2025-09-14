@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _apply_filters(self, domain: Domain, filters: Dict[str, Any]) -> bool:
     """Apply filters to a domain"""

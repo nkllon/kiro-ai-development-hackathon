@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _generate_repair_recommendations(self, tool_name: str, root_causes: List[str]) -> List[str]:
         """Generate systematic repair recommendations"""

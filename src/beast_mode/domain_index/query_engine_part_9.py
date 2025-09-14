@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _pattern_matches(self, search_pattern: str, indexed_pattern: str) -> bool:
     """Check if search pattern matches indexed pattern"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _validate_all_make_targets(self) -> Dict[str, Any]:
         """Validate all make targets work correctly"""
