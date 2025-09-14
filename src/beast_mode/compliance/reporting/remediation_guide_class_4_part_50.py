@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _extract_component_name(self, affected_files: List[str]) -> str:
     try:

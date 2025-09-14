@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _convert_effort_to_duration(self, effort_points: int) -> str:
         try:

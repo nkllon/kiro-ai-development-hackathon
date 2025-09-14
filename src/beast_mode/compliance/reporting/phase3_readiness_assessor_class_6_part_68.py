@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _evaluate_rm_compliance_metric(self, rm_status) -> ReadinessMetric:
     try:

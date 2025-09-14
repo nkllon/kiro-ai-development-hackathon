@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _initialize_common_patterns(self) -> Dict[str, Dict[str, Any]]:
     try:

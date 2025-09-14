@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def __init__(self) -> Any:
         """Initialize the remediation guide with templates and known issues."""

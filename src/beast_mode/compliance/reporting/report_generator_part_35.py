@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _estimate_remediation_effort(self, issues: List[ComplianceIssue]) -> str:
         try:

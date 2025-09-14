@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _generate_validation_criteria(self, issue_type: ComplianceIssueType, issues: List[ComplianceIssue]) -> List[str]:
         try:

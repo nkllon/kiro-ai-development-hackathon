@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _make_go_no_go_decision(self, overall_status: ReadinessStatus, blocking_issues: List[ComplianceIssue], risk_assessment: Dict[str, Any]) -> Dict[str, Any]:
     try:

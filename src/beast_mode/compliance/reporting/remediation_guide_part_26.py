@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _initialize_phase2_failing_tests(self) -> Dict[str, FailingTestRemediation]:
         try:

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _create_implementation_roadmap(self, remediation_steps: List[RemediationStep], test_remediations: List[FailingTestRemediation]) -> Dict[str, Any]:
     try:

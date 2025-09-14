@@ -7,3 +7,5 @@ from ..models import ComplianceAnalysisResult, ComplianceIssue, IssueSeverity, C
 from .report_generator_core_validation import *
 from .report_generator_core_utils import *
 from .report_generator_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

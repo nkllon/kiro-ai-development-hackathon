@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _generate_remediation_summary(self, issues: List[ComplianceIssue], remediation_steps: List[RemediationStep]) -> Dict[str, Any]:
         try:

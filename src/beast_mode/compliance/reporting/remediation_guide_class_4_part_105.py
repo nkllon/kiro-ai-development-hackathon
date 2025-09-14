@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _estimate_success_probability(self, issues: List[ComplianceIssue], remediation_steps: List[RemediationStep]) -> str:
     try:

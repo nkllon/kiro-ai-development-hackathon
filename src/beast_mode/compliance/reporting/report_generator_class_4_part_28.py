@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _format_detailed_findings(self, findings: Dict[str, Any]) -> str:
         try:

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _get_effort_weight(self, effort: str) -> int:
         try:

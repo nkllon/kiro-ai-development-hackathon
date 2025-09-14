@@ -1,4 +1,4 @@
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -118,3 +118,5 @@ from dataclasses import dataclass
 from enum import Enum
 from datetime import datetime
 from ..models import ComplianceAnalysisResult, ComplianceIssue, IssueSeverity, ComplianceIssueType
+from src.rm_ddd.core.health import ModuleHealth
+

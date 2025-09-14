@@ -9,6 +9,8 @@ from typing import List, Dict, Any, Optional, Set
 from dataclasses import dataclass
 from enum import Enum
 from ..models import ComplianceAnalysisResult, ComplianceIssue, ComplianceIssueType, IssueSeverity, RemediationStep
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def get_phase2_test_remediations(self) -> List[FailingTestRemediation]:
     """

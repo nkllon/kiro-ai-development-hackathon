@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _evaluate_blocking_issues_metric(self, analysis_result: ComplianceAnalysisResult) -> ReadinessMetric:
         try:

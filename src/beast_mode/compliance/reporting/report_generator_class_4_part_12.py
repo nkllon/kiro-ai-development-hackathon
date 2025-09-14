@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _format_complete_report(self, report_id: str, analysis_result: ComplianceAnalysisResult, executive_summary: str, detailed_findings: Dict[str, Any], remediation_plan: List[RemediationStep], phase3_assessment: Dict[str, Any]) -> str:
         try:

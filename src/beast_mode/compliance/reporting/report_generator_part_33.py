@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _group_issues_by_type_and_severity(self, issues: List[ComplianceIssue]) -> Dict[ComplianceIssueType, Dict[IssueSeverity, List[ComplianceIssue]]]:
         try:

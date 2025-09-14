@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _generate_phase3_readiness_assessment(self, analysis_result: ComplianceAnalysisResult) -> Dict[str, Any]:
     try:

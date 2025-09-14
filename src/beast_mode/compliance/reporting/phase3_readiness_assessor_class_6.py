@@ -111,3 +111,4 @@ from .phase3_readiness_assessor_class_6_part_110 import *
 from .phase3_readiness_assessor_class_6_part_111 import *
 from .phase3_readiness_assessor_class_6_part_112 import *
 from .phase3_readiness_assessor_class_6_part_113 import *
+from src.rm_ddd.core.health import ModuleHealth

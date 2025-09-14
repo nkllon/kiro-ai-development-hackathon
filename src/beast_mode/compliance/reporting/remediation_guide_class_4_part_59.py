@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def generate_remediation_guide(self, analysis_result: ComplianceAnalysisResult) -> Dict[str, Any]:
     try:

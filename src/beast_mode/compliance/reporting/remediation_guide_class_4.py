@@ -103,3 +103,4 @@ from .remediation_guide_class_4_part_102 import *
 from .remediation_guide_class_4_part_103 import *
 from .remediation_guide_class_4_part_104 import *
 from .remediation_guide_class_4_part_105 import *
+from src.rm_ddd.core.health import ModuleHealth

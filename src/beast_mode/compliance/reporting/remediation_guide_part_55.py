@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _categorize_issues(self, issues: List[ComplianceIssue]) -> Dict[RemediationCategory, List[ComplianceIssue]]:
     try:

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def generate_specific_remediation(self, issue: ComplianceIssue) -> RemediationStep:
     try:

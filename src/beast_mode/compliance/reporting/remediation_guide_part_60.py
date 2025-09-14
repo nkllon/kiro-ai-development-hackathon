@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _define_success_criteria(self, analysis_result: ComplianceAnalysisResult) -> List[str]:
     try:

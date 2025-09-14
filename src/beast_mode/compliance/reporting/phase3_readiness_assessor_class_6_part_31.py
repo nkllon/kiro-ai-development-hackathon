@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _generate_go_conditions(self, overall_status: ReadinessStatus, blocking_issues: List[ComplianceIssue]) -> List[str]:
         try:

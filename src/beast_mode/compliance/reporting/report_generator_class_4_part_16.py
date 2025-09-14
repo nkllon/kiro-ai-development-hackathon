@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _estimate_remediation_effort(self, issues: List[ComplianceIssue]) -> str:
         try:

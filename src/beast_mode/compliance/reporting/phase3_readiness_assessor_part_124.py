@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _calculate_overall_readiness_score(self, readiness_metrics: List[ReadinessMetric]) -> float:
     try:

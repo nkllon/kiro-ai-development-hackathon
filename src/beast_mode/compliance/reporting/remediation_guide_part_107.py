@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_remediation_effort(self, remediation_steps: List[RemediationStep], test_remediations: List[FailingTestRemediation]) -> Dict[str, Any]:
     try:

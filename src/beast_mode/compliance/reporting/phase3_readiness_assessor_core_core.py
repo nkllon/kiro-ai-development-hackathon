@@ -6,3 +6,5 @@ from ..models import ComplianceAnalysisResult, ComplianceIssue, IssueSeverity, C
 from .phase3_readiness_assessor_core_core_core import *
 from .phase3_readiness_assessor_core_core_validation import *
 from .phase3_readiness_assessor_core_core_processing import *
+from src.rm_ddd.core.health import ModuleHealth
+

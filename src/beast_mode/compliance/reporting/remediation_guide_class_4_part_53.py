@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _estimate_resource_requirements(self, effort_points: int) -> Dict[str, Any]:
     try:

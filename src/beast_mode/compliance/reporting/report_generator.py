@@ -111,3 +111,4 @@ from .report_generator_part_110 import *
 from .report_generator_part_111 import *
 from .report_generator_part_112 import *
 from .report_generator_part_113 import *
+from src.rm_ddd.core.health import ModuleHealth

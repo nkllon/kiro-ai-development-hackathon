@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _calculate_review_date(self, decision: str, overall_status: ReadinessStatus) -> str:
         try:

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _initialize_criteria_weights(self) -> Dict[ReadinessCriteria, float]:
     try:

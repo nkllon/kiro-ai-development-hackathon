@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_phase2_test_remediations(self) -> List[FailingTestRemediation]:
         try:

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def assess_phase3_readiness(self, analysis_result: ComplianceAnalysisResult) -> Phase3ReadinessReport:
         try:

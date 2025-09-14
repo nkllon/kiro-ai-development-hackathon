@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _generate_readiness_recommendations(self, readiness_metrics: List[ReadinessMetric], blocking_issues: List[ComplianceIssue]) -> List[str]:
         try:

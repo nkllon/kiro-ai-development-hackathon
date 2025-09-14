@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def assess_phase3_readiness(self, analysis_result: ComplianceAnalysisResult) -> Phase3ReadinessReport:
         try:
