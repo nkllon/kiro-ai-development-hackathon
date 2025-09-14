@@ -26,7 +26,7 @@ from src.spec_reconciliation.monitoring import ContinuousMonitor
 from src.spec_reconciliation.boundary_resolver import ComponentBoundaryResolver
 
 
-class TestSystemIntegrationWorkflows:
+class TestSystemIntegrationWorkflows(ModuleHealth):
     """Test integration workflows across consolidated systems (R10.2)"""
     
     def setup_method(self):
@@ -340,7 +340,7 @@ class {spec_name.replace('_', '').title()}Interface(ReflectiveModule):
         assert all(wid == workflow_id for wid in workflow_ids), "Workflow ID continuity broken"
 
 
-class TestComponentBoundaryCompliance:
+class TestComponentBoundaryCompliance(ModuleHealth):
     """Test component boundary compliance and enforcement (R10.2)"""
     
     def setup_method(self):
@@ -513,6 +513,8 @@ class {spec_name.replace('_', '').title()}Interface(ReflectiveModule):
         """Test boundary violations are properly detected (R10.2)"""
         # Create boundaries with intentional violations for testing
         from src.spec_reconciliation.boundary_resolver import ComponentBoundary, ComponentType, BoundaryViolationType
+from src.rm_ddd.core.health import ModuleHealth
+
         
         # Create overlapping boundaries
         boundary_a = ComponentBoundary(
@@ -604,7 +606,7 @@ class {spec_name.replace('_', '').title()}Interface(ReflectiveModule):
             assert len(test_cases) > 0
 
 
-class TestDataFlowValidation:
+class TestDataFlowValidation(ModuleHealth):
     """Test data flow validation between components (R10.2)"""
     
     def setup_method(self):
@@ -889,7 +891,7 @@ class TestDataFlowValidation:
         assert len(critical_alerts) > 0, "Should generate critical alerts for severe issues"
 
 
-class TestErrorHandlingAndRecovery:
+class TestErrorHandlingAndRecovery(ModuleHealth):
     """Test error handling and recovery across integrated systems (R10.2)"""
     
     def setup_method(self):
@@ -1178,4 +1180,21 @@ class TestErrorHandlingAndRecovery:
             assert len(result['lessons_learned']) > 0, f"No lessons learned from {scenario['type']}"
             
             # Verify recovery time is reasonable
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
             assert result['recovery_time'] <= 60.0, f"Recovery time too long for {scenario['type']}: {result['recovery_time']}s"

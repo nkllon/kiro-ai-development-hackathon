@@ -92,4 +92,21 @@ def mock_tool_health_metrics():
     metrics.performance_trend = "stable"
     metrics.last_health_check = datetime.now() - timedelta(minutes=5)
     metrics.error_patterns = ["timeout error", "permission denied"]
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
     return metrics

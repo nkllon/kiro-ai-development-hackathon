@@ -23,6 +23,8 @@ from src.beast_mode.backlog.models import (
     MPMValidation
 )
 from src.beast_mode.backlog.enums import (
+from src.rm_ddd.core.health import ModuleHealth
+
     StrategicTrack,
     BeastReadinessStatus,
     ApprovalStatus
@@ -147,11 +149,11 @@ def ambiguous_backlog_item():
     )
 
 
-class TestBeastReadinessValidator:
+class TestBeastReadinessValidator(ModuleHealth):
     """Test suite for BeastReadinessValidator"""
 
 
-class TestValidateBeastReadiness:
+class TestValidateBeastReadiness(ModuleHealth):
     """Test the main validate_beast_readiness method"""
     
     def test_validate_complete_item_success(self, validator, complete_backlog_item):
@@ -195,7 +197,7 @@ class TestValidateBeastReadiness:
             validator.validate_beast_readiness(invalid_item)
 
 
-class TestCompletenessValidation:
+class TestCompletenessValidation(ModuleHealth):
     """Test completeness criteria validation"""
     
     def test_requirements_completeness_success(self, validator, complete_backlog_item):
@@ -293,7 +295,7 @@ class TestCompletenessValidation:
         assert abs(report.overall_score - expected_score) < 0.001
 
 
-class TestDependencyValidation:
+class TestDependencyValidation(ModuleHealth):
     """Test dependency satisfaction validation"""
     
     def test_dependency_satisfaction_success(self, validator, complete_backlog_item):
@@ -358,7 +360,7 @@ class TestDependencyValidation:
         assert len(statuses) == 0
 
 
-class TestValidationCriterion:
+class TestValidationCriterion(ModuleHealth):
     """Test ValidationCriterion data model"""
     
     def test_validation_criterion_creation(self):
@@ -380,7 +382,7 @@ class TestValidationCriterion:
         assert criterion.details["test"] == "data"
 
 
-class TestCompletenessReport:
+class TestCompletenessReport(ModuleHealth):
     """Test CompletenessReport data model"""
     
     def test_completeness_report_creation(self):
@@ -422,7 +424,7 @@ class TestCompletenessReport:
             )
 
 
-class TestReadinessValidation:
+class TestReadinessValidation(ModuleHealth):
     """Test ReadinessValidation data model"""
     
     def test_readiness_validation_creation(self, complete_backlog_item):
@@ -475,7 +477,7 @@ class TestReadinessValidation:
             )
 
 
-class TestReflectiveModuleInterface:
+class TestReflectiveModuleInterface(ModuleHealth):
     """Test ReflectiveModule interface implementation"""
     
     def test_get_module_status(self, validator):
@@ -516,7 +518,7 @@ class TestReflectiveModuleInterface:
         assert "validate" in responsibility.lower()
 
 
-class TestEdgeCases:
+class TestEdgeCases(ModuleHealth):
     """Test edge cases and error conditions"""
     
     def test_empty_requirements_list(self, validator):
@@ -625,4 +627,21 @@ class TestEdgeCases:
 
 
 if __name__ == "__main__":
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
     pytest.main([__file__])

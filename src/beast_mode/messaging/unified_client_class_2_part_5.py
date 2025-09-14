@@ -54,3 +54,20 @@ from src.rm_ddd.core.health import ModuleHealth
         """Announce agent presence in shared state."""
         agent_state = {'status': 'online', 'capabilities': self.capabilities, 'specializations': self.specializations, 'transport_type': self.transport_type, 'last_seen': datetime.now().isoformat(), 'stats': self.stats.copy()}
         await self.shared_state.update_agent_state(self.agent_id, agent_state)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

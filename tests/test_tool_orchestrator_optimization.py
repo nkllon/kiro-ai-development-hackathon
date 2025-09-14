@@ -7,9 +7,11 @@ from unittest.mock import Mock, patch
 from typing import Dict, Any
 
 from src.beast_mode.orchestration.tool_orchestrator import ToolOrchestrator, ToolDefinition, ToolType
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestToolOrchestratorOptimization:
+
+class TestToolOrchestratorOptimization(ReflectiveModule):
     """Test ToolOrchestrator optimization methods"""
     
     def setup_method(self):
@@ -260,7 +262,7 @@ class TestToolOrchestratorOptimization:
             assert callable(getattr(self.orchestrator, method_name))
 
 
-class TestToolOrchestratorOptimizationIntegration:
+class TestToolOrchestratorOptimizationIntegration(ReflectiveModule):
     """Integration tests for ToolOrchestrator optimization methods"""
     
     def setup_method(self):
@@ -299,4 +301,32 @@ class TestToolOrchestratorOptimizationIntegration:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v"])

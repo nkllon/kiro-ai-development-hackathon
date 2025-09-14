@@ -26,3 +26,20 @@ from src.rm_ddd.core.health import ModuleHealth
             findings, recommendations, score = self._validate_continuous_improvement(component_data, standards)
         compliance_level = self._determine_compliance_level(score)
         return RDIValidationResult(validation_id=validation_id, component_name=component_name, validation_type=validation_type, compliance_level=compliance_level, score=score, findings=findings, recommendations=recommendations, validation_timestamp=datetime.now(), validator='RDI Validator')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

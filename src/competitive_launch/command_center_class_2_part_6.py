@@ -28,3 +28,20 @@ from src.rm_ddd.core.health import ModuleHealth
         plan = ResponsePlan(plan_id=f"response_{threat.competitor}_{datetime.now().strftime('%Y%m%d_%H%M%S')}", threat_id=f'threat_{threat.competitor}_{threat.threat_type}', response_strategy=response_strategy, timeline=timeline, resources_required=response_resources, success_criteria=differentiation['success_criteria'], risk_mitigation=differentiation['risk_mitigation'])
         logger.info(f'Generated response plan: {plan.plan_id}')
         return plan
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

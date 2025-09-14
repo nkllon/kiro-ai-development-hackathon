@@ -18,7 +18,7 @@ from src.beast_mode.documentation.document_management_rm import (
     DocumentationStandard
 )
 
-class TestDocumentManagementRM:
+class TestDocumentManagementRM(ModuleHealth):
     """Test Document Management RM functionality"""
     
     @pytest.fixture
@@ -212,7 +212,7 @@ class TestDocumentManagementRM:
         readme_content = (doc_manager.docs_root / "README.md").read_text()
         assert "RDI Documentation Structure" in readme_content
 
-class TestReflectiveModuleDocumentationConstraint:
+class TestReflectiveModuleDocumentationConstraint(ModuleHealth):
     """Test RM documentation constraint integration"""
     
     @pytest.fixture
@@ -227,7 +227,7 @@ class TestReflectiveModuleDocumentationConstraint:
         from src.beast_mode.core.reflective_module import ReflectiveModule
         
         # Create a test RM implementation
-        class TestRM(ReflectiveModule):
+        class TestRM(ReflectiveModule, ModuleHealth):
             def get_module_status(self):
                 return {"status": "operational"}
                 
@@ -255,8 +255,10 @@ class TestReflectiveModuleDocumentationConstraint:
     def test_rm_template_creation_integration(self, temp_project_root):
         """Test RM template creation integration"""
         from src.beast_mode.core.reflective_module import ReflectiveModule
+from src.rm_ddd.core.health import ModuleHealth
+
         
-        class TestRM(ReflectiveModule):
+        class TestRM(ReflectiveModule, ModuleHealth):
             def get_module_status(self):
                 return {"status": "operational"}
                 
@@ -277,7 +279,7 @@ class TestReflectiveModuleDocumentationConstraint:
         # Should succeed or fail gracefully
         assert "success" in template_result or "error" in template_result
 
-class TestDocumentationStandards:
+class TestDocumentationStandards(ModuleHealth):
     """Test documentation standards and compliance"""
     
     def test_documentation_standard_creation(self):
@@ -302,4 +304,21 @@ class TestDocumentationStandards:
         assert DocumentStatus.PUBLISHED.value == "published"
 
 if __name__ == "__main__":
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
     pytest.main([__file__])
