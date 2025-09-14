@@ -7,3 +7,5 @@ from ..models import SuccessMetrics, RequirementScaling, GrowthRate, ProtocolImp
 from .humility_enforcer_core_core_processing import *
 from .humility_enforcer_core_core_core import *
 from .humility_enforcer_core_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _build_dependency_graph(self) -> DependencyGraph:
     """Build dependency graph from current dependencies"""

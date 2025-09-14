@@ -1,4 +1,4 @@
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -101,4 +101,6 @@ for type safety and consistency.
 
 from enum import Enum
 from typing import Any, Dict, List, Optional
+from src.rm_ddd.core.health import ModuleHealth
+
 

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_project_metadata(self) -> ProjectMetadata:
     """Extract metadata from local project files.

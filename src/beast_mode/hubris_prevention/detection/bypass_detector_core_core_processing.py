@@ -34,6 +34,8 @@ from ..models import TriggerEvent
 from ..models import EscalationStep
 from ..models import SuccessCriterion
 from ..models import RollbackPlan
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _detect_process_circumvention(self, actor_id: str, governance_events: List[Dict]) -> Optional[BypassPattern]:
     """Detect attempts to circumvent established processes."""

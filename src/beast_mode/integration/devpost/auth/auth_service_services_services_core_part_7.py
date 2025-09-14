@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def refresh_access_token(self) -> bool:
     """

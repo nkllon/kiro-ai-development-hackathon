@@ -35,3 +35,4 @@ from .dependency_manager_services_core_core_part_34 import *
 from .dependency_manager_services_core_core_part_35 import *
 from .dependency_manager_services_core_core_part_36 import *
 from .dependency_manager_services_core_core_part_37 import *
+from src.rm_ddd.core.health import ModuleHealth

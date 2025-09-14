@@ -1,8 +1,10 @@
 from typing import Any, Dict, List, Optional
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
 
-class ReflectiveModule(ReflectiveModule):
+
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -105,7 +107,7 @@ here as placeholders for type hints and interface definitions.
 """
 
 
-class BacklogItemSpec(ReflectiveModule):
+class BacklogItemSpec(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -135,7 +137,7 @@ def get_health_indicators(self) -> Dict[str, any]:
     pass
 
 
-class ReadinessResult(ReflectiveModule):
+class ReadinessResult(ReflectiveModule, ModuleHealth):
     """
     Placeholder for beast-readiness result
     

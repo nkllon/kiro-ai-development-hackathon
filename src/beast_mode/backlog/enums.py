@@ -27,3 +27,4 @@ from .enums_part_26 import *
 from .enums_part_27 import *
 from .enums_part_28 import *
 from .enums_part_29 import *
+from src.rm_ddd.core.health import ModuleHealth

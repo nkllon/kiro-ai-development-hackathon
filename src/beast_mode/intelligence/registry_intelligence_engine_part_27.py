@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def extract_domain_intelligence(self, domain_context: str, query_context: Dict[str, Any]) -> Dict[str, Any]:
         """extract_domain_intelligence - Enhanced for compliance"""

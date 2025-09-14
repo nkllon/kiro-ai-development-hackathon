@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def switch_project(self, project_id: str) -> bool:
     """Switch to a different project context.

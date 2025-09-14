@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def connect_to_devpost(self, project_id: str, hackathon_id: str) -> ProjectConnection:
     """Connect local project to Devpost submission.

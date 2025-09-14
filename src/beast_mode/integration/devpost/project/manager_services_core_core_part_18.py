@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def resolve_conflict(self, conflict_type: str, resolution: str, **kwargs) -> bool:
     """Resolve a detected conflict.

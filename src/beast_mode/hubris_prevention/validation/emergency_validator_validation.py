@@ -11,6 +11,8 @@ import logging
 import re
 from dataclasses import dataclass
 from ..models import EmergencyClaim, EmergencyValidation, Decision
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_emergency_claim(self, claim: EmergencyClaim) -> EmergencyValidation:
     """

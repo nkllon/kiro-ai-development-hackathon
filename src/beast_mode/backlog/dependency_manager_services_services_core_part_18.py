@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_cycle_resolution_suggestions(self, cycles: List[List[str]]) -> List[str]:
     """Generate suggestions for resolving circular dependencies"""

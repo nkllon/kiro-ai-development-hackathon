@@ -13,6 +13,8 @@ from datetime import datetime
 from enum import Enum
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .registry_intelligence_engine import RegistryIntelligenceEngine
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _analyze_process_model(self, context: Dict[str, Any]) -> Dict[str, Any]:
     """Analyze using process model"""

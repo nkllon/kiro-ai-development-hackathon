@@ -12,6 +12,8 @@ import logging
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .models import BacklogItem, Requirement, AcceptanceCriterion, DependencyReference
 from .enums import BeastReadinessStatus, ApprovalStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_beast_readiness(self, item: BacklogItem) -> ReadinessValidation:
     """

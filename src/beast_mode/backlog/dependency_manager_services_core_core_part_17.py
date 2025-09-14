@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _find_orphaned_nodes(self, graph: DependencyGraph) -> Set[str]:
     """Find nodes with no dependencies or dependents"""

@@ -11,6 +11,8 @@ import logging
 import math
 from ..interfaces import HumilityEnforcer
 from ..models import SuccessMetrics, RequirementScaling, GrowthRate, ProtocolImplementation, Claim, FailureSimulation, Bypass, EmergencyGovernance
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def implement_reality_check_protocols(self, growth_rate: GrowthRate) -> ProtocolImplementation:
     """

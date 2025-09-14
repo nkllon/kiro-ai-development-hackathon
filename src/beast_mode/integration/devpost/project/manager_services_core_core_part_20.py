@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _resolve_duplicate_hackathon_path(self, resolution: str, **kwargs) -> bool:
     """Resolve duplicate hackathon path conflict."""

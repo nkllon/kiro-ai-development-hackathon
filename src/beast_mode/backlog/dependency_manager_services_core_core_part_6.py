@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def declare_dependency(self, item_id: str, dependency_spec: DependencySpec) -> DependencyResult:
     """

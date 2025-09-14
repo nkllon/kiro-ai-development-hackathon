@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _load_current_connection(self) -> None:
     """Load current project connection if it exists."""

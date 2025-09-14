@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _estimate_dependency_duration(self, source: str, target: str) -> timedelta:
     """Estimate duration for a dependency relationship"""

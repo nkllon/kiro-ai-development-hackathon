@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def detect_project_conflicts(self) -> List[Dict[str, Any]]:
     """Detect conflicts between projects.

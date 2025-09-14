@@ -14,6 +14,8 @@ import time
 from .models import BacklogItem, MPMValidation, DependencySpec
 from .enums import StrategicTrack, BeastReadinessStatus, ApprovalStatus, StakeholderType, RiskLevel
 from .dependency_manager import BacklogDependencyManager
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _calculate_resource_utilization(self, scenario_params: Dict[str, Any], constraints: ResourceConstraints) -> Dict[str, float]:
     """Calculate resource utilization for scenario"""

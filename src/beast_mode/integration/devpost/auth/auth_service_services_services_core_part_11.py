@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_auth_headers(self) -> Dict[str, str]:
     """

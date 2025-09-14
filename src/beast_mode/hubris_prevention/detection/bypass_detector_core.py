@@ -18,3 +18,5 @@ from ..models import RollbackPlan
 from .bypass_detector_core_validation import *
 from .bypass_detector_core_processing import *
 from .bypass_detector_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

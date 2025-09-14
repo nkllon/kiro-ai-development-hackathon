@@ -30,3 +30,4 @@ from .humility_enforcer_part_29 import *
 from .humility_enforcer_part_30 import *
 from .humility_enforcer_part_31 import *
 from .humility_enforcer_part_32 import *
+from src.rm_ddd.core.health import ModuleHealth

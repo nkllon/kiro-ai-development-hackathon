@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def dfs_longest(node: str, current_path: List[str], current_duration: timedelta) -> Tuple[List[str], timedelta]:
     nonlocal path, duration

@@ -11,6 +11,8 @@ import logging
 from dataclasses import dataclass
 from ..interfaces import HubrisDetector
 from ..models import Decision, HubrisScore, VelocityAlert, BypassAlert, EscalationAction, HubrisFactor, RecommendedAction, TrendDirection, RiskLevel
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def check_bypass_attempts(self, actor_id: str, governance_events: List) -> BypassAlert:
     """

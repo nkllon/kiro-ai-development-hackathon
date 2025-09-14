@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _resolve_duplicate_project_id(self, resolution: str, **kwargs) -> bool:
     """Resolve duplicate project ID conflict."""

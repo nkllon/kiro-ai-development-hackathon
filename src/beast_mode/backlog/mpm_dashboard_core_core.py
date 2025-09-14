@@ -10,3 +10,5 @@ from .dependency_manager import BacklogDependencyManager
 from .mpm_dashboard_core_core_validation import *
 from .mpm_dashboard_core_core_core import *
 from .mpm_dashboard_core_core_utils import *
+from src.rm_ddd.core.health import ModuleHealth
+

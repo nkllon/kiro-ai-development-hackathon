@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def calculate_critical_path(self, track_filter: Optional[str]=None) -> CriticalPathAnalysis:
     """

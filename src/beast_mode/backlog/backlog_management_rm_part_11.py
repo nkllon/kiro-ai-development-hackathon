@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _check_boundary_violations(self) -> List[str]:
         """Check for architectural boundary violations"""

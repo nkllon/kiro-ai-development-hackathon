@@ -18,6 +18,8 @@ import tomllib
 import tomli as tomllib
 import tomllib
 import tomli as tomllib
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _parse_readme_content(self, content: str, path: Path) -> Dict[str, Any]:
     """Parse README content to extract metadata."""

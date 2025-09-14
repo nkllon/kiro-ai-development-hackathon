@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def list_projects(self) -> List[Dict[str, Any]]:
     """List all connected projects with their status.

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
 
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -111,9 +111,11 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .models import BacklogItem, MPMValidation
     from .placeholders import BacklogItemSpec, ReadinessResult
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class BacklogCoreOperations(ReflectiveModule):
+
+class BacklogCoreOperations(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {

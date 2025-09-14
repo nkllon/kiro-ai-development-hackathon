@@ -45,3 +45,4 @@ from .client_class_2_part_44 import *
 from .client_class_2_part_45 import *
 from .client_class_2_part_46 import *
 from .client_class_2_part_47 import *
+from src.rm_ddd.core.health import ModuleHealth

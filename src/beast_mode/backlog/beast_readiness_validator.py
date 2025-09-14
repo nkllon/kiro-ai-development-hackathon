@@ -38,3 +38,4 @@ from .beast_readiness_validator_part_37 import *
 from .beast_readiness_validator_part_38 import *
 from .beast_readiness_validator_part_39 import *
 from .beast_readiness_validator_part_40 import *
+from src.rm_ddd.core.health import ModuleHealth

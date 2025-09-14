@@ -9,6 +9,8 @@ def _extract_pyproject_metadata(self) -> Optional[Dict[str, Any]]:
     except ImportError:
         try:
             import tomli as tomllib
+from src.rm_ddd.core.health import ModuleHealth
+
         except ImportError:
             return None
     try:

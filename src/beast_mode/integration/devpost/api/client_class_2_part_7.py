@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _validate_media_file(self, file_path: Path) -> Dict[str, Any]:
         try:

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def __init__(self, auth_service: DevpostAuthService, base_url: Optional[str]=None, timeout: Optional[float]=None, max_retry_attempts: Optional[int]=None, enable_logging: bool=True):
     """

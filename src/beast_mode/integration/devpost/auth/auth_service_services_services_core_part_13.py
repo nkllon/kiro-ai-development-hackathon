@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def setup_oauth_credentials(self, client_id: str, client_secret: str) -> None:
     """

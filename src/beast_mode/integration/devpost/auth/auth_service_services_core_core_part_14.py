@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_authentication_status(self) -> Dict[str, Any]:
     """

@@ -58,3 +58,4 @@ from .client_part_57 import *
 from .client_part_58 import *
 from .client_part_59 import *
 from .client_part_60 import *
+from src.rm_ddd.core.health import ModuleHealth

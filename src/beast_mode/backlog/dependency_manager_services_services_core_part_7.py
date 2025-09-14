@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def detect_circular_dependencies(self) -> CircularDependencyReport:
     """

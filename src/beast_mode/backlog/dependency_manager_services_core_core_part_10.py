@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_cached_graph(self) -> DependencyGraph:
     """Get cached dependency graph or build new one if cache is stale"""

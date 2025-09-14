@@ -20,3 +20,4 @@ from .auth_service_services_core_core_part_19 import *
 from .auth_service_services_core_core_part_20 import *
 from .auth_service_services_core_core_part_21 import *
 from .auth_service_services_core_core_part_22 import *
+from src.rm_ddd.core.health import ModuleHealth

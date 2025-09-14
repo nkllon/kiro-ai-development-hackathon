@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_longest_path(self, graph: DependencyGraph, nodes: Set[str]) -> Tuple[List[str], timedelta]:
     """Calculate longest path through the dependency graph (critical path)"""

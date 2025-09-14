@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _extract_package_json_metadata(self) -> Optional[Dict[str, Any]]:
     """Extract metadata from package.json."""

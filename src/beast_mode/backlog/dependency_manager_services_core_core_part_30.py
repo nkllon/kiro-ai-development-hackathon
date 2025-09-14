@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _is_performance_healthy(self) -> bool:
     """Check if performance is within acceptable limits"""

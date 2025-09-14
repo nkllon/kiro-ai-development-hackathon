@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _would_create_cycle(self, source_item: str, target_item: str, temp_deps: Dict[str, DependencySpec]) -> bool:
     """Check if adding a dependency would create a cycle"""

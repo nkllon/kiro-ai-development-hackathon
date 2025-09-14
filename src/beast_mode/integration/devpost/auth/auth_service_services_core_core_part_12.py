@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def interactive_oauth_flow(self) -> bool:
     """

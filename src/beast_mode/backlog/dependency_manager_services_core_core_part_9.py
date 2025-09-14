@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_dependency_graph(self, item_id: str) -> DependencyGraph:
     """

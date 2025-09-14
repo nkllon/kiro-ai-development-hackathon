@@ -11,6 +11,8 @@ import logging
 import math
 from ..interfaces import HumilityEnforcer
 from ..models import SuccessMetrics, RequirementScaling, GrowthRate, ProtocolImplementation, Claim, FailureSimulation, Bypass, EmergencyGovernance
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _identify_affected_processes(self, scaling_factor: float) -> List[str]:
     """Identify processes affected by accountability scaling."""

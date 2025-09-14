@@ -11,3 +11,4 @@ from .backlog_management_rm_part_10 import *
 from .backlog_management_rm_part_11 import *
 from .backlog_management_rm_part_12 import *
 from .backlog_management_rm_part_13 import *
+from src.rm_ddd.core.health import ModuleHealth

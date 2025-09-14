@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def disconnect_project(self, project_id: str) -> bool:
     """Disconnect a project from Devpost integration.

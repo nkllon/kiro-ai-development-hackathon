@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_cache_hit_ratio(self) -> float:
     """Calculate cache hit ratio for performance metrics"""

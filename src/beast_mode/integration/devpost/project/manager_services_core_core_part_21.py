@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _resolve_missing_path(self, resolution: str, **kwargs) -> bool:
     """Resolve missing path conflict."""

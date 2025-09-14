@@ -12,6 +12,8 @@ import asyncio
 from dataclasses import dataclass
 from ..interfaces import MamaDiscoverer
 from ..models import AccountabilityChain, AccountabilityRelationship, ConstraintSource, IndependenceClaim, ResearchResult, ChainChange, MappingUpdate, HumanEscalation
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _validate_independence_claim(self, claim: IndependenceClaim, chain: AccountabilityChain) -> bool:
     """Validate independence claim against discovered accountability chain."""

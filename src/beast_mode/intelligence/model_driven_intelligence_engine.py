@@ -10,3 +10,5 @@ from .model_driven_intelligence_engine_core import *
 from .model_driven_intelligence_engine_processing import *
 from .model_driven_intelligence_engine_models import *
 from .model_driven_intelligence_engine_utils import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def __init__(self, client_id: Optional[str]=None, client_secret: Optional[str]=None):
     """

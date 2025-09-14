@@ -15,6 +15,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import logging
 from ..core.reflective_module import ReflectiveModule, HealthStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_api_key(self, api_key: str, required_access: str='read_only') -> Dict[str, Any]:
     """

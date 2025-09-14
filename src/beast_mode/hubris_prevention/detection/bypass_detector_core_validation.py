@@ -22,6 +22,8 @@ from ..models import TriggerEvent
 from ..models import EscalationStep
 from ..models import SuccessCriterion
 from ..models import RollbackPlan
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def check_escalation_needed(self, actor_id: str, pattern_duration: timedelta) -> Optional[EscalationAction]:
     """

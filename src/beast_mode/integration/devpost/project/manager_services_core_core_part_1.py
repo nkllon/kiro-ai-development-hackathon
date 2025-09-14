@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def __init__(self, project_root: Optional[Path]=None):
     """Initialize project manager.

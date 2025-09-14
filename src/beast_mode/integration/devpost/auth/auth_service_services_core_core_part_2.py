@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _load_credentials(self) -> None:
     """Load stored credentials from file"""

@@ -11,6 +11,8 @@ def authenticate_with_api_key(self, api_key: str) -> bool:
         """
     try:
         from ..api.client import DevPostAPIClient
+from src.rm_ddd.core.health import ModuleHealth
+
         client = DevPostAPIClient(api_key=api_key)
         if client.test_connection():
             self.credentials.api_key = api_key

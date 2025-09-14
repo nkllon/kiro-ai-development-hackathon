@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def dfs(node: str):
     if node in rec_stack:

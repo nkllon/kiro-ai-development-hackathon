@@ -28,3 +28,4 @@ from .reality_checker_core_part_27 import *
 from .reality_checker_core_part_28 import *
 from .reality_checker_core_part_29 import *
 from .reality_checker_core_part_30 import *
+from src.rm_ddd.core.health import ModuleHealth

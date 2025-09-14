@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _extract_repository_url(self, package_data: Dict[str, Any]) -> Optional[str]:
     """Extract repository URL from package data."""

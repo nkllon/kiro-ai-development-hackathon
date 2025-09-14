@@ -18,6 +18,8 @@ import tomllib
 import tomli as tomllib
 import tomllib
 import tomli as tomllib
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_project(self) -> ValidationResult:
     """Validate project against Devpost requirements.

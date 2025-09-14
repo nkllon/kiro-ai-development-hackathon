@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _save_credentials(self) -> None:
     """Save credentials to file"""

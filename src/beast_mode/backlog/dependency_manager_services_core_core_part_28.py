@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _record_operation_time(self, operation_time: float):
     """Record operation time for performance monitoring"""

@@ -6,3 +6,5 @@ from ..interfaces import RealityChecker
 from ..models import Decision, ImpactValidation, EmergencyClaim, EmergencyValidation, VerificationRequirement, RealityCheckFailure, AuditEntry
 from .reality_checker_core import *
 from .reality_checker_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

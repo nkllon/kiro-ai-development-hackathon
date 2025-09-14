@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_project_status(self, project_id: Optional[str]=None) -> Dict[str, Any]:
     """Get detailed status for a project.

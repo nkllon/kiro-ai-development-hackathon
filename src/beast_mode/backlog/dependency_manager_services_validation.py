@@ -14,6 +14,8 @@ import logging
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .models import DependencySpec, BacklogItem
 from .enums import DependencyType, RiskLevel, StrategicTrack
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _check_boundary_violations(self) -> List[str]:
     """Check for architectural boundary violations"""

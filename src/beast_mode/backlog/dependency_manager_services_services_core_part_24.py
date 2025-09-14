@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _assess_path_risks(self, critical_path: List[str]) -> Dict[str, RiskLevel]:
     """Assess risk factors for nodes in the critical path"""

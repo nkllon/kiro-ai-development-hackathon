@@ -14,6 +14,8 @@ import time
 from .models import BacklogItem, MPMValidation, DependencySpec
 from .enums import StrategicTrack, BeastReadinessStatus, ApprovalStatus, StakeholderType, RiskLevel
 from .dependency_manager import BacklogDependencyManager
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _invalidate_cache(self) -> None:
     """Invalidate cached portfolio status"""

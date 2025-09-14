@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def clear_credentials(self) -> None:
     """Clear stored credentials"""

@@ -17,3 +17,5 @@ from .manager_services_services_processing import *
 from .manager_services_services_services import *
 from .manager_services_services_validation import *
 from .manager_services_services_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

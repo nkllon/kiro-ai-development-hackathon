@@ -8,3 +8,5 @@ from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .models import DependencySpec, BacklogItem
 from .enums import DependencyType, RiskLevel, StrategicTrack
 from .dependency_manager_services_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def collect_reachable(node: str, visited: Set[str]):
         if node in visited:

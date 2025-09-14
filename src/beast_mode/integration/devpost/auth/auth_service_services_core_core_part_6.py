@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def complete_oauth_flow(self, authorization_code: str, state: str) -> bool:
     """

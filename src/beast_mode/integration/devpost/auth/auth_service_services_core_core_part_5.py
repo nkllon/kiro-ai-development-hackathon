@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def authenticate_with_oauth(self, scopes: Optional[list]=None, redirect_uri: str='http://localhost:8080/callback') -> str:
     """

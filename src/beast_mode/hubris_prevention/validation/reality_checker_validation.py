@@ -11,6 +11,8 @@ import logging
 import hashlib
 from ..interfaces import RealityChecker
 from ..models import Decision, ImpactValidation, EmergencyClaim, EmergencyValidation, VerificationRequirement, RealityCheckFailure, AuditEntry
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_impact_threshold(self, decision: Decision) -> ImpactValidation:
     """

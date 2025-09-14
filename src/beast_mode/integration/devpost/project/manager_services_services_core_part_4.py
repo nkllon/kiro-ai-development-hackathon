@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def update_config(self, updates: Dict[str, Any]) -> bool:
     """Update project configuration.

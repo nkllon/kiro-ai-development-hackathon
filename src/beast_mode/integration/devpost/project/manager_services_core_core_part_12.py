@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _find_media_files(self) -> List[Path]:
     """Find media files in the project."""

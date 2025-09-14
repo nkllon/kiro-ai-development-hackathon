@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def mark_beast_ready(self, item_id: str, mpm_validation: MPMValidation) -> ReadinessResult:
         """Mark an item as beast-ready after MPM validation"""

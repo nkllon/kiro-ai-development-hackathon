@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _has_path(self, graph: Dict[str, Set[str]], start: str, end: str) -> bool:
     """Check if there's a path from start to end in the graph using BFS"""

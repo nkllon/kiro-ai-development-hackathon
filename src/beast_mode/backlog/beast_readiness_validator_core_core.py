@@ -7,3 +7,5 @@ from .models import BacklogItem, Requirement, AcceptanceCriterion, DependencyRef
 from .enums import BeastReadinessStatus, ApprovalStatus
 from .beast_readiness_validator_core_core_core import *
 from .beast_readiness_validator_core_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

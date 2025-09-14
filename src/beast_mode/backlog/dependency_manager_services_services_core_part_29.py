@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_avg_operation_time(self) -> float:
     """Get average operation time in milliseconds"""

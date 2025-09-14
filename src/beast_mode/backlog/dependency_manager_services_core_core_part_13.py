@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _build_temp_graph(self, temp_deps: Dict[str, DependencySpec]) -> Dict[str, Set[str]]:
     """Build temporary graph for cycle detection"""

@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def report_error(self, error: str, context: Optional[Dict[str, Any]] = None):
         """Provide error reporting and handling"""
