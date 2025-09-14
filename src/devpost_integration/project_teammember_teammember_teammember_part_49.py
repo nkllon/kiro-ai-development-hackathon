@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def add_permission(self, permission: str) -> bool:
     """Add permission to member."""

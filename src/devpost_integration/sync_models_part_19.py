@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def add_failed_record(self) -> None:
         """Increment failed records count."""

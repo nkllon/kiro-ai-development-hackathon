@@ -25,3 +25,4 @@ from .models_models_models_models_class_2_part_24 import *
 from .models_models_models_models_class_2_part_25 import *
 from .models_models_models_models_class_2_part_26 import *
 from .models_models_models_models_class_2_part_27 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -17,3 +17,4 @@ from .cli_commands_part_16 import *
 from .cli_commands_part_17 import *
 from .cli_commands_part_18 import *
 from .cli_commands_part_19 import *
+from src.rm_ddd.core.health import ModuleHealth

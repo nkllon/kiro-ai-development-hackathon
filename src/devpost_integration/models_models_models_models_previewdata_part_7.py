@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _get_default_preview_data(self) -> Dict[str, Any]:
         """Get default preview data"""

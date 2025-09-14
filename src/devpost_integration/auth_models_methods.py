@@ -54,3 +54,4 @@ from .auth_models_methods_part_53 import *
 from .auth_models_methods_part_54 import *
 from .auth_models_methods_part_55 import *
 from .auth_models_methods_part_56 import *
+from src.rm_ddd.core.health import ModuleHealth

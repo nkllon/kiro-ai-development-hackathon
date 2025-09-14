@@ -36,3 +36,4 @@ from .models_core_validation_validation_part_35 import *
 from .models_core_validation_validation_part_36 import *
 from .models_core_validation_validation_part_37 import *
 from .models_core_validation_validation_part_38 import *
+from src.rm_ddd.core.health import ModuleHealth

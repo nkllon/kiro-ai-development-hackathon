@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_pending_changes(self) -> List[str]:
         """get_pending_changes - Enhanced for compliance"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_project_metadata(metadata: Dict[str, Any]) -> Dict[str, Any]:
     """Validate project metadata with comprehensive validation"""

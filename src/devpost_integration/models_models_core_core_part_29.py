@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def set_thumbnail(self, thumbnail_url: str) -> bool:
     """Set preview thumbnail URL"""
