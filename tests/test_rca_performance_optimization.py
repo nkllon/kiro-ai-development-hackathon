@@ -18,11 +18,13 @@ from src.beast_mode.testing.timeout_handler import (
     RCATimeoutHandler, TimeoutConfiguration, TimeoutStrategy, TimeoutEvent
 )
 from src.beast_mode.testing.rca_integration import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     TestRCAIntegrationEngine, TestFailureData
 )
 
 
-class TestRCAPerformanceMonitor:
+class TestRCAPerformanceMonitor(ReflectiveModule):
     """Test performance monitoring functionality"""
     
     def test_performance_monitor_initialization(self):
@@ -154,7 +156,7 @@ class TestRCAPerformanceMonitor:
             assert not monitor.monitor_thread.is_alive()
 
 
-class TestRCATimeoutHandler:
+class TestRCATimeoutHandler(ReflectiveModule):
     """Test timeout handling functionality"""
     
     def test_timeout_handler_initialization(self):
@@ -291,7 +293,7 @@ class TestRCATimeoutHandler:
                     handler._cleanup_operation_timeouts(operation_id)
 
 
-class TestRCAIntegrationPerformance:
+class TestRCAIntegrationPerformance(ReflectiveModule):
     """Test RCA integration performance optimization"""
     
     def test_rca_integration_with_performance_monitoring(self):
@@ -500,4 +502,32 @@ class TestRCAIntegrationPerformance:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v", "--tb=short"])

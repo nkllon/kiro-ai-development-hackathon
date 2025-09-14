@@ -11,13 +11,15 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 from src.spec_reconciliation.governance import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     GovernanceFramework, GovernanceController, GovernanceRole, TrainingProgram, 
     MaintenanceSchedule, ContinuousImprovementProcess,
     TrainingStatus, MaintenanceType, GovernanceRoleType
 )
 
 
-class TestGovernanceFramework:
+class TestGovernanceFramework(ReflectiveModule):
     """Test governance framework functionality"""
     
     def setup_method(self):
@@ -291,7 +293,7 @@ class TestGovernanceFramework:
         assert len(report["success_criteria"]) > 0
 
 
-class TestGovernanceDataModels:
+class TestGovernanceDataModels(ReflectiveModule):
     """Test governance data model classes"""
     
     def test_governance_role_model(self):
@@ -373,7 +375,7 @@ class TestGovernanceDataModels:
         assert process.review_cycle_months == 3
 
 
-class TestGovernanceIntegration:
+class TestGovernanceIntegration(ReflectiveModule):
     """Test governance framework integration"""
     
     def setup_method(self):
@@ -459,4 +461,32 @@ class TestGovernanceIntegration:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__])

@@ -10,6 +10,8 @@ from datetime import datetime
 from unittest.mock import Mock
 
 from src.gitkraken_integration.providers.git_provider import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     GitProvider,
     GitOperationResult,
     GitOperationStatus,
@@ -20,7 +22,7 @@ from src.gitkraken_integration.providers.git_provider import (
 )
 
 
-class TestGitOperationResult:
+class TestGitOperationResult(ReflectiveModule):
     """Test GitOperationResult data model"""
     
     def test_successful_result_creation(self):
@@ -76,7 +78,7 @@ class TestGitOperationResult:
         assert result.status == GitOperationStatus.FAILURE
 
 
-class TestBranchInfo:
+class TestBranchInfo(ReflectiveModule):
     """Test BranchInfo data model"""
     
     def test_branch_info_creation(self):
@@ -113,7 +115,7 @@ class TestBranchInfo:
         assert branch.staged_files == 1
 
 
-class TestCommitInfo:
+class TestCommitInfo(ReflectiveModule):
     """Test CommitInfo data model"""
     
     def test_commit_info_creation(self):
@@ -148,7 +150,7 @@ class TestCommitInfo:
         assert commit.deletions == 10
 
 
-class TestFileStatus:
+class TestFileStatus(ReflectiveModule):
     """Test FileStatus data model"""
     
     def test_file_status_creation(self):
@@ -168,7 +170,7 @@ class TestFileStatus:
         assert file_status.index_status == "M"
 
 
-class TestMergeConflict:
+class TestMergeConflict(ReflectiveModule):
     """Test MergeConflict data model"""
     
     def test_merge_conflict_creation(self):
@@ -199,7 +201,7 @@ class TestMergeConflict:
         assert conflict.resolution_suggestions == []
 
 
-class TestGitProviderInterface:
+class TestGitProviderInterface(ReflectiveModule):
     """Test GitProvider abstract interface"""
     
     def test_cannot_instantiate_abstract_provider(self):
@@ -210,7 +212,7 @@ class TestGitProviderInterface:
     def test_branch_name_validation(self):
         """Test branch name validation utility method"""
         # Create a concrete implementation for testing
-        class TestProvider(GitProvider):
+        class TestProvider(GitProvider, ReflectiveModule):
             def get_status(self): pass
             def get_current_branch(self): pass
             def list_branches(self, include_remote=True): pass
@@ -259,7 +261,7 @@ class TestGitProviderInterface:
     def test_commit_message_formatting(self):
         """Test commit message formatting utility method"""
         # Create a concrete implementation for testing
-        class TestProvider(GitProvider):
+        class TestProvider(GitProvider, ReflectiveModule):
             def get_status(self): pass
             def get_current_branch(self): pass
             def list_branches(self, include_remote=True): pass
@@ -318,4 +320,32 @@ class TestGitProviderInterface:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__])

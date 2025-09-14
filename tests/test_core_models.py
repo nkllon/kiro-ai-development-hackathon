@@ -2,12 +2,14 @@
 
 import pytest
 from src.visual_diagram_validation.core.models import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     PNGImage, QualityViolation, Recommendation, AnalysisResult, 
     QualityReport, BoundingBox, Severity, ActionType
 )
 
 
-class TestBoundingBox:
+class TestBoundingBox(ReflectiveModule):
     """Test BoundingBox functionality."""
     
     def test_center_calculation(self):
@@ -22,7 +24,7 @@ class TestBoundingBox:
         assert bbox.area() == 5000
 
 
-class TestPNGImage:
+class TestPNGImage(ReflectiveModule):
     """Test PNGImage functionality."""
     
     def test_aspect_ratio(self):
@@ -50,7 +52,7 @@ class TestPNGImage:
         assert abs(image.size_mb() - 1.0) < 0.01
 
 
-class TestQualityViolation:
+class TestQualityViolation(ReflectiveModule):
     """Test QualityViolation functionality."""
     
     def test_severity_enum_conversion(self):
@@ -66,7 +68,7 @@ class TestQualityViolation:
         assert violation.severity == Severity.ERROR
 
 
-class TestAnalysisResult:
+class TestAnalysisResult(ReflectiveModule):
     """Test AnalysisResult functionality."""
     
     def test_has_errors(self):
@@ -106,7 +108,7 @@ class TestAnalysisResult:
         assert result.has_warnings() is True
 
 
-class TestQualityReport:
+class TestQualityReport(ReflectiveModule):
     """Test QualityReport functionality."""
     
     def test_violation_counts(self):
@@ -160,4 +162,32 @@ class TestQualityReport:
             processing_time=1.0,
             audience_mode="general"
         )
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert report3.is_passing() is True

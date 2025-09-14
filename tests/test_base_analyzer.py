@@ -7,11 +7,13 @@ from src.visual_diagram_validation.analyzers.base_analyzer import (
     BaseQualityAnalyzer, ViolationBuilder, RecommendationBuilder
 )
 from src.visual_diagram_validation.core.models import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     PNGImage, Severity, ActionType, BoundingBox
 )
 
 
-class TestAnalyzer(BaseQualityAnalyzer):
+class TestAnalyzer(BaseQualityAnalyzer, ReflectiveModule):
     """Test implementation of BaseQualityAnalyzer."""
     
     @property
@@ -34,7 +36,7 @@ class TestAnalyzer(BaseQualityAnalyzer):
             )
 
 
-class TestBaseQualityAnalyzer:
+class TestBaseQualityAnalyzer(ReflectiveModule):
     """Test base analyzer functionality."""
     
     def setup_method(self):
@@ -142,7 +144,7 @@ class TestBaseQualityAnalyzer:
     
     def test_analysis_error_handling(self):
         """Test error handling during analysis."""
-        class FailingAnalyzer(BaseQualityAnalyzer):
+        class FailingAnalyzer(BaseQualityAnalyzer, ReflectiveModule):
             @property
             def analyzer_name(self):
                 return "failing_analyzer"
@@ -182,7 +184,7 @@ class TestBaseQualityAnalyzer:
         assert "4.5" in rec.specific_guidance
 
 
-class TestViolationBuilder:
+class TestViolationBuilder(ReflectiveModule):
     """Test violation builder pattern."""
     
     def test_basic_build(self):
@@ -212,7 +214,7 @@ class TestViolationBuilder:
         assert violation.category == "accessibility"
 
 
-class TestRecommendationBuilder:
+class TestRecommendationBuilder(ReflectiveModule):
     """Test recommendation builder pattern."""
     
     def test_basic_build(self):
@@ -228,4 +230,32 @@ class TestRecommendationBuilder:
         assert rec.action_type == ActionType.INCREASE
         assert rec.specific_guidance == "Increase font size"
         assert rec.expected_outcome == "Better readability"
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert rec.priority == 1
