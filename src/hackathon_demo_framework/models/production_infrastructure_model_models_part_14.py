@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _generate_health_metrics(self, config: GKEConfig) -> Dict[str, Any]:
         """Generate health metrics for deployed cluster"""

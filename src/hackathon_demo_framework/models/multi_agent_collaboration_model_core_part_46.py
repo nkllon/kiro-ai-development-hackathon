@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def coordinate_agents(self, task: Task) -> CollaborationResult:
     try:

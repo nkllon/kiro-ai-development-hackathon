@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _initialize_requirements_traceability(self) -> List[Dict[str, Any]]:
         """RDI Compliance: Initialize requirements traceability"""

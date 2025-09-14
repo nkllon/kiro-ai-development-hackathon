@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def amplify_human_creativity(self, human_input: HumanInput) -> Dict[str, Any]:
     try:

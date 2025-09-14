@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def update_learning_patterns(self, session_id: str, patterns: List[Dict[str, Any]]) -> None:
         """update_learning_patterns - Enhanced for compliance"""

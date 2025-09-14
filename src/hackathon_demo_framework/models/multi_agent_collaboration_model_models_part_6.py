@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def __init__(self):
         super().__init__('MultiAgentCollaborationModel', '1.0.0')

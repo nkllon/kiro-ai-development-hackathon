@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_performance_metrics(self, code: str) -> Dict[str, Any]:
     try:

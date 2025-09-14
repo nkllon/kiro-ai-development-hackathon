@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def prepare_hackathon_demo(self, quick_mode: bool=False) -> DemoPackage:
         """

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_domain_boundaries(self) -> Dict[str, Any]:
     try:

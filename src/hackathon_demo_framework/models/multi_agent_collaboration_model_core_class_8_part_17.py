@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def resolve_conflicts(self, conflicts: List[Conflict]) -> List[Dict[str, Any]]:
     try:

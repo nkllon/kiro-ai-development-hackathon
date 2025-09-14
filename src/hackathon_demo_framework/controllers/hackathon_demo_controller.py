@@ -6,3 +6,5 @@ from ..views import HackathonDemoView, DemoPhase, DemoContent
 from .hackathon_demo_controller_processing import *
 from .hackathon_demo_controller_handlers import *
 from .hackathon_demo_controller_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

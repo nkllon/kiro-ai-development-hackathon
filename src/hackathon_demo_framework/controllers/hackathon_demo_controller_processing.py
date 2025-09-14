@@ -10,6 +10,8 @@ from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 from ..models import SpecToCodeModel, SystematicSuperiorityModel, MultiAgentCollaborationModel, ProductionInfrastructureModel, Task, HumanInput, GKEConfig
 from ..views import HackathonDemoView, DemoPhase, DemoContent
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def create_spec_transformation(self, session_id: str, spec: str) -> TransformationResult:
     """Create a new spec-to-code transformation"""

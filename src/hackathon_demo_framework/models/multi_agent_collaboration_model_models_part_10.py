@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def validate_against_requirements(self) -> Dict[str, Any]:
         """RDI Compliance: Validate against requirements"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_evidence_package(self, systematic: Approach, adhoc: Approach, improvement_factors: Dict[str, float], overall_improvement: float) -> Dict[str, Any]:
     try:

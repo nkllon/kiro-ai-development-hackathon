@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def create_systematic_approach(self) -> Approach:
     try:

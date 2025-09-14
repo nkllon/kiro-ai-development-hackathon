@@ -11,6 +11,8 @@ from dataclasses import dataclass
 from enum import Enum
 from rm_ddd.core.unified_reflective_module import ReflectiveModule, HealthStatus, HealthIndicator
 from beast_mode.core.model_registry import ModelRegistry
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_against_requirements(self) -> Dict[str, Any]:
     """RDI Compliance: Validate against requirements"""

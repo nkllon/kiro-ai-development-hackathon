@@ -19,3 +19,4 @@ from .multi_agent_collaboration_model_core_class_8_part_18 import *
 from .multi_agent_collaboration_model_core_class_8_part_19 import *
 from .multi_agent_collaboration_model_core_class_8_part_20 import *
 from .multi_agent_collaboration_model_core_class_8_part_21 import *
+from src.rm_ddd.core.health import ModuleHealth

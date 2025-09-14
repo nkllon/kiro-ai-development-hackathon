@@ -8,3 +8,5 @@ from .spec_to_code_model_validation import *
 from .spec_to_code_model_processing import *
 from .spec_to_code_model_models import *
 from .spec_to_code_model_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

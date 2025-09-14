@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def update_demo_phase(self, session_id: str, phase: DemoPhase) -> None:
         """update_demo_phase - Enhanced for compliance"""

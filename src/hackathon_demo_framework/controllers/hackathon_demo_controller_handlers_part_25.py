@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def update_demo_phase(self, session_id: str, phase: DemoPhase) -> None:
         """update_demo_phase - Enhanced for compliance"""

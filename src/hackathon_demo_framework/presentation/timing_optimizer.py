@@ -105,3 +105,4 @@ from .timing_optimizer_part_104 import *
 from .timing_optimizer_part_105 import *
 from .timing_optimizer_part_106 import *
 from .timing_optimizer_part_107 import *
+from src.rm_ddd.core.health import ModuleHealth

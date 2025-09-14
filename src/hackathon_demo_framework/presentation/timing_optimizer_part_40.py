@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _create_rehearsal_schedule(self, demo_script: DemoScript) -> List[str]:
         try:

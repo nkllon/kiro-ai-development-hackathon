@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _amplify_human_input(self, human_input: str) -> Dict[str, Any]:
         """Amplify human creativity through AI assistance"""

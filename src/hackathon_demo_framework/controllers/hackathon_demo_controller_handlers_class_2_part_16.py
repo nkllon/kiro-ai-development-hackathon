@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def run_complete_demo(self, judge_id: str) -> Dict[str, Any]:
         """run_complete_demo - Enhanced for compliance"""

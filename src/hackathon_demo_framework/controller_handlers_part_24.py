@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _validate_technical_completeness(self) -> TechnicalAssessment:
         """Validate technical implementation completeness and quality."""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def test_performance(self) -> Dict[str, Any]:
         """Test performance with load testing and optimization recommendations"""

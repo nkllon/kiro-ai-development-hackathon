@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _select_agents_for_task(self, task: Task) -> List[Agent]:
         """Select appropriate agents for task based on requirements"""

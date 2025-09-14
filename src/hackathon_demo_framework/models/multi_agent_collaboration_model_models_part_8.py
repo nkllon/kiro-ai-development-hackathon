@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _initialize_default_agents(self):
         """Initialize default set of specialized agents"""

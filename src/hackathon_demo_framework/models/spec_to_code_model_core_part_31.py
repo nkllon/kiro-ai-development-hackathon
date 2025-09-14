@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def generate_learning_patterns(self) -> List[LearningPattern]:
     try:

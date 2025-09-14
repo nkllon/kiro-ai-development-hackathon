@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def calculate_systematic_score(self) -> float:
     try:

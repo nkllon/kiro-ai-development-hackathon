@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _measure_presentation_impact(self, demo_package: DemoPackage) -> PresentationMetrics:
         """Measure and analyze presentation effectiveness."""

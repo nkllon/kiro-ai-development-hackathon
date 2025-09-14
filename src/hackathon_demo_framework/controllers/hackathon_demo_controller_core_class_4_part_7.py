@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def create_infrastructure_deployment(self, session_id: str) -> Dict[str, Any]:
     try:

@@ -17,3 +17,4 @@ from .systematic_superiority_model_core_class_5_part_16 import *
 from .systematic_superiority_model_core_class_5_part_17 import *
 from .systematic_superiority_model_core_class_5_part_18 import *
 from .systematic_superiority_model_core_class_5_part_19 import *
+from src.rm_ddd.core.health import ModuleHealth

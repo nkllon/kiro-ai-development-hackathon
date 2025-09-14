@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _apply_pacing_strategy(self, base_ratios: Dict[str, float], strategy: PacingStrategy) -> Dict[str, float]:
         try:

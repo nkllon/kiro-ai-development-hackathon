@@ -5,3 +5,5 @@ from dataclasses import dataclass
 from enum import Enum
 from ..models import DemoScript, HackathonConfig, SystematicEvidence, TechnicalAssessment
 from .demo_script_generator_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

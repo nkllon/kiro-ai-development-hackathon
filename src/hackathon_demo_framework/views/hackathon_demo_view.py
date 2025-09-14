@@ -4,3 +4,5 @@ from dataclasses import dataclass
 from enum import Enum
 from ..models import SpecToCodeModel, SystematicSuperiorityModel, MultiAgentCollaborationModel, ProductionInfrastructureModel
 from .hackathon_demo_view_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

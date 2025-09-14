@@ -18,3 +18,4 @@ from .production_infrastructure_model_core_class_7_part_17 import *
 from .production_infrastructure_model_core_class_7_part_18 import *
 from .production_infrastructure_model_core_class_7_part_19 import *
 from .production_infrastructure_model_core_class_7_part_20 import *
+from src.rm_ddd.core.health import ModuleHealth

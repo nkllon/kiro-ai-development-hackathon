@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _simulate_deployment_time(self, config: GKEConfig) -> float:
         """Simulate GKE deployment time based on configuration"""

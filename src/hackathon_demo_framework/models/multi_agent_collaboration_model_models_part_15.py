@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _generate_coordination_events(self, task: Task, agents: List[Agent]) -> List[Dict[str, Any]]:
         """Generate visible coordination events between agents"""

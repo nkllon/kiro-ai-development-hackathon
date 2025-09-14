@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_collaborative_output(self, task: Task, agents: List[Agent], human_amplification: Dict[str, Any]) -> Dict[str, Any]:
     try:

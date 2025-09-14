@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def update_systematic_score(self, session_id: str, new_score: float) -> None:
         """update_systematic_score - Enhanced for compliance"""

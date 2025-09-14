@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _simulate_conflict_resolution(self, agents: List[Agent]) -> List[Dict[str, Any]]:
         """Simulate conflicts between agents and their resolution"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def create_adhoc_approach(self) -> Approach:
     try:

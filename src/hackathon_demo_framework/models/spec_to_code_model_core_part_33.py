@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _assess_quality_level(self, code: str) -> QualityLevel:
     try:

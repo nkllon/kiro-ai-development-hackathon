@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def __init__(self) -> Any:
     super().__init__('SystematicSuperiorityModel', '1.0.0')

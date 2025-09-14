@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def run_complete_demo(self, judge_id: str) -> Dict[str, Any]:
         """run_complete_demo - Enhanced for compliance"""

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def create_spec_transformation(self, session_id: str, spec: str) -> TransformationResult:
         """create_spec_transformation - Enhanced for compliance"""

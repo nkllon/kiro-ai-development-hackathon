@@ -23,3 +23,4 @@ from .production_infrastructure_model_models_part_22 import *
 from .production_infrastructure_model_models_part_23 import *
 from .production_infrastructure_model_models_part_24 import *
 from .production_infrastructure_model_models_part_25 import *
+from src.rm_ddd.core.health import ModuleHealth

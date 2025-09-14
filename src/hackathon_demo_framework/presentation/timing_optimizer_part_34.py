@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def analyze_pacing_effectiveness(self, demo_script: DemoScript, judge_attention_data: Optional[Dict[str, float]]=None) -> Dict[str, Any]:
         try:

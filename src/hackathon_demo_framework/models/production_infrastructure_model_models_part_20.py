@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def validate_security(self) -> SecurityValidationResult:
         """Validate security with comprehensive scanning and compliance checking"""

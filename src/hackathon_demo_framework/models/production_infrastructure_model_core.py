@@ -48,3 +48,4 @@ from .production_infrastructure_model_core_part_47 import *
 from .production_infrastructure_model_core_part_48 import *
 from .production_infrastructure_model_core_part_49 import *
 from .production_infrastructure_model_core_part_50 import *
+from src.rm_ddd.core.health import ModuleHealth

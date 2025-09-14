@@ -54,3 +54,4 @@ from .multi_agent_collaboration_model_core_part_53 import *
 from .multi_agent_collaboration_model_core_part_54 import *
 from .multi_agent_collaboration_model_core_part_55 import *
 from .multi_agent_collaboration_model_core_part_56 import *
+from src.rm_ddd.core.health import ModuleHealth

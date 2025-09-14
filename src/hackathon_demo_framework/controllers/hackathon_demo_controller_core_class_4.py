@@ -15,3 +15,4 @@ from .hackathon_demo_controller_core_class_4_part_14 import *
 from .hackathon_demo_controller_core_class_4_part_15 import *
 from .hackathon_demo_controller_core_class_4_part_16 import *
 from .hackathon_demo_controller_core_class_4_part_17 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_security_metrics(self, config: GKEConfig) -> Dict[str, Any]:
     try:

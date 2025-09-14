@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def update_session_interaction(self, session_id: str, interaction_type: str, details: Dict[str, Any]) -> None:
         """update_session_interaction - Enhanced for compliance"""

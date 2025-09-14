@@ -37,3 +37,4 @@ from .systematic_superiority_model_core_part_36 import *
 from .systematic_superiority_model_core_part_37 import *
 from .systematic_superiority_model_core_part_38 import *
 from .systematic_superiority_model_core_part_39 import *
+from src.rm_ddd.core.health import ModuleHealth

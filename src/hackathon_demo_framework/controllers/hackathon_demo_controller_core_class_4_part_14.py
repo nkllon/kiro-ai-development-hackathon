@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _update_session_progress(self, session_id: str, progress_increment: float) -> None:
     try:

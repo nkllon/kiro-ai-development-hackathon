@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_roi(self, systematic: Approach, adhoc: Approach, improvement_factors: Dict[str, float]) -> Dict[str, Any]:
     try:

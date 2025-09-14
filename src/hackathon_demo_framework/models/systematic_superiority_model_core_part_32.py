@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def compare_approaches(self, systematic: Approach, adhoc: Approach) -> ComparisonResult:
     try:

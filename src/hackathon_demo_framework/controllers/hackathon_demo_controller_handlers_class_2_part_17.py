@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def get_session_analytics(self, session_id: str) -> Dict[str, Any]:
         """get_session_analytics - Enhanced for compliance"""

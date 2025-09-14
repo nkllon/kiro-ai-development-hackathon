@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _get_adjustment_reason(self, section: str, current: int, optimal: int, strategy: PacingStrategy) -> str:
         try:

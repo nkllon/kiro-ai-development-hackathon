@@ -29,3 +29,4 @@ from .hackathon_demo_controller_handlers_part_28 import *
 from .hackathon_demo_controller_handlers_part_29 import *
 from .hackathon_demo_controller_handlers_part_30 import *
 from .hackathon_demo_controller_handlers_part_31 import *
+from src.rm_ddd.core.health import ModuleHealth

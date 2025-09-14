@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def create_demo_session(self, judge_id: str) -> DemoSession:
         """create_demo_session - Enhanced for compliance"""

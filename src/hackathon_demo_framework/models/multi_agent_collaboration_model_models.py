@@ -22,3 +22,4 @@ from .multi_agent_collaboration_model_models_part_21 import *
 from .multi_agent_collaboration_model_models_part_22 import *
 from .multi_agent_collaboration_model_models_part_23 import *
 from .multi_agent_collaboration_model_models_part_24 import *
+from src.rm_ddd.core.health import ModuleHealth

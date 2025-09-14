@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def generate_judge_package(self, demo_package: DemoPackage) -> Dict[str, Any]:
         """

@@ -35,3 +35,4 @@ from .spec_to_code_model_core_part_34 import *
 from .spec_to_code_model_core_part_35 import *
 from .spec_to_code_model_core_part_36 import *
 from .spec_to_code_model_core_part_37 import *
+from src.rm_ddd.core.health import ModuleHealth
