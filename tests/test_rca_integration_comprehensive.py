@@ -27,7 +27,7 @@ from beast_mode.testing.rca_report_generator import RCAReportGenerator, ReportFo
 from beast_mode.analysis.rca_engine import RCAEngine, Failure, FailureCategory, RCAResult
 
 
-class TestEndToEndRCAWorkflow:
+class TestEndToEndRCAWorkflow(ReflectiveModule):
     """Test complete end-to-end test failure to RCA workflow"""
     
     @pytest.fixture
@@ -298,7 +298,7 @@ class TestEndToEndRCAWorkflow:
         assert len(report.recommendations) > 0
 
 
-class TestPerformanceRequirements:
+class TestPerformanceRequirements(ReflectiveModule):
     """Test performance requirements for RCA analysis"""
     
     @pytest.fixture
@@ -374,6 +374,8 @@ class TestPerformanceRequirements:
         """
         import psutil
         import os
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         
         integrator = TestRCAIntegrationEngine()
         
@@ -430,7 +432,7 @@ class TestPerformanceRequirements:
         assert report.total_failures == 1
 
 
-class TestCompatibilityRequirements:
+class TestCompatibilityRequirements(ReflectiveModule):
     """Test compatibility with different pytest versions and failure types"""
     
     def test_pytest_output_parsing_compatibility(self):
@@ -626,7 +628,7 @@ tests/test_files.py:8: FileNotFoundError
             assert "infrastructure" in rca_failure.context.get("test_type", "")
 
 
-class TestAutomatedTestSuite:
+class TestAutomatedTestSuite(ReflectiveModule):
     """Automated test suite that validates all RCA integration functionality"""
     
     def test_all_requirements_coverage(self):
@@ -781,4 +783,32 @@ class TestAutomatedTestSuite:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v", "--tb=short"])

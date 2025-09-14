@@ -10,7 +10,7 @@ from src.beast_mode.hubris_prevention.models import (
 )
 
 
-class TestActor:
+class TestActor(ReflectiveModule):
     """Test cases for Actor model."""
     
     def test_actor_creation(self):
@@ -44,7 +44,7 @@ class TestActor:
         assert actor.metadata == metadata
 
 
-class TestDecision:
+class TestDecision(ReflectiveModule):
     """Test cases for Decision model."""
     
     def test_decision_creation(self):
@@ -78,7 +78,7 @@ class TestDecision:
         assert decision.emergency_claimed is True
 
 
-class TestAccountabilityChain:
+class TestAccountabilityChain(ReflectiveModule):
     """Test cases for AccountabilityChain model."""
     
     def test_empty_accountability_chain(self):
@@ -94,7 +94,7 @@ class TestAccountabilityChain:
         assert chain.discovery_method == ""
 
 
-class TestHubrisScore:
+class TestHubrisScore(ReflectiveModule):
     """Test cases for HubrisScore model."""
     
     def test_hubris_score_creation(self):
@@ -127,12 +127,14 @@ class TestHubrisScore:
         assert score.trend_direction == TrendDirection.WORSENING
 
 
-class TestRealityCheckResult:
+class TestRealityCheckResult(ReflectiveModule):
     """Test cases for RealityCheckResult model."""
     
     def test_reality_check_result_creation(self):
         """Test basic reality check result creation."""
         from src.beast_mode.hubris_prevention.models import ImpactValidation
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         
         impact_validation = ImpactValidation(
             decision_id="decision_001",
@@ -155,7 +157,7 @@ class TestRealityCheckResult:
         assert isinstance(result.timestamp, datetime)
 
 
-class TestEnums:
+class TestEnums(ReflectiveModule):
     """Test cases for enum values."""
     
     def test_trend_direction_values(self):
@@ -185,4 +187,32 @@ class TestEnums:
         assert RealityCheckOutcome.PASSED.value == "passed"
         assert RealityCheckOutcome.FAILED.value == "failed"
         assert RealityCheckOutcome.REQUIRES_ESCALATION.value == "requires_escalation"
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert RealityCheckOutcome.EMERGENCY_INTERVENTION.value == "emergency_intervention"

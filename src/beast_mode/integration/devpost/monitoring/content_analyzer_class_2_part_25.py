@@ -31,3 +31,20 @@ def _get_git_info(self, file_path: Path) -> Optional[Dict[str, Any]]:
     except Exception as e:
         logger.error(f'Error getting Git info for {file_path}: {e}')
         return None
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

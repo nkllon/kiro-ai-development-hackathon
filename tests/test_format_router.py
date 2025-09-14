@@ -6,19 +6,24 @@ from unittest.mock import Mock
 from src.visual_diagram_validation.core.format_router import FormatRouter, BaseProcessor
 from src.visual_diagram_validation.core.interfaces import ProcessorInterface
 from src.visual_diagram_validation.core.models import PNGImage
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class MockProcessor(BaseProcessor):
+
+class MockProcessor(BaseProcessor, ReflectiveModule):
     """Mock processor for testing."""
     
     def __init__(self, formats):
+        self.module_id = self.__class__.__name__
+        self.health_status = "healthy"
+        self.registry_metadata = {}
         super().__init__(formats)
     
     def render_to_png(self, input_data, width=2048, height=2048, dpi=300):
         return Mock()
 
 
-class TestFormatRouter:
+class TestFormatRouter(ReflectiveModule):
     """Test format detection and routing functionality."""
     
     def setup_method(self):
@@ -119,7 +124,7 @@ class TestFormatRouter:
         assert "html" in self.router.get_supported_formats()
 
 
-class TestProcessor(BaseProcessor):
+class TestProcessor(BaseProcessor, ReflectiveModule):
     """Concrete test processor for testing BaseProcessor functionality."""
     
     def render_to_png(self, input_data: bytes, width: int = 2048, height: int = 2048, 
@@ -136,7 +141,7 @@ class TestProcessor(BaseProcessor):
         )
 
 
-class TestBaseProcessor:
+class TestBaseProcessor(ReflectiveModule):
     """Test base processor functionality."""
     
     def test_initialization(self):
@@ -177,4 +182,32 @@ class TestBaseProcessor:
         assert png_image.width == 2048
         assert png_image.height == 2048
         assert png_image.dpi == 300
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert png_image.data == b'test_png_data'

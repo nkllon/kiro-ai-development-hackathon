@@ -23,3 +23,20 @@ from src.rm_ddd.core.health import ModuleHealth
         if contrast_ratio < required_ratio:
             severity = Severity.ERROR if contrast_ratio < required_ratio * 0.8 else Severity.WARNING
             self.add_violation(rule_id='wcag_contrast_normal' if not is_large_text else 'wcag_contrast_large', severity=severity, current_value=contrast_ratio, expected_value=required_ratio, description=f"Text contrast ratio {contrast_ratio:.2f}:1 is below WCAG {('AA' if required_ratio >= 4.5 else 'A')} standard of {required_ratio}:1", location=bbox, category='accessibility')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
