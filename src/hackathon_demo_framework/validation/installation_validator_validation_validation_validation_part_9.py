@@ -33,3 +33,20 @@ def _validate_setup_instructions(self) -> Dict[str, Any]:
                 issues.append(InstallationIssue(issue_type=InstallationIssueType.DOCUMENTATION, severity='minor', message=f'Cannot read {doc_file.name}: {e}', file_path=str(doc_file), suggestion='Fix file encoding or permissions'))
                 score -= 5
     return {'score': max(0, score), 'issues': issues}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

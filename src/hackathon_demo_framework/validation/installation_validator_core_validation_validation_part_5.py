@@ -15,3 +15,20 @@ def _validate_requirements_txt(self, file_path: Path, content: str) -> List[Inst
         if not re.match('^[a-zA-Z0-9_-]+', line.split('=')[0].split('>')[0].split('<')[0]):
             issues.append(InstallationIssue(issue_type=InstallationIssueType.DEPENDENCY_CONFLICT, severity='major', message=f'Invalid package name format: {line}', file_path=str(file_path), suggestion='Use valid Python package names'))
     return issues
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

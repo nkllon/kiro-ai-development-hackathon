@@ -47,3 +47,20 @@ def generate_quality_improvement_plan(self, report: CodeQualityReport) -> List[s
         improvement_plan.append('  - Reduce unnecessary computations and memory usage')
         improvement_plan.append('  - Consider algorithmic improvements')
     return improvement_plan
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

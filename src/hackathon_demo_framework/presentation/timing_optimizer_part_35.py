@@ -37,3 +37,20 @@ from src.rm_ddd.core.health import ModuleHealth
             session_plan['feedback_points'] = ['Timing accuracy for each section', 'Clarity of systematic excellence message', 'Judge engagement and eye contact', 'Technical demo reliability', 'Overall presentation confidence']
             rehearsal_plan.append(session_plan)
         return rehearsal_plan
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

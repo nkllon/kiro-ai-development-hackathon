@@ -16,3 +16,20 @@ def __init__(self, project_path: Path):
     self.source_patterns = ['src/**/*.py', '*.py', 'lib/**/*.py']
     self.required_files = ['README.md', 'requirements.txt', 'pyproject.toml']
     self.logger.info(f'Functionality validator initialized for {self.project_path}')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

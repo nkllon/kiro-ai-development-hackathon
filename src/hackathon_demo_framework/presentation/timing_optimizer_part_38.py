@@ -23,3 +23,20 @@ from src.rm_ddd.core.health import ModuleHealth
                     recommendation = PacingRecommendation(section=section, current_duration=current_duration, recommended_duration=optimal_duration, adjustment_reason=self._get_adjustment_reason(section, current_duration, optimal_duration, pacing_strategy), implementation_tips=self._get_implementation_tips(section, optimal_duration))
                     recommendations.append(recommendation)
         return recommendations
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

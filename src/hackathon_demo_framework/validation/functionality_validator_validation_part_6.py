@@ -34,3 +34,20 @@ def _check_documentation_completeness(self) -> List[str]:
     if undocumented_files:
         doc_issues.append(f"Files missing docstrings: {', '.join(undocumented_files[:5])}")
     return doc_issues
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

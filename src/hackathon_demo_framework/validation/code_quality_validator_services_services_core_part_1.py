@@ -13,3 +13,20 @@ def __init__(self, project_path: Path):
     self.source_patterns = ['src/**/*.py', '*.py', 'lib/**/*.py']
     self.exclude_patterns = ['test_*.py', '*_test.py', 'tests/**/*.py', '__pycache__/**', '.git/**', 'venv/**', 'env/**']
     self.logger.info(f'Code quality engine initialized for {self.project_path}')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

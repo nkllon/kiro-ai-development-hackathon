@@ -19,3 +19,20 @@ def _analyze_security(self, tree: ast.AST, content: str, file_path: Path) -> Dic
             issues.append(CodeQualityIssue(file_path=str(file_path), line_number=line_num, issue_type=CodeQualityMetric.SECURITY, severity='critical', message='Potential hardcoded secret found', suggestion='Use environment variables or secure configuration'))
             security_score -= 20
     return {'score': max(0, security_score), 'issues': issues}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -24,3 +24,20 @@ def _analyze_maintainability(self, tree: ast.AST, content: str, file_path: Path)
                 issues.append(CodeQualityIssue(file_path=str(file_path), line_number=node.lineno, issue_type=CodeQualityMetric.MAINTAINABILITY, severity='minor', message=f"Function '{node.name}' has too many parameters: {param_count}", suggestion='Consider using a configuration object or breaking down the function'))
                 maintainability_score -= 3
     return {'score': max(0, maintainability_score), 'issues': issues}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

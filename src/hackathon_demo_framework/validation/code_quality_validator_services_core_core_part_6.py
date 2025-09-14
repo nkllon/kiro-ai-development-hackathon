@@ -19,3 +19,20 @@ def _analyze_complexity(self, tree: ast.AST, file_path: Path) -> Dict[str, Any]:
                 issues.append(CodeQualityIssue(file_path=str(file_path), line_number=node.lineno, issue_type=CodeQualityMetric.COMPLEXITY, severity='minor', message=f"Class '{node.name}' is too long: {class_length} lines", suggestion='Consider breaking into smaller, more focused classes'))
     avg_score = sum(complexity_scores) / len(complexity_scores) if complexity_scores else 100
     return {'score': avg_score, 'issues': issues}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

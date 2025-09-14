@@ -57,3 +57,20 @@ def check_health(self) -> Dict[str, Any]:
         return {'module_id': self.module_id, 'status': 'healthy' if health_score >= 0.8 else 'degraded', 'health_score': health_score, 'issues': issues, 'metrics': {'systematic_score': systematic_score, 'rdi_compliance': rdi_compliance, 'learning_patterns': len(self.learning_patterns), 'transformations_completed': len(self.transformation_history)}, 'last_check': datetime.now().isoformat()}
     except Exception as e:
         return {'module_id': self.module_id, 'status': 'failed', 'health_score': 0.0, 'issues': [f'Health check failed: {str(e)}'], 'metrics': {}, 'last_check': datetime.now().isoformat()}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

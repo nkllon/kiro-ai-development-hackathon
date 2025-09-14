@@ -19,3 +19,20 @@ def _analyze_documentation(self, tree: ast.AST, file_path: Path) -> Dict[str, An
                 issues.append(CodeQualityIssue(file_path=str(file_path), line_number=node.lineno, issue_type=CodeQualityMetric.DOCUMENTATION, severity=severity, message=f"{type(node).__name__} '{node.name}' missing docstring", suggestion='Add comprehensive docstring with description and parameters'))
     documentation_score = documented_items / total_items * 100 if total_items > 0 else 100
     return {'score': documentation_score, 'issues': issues}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

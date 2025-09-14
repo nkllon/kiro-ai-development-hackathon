@@ -17,3 +17,20 @@ def _analyze_style(self, content: str, file_path: Path) -> Dict[str, Any]:
             issues.append(CodeQualityIssue(file_path=str(file_path), line_number=line_num, issue_type=CodeQualityMetric.STYLE, severity='major', message='Mixed tabs and spaces for indentation', suggestion='Use consistent indentation (prefer spaces)'))
             style_score -= 5
     return {'score': max(0, style_score), 'issues': issues}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

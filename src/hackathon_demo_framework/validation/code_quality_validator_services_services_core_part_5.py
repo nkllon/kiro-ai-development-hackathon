@@ -24,3 +24,20 @@ def _analyze_file(self, file_path: Path) -> Dict[str, Any]:
     except Exception as e:
         self.logger.error(f'Failed to analyze {file_path}: {e}')
         return {'lines_of_code': 0, 'complexity_score': 0, 'maintainability_score': 0, 'documentation_score': 0, 'style_score': 0, 'security_score': 0, 'performance_score': 0, 'issues': [CodeQualityIssue(file_path=str(file_path), line_number=1, issue_type=CodeQualityMetric.MAINTAINABILITY, severity='critical', message=f'File analysis failed: {e}', suggestion='Fix syntax errors or encoding issues')]}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -13,3 +13,20 @@ def create_evidence_package(self) -> EvidencePackage:
     evidence_package = EvidencePackage(evidence_id=f"EVIDENCE-{datetime.now().strftime('%Y%m%d%H%M%S')}", systematic_metrics=systematic.metrics, adhoc_metrics=adhoc.metrics, improvement_claims=comparison.evidence_package['improvement_claims'], statistical_validation=comparison.evidence_package['statistical_validation'], roi_calculation=comparison.evidence_package['roi_calculation'], created_at=datetime.now())
     self.evidence_packages.append(evidence_package)
     return evidence_package
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

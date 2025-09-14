@@ -31,3 +31,20 @@ def _validate_documentation(self) -> Dict[str, Any]:
             issues.append(InstallationIssue(issue_type=InstallationIssueType.DOCUMENTATION, severity='major', message=f'Cannot read README: {e}', file_path=str(readme_path), suggestion='Fix README file encoding or permissions'))
             score -= 20
     return {'score': max(0, score), 'issues': issues}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

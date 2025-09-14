@@ -23,3 +23,20 @@ def create_spec_transformation(self, session_id: str, spec: str) -> Transformati
     self._update_session_progress(session_id, 0.1)
     self._log_interaction(session_id, 'transformation_created', {'transformation_id': transformation.transformation_id, 'spec': spec, 'systematic_score': model_result.systematic_score})
     return transformation
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

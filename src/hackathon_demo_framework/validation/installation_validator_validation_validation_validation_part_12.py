@@ -23,3 +23,20 @@ def _test_single_installation(self, temp_dir: Path) -> Dict[str, Any]:
         return {'success': True, 'issues': []}
     except Exception as e:
         return {'success': False, 'issues': [f'Installation test failed: {e}']}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

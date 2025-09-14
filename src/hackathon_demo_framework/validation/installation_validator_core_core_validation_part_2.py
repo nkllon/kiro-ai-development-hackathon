@@ -32,3 +32,20 @@ def validate_installation_reliability(self, num_tests: int=3) -> ValidationResul
     if success_rate < 50:
         recommendations.append('Critical: Fix installation process - more than half of attempts fail')
     return ValidationResult(is_valid=success_rate >= 80, score=success_rate, issues=issues, recommendations=recommendations)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
