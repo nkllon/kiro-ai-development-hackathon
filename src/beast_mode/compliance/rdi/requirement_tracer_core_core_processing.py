@@ -12,6 +12,8 @@ from typing import List, Dict, Set, Optional, Tuple
 from dataclasses import dataclass
 from ..interfaces import ComplianceValidator
 from ..models import ComplianceIssue, ComplianceIssueType, IssueSeverity
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _parse_requirements_file(self, file_path: Path) -> Dict[str, RequirementDefinition]:
     """

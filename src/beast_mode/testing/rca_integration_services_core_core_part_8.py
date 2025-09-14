@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def generate_comprehensive_report(self, original_failures: List[TestFailureData], grouped_failures: Dict[str, List[TestFailureData]], rca_results: List[RCAResult], pattern_matches: List[PreventionPattern]) -> TestRCAReportData:
     """

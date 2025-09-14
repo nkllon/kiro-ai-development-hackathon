@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_overall_component_health(self) -> float:
     """Calculate overall component health score"""

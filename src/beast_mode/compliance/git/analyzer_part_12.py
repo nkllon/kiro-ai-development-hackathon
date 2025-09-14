@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_module_status(self) -> Dict[str, Any]:
         """Get the current status of the git analyzer."""

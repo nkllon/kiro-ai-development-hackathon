@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _determine_failure_type(self, error_message: str) -> str:
     """Determine failure type from error message"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_rm_compliance(self, module_path: str) -> RMComplianceStatus:
     """

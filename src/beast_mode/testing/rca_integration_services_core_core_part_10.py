@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def detect_failure_correlations(self, failures: List[TestFailureData]) -> Dict[str, Any]:
     """

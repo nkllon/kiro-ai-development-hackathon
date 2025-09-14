@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_temporal_correlations(self, failures: List[TestFailureData]) -> List[Dict[str, Any]]:
     """Analyze temporal correlations between failures"""

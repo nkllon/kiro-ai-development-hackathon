@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _validate_dashboard_config(self, config: DashboardConfig) -> bool:
         """Validate dashboard configuration"""

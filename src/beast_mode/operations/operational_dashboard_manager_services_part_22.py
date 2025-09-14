@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _get_oldest_data_age_hours(self) -> float:
         """Get age of oldest data in hours"""

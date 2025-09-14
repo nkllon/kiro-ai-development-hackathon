@@ -15,6 +15,8 @@ from datetime import datetime
 from enum import Enum
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from ..analysis.rca_engine import PreventionPattern, Failure, RootCause, SystematicFix
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def match_test_patterns(self, failure: Failure) -> List[PreventionPattern]:
     """

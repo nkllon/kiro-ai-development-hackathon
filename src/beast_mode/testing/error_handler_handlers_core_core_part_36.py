@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _apply_emergency_degradation(self, reason: str) -> Dict[str, Any]:
     """Apply emergency degradation - fallback mode only"""

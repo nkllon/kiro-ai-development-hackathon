@@ -7,3 +7,5 @@ from .models import ComplianceAnalysisResult, Phase2ValidationResult, Compliance
 from .rm.rm_validator import RMValidator
 from .orchestrator_core_validation import *
 from .orchestrator_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_all_dashboards(self) -> Dict[str, Any]:
         """Get information about all dashboards"""

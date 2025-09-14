@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _get_commit_line_changes(self, commit_hash: str) -> Tuple[int, int]:
         """Get the number of lines added and deleted in a commit."""

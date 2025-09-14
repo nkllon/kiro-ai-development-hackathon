@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def analyze_batch_failures(self, failure_groups: Dict[str, List[TestFailureData]]) -> Dict[str, List[RCAResult]]:
     """

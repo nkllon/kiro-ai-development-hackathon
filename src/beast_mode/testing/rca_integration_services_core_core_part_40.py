@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_recommendations(self, rca_results: List[RCAResult]) -> List[str]:
     """Generate actionable recommendations from RCA results"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_health_indicators(self) -> Dict[str, Any]:
         """Get detailed health metrics for operational visibility."""

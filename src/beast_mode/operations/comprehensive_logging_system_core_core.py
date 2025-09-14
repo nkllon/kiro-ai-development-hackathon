@@ -10,3 +10,5 @@ import threading
 from contextlib import contextmanager
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .comprehensive_logging_system_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

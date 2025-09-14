@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _check_architectural_patterns(self, module_path: str, complexity_indicators: Dict[str, Any], issues: List[ComplianceIssue]) -> None:
     """Check for specific architectural patterns and violations."""

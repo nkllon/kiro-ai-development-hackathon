@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _can_execute_git_commands(self) -> bool:
     """Check if git commands can be executed in the repository."""

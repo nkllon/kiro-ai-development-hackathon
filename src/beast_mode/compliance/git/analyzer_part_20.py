@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _get_default_task_patterns(self) -> Dict[str, List[str]]:
         """Get default patterns for mapping files to tasks."""

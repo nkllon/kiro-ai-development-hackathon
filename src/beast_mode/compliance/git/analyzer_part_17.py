@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _get_commit_info(self, commit_hash: str) -> Optional[CommitInfo]:
         """Get detailed information for a specific commit."""

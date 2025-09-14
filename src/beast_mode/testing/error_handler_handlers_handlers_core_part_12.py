@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_error_report(self) -> Dict[str, Any]:
     """Get comprehensive error handling report"""

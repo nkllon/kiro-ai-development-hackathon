@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_next_steps(self, rca_results: List[RCAResult], summary: TestRCASummaryData) -> List[str]:
     """Generate next steps for developers"""

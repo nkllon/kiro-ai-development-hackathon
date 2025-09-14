@@ -67,3 +67,4 @@ from .analyzer_part_66 import *
 from .analyzer_part_67 import *
 from .analyzer_part_68 import *
 from .analyzer_part_69 import *
+from src.rm_ddd.core.health import ModuleHealth

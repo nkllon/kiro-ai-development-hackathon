@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _assess_error_severity(self, error: Exception, category: ErrorCategory) -> ErrorSeverity:
     """Assess error severity based on type and category"""

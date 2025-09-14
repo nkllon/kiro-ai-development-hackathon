@@ -15,6 +15,8 @@ from contextlib import contextmanager
 from enum import Enum
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .performance_monitor import PerformanceMetrics, PerformanceStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _check_operation_timeout(self, operation_id: str) -> Dict[str, Any]:
     """Check if operation is approaching timeout"""

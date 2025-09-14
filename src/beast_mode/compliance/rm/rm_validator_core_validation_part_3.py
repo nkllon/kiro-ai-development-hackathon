@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_health_monitoring(self, module_path: str) -> HealthMonitoringResult:
     """

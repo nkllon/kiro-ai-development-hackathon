@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _determine_remediation_category_from_description(self, description: str) -> str:
     try:

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _generate_remediation_description(self, issue_type: ComplianceIssueType, severity: IssueSeverity, issues: List[ComplianceIssue]) -> str:
     try:

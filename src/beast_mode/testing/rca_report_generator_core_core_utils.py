@@ -15,6 +15,8 @@ from pathlib import Path
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from ..analysis.rca_engine import RCAResult, RootCauseType, PreventionPattern
 from .rca_integration import TestFailureData, TestRCASummaryData, TestRCAReportData
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def format_for_console(self, rca_report: TestRCAReportData, use_colors: bool=True) -> str:
     """

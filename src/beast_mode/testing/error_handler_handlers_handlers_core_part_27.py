@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _record_successful_operation(self, component: str, operation: str, duration: float) -> None:
     """Record successful operation for health monitoring"""

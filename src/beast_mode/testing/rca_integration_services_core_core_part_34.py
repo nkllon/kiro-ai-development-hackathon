@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _identify_common_root_causes(self, failures: List[TestFailureData]) -> List[Dict[str, Any]]:
     """Identify potential common root causes across failures"""

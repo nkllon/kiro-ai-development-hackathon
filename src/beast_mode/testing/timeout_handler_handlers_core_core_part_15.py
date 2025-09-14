@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _handle_graceful_timeout(self, operation_id: str) -> None:
     """Handle graceful timeout"""

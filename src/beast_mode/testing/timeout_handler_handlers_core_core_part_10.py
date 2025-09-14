@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _setup_timeout_handlers(self, operation_id: str) -> Dict[str, threading.Timer]:
     """Set up timeout handlers for an operation"""

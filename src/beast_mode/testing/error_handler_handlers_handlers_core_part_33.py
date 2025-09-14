@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _apply_minimal_degradation(self, reason: str) -> Dict[str, Any]:
     """Apply minimal degradation - reduce analysis depth"""

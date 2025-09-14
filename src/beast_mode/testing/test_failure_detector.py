@@ -60,3 +60,4 @@ from .test_failure_detector_part_59 import *
 from .test_failure_detector_part_60 import *
 from .test_failure_detector_part_61 import *
 from .test_failure_detector_part_62 import *
+from src.rm_ddd.core.health import ModuleHealth

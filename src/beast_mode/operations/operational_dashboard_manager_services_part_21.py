@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _cleanup_old_data(self, dashboard_id: str):
         """Clean up old dashboard data based on retention policy"""

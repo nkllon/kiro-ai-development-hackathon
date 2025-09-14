@@ -31,3 +31,4 @@ from .rdi_validator_class_5_part_30 import *
 from .rdi_validator_class_5_part_31 import *
 from .rdi_validator_class_5_part_32 import *
 from .rdi_validator_class_5_part_33 import *
+from src.rm_ddd.core.health import ModuleHealth

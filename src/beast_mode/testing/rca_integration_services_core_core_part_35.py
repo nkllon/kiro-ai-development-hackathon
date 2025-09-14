@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _extract_error_pattern(self, error_message: str) -> str:
     """Extract error pattern from error message"""

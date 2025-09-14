@@ -13,6 +13,8 @@ from dataclasses import dataclass
 from enum import Enum
 from ..interfaces import ComplianceValidator
 from ..models import ComplianceIssue, ComplianceIssueType, IssueSeverity
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate(self, target: str) -> List[ComplianceIssue]:
     """

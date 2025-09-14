@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_class_methods(self, class_node: ast.ClassDef, module_path: str) -> tuple[List[str], List[str]]:
     """Validate methods in a ReflectiveModule class."""

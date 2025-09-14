@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_cross_group_correlation(self, group_a: List[TestFailureData], group_b: List[TestFailureData]) -> float:
     """Calculate correlation score between two groups"""

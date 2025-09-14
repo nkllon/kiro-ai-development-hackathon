@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _categorize_error(self, error: Exception) -> ErrorCategory:
     """Categorize error based on type and message"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_commits_ahead_of_main(self, target_branch: str='HEAD', base_branch: str='origin/master') -> List[CommitInfo]:
     """

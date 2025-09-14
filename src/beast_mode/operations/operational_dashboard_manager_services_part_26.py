@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_dashboard_analytics(self) -> Dict[str, Any]:
         """Get comprehensive dashboard analytics"""

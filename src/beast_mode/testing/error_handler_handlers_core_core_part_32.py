@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _consider_degradation(self, component_name: str, health_metrics: HealthMonitoringMetrics) -> None:
     """Consider applying degradation based on component health"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_error_pattern_correlations(self, failures: List[TestFailureData]) -> List[Dict[str, Any]]:
     """Analyze error pattern correlations"""

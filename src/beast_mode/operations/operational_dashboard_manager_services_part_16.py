@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def generate_performance_analytics_dashboard(self) -> Dict[str, Any]:
         """

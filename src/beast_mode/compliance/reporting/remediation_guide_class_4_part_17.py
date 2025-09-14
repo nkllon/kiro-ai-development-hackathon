@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _generate_test_failure_remediations(self, failing_tests: List[str]) -> List[FailingTestRemediation]:
         try:

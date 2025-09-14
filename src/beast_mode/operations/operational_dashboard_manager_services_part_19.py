@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _initialize_default_dashboards(self):
         """Initialize default operational dashboards"""

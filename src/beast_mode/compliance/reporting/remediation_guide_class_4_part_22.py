@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _find_best_template(self, issue: ComplianceIssue) -> Optional[RemediationTemplate]:
         try:

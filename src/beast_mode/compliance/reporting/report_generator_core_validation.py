@@ -11,6 +11,8 @@ from dataclasses import dataclass
 import json
 from ..interfaces import ComplianceReporter
 from ..models import ComplianceAnalysisResult, ComplianceIssue, IssueSeverity, ComplianceIssueType, RemediationStep, Phase2ValidationResult
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _analyze_test_coverage_findings(self, test_status) -> Dict[str, Any]:
     """Analyze test coverage findings."""

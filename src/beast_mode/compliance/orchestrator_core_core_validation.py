@@ -12,6 +12,8 @@ from ..core.reflective_module import ReflectiveModule
 from .interfaces import ComplianceValidator, ComplianceAnalyzer, ValidationContext
 from .models import ComplianceAnalysisResult, Phase2ValidationResult, ComplianceIssue, ComplianceIssueType, IssueSeverity, CommitInfo, RDIComplianceStatus, RMComplianceStatus, TestCoverageStatus, TaskReconciliationStatus
 from .rm.rm_validator import RMValidator
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_phase2_completion(self) -> Phase2ValidationResult:
     """

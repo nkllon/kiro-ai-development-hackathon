@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def analyze_file_changes(self, commits: Optional[List[CommitInfo]]=None) -> FileChangeAnalysis:
     """

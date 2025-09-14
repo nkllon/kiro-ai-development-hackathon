@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def map_changes_to_tasks(self, file_changes: FileChangeAnalysis, task_patterns: Optional[Dict[str, List[str]]]=None) -> Dict[str, List[str]]:
         """

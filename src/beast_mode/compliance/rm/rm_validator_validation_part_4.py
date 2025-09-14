@@ -1,3 +1,5 @@
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def check_registry_integration(self, module_path: str) -> RegistryIntegrationResult:
     """

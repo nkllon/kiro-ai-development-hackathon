@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_commit_hashes_ahead(self, target_branch: str, base_branch: str) -> List[str]:
     """Get commit hashes that are ahead of the base branch."""

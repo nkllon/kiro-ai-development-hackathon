@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def update_dashboard_data(self, dashboard_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
         """

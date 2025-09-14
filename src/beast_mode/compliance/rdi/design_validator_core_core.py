@@ -10,3 +10,5 @@ from .design_validator_core_core_core import *
 from .design_validator_core_core_validation import *
 from .design_validator_core_core_processing import *
 from .design_validator_core_core_utils import *
+from src.rm_ddd.core.health import ModuleHealth
+

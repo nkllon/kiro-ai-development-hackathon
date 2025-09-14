@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _perform_basic_failure_analysis(self, test_failures: List[Any]) -> Dict[str, Any]:
     """Perform basic analysis when RCA engine is unavailable"""

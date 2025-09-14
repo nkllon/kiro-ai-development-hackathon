@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _validate_requirements_traceability(self, component_data: Dict[str, Any], standards: List[str]) -> Tuple[List[str], List[str], float]:
         try:

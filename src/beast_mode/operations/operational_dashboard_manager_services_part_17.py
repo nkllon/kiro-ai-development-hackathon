@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def generate_unknown_risks_dashboard(self) -> Dict[str, Any]:
         """

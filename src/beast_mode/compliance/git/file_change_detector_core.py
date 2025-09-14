@@ -14,3 +14,5 @@ import fnmatch
 import fnmatch
 from .file_change_detector_core_validation import *
 from .file_change_detector_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

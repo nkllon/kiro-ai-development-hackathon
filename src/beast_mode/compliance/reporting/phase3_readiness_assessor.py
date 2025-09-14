@@ -136,3 +136,4 @@ from .phase3_readiness_assessor_part_135 import *
 from .phase3_readiness_assessor_part_136 import *
 from .phase3_readiness_assessor_part_137 import *
 from .phase3_readiness_assessor_part_138 import *
+from src.rm_ddd.core.health import ModuleHealth

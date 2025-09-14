@@ -53,3 +53,4 @@ from .rdi_validator_part_52 import *
 from .rdi_validator_part_53 import *
 from .rdi_validator_part_54 import *
 from .rdi_validator_part_55 import *
+from src.rm_ddd.core.health import ModuleHealth

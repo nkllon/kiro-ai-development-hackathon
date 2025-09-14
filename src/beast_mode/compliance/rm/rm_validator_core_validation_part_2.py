@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def check_size_constraints(self, module_path: str) -> SizeConstraintResult:
     """

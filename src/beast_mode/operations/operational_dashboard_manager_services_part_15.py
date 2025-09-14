@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def generate_superiority_metrics_dashboard(self) -> Dict[str, Any]:
         """

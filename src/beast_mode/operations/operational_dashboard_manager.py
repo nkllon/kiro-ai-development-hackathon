@@ -13,3 +13,5 @@ from .operational_dashboard_manager_models import *
 from .operational_dashboard_manager_core import *
 from .operational_dashboard_manager_validation import *
 from .operational_dashboard_manager_services import *
+from src.rm_ddd.core.health import ModuleHealth
+

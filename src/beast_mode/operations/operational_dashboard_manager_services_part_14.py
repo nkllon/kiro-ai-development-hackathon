@@ -7,6 +7,8 @@
             from ..integration.infrastructure_integration_manager import InfrastructureIntegrationManager
             from ..integration.self_consistency_validator import SelfConsistencyValidator
             from ..orchestration.tool_orchestration_engine import ToolOrchestrationEngine
+from src.rm_ddd.core.health import ModuleHealth
+
             integration_manager = InfrastructureIntegrationManager(str(self.project_root))
             consistency_validator = SelfConsistencyValidator(str(self.project_root))
             tool_orchestrator = ToolOrchestrationEngine(str(self.project_root))

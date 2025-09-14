@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_remediation_steps(self, categorized_issues: Dict[RemediationCategory, List[ComplianceIssue]]) -> List[RemediationStep]:
     try:

@@ -24,3 +24,4 @@ from .operational_dashboard_manager_services_part_23 import *
 from .operational_dashboard_manager_services_part_24 import *
 from .operational_dashboard_manager_services_part_25 import *
 from .operational_dashboard_manager_services_part_26 import *
+from src.rm_ddd.core.health import ModuleHealth

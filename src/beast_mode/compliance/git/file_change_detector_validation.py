@@ -15,6 +15,8 @@ from ..models import CommitInfo, FileChangeAnalysis
 from ...utils.path_normalizer import PathNormalizer, normalize_path, safe_relative_to
 import fnmatch
 import fnmatch
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _validate_claimed_vs_implemented(self, task_mappings: List[TaskMapping], claimed_tasks: List[str]) -> None:
     """

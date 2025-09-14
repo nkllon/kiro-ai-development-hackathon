@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _update_refresh_metrics(self, refresh_time_ms: int):
         """Update dashboard refresh metrics"""

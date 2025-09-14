@@ -11,3 +11,5 @@ from ..models import ComplianceIssue, ComplianceIssueType, IssueSeverity
 from ...utils.path_normalizer import safe_relative_to
 from .test_coverage_validator_core_core_core import *
 from .test_coverage_validator_core_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+
