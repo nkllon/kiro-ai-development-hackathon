@@ -18,3 +18,20 @@ def _identify_root_causes(self, failure: Failure, analysis: ComprehensiveAnalysi
     if 'missing_dependency' in analysis.symptoms:
         root_causes.append(RootCause(cause_type=RootCauseType.BROKEN_DEPENDENCIES, description='Missing or broken dependencies', evidence=['ImportError in stack trace'], confidence_score=0.7, impact_severity='high', affected_components=[failure.component]))
     return root_causes
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

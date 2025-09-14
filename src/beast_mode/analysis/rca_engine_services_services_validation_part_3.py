@@ -20,3 +20,20 @@ def generate_test_specific_systematic_fixes(self, root_causes: List[RootCause]) 
         except Exception as e:
             self.logger.error(f'Failed to generate test-specific fix for {root_cause.cause_type}: {e}')
     return test_specific_fixes
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

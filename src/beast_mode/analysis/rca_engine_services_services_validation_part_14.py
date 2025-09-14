@@ -20,3 +20,20 @@ def _identify_test_specific_root_causes(self, failure: Failure, analysis: Compre
         if 'PermissionError' in failure.error_message:
             test_root_causes.append(RootCause(cause_type=RootCauseType.INFRASTRUCTURE_ERROR, description='Infrastructure permission error - system access issue', evidence=['Permission error in system operation', failure.error_message], confidence_score=0.8, impact_severity='high', affected_components=['system', 'infrastructure']))
     return test_root_causes
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

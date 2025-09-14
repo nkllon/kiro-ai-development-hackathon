@@ -25,3 +25,20 @@ def analyze_comprehensive_factors(self, failure: Failure) -> ComprehensiveAnalys
     except Exception as e:
         self.logger.error(f'Comprehensive analysis failed: {e}')
         return ComprehensiveAnalysisResult(symptoms=[f'Analysis failed: {e}'], tool_health_status={'error': str(e)}, dependency_analysis={'error': str(e)}, configuration_analysis={'error': str(e)}, installation_integrity={'error': str(e)}, environmental_factors={'error': str(e)}, analysis_confidence=0.0)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

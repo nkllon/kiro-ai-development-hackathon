@@ -28,3 +28,20 @@ def check_escalation_needed(self, actor_id: str, pattern_duration: timedelta) ->
         self.logger.warning(f'Escalating persistent bypass patterns for {actor_id}')
         return EscalationAction(actor_id=actor_id, escalation_type='governance_bypass_intervention', target_accountability_chain=self._get_accountability_chain(actor_id), action_description=f'Persistent governance bypass patterns detected for {pattern_duration}. Implementing systematic intervention.', timeline=timedelta(hours=4), success_criteria=['All bypass attempts cease', 'Governance compliance restored to >95%', 'Accountability verification implemented', 'Pattern monitoring continues for 30 days'])
     return None
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

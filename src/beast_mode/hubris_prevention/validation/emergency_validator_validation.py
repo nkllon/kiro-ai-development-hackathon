@@ -118,3 +118,20 @@ def _validate_objective_criteria(self, claim: EmergencyClaim, config: Dict[str, 
     total_criteria = len(validation_results)
     overall_valid = total_criteria == 0 or met_criteria >= total_criteria * 0.5
     return {'valid': overall_valid, 'details': validation_results}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

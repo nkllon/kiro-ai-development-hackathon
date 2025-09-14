@@ -14,3 +14,20 @@ def _execute_validation_criteria(self, criteria: str, original_failure: Failure)
             return {'status': 'failed', 'resolved_symptoms': [], 'remaining_issues': [f'make help validation error: {e}']}
     else:
         return {'status': 'passed', 'resolved_symptoms': ['generic_symptom'], 'remaining_issues': []}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

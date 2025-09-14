@@ -15,3 +15,20 @@ def document_prevention_patterns(self, failure: Failure, root_causes: List[RootC
         except Exception as e:
             self.logger.error(f'Failed to document prevention pattern: {e}')
     return prevention_patterns
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

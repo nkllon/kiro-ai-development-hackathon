@@ -14,3 +14,20 @@ from src.rm_ddd.core.health import ModuleHealth
         self.emergency_shutdown_triggered = False
         self.kill_switch.register_shutdown_callback(self._emergency_shutdown_callback)
         self.resource_monitor.register_violation_callback(self._resource_violation_callback)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

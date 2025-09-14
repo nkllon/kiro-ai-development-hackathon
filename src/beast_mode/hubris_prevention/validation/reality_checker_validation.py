@@ -96,3 +96,20 @@ def _validate_impact_consistency(self, claimed_impact: str, actual_impact: str) 
     claimed_level = impact_hierarchy.get(claimed_impact, 0)
     actual_level = impact_hierarchy.get(actual_impact, 0)
     return abs(claimed_level - actual_level) <= 1
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

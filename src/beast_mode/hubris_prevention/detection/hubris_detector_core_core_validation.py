@@ -28,3 +28,20 @@ def check_bypass_attempts(self, actor_id: str, governance_events: List) -> Bypas
         alert_level = 'critical' if success_rate > 0.5 else 'high'
         return BypassAlert(actor_id=actor_id, bypass_type='governance_process', governance_process='systematic_accountability', attempt_count=len(recent_bypasses), success_rate=success_rate, alert_level=alert_level)
     return None
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

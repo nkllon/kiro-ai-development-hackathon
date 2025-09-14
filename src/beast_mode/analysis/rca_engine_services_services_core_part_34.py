@@ -13,3 +13,20 @@ def _analyze_python_issues(self, failure: Failure) -> Dict[str, Any]:
         if 'RuntimeError' in failure.stack_trace:
             python_issues['runtime_errors'].append('RuntimeError detected in stack trace')
     return python_issues
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

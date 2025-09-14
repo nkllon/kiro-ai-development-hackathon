@@ -36,3 +36,20 @@ def _execute_formatting_gate(self, config: QualityGateConfig, target_path: Path,
         return QualityGateResult(gate_type=QualityGateType.FORMATTING, status=status, score=score, details=details, execution_time_seconds=time.time() - start_time, recommendations=recommendations)
     except subprocess.TimeoutExpired:
         return QualityGateResult(gate_type=QualityGateType.FORMATTING, status=QualityGateStatus.FAILED, score=0.0, details={'error': 'Formatting check timeout'}, execution_time_seconds=time.time() - start_time, error_message='Formatting check timed out', recommendations=['Check for infinite loops or very large files'])
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

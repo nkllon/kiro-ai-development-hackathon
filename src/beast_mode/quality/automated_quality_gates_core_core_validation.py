@@ -32,3 +32,20 @@ def _check_beast_mode_compliance(self, gate_results: List[QualityGateResult]) ->
     compliance_status['documentation_compliance'] = doc_result is not None and doc_result.score >= 0.8 and (doc_result.status == QualityGateStatus.PASSED)
     compliance_status['overall_beast_mode_compliance'] = all(compliance_status.values())
     return compliance_status
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

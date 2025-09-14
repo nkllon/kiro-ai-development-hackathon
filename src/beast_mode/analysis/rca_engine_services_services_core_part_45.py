@@ -9,3 +9,20 @@ def _generate_makefile_specific_fix(self, root_cause: RootCause) -> SystematicFi
         return SystematicFix(fix_id=fix_id, root_cause=root_cause, fix_description='Fix build dependency errors by installing required tools and libraries', implementation_steps=['Identify missing build dependencies from error', 'Check system package manager for required tools', 'Install missing build tools (make, gcc, etc.)', 'Verify tool versions are compatible', 'Update PATH if necessary', 'Test build process with dependencies'], validation_criteria=['All required build tools are available', 'Tool versions meet requirements', 'Build process completes successfully', 'No dependency errors in build output'], rollback_plan='Remove installed packages if they cause conflicts', estimated_time_minutes=15)
     else:
         return SystematicFix(fix_id=fix_id, root_cause=root_cause, fix_description=f'Generic Makefile fix for {root_cause.cause_type.value}', implementation_steps=[f'Analyze {root_cause.cause_type.value} systematically', 'Review Makefile documentation', 'Implement appropriate fix', 'Validate fix resolves root cause'], validation_criteria=['Makefile error no longer occurs', 'Build process completes successfully'], rollback_plan='Revert changes if fix fails', estimated_time_minutes=10)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

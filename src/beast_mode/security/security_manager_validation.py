@@ -51,3 +51,20 @@ def validate_security_compliance(self) -> Dict[str, Any]:
     """Validate security compliance for testing"""
     compliance_score = self._calculate_compliance_score()
     return {'compliance_score': compliance_score, 'security_checks_passed': compliance_score >= 0.9, 'encryption_enabled': self.encryption_enabled, 'authentication_configured': len(self.api_keys) > 0}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

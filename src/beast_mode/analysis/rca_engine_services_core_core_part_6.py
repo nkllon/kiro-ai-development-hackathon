@@ -28,3 +28,20 @@ def perform_systematic_rca(self, failure: Failure) -> RCAResult:
     except Exception as e:
         self.logger.error(f'RCA failed: {e}')
         return RCAResult(failure=failure, analysis=ComprehensiveAnalysisResult([], {}, {}, {}, {}, {}, 0.0), root_causes=[], systematic_fixes=[], validation_results=[], prevention_patterns=[], total_analysis_time_seconds=time.time() - start_time, rca_confidence_score=0.0)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

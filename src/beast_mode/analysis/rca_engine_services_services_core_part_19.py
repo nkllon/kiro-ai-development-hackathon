@@ -25,3 +25,20 @@ def _generate_systematic_fix(self, root_cause: RootCause) -> SystematicFix:
         return SystematicFix(fix_id=fix_id, root_cause=root_cause, fix_description='Fix file permissions systematically', implementation_steps=['Identify files with incorrect permissions', 'Apply correct permissions using chmod', 'Verify user has necessary access rights'], validation_criteria=['File permissions are correct', 'User can access required files', 'Original error no longer occurs'], rollback_plan='Restore original file permissions', estimated_time_minutes=5)
     else:
         return SystematicFix(fix_id=fix_id, root_cause=root_cause, fix_description=f'Generic systematic fix for {root_cause.cause_type.value}', implementation_steps=[f'Analyze {root_cause.cause_type.value} systematically', 'Implement root cause fix', 'Validate fix addresses root cause'], validation_criteria=['Root cause no longer present', 'Original symptoms resolved'], rollback_plan='Revert changes if fix fails', estimated_time_minutes=10)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

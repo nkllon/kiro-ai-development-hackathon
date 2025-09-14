@@ -14,3 +14,20 @@ def _build_dependency_graph(self) -> DependencyGraph:
             edges[target_item].add(source_item)
             reverse_edges[source_item].add(target_item)
     return DependencyGraph(nodes=nodes, edges=dict(edges), reverse_edges=dict(reverse_edges), dependency_specs=self._dependencies.copy())
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

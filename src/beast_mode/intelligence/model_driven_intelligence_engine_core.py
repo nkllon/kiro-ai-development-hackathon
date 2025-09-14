@@ -122,3 +122,20 @@ def consult_registry_first(self, context: Dict[str, Any]=None) -> Dict[str, Any]
 def get_model_performance_report(self) -> Dict[str, Any]:
     """Get comprehensive model performance report"""
     return {'performance_summary': self.performance_metrics, 'model_types_used': list(set((analysis.model_type.value for analysis in self.analysis_history))), 'recent_analyses': [{'model_id': analysis.model_id, 'model_type': analysis.model_type.value, 'confidence_score': analysis.confidence_score, 'systematic_validated': analysis.systematic_approach_validated, 'timestamp': analysis.timestamp.isoformat()} for analysis in self.analysis_history[-10:]], 'systematic_validation_rate': self.performance_metrics['systematic_validations'] / max(1, self.performance_metrics['total_analyses'])}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

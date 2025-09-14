@@ -12,3 +12,20 @@ def _generate_pytest_specific_fix(self, root_cause: RootCause) -> SystematicFix:
         return SystematicFix(fix_id=fix_id, root_cause=root_cause, fix_description='Fix test fixture errors by resolving setup and teardown issues', implementation_steps=['Identify failing fixture from error message', 'Check fixture definition and scope', 'Verify fixture dependencies and parameters', 'Test fixture setup and teardown independently', 'Fix fixture implementation or dependencies', 'Validate fixture works with dependent tests'], validation_criteria=['Fixture setup completes without errors', 'Fixture provides expected test data/resources', 'Fixture teardown cleans up properly', 'Tests using fixture execute successfully'], rollback_plan='Revert fixture changes and restore original implementation', estimated_time_minutes=12)
     else:
         return SystematicFix(fix_id=fix_id, root_cause=root_cause, fix_description=f'Generic pytest fix for {root_cause.cause_type.value}', implementation_steps=[f'Analyze {root_cause.cause_type.value} systematically', 'Review pytest documentation for issue type', 'Implement appropriate fix', 'Validate fix resolves root cause'], validation_criteria=['Pytest error no longer occurs', 'Test execution completes successfully'], rollback_plan='Revert changes if fix fails', estimated_time_minutes=10)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
