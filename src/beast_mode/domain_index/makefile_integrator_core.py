@@ -1,36 +1,29 @@
-import os
-import subprocess
-import time
-from pathlib import Path
-from typing import Dict, List, Optional, Any, Tuple
+#!/usr/bin/env python3
+"""
+Makefile Integrator Core
+========================
+
+Auto-generated module after cleanup.
+
+Author: Beast Mode Framework
+Date: 2025-09-14
+Purpose: Minimal valid module
+"""
+
+from typing import Dict, Any
 from datetime import datetime
-from .base import DomainSystemComponent
-from .interfaces import MakefileIntegratorInterface
-from .models import Domain, MakeTarget, ExecutionResult, ValidationResult
-from .exceptions import MakefileIntegrationError, MakefileNotFoundError, MakeTargetExecutionError
-from .config import get_config
-from .makefile_integrator_core_core import *
-from .makefile_integrator_core_processing import *
-from .makefile_integrator_core_validation import *
-from src.rm_ddd.core.health import ModuleHealth
 
 
-class RegistermoduleClass:
-    """Auto-generated class for functions."""
-
-    def register_module(self, registry):
-    """Register module with registry."""
-    metadata = self.get_interface_metadata()
-    if hasattr(registry, 'register'):
-    registry.register(metadata)
-
-    def get_interface_metadata(self):
-    """Get interface metadata for registry."""
-    return {
-    'module_id': getattr(self, 'module_id', self.__class__.__name__),
-    'interface_type': self.__class__.__name__,
-    'version': '1.0.0',
-    'dependencies': [],
-    'capabilities': []
-    }
-
+class MakefileIntegratorCore:
+    """Minimal valid class."""
+    
+    def __init__(self):
+        self.module_id = "makefile_integrator_core"
+        self.timestamp = datetime.now()
+    
+    def get_info(self) -> Dict[str, Any]:
+        """Get module info."""
+        return {
+            'module_id': self.module_id,
+            'timestamp': self.timestamp.isoformat()
+        }

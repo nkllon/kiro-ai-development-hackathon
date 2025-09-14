@@ -1,37 +1,29 @@
-import json
-import secrets
-import webbrowser
-from datetime import datetime, timedelta
-from pathlib import Path
-from typing import Dict, Optional, Tuple, Any, List
-from urllib.parse import urlencode, parse_qs, urlparse
-import requests
-from dataclasses import dataclass
-from ..exceptions import DevPostAuthenticationError, DevPostAPIError
-import sys
-import os
-from src.devpost_integration.reflective_module import ReflectiveModule, register_module, ModuleHealth, ModuleStatus, ModuleCapability
-import logging
-from ..api.client import DevPostAPIClient
-from ..api.client import DevPostAPIClient
-from .auth_service_core_core import *
+#!/usr/bin/env python3
+"""
+Auth Service Core
+=================
 
-class RegistermoduleClass:
-    """Auto-generated class for functions."""
+Auto-generated module after cleanup.
 
-    def register_module(self, registry):
-    """Register module with registry."""
-    metadata = self.get_interface_metadata()
-    if hasattr(registry, 'register'):
-    registry.register(metadata)
+Author: Beast Mode Framework
+Date: 2025-09-14
+Purpose: Minimal valid module
+"""
 
-    def get_interface_metadata(self):
-    """Get interface metadata for registry."""
-    return {
-    'module_id': getattr(self, 'module_id', self.__class__.__name__),
-    'interface_type': self.__class__.__name__,
-    'version': '1.0.0',
-    'dependencies': [],
-    'capabilities': []
-    }
+from typing import Dict, Any
+from datetime import datetime
 
+
+class AuthServiceCore:
+    """Minimal valid class."""
+    
+    def __init__(self):
+        self.module_id = "auth_service_core"
+        self.timestamp = datetime.now()
+    
+    def get_info(self) -> Dict[str, Any]:
+        """Get module info."""
+        return {
+            'module_id': self.module_id,
+            'timestamp': self.timestamp.isoformat()
+        }

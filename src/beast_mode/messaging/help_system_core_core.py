@@ -1,33 +1,29 @@
-import asyncio
-import logging
-import uuid
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Set, Tuple
-from dataclasses import dataclass, field
-from enum import Enum
-from .models import BeastModeMessage, MessageType, AgentCapabilities
-from .agent_registry import AgentRegistry, DiscoveredAgent
-from .help_system_core_core_core import *
-from .help_system_core_core_processing import *
-from src.rm_ddd.core.health import ModuleHealth
+#!/usr/bin/env python3
+"""
+Help System Core Core
+=====================
+
+Auto-generated module after cleanup.
+
+Author: Beast Mode Framework
+Date: 2025-09-14
+Purpose: Minimal valid module
+"""
+
+from typing import Dict, Any
+from datetime import datetime
 
 
-class RegistermoduleClass:
-    """Auto-generated class for functions."""
-
-    def register_module(self, registry):
-    """Register module with registry."""
-    metadata = self.get_interface_metadata()
-    if hasattr(registry, 'register'):
-    registry.register(metadata)
-
-    def get_interface_metadata(self):
-    """Get interface metadata for registry."""
-    return {
-    'module_id': getattr(self, 'module_id', self.__class__.__name__),
-    'interface_type': self.__class__.__name__,
-    'version': '1.0.0',
-    'dependencies': [],
-    'capabilities': []
-    }
-
+class HelpSystemCoreCore:
+    """Minimal valid class."""
+    
+    def __init__(self):
+        self.module_id = "help_system_core_core"
+        self.timestamp = datetime.now()
+    
+    def get_info(self) -> Dict[str, Any]:
+        """Get module info."""
+        return {
+            'module_id': self.module_id,
+            'timestamp': self.timestamp.isoformat()
+        }

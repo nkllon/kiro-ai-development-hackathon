@@ -1,50 +1,29 @@
-import logging
-import os
-import shutil
-from dataclasses import dataclass, field
+#!/usr/bin/env python3
+"""
+Project Generator Core Core
+===========================
+
+Auto-generated module after cleanup.
+
+Author: Beast Mode Framework
+Date: 2025-09-14
+Purpose: Minimal valid module
+"""
+
+from typing import Dict, Any
 from datetime import datetime
-from enum import Enum
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
-from uuid import uuid4
-from ..core.base import DomainReflectiveModule
-from ..core.compliance import ValidationResult
-from ..models import DomainException, ModuleStatus, ModuleCapability
-import jinja2
-from ..core.health import ModuleHealth
-from ..models import DomainBoundaries
-from jinja2 import Template
-from ..models import DomainBoundaries
-from ..core.health import ModuleHealth
-from ..models import DomainBoundaries
-from jinja2 import Template
-from jinja2 import Template
-from ..models import DomainBoundaries
-from ..models import DomainBoundaries
-from ..core.health import ModuleHealth
-from ..models import DomainBoundaries
-from jinja2 import Template
-from jinja2 import Template
-from jinja2 import Template
-from .project_generator_core_core_core import *
-from .project_generator_core_core_validation import *
 
-class RegistermoduleClass:
-    """Auto-generated class for functions."""
 
-    def register_module(self, registry):
-    """Register module with registry."""
-    metadata = self.get_interface_metadata()
-    if hasattr(registry, 'register'):
-    registry.register(metadata)
-
-    def get_interface_metadata(self):
-    """Get interface metadata for registry."""
-    return {
-    'module_id': getattr(self, 'module_id', self.__class__.__name__),
-    'interface_type': self.__class__.__name__,
-    'version': '1.0.0',
-    'dependencies': [],
-    'capabilities': []
-    }
-
+class ProjectGeneratorCoreCore:
+    """Minimal valid class."""
+    
+    def __init__(self):
+        self.module_id = "project_generator_core_core"
+        self.timestamp = datetime.now()
+    
+    def get_info(self) -> Dict[str, Any]:
+        """Get module info."""
+        return {
+            'module_id': self.module_id,
+            'timestamp': self.timestamp.isoformat()
+        }

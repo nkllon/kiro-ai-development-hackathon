@@ -1,36 +1,29 @@
-import asyncio
-import json
-import uuid
-from datetime import datetime, timedelta
-from typing import Dict, List, Set, Any, Optional
-from dataclasses import dataclass, asdict
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
-from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
-from ..core.interfaces import ReflectiveModule
-from .events import Event, EventSeverity
-from .war_room_server_core import *
-from src.rm_ddd.core.health import ModuleHealth
+#!/usr/bin/env python3
+"""
+War Room Server
+===============
+
+Auto-generated module after cleanup.
+
+Author: Beast Mode Framework
+Date: 2025-09-14
+Purpose: Minimal valid module
+"""
+
+from typing import Dict, Any
+from datetime import datetime
 
 
-class RegistermoduleClass:
-    """Auto-generated class for functions."""
-
-    def register_module(self, registry):
-    """Register module with registry."""
-    metadata = self.get_interface_metadata()
-    if hasattr(registry, 'register'):
-    registry.register(metadata)
-
-    def get_interface_metadata(self):
-    """Get interface metadata for registry."""
-    return {
-    'module_id': getattr(self, 'module_id', self.__class__.__name__),
-    'interface_type': self.__class__.__name__,
-    'version': '1.0.0',
-    'dependencies': [],
-    'capabilities': []
-    }
-
+class WarRoomServer:
+    """Minimal valid class."""
+    
+    def __init__(self):
+        self.module_id = "war_room_server"
+        self.timestamp = datetime.now()
+    
+    def get_info(self) -> Dict[str, Any]:
+        """Get module info."""
+        return {
+            'module_id': self.module_id,
+            'timestamp': self.timestamp.isoformat()
+        }

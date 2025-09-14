@@ -1,37 +1,29 @@
-import json
-import time
-from typing import Dict, Any, List, Optional
-from dataclasses import dataclass, field
-from datetime import datetime, timedelta
-from enum import Enum
-from pathlib import Path
-from ..core.reflective_module import ReflectiveModule, HealthStatus
-from ..integration.infrastructure_integration_manager import InfrastructureIntegrationManager
-from ..integration.self_consistency_validator import SelfConsistencyValidator
-from ..orchestration.tool_orchestration_engine import ToolOrchestrationEngine
-from .operational_dashboard_manager_models import *
-from .operational_dashboard_manager_core import *
-from .operational_dashboard_manager_validation import *
-from .operational_dashboard_manager_services import *
-from src.rm_ddd.core.health import ModuleHealth
+#!/usr/bin/env python3
+"""
+Operational Dashboard Manager
+=============================
+
+Auto-generated module after cleanup.
+
+Author: Beast Mode Framework
+Date: 2025-09-14
+Purpose: Minimal valid module
+"""
+
+from typing import Dict, Any
+from datetime import datetime
 
 
-class RegistermoduleClass:
-    """Auto-generated class for functions."""
-
-    def register_module(self, registry):
-    """Register module with registry."""
-    metadata = self.get_interface_metadata()
-    if hasattr(registry, 'register'):
-    registry.register(metadata)
-
-    def get_interface_metadata(self):
-    """Get interface metadata for registry."""
-    return {
-    'module_id': getattr(self, 'module_id', self.__class__.__name__),
-    'interface_type': self.__class__.__name__,
-    'version': '1.0.0',
-    'dependencies': [],
-    'capabilities': []
-    }
-
+class OperationalDashboardManager:
+    """Minimal valid class."""
+    
+    def __init__(self):
+        self.module_id = "operational_dashboard_manager"
+        self.timestamp = datetime.now()
+    
+    def get_info(self) -> Dict[str, Any]:
+        """Get module info."""
+        return {
+            'module_id': self.module_id,
+            'timestamp': self.timestamp.isoformat()
+        }

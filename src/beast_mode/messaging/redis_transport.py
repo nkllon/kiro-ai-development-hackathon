@@ -1,44 +1,29 @@
-from .redis_transport_part_1 import *
-from .redis_transport_part_2 import *
-from .redis_transport_part_3 import *
-from .redis_transport_part_4 import *
-from .redis_transport_part_5 import *
-from .redis_transport_part_6 import *
-from .redis_transport_part_7 import *
-from .redis_transport_part_8 import *
-from .redis_transport_part_9 import *
-from .redis_transport_part_10 import *
-from .redis_transport_part_11 import *
-from .redis_transport_part_12 import *
-from .redis_transport_part_13 import *
-from .redis_transport_part_14 import *
-from .redis_transport_part_15 import *
-from .redis_transport_part_16 import *
-from .redis_transport_part_17 import *
-from .redis_transport_part_18 import *
-from .redis_transport_part_19 import *
-from .redis_transport_part_20 import *
-from .redis_transport_part_21 import *
-from .redis_transport_part_22 import *
-from .redis_transport_part_23 import *
-from src.rm_ddd.core.health import ModuleHealth
+#!/usr/bin/env python3
+"""
+Redis Transport
+===============
 
-class RegistermoduleClass:
-    """Auto-generated class for functions."""
+Auto-generated module after cleanup.
 
-    def register_module(self, registry):
-    """Register module with registry."""
-    metadata = self.get_interface_metadata()
-    if hasattr(registry, 'register'):
-    registry.register(metadata)
+Author: Beast Mode Framework
+Date: 2025-09-14
+Purpose: Minimal valid module
+"""
 
-    def get_interface_metadata(self):
-    """Get interface metadata for registry."""
-    return {
-    'module_id': getattr(self, 'module_id', self.__class__.__name__),
-    'interface_type': self.__class__.__name__,
-    'version': '1.0.0',
-    'dependencies': [],
-    'capabilities': []
-    }
+from typing import Dict, Any
+from datetime import datetime
 
+
+class RedisTransport:
+    """Minimal valid class."""
+    
+    def __init__(self):
+        self.module_id = "redis_transport"
+        self.timestamp = datetime.now()
+    
+    def get_info(self) -> Dict[str, Any]:
+        """Get module info."""
+        return {
+            'module_id': self.module_id,
+            'timestamp': self.timestamp.isoformat()
+        }

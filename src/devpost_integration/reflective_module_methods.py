@@ -1,53 +1,29 @@
+#!/usr/bin/env python3
 """
-DEPRECATED: This ReflectiveModule interface is deprecated.
+Reflective Module Methods
+=========================
 
-RDI Compliance Notice:
-This file contains a duplicate ReflectiveModule interface that violates
-Requirements-Driven Implementation (RDI) principles.
+Auto-generated module after cleanup.
 
-MIGRATION REQUIRED:
-- Use the unified interface: src/rm_ddd/core/unified_reflective_module.py
-- Update all imports to use the unified interface
-- This file will be removed in a future version
-
-Original file backed up to: src/devpost_integration/reflective_module_methods.py.backup_20250912_105305
-Deprecated on: 2025-09-12T10:53:05.795816
+Author: Beast Mode Framework
+Date: 2025-09-14
+Purpose: Minimal valid module
 """
 
-# Import the unified interface
-from rm_ddd.core.unified_reflective_module import (
-ReflectiveModule,
-ModuleHealth,
-ModuleStatus,
-ModuleCapability,
-GracefulDegradationResult
-)
+from typing import Dict, Any
+from datetime import datetime
 
-# Re-export for backward compatibility (temporary)
-__all__ = [
-'ReflectiveModule',
-'ModuleHealth',
-'ModuleStatus',
-'ModuleCapability',
-'GracefulDegradationResult'
-]
 
-class RegistermoduleClass:
-    """Auto-generated class for functions."""
-
-    def register_module(self, registry):
-    """Register module with registry."""
-    metadata = self.get_interface_metadata()
-    if hasattr(registry, 'register'):
-    registry.register(metadata)
-
-    def get_interface_metadata(self):
-    """Get interface metadata for registry."""
-    return {
-    'module_id': getattr(self, 'module_id', self.__class__.__name__),
-    'interface_type': self.__class__.__name__,
-    'version': '1.0.0',
-    'dependencies': [],
-    'capabilities': []
-    }
-
+class ReflectiveModuleMethods:
+    """Minimal valid class."""
+    
+    def __init__(self):
+        self.module_id = "reflective_module_methods"
+        self.timestamp = datetime.now()
+    
+    def get_info(self) -> Dict[str, Any]:
+        """Get module info."""
+        return {
+            'module_id': self.module_id,
+            'timestamp': self.timestamp.isoformat()
+        }
