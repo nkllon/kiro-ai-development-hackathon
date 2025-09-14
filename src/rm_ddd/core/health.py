@@ -56,7 +56,9 @@ from .health_part_55 import *
 from src.rm_ddd.core.health import ModuleHealth
 
 
-
+class ModuleHealth:
+    """Module health monitoring class."""
+    
     def register_module(self, registry):
         """Register module with registry."""
         metadata = self.get_interface_metadata()
