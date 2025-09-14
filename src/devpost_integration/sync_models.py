@@ -119,3 +119,4 @@ from .sync_models_part_118 import *
 from .sync_models_part_119 import *
 from .sync_models_part_120 import *
 from .sync_models_part_121 import *
+from src.rm_ddd.core.health import ModuleHealth

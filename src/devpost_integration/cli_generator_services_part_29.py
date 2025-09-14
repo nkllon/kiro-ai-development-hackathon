@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _analyze_methods(self, module: ReflectiveModule) -> List[Dict[str, Any]]:
         """Analyze module methods for CLI generation"""

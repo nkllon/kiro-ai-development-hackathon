@@ -20,3 +20,4 @@ from .models_models_models_models_projectmetadata_part_19 import *
 from .models_models_models_models_projectmetadata_part_20 import *
 from .models_models_models_models_projectmetadata_part_21 import *
 from .models_models_models_models_projectmetadata_part_22 import *
+from src.rm_ddd.core.health import ModuleHealth

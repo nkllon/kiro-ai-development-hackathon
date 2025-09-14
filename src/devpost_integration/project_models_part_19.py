@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def remove_team_member(self, member_id: str) -> bool:
         """Remove team member from project."""

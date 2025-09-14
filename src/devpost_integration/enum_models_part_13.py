@@ -20,4 +20,6 @@ RM-DDD Compliance:
 
 from enum import Enum
 from typing import Any, Dict, List, Optional
+from src.rm_ddd.core.health import ModuleHealth
+
 

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def __post_init__(self):
         """__post_init__ - Enhanced for compliance"""

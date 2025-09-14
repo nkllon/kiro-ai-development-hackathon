@@ -98,3 +98,4 @@ from .sync_models_filechangeevent_filechangeevent_part_97 import *
 from .sync_models_filechangeevent_filechangeevent_part_98 import *
 from .sync_models_filechangeevent_filechangeevent_part_99 import *
 from .sync_models_filechangeevent_filechangeevent_part_100 import *
+from src.rm_ddd.core.health import ModuleHealth

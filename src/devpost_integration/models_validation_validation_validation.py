@@ -41,3 +41,4 @@ from .models_validation_validation_validation_part_40 import *
 from .models_validation_validation_validation_part_41 import *
 from .models_validation_validation_validation_part_42 import *
 from .models_validation_validation_validation_part_43 import *
+from src.rm_ddd.core.health import ModuleHealth

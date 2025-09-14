@@ -8,6 +8,8 @@ from .reflective_module import ReflectiveModule, register_module
 from datetime import datetime
 from typing import Dict, Any, List, Optional
 import logging
+from src.rm_ddd.core.health import ModuleHealth
+
 
 logger = logging.getLogger(__name__)
 
