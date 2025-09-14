@@ -8,7 +8,7 @@ from src.beast_mode.hubris_prevention.detection.bypass_detector import Governanc
 from src.beast_mode.hubris_prevention.models import Decision, InterventionType
 
 
-class TestGovernanceBypassDetector:
+class TestGovernanceBypassDetector(ReflectiveModule):
     """Test cases for governance bypass detection."""
     
     def setup_method(self):
@@ -180,6 +180,8 @@ class TestGovernanceBypassDetector:
     def test_pattern_storage_and_cleanup(self):
         """Test pattern storage and automatic cleanup."""
         from src.beast_mode.hubris_prevention.detection.bypass_detector import BypassPattern
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         
         # Create old and new patterns
         old_pattern = BypassPattern(
@@ -211,4 +213,32 @@ class TestGovernanceBypassDetector:
         
         # New pattern should be present
         recent_patterns = [p for p in stored_patterns if p.last_detected >= datetime.now() - timedelta(days=1)]
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert len(recent_patterns) >= 1

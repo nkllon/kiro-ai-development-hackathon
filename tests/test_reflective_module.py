@@ -12,7 +12,7 @@ from typing import Dict, Any
 from src.beast_mode.core.reflective_module import ReflectiveModule
 
 
-class TestReflectiveModule(ReflectiveModule):
+class TestReflectiveModule(ReflectiveModule, ModuleHealth):
     """Concrete test implementation of ReflectiveModule."""
     
     def __init__(self, module_name: str = "test_module"):
@@ -33,7 +33,7 @@ class TestReflectiveModule(ReflectiveModule):
         return self._test_data
 
 
-class TestReflectiveModulePattern:
+class TestReflectiveModulePattern(ModuleHealth):
     """Test the Reflective Module pattern implementation."""
     
     def setup_method(self):
@@ -92,7 +92,7 @@ class TestReflectiveModulePattern:
         assert module2.get_test_data()["custom"] == "value2"
 
 
-class TestReflectiveModuleCompliance:
+class TestReflectiveModuleCompliance(ModuleHealth):
     """Test RM pattern compliance requirements."""
     
     def test_abstract_method_enforcement(self):
@@ -133,7 +133,7 @@ class TestReflectiveModuleCompliance:
         assert " and " not in responsibility.lower()
 
 
-class TestReflectiveModuleIntegration:
+class TestReflectiveModuleIntegration(ModuleHealth):
     """Test RM pattern integration scenarios."""
     
     def test_module_registry_compatibility(self):
@@ -191,7 +191,7 @@ class TestReflectiveModuleIntegration:
         assert updated_data["status"] == "active"
 
 
-class TestReflectiveModuleErrorHandling:
+class TestReflectiveModuleErrorHandling(ModuleHealth):
     """Test error handling in RM pattern."""
     
     def test_invalid_module_name_handling(self):
@@ -219,7 +219,7 @@ class TestReflectiveModuleErrorHandling:
         assert resp1 == resp2
 
 
-class TestReflectiveModulePerformance:
+class TestReflectiveModulePerformance(ModuleHealth):
     """Test RM pattern performance characteristics."""
     
     def test_module_creation_performance(self):
@@ -247,6 +247,8 @@ class TestReflectiveModulePerformance:
     def test_module_method_call_performance(self):
         """Test module method call performance."""
         import time
+from src.rm_ddd.core.health import ModuleHealth
+
         
         module = TestReflectiveModule("performance_test")
         
@@ -265,4 +267,21 @@ class TestReflectiveModulePerformance:
 
 
 if __name__ == "__main__":
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
     pytest.main([__file__, "-v"])

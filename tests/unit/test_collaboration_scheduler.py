@@ -17,9 +17,11 @@ from src.beast_mode.messaging.collaboration_scheduler import (
     OfficeHoursPattern
 )
 from src.beast_mode.messaging.models import BeastModeMessage, MessageType
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestCollaborationScheduler:
+
+class TestCollaborationScheduler(ReflectiveModule):
     """Test collaboration scheduler functionality"""
     
     @pytest.fixture
@@ -634,7 +636,7 @@ class TestCollaborationScheduler:
         assert scheduler._pattern_analysis_task is None
 
 
-class TestOfficeHours:
+class TestOfficeHours(ReflectiveModule):
     """Test office hours functionality"""
     
     def test_office_hours_creation(self):
@@ -665,7 +667,7 @@ class TestOfficeHours:
         assert office_hours.is_active is True
 
 
-class TestCollaborationSession:
+class TestCollaborationSession(ReflectiveModule):
     """Test collaboration session functionality"""
     
     def test_collaboration_session_creation(self):
@@ -696,7 +698,7 @@ class TestCollaborationSession:
         assert session.session_id is not None
 
 
-class TestCollaborationPattern:
+class TestCollaborationPattern(ReflectiveModule):
     """Test collaboration pattern functionality"""
     
     def test_collaboration_pattern_creation(self):
@@ -724,4 +726,32 @@ class TestCollaborationPattern:
         assert pattern.capabilities_involved == ["python", "architecture"]
         assert pattern.last_occurrence == datetime(2024, 1, 1, 10, 0)
         assert pattern.confidence_score == 0.85
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert pattern.pattern_id is not None

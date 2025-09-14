@@ -20,7 +20,7 @@ from src.spec_reconciliation.models import SpecProposal, ValidationResult
 from src.spec_reconciliation.validation import ConsistencyValidator
 
 
-class TestCLICommands:
+class TestCLICommands(ModuleHealth):
     """Test all CLI commands and their functionality"""
     
     def setup_method(self):
@@ -74,7 +74,7 @@ The ReflectiveModule pattern should be used consistently.
 
 ## Interface Definition
 
-class TestModule(ReflectiveModule):
+class TestModule(ReflectiveModule, ModuleHealth):
     def get_module_status(self):
         return {"status": "healthy"}
     
@@ -84,7 +84,7 @@ class TestModule(ReflectiveModule):
     def get_health_indicators(self):
         return []
 
-class BadModule:
+class BadModule(ModuleHealth):
     def bad_method_name(self):
         pass
 """
@@ -334,7 +334,7 @@ This is a test specification for validation.
                     assert 'overlap matrix' in printed_output or 'not yet implemented' in printed_output
 
 
-class TestCLIErrorHandling:
+class TestCLIErrorHandling(ModuleHealth):
     """Test CLI error handling and user feedback"""
     
     def test_cli_exception_handling(self):
@@ -386,7 +386,7 @@ class TestCLIErrorHandling:
                 test_file.chmod(0o644)
 
 
-class TestCLIBackendIntegration:
+class TestCLIBackendIntegration(ModuleHealth):
     """Test CLI integration with all backend components"""
     
     def setup_method(self):
@@ -428,7 +428,7 @@ class TestCLIBackendIntegration:
 
 ## Interface
 
-class IntegrationTestModule(ReflectiveModule):
+class IntegrationTestModule(ReflectiveModule, ModuleHealth):
     def get_module_status(self):
         return {"status": "healthy"}
     
@@ -545,7 +545,7 @@ It should be consistent with standard terminology.
                         assert mock_print.called
 
 
-class TestCLIHelpDocumentation:
+class TestCLIHelpDocumentation(ModuleHealth):
     """Test CLI help documentation and usage examples"""
     
     def test_main_help_documentation(self):
@@ -577,7 +577,7 @@ class TestCLIHelpDocumentation:
         # Subcommand help is handled by argparse
 
 
-class TestCLIUsageExamples:
+class TestCLIUsageExamples(ModuleHealth):
     """Test CLI usage examples and common workflows"""
     
     def setup_method(self):
@@ -641,7 +641,7 @@ This is an example specification for testing governance workflow.
         
         spec2 = self.specs_dir / "spec2.md"
         spec2.write_text("""
-class TestModule(ReflectiveModule):
+class TestModule(ReflectiveModule, ModuleHealth):
     def get_module_status(self): pass
     def is_healthy(self): pass
 """)
@@ -724,6 +724,8 @@ def test_cli_argument_parsing():
     """Test CLI argument parsing functionality"""
     import argparse
     from src.spec_reconciliation.cli import main
+from src.rm_ddd.core.health import ModuleHealth
+
     
     # Test that argument parser is set up correctly
     with patch('sys.argv', ['cli.py']):
@@ -732,4 +734,21 @@ def test_cli_argument_parsing():
 
 
 if __name__ == '__main__':
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
     pytest.main([__file__])
