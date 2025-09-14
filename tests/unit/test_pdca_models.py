@@ -8,6 +8,8 @@ for systematic PDCA orchestration.
 import pytest
 from datetime import datetime, timedelta
 from src.beast_mode.core.pdca_models import (
+from src.rm_ddd.core.health import ModuleHealth
+
     PDCATask, PDCAResult, PlanResult, DoResult, CheckResult, ActResult,
     ModelIntelligence, Requirement, Constraint, Criterion, Pattern, Tool,
     PDCAPhase, TaskStatus, ValidationLevel, ReflectiveModule,
@@ -15,7 +17,7 @@ from src.beast_mode.core.pdca_models import (
 )
 
 
-class TestPDCATask:
+class TestPDCATask(ModuleHealth):
     """Test PDCATask data model"""
     
     def test_create_valid_task(self):
@@ -73,7 +75,7 @@ class TestPDCATask:
         assert len(task.success_criteria) == 0
 
 
-class TestPDCAResult:
+class TestPDCAResult(ModuleHealth):
     """Test PDCAResult and phase results"""
     
     def setup_method(self):
@@ -157,7 +159,7 @@ class TestPDCAResult:
         assert result.get_phase_result(PDCAPhase.ACT) == self.act_result
 
 
-class TestModelIntelligence:
+class TestModelIntelligence(ModuleHealth):
     """Test ModelIntelligence data model"""
     
     def test_create_model_intelligence(self):
@@ -227,7 +229,7 @@ class TestModelIntelligence:
         assert found_tool is None
 
 
-class TestUtilityFunctions:
+class TestUtilityFunctions(ModuleHealth):
     """Test utility functions"""
     
     def test_calculate_systematic_score(self):
@@ -335,7 +337,7 @@ class TestUtilityFunctions:
         assert len(issues) == 4  # task_id, cycle_duration, systematic_score, success_rate
 
 
-class MockReflectiveModule(ReflectiveModule):
+class MockReflectiveModule(ReflectiveModule, ModuleHealth):
     """Mock implementation for testing ReflectiveModule interface"""
     
     def get_health_status(self) -> dict:
@@ -348,7 +350,7 @@ class MockReflectiveModule(ReflectiveModule):
         return ValidationLevel.HIGH
 
 
-class TestReflectiveModule:
+class TestReflectiveModule(ModuleHealth):
     """Test ReflectiveModule interface"""
     
     def test_reflective_module_interface(self):
@@ -367,4 +369,21 @@ class TestReflectiveModule:
         info = module.get_module_info()
         assert info["module_name"] == "MockReflectiveModule"
         assert info["module_type"] == "ReflectiveModule"
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
         assert info["systematic_approach"] == "PDCA-driven"

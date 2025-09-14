@@ -28,7 +28,7 @@ from src.devpost_integration.models import (
 )
 
 
-class TestContentBasedChangeDetector:
+class TestContentBasedChangeDetector(ReflectiveModule):
     """Test content-based change detection functionality."""
     
     def setup_method(self):
@@ -128,7 +128,7 @@ class TestContentBasedChangeDetector:
         assert is_significant is True
 
 
-class TestMediaFileDetector:
+class TestMediaFileDetector(ReflectiveModule):
     """Test media file detection and categorization."""
     
     def setup_method(self):
@@ -225,7 +225,7 @@ class TestMediaFileDetector:
         assert 'mime_type' in metadata
 
 
-class TestGitIntegration:
+class TestGitIntegration(ReflectiveModule):
     """Test Git integration functionality."""
     
     def setup_method(self):
@@ -312,7 +312,7 @@ class TestGitIntegration:
             shutil.rmtree(non_git_dir)
 
 
-class TestProjectFileMonitor:
+class TestProjectFileMonitor(ReflectiveModule):
     """Test the main ProjectFileMonitor class."""
     
     def setup_method(self):
@@ -549,7 +549,7 @@ class TestProjectFileMonitor:
             assert should_process is False, f"Should ignore {filename}"
 
 
-class TestProjectFileEventHandler:
+class TestProjectFileEventHandler(ReflectiveModule):
     """Test the file system event handler."""
     
     def setup_method(self):
@@ -582,6 +582,8 @@ class TestProjectFileEventHandler:
         test_dir.mkdir()
         
         from watchdog.events import DirModifiedEvent
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         event = DirModifiedEvent(str(test_dir))
         
         self.handler.on_any_event(event)
@@ -591,7 +593,7 @@ class TestProjectFileEventHandler:
 
 
 # Integration tests
-class TestFileMonitorIntegration:
+class TestFileMonitorIntegration(ReflectiveModule):
     """Integration tests for file monitoring system."""
     
     def setup_method(self):
@@ -664,4 +666,32 @@ class TestFileMonitorIntegration:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v"])

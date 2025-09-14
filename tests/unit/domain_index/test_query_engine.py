@@ -9,9 +9,11 @@ from unittest.mock import Mock, MagicMock
 
 from src.beast_mode.domain_index.query_engine import DomainQueryEngine
 from src.beast_mode.domain_index.models import Domain, DomainTools, DomainMetadata, PackagePotential, QueryResult
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestDomainQueryEngine:
+
+class TestDomainQueryEngine(ReflectiveModule):
     """Test the domain query engine"""
     
     @pytest.fixture
@@ -942,4 +944,32 @@ class TestDomainQueryEngine:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__])

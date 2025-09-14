@@ -18,9 +18,11 @@ from src.beast_mode.compliance.models import (
     IssueSeverity
 )
 from src.beast_mode.compliance.interfaces import ComplianceValidator, ValidationContext
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class MockValidator(ComplianceValidator):
+
+class MockValidator(ComplianceValidator, ModuleHealth):
     """Mock validator for testing."""
     
     def validate(self, target):
@@ -30,7 +32,7 @@ class MockValidator(ComplianceValidator):
         return "mock_validator"
 
 
-class TestComplianceOrchestrator:
+class TestComplianceOrchestrator(ModuleHealth):
     """Test cases for ComplianceOrchestrator."""
     
     def test_initialization(self):
@@ -167,4 +169,21 @@ class TestComplianceOrchestrator:
                 description="Critical issue"
             )
         ]
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
         assert not orchestrator._assess_phase3_readiness(result)
