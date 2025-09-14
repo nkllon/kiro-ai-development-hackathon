@@ -197,6 +197,55 @@ class PrometheusExporter:
             ['queue_name']
         )
         
+        # Module-specific metrics
+        self.module_health_score = Gauge(
+            'beast_mode_module_health_score',
+            'Module health score (0-100)',
+            ['module_id', 'class_name']
+        )
+        
+        self.module_status = Gauge(
+            'beast_mode_module_status',
+            'Module status (1=healthy, 0=unhealthy)',
+            ['module_id', 'class_name', 'status']
+        )
+        
+        self.module_error_count = Counter(
+            'beast_mode_module_errors_total',
+            'Total number of module errors',
+            ['module_id', 'class_name']
+        )
+        
+        self.module_warning_count = Counter(
+            'beast_mode_module_warnings_total',
+            'Total number of module warnings',
+            ['module_id', 'class_name']
+        )
+        
+        self.module_uptime_seconds = Gauge(
+            'beast_mode_module_uptime_seconds',
+            'Module uptime in seconds',
+            ['module_id', 'class_name']
+        )
+        
+        self.module_last_activity = Gauge(
+            'beast_mode_module_last_activity_timestamp',
+            'Module last activity timestamp',
+            ['module_id', 'class_name']
+        )
+        
+        self.module_capabilities_count = Gauge(
+            'beast_mode_module_capabilities_count',
+            'Number of module capabilities',
+            ['module_id', 'class_name']
+        )
+        
+        self.module_version_info = Info(
+            'beast_mode_module_version',
+            'Module version information',
+            ['module_id', 'class_name']
+        )
+        
         # Health metrics
         self.component_health_status = Gauge(
             'beast_mode_component_health_status',
@@ -470,6 +519,109 @@ class PrometheusExporter:
             
         except Exception as e:
             self.logger.error(f"Failed to export performance metrics: {e}")
+    
+    def record_module_health(self, module_id: str, status: str, health_score: float, 
+                           error_count: int, warning_count: int, uptime_seconds: float):
+        """Record module health metrics."""
+        if not PROMETHEUS_AVAILABLE:
+            return
+        
+        try:
+            class_name = module_id.split('_')[0] if '_' in module_id else module_id
+            
+            # Record health score
+            self.module_health_score.labels(
+                module_id=module_id,
+                class_name=class_name
+            ).set(health_score)
+            
+            # Record status (1=healthy, 0=unhealthy)
+            status_value = 1 if status == 'healthy' else 0
+            self.module_status.labels(
+                module_id=module_id,
+                class_name=class_name,
+                status=status
+            ).set(status_value)
+            
+            # Record error count
+            self.module_error_count.labels(
+                module_id=module_id,
+                class_name=class_name
+            )._value._value = error_count
+            
+            # Record warning count
+            self.module_warning_count.labels(
+                module_id=module_id,
+                class_name=class_name
+            )._value._value = warning_count
+            
+            # Record uptime
+            self.module_uptime_seconds.labels(
+                module_id=module_id,
+                class_name=class_name
+            ).set(uptime_seconds)
+            
+        except Exception as e:
+            self.logger.error(f"Failed to record module health metrics: {e}")
+    
+    def record_module_performance(self, module_id: str, class_name: str, version: str,
+                                capabilities: List[str], last_activity: datetime):
+        """Record module performance metrics."""
+        if not PROMETHEUS_AVAILABLE:
+            return
+        
+        try:
+            # Record last activity timestamp
+            self.module_last_activity.labels(
+                module_id=module_id,
+                class_name=class_name
+            ).set(last_activity.timestamp())
+            
+            # Record capabilities count
+            self.module_capabilities_count.labels(
+                module_id=module_id,
+                class_name=class_name
+            ).set(len(capabilities))
+            
+            # Record version info
+            self.module_version_info.labels(
+                module_id=module_id,
+                class_name=class_name
+            ).info({'version': version, 'capabilities': ','.join(capabilities)})
+            
+        except Exception as e:
+            self.logger.error(f"Failed to record module performance metrics: {e}")
+    
+    def get_module_metrics(self, module_id: str) -> Dict[str, Any]:
+        """Get metrics for a specific module."""
+        if not PROMETHEUS_AVAILABLE:
+            return {}
+        
+        try:
+            class_name = module_id.split('_')[0] if '_' in module_id else module_id
+            
+            return {
+                'module_id': module_id,
+                'class_name': class_name,
+                'health_score': self.module_health_score.labels(
+                    module_id=module_id, class_name=class_name
+                )._value._value,
+                'error_count': self.module_error_count.labels(
+                    module_id=module_id, class_name=class_name
+                )._value._value,
+                'warning_count': self.module_warning_count.labels(
+                    module_id=module_id, class_name=class_name
+                )._value._value,
+                'uptime_seconds': self.module_uptime_seconds.labels(
+                    module_id=module_id, class_name=class_name
+                )._value._value,
+                'capabilities_count': self.module_capabilities_count.labels(
+                    module_id=module_id, class_name=class_name
+                )._value._value
+            }
+        except Exception as e:
+            self.logger.error(f"Failed to get module metrics: {e}")
+            return {}
     
     def get_metrics_summary(self) -> Dict[str, Any]:
         """Get metrics summary for monitoring."""

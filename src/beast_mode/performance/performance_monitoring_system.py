@@ -140,6 +140,12 @@ class PerformanceMonitoringSystem:
         self.alert_callbacks: List[Callable[[PerformanceAlert], None]] = []
         self.metric_callbacks: List[Callable[[PerformanceMetric], None]] = []
         
+        # Prometheus integration
+        self._prometheus_exporter = None
+        self._enable_prometheus = self._should_enable_prometheus()
+        if self._enable_prometheus:
+            self._initialize_prometheus_integration()
+        
         # Start monitoring
         self.start_monitoring()
         
@@ -157,6 +163,28 @@ class PerformanceMonitoringSystem:
             logger.addHandler(handler)
             
         return logger
+    
+    def _should_enable_prometheus(self) -> bool:
+        """Check if Prometheus metrics should be enabled."""
+        import os
+        return os.getenv('BEAST_MODE_PROMETHEUS_ENABLED', 'true').lower() == 'true'
+    
+    def _initialize_prometheus_integration(self):
+        """Initialize Prometheus integration."""
+        try:
+            from beast_mode.monitoring.prometheus_exporter import PrometheusExporter
+            import os
+            self._prometheus_exporter = PrometheusExporter(
+                port=int(os.getenv('BEAST_MODE_PROMETHEUS_PORT', '8000')),
+                enable_http_server=True
+            )
+            self.logger.info("Prometheus integration enabled for PerformanceMonitoringSystem")
+        except ImportError:
+            self.logger.warning("Prometheus client not available. Install with: pip install prometheus-client")
+            self._enable_prometheus = False
+        except Exception as e:
+            self.logger.error(f"Failed to initialize Prometheus integration: {e}")
+            self._enable_prometheus = False
     
     def _initialize_alert_thresholds(self) -> Dict[str, Dict[str, float]]:
         """Initialize alert thresholds for different metrics."""
@@ -236,6 +264,10 @@ class PerformanceMonitoringSystem:
                 if self.enable_alerts:
                     self._check_alerts()
                 
+                # Export to Prometheus if enabled
+                if self._enable_prometheus and self._prometheus_exporter:
+                    self._export_to_prometheus()
+                
                 # Clean up old data
                 self._cleanup_old_data()
                 
@@ -243,6 +275,33 @@ class PerformanceMonitoringSystem:
                 
             except Exception as e:
                 self.logger.error(f"Monitoring loop error: {e}")
+    
+    def _export_to_prometheus(self):
+        """Export performance metrics to Prometheus."""
+        try:
+            if not self._prometheus_exporter:
+                return
+            
+            # Get current metrics
+            current_metrics = self.get_current_metrics()
+            
+            # Export system metrics
+            system_usage = current_metrics.get('system_usage', {})
+            if system_usage:
+                self._prometheus_exporter._export_system_metrics()
+            
+            # Export application metrics
+            app_metrics = current_metrics.get('application_metrics', {})
+            if app_metrics:
+                self._prometheus_exporter._export_application_metrics()
+            
+            # Export performance metrics
+            perf_metrics = current_metrics.get('performance_metrics', {})
+            if perf_metrics:
+                self._prometheus_exporter._export_performance_metrics()
+            
+        except Exception as e:
+            self.logger.error(f"Failed to export to Prometheus: {e}")
     
     def _collect_system_metrics(self):
         """Collect system resource metrics."""
