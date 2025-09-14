@@ -122,3 +122,4 @@ from .notification_notificationmessage_notificationmessage_part_121 import *
 from .notification_notificationmessage_notificationmessage_part_122 import *
 from .notification_notificationmessage_notificationmessage_part_123 import *
 from .notification_notificationmessage_notificationmessage_part_124 import *
+from src.rm_ddd.core.health import ModuleHealth

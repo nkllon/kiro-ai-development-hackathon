@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def mark_as_sent(self) -> bool:
         """Mark message as sent."""

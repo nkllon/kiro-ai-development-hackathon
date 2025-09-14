@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def remove_permission(self, permission: str) -> bool:
         """Remove permission from member."""

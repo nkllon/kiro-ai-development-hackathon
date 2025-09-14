@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _extract_method_return_type(self, method: callable) -> str:
         """Extract return type from method"""

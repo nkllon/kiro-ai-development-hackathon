@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def __init__(self, config_data: Dict[str, Any]=None):
         """Initialize DevPost configuration."""

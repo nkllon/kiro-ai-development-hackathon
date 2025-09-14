@@ -41,3 +41,4 @@ from .performance_profiler_methods_part_40 import *
 from .performance_profiler_methods_part_41 import *
 from .performance_profiler_methods_part_42 import *
 from .performance_profiler_methods_part_43 import *
+from src.rm_ddd.core.health import ModuleHealth

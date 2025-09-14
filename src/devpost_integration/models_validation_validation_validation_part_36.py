@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_multi_project_config(self) -> bool:
     """Validate multi-project configuration"""

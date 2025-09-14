@@ -47,3 +47,4 @@ from .models_models_models_models_part_46 import *
 from .models_models_models_models_part_47 import *
 from .models_models_models_models_part_48 import *
 from .models_models_models_models_part_49 import *
+from src.rm_ddd.core.health import ModuleHealth

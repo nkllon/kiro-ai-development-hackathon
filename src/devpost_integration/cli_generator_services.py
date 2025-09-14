@@ -32,3 +32,4 @@ from .cli_generator_services_part_31 import *
 from .cli_generator_services_part_32 import *
 from .cli_generator_services_part_33 import *
 from .cli_generator_services_part_34 import *
+from src.rm_ddd.core.health import ModuleHealth

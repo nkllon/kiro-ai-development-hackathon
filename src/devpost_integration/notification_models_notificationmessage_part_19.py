@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def add_recipient(self, recipient: str) -> bool:
         """Add recipient to message."""

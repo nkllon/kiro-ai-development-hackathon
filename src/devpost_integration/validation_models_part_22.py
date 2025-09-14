@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def validate_data(self, data: Dict[str, Any], rules: Dict[str, Any]) -> bool:
         """Validate data against rules."""

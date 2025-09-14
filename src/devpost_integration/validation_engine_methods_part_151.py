@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_configuration(self) -> Dict[str, Any]:
         try:

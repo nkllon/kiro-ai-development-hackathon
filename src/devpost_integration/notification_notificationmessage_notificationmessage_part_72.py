@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def set_timing(self, timing: NotificationTiming) -> bool:
     """Set notification timing."""
