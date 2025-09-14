@@ -10,3 +10,20 @@ def _validate_value_object_immutability(self, value_object: ValueObject) -> Vali
     if setter_methods:
         result.add_warning(f'Value object has setter methods that may violate immutability: {setter_methods}')
     return result
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

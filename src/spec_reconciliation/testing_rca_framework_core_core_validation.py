@@ -68,3 +68,20 @@ def _assess_test_quality(self, test_results: List[Dict[str, Any]]) -> Dict[str, 
 def _generate_testing_insights(self) -> Dict[str, Any]:
     """Generate insights from testing data"""
     return {'total_tests_executed': len(self._test_results), 'average_execution_time': sum((t.execution_time for t in self._test_results)) / len(self._test_results) if self._test_results else 0, 'test_success_rate': len([t for t in self._test_results if t.status == 'passed']) / len(self._test_results) if self._test_results else 0}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

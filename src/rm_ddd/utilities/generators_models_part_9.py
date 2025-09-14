@@ -28,3 +28,20 @@ from src.rm_ddd.core.health import ModuleHealth
                 else:
                     constructor_params.append(f"{attr['name']}: {attr_type}")
         return {'name': spec.name, 'domain_context': spec.domain_context, 'description': spec.metadata.get('description', f'{spec.name} domain entity'), 'id_type': id_type, 'id_param': id_param, 'constructor_params': ', '.join(constructor_params), 'attributes': spec.attributes, 'methods': spec.methods, 'constraints': spec.constraints, 'generated_at': datetime.now().isoformat()}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -80,3 +80,20 @@ def _validate_implementation_compliance(self, config: Dict[str, Any]) -> Dict[st
 def _validate_design_elements(self, config: Dict[str, Any]) -> Dict[str, Any]:
     """Validate design elements against requirements"""
     return {'elements': ['UserInterface', 'DataModel', 'BusinessLogic', 'IntegrationLayer'], 'results': {'UserInterface': {'compliant': True, 'score': 0.95}, 'DataModel': {'compliant': True, 'score': 0.88}, 'BusinessLogic': {'compliant': True, 'score': 0.92}, 'IntegrationLayer': {'compliant': False, 'score': 0.65}}}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

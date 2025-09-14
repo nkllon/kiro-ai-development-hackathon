@@ -170,3 +170,20 @@ def get_service_capabilities(self) -> List[str]:
     base_capabilities = super().get_service_capabilities()
     base_capabilities.extend([f'{self.service_name}_external_integration', f'{self.service_name}_infrastructure_support'])
     return base_capabilities
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

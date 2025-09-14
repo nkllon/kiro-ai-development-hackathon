@@ -36,3 +36,20 @@
     async def get_health_indicators(self):
         """Get health indicators."""
         return {'adaptation_metrics': self._adaptation_metrics, 'external_system': self.external_system_name, 'translator_errors': len(self.translator.get_translation_errors())}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

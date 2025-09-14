@@ -106,3 +106,20 @@ def _generate_integration_test_plan(self, boundaries: List[ComponentBoundary], c
     for contract in contracts:
         test_plan['contract_tests'].append({'contract': contract.interface_name, 'test_name': f'test_{contract.interface_name}_contract', 'test_cases': [f'test_method_signatures', f'test_data_contracts', f'test_service_level_agreements']})
     return test_plan
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

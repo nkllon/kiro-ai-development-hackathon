@@ -35,3 +35,20 @@
         """Get detailed health indicators."""
         validation_result = self.validate_domain_invariants()
         return {'entity_id': str(self.id), 'entity_type': self.__class__.__name__, 'version': self._version, 'domain_valid': validation_result.is_valid, 'validation_errors': len(validation_result.errors), 'validation_warnings': len(validation_result.warnings), 'pending_events': len(self._domain_events), 'last_updated': self._updated_at.isoformat()}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

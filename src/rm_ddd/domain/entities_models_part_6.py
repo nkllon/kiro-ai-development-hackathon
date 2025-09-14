@@ -16,3 +16,20 @@ from src.rm_ddd.core.health import ModuleHealth
         self._domain_events: List['DomainEvent'] = []
         super().__init__(domain_context, module_id)
         logger.debug(f'Entity created: {self.__class__.__name__}({entity_id}) in context: {domain_context}')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

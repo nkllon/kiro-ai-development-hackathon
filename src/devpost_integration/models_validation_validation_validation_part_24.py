@@ -41,3 +41,20 @@ def validate_submission(self, submission_data: Dict[str, Any]) -> Dict[str, Any]
         self._logger.error(f'Submission validation failed: {e}')
         self._metrics['error_count'] += 1
         return {'is_valid': False, 'errors': [f'Validation error: {str(e)}'], 'warnings': [], 'requirement_id': self.requirement_id}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

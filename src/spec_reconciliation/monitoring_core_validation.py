@@ -138,3 +138,20 @@ def _check_decision_consistency(self, decision: ArchitecturalDecision) -> Dict[s
     if 'microservice' in decision.description.lower() and 'monolith' in decision.description.lower():
         issues.append('Decision mentions both microservice and monolith approaches')
     return {'consistent': len(issues) == 0, 'issues': issues}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

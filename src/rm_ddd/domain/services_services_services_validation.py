@@ -65,3 +65,20 @@ def validate_service_constraints(self) -> ValidationResult:
     if not self.domain_context or not self.domain_context.strip():
         result.add_error('Domain service must have a valid domain context', code='DS_003', component=self.__class__.__name__)
     return result
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
