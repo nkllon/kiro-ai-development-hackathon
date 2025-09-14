@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def output_text(self, data: Any) -> bytes:
         """Output data as text"""

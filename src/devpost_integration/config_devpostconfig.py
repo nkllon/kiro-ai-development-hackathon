@@ -22,3 +22,4 @@ from .config_devpostconfig_part_21 import *
 from .config_devpostconfig_part_22 import *
 from .config_devpostconfig_part_23 import *
 from .config_devpostconfig_part_24 import *
+from src.rm_ddd.core.health import ModuleHealth

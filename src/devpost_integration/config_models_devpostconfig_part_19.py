@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def set_config_value(self, key: str, value: Any) -> bool:
         """Set configuration value by key."""

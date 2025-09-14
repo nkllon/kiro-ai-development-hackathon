@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def detect_format(self, input_data: bytes) -> str:
         """Auto-detect input format"""

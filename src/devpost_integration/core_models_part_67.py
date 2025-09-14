@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def set_metadata(self, key: str, value: Any) -> bool:
     """Set metadata value."""

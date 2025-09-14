@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _extract_method_docstring(self, method: callable) -> str:
         """Extract docstring from method"""

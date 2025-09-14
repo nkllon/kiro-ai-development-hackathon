@@ -12,3 +12,4 @@ from .multi_project_manager_part_11 import *
 from .multi_project_manager_part_12 import *
 from .multi_project_manager_part_13 import *
 from .multi_project_manager_part_14 import *
+from src.rm_ddd.core.health import ModuleHealth
