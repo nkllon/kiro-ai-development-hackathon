@@ -1,4 +1,25 @@
 from src.rm_ddd.core.health import ModuleHealth
+from dataclasses import dataclass
+from datetime import datetime
+from typing import Dict, Any
+
+@dataclass
+class MakefileDiagnosisResult:
+    """Result of Makefile diagnosis."""
+    issues_found: bool
+    root_cause: str
+    affected_targets: list
+    severity: str
+
+@dataclass
+class MakefileRepairResult:
+    """Result of Makefile repair."""
+    root_cause_addressed: bool
+    systematic_fix_applied: str
+    workarounds_avoided: bool
+    validation_passed: bool
+    prevention_pattern_documented: str
+    repair_time: float
 
 class MakefileHealthManagerServicesPart12:
     def fix_makefile_systematically(self, diagnosis: MakefileDiagnosisResult) -> MakefileRepairResult:
