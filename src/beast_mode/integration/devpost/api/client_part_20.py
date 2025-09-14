@@ -1,8 +1,6 @@
 from datetime import datetime
 from typing import Dict, List, Any
 from src.rm_ddd.core.health import ModuleHealth
-
-
     def _validate_media_file(self, file_path: Path) -> Dict[str, Any]:
         try:
             pass  # TODO: Add method implementation
@@ -11,10 +9,8 @@ from src.rm_ddd.core.health import ModuleHealth
             raise
         """
         Validate media file and extract metadata.
-        
         Args:
             file_path: Path to media file
-            
         Returns:
             Dictionary with validation result and metadata
         """
@@ -35,11 +31,9 @@ from src.rm_ddd.core.health import ModuleHealth
         else:
             metadata['media_type'] = 'document'
         return metadata
-
     async def _make_request(self, method: str, endpoint: str, json_data: Optional[Dict[str, Any]]=None, form_data: Optional[aiohttp.FormData]=None, params: Optional[Dict[str, Any]]=None, headers: Optional[Dict[str, str]]=None, timeout: Optional[float]=None) -> Dict[str, Any]:
         """
         Make HTTP request with retry logic and error handling.
-        
         Args:
             method: HTTP method (GET, POST, PUT, DELETE)
             endpoint: API endpoint (without base URL)
@@ -48,10 +42,8 @@ from src.rm_ddd.core.health import ModuleHealth
             params: Query parameters
             headers: Additional headers
             timeout: Request timeout override
-            
         Returns:
             Response data as dictionary
-            
         Raises:
             AuthenticationError: If authentication fails
             NetworkError: If request fails after retries
@@ -132,19 +124,15 @@ from src.rm_ddd.core.health import ModuleHealth
             error_msg += f': {str(last_exception)}'
         logger.error(error_msg)
         raise NetworkError(error_msg)
-
     async def _handle_response(self, response: aiohttp.ClientResponse, url: str, method: str) -> Dict[str, Any]:
         """
         Handle HTTP response and extract data.
-        
         Args:
             response: aiohttp response object
             url: Request URL for logging
             method: HTTP method for logging
-            
         Returns:
             Response data as dictionary
-            
         Raises:
             ClientResponseError: If response indicates error
             ValidationError: If response format is invalid
@@ -168,11 +156,9 @@ from src.rm_ddd.core.health import ModuleHealth
         except Exception as e:
             logger.error(f'Failed to process response from {url}: {e}')
             raise ValidationError(f'Response processing failed: {str(e)}')
-
     async def _get_session(self) -> aiohttp.ClientSession:
         """
         Get or create HTTP session with automatic renewal.
-        
         Returns:
             aiohttp.ClientSession instance
         """
@@ -185,13 +171,11 @@ from src.rm_ddd.core.health import ModuleHealth
             self._session_created_at = now
             logger.debug('Created new HTTP session')
         return self._session
-
     def register_module(self, registry):
         """Register module with registry."""
         metadata = self.get_interface_metadata()
         if hasattr(registry, 'register'):
             registry.register(metadata)
-            
     def get_interface_metadata(self):
         """Get interface metadata for registry."""
         return {
@@ -201,4 +185,3 @@ from src.rm_ddd.core.health import ModuleHealth
             'dependencies': [],
             'capabilities': []
         }
-

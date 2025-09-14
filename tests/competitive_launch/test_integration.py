@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Integration tests for devpost_integration module.
+Integration tests for competitive_launch module.
 """
 
 import unittest
@@ -10,8 +10,8 @@ import os
 # Add src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'src'))
 
-class TestDevpostIntegrationIntegration(unittest.TestCase):
-    """devpost_integration integration tests."""
+class TestCompetitiveLaunchIntegration(unittest.TestCase):
+    """competitive_launch integration tests."""
     
     def test_system_integration(self):
         """Test system integration."""

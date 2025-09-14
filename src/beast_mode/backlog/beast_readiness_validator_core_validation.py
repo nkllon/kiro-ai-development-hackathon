@@ -1,10 +1,8 @@
 """
 Beast Readiness Validator Core Validation
-
 This module was extracted from beast_readiness_validator_core.py
 as part of RM-DDD compliance refactoring.
 """
-
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional
 from datetime import datetime
@@ -13,15 +11,11 @@ from ..core.reflective_module import ReflectiveModule, HealthStatus
 from .models import BacklogItem, Requirement, AcceptanceCriterion, DependencyReference
 from .enums import BeastReadinessStatus, ApprovalStatus
 from src.rm_ddd.core.health import ModuleHealth
-
-
 def validate_beast_readiness(self, item: BacklogItem) -> ReadinessValidation:
     """
         Perform comprehensive beast-readiness validation.
-        
         Args:
             item: BacklogItem to validate
-            
         Returns:
             ReadinessValidation with detailed results and remediation guidance
         """
@@ -40,11 +34,9 @@ def validate_beast_readiness(self, item: BacklogItem) -> ReadinessValidation:
         self.logger.error(f'Beast readiness validation failed for {item.item_id}: {str(e)}')
         self._update_health_indicator('validation_error', HealthStatus.UNHEALTHY, str(e), f'Validation failed for item {item.item_id}')
         raise
-
 def check_completeness_criteria(self, item: BacklogItem) -> CompletenessReport:
     """
         Check completeness criteria for beast-readiness.
-        
         Validates:
         - Requirements completeness and clarity
         - Acceptance criteria testability
@@ -79,14 +71,11 @@ def check_completeness_criteria(self, item: BacklogItem) -> CompletenessReport:
     overall_score = weighted_score / total_weight if total_weight > 0 else 0.0
     beast_ready = overall_score >= self._beast_readiness_threshold
     return CompletenessReport(overall_score=overall_score, criteria_results=criteria_results, missing_elements=missing_elements, remediation_actions=remediation_actions, beast_ready=beast_ready, validation_timestamp=datetime.now())
-
 def verify_dependency_satisfaction(self, item: BacklogItem) -> List[DependencyStatus]:
     """
         Verify that all dependencies are satisfied or explicitly documented.
-        
         Args:
             item: BacklogItem to check dependencies for
-            
         Returns:
             List of DependencyStatus for each dependency
         """
@@ -95,7 +84,6 @@ def verify_dependency_satisfaction(self, item: BacklogItem) -> List[DependencySt
         status = self._check_dependency_satisfaction(dep_ref, item)
         dependency_statuses.append(status)
     return dependency_statuses
-
 def _validate_requirements_completeness(self, requirements: List[Requirement]) -> ValidationCriterion:
     """Validate that requirements are complete and well-defined"""
     missing = []
@@ -114,7 +102,6 @@ def _validate_requirements_completeness(self, requirements: List[Requirement]) -
     score = max(0.0, score)
     passed = score >= 0.8 and (not missing)
     return ValidationCriterion(criterion_name='requirements_completeness', description='Requirements are complete, clear, and well-defined', weight=0.3, passed=passed, score=score, remediation_guidance='Add detailed descriptions and acceptance criteria for all requirements', details={'missing': missing, 'requirement_count': len(requirements)})
-
 def _validate_acceptance_criteria(self, criteria: List[AcceptanceCriterion]) -> ValidationCriterion:
     """Validate that acceptance criteria are testable and measurable"""
     missing = []
@@ -136,7 +123,6 @@ def _validate_acceptance_criteria(self, criteria: List[AcceptanceCriterion]) -> 
     score = max(0.0, score)
     passed = score >= 0.8 and (not missing)
     return ValidationCriterion(criterion_name='acceptance_criteria_quality', description='Acceptance criteria are testable, measurable, and unambiguous', weight=0.3, passed=passed, score=score, remediation_guidance='Ensure all acceptance criteria are testable and measurable with clear descriptions', details={'missing': missing, 'criteria_count': len(criteria)})
-
 def _validate_context_adequacy(self, item: BacklogItem) -> ValidationCriterion:
     """Validate that item has adequate context for independent execution"""
     missing = []
@@ -156,7 +142,6 @@ def _validate_context_adequacy(self, item: BacklogItem) -> ValidationCriterion:
     score = max(0.0, score)
     passed = score >= 0.8 and (not missing)
     return ValidationCriterion(criterion_name='context_adequacy', description='Item has adequate context and supporting information', weight=0.2, passed=passed, score=score, remediation_guidance='Ensure item has clear title, approved MPM validation, and strategic track assignment', details={'missing': missing})
-
 def _validate_ambiguity_absence(self, item: BacklogItem) -> ValidationCriterion:
     """Validate that item contains no ambiguous or interpretable elements"""
     ambiguous = []
@@ -182,7 +167,6 @@ def _validate_ambiguity_absence(self, item: BacklogItem) -> ValidationCriterion:
     score = max(0.0, score)
     passed = score >= 0.9 and (not ambiguous)
     return ValidationCriterion(criterion_name='ambiguity_absence', description='Item contains no ambiguous or interpretable language', weight=0.2, passed=passed, score=score, remediation_guidance='Remove ambiguous language and replace with specific, measurable terms', details={'ambiguous': ambiguous})
-
 def _check_dependency_satisfaction(self, dep_ref: DependencyReference, item: BacklogItem) -> DependencyStatus:
     """Check if a specific dependency is satisfied"""
     satisfied = bool(dep_ref.description and len(dep_ref.description.strip()) > 10)
@@ -191,13 +175,11 @@ def _check_dependency_satisfaction(self, dep_ref: DependencyReference, item: Bac
         blocking_issues.append('Dependency description is insufficient')
     evidence = dep_ref.description if satisfied else 'No clear satisfaction criteria'
     return DependencyStatus(dependency_id=dep_ref.dependency_id, target_item_id=dep_ref.target_item_id, satisfied=satisfied, satisfaction_evidence=evidence, blocking_issues=blocking_issues, estimated_resolution=None)
-
     def register_module(self, registry):
         """Register module with registry."""
         metadata = self.get_interface_metadata()
         if hasattr(registry, 'register'):
             registry.register(metadata)
-            
     def get_interface_metadata(self):
         """Get interface metadata for registry."""
         return {
@@ -207,4 +189,3 @@ def _check_dependency_satisfaction(self, dep_ref: DependencyReference, item: Bac
             'dependencies': [],
             'capabilities': []
         }
-

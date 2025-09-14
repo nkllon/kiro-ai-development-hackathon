@@ -1,27 +1,21 @@
 """
 Rdi Validator Core Core Validation
-
 This module was extracted from rdi_validator_core_core.py
 as part of RM-DDD compliance refactoring.
 """
-
 import logging
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from src.rm_ddd.core.health import ModuleHealth
-
-
 def validate_component(self, component_name: str, component_data: Dict[str, Any], validation_types: List[RDIValidationType]=None) -> List[RDIValidationResult]:
     """
         Validate a component for RDI compliance
-        
         Args:
             component_name: Name of the component to validate
             component_data: Component data and metadata
             validation_types: Types of validation to perform
-            
         Returns:
             List of validation results
         """
@@ -34,7 +28,6 @@ def validate_component(self, component_name: str, component_data: Dict[str, Any]
         results.append(result)
         self.validation_history.append(result)
     return results
-
 def _validate_requirements_traceability(self, component_data: Dict[str, Any], standards: List[str]) -> Tuple[List[str], List[str], float]:
     """Validate requirements traceability"""
     findings = []
@@ -65,7 +58,6 @@ def _validate_requirements_traceability(self, component_data: Dict[str, Any], st
         findings.append('❌ Validation system missing')
         recommendations.append('Implement systematic validation')
     return (findings, recommendations, score)
-
 def _validate_implementation_quality(self, component_data: Dict[str, Any], standards: List[str]) -> Tuple[List[str], List[str], float]:
     """Validate implementation quality"""
     findings = []
@@ -97,7 +89,6 @@ def _validate_implementation_quality(self, component_data: Dict[str, Any], stand
         findings.append('❌ Documentation incomplete')
         recommendations.append('Complete and maintain documentation')
     return (findings, recommendations, score)
-
 def _validate_systematic_approach(self, component_data: Dict[str, Any], standards: List[str]) -> Tuple[List[str], List[str], float]:
     """Validate systematic approach"""
     findings = []
@@ -128,7 +119,6 @@ def _validate_systematic_approach(self, component_data: Dict[str, Any], standard
         findings.append('❌ Continuous monitoring missing')
         recommendations.append('Implement continuous monitoring')
     return (findings, recommendations, score)
-
 def _validate_prevention_measures(self, component_data: Dict[str, Any], standards: List[str]) -> Tuple[List[str], List[str], float]:
     """Validate prevention measures"""
     findings = []
@@ -159,7 +149,6 @@ def _validate_prevention_measures(self, component_data: Dict[str, Any], standard
         findings.append('❌ Continuous improvement not active')
         recommendations.append('Implement continuous improvement processes')
     return (findings, recommendations, score)
-
 def _validate_continuous_improvement(self, component_data: Dict[str, Any], standards: List[str]) -> Tuple[List[str], List[str], float]:
     """Validate continuous improvement"""
     findings = []
@@ -190,13 +179,11 @@ def _validate_continuous_improvement(self, component_data: Dict[str, Any], stand
         findings.append('❌ Process optimization not active')
         recommendations.append('Implement ongoing process optimization')
     return (findings, recommendations, score)
-
     def register_module(self, registry):
         """Register module with registry."""
         metadata = self.get_interface_metadata()
         if hasattr(registry, 'register'):
             registry.register(metadata)
-            
     def get_interface_metadata(self):
         """Get interface metadata for registry."""
         return {
@@ -206,4 +193,3 @@ def _validate_continuous_improvement(self, component_data: Dict[str, Any], stand
             'dependencies': [],
             'capabilities': []
         }
-

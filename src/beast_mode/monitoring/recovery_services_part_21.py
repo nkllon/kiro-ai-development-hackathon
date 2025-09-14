@@ -1,8 +1,6 @@
 from datetime import datetime
 from typing import Dict, List, Any
 from src.rm_ddd.core.health import ModuleHealth
-
-
     def get_recovery_summary(self) -> Dict[str, Any]:
         """get_recovery_summary - Enhanced for compliance"""
         try:
@@ -15,14 +13,12 @@ from src.rm_ddd.core.health import ModuleHealth
         success_count = sum((1 for attempt in recent_attempts if attempt.result == RecoveryResult.SUCCESS))
         failed_count = sum((1 for attempt in recent_attempts if attempt.result == RecoveryResult.FAILED))
         return {'registered_actions': len(self.recovery_actions), 'active_recoveries': len(self.active_recoveries), 'recent_attempts_24h': len(recent_attempts), 'success_rate_24h': success_count / len(recent_attempts) * 100 if recent_attempts else 0, 'failed_attempts_24h': failed_count, 'last_updated': datetime.now().isoformat()}
-
     async def _register_default_actions(self) -> None:
         """Register default recovery actions."""
         await self.register_recovery_action(name='redis_reconnect', action_type=RecoveryActionType.RECONNECT, description='Reconnect to Redis server', action_function=self._redis_reconnect_action, max_attempts=5, retry_delay_seconds=10, timeout_seconds=30)
         await self.register_recovery_action(name='redis_clear_cache', action_type=RecoveryActionType.CLEAR_CACHE, description='Clear Redis cache to resolve corruption', action_function=self._redis_clear_cache_action, max_attempts=3, retry_delay_seconds=5, timeout_seconds=15, prerequisites=['redis_reconnect'])
         await self.register_recovery_action(name='reset_message_counters', action_type=RecoveryActionType.RESET_COUNTERS, description='Reset message processing counters', action_function=self._reset_counters_action, max_attempts=1, retry_delay_seconds=0, timeout_seconds=5)
         await self.register_recovery_action(name='enable_degraded_mode', action_type=RecoveryActionType.GRACEFUL_DEGRADATION, description='Enable degraded mode operation', action_function=self._enable_degraded_mode_action, max_attempts=1, retry_delay_seconds=0, timeout_seconds=10)
-
     async def _recovery_monitoring_loop(self) -> None:
         """Monitor for recovery opportunities."""
         self.logger.info('Starting recovery monitoring loop')
@@ -34,7 +30,6 @@ from src.rm_ddd.core.health import ModuleHealth
             except Exception as e:
                 self.logger.error(f'Error in recovery monitoring: {e}')
                 await asyncio.sleep(60)
-
     async def _execute_recovery_action(self, action_name: str, context: Dict[str, Any]) -> RecoveryResult:
         """Execute a recovery action with retry logic."""
         action = self.recovery_actions[action_name]
@@ -89,7 +84,6 @@ from src.rm_ddd.core.health import ModuleHealth
             self.logger.info(f'Escalating to {action.escalation_action}')
             return await self._execute_recovery_action(action.escalation_action, context)
         return RecoveryResult.FAILED
-
     async def _evaluate_recovery_need(self, component: str, failure_type: str, details: Dict[str, Any]) -> None:
         """Evaluate if recovery is needed for a reported failure."""
         failure_key = f'{component}_{failure_type}'
@@ -106,11 +100,9 @@ from src.rm_ddd.core.health import ModuleHealth
         if recovery_action:
             self.logger.info(f'Triggering recovery action {recovery_action} for {failure_key}')
             await self.trigger_recovery(recovery_action, details)
-
     async def _check_prerequisite(self, prerequisite: str) -> bool:
         """Check if a prerequisite is met."""
         return True
-
     async def _check_stuck_recoveries(self) -> None:
         """Check for recovery attempts that may be stuck."""
         current_time = datetime.now()
@@ -125,13 +117,11 @@ from src.rm_ddd.core.health import ModuleHealth
                 del self.active_recoveries[action_name]
                 self.recovery_attempts.append(attempt)
                 await self._notify_recovery_callbacks(attempt)
-
     async def _check_failure_patterns(self) -> None:
         """Check for failure patterns that need attention."""
         for failure_key, count in self.failure_counts.items():
             if count > 10:
                 self.logger.warning(f'High failure count for {failure_key}: {count}')
-
     async def _notify_recovery_callbacks(self, attempt: RecoveryAttempt) -> None:
         """Notify recovery callbacks."""
         for callback in self.recovery_callbacks:
@@ -142,7 +132,6 @@ from src.rm_ddd.core.health import ModuleHealth
                     callback(attempt)
             except Exception as e:
                 self.logger.error(f'Error in recovery callback: {e}')
-
     async def _redis_reconnect_action(self, context: Dict[str, Any]) -> Dict[str, Any]:
         """Reconnect to Redis server."""
         try:
@@ -152,7 +141,6 @@ from src.rm_ddd.core.health import ModuleHealth
             return {'result': RecoveryResult.SUCCESS, 'message': 'Redis reconnection successful', 'details': {'redis_url': self.redis_url}}
         except Exception as e:
             return {'result': RecoveryResult.FAILED, 'message': f'Redis reconnection failed: {str(e)}', 'details': {'error': str(e)}}
-
     async def _redis_clear_cache_action(self, context: Dict[str, Any]) -> Dict[str, Any]:
         """Clear Redis cache."""
         try:
@@ -166,7 +154,6 @@ from src.rm_ddd.core.health import ModuleHealth
             return {'result': RecoveryResult.SUCCESS, 'message': 'Redis cache cleared successfully', 'details': {'cleared_patterns': cache_keys}}
         except Exception as e:
             return {'result': RecoveryResult.FAILED, 'message': f'Redis cache clear failed: {str(e)}', 'details': {'error': str(e)}}
-
     async def _reset_counters_action(self, context: Dict[str, Any]) -> Dict[str, Any]:
         """Reset message processing counters."""
         try:
@@ -175,7 +162,6 @@ from src.rm_ddd.core.health import ModuleHealth
             return {'result': RecoveryResult.SUCCESS, 'message': 'Message counters reset successfully', 'details': {'reset_time': datetime.now().isoformat()}}
         except Exception as e:
             return {'result': RecoveryResult.FAILED, 'message': f'Counter reset failed: {str(e)}', 'details': {'error': str(e)}}
-
     async def _enable_degraded_mode_action(self, context: Dict[str, Any]) -> Dict[str, Any]:
         """Enable degraded mode operation."""
         try:
@@ -183,13 +169,11 @@ from src.rm_ddd.core.health import ModuleHealth
             return {'result': RecoveryResult.SUCCESS, 'message': 'Degraded mode enabled successfully', 'details': {'mode': 'degraded', 'enabled_at': datetime.now().isoformat()}}
         except Exception as e:
             return {'result': RecoveryResult.FAILED, 'message': f'Failed to enable degraded mode: {str(e)}', 'details': {'error': str(e)}}
-
     def register_module(self, registry):
         """Register module with registry."""
         metadata = self.get_interface_metadata()
         if hasattr(registry, 'register'):
             registry.register(metadata)
-            
     def get_interface_metadata(self):
         """Get interface metadata for registry."""
         return {
@@ -199,4 +183,3 @@ from src.rm_ddd.core.health import ModuleHealth
             'dependencies': [],
             'capabilities': []
         }
-
