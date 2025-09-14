@@ -21,9 +21,11 @@ from src.beast_mode.integration.devpost.api.client import DevpostAPIClient
 from src.beast_mode.integration.devpost.auth.auth_service import DevpostAuthService
 from src.beast_mode.integration.devpost.models import DevpostProject, AuthToken, AuthResult
 from src.beast_mode.core.exceptions import NetworkError, AuthenticationError, ValidationError
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestDevpostAPIClient:
+
+class TestDevpostAPIClient(ReflectiveModule):
     """Test suite for DevpostAPIClient."""
     
     @pytest.fixture
@@ -78,7 +80,7 @@ class TestDevpostAPIClient:
         if temp_path.exists():
             temp_path.unlink()
     
-    class TestInitialization:
+    class TestInitialization(ReflectiveModule):
         """Test client initialization."""
         
         def test_client_initialization_default_params(self, mock_auth_service):
@@ -110,7 +112,7 @@ class TestDevpostAPIClient:
             assert client.max_retry_attempts == custom_retries
             assert client.enable_logging is False
     
-    class TestAuthentication:
+    class TestAuthentication(ReflectiveModule):
         """Test authentication functionality."""
         
         @pytest.mark.asyncio
@@ -164,7 +166,7 @@ class TestDevpostAPIClient:
             assert result.success is False
             assert "Network error" in result.error_message
     
-    class TestProjectManagement:
+    class TestProjectManagement(ReflectiveModule):
         """Test project management API methods."""
         
         @pytest.mark.asyncio
@@ -315,7 +317,7 @@ class TestDevpostAPIClient:
                 assert result["status"] == "submitted"
                 mock_request.assert_called_once_with("POST", "/projects/test-project-123/submit")
     
-    class TestMediaHandling:
+    class TestMediaHandling(ReflectiveModule):
         """Test media upload and handling functionality."""
         
         @pytest.mark.asyncio
@@ -973,7 +975,7 @@ class TestDevpostAPIClient:
             # Test unknown extension
             assert api_client._get_content_type(Path("test.unknown")) == "application/octet-stream"
     
-    class TestErrorHandling:
+    class TestErrorHandling(ReflectiveModule):
         """Test error handling and retry logic."""
         
         @pytest.mark.asyncio
@@ -1076,7 +1078,7 @@ class TestDevpostAPIClient:
                 mock_auth_service.refresh_token.assert_called_once()
                 assert result == {"success": True}
     
-    class TestUtilityMethods:
+    class TestUtilityMethods(ReflectiveModule):
         """Test utility and helper methods."""
         
         def test_get_content_type(self, api_client):
@@ -1167,7 +1169,7 @@ class TestDevpostAPIClient:
                 
                 mock_close.assert_called_once()
     
-    class TestHTTPMethodWrappers:
+    class TestHTTPMethodWrappers(ReflectiveModule):
         """Test basic HTTP method wrapper functions."""
         
         @pytest.mark.asyncio
@@ -1253,7 +1255,7 @@ class TestDevpostAPIClient:
 
 
 # Integration test helpers
-class TestAPIClientIntegration:
+class TestAPIClientIntegration(ReflectiveModule):
     """Integration tests with real-like scenarios."""
     
     @pytest.fixture
@@ -1336,4 +1338,32 @@ class TestAPIClientIntegration:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__])

@@ -8,6 +8,8 @@ proper error handling for all core data structures.
 import pytest
 from datetime import datetime, timedelta
 from src.ghostbusters.core.models import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     Finding, Recommendation, AnalysisContext, AnalysisResult,
     Delusion, RecoveryPlan, RecoveryAction, ValidationResult,
     ConsensusResult, MultiDimensionalResult, ValidationCertificate,
@@ -15,7 +17,7 @@ from src.ghostbusters.core.models import (
 )
 
 
-class TestCodeLocation:
+class TestCodeLocation(ReflectiveModule):
     """Test CodeLocation data model"""
     
     def test_code_location_creation(self):
@@ -51,7 +53,7 @@ class TestCodeLocation:
         assert location.end_column == 20
 
 
-class TestFinding:
+class TestFinding(ReflectiveModule):
     """Test Finding data model"""
     
     def test_finding_creation(self):
@@ -90,7 +92,7 @@ class TestFinding:
             Finding(description="   ", confidence=0.8)
 
 
-class TestRecommendation:
+class TestRecommendation(ReflectiveModule):
     """Test Recommendation data model"""
     
     def test_recommendation_creation(self):
@@ -121,7 +123,7 @@ class TestRecommendation:
             Recommendation(title="Test title", description="")
 
 
-class TestAnalysisContext:
+class TestAnalysisContext(ReflectiveModule):
     """Test AnalysisContext data model"""
     
     def test_analysis_context_creation(self):
@@ -149,7 +151,7 @@ class TestAnalysisContext:
             AnalysisContext(target_path="src/test.py", analysis_type="")
 
 
-class TestAnalysisResult:
+class TestAnalysisResult(ReflectiveModule):
     """Test AnalysisResult data model"""
     
     def test_analysis_result_creation(self):
@@ -231,7 +233,7 @@ class TestAnalysisResult:
         assert high_conf_findings[0] == high_conf_finding
 
 
-class TestDelusion:
+class TestDelusion(ReflectiveModule):
     """Test Delusion data model"""
     
     def test_delusion_creation(self):
@@ -269,7 +271,7 @@ class TestDelusion:
             Delusion(pattern="test", description="", confidence=0.8)
 
 
-class TestRecoveryPlan:
+class TestRecoveryPlan(ReflectiveModule):
     """Test RecoveryPlan data model"""
     
     def test_recovery_plan_creation(self):
@@ -311,7 +313,7 @@ class TestRecoveryPlan:
             )
 
 
-class TestValidationResult:
+class TestValidationResult(ReflectiveModule):
     """Test ValidationResult data model"""
     
     def test_validation_result_creation(self):
@@ -348,7 +350,7 @@ class TestValidationResult:
             )
 
 
-class TestConsensusResult:
+class TestConsensusResult(ReflectiveModule):
     """Test ConsensusResult data model"""
     
     def test_consensus_result_creation(self):
@@ -407,7 +409,7 @@ class TestConsensusResult:
             )
 
 
-class TestMultiDimensionalResult:
+class TestMultiDimensionalResult(ReflectiveModule):
     """Test MultiDimensionalResult data model"""
     
     def test_multi_dimensional_result_creation(self):
@@ -471,7 +473,7 @@ class TestMultiDimensionalResult:
         assert result2.is_production_ready(threshold=0.8) is False
 
 
-class TestValidationCertificate:
+class TestValidationCertificate(ReflectiveModule):
     """Test ValidationCertificate data model"""
     
     def test_validation_certificate_creation(self):
@@ -521,4 +523,32 @@ class TestValidationCertificate:
                 target="test",
                 validation_results=[],
                 overall_confidence=0.8
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
             )

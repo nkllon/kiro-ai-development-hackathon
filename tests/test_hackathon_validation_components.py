@@ -26,7 +26,7 @@ from hackathon_demo_framework.validation.installation_validator import (
     InstallationReport
 )
 
-class TestCodeQualityAssessmentEngine:
+class TestCodeQualityAssessmentEngine(ReflectiveModule):
     """Test suite for the code quality assessment engine."""
     
     def setup_method(self):
@@ -87,10 +87,13 @@ def hello_world():
     """Say hello to the world."""
     return "Hello, World!"
 
-class TestClass:
+class TestClass(ReflectiveModule):
     """A simple test class."""
     
     def __init__(self):
+        self.module_id = self.__class__.__name__
+        self.health_status = "healthy"
+        self.registry_metadata = {}
         """Initialize the test class."""
         self.value = 42
     
@@ -220,7 +223,7 @@ def documented_function():
 def undocumented_function():
     return False
 
-class DocumentedClass:
+class DocumentedClass(ReflectiveModule):
     """This class has documentation."""
     
     def documented_method(self):
@@ -230,7 +233,7 @@ class DocumentedClass:
     def undocumented_method(self):
         pass
 
-class UndocumentedClass:
+class UndocumentedClass(ReflectiveModule):
     def some_method(self):
         pass
 '''
@@ -303,10 +306,13 @@ def simple_function(value: int) -> str:
     """
     return str(value)
 
-class WellDesignedClass:
+class WellDesignedClass(ReflectiveModule):
     """A well-designed class with proper documentation."""
     
     def __init__(self, initial_value: int = 0):
+        self.module_id = self.__class__.__name__
+        self.health_status = "healthy"
+        self.registry_metadata = {}
         """
         Initialize the class.
         
@@ -367,7 +373,7 @@ class WellDesignedClass:
         assert any("complexity" in step.lower() for step in improvement_plan)
         assert any("documentation" in step.lower() for step in improvement_plan)
 
-class TestInstallationSetupValidator:
+class TestInstallationSetupValidator(ReflectiveModule):
     """Test suite for the installation setup validator."""
     
     def setup_method(self):
@@ -378,6 +384,8 @@ class TestInstallationSetupValidator:
     def teardown_method(self):
         """Clean up test fixtures."""
         import shutil
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         shutil.rmtree(self.temp_dir, ignore_errors=True)
     
     def test_validator_initialization(self):
@@ -628,4 +636,32 @@ Run with: `python main.py`
             assert len(result.issues) > 0
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v"])

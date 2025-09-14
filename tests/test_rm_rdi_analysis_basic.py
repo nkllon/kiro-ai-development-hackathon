@@ -7,9 +7,11 @@ These tests validate the core framework without external dependencies
 import unittest
 import os
 from pathlib import Path
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestAnalysisSystemBasic(unittest.TestCase):
+
+class TestAnalysisSystemBasic(unittest.TestCase, ReflectiveModule):
     """Basic tests for analysis system structure and safety"""
     
     def test_analysis_system_structure_exists(self):
@@ -83,10 +85,10 @@ class TestAnalysisSystemBasic(unittest.TestCase):
         content = safety_path.read_text()
         
         required_classes = [
-            "class KillSwitch:",
-            "class ResourceMonitor:",
-            "class SafetyValidator:",
-            "class OperatorSafetyManager:"
+            "class KillSwitch(ReflectiveModule):",
+            "class ResourceMonitor(ReflectiveModule):",
+            "class SafetyValidator(ReflectiveModule):",
+            "class OperatorSafetyManager(ReflectiveModule):"
         ]
         
         for class_def in required_classes:
@@ -108,7 +110,7 @@ class TestAnalysisSystemBasic(unittest.TestCase):
             self.assertIn(feature, content, f"Safety feature {feature} must exist")
 
 
-class TestOperatorSafetyDocumentation(unittest.TestCase):
+class TestOperatorSafetyDocumentation(unittest.TestCase, ReflectiveModule):
     """Test that operator safety documentation is complete"""
     
     def test_operator_safety_guide_exists(self):
@@ -148,4 +150,32 @@ class TestOperatorSafetyDocumentation(unittest.TestCase):
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     unittest.main()

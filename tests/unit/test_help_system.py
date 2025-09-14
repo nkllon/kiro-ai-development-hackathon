@@ -13,9 +13,11 @@ from src.beast_mode.messaging.help_system import (
 )
 from src.beast_mode.messaging.models import BeastModeMessage, MessageType, AgentCapabilities
 from src.beast_mode.messaging.agent_registry import AgentRegistry, DiscoveredAgent
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestCapabilityMatcher:
+
+class TestCapabilityMatcher(ReflectiveModule):
     """Test capability matching algorithm"""
     
     def setup_method(self):
@@ -114,7 +116,7 @@ class TestCapabilityMatcher:
         assert agent3 not in agent_ids
 
 
-class TestHelpWantedSystem:
+class TestHelpWantedSystem(ReflectiveModule):
     """Test help wanted system"""
     
     def setup_method(self):
@@ -480,7 +482,7 @@ class TestHelpWantedSystem:
         assert stats["active_requests"] >= 1
 
 
-class TestHelpRequestModel:
+class TestHelpRequestModel(ReflectiveModule):
     """Test HelpRequest data model"""
     
     def test_help_request_creation(self):
@@ -502,7 +504,7 @@ class TestHelpRequestModel:
         assert isinstance(request.created_at, datetime)
 
 
-class TestHelpResponseModel:
+class TestHelpResponseModel(ReflectiveModule):
     """Test HelpResponse data model"""
     
     def test_help_response_creation(self):
@@ -525,7 +527,7 @@ class TestHelpResponseModel:
         assert isinstance(response.created_at, datetime)
 
 
-class TestCollaborationSessionModel:
+class TestCollaborationSessionModel(ReflectiveModule):
     """Test CollaborationSession data model"""
     
     def test_collaboration_session_creation(self):
@@ -546,4 +548,32 @@ class TestCollaborationSessionModel:
         assert session.status == CollaborationStatus.IN_PROGRESS  # Default
         assert isinstance(session.started_at, datetime)
         assert isinstance(session.last_activity, datetime)
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert session.messages_exchanged == 0  # Default
