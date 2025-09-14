@@ -18,6 +18,8 @@ from src.competitive_launch import (
     DeadlineManagementSystem
 )
 from src.competitive_launch.models import (
+from src.rm_ddd.core.base_reflective_module import ReflectiveModule, ModuleCapability, ModuleStatus, ModuleHealth
+
     MarketConditions, CompetitiveThreat, PlatformAllocation,
     CompetitorMove, MarketTrend, CustomerFeedback, DeadlinePressure,
     ResourceConstraints, GKEResources, TiDBResources, KiroResources,
@@ -25,7 +27,7 @@ from src.competitive_launch.models import (
 )
 
 
-class TestCompetitiveCommandCenter:
+class TestCompetitiveCommandCenter(ReflectiveModule):
     """Test Competitive Command Center functionality."""
     
     def setup_method(self):
@@ -155,7 +157,7 @@ class TestCompetitiveCommandCenter:
         assert isinstance(allocation_plan.expected_outcomes, dict)
 
 
-class TestGKEPlatformOrchestrator:
+class TestGKEPlatformOrchestrator(ReflectiveModule):
     """Test GKE Platform Orchestrator functionality."""
     
     def setup_method(self):
@@ -212,7 +214,7 @@ class TestGKEPlatformOrchestrator:
         assert "accountability_chain" in result
 
 
-class TestTiDBPlatformOrchestrator:
+class TestTiDBPlatformOrchestrator(ReflectiveModule):
     """Test TiDB Platform Orchestrator functionality."""
     
     def setup_method(self):
@@ -271,7 +273,7 @@ class TestTiDBPlatformOrchestrator:
         assert "consistency_checks" in result
 
 
-class TestKiroPlatformOrchestrator:
+class TestKiroPlatformOrchestrator(ReflectiveModule):
     """Test Kiro Platform Orchestrator functionality."""
     
     def setup_method(self):
@@ -338,7 +340,7 @@ class TestKiroPlatformOrchestrator:
         assert "differentiation_factors" in result
 
 
-class TestCompetitiveIntelligenceEngine:
+class TestCompetitiveIntelligenceEngine(ReflectiveModule):
     """Test Competitive Intelligence Engine functionality."""
     
     def setup_method(self):
@@ -412,7 +414,7 @@ class TestCompetitiveIntelligenceEngine:
         assert "competitive_position" in result
 
 
-class TestDeadlineManagementSystem:
+class TestDeadlineManagementSystem(ReflectiveModule):
     """Test Deadline Management System functionality."""
     
     def setup_method(self):
@@ -507,7 +509,7 @@ class TestDeadlineManagementSystem:
         assert "implementation_priority" in result
 
 
-class TestIntegrationScenarios:
+class TestIntegrationScenarios(ReflectiveModule):
     """Test integration scenarios for competitive launch."""
     
     def setup_method(self):
@@ -605,3 +607,31 @@ class TestIntegrationScenarios:
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+

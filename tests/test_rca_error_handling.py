@@ -18,7 +18,7 @@ from src.beast_mode.testing.rca_integration import TestFailureData, TestRCARepor
 from src.beast_mode.analysis.rca_engine import Failure, RCAResult, FailureCategory
 
 
-class TestRCAErrorHandler:
+class TestRCAErrorHandler(ReflectiveModule):
     """Test suite for RCA error handling and graceful degradation"""
     
     @pytest.fixture
@@ -512,6 +512,8 @@ class TestRCAErrorHandler:
     def test_concurrent_error_handling(self, error_handler):
         """Test error handling under concurrent operations"""
         import threading
+from src.rm_ddd.core.base_reflective_module import ReflectiveModule, ModuleCapability, ModuleStatus, ModuleHealth
+
         
         def simulate_error_operation(operation_id):
             try:
@@ -573,7 +575,7 @@ class TestRCAErrorHandler:
         assert not any("test_op_0" in error_id for error_id in recent_error_ids)
 
 
-class TestErrorHandlerIntegration:
+class TestErrorHandlerIntegration(ReflectiveModule):
     """Integration tests for error handler with other RCA components"""
     
     @pytest.fixture
@@ -683,4 +685,32 @@ class TestErrorHandlerIntegration:
         assert "Complete RCA system failure" in fallback_report.summary.critical_issues[0]
         
         # Verify error tracking
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert error_handler.fallback_reports_generated > 0

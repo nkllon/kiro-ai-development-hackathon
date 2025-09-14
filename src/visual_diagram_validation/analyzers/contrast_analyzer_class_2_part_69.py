@@ -30,3 +30,20 @@ def _extract_text_background_colors(self, image: Image.Image, bbox: BoundingBox)
         text_color = tuple(unique_colors[0]) if len(unique_colors) > 0 else (0, 0, 0)
         bg_color = (255, 255, 255)
     return (text_color, bg_color)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

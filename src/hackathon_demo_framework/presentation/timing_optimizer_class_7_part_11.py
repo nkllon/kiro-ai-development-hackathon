@@ -20,3 +20,20 @@ from src.rm_ddd.core.health import ModuleHealth
                 optimized_timing[section] = int(optimized_timing[section] * reduction_factor)
         optimized_script = DemoScript(opening_hook=demo_script.opening_hook, problem_statement=demo_script.problem_statement, solution_overview=demo_script.solution_overview, technical_demonstration=demo_script.technical_demonstration, systematic_excellence=demo_script.systematic_excellence, business_impact=demo_script.business_impact, closing_call_to_action=demo_script.closing_call_to_action, total_duration=sum(optimized_timing.values()), timing_breakdown=optimized_timing, backup_plans=demo_script.backup_plans.copy())
         return optimized_script
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
