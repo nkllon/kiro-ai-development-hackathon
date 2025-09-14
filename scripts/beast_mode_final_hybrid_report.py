@@ -288,3 +288,4 @@ class BeastModeFinalHybridReport:
 if __name__ == "__main__":
     reporter = BeastModeFinalHybridReport()
     reporter.generate_final_hybrid_report()
+

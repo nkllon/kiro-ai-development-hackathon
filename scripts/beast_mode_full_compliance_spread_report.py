@@ -240,3 +240,4 @@ class BeastModeFullComplianceSpreadReport:
 if __name__ == "__main__":
     reporter = BeastModeFullComplianceSpreadReport()
     reporter.generate_full_compliance_spread_report()
+

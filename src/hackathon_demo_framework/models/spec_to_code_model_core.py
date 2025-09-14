@@ -13,6 +13,42 @@ from rm_ddd.core.unified_reflective_module import ReflectiveModule, HealthStatus
 from beast_mode.core.model_registry import ModelRegistry
 
 class TransformationStatus(Enum):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Status of spec-to-code transformation"""
     PENDING = 'pending'
     ANALYZING = 'analyzing'
@@ -22,6 +58,42 @@ class TransformationStatus(Enum):
     FAILED = 'failed'
 
 class QualityLevel(Enum):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Quality level of generated code"""
     BASIC = 'basic'
     GOOD = 'good'
@@ -30,6 +102,42 @@ class QualityLevel(Enum):
 
 @dataclass
 class RequirementLink:
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """RDI Compliance: Links model functionality to specific requirements"""
     requirement_id: str
     requirement_text: str
@@ -39,6 +147,42 @@ class RequirementLink:
 
 @dataclass
 class LearningPattern:
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Beast Mode Intent: Learning patterns from systematic development"""
     pattern_id: str
     pattern_type: str
@@ -49,6 +193,42 @@ class LearningPattern:
 
 @dataclass
 class TransformationResult:
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Result of spec-to-code transformation"""
     spec_id: str
     generated_code: str

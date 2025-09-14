@@ -18,6 +18,42 @@ from datetime import datetime
 
 
 class SyncStatus(Enum):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Status of sync operations."""
     PENDING = "pending"
     IN_PROGRESS = "in_progress"
@@ -27,6 +63,42 @@ class SyncStatus(Enum):
 
 
 class SyncPriority(Enum):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Priority levels for sync operations."""
     LOW = "low"
     MEDIUM = "medium"
@@ -36,6 +108,42 @@ class SyncPriority(Enum):
 
 @dataclass
 class QueuedSyncOperation(ReflectiveModule):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Represents a queued sync operation."""
     operation_id: str
     priority: SyncPriority
@@ -46,6 +154,42 @@ class QueuedSyncOperation(ReflectiveModule):
 
 @dataclass
 class SyncConflict:
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Represents a sync conflict."""
     conflict_id: str
     file_path: str
@@ -57,6 +201,42 @@ class SyncConflict:
 
 @dataclass
 class SyncStatusReport:
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Comprehensive sync status report."""
     total_operations: int
     completed_operations: int
@@ -68,6 +248,42 @@ class SyncStatusReport:
 
 @dataclass
 class SyncResult:
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Result of a sync operation."""
     success: bool
     changes_made: List[str]
@@ -238,6 +454,42 @@ class SyncResult:
 
 
 class DevpostSyncManager:
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Manages synchronization with Devpost."""
     
     def __init__(self) -> Any:

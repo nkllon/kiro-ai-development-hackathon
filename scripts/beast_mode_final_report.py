@@ -226,3 +226,4 @@ class BeastModeFinalReport:
 if __name__ == "__main__":
     reporter = BeastModeFinalReport()
     reporter.generate_beast_mode_report()
+

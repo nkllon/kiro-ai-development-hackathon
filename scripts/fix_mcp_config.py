@@ -400,3 +400,4 @@ if __name__ == "__main__":
     else:
         print("\n❌ MCP CONFIGURATION FIX FAILED!")
         print("🔧 Please review the errors and try again")
+

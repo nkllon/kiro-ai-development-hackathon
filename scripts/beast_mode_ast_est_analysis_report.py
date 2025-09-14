@@ -346,3 +346,4 @@ class BeastModeASTESTAnalysisReport:
 if __name__ == "__main__":
     reporter = BeastModeASTESTAnalysisReport()
     reporter.generate_ast_est_analysis_report()
+

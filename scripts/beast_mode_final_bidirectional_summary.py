@@ -425,3 +425,4 @@ if __name__ == "__main__":
         print("\n❌ BEAST MODE FINAL BIDIRECTIONAL SUMMARY FAILED")
         print("🔧 Summary generation encountered errors")
         sys.exit(1)
+

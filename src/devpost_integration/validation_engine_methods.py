@@ -25,6 +25,42 @@ from .reflective_module import ReflectiveModule, register_module, ModuleHealth, 
 from .validation_engine_methods import ValidationReport
 
 class CleanImplementation:
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Clean implementation for RM-DDD compliance"""
 
     def __init__(self) -> Any:
@@ -104,6 +140,42 @@ class CleanImplementation:
         pass
 
 class ValidationRule(ReflectiveModule):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """ValidationRule with RM-DDD compliance"""
 
     def __init__(self) -> Any:
@@ -186,6 +258,42 @@ class ValidationRule(ReflectiveModule):
         pass
 
 class ValidationReport(ReflectiveModule):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """ValidationReport with RM-DDD compliance"""
 
     def __init__(self) -> Any:
@@ -268,6 +376,42 @@ class ValidationReport(ReflectiveModule):
         pass
 
 class ValidationIssue(ReflectiveModule):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """ValidationIssue with RM-DDD compliance"""
 
     def __init__(self) -> Any:
@@ -350,6 +494,42 @@ class ValidationIssue(ReflectiveModule):
         pass
 
 class ValidationContext(ReflectiveModule):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """ValidationContext with RM-DDD compliance"""
 
     def __init__(self) -> Any:
@@ -432,6 +612,42 @@ class ValidationContext(ReflectiveModule):
         pass
 
 class ValidationSeverity(ReflectiveModule):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """ValidationSeverity with RM-DDD compliance"""
 
     def __init__(self) -> Any:
@@ -514,6 +730,42 @@ class ValidationSeverity(ReflectiveModule):
         pass
 
 class ValidationCategory(ReflectiveModule):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """ValidationCategory with RM-DDD compliance"""
 
     def __init__(self) -> Any:
@@ -596,6 +848,42 @@ class ValidationCategory(ReflectiveModule):
         pass
 
 class RequiredFieldRule(ReflectiveModule):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """RequiredFieldRule with RM-DDD compliance"""
 
     def __init__(self) -> Any:
@@ -678,6 +966,42 @@ class RequiredFieldRule(ReflectiveModule):
         pass
 
 class ContentQualityRule(ReflectiveModule):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """ContentQualityRule with RM-DDD compliance"""
 
     def __init__(self) -> Any:
@@ -760,6 +1084,42 @@ class ContentQualityRule(ReflectiveModule):
         pass
 
 class LinkValidationRule(ReflectiveModule):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """LinkValidationRule with RM-DDD compliance"""
 
     def __init__(self) -> Any:
@@ -842,6 +1202,42 @@ class LinkValidationRule(ReflectiveModule):
         pass
 
 class TeamValidationRule(ReflectiveModule):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """TeamValidationRule with RM-DDD compliance"""
 
     def __init__(self) -> Any:
@@ -924,6 +1320,42 @@ class TeamValidationRule(ReflectiveModule):
         pass
 
 class TagValidationRule(ReflectiveModule):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """TagValidationRule with RM-DDD compliance"""
 
     def __init__(self) -> Any:

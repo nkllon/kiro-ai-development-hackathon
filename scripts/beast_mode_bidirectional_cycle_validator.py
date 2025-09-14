@@ -442,3 +442,4 @@ if __name__ == "__main__":
         print("\n❌ BEAST MODE BIDIRECTIONAL CYCLE VALIDATION FAILED")
         print("🔧 Validation encountered errors")
         sys.exit(1)
+

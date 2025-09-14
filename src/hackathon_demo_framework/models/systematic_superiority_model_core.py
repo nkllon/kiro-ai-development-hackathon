@@ -13,12 +13,84 @@ from rm_ddd.core.unified_reflective_module import ReflectiveModule, ModuleHealth
 from beast_mode.core.model_registry import ModelRegistry
 
 class ApproachType(Enum):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Type of development approach"""
     SYSTEMATIC = 'systematic'
     AD_HOC = 'ad_hoc'
     HYBRID = 'hybrid'
 
 class ComparisonMetric(Enum):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Metrics for comparing approaches"""
     SPEED = 'speed'
     QUALITY = 'quality'
@@ -29,6 +101,42 @@ class ComparisonMetric(Enum):
 
 @dataclass
 class Approach:
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Represents a development approach with measurable characteristics"""
     approach_id: str
     approach_type: ApproachType
@@ -39,6 +147,42 @@ class Approach:
 
 @dataclass
 class ComparisonResult:
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Result of comparing systematic vs ad-hoc approaches"""
     comparison_id: str
     systematic_approach: Approach
@@ -51,6 +195,42 @@ class ComparisonResult:
 
 @dataclass
 class EvidencePackage:
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
     """Package of evidence demonstrating systematic superiority"""
     evidence_id: str
     systematic_metrics: Dict[str, float]

@@ -1,0 +1,131 @@
+"""
+DevpostProjectManager Module
+
+Extracted from project_manager_methods.py for RDI compliance.
+This module contains the DevpostProjectManager class implementation.
+"""
+
+import logging
+from datetime import datetime
+from .reflective_module import ReflectiveModule, register_module, ModuleHealth, ModuleStatus, ModuleCapability
+from typing import Dict, List, Any, Optional
+
+class DevpostProjectManager(ReflectiveModule):
+def register_with_registry(self, registry):
+        """Register this module with the RM registry."""
+        if registry:
+            registry.register_module(self)
+            self.add_capability("registry_registered")
+    
+    def get_module_metadata(self) -> Dict[str, any]:
+        """Get module metadata for registry."""
+        return {
+            "module_id": self.module_id,
+            "module_type": self.module_type,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "health_status": self.health_status,
+            "last_updated": self.last_updated
+        }
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
+    """Main project manager for DevPost integration."""
+    
+    def __init__(self):
+        super().__init__(module_id="devpost_project_manager", version="1.0.0")
+        self._start_time = datetime.now()
+        register_module(self)
+        
+        self.status = ProjectStatus()
+    
+    # ReflectiveModule interface implementation
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get comprehensive module information."""
+        return {
+            'module_id': self.module_id,
+            'version': self.version,
+            'name': 'DevPost Project Manager',
+            'description': 'Main project manager for DevPost integration',
+            'status': self.status.connected
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities."""
+        return [
+            ModuleCapability.PROJECT_MANAGEMENT,
+            ModuleCapability.FILE_MONITORING,
+            ModuleCapability.VALIDATION
+        ]
+    
+    def get_dependencies(self) -> List[str]:
+        """Get module dependencies."""
+        return ['validation_engine', 'file_watcher_core']
+    
+    def check_health(self) -> ModuleHealth:
+        """Check module health with comprehensive monitoring"""
+        try:
+            if not hasattr(self, '_start_time'):
+                return ModuleHealth.UNHEALTHY
+            uptime = (datetime.now() - self._start_time).total_seconds()
+            if uptime < 0:
+                return ModuleHealth.UNHEALTHY
+            error_count = getattr(self, '_error_count', 0)
+            total_operations = getattr(self, '_command_count', 1)
+            error_rate = error_count / total_operations if total_operations > 0 else 0
+            if error_rate > 0.5:
+                return ModuleHealth.UNHEALTHY
+            elif error_rate > 0.1:
+                return ModuleHealth.DEGRADED
+            else:
+                return ModuleHealth.HEALTHY
+        except Exception as e:
+            logger.error(f"Health check failed: {e}")
+            return ModuleHealth.UNHEALTHY
+        """Check module health."""
+        return ModuleHealth.HEALTHY if self.status.connected else ModuleHealth.DEGRADED
+    
+    def get_configuration(self) -> ModuleConfiguration:
+        """Get module configuration."""
+        return ModuleConfiguration(
+            project_path=self.status.local_path,
+            connected=self.status.connected
+        )
+    
+    def update_configuration(self, config: ModuleConfiguration) -> bool:
+        """Update module configuration."""
+        if config.project_path:
+            self.status.local_path = config.project_path
+        if config.connected is not None:
+            self.status.connected = config.connected
+        return True
+    
+    def get_metrics(self) -> Dict[str, Any]:
+        """Get module metrics."""
+        return {
+            'uptime': (datetime.now() - self._start_time).total_seconds(),
+            'connected': self.status.connected,
+            'project_id': self.status.project_id
+        }
+    
+    def reset_metrics(self) -> None:
+        """Reset module metrics."""
+        self._start_time = datetime.now()
+
