@@ -1,9 +1,11 @@
 """
-Unit tests for Ghostbusters Expert Agents.
+RDI Enhanced Test Module
 
-Tests all expert agents for proper functionality, confidence scoring,
-and analysis capabilities.
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:20:55.279987
 """
+
 
 import pytest
 import tempfile

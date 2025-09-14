@@ -1,9 +1,11 @@
-#!/usr/bin/env python3
 """
-Unit tests for Devpost Integration File Monitor
+RDI Enhanced Test Module
 
-Tests intelligent change detection, media file detection, and Git integration.
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:20:55.265330
 """
+
 
 import json
 import os

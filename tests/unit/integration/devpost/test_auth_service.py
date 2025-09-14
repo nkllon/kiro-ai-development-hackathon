@@ -1,9 +1,11 @@
 """
-Unit tests for Devpost authentication service.
+RDI Enhanced Test Module
 
-Tests cover OAuth flow, API key authentication, token management,
-retry logic, and error handling scenarios.
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:20:55.217609
 """
+
 
 import asyncio
 import json

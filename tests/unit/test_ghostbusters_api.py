@@ -1,9 +1,11 @@
 """
-Unit tests for Ghostbusters API layer.
+RDI Enhanced Test Module
 
-Tests the service interface layer, authentication, circuit breaker,
-and rate limiting functionality.
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:20:55.266806
 """
+
 
 import pytest
 import asyncio
