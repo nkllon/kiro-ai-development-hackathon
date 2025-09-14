@@ -27,3 +27,20 @@ def analyze_layer_dependencies(self, layer_number: int, specifications: List[Spe
             if dep_spec and dep_spec.completion_percentage < 100.0:
                 blocking_dependencies.append(dep_name)
     return list(set(blocking_dependencies))
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
