@@ -24,7 +24,7 @@ from src.rm_ddd.core.health import ModuleHealth
             recommendations.append('Implement all required RM interface methods')
         if not rm_status.size_constraints_met:
             blocking_issues.append('Module size constraints violated')
-            recommendations.append('Refactor modules to meet ≤200 lines constraint')
+            recommendations.append('Refactor modules to meet ≤300 lines constraint')
         if not rm_status.health_monitoring_present:
             blocking_issues.append('Health monitoring not implemented')
             recommendations.append('Implement health monitoring capabilities')

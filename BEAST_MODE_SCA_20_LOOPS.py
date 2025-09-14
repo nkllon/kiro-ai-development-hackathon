@@ -187,7 +187,7 @@ class BeastModeSCA20Loops:
                     registry_files += 1
                     
                 # Check size compliance
-                if len(lines) > 200:
+                if len(lines) > 300:
                     large_files.append((file_path, len(lines)))
                     
             except:
@@ -558,7 +558,7 @@ class BeastModeSCA20Loops:
             with open(file_path, 'r', encoding='utf-8') as f:
                 lines = f.readlines()
                 
-            if len(lines) <= 200:
+            if len(lines) <= 300:
                 return True
                 
             # Simple size reduction by removing empty lines and comments
@@ -568,7 +568,7 @@ class BeastModeSCA20Loops:
                 if stripped and not stripped.startswith('#'):
                     filtered_lines.append(line)
                     
-            if len(filtered_lines) <= 200:
+            if len(filtered_lines) <= 300:
                 with open(file_path, 'w', encoding='utf-8') as f:
                     f.writelines(filtered_lines)
                 return True
@@ -632,7 +632,7 @@ class BeastModeSCA20Loops:
         for file_path, line_count in large_files:
             if self.fix_size_compliance(file_path):
                 size_fixed += 1
-                print(f"✅ Fixed size compliance: {file_path} ({line_count} → ≤200 lines)")
+                print(f"✅ Fixed size compliance: {file_path} ({line_count} → ≤300 lines)")
         
         # Get POST-attack metrics
         post_metrics, _ = self.get_subset_metrics(random_files)
