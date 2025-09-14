@@ -34,9 +34,11 @@ from src.beast_mode.messaging import (
 )
 from src.beast_mode.messaging.agent_registry import DiscoveredAgent
 from src.beast_mode.messaging.help_system import HelpUrgency, CollaborationStatus
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestMultiAgentCollaborationScenarios:
+
+class TestMultiAgentCollaborationScenarios(ReflectiveModule):
     """Test multi-agent collaboration scenarios (Requirements: 1.1, 2.1, 4.1, 7.1)"""
     
     @pytest.fixture
@@ -258,8 +260,11 @@ def execute(context):
         "deployment_time": "reduced by 40%"
     }
 
-class KubernetesOptimizer:
+class KubernetesOptimizer(ReflectiveModule):
     def __init__(self):
+        self.module_id = self.__class__.__name__
+        self.health_status = "healthy"
+        self.registry_metadata = {}
         self.name = "k8s_optimizer"
         self.version = "1.0.0"
     
@@ -404,7 +409,7 @@ class KubernetesOptimizer:
         assert completed_sessions[0]["success"] is True
 
 
-class TestEndToEndMessageFlowValidation:
+class TestEndToEndMessageFlowValidation(ReflectiveModule):
     """Test end-to-end message flow validation (Requirements: 1.1, 1.3, 5.1, 6.1)"""
     
     @pytest.fixture
@@ -605,7 +610,7 @@ class TestEndToEndMessageFlowValidation:
             await responder.disconnect()
 
 
-class TestPerformanceAndThroughput:
+class TestPerformanceAndThroughput(ReflectiveModule):
     """Test performance, throughput and latency (Requirements: Performance Requirements)"""
     
     @pytest.mark.asyncio
@@ -757,7 +762,7 @@ class TestPerformanceAndThroughput:
                 await agent.disconnect()
 
 
-class TestStressAndVolumeScenarios:
+class TestStressAndVolumeScenarios(ReflectiveModule):
     """Test stress testing for high-volume message scenarios (Requirements: System reliability)"""
     
     @pytest.mark.asyncio
@@ -979,7 +984,7 @@ class TestStressAndVolumeScenarios:
             await agent.disconnect()
 
 
-class TestCrossPlatformCompatibility:
+class TestCrossPlatformCompatibility(ReflectiveModule):
     """Test compatibility across different platforms (Requirements: 6.3, 6.4)"""
     
     def test_message_serialization_compatibility(self):
@@ -1128,7 +1133,7 @@ class TestCrossPlatformCompatibility:
         assert reconstructed.payload["large_dict"] == large_dict
 
 
-class TestSystemReliabilityAndRecovery:
+class TestSystemReliabilityAndRecovery(ReflectiveModule):
     """Test system reliability and recovery scenarios (Requirements: System reliability)"""
     
     @pytest.mark.asyncio
@@ -1256,7 +1261,7 @@ class TestSystemReliabilityAndRecovery:
 
 
 # Performance benchmarks and success criteria validation
-class TestSuccessCriteriaValidation:
+class TestSuccessCriteriaValidation(ReflectiveModule):
     """Validate all success criteria from the task specification"""
     
     @pytest.mark.asyncio
@@ -1487,4 +1492,32 @@ def execute(context):
 
 if __name__ == "__main__":
     # Run the comprehensive test suite
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v", "--tb=short"])

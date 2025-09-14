@@ -16,3 +16,20 @@ def _calculate_section_pacing_score(self, section: str, ratio: float) -> float:
     deviation = abs(ratio - optimal) / optimal
     score = max(0, 100 - deviation * 100)
     return score
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

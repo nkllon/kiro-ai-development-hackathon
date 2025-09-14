@@ -13,6 +13,8 @@ from unittest.mock import AsyncMock, patch
 from src.beast_mode.messaging.spore_manager import SporeManager
 from src.beast_mode.messaging.bus_client import BeastModeBusClient
 from src.beast_mode.messaging.models import BeastModeMessage, MessageType
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
 
 
 @pytest.fixture
@@ -45,10 +47,13 @@ def execute(context):
         "savings": "$500/month"
     }
 
-class CostOptimizationSpore:
+class CostOptimizationSpore(ReflectiveModule):
     """Systematic cost optimization methodology"""
     
     def __init__(self):
+        self.module_id = self.__class__.__name__
+        self.health_status = "healthy"
+        self.registry_metadata = {}
         self.name = "cost_optimization"
         self.version = "1.0.0"
     
@@ -80,7 +85,7 @@ def sample_metadata():
     }
 
 
-class TestSporeLifecycleIntegration:
+class TestSporeLifecycleIntegration(ReflectiveModule):
     """Test complete spore lifecycle integration"""
     
     def test_complete_spore_lifecycle(self, spore_manager, sample_spore_content, sample_metadata):
@@ -219,8 +224,11 @@ def execute(context):
         
         # Test spore with class but no execute function
         class_only_spore = '''
-class TestSpore:
+class TestSpore(ReflectiveModule):
     def __init__(self):
+        self.module_id = self.__class__.__name__
+        self.health_status = "healthy"
+        self.registry_metadata = {}
         self.name = "test"
 '''
         assert spore_manager.validate_spore(class_only_spore) is True
@@ -298,7 +306,7 @@ z = x + y
         assert final_spore['metadata']['version'] == "1.1.0"
 
 
-class TestSporeDistributionIntegration:
+class TestSporeDistributionIntegration(ReflectiveModule):
     """Test spore distribution through message bus"""
     
     @pytest.mark.asyncio
@@ -372,7 +380,7 @@ class TestSporeDistributionIntegration:
             assert response_message.correlation_id == request_message.id
 
 
-class TestSporeCompatibilityIntegration:
+class TestSporeCompatibilityIntegration(ReflectiveModule):
     """Test spore compatibility and versioning integration"""
     
     def test_version_compatibility_tracking(self, spore_manager, sample_spore_content):
@@ -433,7 +441,7 @@ class TestSporeCompatibilityIntegration:
 def execute(context):
     return {"utility": "base_function"}
 
-class BaseUtility:
+class BaseUtility(ReflectiveModule):
     def helper_function(self):
         return "helper"
 '''
@@ -453,8 +461,11 @@ def execute(context):
     # This spore depends on base_utility
     return {"status": "depends_on_base"}
 
-class DependentSpore:
+class DependentSpore(ReflectiveModule):
     def __init__(self):
+        self.module_id = self.__class__.__name__
+        self.health_status = "healthy"
+        self.registry_metadata = {}
         self.dependencies = ["base_utility"]
 '''
         
@@ -472,4 +483,32 @@ class DependentSpore:
         
         assert base_spore is not None
         assert dependent_spore is not None
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert "base_utility" in dependent_spore['implementation']

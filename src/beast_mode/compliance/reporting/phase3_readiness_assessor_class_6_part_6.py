@@ -22,3 +22,20 @@ from src.rm_ddd.core.health import ModuleHealth
         overall_status = self._determine_overall_readiness_status(readiness_metrics, overall_score)
         blocking_issues = self._identify_blocking_issues(analysis_result)
         return {'readiness_status': overall_status.value, 'readiness_score': overall_score, 'blocking_issues_count': len(blocking_issues), 'critical_blockers': [issue.description for issue in blocking_issues if issue.severity == IssueSeverity.CRITICAL][:3], 'ready_for_phase3': overall_status in [ReadinessStatus.READY, ReadinessStatus.CONDITIONALLY_READY] and len(blocking_issues) == 0, 'key_metrics': {metric.criteria.value: {'current': metric.current_value, 'required': metric.required_value, 'status': metric.status.value} for metric in readiness_metrics}}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

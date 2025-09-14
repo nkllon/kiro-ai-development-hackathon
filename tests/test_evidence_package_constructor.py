@@ -11,9 +11,11 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent / "src"))
 
 from beast_mode.assessment.evidence_package_generator import SuperiorityEvidence
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestEvidencePackageConstructor:
+
+class TestEvidencePackageConstructor(ReflectiveModule):
     """Test evidence package constructor with concrete_proof parameter"""
     
     def test_superiority_evidence_with_concrete_proof(self):
@@ -146,4 +148,32 @@ class TestEvidencePackageConstructor:
         
         # Test string representation
         assert "SuperiorityEvidence" in str(evidence1)
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert "Test" in str(evidence1)

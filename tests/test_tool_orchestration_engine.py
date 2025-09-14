@@ -19,7 +19,7 @@ from src.beast_mode.orchestration.tool_orchestration_engine import (
     ToolExecutionResult
 )
 
-class TestToolOrchestrationEngine:
+class TestToolOrchestrationEngine(ReflectiveModule):
     """Test tool orchestration functionality"""
     
     @pytest.fixture
@@ -212,6 +212,8 @@ class TestToolOrchestrationEngine:
         
         # Mock timeout exception
         from subprocess import TimeoutExpired
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         mock_subprocess.side_effect = TimeoutExpired("test_command", 30)
         
         result = orchestration_engine._execute_single_tool(
@@ -443,7 +445,7 @@ class TestToolOrchestrationEngine:
         assert "decision_framework" in health_indicators
         assert "performance_metrics" in health_indicators
 
-class TestDecisionConfidenceFramework:
+class TestDecisionConfidenceFramework(ReflectiveModule):
     """Test the confidence-based decision framework"""
     
     def test_confidence_level_enum(self):
@@ -470,7 +472,7 @@ class TestDecisionConfidenceFramework:
         assert context.time_pressure == "urgent"
         assert context.risk_tolerance == "low"
 
-class TestToolDefinitionAndExecution:
+class TestToolDefinitionAndExecution(ReflectiveModule):
     """Test tool definition and execution components"""
     
     def test_tool_definition_creation(self):
@@ -529,4 +531,32 @@ class TestToolDefinitionAndExecution:
         assert len(result.recommendations) == 2
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__])

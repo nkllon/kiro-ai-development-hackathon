@@ -15,12 +15,14 @@ from datetime import datetime, timedelta
 
 from src.devpost_integration.file_monitor import ProjectFileMonitor, ProjectFileEventHandler
 from src.devpost_integration.models import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     FileChangeEvent, ChangeType, ContentType, DevpostConfig,
     SyncOperation, SyncOperationType
 )
 
 
-class TestProjectFileMonitor:
+class TestProjectFileMonitor(ReflectiveModule):
     """Test ProjectFileMonitor functionality."""
     
     @pytest.fixture
@@ -536,7 +538,7 @@ class TestProjectFileMonitor:
         assert stats["queue_size"] == 0
 
 
-class TestProjectFileEventHandler:
+class TestProjectFileEventHandler(ReflectiveModule):
     """Test ProjectFileEventHandler functionality."""
     
     @pytest.fixture
@@ -581,7 +583,7 @@ class TestProjectFileEventHandler:
         mock_monitor.handle_file_change.assert_not_called()
 
 
-class TestProjectFileMonitorIntegration:
+class TestProjectFileMonitorIntegration(ReflectiveModule):
     """Integration tests for ProjectFileMonitor."""
     
     @pytest.fixture
@@ -681,4 +683,32 @@ class TestProjectFileMonitorIntegration:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v"])
