@@ -1,7 +1,7 @@
 """
-Document Management Rm Core Validation
+Document Management Rm Core Core Validation
 
-This module was extracted from document_management_rm_core.py
+This module was extracted from document_management_rm_core_core.py
 as part of RM-DDD compliance refactoring.
 """
 
@@ -13,6 +13,7 @@ from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from ..core.reflective_module import ReflectiveModule, HealthStatus
+import re
 import re
 import re
 
@@ -104,6 +105,8 @@ def _check_rdi_placement(self, doc: RDIDocument) -> bool:
 def _validate_version_format(self, version: str) -> bool:
     """Validate semantic version format"""
     import re
+from src.rm_ddd.core.health import ModuleHealth
+
     pattern = '^\\d+\\.\\d+\\.\\d+$'
     return bool(re.match(pattern, version))
 

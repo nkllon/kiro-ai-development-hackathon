@@ -15,7 +15,7 @@ Deprecated on: 2025-09-12T10:51:04.491081
 """
 
 # Import the unified interface
-from rm_ddd.core.unified_reflective_module import (
+from src.rm_ddd.core.unified_reflective_module import (
     ReflectiveModule,
     ModuleHealth, 
     ModuleStatus,
@@ -23,28 +23,16 @@ from rm_ddd.core.unified_reflective_module import (
     GracefulDegradationResult
 )
 
+# Alias for backward compatibility
+HealthStatus = ModuleStatus
+
 # Re-export for backward compatibility (temporary)
 __all__ = [
     "ReflectiveModule",
     "ModuleHealth",
     "ModuleStatus", 
+    "HealthStatus",
     "ModuleCapability",
     "GracefulDegradationResult"
 ]
-
-    def register_module(self, registry):
-        """Register module with registry."""
-        metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
-            registry.register(metadata)
-            
-    def get_interface_metadata(self):
-        """Get interface metadata for registry."""
-        return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
-        }
 

@@ -1,6 +1,5 @@
 from src.rm_ddd.core.health import ModuleHealth
 
-class MakefileHealthManagerServicesPart12:
     def fix_makefile_systematically(self, diagnosis: MakefileDiagnosisResult) -> MakefileRepairResult:
         """
         Systematic Makefile repair - NO WORKAROUNDS (Constraint C-03)
