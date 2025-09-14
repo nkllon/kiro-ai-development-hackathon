@@ -3,7 +3,7 @@
 import pytest
 from datetime import datetime, timedelta
 from typing import Dict, Any
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+from src.rm_ddd.core.base_reflective_module import ReflectiveModule
 
 
 # Mock classes for testing when modules aren't available
