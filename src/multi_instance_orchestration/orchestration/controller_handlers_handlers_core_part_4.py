@@ -23,3 +23,20 @@ def monitor_swarm(self, swarm_id: Optional[str]=None) -> SwarmState:
         self.add_health_indicator(self.create_health_indicator('swarm_monitoring', 'warning', f'Failed to monitor swarm: {str(e)}', {'error': str(e), 'swarm_id': swarm_id}))
         logger.warning(f'Swarm monitoring failed: {e}')
         raise
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

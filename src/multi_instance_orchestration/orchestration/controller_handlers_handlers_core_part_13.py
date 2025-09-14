@@ -11,3 +11,20 @@ def _update_swarm_metrics(self, swarm: SwarmState) -> None:
     total_finished = completed_count + failed_count
     metrics.error_rate = failed_count / total_finished if total_finished > 0 else 0.0
     metrics.last_updated = datetime.now()
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

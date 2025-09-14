@@ -25,3 +25,20 @@ from src.rm_ddd.core.health import ModuleHealth
         except Exception as e:
             self.add_health_indicator(self.create_health_indicator('action_execution', 'critical', f'Failed to execute action: {action.to_command_string()}', {'error': str(e), 'action': action.model_dump()}))
             return ActionResult(success=False, message=f'Execution failed: {str(e)}', execution_time=datetime.now() - start_time, correlation_id=action.correlation_id)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

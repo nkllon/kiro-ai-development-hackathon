@@ -12,3 +12,20 @@ from src.rm_ddd.core.health import ModuleHealth
             if demo_package.demo_environment.reliability_score < 95.0:
                 demo_package.backup_plans.extend(['Pre-recorded demo video', 'Static screenshot walkthrough', 'Architecture diagram presentation'])
         return demo_package
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

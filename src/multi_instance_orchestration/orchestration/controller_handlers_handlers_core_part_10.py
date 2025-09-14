@@ -11,3 +11,20 @@ def _create_distribution_plan(self, tasks: List[Task], instance_count: int, para
     estimated_completion_time = timedelta(seconds=max_tasks_per_instance * avg_task_duration)
     plan = DistributionPlan(total_tasks=len(tasks), strategy_used=self.config.task_distribution_strategy, parallel_execution_groups=parallel_groups, instance_assignments=task_assignments, estimated_completion_time=estimated_completion_time)
     return plan
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

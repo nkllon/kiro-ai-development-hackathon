@@ -12,3 +12,20 @@ def get_health_indicators(self) -> List[HealthIndicator]:
             swarm_health = 'critical'
     performance_indicator = self.create_health_indicator('swarm_performance', swarm_health, f'Managing {len(self.active_swarms)} active swarms', {'active_swarms': len(self.active_swarms), 'total_swarms_launched': self.performance_metrics['swarms_launched'], 'tasks_distributed': self.performance_metrics['tasks_distributed']})
     return self._health_indicators + [performance_indicator]
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

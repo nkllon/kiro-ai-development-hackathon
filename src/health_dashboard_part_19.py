@@ -27,4 +27,21 @@ from src.rm_ddd.core.health import ModuleHealth
             'health_percentage': (healthy_count / total_modules * 100) if total_modules > 0 else 0,
             'last_update': self.last_update
         }
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
     

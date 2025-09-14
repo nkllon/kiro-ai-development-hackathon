@@ -50,3 +50,20 @@ from src.rm_ddd.core.health import ModuleHealth
                 elif 'branch' in noun:
                     parameters['branch_name'] = word
         return StructuredAction(verb=verb, noun=noun, modifiers=modifiers, parameters=parameters, source_instance=self.instance_id)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

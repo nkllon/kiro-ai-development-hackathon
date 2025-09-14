@@ -40,3 +40,20 @@ def launch_swarm(self, tasks: List[Task]) -> SwarmState:
         self.add_health_indicator(self.create_health_indicator('swarm_launch', 'critical', f'Failed to launch swarm: {str(e)}', {'error': str(e), 'task_count': len(tasks)}))
         logger.error(f'Swarm launch failed: {e}')
         raise RuntimeError(f'Swarm launch failed: {e}') from e
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

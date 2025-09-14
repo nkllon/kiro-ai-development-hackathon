@@ -26,3 +26,20 @@ def integrate_results(self, swarm_id: Optional[str]=None) -> IntegrationReport:
         self.add_health_indicator(self.create_health_indicator('integration', 'critical', f'Integration failed: {str(e)}', {'error': str(e), 'swarm_id': swarm_id}))
         logger.error(f'Integration failed: {e}')
         raise
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

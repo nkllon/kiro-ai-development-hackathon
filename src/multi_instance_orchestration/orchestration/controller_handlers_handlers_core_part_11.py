@@ -13,3 +13,20 @@ from src.rm_ddd.core.health import ModuleHealth
         instance = KiroInstance(instance_id=instance_id, branch_name=f'feature/{instance_id}', workspace_path=Path(f'/tmp/kiro-workspaces/{instance_id}'), source_repository='.', task_assignments=task_ids, communication_endpoint=f'tcp://localhost:{5000 + len(instances)}', peacock_theme=theme, visual_identifier=theme.color_name)
         instances.append(instance)
     return instances
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

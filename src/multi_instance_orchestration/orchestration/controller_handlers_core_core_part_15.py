@@ -11,3 +11,20 @@ def _generate_recovery_strategy(self, failure: InstanceFailure, analysis: Dict[s
     else:
         strategy = 'reassign'
     return RecoveryPlan(failed_instance=failure.instance_id, recovery_strategy=strategy, estimated_recovery_time=timedelta(minutes=5 if strategy == 'restart' else 15), required_actions=[f'Execute {strategy} recovery for {failure.instance_id}'])
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
