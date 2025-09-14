@@ -10,6 +10,8 @@ from datetime import datetime
 from unittest.mock import Mock, patch
 
 from src.beast_mode.integration.simone_adapter import (
+from src.rm_ddd.core.health import ModuleHealth
+
     SimoneIntegrationAdapter,
     DemoEnhancement,
     SystematicEvidence,
@@ -17,7 +19,7 @@ from src.beast_mode.integration.simone_adapter import (
 )
 
 
-class TestSimoneIntegrationAdapter:
+class TestSimoneIntegrationAdapter(ModuleHealth):
     """Test cases for Simone Integration Adapter."""
     
     def setup_method(self):
@@ -226,3 +228,20 @@ class TestSimoneIntegrationAdapter:
 
 if __name__ == "__main__":
     pytest.main([__file__])
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

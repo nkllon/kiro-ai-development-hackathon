@@ -29,7 +29,7 @@ from hackathon_demo_framework.presentation.timing_optimizer import (
     PacingStrategy, TimingConstraint, TimingAnalysis, PacingRecommendation
 )
 
-class TestDemoScriptGenerator:
+class TestDemoScriptGenerator(ReflectiveModule):
     """Test suite for the demo script generator."""
     
     def setup_method(self):
@@ -223,7 +223,7 @@ class TestDemoScriptGenerator:
         # In practice, would verify that technical depth is reduced
         # and business elements are emphasized
 
-class TestPresentationMaterialsCreator:
+class TestPresentationMaterialsCreator(ReflectiveModule):
     """Test suite for the presentation materials creator."""
     
     def setup_method(self):
@@ -287,6 +287,8 @@ class TestPresentationMaterialsCreator:
     def teardown_method(self):
         """Clean up test fixtures."""
         import shutil
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         shutil.rmtree(self.temp_dir, ignore_errors=True)
     
     def test_creator_initialization(self):
@@ -420,7 +422,7 @@ class TestPresentationMaterialsCreator:
         # Should maintain slide structure
         assert len(optimized_package.slides) == len(package.slides)
 
-class TestDemoTimingOptimizer:
+class TestDemoTimingOptimizer(ReflectiveModule):
     """Test suite for the demo timing optimizer."""
     
     def setup_method(self):
@@ -601,4 +603,32 @@ class TestDemoTimingOptimizer:
         assert "demo" in plans_text or "backup" in plans_text
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v"])

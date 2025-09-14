@@ -54,6 +54,8 @@ def mock_analyzer():
 def mock_analysis_result():
     """Mock analysis result for testing"""
     from src.beast_mode.analysis.rm_rdi.data_models import AnalysisResult, AnalysisStatus
+from src.rm_ddd.core.health import ModuleHealth
+
     
     return AnalysisResult(
         analysis_id="test_analysis_001",
@@ -126,4 +128,21 @@ def mock_workflow_coordinator():
         status="completed",
         results=[]
     )
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
     return coordinator

@@ -8,6 +8,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from datetime import datetime
 
 from src.beast_mode.messaging.shared_state import BeastModeSharedState, SharedStateConfig
+from src.rm_ddd.core.health import ModuleHealth
+
 
 
 @pytest.fixture
@@ -215,4 +217,21 @@ async def test_error_handling(shared_state_config):
         assert agent_state is None
         
         active_agents = await shared_state.get_active_agents()
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
         assert active_agents == []
