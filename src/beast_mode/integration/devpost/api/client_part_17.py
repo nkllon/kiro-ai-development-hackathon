@@ -198,4 +198,3 @@ from typing import Dict, List, Any
                 progress_callback(100)
             logger.info(f'Successfully uploaded media {media_path.name} to project {project_id}')
             return result
-    # ... (truncated for size compliance)

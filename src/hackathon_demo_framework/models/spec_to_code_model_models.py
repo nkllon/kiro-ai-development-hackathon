@@ -1,24 +1,20 @@
 """
 Spec To Code Model Models
-
 This module was extracted from spec_to_code_model.py
 as part of RM-DDD compliance refactoring.
 """
-
 from datetime import datetime
 from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
 from rm_ddd.core.unified_reflective_module import ReflectiveModule, HealthStatus, HealthIndicator
 from beast_mode.core.model_registry import ModelRegistry
-
 class SpecToCodeModel(ReflectiveModule):
 def register_with_registry(self, registry):
         """Register this module with the RM registry."""
         if registry:
             registry.register_module(self)
             self.add_capability("registry_registered")
-    
     def get_module_metadata(self) -> Dict[str, any]:
         """Get module metadata for registry."""
         return {
@@ -38,7 +34,6 @@ def get_health_indicators(self) -> Dict[str, any]:
             "capabilities_count": len(self.capabilities),
             "dependencies_count": len(self.dependencies)
         }
-    
     def get_status_report(self) -> Dict[str, any]:
         """Get comprehensive status report for this module."""
         return {
@@ -51,12 +46,10 @@ def get_health_indicators(self) -> Dict[str, any]:
         }
     """
     Model for spec-to-code transformation with systematic validation.
-    
     RDI Compliance: Traces to hackathon demo requirements
     RM-DDD Compliance: Extends ReflectiveModule with domain boundaries
     Beast Mode Intent: Demonstrates systematic superiority
     """
-
     def __init__(self):
         super().__init__('SpecToCodeModel', '1.0.0')
         self.model_registry = ModelRegistry()
@@ -65,26 +58,21 @@ def get_health_indicators(self) -> Dict[str, any]:
         self.requirements_traceability = self._initialize_requirements_traceability()
         self.systematic_scores: List[float] = []
         self.improvement_factors: List[float] = []
-
     def _initialize_requirements_traceability(self) -> List[RequirementLink]:
         """RDI Compliance: Initialize requirements traceability"""
         return [RequirementLink(requirement_id='REQ-1.1', requirement_text='Generate complete, production-ready code within 30 seconds', implementation_method='transform_spec_to_code()', validation_criteria='execution_time < 30 seconds', traceability_score=1.0), RequirementLink(requirement_id='REQ-1.2', requirement_text='Display systematic quality metrics including test coverage, security validation, and performance optimization', implementation_method='calculate_quality_metrics()', validation_criteria='all metrics calculated and displayed', traceability_score=1.0), RequirementLink(requirement_id='REQ-1.3', requirement_text='Demonstrate 100% functional accuracy with comprehensive error handling', implementation_method='validate_generated_code()', validation_criteria='functional_accuracy == 1.0', traceability_score=1.0)]
-
     def get_requirements_traceability(self) -> List[RequirementLink]:
         """RDI Compliance: Get requirements traceability"""
         return self.requirements_traceability
-
     def validate_against_requirements(self) -> Dict[str, Any]:
         """RDI Compliance: Validate against requirements"""
         validation_results = {}
         for link in self.requirements_traceability:
             validation_results[link.requirement_id] = {'requirement': link.requirement_text, 'implementation': link.implementation_method, 'compliance': True, 'traceability_score': link.traceability_score}
         return validation_results
-
     def get_domain_boundaries(self) -> Dict[str, Any]:
         """RM-DDD Compliance: Get domain boundaries"""
         return {'domain': 'spec_to_code_transformation', 'bounded_context': 'hackathon_demo_showcase', 'invariants': ['generated_code must be syntactically valid', 'systematic_score must be >= 0.8', 'transformation must complete within 30 seconds'], 'business_rules': ['All generated code must include comprehensive error handling', 'Quality metrics must be calculated for all transformations', 'Learning patterns must be generated and stored']}
-
     def validate_domain_invariants(self) -> Dict[str, Any]:
         """RM-DDD Compliance: Validate domain invariants"""
         invariants = self.get_domain_boundaries()['invariants']
@@ -92,7 +80,6 @@ def get_health_indicators(self) -> Dict[str, any]:
         for invariant in invariants:
             validation_results[invariant] = {'valid': True, 'message': f"Invariant '{invariant}' is satisfied", 'timestamp': datetime.now().isoformat()}
         return validation_results
-
     def calculate_systematic_score(self) -> float:
         """Beast Mode Intent: Calculate systematic score for transformation"""
         if not self.systematic_scores:
@@ -100,13 +87,11 @@ def get_health_indicators(self) -> Dict[str, any]:
         avg_score = sum(self.systematic_scores) / len(self.systematic_scores)
         systematic_factor = 1.204
         return min(avg_score * systematic_factor, 1.0)
-
     def generate_learning_patterns(self) -> List[LearningPattern]:
         """Beast Mode Intent: Generate learning patterns from systematic development"""
         patterns = [LearningPattern(pattern_id='PAT-001', pattern_type='spec_analysis_pattern', confidence_score=0.95, application_context='requirements analysis and validation', improvement_factor=1.15, created_at=datetime.now()), LearningPattern(pattern_id='PAT-002', pattern_type='code_generation_pattern', confidence_score=0.92, application_context='systematic code generation with quality gates', improvement_factor=1.2, created_at=datetime.now()), LearningPattern(pattern_id='PAT-003', pattern_type='validation_pattern', confidence_score=0.88, application_context='comprehensive validation and testing', improvement_factor=1.18, created_at=datetime.now())]
         self.learning_patterns.extend(patterns)
         return patterns
-
     def transform_spec_to_code(self, spec: str) -> TransformationResult:
         """Core functionality: Transform specification to executable code"""
         start_time = datetime.now()
@@ -121,11 +106,9 @@ def get_health_indicators(self) -> Dict[str, any]:
         self.transformation_history.append(result)
         self.systematic_scores.append(systematic_score)
         return result
-
     def _generate_code_from_spec(self, spec: str) -> str:
         """Generate code from specification (simplified for demo)"""
         return f'\n# Generated from specification: {spec}\nimport asyncio\nfrom typing import Dict, Any, List\nfrom datetime import datetime\n\nclass GeneratedService(ReflectiveModule):\n    """Systematically generated service from specification"""\n    \n    def __init__(self):\n        self.created_at = datetime.now()\n        self.systematic_score = 0.908\n    \n    async def process_request(self, data: Dict[str, Any]) -> Dict[str, Any]:\n        """Process request with systematic error handling"""\n        try:\n            # Systematic validation\n            if not self._validate_input(data):\n                raise ValueError("Invalid input data")\n            \n            # Process with systematic approach\n            result = await self._systematic_process(data)\n            \n            return {{\n                "success": True,\n                "result": result,\n                "systematic_score": self.systematic_score,\n                "timestamp": datetime.now().isoformat()\n            }}\n        except Exception as e:\n            return {{\n                "success": False,\n                "error": str(e),\n                "timestamp": datetime.now().isoformat()\n            }}\n    \n    def _validate_input(self, data: Dict[str, Any]) -> bool:\n        """Systematic input validation"""\n        return isinstance(data, dict) and len(data) > 0\n    \n    async def _systematic_process(self, data: Dict[str, Any]) -> Dict[str, Any]:\n        """Systematic processing with quality gates"""\n        # Simulate systematic processing\n        await asyncio.sleep(0.1)  # Simulate processing time\n        return {{"processed": True, "data": data}}\n'
-
     def _assess_quality_level(self, code: str) -> QualityLevel:
         """Assess quality level of generated code"""
         if 'systematic' in code.lower() and 'error handling' in code.lower():
@@ -136,34 +119,27 @@ def get_health_indicators(self) -> Dict[str, any]:
             return QualityLevel.GOOD
         else:
             return QualityLevel.BASIC
-
     def _calculate_test_coverage(self, code: str) -> float:
         """Calculate test coverage for generated code"""
         lines = code.count('\n')
         test_lines = code.count('def test_') * 3
         return min(test_lines / lines if lines > 0 else 0, 1.0)
-
     def _validate_security(self, code: str) -> bool:
         """Validate security of generated code"""
         security_indicators = ['input validation', 'error handling', 'no hardcoded secrets', 'proper exception handling']
         return all((indicator in code.lower() for indicator in security_indicators))
-
     def _calculate_performance_metrics(self, code: str) -> Dict[str, Any]:
         """Calculate performance metrics for generated code"""
         return {'lines_of_code': len(code.split('\n')), 'cyclomatic_complexity': 3, 'maintainability_index': 85, 'performance_score': 0.92}
-
     def get_module_info(self) -> Dict[str, Any]:
         """Get comprehensive module information"""
         return {'module_id': self.module_id, 'version': self.version, 'name': 'Spec-to-Code Transformation Model', 'description': 'RDI/RM-DDD compliant model for transforming specifications into executable code', 'author': 'Beast Mode Development Team', 'created_at': self._start_time.isoformat(), 'requirements_traceability': len(self.requirements_traceability), 'systematic_score': self.calculate_systematic_score(), 'learning_patterns': len(self.learning_patterns)}
-
     def get_capabilities(self) -> List[str]:
         """Get module capabilities"""
         return ['core_functionality', 'data_processing', 'analytics', 'learning']
-
     def get_dependencies(self) -> List[str]:
         """Get module dependencies"""
         return ['model_registry', 'reflective_module']
-
     def check_health(self) -> Dict[str, Any]:
         """Check module health with comprehensive monitoring"""
         try:
@@ -181,7 +157,6 @@ def get_health_indicators(self) -> Dict[str, any]:
             return {'module_id': self.module_id, 'status': 'healthy' if health_score >= 0.8 else 'degraded', 'health_score': health_score, 'issues': issues, 'metrics': {'systematic_score': systematic_score, 'rdi_compliance': rdi_compliance, 'learning_patterns': len(self.learning_patterns), 'transformations_completed': len(self.transformation_history)}, 'last_check': datetime.now().isoformat()}
         except Exception as e:
             return {'module_id': self.module_id, 'status': 'failed', 'health_score': 0.0, 'issues': [f'Health check failed: {str(e)}'], 'metrics': {}, 'last_check': datetime.now().isoformat()}
-
     def get_interface_metadata(self):
         """Get interface metadata for registry."""
         return {
@@ -191,12 +166,10 @@ def get_health_indicators(self) -> Dict[str, any]:
             'dependencies': [],
             'capabilities': []
         }
-        
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
     def health_check(self):
         """Perform health check."""
         return {
@@ -204,8 +177,6 @@ def get_health_indicators(self) -> Dict[str, any]:
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()
-

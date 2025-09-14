@@ -198,4 +198,3 @@ from src.rm_ddd.core.registry import register_module
             else:
                 logger.warning(f'Status update returned success=False for project {project_id}')
                 result['error'] = response_data.get('error', 'Status update failed')
-    # ... (truncated for size compliance)

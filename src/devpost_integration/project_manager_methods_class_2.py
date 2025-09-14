@@ -4,7 +4,6 @@ def register_with_registry(self, registry):
         if registry:
             registry.register_module(self)
             self.add_capability("registry_registered")
-    
     def get_module_metadata(self) -> Dict[str, any]:
         """Get module metadata for registry."""
         return {
@@ -24,7 +23,6 @@ def get_health_indicators(self) -> Dict[str, any]:
             "capabilities_count": len(self.capabilities),
             "dependencies_count": len(self.dependencies)
         }
-    
     def get_status_report(self) -> Dict[str, any]:
         """Get comprehensive status report for this module."""
         return {
@@ -43,12 +41,10 @@ def get_health_indicators(self) -> Dict[str, any]:
     last_sync: Optional[datetime] = None
     pending_changes: List[str] = None
     validation_errors: List[str] = None
-    
     def __init__(self, connected: bool = False):
         super().__init__(module_id="project_status", version="1.0.0")
         self._start_time = datetime.now()
         register_module(self)
-        
         self.connected = connected
         self.project_id = None
         self.project_name = None
@@ -56,15 +52,12 @@ def get_health_indicators(self) -> Dict[str, any]:
         self.last_sync = None
         self.pending_changes = []
         self.validation_errors = []
-    
     def __post_init__(self):
         """__post_init__ - Enhanced for compliance"""
         if self.pending_changes is None:
             self.pending_changes = []
         if self.validation_errors is None:
             self.validation_errors = []
-
-    # ReflectiveModule interface implementation
     def get_module_info(self) -> Dict[str, Any]:
         """Get comprehensive module information."""
         return {
@@ -76,15 +69,12 @@ def get_health_indicators(self) -> Dict[str, any]:
             'created_at': self._start_time.isoformat(),
             'interface_version': self.get_interface_version()
         }
-    
     def get_capabilities(self) -> List[ModuleCapability]:
         """Get module capabilities."""
         return []
-    
     def get_dependencies(self) -> List[str]:
         """Get module dependencies."""
         return []
-    
     def check_health(self) -> ModuleHealth:
         """Check module health with comprehensive monitoring"""
         try:
@@ -108,24 +98,16 @@ def get_health_indicators(self) -> Dict[str, any]:
         """Perform comprehensive health check."""
         issues = []
         health_score = 1.0
-        
         try:
-            # Basic health checks
             if not hasattr(self, 'module_id'):
                 issues.append("Missing module_id")
                 health_score -= 0.2
-            
-            # Add module-specific health checks here
-            
-            
-            # Determine status
             if health_score >= 0.9:
                 status = ModuleStatus.HEALTHY
             elif health_score >= 0.7:
                 status = ModuleStatus.DEGRADED
             else:
                 status = ModuleStatus.UNHEALTHY
-            
             return ModuleHealth(
                 module_id=self.module_id,
                 status=status,
@@ -136,7 +118,6 @@ def get_health_indicators(self) -> Dict[str, any]:
                 dependencies=self.get_dependencies(),
                 metrics=self.get_metrics()
             )
-            
         except Exception as e:
             logger.error(f"Health check failed: {e}")
             return ModuleHealth(
@@ -149,7 +130,6 @@ def get_health_indicators(self) -> Dict[str, any]:
                 dependencies=self.get_dependencies(),
                 metrics={}
             )
-    
     def get_configuration(self) -> ModuleConfiguration:
         """Get module configuration."""
         return ModuleConfiguration(
@@ -161,35 +141,28 @@ def get_health_indicators(self) -> Dict[str, any]:
             validation_rules={},
             last_updated=datetime.now()
         )
-    
     def update_configuration(self, config: ModuleConfiguration) -> bool:
         """Update module configuration."""
         try:
             if not config.is_valid():
                 logger.error("Invalid configuration provided")
                 return False
-            
             logger.info(f"Configuration updated for {self.module_id}")
             return True
-            
         except Exception as e:
             logger.error(f"Error updating configuration: {e}")
             return False
-    
     def get_metrics(self) -> Dict[str, Any]:
         """Get module metrics."""
         uptime = (datetime.now() - self._start_time).total_seconds()
-        
         return {
             'uptime_seconds': uptime,
             'uptime_hours': uptime / 3600,
             'last_check': datetime.now().isoformat()
         }
-    
     def reset_metrics(self) -> None:
         """Reset module metrics to initial state."""
         self._start_time = datetime.now()
-
     def get_interface_metadata(self):
         """Get interface metadata for registry."""
         return {
@@ -199,12 +172,10 @@ def get_health_indicators(self) -> Dict[str, any]:
             'dependencies': [],
             'capabilities': []
         }
-        
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
     def health_check(self):
         """Perform health check."""
         return {
@@ -212,9 +183,7 @@ def get_health_indicators(self) -> Dict[str, any]:
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()
-
         logger.info("Metrics reset for {self.module_id} module")

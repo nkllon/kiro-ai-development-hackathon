@@ -198,4 +198,3 @@ from typing import Dict, List, Any
                 logger.info(f'Successfully updated project {project_id} status to {status}')
             else:
                 logger.warning(f'Status update returned success=False for project {project_id}')
-    # ... (truncated for size compliance)

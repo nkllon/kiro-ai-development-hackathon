@@ -198,4 +198,3 @@ from src.rm_ddd.core.registry import register_module
             logger.info(f'Successfully uploaded media {media_path.name} to project {project_id}')
             return result
         except Exception as e:
-    # ... (truncated for size compliance)

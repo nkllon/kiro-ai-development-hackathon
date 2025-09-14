@@ -198,4 +198,3 @@ from typing import Dict, List, Any
         response = BeastModeMessage(type=MessageType.AGENT_RESPONSE, source=self.agent_id, target=message.source, payload={'agent_capabilities': AgentCapabilities(agent_id=self.agent_id, capabilities=self.capabilities, availability='ready_for_business').model_dump(), 'response_to': message.id}, correlation_id=message.id, priority=3)
         await self.send_message(response)
         logger.info(f'Responded to discovery from {message.source}')
-    # ... (truncated for size compliance)

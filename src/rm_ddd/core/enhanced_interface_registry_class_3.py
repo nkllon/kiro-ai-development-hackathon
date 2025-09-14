@@ -9,7 +9,6 @@ def get_health_indicators(self) -> Dict[str, any]:
             "capabilities_count": len(self.capabilities),
             "dependencies_count": len(self.dependencies)
         }
-    
     def get_status_report(self) -> Dict[str, any]:
         """Get comprehensive status report for this module."""
         return {
@@ -21,13 +20,11 @@ def get_health_indicators(self) -> Dict[str, any]:
             "performance_metrics": self.get_metrics()
         }
     """Enhanced Interface Registry with advanced features"""
-    
     def __init__(self, registry_file: str = "enhanced_interface_registry.json"):
         super().__init__(registry_file)
         self.metrics: Dict[str, InterfaceMetrics] = {}
         self.cache: Dict[str, Any] = {}
         self.load_metrics()
-    
     def load_metrics(self):
         """Load interface metrics from storage"""
         metrics_file = self.registry_file.replace('.json', '_metrics.json')
@@ -39,7 +36,6 @@ def get_health_indicators(self) -> Dict[str, any]:
                     self.metrics[interface_id] = InterfaceMetrics(**metrics_data)
             except Exception as e:
                 print(f"Warning: Could not load metrics: {e}")
-    
     def save_metrics(self):
         """Save interface metrics to storage"""
         metrics_file = self.registry_file.replace('.json', '_metrics.json')
@@ -59,12 +55,10 @@ def get_health_indicators(self) -> Dict[str, any]:
                 json.dump(data, f, indent=2)
         except Exception as e:
             print(f"Error saving metrics: {e}")
-    
     def register_interface(self, interface: InterfaceMetadata) -> bool:
         """Enhanced interface registration with metrics"""
         success = super().register_interface(interface)
         if success:
-            # Initialize metrics for new interface
             self.metrics[interface.interface_id] = InterfaceMetrics(
                 interface_id=interface.interface_id,
                 usage_count=0,
@@ -75,45 +69,35 @@ def get_health_indicators(self) -> Dict[str, any]:
             )
             self.save_metrics()
         return success
-    
     def track_interface_usage(self, interface_id: str, success: bool = True):
         """Track interface usage for metrics"""
         if interface_id in self.metrics:
             metrics = self.metrics[interface_id]
             metrics.usage_count += 1
             metrics.last_accessed = datetime.now()
-            
             if success:
                 metrics.success_rate = (metrics.success_rate * (metrics.usage_count - 1) + 1.0) / metrics.usage_count
             else:
                 metrics.error_count += 1
                 metrics.success_rate = (metrics.success_rate * (metrics.usage_count - 1) + 0.0) / metrics.usage_count
-            
             self.save_metrics()
-    
     def get_interface_performance_report(self) -> Dict[str, Any]:
         """Generate interface performance report"""
         if not self.metrics:
             return {"message": "No metrics available"}
-        
         total_interfaces = len(self.metrics)
         total_usage = sum(metrics.usage_count for metrics in self.metrics.values())
         avg_success_rate = sum(metrics.success_rate for metrics in self.metrics.values()) / total_interfaces
-        
-        # Top performing interfaces
         top_performers = sorted(
             self.metrics.values(),
             key=lambda x: x.performance_score * x.success_rate,
             reverse=True
         )[:5]
-        
-        # Most used interfaces
         most_used = sorted(
             self.metrics.values(),
             key=lambda x: x.usage_count,
             reverse=True
         )[:5]
-        
         return {
             'total_interfaces': total_interfaces,
             'total_usage': total_usage,
@@ -136,28 +120,20 @@ def get_health_indicators(self) -> Dict[str, any]:
                 for metrics in most_used
             ]
         }
-    
     def optimize_interface_cache(self):
         """Optimize interface cache based on usage patterns"""
-        # Clear cache for unused interfaces
         current_time = datetime.now()
         for interface_id, metrics in self.metrics.items():
-            # Remove from cache if not used in last 24 hours
             time_diff = (current_time - metrics.last_accessed).total_seconds()
             if time_diff > 86400 and interface_id in self.cache:
                 del self.cache[interface_id]
-        
-        # Pre-load cache for frequently used interfaces
         for interface_id, metrics in self.metrics.items():
             if metrics.usage_count > 10 and interface_id not in self.cache:
                 if interface_id in self.interfaces:
                     self.cache[interface_id] = self.interfaces[interface_id]
-    
     def get_interface_recommendations(self, context: str) -> List[Dict[str, Any]]:
         """Get interface recommendations based on context and usage patterns"""
         recommendations = []
-        
-        # Find interfaces with high success rates and good performance
         for interface_id, metrics in self.metrics.items():
             if metrics.success_rate > 0.9 and metrics.performance_score > 0.8:
                 if interface_id in self.interfaces:
@@ -171,15 +147,10 @@ def get_health_indicators(self) -> Dict[str, any]:
                         'usage_count': metrics.usage_count,
                         'recommendation_score': metrics.performance_score * metrics.success_rate
                     })
-        
-        # Sort by recommendation score
         recommendations.sort(key=lambda x: x['recommendation_score'], reverse=True)
         return recommendations[:10]
-
         register_module(self.__class__.__name__, self)
-# Global enhanced registry instance
 enhanced_registry = EnhancedInterfaceRegistry()
-
     def get_interface_metadata(self):
         """Get interface metadata for registry."""
         return {
@@ -189,12 +160,10 @@ enhanced_registry = EnhancedInterfaceRegistry()
             'dependencies': [],
             'capabilities': []
         }
-        
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
     def health_check(self):
         """Perform health check."""
         return {
@@ -202,8 +171,6 @@ enhanced_registry = EnhancedInterfaceRegistry()
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()
-

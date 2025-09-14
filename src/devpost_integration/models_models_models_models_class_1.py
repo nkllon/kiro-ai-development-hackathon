@@ -4,7 +4,6 @@ def register_with_registry(self, registry):
         if registry:
             registry.register_module(self)
             self.add_capability("registry_registered")
-    
     def get_module_metadata(self) -> Dict[str, any]:
         """Get module metadata for registry."""
         return {
@@ -24,7 +23,6 @@ def get_health_indicators(self) -> Dict[str, any]:
             "capabilities_count": len(self.capabilities),
             "dependencies_count": len(self.dependencies)
         }
-    
     def get_status_report(self) -> Dict[str, any]:
         """Get comprehensive status report for this module."""
         return {
@@ -36,7 +34,6 @@ def get_health_indicators(self) -> Dict[str, any]:
             "performance_metrics": self.get_metrics()
         }
     """ProjectMetadata with RM-DDD compliance - Project information handling"""
-
     def __init__(self, metadata: Dict[str, Any]=None):
         """Initialize project metadata with comprehensive functionality"""
         super().__init__(module_id='projectmetadata', version='1.0.0')
@@ -48,19 +45,15 @@ def get_health_indicators(self) -> Dict[str, any]:
         self.version = '1.0.0'
         self._metrics = {'operations_count': 0, 'last_operation_time': None, 'error_count': 0, 'success_rate': 1.0, 'metadata_updates': 0}
         self._logger.info('ProjectMetadata initialized with RM-DDD compliance')
-
     def get_module_info(self) -> Dict[str, Any]:
         """Get module information"""
         return {'module_id': 'projectmetadata', 'version': '1.0.0', 'description': 'Project metadata management with comprehensive functionality', 'metadata_count': len(self.metadata), 'version': self.version}
-
     def get_capabilities(self) -> List[ModuleCapability]:
         """Get module capabilities"""
         return [ModuleCapability.CORE_FUNCTIONALITY, ModuleCapability.DATA_MANAGEMENT, ModuleCapability.VALIDATION, ModuleCapability.MONITORING]
-
     def get_dependencies(self) -> List[str]:
         """Get module dependencies"""
         return ['reflective_module', 'validation_result']
-
     def check_health(self) -> ModuleHealth:
         """Perform health check"""
         try:
@@ -70,7 +63,6 @@ def get_health_indicators(self) -> Dict[str, any]:
         except Exception as e:
             self._logger.error(f'Health check failed: {e}')
             return ModuleHealth(module_id='projectmetadata', status=ModuleStatus.UNHEALTHY, health_score=0.0, issues=[f'Health check error: {str(e)}'], capabilities=self.get_capabilities(), dependencies=self.get_dependencies(), metrics=self._metrics, last_check=datetime.now())
-
     def _calculate_health_score(self) -> float:
         """Calculate health score based on metrics"""
         if self._metrics['operations_count'] == 0:
@@ -78,7 +70,6 @@ def get_health_indicators(self) -> Dict[str, any]:
         success_rate = self._metrics['success_rate']
         error_penalty = min(self._metrics['error_count'] * 0.1, 0.5)
         return max(0.0, success_rate - error_penalty)
-
     def _identify_health_issues(self) -> List[str]:
         """Identify health issues"""
         issues = []
@@ -87,11 +78,9 @@ def get_health_indicators(self) -> Dict[str, any]:
         if self._metrics['error_count'] > 10:
             issues.append('High error count detected')
         return issues
-
     def get_configuration(self) -> Dict[str, Any]:
         """Get module configuration"""
         return {'version': self.version, 'auto_validation_enabled': True, 'metadata_schema_enforced': True, 'logging_level': 'INFO'}
-
     def update_configuration(self, config: Dict[str, Any]) -> bool:
         """Update module configuration"""
         try:
@@ -103,16 +92,13 @@ def get_health_indicators(self) -> Dict[str, any]:
         except Exception as e:
             self._logger.error(f'Configuration update failed: {e}')
             return False
-
     def get_metrics(self) -> Dict[str, Any]:
         """Get module metrics"""
         return self._metrics.copy()
-
     def reset_metrics(self) -> None:
         """Reset module metrics"""
         self._metrics = {'operations_count': 0, 'last_operation_time': None, 'error_count': 0, 'success_rate': 1.0, 'metadata_updates': 0}
         self._logger.info('Metrics reset successfully')
-
     def set_metadata(self, key: str, value: Any) -> bool:
         """Set metadata value"""
         try:
@@ -126,7 +112,6 @@ def get_health_indicators(self) -> Dict[str, any]:
             self._logger.error(f'Failed to set metadata: {e}')
             self._metrics['error_count'] += 1
             return False
-
     def get_metadata(self, key: str=None) -> Any:
         """Get metadata value or all metadata"""
         try:
@@ -138,7 +123,6 @@ def get_health_indicators(self) -> Dict[str, any]:
             self._logger.error(f'Failed to get metadata: {e}')
             self._metrics['error_count'] += 1
             return None
-
     def update_metadata(self, updates: Dict[str, Any]) -> bool:
         """Update multiple metadata values"""
         try:
@@ -152,7 +136,6 @@ def get_health_indicators(self) -> Dict[str, any]:
             self._logger.error(f'Failed to update metadata: {e}')
             self._metrics['error_count'] += 1
             return False
-
     def validate_metadata(self) -> bool:
         """Validate metadata structure and content"""
         try:
@@ -167,7 +150,6 @@ def get_health_indicators(self) -> Dict[str, any]:
             self._logger.error(f'Metadata validation failed: {e}')
             self._metrics['error_count'] += 1
             return False
-
     def clear_metadata(self) -> bool:
         """Clear all metadata"""
         try:
@@ -180,7 +162,6 @@ def get_health_indicators(self) -> Dict[str, any]:
             self._logger.error(f'Failed to clear metadata: {e}')
             self._metrics['error_count'] += 1
             return False
-
     def _update_metrics(self, operation: str) -> None:
         """Update performance metrics"""
         self._metrics['operations_count'] += 1
@@ -188,7 +169,6 @@ def get_health_indicators(self) -> Dict[str, any]:
         total_ops = self._metrics['operations_count']
         errors = self._metrics['error_count']
         self._metrics['success_rate'] = (total_ops - errors) / total_ops if total_ops > 0 else 1.0
-
     def get_interface_metadata(self):
         """Get interface metadata for registry."""
         return {
@@ -198,12 +178,10 @@ def get_health_indicators(self) -> Dict[str, any]:
             'dependencies': [],
             'capabilities': []
         }
-        
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
     def health_check(self):
         """Perform health check."""
         return {
@@ -211,8 +189,6 @@ def get_health_indicators(self) -> Dict[str, any]:
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()
-

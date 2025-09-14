@@ -198,4 +198,3 @@
         logger.info(f'Responded to discovery from {message.source}')
     async def _handle_agent_response(self, message: BeastModeMessage) -> None:
         if self.discovery_enabled:
-    # ... (truncated for size compliance)
