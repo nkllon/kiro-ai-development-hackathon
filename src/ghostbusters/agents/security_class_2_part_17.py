@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _check_java_security(self, content: str, file_path: Path) -> List[Finding]:
         """Java-specific security checks"""

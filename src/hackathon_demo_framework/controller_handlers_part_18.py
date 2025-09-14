@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def prepare_hackathon_demo(self, quick_mode: bool=False) -> DemoPackage:
         """

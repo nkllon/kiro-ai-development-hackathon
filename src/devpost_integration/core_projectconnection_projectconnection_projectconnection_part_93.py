@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def start_sync(self, sync_data: Dict[str, Any]) -> bool:
     """Start synchronization operation."""

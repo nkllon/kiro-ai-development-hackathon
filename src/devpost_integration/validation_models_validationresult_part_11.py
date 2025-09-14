@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _calculate_health_score(self) -> float:
         """Calculate health score."""

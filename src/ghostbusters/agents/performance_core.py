@@ -7,3 +7,5 @@ from ..core.interfaces import GhostbustersExpertAgent
 from ..core.models import AnalysisResult, AnalysisContext, Finding, Recommendation, FindingType, Severity, CodeLocation
 from .performance_core_core import *
 from .performance_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

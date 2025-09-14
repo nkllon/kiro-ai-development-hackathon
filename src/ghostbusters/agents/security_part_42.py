@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _calculate_risk_level(self, findings: List[Finding]) -> str:
     """Calculate overall risk level based on findings"""

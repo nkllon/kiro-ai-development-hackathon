@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_capabilities(self) -> List[ModuleCapability]:
         """get_capabilities - Enhanced for compliance"""

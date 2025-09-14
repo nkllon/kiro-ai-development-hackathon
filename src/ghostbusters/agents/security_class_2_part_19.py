@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _calculate_security_confidence(self, findings: List[Finding], target_path: Path) -> float:
         """Calculate confidence score for security analysis"""

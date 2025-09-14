@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _should_analyze_file(self, file_path: Path) -> bool:
         """Determine if file should be analyzed for security issues"""

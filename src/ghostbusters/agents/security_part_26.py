@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _check_path_traversal(self, content: str, file_path: Path) -> List[Finding]:
         """Check for path traversal vulnerabilities"""

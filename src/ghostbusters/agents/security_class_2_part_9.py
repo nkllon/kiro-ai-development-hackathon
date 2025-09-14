@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _check_xss_vulnerabilities(self, content: str, file_path: Path) -> List[Finding]:
         """Check for XSS vulnerabilities"""

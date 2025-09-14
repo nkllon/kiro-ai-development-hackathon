@@ -12,6 +12,8 @@ from pathlib import Path
 import logging
 from ..core.interfaces import GhostbustersExpertAgent
 from ..core.models import AnalysisResult, AnalysisContext, Finding, Recommendation, FindingType, Severity, CodeLocation
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_confidence(self, result: AnalysisResult) -> bool:
     """Validate confidence score accuracy"""

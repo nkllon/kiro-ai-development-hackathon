@@ -41,3 +41,4 @@ from .security_class_2_part_40 import *
 from .security_class_2_part_41 import *
 from .security_class_2_part_42 import *
 from .security_class_2_part_43 import *
+from src.rm_ddd.core.health import ModuleHealth

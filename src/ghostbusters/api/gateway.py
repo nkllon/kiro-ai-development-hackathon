@@ -8,3 +8,5 @@ from .auth import AuthenticationManager
 from .circuit_breaker import CircuitBreaker
 from .rate_limiter import RateLimiter
 from .gateway_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def generate_preview(self, content: str, content_type: str='text') -> bool:
     """Generate preview from content"""

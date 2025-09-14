@@ -19,6 +19,8 @@ import secrets
 from typing import Dict, Optional, Set
 from datetime import datetime, timedelta
 import logging
+from src.rm_ddd.core.health import ModuleHealth
+
 
 logger = logging.getLogger(__name__)
 

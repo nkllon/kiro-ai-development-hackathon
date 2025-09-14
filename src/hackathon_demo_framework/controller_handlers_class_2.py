@@ -16,3 +16,4 @@ from .controller_handlers_class_2_part_15 import *
 from .controller_handlers_class_2_part_16 import *
 from .controller_handlers_class_2_part_17 import *
 from .controller_handlers_class_2_part_18 import *
+from src.rm_ddd.core.health import ModuleHealth

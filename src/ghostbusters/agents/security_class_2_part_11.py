@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _check_hardcoded_secrets(self, content: str, file_path: Path) -> List[Finding]:
         """Check for hardcoded secrets and credentials"""

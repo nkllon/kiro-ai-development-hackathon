@@ -10,3 +10,5 @@ from .models import IsolationLevel
 from .controller_validation import *
 from .controller_core import *
 from .controller_handlers import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def mark_as_failed(self) -> bool:
         """Mark message as failed."""

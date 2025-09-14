@@ -6,3 +6,5 @@ from ..core.interfaces import GhostbustersExpertAgent
 from ..core.models import AnalysisResult, AnalysisContext, Finding, Recommendation, FindingType, Severity, CodeLocation
 from .build_core_core_validation import *
 from .build_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

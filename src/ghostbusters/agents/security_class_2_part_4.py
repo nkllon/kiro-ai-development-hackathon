@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def __init__(self, name: str='SecurityExpert', version: str='1.0.0'):
         super().__init__(name, version)

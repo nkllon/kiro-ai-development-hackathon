@@ -6,6 +6,8 @@ from typing import Dict, List, Any
         findings = []
         try:
             import stat
+from src.rm_ddd.core.health import ModuleHealth
+
             file_stat = file_path.stat()
             if file_stat.st_mode & stat.S_IWOTH:
                 findings.append(Finding(type=FindingType.SECURITY_VULNERABILITY, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), 1), description='File is world-writable (security risk)', confidence=0.9, evidence={'vulnerability_type': 'file_permissions', 'permissions': oct(file_stat.st_mode)[-3:]}))

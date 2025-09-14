@@ -22,3 +22,5 @@ from src.beast_mode.testing.test_orchestrator import BeastModeTestOrchestrator
 from src.beast_mode.analysis.rca_analyzer import RCAPatternAnalyzer
 from src.beast_mode.compliance.rdi_validator import RDIChainValidator
 from .models import IsolationLevel
+from src.rm_ddd.core.health import ModuleHealth
+
