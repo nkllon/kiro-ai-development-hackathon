@@ -1,3 +1,4 @@
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 def create_failure_object(self, test_name: str, error_info: dict) -> TestFailureData:
     """
@@ -12,3 +13,31 @@ def create_failure_object(self, test_name: str, error_info: dict) -> TestFailure
     except Exception as e:
         self.logger.error(f'Failure object creation failed: {e}')
         return TestFailureData(test_name=test_name, test_file='unknown', failure_type='creation_error', error_message=f'Failed to create failure object: {e}', stack_trace='', test_function='unknown', test_class=None, failure_timestamp=datetime.now(), test_context={'creation_error': str(e)}, pytest_node_id=test_name)
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+

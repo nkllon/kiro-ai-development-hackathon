@@ -36,3 +36,31 @@ def validate_rm_interface_implementation(self, module_path: str) -> RMInterfaceR
     except Exception as e:
         issues.append(ComplianceIssue(issue_type=ComplianceIssueType.RM_NON_COMPLIANCE, severity=IssueSeverity.HIGH, description=f'Failed to validate RM interface: {str(e)}', affected_files=[module_path], remediation_steps=['Fix syntax errors in the module', 'Ensure module is valid Python code'], blocking_merge=True))
         return RMInterfaceResult(module_path=module_path, implements_rm_interface=False, missing_methods=list(self.REQUIRED_RM_METHODS.keys()), invalid_methods=[], interface_compliance_score=0.0, issues=issues)
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+

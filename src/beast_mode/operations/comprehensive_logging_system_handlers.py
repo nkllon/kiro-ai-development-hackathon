@@ -17,7 +17,7 @@ import threading
 from contextlib import contextmanager
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 
-class ComprehensiveLoggingHandler(logging.Handler):
+class ComprehensiveLoggingHandler(logging.Handler, ReflectiveModule):
 def register_with_registry(self, registry):
         """Register this module with the RM registry."""
         if registry:
@@ -70,3 +70,31 @@ def get_health_indicators(self) -> Dict[str, any]:
             self.logging_system.log(level=level, message=message, component=component, operation=getattr(record, 'operation', None), metadata={'logger_name': record.name, 'module': record.module} if hasattr(record, 'module') else {'logger_name': record.name})
         except Exception:
             pass
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+

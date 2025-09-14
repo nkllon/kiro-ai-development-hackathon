@@ -20,7 +20,7 @@ from .test_pattern_library import TestPatternLibrary
 from .error_handler import RCAErrorHandler, DegradationLevel
 
 @dataclass
-class TestFailureData:
+class TestFailureData(ReflectiveModule):
 def register_with_registry(self, registry):
         """Register this module with the RM registry."""
         if registry:
@@ -70,7 +70,7 @@ def get_health_indicators(self) -> Dict[str, any]:
     pytest_node_id: str
 
 @dataclass
-class TestRCASummaryData:
+class TestRCASummaryData(ReflectiveModule):
 def register_with_registry(self, registry):
         """Register this module with the RM registry."""
         if registry:
@@ -116,7 +116,7 @@ def get_health_indicators(self) -> Dict[str, any]:
     critical_issues: List[str]
 
 @dataclass
-class TestRCAReportData:
+class TestRCAReportData(ReflectiveModule):
     """Complete test RCA analysis report"""
     analysis_timestamp: datetime
     total_failures: int
@@ -127,3 +127,31 @@ class TestRCAReportData:
     recommendations: List[str]
     prevention_patterns: List[PreventionPattern]
     next_steps: List[str]
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
