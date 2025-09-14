@@ -11,3 +11,20 @@ def validate_domain_name(domain: Domain, context: Dict[str, Any]) -> List[Health
     if domain.name.lower() in reserved_names:
         issues.append(HealthIssue(severity=IssueSeverity.WARNING, category=IssueCategory.VALIDATION, description=f"Domain name '{domain.name}' is reserved", suggested_fix='Choose a more descriptive domain name'))
     return issues
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

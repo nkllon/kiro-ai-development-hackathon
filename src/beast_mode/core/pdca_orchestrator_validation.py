@@ -80,3 +80,20 @@ def validate_self_consistency(self) -> Dict[str, Any]:
     self_consistency_analysis = {'self_pdca_executed': True, 'systematic_approach_used': self_pdca_result.do_result.systematic_approach_maintained if self_pdca_result.do_result else False, 'registry_consulted': self_pdca_result.plan_result.confidence_level > 0.5 if self_pdca_result.plan_result else False, 'constraints_satisfied': all(self_pdca_result.do_result.constraints_satisfied.values()) if self_pdca_result.do_result else False, 'learning_captured': len(self_pdca_result.act_result.lessons_learned) > 0 if self_pdca_result.act_result else False, 'self_consistency_score': self._calculate_self_consistency_score(self_pdca_result), 'credibility_proof': self_pdca_result.cycle_success}
     self.logger.info(f"Self-consistency validation completed - Score: {self_consistency_analysis['self_consistency_score']:.2f}")
     return self_consistency_analysis
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

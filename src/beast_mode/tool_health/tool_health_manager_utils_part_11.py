@@ -29,3 +29,20 @@ def diagnose_tool_systematically(self, tool_name: str) -> ToolDiagnosis:
     diagnosis = ToolDiagnosis(tool_name=tool_name, is_healthy=is_healthy, issues_found=issues_found, root_causes=root_causes, repair_recommendations=repair_recommendations, confidence_score=confidence_score)
     self.logger.info(f"🔍 Diagnosis complete: {tool_name} {('healthy' if is_healthy else 'needs repair')}")
     return diagnosis
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -15,3 +15,20 @@ from src.rm_ddd.core.health import ModuleHealth
                             issues.append(HealthIssue(severity=IssueSeverity.WARNING, category=IssueCategory.PATTERN, description=f"Pattern overlap between '{domain1}' and '{domain2}': '{pattern1}' vs '{pattern2}'", suggested_fix='Review domain boundaries to avoid pattern conflicts', affected_files=[domain1, domain2]))
         return issues
     self._consistency_checks.append(ConsistencyCheck(name='pattern_overlaps', description='Check for overlapping file patterns between domains', severity=IssueSeverity.WARNING, checker_func=check_pattern_overlaps))
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

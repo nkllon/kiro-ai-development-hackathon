@@ -10,3 +10,20 @@ from src.rm_ddd.core.health import ModuleHealth
         indicators.append({'name': 'monitoring_health', 'status': 'healthy' if self.monitored_tools else 'not_monitoring', 'tools_monitored': len(self.monitored_tools)})
         indicators.append({'name': 'fix_tools_first_principle', 'status': 'active', 'principle_applied': len(self.repair_history) > 0, 'systematic_repairs': len([r for r in self.repair_history if r.repair_successful])})
         return indicators
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

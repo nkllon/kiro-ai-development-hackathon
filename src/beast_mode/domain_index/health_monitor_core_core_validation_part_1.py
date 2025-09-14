@@ -12,3 +12,20 @@ def check_domain_health(self, domain_name: str) -> HealthStatus:
             self.failed_checks += 1
             self._handle_error(e, 'check_domain_health')
             raise HealthCheckFailedError(domain_name, 'full_check', str(e))
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

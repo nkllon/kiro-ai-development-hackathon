@@ -51,3 +51,20 @@ from src.rm_ddd.core.health import ModuleHealth
         except Exception as e:
             self.logger.error(f'Diagnosis failed: {e}')
             return MakefileDiagnosisResult(missing_files=[], broken_targets=['diagnosis_failed'], dependency_issues=[str(e)], root_cause=f'Diagnosis system failure: {e}', systematic_fix_required=True, workaround_temptation='Skip diagnosis and guess the problem')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

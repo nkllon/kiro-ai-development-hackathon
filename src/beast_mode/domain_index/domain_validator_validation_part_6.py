@@ -13,3 +13,20 @@ def validate_dependencies(self, domains: DomainCollection) -> List[HealthIssue]:
             cycle_str = ' -> '.join(cycle)
             issues.append(HealthIssue(severity=IssueSeverity.WARNING, category=IssueCategory.DEPENDENCY, description=f'Circular dependency detected: {cycle_str}', suggested_fix='Refactor to remove circular dependency', affected_files=cycle[:-1]))
         return issues
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

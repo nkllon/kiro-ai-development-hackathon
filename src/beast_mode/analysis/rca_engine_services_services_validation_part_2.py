@@ -20,3 +20,20 @@ def analyze_test_failure_categorization(self, failure: Failure) -> Dict[str, Any
     except Exception as e:
         self.logger.error(f'Test failure categorization failed: {e}')
         return {'primary_category': 'unknown', 'subcategory': 'categorization_error', 'confidence': 0.0, 'analysis_details': {'error': str(e)}}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

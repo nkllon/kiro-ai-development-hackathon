@@ -32,3 +32,20 @@ def complex_query(self, query_spec: Dict[str, Any]) -> QueryResult:
         except Exception as e:
             self._handle_error(e, 'complex_query')
             raise QueryEngineError(f'Complex query failed: {str(e)}')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

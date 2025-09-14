@@ -23,3 +23,20 @@ def _find_similar_domains(self, target_domain: Domain, all_domains: Dict[str, Do
             similar_domains.append(domain_obj)
     similar_domains.sort(key=lambda d: self._calculate_domain_similarity(target_domain, d), reverse=True)
     return similar_domains
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -19,3 +19,20 @@ def validate_domain(self, domain: Domain, context: Optional[Dict[str, Any]]=None
         suggestions = [issue.suggested_fix for issue in all_issues if issue.severity == IssueSeverity.INFO]
         self.issues_found += len(all_issues)
         return ValidationResult(is_valid=len(errors) == 0, errors=[issue.description for issue in errors], warnings=[issue.description for issue in warnings], suggestions=suggestions)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

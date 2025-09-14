@@ -30,3 +30,20 @@ from src.rm_ddd.core.health import ModuleHealth
         except Exception as e:
             self.logger.error(f'Systematic repair failed: {e}')
             return MakefileRepairResult(root_cause_addressed=False, systematic_fix_applied=f'Repair failed: {e}', workarounds_avoided=workarounds_avoided, validation_passed=False, prevention_pattern_documented='Failed repair - investigate systematic approach', repair_time=(datetime.now() - start_time).total_seconds())
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

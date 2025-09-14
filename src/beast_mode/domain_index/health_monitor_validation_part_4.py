@@ -19,3 +19,20 @@ def _perform_health_check(self, domain: Domain) -> HealthStatus:
     self.issues_detected += len(issues)
     check_duration = int((time.time() - start_time) * 1000)
     return HealthStatus(status=status_type, last_check=datetime.now(), issues=issues, metrics=metrics, check_duration_ms=check_duration, next_check=datetime.now() + timedelta(minutes=self.check_interval))
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

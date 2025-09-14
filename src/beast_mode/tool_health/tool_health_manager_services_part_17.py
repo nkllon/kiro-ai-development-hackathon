@@ -10,3 +10,20 @@ from src.rm_ddd.core.health import ModuleHealth
                 f.write("# Basic makefile module\n.PHONY: help\nhelp:\n\t@echo 'Beast Mode Makefile - Systematically Fixed!'\n")
             return {'applied': True, 'description': 'Created modular makefile structure with makefiles/ directory'}
         return {'applied': False, 'description': f'No repair action for {root_cause}'}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

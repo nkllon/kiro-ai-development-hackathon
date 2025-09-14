@@ -26,3 +26,20 @@ def get_tool_mappings(self, domain: str) -> Dict[str, Tool]:
         tools['black'] = Tool(tool_id=f'{domain}-black', name='black', domain=domain, purpose='systematic code formatting', command_template='black {file_path} --check', validation_method='exit_code')
         tools['mypy'] = Tool(tool_id=f'{domain}-mypy', name='mypy', domain=domain, purpose='systematic type checking', command_template='mypy {file_path}', validation_method='exit_code_and_output')
     return tools
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

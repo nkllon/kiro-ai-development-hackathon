@@ -7,3 +7,20 @@ def _pattern_suggests_capability(self, pattern: str, capability: str) -> bool:
     if capability in capability_patterns:
         return any((cap_pattern in pattern_lower for cap_pattern in capability_patterns[capability]))
     return False
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
