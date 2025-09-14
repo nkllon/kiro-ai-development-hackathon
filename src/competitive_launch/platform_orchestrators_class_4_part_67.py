@@ -24,3 +24,20 @@ def auto_scale_agents(self, demand: Dict[str, Any]) -> Dict[str, Any]:
     except Exception as e:
         logger.error(f'Auto-scaling failed: {e}')
         return {'success': False, 'error': str(e)}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

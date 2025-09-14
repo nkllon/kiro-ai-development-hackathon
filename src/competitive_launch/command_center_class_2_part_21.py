@@ -19,3 +19,20 @@ def optimize_platform_allocation(self, resources: PlatformAllocation) -> Allocat
     plan = AllocationPlan(plan_id=f"allocation_{datetime.now().strftime('%Y%m%d_%H%M%S')}", allocation_strategy='competitive_optimization', platform_allocations=optimized_allocation, optimization_goals=optimization_opportunities['goals'], constraints=optimization_opportunities['constraints'], expected_outcomes=optimization_opportunities['expected_outcomes'])
     logger.info(f'Generated allocation plan: {plan.plan_id}')
     return plan
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
