@@ -31,3 +31,20 @@ def _make_go_no_go_decision(self, overall_status: ReadinessStatus, blocking_issu
         confidence = 'MEDIUM'
         rationale += ' (adjusted for high risk)'
     return {'decision': decision, 'confidence': confidence, 'rationale': rationale, 'conditions': self._generate_go_conditions(overall_status, blocking_issues), 'review_date': self._calculate_review_date(decision, overall_status)}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

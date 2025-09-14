@@ -27,3 +27,20 @@ from src.rm_ddd.core.health import ModuleHealth
         if missing_tasks:
             recommendations.extend([f'Complete task: {task}' for task in missing_tasks])
         return ReadinessMetric(criteria=ReadinessCriteria.TASK_COMPLETION, current_value=current_score, required_value=required_score, weight=self.criteria_weights[ReadinessCriteria.TASK_COMPLETION], status=status, description=f'Task completion reconciliation: {current_score:.1f}% (required: {required_score:.1f}%)', blocking_issues=blocking_issues, recommendations=recommendations)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

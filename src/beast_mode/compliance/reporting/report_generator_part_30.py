@@ -17,3 +17,20 @@ from src.rm_ddd.core.health import ModuleHealth
         overall_readiness_score = sum(factor_scores) / len(factor_scores)
         assessment = {'overall_readiness_score': overall_readiness_score, 'phase3_ready': overall_readiness_score >= 80.0 and len(blocking_issues) == 0, 'readiness_factors': readiness_factors, 'recommendations': self._generate_readiness_recommendations(readiness_factors), 'next_steps': self._generate_next_steps(analysis_result)}
         return assessment
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

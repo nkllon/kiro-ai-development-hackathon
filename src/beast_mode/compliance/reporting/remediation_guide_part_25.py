@@ -14,3 +14,20 @@ from src.rm_ddd.core.health import ModuleHealth
         templates['rm_size_violation'] = RemediationTemplate(issue_type=ComplianceIssueType.RM_NON_COMPLIANCE, severity=IssueSeverity.MEDIUM, category=RemediationCategory.REFACTORING, title_template='Reduce {component} size to meet RM constraints', description_template='Refactor module to be ≤200 lines of code', steps_template=['Analyze current module size and complexity', 'Identify code that can be extracted to separate modules', 'Create extraction plan maintaining functionality', 'Extract helper functions to utility modules', 'Extract complex logic to dedicated components', 'Update imports and dependencies', 'Validate functionality is preserved', 'Ensure new modules also meet RM constraints'], prerequisites=['Code analysis', 'Architecture review'], validation_criteria=['Module is ≤200 lines of code', 'Functionality is preserved', 'All tests pass', 'New modules meet RM constraints'], estimated_effort='medium', tools_required=['IDE', 'code analysis tools'])
         templates['test_failure_generic'] = RemediationTemplate(issue_type=ComplianceIssueType.TEST_FAILURE, severity=IssueSeverity.HIGH, category=RemediationCategory.TESTING, title_template='Fix failing test: {test_name}', description_template='Analyze and fix test failure', steps_template=['Analyze test failure logs and error messages', 'Identify root cause of failure', 'Determine if issue is in test or implementation', 'Fix implementation if code issue identified', 'Update test if test logic is incorrect', 'Verify fix resolves the failure', 'Run full test suite to check for regressions'], prerequisites=['Test failure logs', 'Test environment access'], validation_criteria=['Test passes consistently', 'No new test failures introduced', 'Test coverage maintained or improved'], estimated_effort='medium', tools_required=['testing framework', 'debugger'])
         return templates
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

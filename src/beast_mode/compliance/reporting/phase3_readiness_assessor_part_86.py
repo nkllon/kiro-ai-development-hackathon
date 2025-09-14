@@ -29,3 +29,20 @@ def assess_phase3_readiness(self, analysis_result: ComplianceAnalysisResult) -> 
     risk_assessment = self._perform_risk_assessment(analysis_result, readiness_metrics)
     go_no_go_decision = self._make_go_no_go_decision(overall_status, blocking_issues, risk_assessment)
     return Phase3ReadinessReport(assessment_timestamp=datetime.now(), overall_readiness_status=overall_status, overall_readiness_score=overall_score, readiness_metrics=readiness_metrics, blocking_issues=blocking_issues, conditional_requirements=conditional_requirements, recommendations=recommendations, next_steps=next_steps, estimated_time_to_ready=time_to_ready, risk_assessment=risk_assessment, go_no_go_decision=go_no_go_decision)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

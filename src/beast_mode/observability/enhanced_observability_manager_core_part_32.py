@@ -22,3 +22,20 @@ def trigger_alert(self, rule_id: str, metric_value: float, context: Dict[str, An
     self._send_alert_notifications(alert)
     self.logger.warning(f'Alert triggered: {alert.title} (ID: {alert.alert_id})')
     return {'success': True, 'alert_id': alert.alert_id, 'severity': alert.severity.value, 'resolution_guidance': alert.resolution_guidance}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

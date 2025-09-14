@@ -23,3 +23,20 @@ def _evaluate_blocking_issues_metric(self, analysis_result: ComplianceAnalysisRe
     issue_descriptions = [issue.description for issue in blocking_issues[:5]]
     recommendations = ['Resolve all blocking issues before Phase 3', 'Prioritize critical severity issues first', "Validate fixes don't introduce new issues"]
     return ReadinessMetric(criteria=ReadinessCriteria.BLOCKING_ISSUES, current_value=current_count, required_value=required_count, weight=self.criteria_weights[ReadinessCriteria.BLOCKING_ISSUES], status=status, description=f'Blocking issues: {current_count} (required: {int(required_count)})', blocking_issues=issue_descriptions, recommendations=recommendations)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

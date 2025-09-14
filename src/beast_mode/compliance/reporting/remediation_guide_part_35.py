@@ -20,3 +20,20 @@ from src.rm_ddd.core.health import ModuleHealth
             criteria.append('All components implement RM interface')
         criteria.extend(['No critical or high severity compliance issues remain', 'Phase 3 readiness assessment shows READY status', 'All remediation validation criteria met'])
         return criteria
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

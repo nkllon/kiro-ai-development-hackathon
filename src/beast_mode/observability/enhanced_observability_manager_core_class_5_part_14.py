@@ -21,3 +21,20 @@ def resolve_alert(self, alert_id: str, resolved_by: str, resolution_notes: str='
     self.observability_metrics['alerts_resolved'] += 1
     self.logger.info(f'Alert resolved: {alert.title} by {resolved_by} (Resolution time: {resolution_time:.1f}s)')
     return {'success': True, 'alert_id': alert_id, 'resolved_by': resolved_by, 'resolution_time_seconds': resolution_time}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

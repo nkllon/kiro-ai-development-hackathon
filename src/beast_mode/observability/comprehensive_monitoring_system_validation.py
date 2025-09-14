@@ -68,3 +68,20 @@ def _run_health_checks(self):
             error_result = {'healthy': False, 'error': str(e), 'timestamp': datetime.now().isoformat()}
             self.health_check_results[endpoint_name] = error_result
             self.emit_structured_log('error', f'Health check failed for {endpoint_name}: {str(e)}', component='health_monitoring', endpoint_name=endpoint_name)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

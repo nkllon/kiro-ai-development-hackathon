@@ -9,3 +9,20 @@ def _get_severity_weight(self, severity: IssueSeverity) -> int:
     """Get numeric weight for severity."""
     weights = {IssueSeverity.CRITICAL: 4, IssueSeverity.HIGH: 3, IssueSeverity.MEDIUM: 2, IssueSeverity.LOW: 1}
     return weights.get(severity, 2)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -29,3 +29,20 @@ from src.rm_ddd.core.health import ModuleHealth
         if len(test_status.missing_tests) > 0:
             recommendations.append('Add missing test cases for complete coverage')
         return ReadinessMetric(criteria=ReadinessCriteria.TEST_COVERAGE, current_value=current_coverage, required_value=required_coverage, weight=self.criteria_weights[ReadinessCriteria.TEST_COVERAGE], status=status, description=f'Test coverage: {current_coverage:.1f}% (required: {required_coverage:.1f}%)', blocking_issues=blocking_issues, recommendations=recommendations)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

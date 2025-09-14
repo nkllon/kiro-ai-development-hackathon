@@ -16,3 +16,20 @@ def _generate_contingency_plans(self, risk_level: str) -> List[str]:
         return ['Set up monitoring dashboards', 'Plan regular checkpoint reviews', 'Prepare rollback procedures if needed']
     else:
         return ['Standard monitoring and support procedures', 'Regular progress reviews']
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

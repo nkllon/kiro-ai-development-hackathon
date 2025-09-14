@@ -16,3 +16,20 @@ from src.rm_ddd.core.health import ModuleHealth
         failing_tests['test_dependency_resolution'] = FailingTestRemediation(test_name='test_dependency_resolution', failure_reason='Dependency resolution algorithm not handling circular dependencies', remediation_steps=['Analyze dependency graph for circular dependencies', 'Implement circular dependency detection', 'Add proper error handling for circular dependencies', 'Update dependency resolution algorithm', 'Add test cases for various dependency scenarios', 'Verify resolution works for complex dependency trees'], affected_components=['src/dependencies/resolver.py', 'tests/test_dependencies.py'], estimated_effort='high', priority=IssueSeverity.HIGH)
         failing_tests['test_health_monitoring'] = FailingTestRemediation(test_name='test_health_monitoring', failure_reason='Health monitoring system not properly reporting component status', remediation_steps=['Debug health check execution and reporting', 'Verify health check registration and discovery', 'Fix health status aggregation logic', 'Update health monitoring to handle component failures', 'Add proper timeout handling for health checks', 'Verify health monitoring dashboard integration'], affected_components=['src/health/monitor.py', 'src/health/dashboard.py', 'tests/test_health.py'], estimated_effort='high', priority=IssueSeverity.HIGH)
         return failing_tests
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

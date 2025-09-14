@@ -33,3 +33,20 @@ def _evaluate_rm_compliance_metric(self, rm_status) -> ReadinessMetric:
         blocking_issues.append('Registry integration missing')
         recommendations.append('Complete RM registry integration')
     return ReadinessMetric(criteria=ReadinessCriteria.RM_COMPLIANCE, current_value=current_score, required_value=required_score, weight=self.criteria_weights[ReadinessCriteria.RM_COMPLIANCE], status=status, description=f'RM architectural compliance score: {current_score:.1f}% (required: {required_score:.1f}%)', blocking_issues=blocking_issues, recommendations=recommendations)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

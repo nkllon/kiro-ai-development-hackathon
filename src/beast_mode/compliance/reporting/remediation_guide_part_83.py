@@ -23,3 +23,20 @@ def _analyze_remediation_effort(self, remediation_steps: List[RemediationStep], 
         test_effort += effort
         total_effort += effort
     return {'total_effort_points': total_effort, 'estimated_duration': self._convert_effort_to_duration(total_effort), 'effort_by_category': effort_by_category, 'test_remediation_effort': test_effort, 'resource_requirements': self._estimate_resource_requirements(total_effort), 'risk_factors': self._identify_risk_factors(remediation_steps, test_remediations)}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
