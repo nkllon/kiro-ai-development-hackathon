@@ -21,3 +21,20 @@ from src.rm_ddd.core.health import ModuleHealth
         return ValidationResult(test_name='quality_gates_enforcement', status=status, score=score, details={'gates_healthy': is_healthy, 'quality_methods_available': quality_methods_available, 'status_info': status_info}, evidence=evidence, recommendations=recommendations, execution_time_seconds=time.time() - start_time)
     except ImportError as e:
         return ValidationResult(test_name='quality_gates_enforcement', status=ValidationStatus.FAILED, score=0.0, details={'import_error': str(e)}, evidence=['Quality gates system not available'], recommendations=['Implement automated quality gates'], execution_time_seconds=time.time() - start_time)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

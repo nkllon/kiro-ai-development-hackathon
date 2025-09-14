@@ -33,3 +33,20 @@ def validate_self_consistency(self) -> SelfConsistencyReport:
     except Exception as e:
         self.logger.error(f'Self-consistency validation failed: {e}')
         return SelfConsistencyReport(overall_status=ValidationStatus.FAILED, overall_score=0.0, validation_results=[], credibility_proof={'validation_error': str(e)}, superiority_evidence={'validation_error': str(e)}, total_execution_time=time.time() - start_time, timestamp=datetime.now(), recommendations=[f'Fix validation system error: {e}'])
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

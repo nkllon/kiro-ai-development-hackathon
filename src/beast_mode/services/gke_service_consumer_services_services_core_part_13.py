@@ -16,3 +16,20 @@ def _track_velocity_improvement(self, team_id: str, pdca_result: Dict[str, Any])
             metrics['improvement_percentage'] = max(0, improvement)
     metrics['service_usage_count'] += 1
     metrics['last_updated'] = datetime.now()
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

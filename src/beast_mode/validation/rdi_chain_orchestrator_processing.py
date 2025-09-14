@@ -30,3 +30,20 @@ def _convert_pdca_to_rdi_result(self, pdca_result: Dict[str, Any], chain_id: str
         act_data = pdca_result['act_result']
         recommendations = act_data.get('recommendations', [])
     return RDIValidationResult(chain_id=chain_id, is_valid=len(issues) == 0, issues=issues, mathematical_consistency=consistency, recommendations=recommendations)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

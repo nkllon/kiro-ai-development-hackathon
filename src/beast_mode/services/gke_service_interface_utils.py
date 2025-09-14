@@ -31,3 +31,20 @@ def provide_tool_health_management(self, gke_tools: List[str]) -> Dict[str, Any]
     except Exception as e:
         self.logger.error(f'Tool health management service failed: {e}')
         return {'service': 'tool_health_management', 'success': False, 'error': str(e), 'response_time_ms': (time.time() - start_time) * 1000}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -41,3 +41,20 @@ def simulate_5_minute_integration_test(self) -> Dict[str, Any]:
 def validate_backward_compatibility(self) -> Dict[str, Any]:
     """Validate backward compatibility (C-09) for testing"""
     return {'compatible': True, 'api_version_supported': ['v1', 'v2'], 'legacy_endpoints_functional': True, 'breaking_changes': []}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

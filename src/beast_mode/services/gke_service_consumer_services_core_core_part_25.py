@@ -11,3 +11,20 @@ def _update_service_metrics(self, status: str, execution_time_ms: int):
     total_requests = self.service_metrics['total_requests']
     new_avg = (current_avg * (total_requests - 1) + execution_time_ms) / total_requests
     self.service_metrics['average_response_time_ms'] = int(new_avg)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

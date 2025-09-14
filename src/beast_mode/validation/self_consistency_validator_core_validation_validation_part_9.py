@@ -52,3 +52,20 @@ from src.rm_ddd.core.health import ModuleHealth
         return ValidationResult(test_name='superiority_evidence', status=status, score=score, details={'evidence_sources': evidence_sources, 'total_sources': total_sources, 'evidence_details': evidence_details}, evidence=evidence, recommendations=recommendations, execution_time_seconds=time.time() - start_time)
     except Exception as e:
         return ValidationResult(test_name='superiority_evidence', status=ValidationStatus.FAILED, score=0.0, details={'validation_error': str(e)}, evidence=['Superiority evidence validation failed'], recommendations=['Fix superiority evidence validation'], execution_time_seconds=time.time() - start_time)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

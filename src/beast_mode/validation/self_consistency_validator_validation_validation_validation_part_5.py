@@ -28,3 +28,20 @@ from src.rm_ddd.core.health import ModuleHealth
         return ValidationResult(test_name='systematic_tool_repair', status=status, score=score, details={'manager_healthy': is_healthy, 'repair_methods_available': repair_methods_available, 'superiority_available': superiority_available, 'status_info': status_info}, evidence=evidence, recommendations=recommendations, execution_time_seconds=time.time() - start_time)
     except ImportError as e:
         return ValidationResult(test_name='systematic_tool_repair', status=ValidationStatus.FAILED, score=0.0, details={'import_error': str(e)}, evidence=['Makefile health manager not available'], recommendations=['Implement systematic tool repair capabilities'], execution_time_seconds=time.time() - start_time)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

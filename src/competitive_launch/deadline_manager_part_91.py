@@ -16,3 +16,20 @@ def _generate_acceleration_plan(self, risk_analysis: Dict[str, Any], critical_pa
         if task.get('slack_days', 0) > 0:
             plan['parallel_execution'].append(task['id'])
     return plan
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

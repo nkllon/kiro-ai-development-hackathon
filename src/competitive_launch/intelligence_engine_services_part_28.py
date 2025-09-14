@@ -11,3 +11,20 @@ from src.rm_ddd.core.health import ModuleHealth
                 opportunity = {'name': f'Systematic {trend.trend_name}', 'description': f'Leverage systematic approach for {trend.trend_name}', 'market_size': trend.opportunity_size, 'competitive_advantage': trend.alignment_with_systematic, 'implementation_priority': 'high' if trend.impact_score > 0.8 else 'medium'}
                 opportunities.append(opportunity)
         return opportunities
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

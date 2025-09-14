@@ -36,3 +36,20 @@ from src.rm_ddd.core.health import ModuleHealth
         return ValidationResult(test_name='beast_mode_uses_pdca', status=status, score=score, details={'orchestrator_healthy': is_healthy, 'pdca_methods_available': pdca_methods_available, 'status_info': status_info, 'execute_method': has_execute_method, 'plan_method': has_plan_method, 'do_method': has_do_method, 'check_method': has_check_method, 'act_method': has_act_method}, evidence=evidence, recommendations=recommendations, execution_time_seconds=time.time() - start_time)
     except ImportError as e:
         return ValidationResult(test_name='beast_mode_uses_pdca', status=ValidationStatus.FAILED, score=0.0, details={'import_error': str(e)}, evidence=['PDCA orchestrator not available'], recommendations=['Implement PDCA orchestrator for Beast Mode'], execution_time_seconds=time.time() - start_time)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

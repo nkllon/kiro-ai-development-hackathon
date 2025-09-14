@@ -19,3 +19,20 @@ def analyze_market_trends(self) -> Dict[str, Any]:
     except Exception as e:
         logger.error(f'Market trend analysis failed: {e}')
         return {'trends_identified': 0, 'error': str(e)}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

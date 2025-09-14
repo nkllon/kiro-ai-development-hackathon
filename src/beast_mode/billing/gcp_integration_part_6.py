@@ -13,3 +13,20 @@ from src.rm_ddd.core.health import ModuleHealth
         self.cached_metrics = None
         self.cache_duration = timedelta(minutes=config.get('cache_duration_minutes', 15))
         self.health_status = HealthStatus(is_healthy=True, status_message='Initialized', last_check=datetime.now(), metrics={})
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

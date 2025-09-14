@@ -23,3 +23,20 @@ def get_cost_optimization_recommendations(self) -> List[Dict[str, Any]]:
         if cost_per_request > 0.001:
             recommendations.append({'type': 'request_efficiency_optimization', 'priority': 'high', 'title': 'High cost per request detected', 'description': f'Cost per request is ${cost_per_request:.6f}. Consider request optimization and caching.', 'potential_savings_usd': self.cached_metrics.daily_cost_usd * 0.3, 'action': 'Implement request caching, reduce database calls, and optimize response sizes'})
     return recommendations
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

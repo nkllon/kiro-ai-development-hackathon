@@ -27,3 +27,20 @@ def _check_compliance_status(self, quality_assessment: Dict[str, Any]) -> Dict[s
 def _design_testing_strategy(self, component_type: str) -> Dict[str, Any]:
     """Design comprehensive testing strategy"""
     return {'unit_testing': 'Required with >90% coverage', 'integration_testing': 'GCP service integration tests', 'performance_testing': 'Load and stress testing', 'security_testing': 'Vulnerability scanning', 'gke_specific_testing': 'Deployment and scaling tests'}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

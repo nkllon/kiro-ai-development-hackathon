@@ -35,3 +35,20 @@ from src.rm_ddd.core.health import ModuleHealth
         logging_cost = random.uniform(0.02, 0.08)
         daily_cost = request_cost + cpu_cost + memory_cost + db_instance_cost + db_storage_cost + storage_cost + operation_cost + secret_version_cost + secret_access_cost + networking_cost + container_registry_cost + logging_cost
         return BillingMetrics(provider_type=BillingProviderType.GCP, provider_name='Google Cloud Platform (Multi-Service)', total_cost_usd=daily_cost * 7, daily_cost_usd=daily_cost, hourly_burn_rate=daily_cost / 24, cost_breakdown={'Cloud Run Requests': request_cost, 'Cloud Run CPU': cpu_cost, 'Cloud Run Memory': memory_cost, 'Cloud SQL Instance': db_instance_cost, 'Cloud SQL Storage': db_storage_cost, 'Cloud Storage Data': storage_cost, 'Cloud Storage Operations': operation_cost, 'Secret Manager Versions': secret_version_cost, 'Secret Manager Access': secret_access_cost, 'Networking (Egress)': networking_cost, 'Container Registry': container_registry_cost, 'Cloud Logging': logging_cost}, usage_metrics={'cloud_run_requests': requests_today, 'cpu_seconds': round(cpu_seconds, 2), 'memory_gb_seconds': round(memory_gb_seconds, 2), 'avg_request_duration_ms': round(avg_cpu_per_request * 1000, 1), 'avg_memory_mb': avg_memory_mb, 'cloud_sql_operations': db_operations, 'cloud_sql_instance_hours': db_instance_hours, 'cloud_sql_storage_gb': round(db_storage_gb, 2), 'cloud_storage_gb': round(storage_gb, 2), 'storage_operations': file_operations, 'class_a_operations': int(class_a_ops), 'class_b_operations': int(class_b_ops), 'secret_versions': secret_versions, 'secret_access_operations': secret_access_ops, 'avg_response_kb': round(avg_response_kb, 1), 'data_transfer_gb': round(data_transfer_gb, 3), 'cold_starts': random.randint(50, 200), 'concurrent_requests': random.randint(1, 10), 'cost_per_request': round(daily_cost / requests_today, 6), 'cost_per_cpu_second': round(cpu_cost / cpu_seconds, 6) if cpu_seconds > 0 else 0, 'cost_per_db_operation': round((db_instance_cost + db_storage_cost) / db_operations, 6) if db_operations > 0 else 0, 'cost_per_storage_operation': round((storage_cost + operation_cost) / file_operations, 6) if file_operations > 0 else 0, 'cost_per_secret_access': round((secret_version_cost + secret_access_cost) / secret_access_ops, 6) if secret_access_ops > 0 else 0}, timestamp=datetime.now())
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

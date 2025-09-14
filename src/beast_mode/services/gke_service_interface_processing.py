@@ -24,3 +24,20 @@ def process_service_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         return {'status': 'success', 'service_type': service_type, 'systematic_approach_used': True, 'version': request.get('version', 'v2')}
     else:
         return {'status': 'error', 'message': f'Unknown service type: {service_type}'}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -23,3 +23,20 @@ def _validate_makefile_works(self) -> ValidationResult:
         return ValidationResult(test_name='makefile_works', status=status, score=score, details={'make_help_success': result.returncode == 0, 'beast_mode_operations_found': operations_found if result.returncode == 0 else 0, 'stdout_preview': result.stdout[:500] if result.stdout else '', 'stderr': result.stderr if result.stderr else ''}, evidence=evidence, recommendations=recommendations, execution_time_seconds=time.time() - start_time)
     except subprocess.TimeoutExpired:
         return ValidationResult(test_name='makefile_works', status=ValidationStatus.FAILED, score=0.0, details={'error': 'make help command timed out'}, evidence=['Makefile execution timed out'], recommendations=['Fix Makefile performance issues'], execution_time_seconds=time.time() - start_time)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

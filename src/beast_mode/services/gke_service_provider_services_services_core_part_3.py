@@ -9,3 +9,20 @@ def is_healthy(self) -> bool:
     total_capacity = sum((service['max_concurrent'] for service in self.service_registry.values()))
     capacity_healthy = total_load < total_capacity * 0.9
     return dependencies_healthy and services_healthy and capacity_healthy and (not self._degradation_active)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
