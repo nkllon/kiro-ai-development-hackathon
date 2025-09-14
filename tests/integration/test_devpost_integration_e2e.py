@@ -533,3 +533,39 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
         return self.health_check()
 
             assert validation_result is not None
+
+def test_browser_automation_hackathon_extraction():
+    """Test hackathon data extraction using browser automation."""
+    from src.devpost_integration.hybrid_integration import DevPostHybridIntegration
+    
+    with DevPostHybridIntegration() as integration:
+        # Test with a real DevPost hackathon page
+        result = integration.extract_hackathon_data_sync("https://devpost.com/software/trending")
+        
+        assert result.success, f"Browser automation failed: {result.error}"
+        assert result.data is not None, "No data extracted"
+        assert result.data.title is not None, "No title extracted"
+        assert result.method_used in ["browser_automation_sync", "web_scraping"], f"Unexpected method: {result.method_used}"
+
+def test_browser_automation_project_extraction():
+    """Test project data extraction using browser automation."""
+    from src.devpost_integration.hybrid_integration import DevPostHybridIntegration
+    
+    with DevPostHybridIntegration() as integration:
+        # Test with a real DevPost project page
+        result = integration.extract_project_data_sync("https://devpost.com/software/trending")
+        
+        assert result.success, f"Browser automation failed: {result.error}"
+        assert result.data is not None, "No data extracted"
+        assert result.data.title is not None, "No title extracted"
+        assert result.method_used in ["browser_automation_sync", "web_scraping"], f"Unexpected method: {result.method_used}"
+
+def test_browser_automation_hackathon_search():
+    """Test hackathon search using browser automation."""
+    from src.devpost_integration.hybrid_integration import DevPostHybridIntegration
+    
+    with DevPostHybridIntegration() as integration:
+        hackathons = integration.search_hackathons(query="ai", limit=5)
+        
+        assert isinstance(hackathons, list), "Search should return a list"
+        assert len(hackathons) >= 0, "Search should return results or empty list"

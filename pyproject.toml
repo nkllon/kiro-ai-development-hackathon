@@ -52,6 +52,7 @@ dependencies = [
     "beautifulsoup4>=4.13.5",
     "requests>=2.32.5",
     "tomlkit>=0.13.3",
+    "playwright>=1.55.0",
 ]
 
 
