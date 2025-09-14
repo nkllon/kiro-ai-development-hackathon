@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _add_business_methods(self, context: Dict[str, Any], spec: GenerationSpec) -> Dict[str, Any]:
         """_add_business_methods - Enhanced for compliance"""

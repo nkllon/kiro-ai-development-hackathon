@@ -5,6 +5,8 @@ from datetime import datetime
 from dataclasses import dataclass
 from enum import Enum
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def __init__(self):
         register_module(self.__class__.__name__, self)

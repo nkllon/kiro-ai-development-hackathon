@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_value_object_immutability(self, value_object: ValueObject) -> ValidationResult:
     """Validate value object immutability."""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_service_statelessness(self, service: DomainService) -> ValidationResult:
     """Validate service statelessness."""

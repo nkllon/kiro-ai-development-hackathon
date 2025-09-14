@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _get_dependencies(self, spec: GenerationSpec) -> List[str]:
         """_get_dependencies - Enhanced for compliance"""

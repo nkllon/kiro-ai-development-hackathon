@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_ubiquitous_language(obj: Any, term_mapping: Dict[str, str]) -> ValidationResult:
     """Validate ubiquitous language usage."""

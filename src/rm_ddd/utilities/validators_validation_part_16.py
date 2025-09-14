@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_rules(self, target: Any, rule_names: Optional[List[str]]=None) -> ValidationResult:
     """

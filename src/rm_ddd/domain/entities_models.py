@@ -14,3 +14,4 @@ from .entities_models_part_13 import *
 from .entities_models_part_14 import *
 from .entities_models_part_15 import *
 from .entities_models_part_16 import *
+from src.rm_ddd.core.health import ModuleHealth

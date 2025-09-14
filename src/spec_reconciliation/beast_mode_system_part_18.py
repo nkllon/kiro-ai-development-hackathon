@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def serve_external_hackathon(self, hackathon_config: Dict[str, Any]) -> Dict[str, Any]:
         """serve_external_hackathon - Enhanced for compliance"""

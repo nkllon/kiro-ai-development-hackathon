@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
 
-class ReflectiveModule(ReflectiveModule):
+
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
     """Base class for all reflective modules in the Beast Mode Framework."""
     
     def __init__(self):

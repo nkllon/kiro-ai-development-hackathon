@@ -5,6 +5,8 @@ from datetime import datetime
 from dataclasses import dataclass
 from enum import Enum
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _update_health_indicator(self, name: str, status: str, value: Any, message: str):
         """_update_health_indicator - Enhanced for compliance"""

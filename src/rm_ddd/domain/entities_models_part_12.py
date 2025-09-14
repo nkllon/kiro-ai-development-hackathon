@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def add_domain_event(self, event: 'DomainEvent'):
         try:

@@ -1,3 +1,5 @@
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _get_imports(self, spec: GenerationSpec) -> List[str]:
         """_get_imports - Enhanced for compliance"""

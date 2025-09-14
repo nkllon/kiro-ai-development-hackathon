@@ -14,6 +14,8 @@ from pathlib import Path
 from typing import Dict, List, Set, Optional, Tuple
 from difflib import SequenceMatcher
 from src.beast_mode.core.reflective_module import ReflectiveModule
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_terminology(self, spec_content: str) -> TerminologyReport:
     """

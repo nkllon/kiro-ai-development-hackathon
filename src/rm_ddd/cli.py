@@ -13,3 +13,5 @@ from .core.registry import get_global_registry
 from .core.compliance import get_global_compliance_orchestrator
 import webbrowser
 from .cli_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

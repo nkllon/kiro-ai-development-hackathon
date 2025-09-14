@@ -16,6 +16,8 @@ from ..domain.services import DomainService
 from ..domain.value_objects import ValueObject
 from ..domain.events import DomainEvent
 from datetime import datetime
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _add_validation_helpers(cls: Type):
     """Add validation helper methods to a class."""

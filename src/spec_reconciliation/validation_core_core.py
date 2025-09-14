@@ -9,3 +9,5 @@ from difflib import SequenceMatcher
 from src.beast_mode.core.reflective_module import ReflectiveModule
 from .validation_core_core_validation import *
 from .validation_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

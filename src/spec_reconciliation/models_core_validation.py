@@ -14,6 +14,8 @@ from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple, Any, Union
 import hashlib
 import re
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_content(self, content: str) -> Tuple[bool, str]:
     """Validate content against this rule"""

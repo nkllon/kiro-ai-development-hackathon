@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_value_object(self, value_object: ValueObject) -> ValidationResult:
     """Validate a value object."""

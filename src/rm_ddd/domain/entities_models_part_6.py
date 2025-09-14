@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def __init__(self, entity_id: TEntityId, domain_context: str, module_id: Optional[str]=None):
         """

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_aggregate(self, aggregate: AggregateRoot) -> ValidationResult:
     """Validate an aggregate root."""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_supported_target(self) -> GenerationTarget:
         """get_supported_target - Enhanced for compliance"""

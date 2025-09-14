@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_domain_model(self, model: Any) -> ValidationResult:
     """Validate any domain model by detecting its type."""

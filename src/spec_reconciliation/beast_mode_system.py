@@ -20,3 +20,4 @@ from .beast_mode_system_part_19 import *
 from .beast_mode_system_part_20 import *
 from .beast_mode_system_part_21 import *
 from .beast_mode_system_part_22 import *
+from src.rm_ddd.core.health import ModuleHealth

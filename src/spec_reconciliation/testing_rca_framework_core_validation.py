@@ -9,6 +9,8 @@ from typing import Dict, List, Any, Optional
 from datetime import datetime
 from dataclasses import dataclass
 from enum import Enum
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def execute_integrated_testing(self, test_config: Dict[str, Any]) -> Dict[str, Any]:
     """

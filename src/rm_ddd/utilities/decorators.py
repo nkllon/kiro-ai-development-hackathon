@@ -115,3 +115,4 @@ from .decorators_part_114 import *
 from .decorators_part_115 import *
 from .decorators_part_116 import *
 from .decorators_part_117 import *
+from src.rm_ddd.core.health import ModuleHealth

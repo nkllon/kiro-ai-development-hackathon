@@ -13,6 +13,8 @@ from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, asdict
 from enum import Enum
 from .models import ReflectiveModule
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _create_default_improvement_processes(self) -> List[ContinuousImprovementProcess]:
     """Create default continuous improvement processes"""

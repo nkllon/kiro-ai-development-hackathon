@@ -21,6 +21,8 @@ from .validation import ConsistencyValidator, ConsistencyMetrics, TerminologyRep
 import watchdog
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_architectural_decisions(self, decision: ArchitecturalDecision) -> ValidationResult:
     """

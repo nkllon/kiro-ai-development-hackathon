@@ -41,3 +41,4 @@ from .logging_infrastructure_methods_part_40 import *
 from .logging_infrastructure_methods_part_41 import *
 from .logging_infrastructure_methods_part_42 import *
 from .logging_infrastructure_methods_part_43 import *
+from src.rm_ddd.core.health import ModuleHealth

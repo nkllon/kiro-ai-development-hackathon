@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def process_json_input(self, input_data: bytes) -> ProcessedInput:
         """Process JSON input from stdin"""

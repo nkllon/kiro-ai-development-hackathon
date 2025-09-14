@@ -20,6 +20,8 @@ from .governance import GovernanceController
 from .models import OverlapSeverity, OverlapReport
 import time
 import time
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _validate_merged_requirements(self, original_requirements: List[RequirementAnalysis], merged_requirements: List['UnifiedRequirement']) -> Dict[str, Any]:
     """Validate that merged requirements maintain original intent"""

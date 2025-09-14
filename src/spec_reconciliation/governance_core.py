@@ -8,3 +8,5 @@ from enum import Enum
 from .models import ReflectiveModule
 from .governance_core_processing import *
 from .governance_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

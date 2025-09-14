@@ -10,3 +10,5 @@ from ..models import DomainException, ValidationException
 from .value_objects_core import *
 from .value_objects_utils import *
 from .value_objects_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

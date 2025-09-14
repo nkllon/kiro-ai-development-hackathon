@@ -8,6 +8,8 @@ as part of RM-DDD compliance refactoring.
 import logging
 from typing import Dict, List, Optional
 from .project_generator import ProjectTemplate, ProjectType, TemplateType
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def create_cli_tool_template() -> ProjectTemplate:
     """Create CLI tool project template."""

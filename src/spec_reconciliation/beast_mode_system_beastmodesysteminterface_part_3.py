@@ -5,6 +5,8 @@ from datetime import datetime
 from dataclasses import dataclass
 from enum import Enum
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def execute_pdca_cycle(self, cycle_config: Dict[str, Any]) -> Dict[str, Any]:
         """execute_pdca_cycle - Enhanced for compliance"""

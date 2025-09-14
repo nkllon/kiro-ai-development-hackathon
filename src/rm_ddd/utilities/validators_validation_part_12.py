@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_entity_context(self, entity: Entity) -> ValidationResult:
     """Validate entity has a domain context."""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_invariants(self, target: Any, invariant_names: Optional[List[str]]=None) -> ValidationResult:
     """

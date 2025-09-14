@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _extract_method_arguments(self, method: callable) -> List[Dict[str, Any]]:
         """Extract method arguments for CLI generation"""

@@ -87,3 +87,4 @@ from .decorators_class_6_part_86 import *
 from .decorators_class_6_part_87 import *
 from .decorators_class_6_part_88 import *
 from .decorators_class_6_part_89 import *
+from src.rm_ddd.core.health import ModuleHealth

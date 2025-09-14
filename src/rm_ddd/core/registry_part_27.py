@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def reset_global_registry():
     """Reset the global registry (primarily for testing)."""

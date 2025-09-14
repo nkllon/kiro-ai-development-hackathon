@@ -90,6 +90,8 @@ def _test_performance_characteristics(self) -> List[Dict]:
     """Test that performance characteristics are maintained"""
     performance_tests = []
     import time
+from src.rm_ddd.core.health import ModuleHealth
+
     test_result = {'test_name': 'import_performance', 'success': False, 'details': {}}
     try:
         start_time = time.time()

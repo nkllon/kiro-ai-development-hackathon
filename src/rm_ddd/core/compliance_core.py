@@ -8,3 +8,5 @@ from ..models import ComplianceReport, DomainException
 from .registry import get_global_registry
 from .registry import get_global_registry
 from .compliance_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

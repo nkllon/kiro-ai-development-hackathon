@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def on_modified(self, event) -> Any:
         """on_modified - Enhanced for compliance"""

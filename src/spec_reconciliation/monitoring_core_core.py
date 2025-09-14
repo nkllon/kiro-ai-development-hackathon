@@ -32,3 +32,5 @@ from watchdog.events import FileSystemEventHandler
 from .monitoring_core_core_validation import *
 from .monitoring_core_core_handlers import *
 from .monitoring_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

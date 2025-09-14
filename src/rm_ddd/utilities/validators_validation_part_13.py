@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_aggregate_size(self, aggregate: AggregateRoot) -> ValidationResult:
     """Validate aggregate size limits."""

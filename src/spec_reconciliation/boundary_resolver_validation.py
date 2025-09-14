@@ -15,6 +15,8 @@ from typing import Dict, List, Optional, Set, Tuple, Any
 import re
 from datetime import datetime
 from src.beast_mode.core.reflective_module import ReflectiveModule
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_component_boundaries(self, component_boundaries: List[ComponentBoundary], interface_contracts: List[InterfaceContract], dependency_graph: Dict[str, List[DependencyRelationship]]) -> Dict[str, bool]:
     """

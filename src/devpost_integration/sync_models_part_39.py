@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def update_file_path(self, new_path: str) -> bool:
         """Update file path."""

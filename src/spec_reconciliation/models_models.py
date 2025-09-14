@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
 
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -112,8 +112,10 @@ from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple, Any, Union
 import hashlib
 import re
+from src.rm_ddd.core.health import ModuleHealth
 
-class DataModelMixin(ReflectiveModule):
+
+class DataModelMixin(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {

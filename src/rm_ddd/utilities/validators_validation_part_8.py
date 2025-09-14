@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_service(self, service: DomainService) -> ValidationResult:
     """Validate a domain service."""

@@ -15,3 +15,4 @@ from .validators_validation_part_14 import *
 from .validators_validation_part_15 import *
 from .validators_validation_part_16 import *
 from .validators_validation_part_17 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
 
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -105,10 +105,12 @@ The main implementation is in other modules.
 
 from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
+from src.rm_ddd.core.health import ModuleHealth
+
 
 
 @dataclass
-class BackupSystemStub(ReflectiveModule):
+class BackupSystemStub(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {

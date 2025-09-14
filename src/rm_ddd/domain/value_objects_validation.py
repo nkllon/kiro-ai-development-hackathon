@@ -14,6 +14,8 @@ from datetime import datetime, date
 import re
 from ..core.compliance import ValidationResult
 from ..models import DomainException, ValidationException
+from src.rm_ddd.core.health import ModuleHealth
+
 
 @abstractmethod
 def validate(self) -> ValidationResult:

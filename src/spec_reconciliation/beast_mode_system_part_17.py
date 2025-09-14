@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def measure_performance(self, metrics_config: Dict[str, Any]) -> Dict[str, Any]:
         """measure_performance - Enhanced for compliance"""

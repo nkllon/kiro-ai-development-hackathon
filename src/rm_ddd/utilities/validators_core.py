@@ -11,3 +11,5 @@ from ..domain.services import DomainService
 from ..domain.value_objects import ValueObject
 from .validators_core_validation import *
 from .validators_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

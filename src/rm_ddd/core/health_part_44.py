@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_health_trend(self) -> str:
     try:

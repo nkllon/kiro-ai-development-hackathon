@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def execute_pdca_cycle(self, cycle_config: Dict[str, Any]) -> Dict[str, Any]:
         """execute_pdca_cycle - Enhanced for compliance"""

@@ -20,3 +20,5 @@ import time
 from .consolidation_core_validation import *
 from .consolidation_core_core import *
 from .consolidation_core_processing import *
+from src.rm_ddd.core.health import ModuleHealth
+

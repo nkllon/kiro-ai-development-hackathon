@@ -9,3 +9,4 @@ from .beast_mode_system_beastmodesysteminterface_part_8 import *
 from .beast_mode_system_beastmodesysteminterface_part_9 import *
 from .beast_mode_system_beastmodesysteminterface_part_10 import *
 from .beast_mode_system_beastmodesysteminterface_part_11 import *
+from src.rm_ddd.core.health import ModuleHealth

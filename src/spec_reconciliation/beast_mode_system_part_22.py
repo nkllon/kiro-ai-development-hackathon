@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _update_health_indicator(self, name: str, status: str, value: Any, message: str):
         """_update_health_indicator - Enhanced for compliance"""

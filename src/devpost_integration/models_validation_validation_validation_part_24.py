@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def validate_submission(self, submission_data: Dict[str, Any]) -> Dict[str, Any]:
     """Validate submission against requirements"""

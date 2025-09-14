@@ -30,3 +30,4 @@ from .proactive_interface_registry_part_29 import *
 from .proactive_interface_registry_part_30 import *
 from .proactive_interface_registry_part_31 import *
 from .proactive_interface_registry_part_32 import *
+from src.rm_ddd.core.health import ModuleHealth

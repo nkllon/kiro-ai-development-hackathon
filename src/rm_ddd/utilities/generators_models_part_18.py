@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _register_default_extensions(self):
         """_register_default_extensions - Enhanced for compliance"""

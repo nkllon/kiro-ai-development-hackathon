@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _generate_with_default_template(self, spec: GenerationSpec) -> GeneratedCode:
         """_generate_with_default_template - Enhanced for compliance"""

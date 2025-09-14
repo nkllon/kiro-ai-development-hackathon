@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _prepare_context(self, spec: GenerationSpec) -> Dict[str, Any]:
         """_prepare_context - Enhanced for compliance"""

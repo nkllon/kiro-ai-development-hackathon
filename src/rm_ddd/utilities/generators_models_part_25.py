@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _add_event_generation(self, context: Dict[str, Any], spec: GenerationSpec) -> Dict[str, Any]:
         """_add_event_generation - Enhanced for compliance"""

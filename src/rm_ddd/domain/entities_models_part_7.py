@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def __eq__(self, other: Any) -> bool:
         try:

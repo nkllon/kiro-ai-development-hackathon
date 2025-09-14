@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def validate_domain_invariants(self) -> ValidationResult:
         try:

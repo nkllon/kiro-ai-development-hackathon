@@ -23,3 +23,4 @@ from .file_watcher_core_methods_part_22 import *
 from .file_watcher_core_methods_part_23 import *
 from .file_watcher_core_methods_part_24 import *
 from .file_watcher_core_methods_part_25 import *
+from src.rm_ddd.core.health import ModuleHealth

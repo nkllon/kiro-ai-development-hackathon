@@ -16,6 +16,8 @@ from ..models import DomainException, ValidationException
 from ..domain.entities import Entity, AggregateRoot
 from ..domain.services import DomainService
 from ..domain.value_objects import ValueObject
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate(self, target: Any) -> ValidationResult:
     """Execute the validation rule."""

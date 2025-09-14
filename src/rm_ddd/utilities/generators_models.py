@@ -26,3 +26,4 @@ from .generators_models_part_25 import *
 from .generators_models_part_26 import *
 from .generators_models_part_27 import *
 from .generators_models_part_28 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -1,4 +1,4 @@
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
     """Base class for all reflective modules in the Beast Mode Framework."""
     
     def __init__(self):
@@ -88,4 +88,6 @@ from typing import Dict, List, Any, Optional
 from datetime import datetime
 from dataclasses import dataclass
 from enum import Enum
+from src.rm_ddd.core.health import ModuleHealth
+
 
