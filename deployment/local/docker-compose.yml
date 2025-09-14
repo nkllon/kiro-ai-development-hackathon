@@ -1,8 +1,6 @@
 # Systematic PDCA Orchestrator - Local Development
 # Runs exactly like Cloud Run but on developer workstation
 
-version: '3.8'
-
 services:
   systematic-pdca-orchestrator:
     build:
@@ -41,6 +39,9 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--storage.tsdb.retention.size=1GB'
+      - '--storage.tsdb.wal-compression'
       - '--web.console.libraries=/etc/prometheus/console_libraries'
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--web.enable-lifecycle'

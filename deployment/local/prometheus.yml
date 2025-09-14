@@ -57,12 +57,7 @@ scrape_configs:
     params:
       format: ['prometheus']
 
-# Storage configuration
-storage:
-  tsdb:
-    retention.time: 30d
-    retention.size: 1GB
-    wal-compression: true
+# Storage configuration (moved to command line arguments in docker-compose.yml)
 
 # Remote write configuration (optional - for long-term storage)
 # remote_write:
