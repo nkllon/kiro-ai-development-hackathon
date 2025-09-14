@@ -1,4 +1,4 @@
-class CLIGeneratorEngine:
+class CLIGeneratorEngine(ReflectiveModule):
 def register_with_registry(self, registry):
         """Register this module with the RM registry."""
         if registry:
@@ -115,3 +115,31 @@ def get_health_indicators(self) -> Dict[str, any]:
         module_info = module.get_module_info()
         entry_point = f'''#!/usr/bin/env python3\n"""\nAuto-generated CLI entry point for {module_info['name']}\nModule ID: {module.module_id}\n"""\n\nimport sys\nfrom pathlib import Path\n\n# Add src to path\nsrc_path = Path(__file__).parent.parent\nsys.path.insert(0, str(src_path))\n\n# Import and run the CLI\nfrom {module.__class__.__module__} import {module.__class__.__name__}\nfrom devpost_integration.cli_generator import CLIGeneratorEngine\n\ndef main():\n    # Initialize module\n    module = {module.__class__.__name__}()\n    \n    # Generate and execute CLI\n    generator = CLIGeneratorEngine()\n    analysis = generator.analyze_module(module)\n    cli_code = generator.generate_cli_code(analysis)\n    \n    # Execute the generated CLI\n    exec(cli_code)\n\nif __name__ == '__main__':\n    main()\n'''
         return entry_point
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
