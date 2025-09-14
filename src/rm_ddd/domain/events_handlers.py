@@ -18,7 +18,7 @@ from ..core.compliance import ValidationResult
 from ..models import DomainException, EventMetadata, DomainBoundaries, ModuleStatus, ModuleCapability
 from ..core.health import ModuleHealth
 
-class DomainEventHandler(ABC):
+class DomainEventHandler(ABC, ReflectiveModule):
 def register_with_registry(self, registry):
         """Register this module with the RM registry."""
         if registry:
@@ -133,3 +133,31 @@ def get_health_indicators(self) -> Dict[str, any]:
         total_events = self._handled_events + self._failed_events
         success_rate = self._handled_events / max(total_events, 1)
         return {'handler_name': self.handler_name, 'handled_events': self._handled_events, 'failed_events': self._failed_events, 'success_rate': success_rate, 'last_handled': self._last_handled.isoformat() if self._last_handled else None}
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
