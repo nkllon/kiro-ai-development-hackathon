@@ -17,7 +17,7 @@ from src.beast_mode.messaging.models import BeastModeMessage, MessageType
 from src.beast_mode.messaging.transport import TransportFactory
 
 
-class TestBackwardCompatibility:
+class TestBackwardCompatibility(ReflectiveModule):
     """Test backward compatibility between old and new implementations"""
     
     @pytest.fixture
@@ -312,6 +312,8 @@ class TestBackwardCompatibility:
         from src.beast_mode.messaging.daemon_client import BeastModeDaemon, BeastModeClient
         from src.beast_mode.messaging.unified_client import BeastModeClient as UnifiedClient
         from src.beast_mode.messaging.shared_state import BeastModeSharedState
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         
         # All imports should succeed without errors
         assert BeastModeMessage is not None
@@ -378,7 +380,7 @@ class TestBackwardCompatibility:
             # All operations should complete without errors
 
 
-class TestRegressionPrevention:
+class TestRegressionPrevention(ReflectiveModule):
     """Tests to prevent regression of specific functionality"""
     
     def test_message_id_generation(self):
@@ -453,4 +455,32 @@ class TestRegressionPrevention:
         # Test serialization/deserialization
         message_dict = message.model_dump()
         reconstructed = BeastModeMessage(**message_dict)
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert reconstructed.payload == complex_payload

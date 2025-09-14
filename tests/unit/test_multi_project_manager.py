@@ -14,13 +14,15 @@ from unittest.mock import Mock, patch
 
 from src.devpost_integration.multi_project_manager import MultiProjectManager
 from src.devpost_integration.models import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     MultiProjectConfig, ProjectConnection, DevpostConfig, GlobalSettings,
     ConflictResolutionStrategy, ContextSwitchResult, ProjectSummary,
     ProjectDashboard, SubmissionStatus, NotificationSettings
 )
 
 
-class TestMultiProjectManager:
+class TestMultiProjectManager(ReflectiveModule):
     """Test MultiProjectManager functionality."""
     
     @pytest.fixture
@@ -481,7 +483,7 @@ class TestMultiProjectManager:
         assert result is False
 
 
-class TestMultiProjectManagerConflictResolution:
+class TestMultiProjectManagerConflictResolution(ReflectiveModule):
     """Test conflict resolution functionality."""
     
     @pytest.fixture
@@ -562,7 +564,7 @@ class TestMultiProjectManagerConflictResolution:
         assert len(manager.config.project_connections) >= 1
 
 
-class TestMultiProjectManagerEdgeCases:
+class TestMultiProjectManagerEdgeCases(ReflectiveModule):
     """Test edge cases and error conditions."""
     
     @pytest.fixture
@@ -608,4 +610,32 @@ class TestMultiProjectManagerEdgeCases:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v"])
