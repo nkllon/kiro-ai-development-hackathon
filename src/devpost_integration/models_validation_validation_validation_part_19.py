@@ -32,3 +32,20 @@ def check_health(self) -> ModuleHealth:
         return ModuleHealth(module_id=self.module_id, status=status, last_check=datetime.now(), health_score=max(0.0, health_score), issues=issues, capabilities=self.get_capabilities(), dependencies=self.get_dependencies(), metrics=self.get_metrics())
     except Exception as e:
         return ModuleHealth(module_id=self.module_id, status=ModuleStatus.UNHEALTHY, last_check=datetime.now(), health_score=0.0, issues=[f'Health check exception: {e}'], capabilities=self.get_capabilities(), dependencies=self.get_dependencies(), metrics={})
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
