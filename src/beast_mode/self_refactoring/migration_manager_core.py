@@ -1,1 +1,115 @@
-"""" Migration Manager Core This module was extracted from migration_manager.py as part of RM - DDD compliance refactoring. """" import asyncio import logging from datetime import datetime, timedelta from typing import Dict, List, Any, Optional from dataclasses import dataclass from pathlib import Path import json from ..core.reflective_module import ReflectiveModule @dataclass class MigrationState: """Current state of the migration process""" old_component_status: str new_component_status: str traffic_routing_percentage: float rollback_available: bool validation_status: str migration_phase: str @dataclass class MigrationResult: """Result of a migration operation""" success: bool component_name: str migration_duration: timedelta traffic_routing_final: float rollback_executed: bool error: Optional[str] = None class TrafficRouter: """Handles traffic routing between monolithic and RM - compliant components""" def __init__(self) -> Any: self.logger = logging.getLogger(__name__) self.current_routing_percentage = 0.0 async def route_traffic_percentage(self, percentage: float) -> Dict[str, Any]: """Route specified percentage of traffic to RM - compliant components""" self.logger.info(f'🔀 Routing {percentage}% traffic to RM - compliant components') old_percentage = self.current_routing_percentage self.current_routing_percentage = percentage await asyncio.sleep(1) return {'old_percentage': old_percentage, 'new_percentage': percentage, 'routing_updated': True, 'monolithic_traffic': 100 - percentage, 'rm_compliant_traffic': percentage} def __init__(self) -> Any: super().__init__('LiveMigrationManager') self.logger = logging.getLogger(__name__) self.migration_states: Dict[str, MigrationState] = {} self.rollback_snapshots: Dict[str, Dict[str, Any]] = {} self.traffic_router = TrafficRouter() self.logger.info('🔄 Live Migration Manager initialized - ready for zero - downtime migration!') def get_module_status(self) -> Dict[str, Any]: """get_module_status - Enhanced for compliance""" try: pass # TODO: Add method implementation pass pass except Exception as e: logging.error(f"Error in method: {e}") raise """Get current status of migration manager""" return {'module_name': 'LiveMigrationManager', 'components_in_migration': len(self.migration_states), 'rollback_snapshots_available': len(self.rollback_snapshots), 'migration_phases': {component: state.migration_phase for component, state in self.migration_states.items()}, 'traffic_routing_status': {component: state.traffic_routing_percentage for component, state in self.migration_states.items()}} def is_healthy(self) -> bool: """Check if migration manager is healthy""" try: for state in self.migration_states.values(): if state.migration_phase == 'failed': return False if self.migration_states and (not self.rollback_snapshots): return False return True except Exception as e: self.logger.error(f'Migration manager health check failed: {e}') return False def get_health_indicators(self) -> List[Dict[str, Any]]: """get_health_indicators - Enhanced for compliance""" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise """Get detailed health indicators""" indicators = [] indicators.append({'name': 'migration_progress', 'status': 'healthy' if self.migration_states else 'idle', 'components_in_migration': len(self.migration_states), 'rollback_available': len(self.rollback_snapshots) > 0}) if self.migration_states: avg_routing = sum((state.traffic_routing_percentage for state in self.migration_states.values())) / len(self.migration_states) indicators.append({'name': 'traffic_routing', 'status': 'healthy', 'average_routing_percentage': avg_routing, 'components_routing': len(self.migration_states)}) indicators.append({'name': 'rollback_capability', 'status': 'healthy' if self.rollback_snapshots else 'not_available', 'snapshots_available': len(self.rollback_snapshots), 'rollback_ready': all((snapshot.get('rollback_available', False) for snapshot in self.rollback_snapshots.values()))}) return indicators def _get_primary_responsibility(self) -> str: """_get_primary_responsibility - Enhanced for compliance""" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise """Get the primary responsibility of this module""" return 'Manage zero - downtime migration from monolithic to RM - compliant architecture while system is running' def __init__(self) -> Any: self.logger = logging.getLogger(__name__) self.current_routing_percentage = 0.0 
+"""
+Interface Registry - Requirements-Driven Implementation
+====================================================
+Generated from requirements: Manage interface metadata with proper typing, Provide registration methods for interfaces, Support interface discovery and validation, Maintain interface compliance tracking
+"""
+
+from typing import Dict, List, Any, Optional
+from dataclasses import dataclass
+from datetime import datetime
+from enum import Enum
+
+class InterfaceType(Enum):
+    """Interface type enumeration"""
+    REFLECTIVE_MODULE = "reflective_module"
+    DOMAIN_SERVICE = "domain_service"
+    INFRASTRUCTURE = "infrastructure"
+    APPLICATION_SERVICE = "application_service"
+
+class InterfaceStatus(Enum):
+    """Interface status enumeration"""
+    ACTIVE = "active"
+    DEPRECATED = "deprecated"
+    EXPERIMENTAL = "experimental"
+
+@dataclass
+class InterfaceMetadata:
+    """Interface metadata"""
+    name: str
+    type: InterfaceType
+    status: InterfaceStatus
+    file_path: str
+    line_number: int
+    methods: List[str]
+    created_at: datetime
+    compliance_score: float
+
+class InterfaceRegistry:
+    """Interface Registry - Requirements-Driven Implementation"""
+    
+    def __init__(self):
+        self.interfaces: Dict[str, InterfaceMetadata] = {}
+        self.registry_file = ".beast_mode/interface_registry.json"
+    
+    def register(self, name: str, interface_type: InterfaceType, 
+                file_path: str, line_number: int, methods: List[str]) -> bool:
+        """Register an interface"""
+        try:
+            metadata = InterfaceMetadata(
+                name=name,
+                type=interface_type,
+                status=InterfaceStatus.ACTIVE,
+                file_path=file_path,
+                line_number=line_number,
+                methods=methods,
+                created_at=datetime.now(),
+                compliance_score=0.0
+            )
+            self.interfaces[name] = metadata
+            self.save_registry()
+            return True
+        except Exception as e:
+            print(f"Error registering interface {name}: {e}")
+            return False
+    
+    def get_metadata(self, name: str) -> Optional[InterfaceMetadata]:
+        """Get interface metadata"""
+        return self.interfaces.get(name)
+    
+    def validate_interface(self, name: str) -> bool:
+        """Validate interface compliance"""
+        if name not in self.interfaces:
+            return False
+        
+        metadata = self.interfaces[name]
+        
+        # Basic validation checks
+        if not metadata.name or not metadata.file_path:
+            return False
+        
+        if metadata.compliance_score < 0.0 or metadata.compliance_score > 100.0:
+            return False
+        
+        return True
+    
+    def list_interfaces(self) -> List[str]:
+        """List all registered interfaces"""
+        return list(self.interfaces.keys())
+    
+    def save_registry(self):
+        """Save registry to file"""
+        try:
+            os.makedirs(os.path.dirname(self.registry_file), exist_ok=True)
+            with open(self.registry_file, 'w') as f:
+                json.dump(self._serialize_registry(), f, indent=2)
+        except Exception as e:
+            print(f"Error saving registry: {e}")
+    
+    def _serialize_registry(self) -> Dict[str, Any]:
+        """Serialize registry for JSON storage"""
+        return {
+            name: {
+                'name': metadata.name,
+                'type': metadata.type.value,
+                'status': metadata.status.value,
+                'file_path': metadata.file_path,
+                'line_number': metadata.line_number,
+                'methods': metadata.methods,
+                'created_at': metadata.created_at.isoformat(),
+                'compliance_score': metadata.compliance_score
+            }
+            for name, metadata in self.interfaces.items()
+        }
+
+# Global registry instance
+registry = InterfaceRegistry()

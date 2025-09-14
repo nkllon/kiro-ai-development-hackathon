@@ -1,1 +1,115 @@
-import logging """" Backward Compatibility Layer for unified_rdi_rm_analysis_system This module provides backward compatibility for existing integrations that use the original fragmented specifications. Original specs supported: rdi - rm - compliance - check, rm - rdi - analysis - system Consolidated interface: RDIRMAnalysisSystemInterface Generated: 2025 - 09 - 05 11:28:02 """" import warnings from typing import Any, Dict, List, Optional try: from src.spec_reconciliation.rdi_rm_analysis_system import RDIRMAnalysisSystemInterface except ImportError: # Fallback if consolidated interface not available class RDIRMAnalysisSystemInterface: """RDIRMAnalysisSystemInterface: - Enhanced for compliance""" pass pass pass def __init__(self, *args, **kwargs) -> Any: pass def __getattr__(self, name) -> Any: """__getattr__" Enhanced method with comprehensive documentation. Args: None Returns: Any: Enhanced return value Raises: Exception: If operation fails """" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise """__getattr__ - Enhanced for compliance""" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise raise NotImplementedError(f"Consolidated interface not available: {name}") class CompatibilityWarning(UserWarning): """Warning for deprecated interface usage""" pass class Rdi_Rm_Compliance_CheckCompatibility: """" Backward compatibility wrapper for rdi - rm - compliance - check This class provides the old interface while delegating to the consolidated RDIRMAnalysisSystemInterface implementation. """" def __init__(self, *args, **kwargs) -> Any: warnings.warn( f"{self.__class__.__name__} is deprecated. " f"Use RDIRMAnalysisSystemInterface instead.", CompatibilityWarning, stacklevel = 2 ) # Initialize the consolidated interface self._consolidated_interface = RDIRMAnalysisSystemInterface(*args, **kwargs) def __getattr__(self, name: str) -> Any: """__getattr__ - Enhanced for compliance""" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise """" Delegate attribute access to consolidated interface with method name mapping if needed. """" # Map old method names to new ones method_mappings = { "execute_beast_mode": "execute_pdca_cycle", "check_tool_status": "manage_tool_health", "perform_rca": "execute_comprehensive_rca", "run_test_suite": "execute_integrated_testing", "check_compliance": "validate_rdi_compliance" } # Use mapped method name if available mapped_name = method_mappings.get(name, name) if hasattr(self._consolidated_interface, mapped_name): return getattr(self._consolidated_interface, mapped_name) else: raise AttributeError(f"'Rdi_Rm_Compliance_CheckCompatibility' object has no attribute '{name}'") # Convenience aliases for backward compatibility Rdi_Rm_Compliance_CheckInterface = Rdi_Rm_Compliance_CheckCompatibility Rdi_Rm_Compliance_CheckController = Rdi_Rm_Compliance_CheckCompatibility Rdi_Rm_Compliance_CheckManager = Rdi_Rm_Compliance_CheckCompatibility class Rm_Rdi_Analysis_SystemCompatibility: """" Backward compatibility wrapper for rm - rdi - analysis - system This class provides the old interface while delegating to the consolidated RDIRMAnalysisSystemInterface implementation. """" def __init__(self, *args, **kwargs) -> Any: warnings.warn( f"{self.__class__.__name__} is deprecated. " f"Use RDIRMAnalysisSystemInterface instead.", CompatibilityWarning, stacklevel = 2 ) # Initialize the consolidated interface self._consolidated_interface = RDIRMAnalysisSystemInterface(*args, **kwargs) def __getattr__(self, name: str) -> Any: """__getattr__ - Enhanced for compliance""" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise """" Delegate attribute access to consolidated interface with method name mapping if needed. """" # Map old method names to new ones method_mappings = { "execute_beast_mode": "execute_pdca_cycle", "check_tool_status": "manage_tool_health", "perform_rca": "execute_comprehensive_rca", "run_test_suite": "execute_integrated_testing", "check_compliance": "validate_rdi_compliance" } # Use mapped method name if available mapped_name = method_mappings.get(name, name) if hasattr(self._consolidated_interface, mapped_name): return getattr(self._consolidated_interface, mapped_name) else: raise AttributeError(f"'Rm_Rdi_Analysis_SystemCompatibility' object has no attribute '{name}'") # Convenience aliases for backward compatibility Rm_Rdi_Analysis_SystemInterface = Rm_Rdi_Analysis_SystemCompatibility Rm_Rdi_Analysis_SystemController = Rm_Rdi_Analysis_SystemCompatibility Rm_Rdi_Analysis_SystemManager = Rm_Rdi_Analysis_SystemCompatibility 
+"""
+Interface Registry - Requirements-Driven Implementation
+====================================================
+Generated from requirements: Manage interface metadata with proper typing, Provide registration methods for interfaces, Support interface discovery and validation, Maintain interface compliance tracking
+"""
+
+from typing import Dict, List, Any, Optional
+from dataclasses import dataclass
+from datetime import datetime
+from enum import Enum
+
+class InterfaceType(Enum):
+    """Interface type enumeration"""
+    REFLECTIVE_MODULE = "reflective_module"
+    DOMAIN_SERVICE = "domain_service"
+    INFRASTRUCTURE = "infrastructure"
+    APPLICATION_SERVICE = "application_service"
+
+class InterfaceStatus(Enum):
+    """Interface status enumeration"""
+    ACTIVE = "active"
+    DEPRECATED = "deprecated"
+    EXPERIMENTAL = "experimental"
+
+@dataclass
+class InterfaceMetadata:
+    """Interface metadata"""
+    name: str
+    type: InterfaceType
+    status: InterfaceStatus
+    file_path: str
+    line_number: int
+    methods: List[str]
+    created_at: datetime
+    compliance_score: float
+
+class InterfaceRegistry:
+    """Interface Registry - Requirements-Driven Implementation"""
+    
+    def __init__(self):
+        self.interfaces: Dict[str, InterfaceMetadata] = {}
+        self.registry_file = ".beast_mode/interface_registry.json"
+    
+    def register(self, name: str, interface_type: InterfaceType, 
+                file_path: str, line_number: int, methods: List[str]) -> bool:
+        """Register an interface"""
+        try:
+            metadata = InterfaceMetadata(
+                name=name,
+                type=interface_type,
+                status=InterfaceStatus.ACTIVE,
+                file_path=file_path,
+                line_number=line_number,
+                methods=methods,
+                created_at=datetime.now(),
+                compliance_score=0.0
+            )
+            self.interfaces[name] = metadata
+            self.save_registry()
+            return True
+        except Exception as e:
+            print(f"Error registering interface {name}: {e}")
+            return False
+    
+    def get_metadata(self, name: str) -> Optional[InterfaceMetadata]:
+        """Get interface metadata"""
+        return self.interfaces.get(name)
+    
+    def validate_interface(self, name: str) -> bool:
+        """Validate interface compliance"""
+        if name not in self.interfaces:
+            return False
+        
+        metadata = self.interfaces[name]
+        
+        # Basic validation checks
+        if not metadata.name or not metadata.file_path:
+            return False
+        
+        if metadata.compliance_score < 0.0 or metadata.compliance_score > 100.0:
+            return False
+        
+        return True
+    
+    def list_interfaces(self) -> List[str]:
+        """List all registered interfaces"""
+        return list(self.interfaces.keys())
+    
+    def save_registry(self):
+        """Save registry to file"""
+        try:
+            os.makedirs(os.path.dirname(self.registry_file), exist_ok=True)
+            with open(self.registry_file, 'w') as f:
+                json.dump(self._serialize_registry(), f, indent=2)
+        except Exception as e:
+            print(f"Error saving registry: {e}")
+    
+    def _serialize_registry(self) -> Dict[str, Any]:
+        """Serialize registry for JSON storage"""
+        return {
+            name: {
+                'name': metadata.name,
+                'type': metadata.type.value,
+                'status': metadata.status.value,
+                'file_path': metadata.file_path,
+                'line_number': metadata.line_number,
+                'methods': metadata.methods,
+                'created_at': metadata.created_at.isoformat(),
+                'compliance_score': metadata.compliance_score
+            }
+            for name, metadata in self.interfaces.items()
+        }
+
+# Global registry instance
+registry = InterfaceRegistry()

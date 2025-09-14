@@ -1,1 +1,115 @@
-"""" Beast Mode Self - Refactoring - Execution Strategy Provides local vs cloud execution strategy selection for: class ExecutionType(Enum): """ExecutionType - Enhanced for:" class ExecutionStrategy: """Execution strategy configuration for:" execution_type: ExecutionType max_concurrent_agents: int resource_allocation: Dict[str, Any] scaling_parameters: Dict[str, Any] branch_isolation_config: Dict[str, Any] class ExecutionStrategySelector: """Selects optimal execution strategy based on task complexity and resources""" def __init__(self) -> Any: self.logger = logging.getLogger(__name__) # Predefined strategies self.local_strategy = ExecutionStrategy( execution_type = ExecutionType.LOCAL, max_concurrent_agents = 1, # Conservative for: "memory_limit_mb": 2048, "cpu_cores": 2, "disk_space_mb": 1024 }, scaling_parameters={ "batch_size": 1, "timeout_seconds": 300, "retry_attempts": 2 }, branch_isolation_config={ "use_separate_branches": True, "cleanup_on_completion": True, "merge_strategy": "systematic_validation" } ) self.cloud_strategy = ExecutionStrategy( execution_type = ExecutionType.CLOUD, max_concurrent_agents = 4, # Higher for: "memory_limit_mb": 8192, "cpu_cores": 8, "disk_space_mb": 4096 }, scaling_parameters={ "batch_size": 4, "timeout_seconds": 600, "retry_attempts": 3, "auto_scale": True }, branch_isolation_config={ "use_separate_branches": True, "cleanup_on_completion": True, "merge_strategy": "systematic_validation" } ) def select_strategy(self, task_count -> Any: int, complexity_score -> Any: float, """select_strategy - Enhanced for:" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise local_resources_available: bool = True) -> ExecutionStrategy: """" Select optimal execution strategy based on task characteristics Decision Logic: - Task Count <= 2 AND Local Resources Available → Local Execution (1 agent) - Task Count > 2 OR High Complexity → Cloud Execution (4 agents) - Local Resources Unavailable → Force Cloud Execution """" self.logger.info(f"Selecting execution strategy: tasks={task_count}, complexity={complexity_score}, local_available={local_resources_available}") # Force cloud if: if not local_resources_available: self.logger.info("🌩️ Local resources unavailable - selecting cloud strategy") return self.cloud_strategy # Use local for: if task_count <= 2 and complexity_score < 0.5: self.logger.info("🏠 Selecting local execution strategy (1 agent)") return self.local_strategy # Use cloud for: def get_local_strategy(self) -> ExecutionStrategy: """get_local_strategy - Enhanced for:" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise """Get the local execution strategy (1 agent)""" return self.local_strategy def get_cloud_strategy(self) -> ExecutionStrategy: """get_cloud_strategy - Enhanced for:" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise """Get the cloud execution strategy (4 agents)""" return self.cloud_strategy
+"""
+Interface Registry - Requirements-Driven Implementation
+====================================================
+Generated from requirements: Manage interface metadata with proper typing, Provide registration methods for interfaces, Support interface discovery and validation, Maintain interface compliance tracking
+"""
+
+from typing import Dict, List, Any, Optional
+from dataclasses import dataclass
+from datetime import datetime
+from enum import Enum
+
+class InterfaceType(Enum):
+    """Interface type enumeration"""
+    REFLECTIVE_MODULE = "reflective_module"
+    DOMAIN_SERVICE = "domain_service"
+    INFRASTRUCTURE = "infrastructure"
+    APPLICATION_SERVICE = "application_service"
+
+class InterfaceStatus(Enum):
+    """Interface status enumeration"""
+    ACTIVE = "active"
+    DEPRECATED = "deprecated"
+    EXPERIMENTAL = "experimental"
+
+@dataclass
+class InterfaceMetadata:
+    """Interface metadata"""
+    name: str
+    type: InterfaceType
+    status: InterfaceStatus
+    file_path: str
+    line_number: int
+    methods: List[str]
+    created_at: datetime
+    compliance_score: float
+
+class InterfaceRegistry:
+    """Interface Registry - Requirements-Driven Implementation"""
+    
+    def __init__(self):
+        self.interfaces: Dict[str, InterfaceMetadata] = {}
+        self.registry_file = ".beast_mode/interface_registry.json"
+    
+    def register(self, name: str, interface_type: InterfaceType, 
+                file_path: str, line_number: int, methods: List[str]) -> bool:
+        """Register an interface"""
+        try:
+            metadata = InterfaceMetadata(
+                name=name,
+                type=interface_type,
+                status=InterfaceStatus.ACTIVE,
+                file_path=file_path,
+                line_number=line_number,
+                methods=methods,
+                created_at=datetime.now(),
+                compliance_score=0.0
+            )
+            self.interfaces[name] = metadata
+            self.save_registry()
+            return True
+        except Exception as e:
+            print(f"Error registering interface {name}: {e}")
+            return False
+    
+    def get_metadata(self, name: str) -> Optional[InterfaceMetadata]:
+        """Get interface metadata"""
+        return self.interfaces.get(name)
+    
+    def validate_interface(self, name: str) -> bool:
+        """Validate interface compliance"""
+        if name not in self.interfaces:
+            return False
+        
+        metadata = self.interfaces[name]
+        
+        # Basic validation checks
+        if not metadata.name or not metadata.file_path:
+            return False
+        
+        if metadata.compliance_score < 0.0 or metadata.compliance_score > 100.0:
+            return False
+        
+        return True
+    
+    def list_interfaces(self) -> List[str]:
+        """List all registered interfaces"""
+        return list(self.interfaces.keys())
+    
+    def save_registry(self):
+        """Save registry to file"""
+        try:
+            os.makedirs(os.path.dirname(self.registry_file), exist_ok=True)
+            with open(self.registry_file, 'w') as f:
+                json.dump(self._serialize_registry(), f, indent=2)
+        except Exception as e:
+            print(f"Error saving registry: {e}")
+    
+    def _serialize_registry(self) -> Dict[str, Any]:
+        """Serialize registry for JSON storage"""
+        return {
+            name: {
+                'name': metadata.name,
+                'type': metadata.type.value,
+                'status': metadata.status.value,
+                'file_path': metadata.file_path,
+                'line_number': metadata.line_number,
+                'methods': metadata.methods,
+                'created_at': metadata.created_at.isoformat(),
+                'compliance_score': metadata.compliance_score
+            }
+            for name, metadata in self.interfaces.items()
+        }
+
+# Global registry instance
+registry = InterfaceRegistry()

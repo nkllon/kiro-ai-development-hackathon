@@ -1,1 +1,277 @@
-#!/usr / bin / env python3 """" Proactive Interface Registry with: class RegistrationRequest: """Request to register a new interface""" interface_name: str file_path: str purpose: str domain: str author: str justification: str dependencies: List[str] = None @dataclass class RegistrationResult: """Result of interface registration attempt""" success: bool interface_name: str registration_id: str duplication_check: DuplicationCheckResult warnings: List[str] requirements: List[str] timestamp: str class ProactiveInterfaceRegistry: """Proactive interface registry with:" def __init__(self, registry_file -> Any: str = "proactive_interface_registry.json") -> Any: self.registry_file = registry_file self.duplication_detector = InterfaceDuplicationDetector(registry_file) self.enhanced_registry = EnhancedInterfaceRegistry() self.registered_interfaces: Dict[str, Dict[str, Any]] = {} self.registration_history: List[RegistrationResult] = [] # Load existing registry self._load_registry() def _load_registry(self) -> Any: """Load existing registry from file""" try: if Path(self.registry_file).exists(): with open(self.registry_file, 'r') as f: self.registered_interfaces = json.load(f) print(f"✅ Loaded {len(self.registered_interfaces)} registered interfaces") else: print("ℹ️ No existing registry found - starting fresh") except Exception as e: print(f"⚠️ Could not load registry: {e}") def _save_registry(self) -> Any: """Save registry to file""" try: with open(self.registry_file, 'w') as f: json.dump(self.registered_interfaces, f, indent = 2, default = str) print(f"💾 Registry saved to {self.registry_file}") except Exception as e: print(f"❌ Could not save registry: {e}") def register_interface(self, request: RegistrationRequest) -> RegistrationResult: """register_interface - Enhanced for:" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise """Register a new interface with:" print(f"🔍 Registering interface: {request.interface_name}") # Step 1: Check for: # Step 2: Determine if: # Step 3: Generate warnings and requirements warnings = self._generate_warnings(request, duplication_check) requirements = self._generate_requirements(request, duplication_check) # Step 4: Register if: if can_register: # Register the interface interface_data = { 'name': request.interface_name, 'file_path': request.file_path, 'purpose': request.purpose, 'domain': request.domain, 'author': request.author, 'justification': request.justification, 'dependencies': request.dependencies or [], 'registration_id': registration_id, 'registered_at': datetime.now().isoformat(), 'status': 'active', 'duplication_check': asdict(duplication_check) } self.registered_interfaces[request.interface_name] = interface_data self._save_registry() print(f"✅ Successfully registered: {request.interface_name}") else: print(f"❌ Registration blocked: {request.interface_name}") # Step 5: Create registration result result = RegistrationResult( success = can_register, interface_name = request.interface_name, registration_id = registration_id, duplication_check = duplication_check, warnings = warnings, requirements = requirements, timestamp = datetime.now().isoformat() ) self.registration_history.append(result) return result def _evaluate_registration_eligibility(self, request -> Any: RegistrationRequest, """_evaluate_registration_eligibility - Enhanced for:" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise duplication_check: DuplicationCheckResult) -> bool: """Evaluate if:" if duplication_check.is_duplicate: print(f"❌ Blocked: Exact duplicate detected") return False # Block if: if very_high_similarities: print(f"❌ Blocked: Very high similarity with:" if critical_conflicts: print(f"❌ Blocked: Critical conflicts detected") return False # Allow with: def _generate_warnings(self, request -> Any: RegistrationRequest, """_generate_warnings - Enhanced for:" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise duplication_check: DuplicationCheckResult) -> List[str]: """Generate warnings for:" for similarity in duplication_check.similar_interfaces: if similarity.similarity_score >= 0.8: warnings.append(f"⚠️ High similarity with {similarity.interface2} ({similarity.similarity_score:.2f})") elif similarity.similarity_score >= 0.6: warnings.append(f"ℹ️ Moderate similarity with {similarity.interface2} ({similarity.similarity_score:.2f})") # Conflict warnings for conflict in duplication_check.conflicts: if 'conflicting methods' in conflict.lower(): warnings.append(f"⚠️ {conflict}") # Domain warnings if request.domain not in self._get_existing_domains(): warnings.append(f"ℹ️ New domain: {request.domain}") return warnings def _generate_requirements(self, request -> Any: RegistrationRequest, """_generate_requirements - Enhanced for:" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise duplication_check: DuplicationCheckResult) -> List[str]: """Generate requirements for:" if request.domain not in self._get_existing_domains(): requirements.append(f"Define domain boundaries for:" for similarity in duplication_check.similar_interfaces: if similarity.similarity_score >= 0.7: requirements.append(f"Document differences from {similarity.interface2}") requirements.append(f"Ensure clear separation from {similarity.interface2}") return requirements def _get_existing_domains(self) -> List[str]: """_get_existing_domains - Enhanced for:" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise """Get list of existing domains""" domains = set() for interface_data in self.registered_interfaces.values(): if 'domain' in interface_data: domains.add(interface_data['domain']) return list(domains) def get_registration_report(self) -> Dict[str, Any]: """get_registration_report - Enhanced for:" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise """Get comprehensive registration report""" total_registrations = len(self.registration_history) successful_registrations = sum(1 for: for interface_data in self.registered_interfaces.values(): domain = interface_data.get('domain', 'unknown') domain_distribution[domain] = domain_distribution.get(domain, 0) + 1 # Similarity statistics similarity_stats = { 'high_similarity': 0, 'moderate_similarity': 0, 'low_similarity': 0 } for result in self.registration_history: for similarity in result.duplication_check.similar_interfaces: if similarity.similarity_score >= 0.8: similarity_stats['high_similarity'] += 1 elif similarity.similarity_score >= 0.6: similarity_stats['moderate_similarity'] += 1 else: similarity_stats['low_similarity'] += 1 return { 'total_registrations': total_registrations, 'successful_registrations': successful_registrations, 'blocked_registrations': blocked_registrations, 'success_rate': successful_registrations / max(total_registrations, 1), 'domain_distribution': domain_distribution, 'similarity_stats': similarity_stats, 'registered_interfaces': len(self.registered_interfaces), 'last_updated': datetime.now().isoformat() } def suggest_interface_consolidation(self) -> List[Dict[str, Any]]: """suggest_interface_consolidation - Enhanced for:" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise """Suggest interfaces that could be consolidated""" suggestions = [] # Group interfaces by similarity interface_groups = {} for name, data in self.registered_interfaces.items(): # This is a simplified grouping - in practice, you'd use more sophisticated clustering' domain = data.get('domain', 'unknown') if domain not in interface_groups: interface_groups[domain] = [] interface_groups[domain].append(name) # Find groups with: for domain, interfaces in interface_groups.items(): if len(interfaces) > 1: suggestions.append({ 'domain': domain, 'interfaces': interfaces, 'consolidation_potential': 'high' if: 'recommendation': f"Consider consolidating {len(interfaces)} interfaces in {domain} domain" }) return suggestions def validate_existing_interfaces(self) -> Dict[str, Any]: """validate_existing_interfaces - Enhanced for:" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise """Validate all existing interfaces for:" 'total_interfaces': len(self.registered_interfaces), 'duplications_found': 0, 'similarities_found': 0, 'issues': [] } for interface_name, interface_data in self.registered_interfaces.items(): file_path = interface_data.get('file_path', '') if file_path and Path(file_path).exists(): # Check for: if duplication_check.is_duplicate: validation_results['duplications_found'] += 1 validation_results['issues'].append({ 'interface': interface_name, 'issue': 'exact_duplicate', 'details': duplication_check.conflicts }) if duplication_check.similar_interfaces: validation_results['similarities_found'] += len(duplication_check.similar_interfaces) validation_results['issues'].append({ 'interface': interface_name, 'issue': 'similar_interfaces', 'details': [sim.interface2 for: def main() -> Any: """main - Enhanced for:" try: pass # TODO: Add method implementation except Exception as e: logging.error(f"Error in method: {e}") raise """Main CLI function""" print("🔍 Proactive Interface Registry with:" print(f"\n📊 Registration Report:") print(f" Total registrations: {report['total_registrations']}") print(f" Successful: {report['successful_registrations']}") print(f" Blocked: {report['blocked_registrations']}") print(f" Success rate: {report['success_rate']:.2%}") # Get domain distribution print(f"\n🌐 Domain Distribution:") for domain, count in report['domain_distribution'].items(): print(f" {domain}: {count} interfaces") # Get similarity statistics print(f"\n🔍 Similarity Statistics:") for sim_type, count in report['similarity_stats'].items(): print(f" {sim_type}: {count}") # Validate existing interfaces print(f"\n🔍 Validating existing interfaces...") validation = registry.validate_existing_interfaces() print(f" Total interfaces: {validation['total_interfaces']}") print(f" Duplications found: {validation['duplications_found']}") print(f" Similarities found: {validation['similarities_found']}") if validation['issues']: print(f"\n⚠️ Issues found:") for issue in validation['issues'][:5]: # Show first 5 issues print(f" - {issue['interface']}: {issue['issue']}") # Get consolidation suggestions suggestions = registry.suggest_interface_consolidation() if suggestions: print(f"\n💡 Consolidation Suggestions:") for suggestion in suggestions: print(f" - {suggestion['recommendation']}") print(f"\n✅ Proactive registry system ready!") print(f"💡 To register a new interface:") print(f" 1. Create RegistrationRequest") print(f" 2. Call registry.register_interface(request)") print(f" 3. Review RegistrationResult") print(f" 4. Follow warnings and requirements") if __name__ == "__main__": main() 
+"""
+Proactive Interface Registry - Requirements-Driven Implementation
+==============================================================
+Generated from requirements: Proactive interface management and prevention
+"""
+
+from typing import Dict, List, Any, Optional
+from dataclasses import dataclass
+from datetime import datetime
+from enum import Enum
+import json
+import os
+from .interface_registry import InterfaceRegistry, InterfaceMetadata, InterfaceType, InterfaceStatus
+
+@dataclass
+class InterfaceHealthCheck:
+    """Interface health check result"""
+    interface_id: str
+    status: str
+    last_checked: datetime
+    issues: List[str]
+    recommendations: List[str]
+    health_score: float
+
+@dataclass
+class DuplicatePreventionRule:
+    """Rule for preventing interface duplication"""
+    rule_name: str
+    pattern: str
+    severity: str
+    action: str
+    description: str
+
+class ProactiveInterfaceRegistry(InterfaceRegistry):
+    """Proactive Interface Registry with prevention and monitoring"""
+    
+    def __init__(self, registry_file: str = "proactive_interface_registry.json"):
+        super().__init__(registry_file)
+        self.health_checks: Dict[str, InterfaceHealthCheck] = {}
+        self.duplicate_rules: List[DuplicatePreventionRule] = []
+        self.monitoring_enabled = True
+        self.load_health_checks()
+        self.setup_default_rules()
+    
+    def load_health_checks(self):
+        """Load interface health checks from storage"""
+        health_file = self.registry_file.replace('.json', '_health.json')
+        if os.path.exists(health_file):
+            try:
+                with open(health_file, 'r') as f:
+                    data = json.load(f)
+                for interface_id, health_data in data.items():
+                    self.health_checks[interface_id] = InterfaceHealthCheck(**health_data)
+            except Exception as e:
+                print(f"Warning: Could not load health checks: {e}")
+    
+    def save_health_checks(self):
+        """Save interface health checks to storage"""
+        health_file = self.registry_file.replace('.json', '_health.json')
+        try:
+            data = {
+                interface_id: {
+                    'interface_id': health.interface_id,
+                    'status': health.status,
+                    'last_checked': health.last_checked.isoformat(),
+                    'issues': health.issues,
+                    'recommendations': health.recommendations,
+                    'health_score': health.health_score
+                }
+                for interface_id, health in self.health_checks.items()
+            }
+            with open(health_file, 'w') as f:
+                json.dump(data, f, indent=2)
+        except Exception as e:
+            print(f"Error saving health checks: {e}")
+    
+    def setup_default_rules(self):
+        """Setup default duplicate prevention rules"""
+        self.duplicate_rules = [
+            DuplicatePreventionRule(
+                rule_name="name_similarity",
+                pattern=".*_service$",
+                severity="high",
+                action="warn",
+                description="Prevent creation of similar service interfaces"
+            ),
+            DuplicatePreventionRule(
+                rule_name="type_conflict",
+                pattern=".*_module$",
+                severity="medium",
+                action="suggest",
+                description="Suggest alternatives for module interfaces"
+            ),
+            DuplicatePreventionRule(
+                rule_name="domain_overlap",
+                pattern=".*_api$",
+                severity="low",
+                action="info",
+                description="Inform about domain overlap in API interfaces"
+            )
+        ]
+    
+    def register_interface(self, interface: InterfaceMetadata) -> bool:
+        """Enhanced interface registration with proactive checks"""
+        # Run proactive checks before registration
+        health_check = self.run_interface_health_check(interface)
+        
+        if health_check.health_score < 0.7:
+            print(f"⚠️  Interface health score below threshold: {health_check.health_score}")
+            for issue in health_check.issues:
+                print(f"   - {issue}")
+            for recommendation in health_check.recommendations:
+                print(f"   - {recommendation}")
+        
+        # Check for potential duplicates using rules
+        duplicate_warnings = self.check_duplicate_prevention_rules(interface)
+        for warning in duplicate_warnings:
+            print(f"⚠️  {warning}")
+        
+        # Proceed with registration
+        success = super().register_interface(interface)
+        if success:
+            self.health_checks[interface.interface_id] = health_check
+            self.save_health_checks()
+        
+        return success
+    
+    def run_interface_health_check(self, interface: InterfaceMetadata) -> InterfaceHealthCheck:
+        """Run comprehensive health check on interface"""
+        issues = []
+        recommendations = []
+        health_score = 1.0
+        
+        # Check interface name quality
+        if len(interface.interface_name) < 3:
+            issues.append("Interface name too short")
+            recommendations.append("Use descriptive interface names")
+            health_score -= 0.2
+        
+        # Check description quality
+        if len(interface.description) < 10:
+            issues.append("Description too short")
+            recommendations.append("Provide detailed interface description")
+            health_score -= 0.1
+        
+        # Check domain terms
+        if not interface.domain_terms:
+            issues.append("No domain terms specified")
+            recommendations.append("Add relevant domain terms for better discoverability")
+            health_score -= 0.15
+        
+        # Check capabilities
+        if not interface.capabilities:
+            issues.append("No capabilities specified")
+            recommendations.append("Define interface capabilities")
+            health_score -= 0.1
+        
+        # Check file path validity
+        if not os.path.exists(interface.file_path):
+            issues.append("File path does not exist")
+            recommendations.append("Ensure interface file exists")
+            health_score -= 0.3
+        
+        # Check for circular dependencies
+        if interface.interface_id in interface.dependencies:
+            issues.append("Circular dependency detected")
+            recommendations.append("Remove circular dependencies")
+            health_score -= 0.2
+        
+        return InterfaceHealthCheck(
+            interface_id=interface.interface_id,
+            status="healthy" if health_score > 0.7 else "warning" if health_score > 0.4 else "critical",
+            last_checked=datetime.now(),
+            issues=issues,
+            recommendations=recommendations,
+            health_score=max(0.0, health_score)
+        )
+    
+    def check_duplicate_prevention_rules(self, interface: InterfaceMetadata) -> List[str]:
+        """Check interface against duplicate prevention rules"""
+        warnings = []
+        
+        for rule in self.duplicate_rules:
+            import re
+            if re.match(rule.pattern, interface.interface_name):
+                # Check for similar existing interfaces
+                similar_interfaces = []
+                for existing in self.interfaces.values():
+                    if (existing.interface_name != interface.interface_name and
+                        existing.interface_type == interface.interface_type):
+                        
+                        # Simple similarity check
+                        name_similarity = self.calculate_name_similarity(
+                            interface.interface_name, 
+                            existing.interface_name
+                        )
+                        if name_similarity > 0.7:
+                            similar_interfaces.append(existing)
+                
+                if similar_interfaces:
+                    warning = f"{rule.description}: Found {len(similar_interfaces)} similar interfaces"
+                    if rule.severity == "high":
+                        warning += " - Consider using existing interface"
+                    warnings.append(warning)
+        
+        return warnings
+    
+    def calculate_name_similarity(self, name1: str, name2: str) -> float:
+        """Calculate similarity between two interface names"""
+        # Simple similarity based on common words
+        words1 = set(name1.lower().split('_'))
+        words2 = set(name2.lower().split('_'))
+        
+        if not words1 or not words2:
+            return 0.0
+        
+        intersection = words1.intersection(words2)
+        union = words1.union(words2)
+        
+        return len(intersection) / len(union) if union else 0.0
+    
+    def get_interface_health_report(self) -> Dict[str, Any]:
+        """Generate comprehensive interface health report"""
+        if not self.health_checks:
+            return {"message": "No health checks available"}
+        
+        total_interfaces = len(self.health_checks)
+        healthy_interfaces = len([h for h in self.health_checks.values() if h.health_score > 0.7])
+        warning_interfaces = len([h for h in self.health_checks.values() if 0.4 <= h.health_score <= 0.7])
+        critical_interfaces = len([h for h in self.health_checks.values() if h.health_score < 0.4])
+        
+        avg_health_score = sum(h.health_score for h in self.health_checks.values()) / total_interfaces
+        
+        # Most common issues
+        all_issues = []
+        for health in self.health_checks.values():
+            all_issues.extend(health.issues)
+        
+        issue_counts = {}
+        for issue in all_issues:
+            issue_counts[issue] = issue_counts.get(issue, 0) + 1
+        
+        most_common_issues = sorted(issue_counts.items(), key=lambda x: x[1], reverse=True)[:5]
+        
+        return {
+            'total_interfaces': total_interfaces,
+            'healthy_interfaces': healthy_interfaces,
+            'warning_interfaces': warning_interfaces,
+            'critical_interfaces': critical_interfaces,
+            'average_health_score': round(avg_health_score, 3),
+            'most_common_issues': most_common_issues,
+            'health_distribution': {
+                'healthy': healthy_interfaces,
+                'warning': warning_interfaces,
+                'critical': critical_interfaces
+            }
+        }
+    
+    def run_proactive_monitoring(self):
+        """Run proactive monitoring on all interfaces"""
+        if not self.monitoring_enabled:
+            return
+        
+        print("🔍 Running proactive interface monitoring...")
+        
+        for interface in self.interfaces.values():
+            health_check = self.run_interface_health_check(interface)
+            self.health_checks[interface.interface_id] = health_check
+            
+            if health_check.health_score < 0.7:
+                print(f"⚠️  {interface.interface_name}: {health_check.status}")
+        
+        self.save_health_checks()
+        print("✅ Proactive monitoring completed")
+
+# Global proactive registry instance
+proactive_registry = ProactiveInterfaceRegistry()
