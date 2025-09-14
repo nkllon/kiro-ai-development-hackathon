@@ -11,4 +11,21 @@ def __init__(self, config: Optional[Dict[str, Any]]=None):
     self.large_text_size = self.get_threshold('large_text_size', 18)
     self.bold_large_text_size = self.get_threshold('bold_large_text_size', 14)
 
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
 @property

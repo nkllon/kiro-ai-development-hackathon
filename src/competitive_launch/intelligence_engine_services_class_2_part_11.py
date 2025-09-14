@@ -10,3 +10,20 @@ from src.rm_ddd.core.health import ModuleHealth
                 threat = CompetitiveThreat(competitor=move.competitor, threat_type=move.move_type, impact_level=move.market_impact, response_urgency=move.response_urgency, market_impact={'description': move.description}, detection_time=datetime.now(), response_deadline=datetime.now() + timedelta(hours=24))
                 threats.append(threat)
         return threats
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
