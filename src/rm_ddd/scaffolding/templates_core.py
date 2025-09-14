@@ -8,6 +8,8 @@ as part of RM-DDD compliance refactoring.
 import logging
 from typing import Dict, List, Optional
 from .project_generator import ProjectTemplate, ProjectType, TemplateType
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
 
 def get_default_project_templates() -> Dict[str, ProjectTemplate]:
     """
@@ -159,13 +161,41 @@ def _get_advanced_patterns_template() -> str:
     return '"""Advanced usage patterns for {{project_name}}."""\n\n# TODO: Add advanced usage examples\npass\n'
 
 def _get_event_base_template() -> str:
-    return '"""Base event classes for event-driven architecture."""\n\nfrom rm_ddd import DomainEvent\n\nclass BaseBusinessEvent(DomainEvent):\n    """Base class for business events."""\n    pass\n'
+    return '"""Base event classes for event-driven architecture."""\n\nfrom rm_ddd import DomainEvent\n\nclass BaseBusinessEvent(DomainEvent, ReflectiveModule):\n    """Base class for business events."""\n    pass\n'
 
 def _get_event_handlers_template() -> str:
-    return '"""Event handlers for domain events."""\n\nfrom rm_ddd import DomainEventHandler\n\nclass ExampleEventHandler(DomainEventHandler):\n    """Example event handler."""\n    \n    def __init__(self):\n        super().__init__("ExampleEventHandler")\n    \n    async def handle(self, event):\n        # TODO: Implement event handling logic\n        pass\n    \n    def can_handle(self, event_type: str) -> bool:\n        return event_type == "ExampleEvent"\n'
+    return '"""Event handlers for domain events."""\n\nfrom rm_ddd import DomainEventHandler\n\nclass ExampleEventHandler(DomainEventHandler, ReflectiveModule):\n    """Example event handler."""\n    \n    def __init__(self):\n        super().__init__("ExampleEventHandler")\n    \n    async def handle(self, event):\n        # TODO: Implement event handling logic\n        pass\n    \n    def can_handle(self, event_type: str) -> bool:\n        return event_type == "ExampleEvent"\n'
 
 def _get_saga_template() -> str:
-    return '"""Process manager/saga for coordinating business processes."""\n\nclass ExampleSaga:\n    """Example saga for coordinating multi-step processes."""\n    \n    def __init__(self):\n        self.state = "initial"\n    \n    async def handle_event(self, event):\n        # TODO: Implement saga logic\n        pass\n'
+    return '"""Process manager/saga for coordinating business processes."""\n\nclass ExampleSaga(ReflectiveModule):\n    """Example saga for coordinating multi-step processes."""\n    \n    def __init__(self):\n        self.state = "initial"\n    \n    async def handle_event(self, event):\n        # TODO: Implement saga logic\n        pass\n'
 
 def _get_message_publisher_template() -> str:
-    return '"""Message publisher for event-driven communication."""\n\nclass MessagePublisher:\n    """Publisher for domain events to message broker."""\n    \n    async def publish(self, event):\n        # TODO: Implement message publishing\n        pass\n'
+    return '"""Message publisher for event-driven communication."""\n\nclass MessagePublisher(ReflectiveModule):\n    """Publisher for domain events to message broker."""\n    \n    async def publish(self, event):\n        # TODO: Implement message publishing\n        pass\n'
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+

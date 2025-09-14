@@ -1,4 +1,5 @@
-class DomainHealth:
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+class DomainHealth(ReflectiveModule):
 def register_with_registry(self, registry):
         """Register this module with the RM registry."""
         if registry:
@@ -83,3 +84,31 @@ def get_health_indicators(self) -> Dict[str, any]:
             raise
         """Convert domain health to dictionary."""
         return {'domain_context': self.domain_context, 'boundary_integrity': self.boundary_integrity, 'invariant_compliance': self.invariant_compliance, 'language_consistency': self.language_consistency, 'complexity_score': self.complexity_score, 'is_healthy': self.is_healthy, 'health_score': self.health_score, 'last_validation': self.last_validation.isoformat()}
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+

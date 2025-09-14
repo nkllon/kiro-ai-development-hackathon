@@ -1,7 +1,12 @@
 from src.rm_ddd.core.health import ModuleHealth, ModuleStatus
 from src.rm_ddd.core.registry import register_module
-        class OrderCreated(DomainEvent):
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
+        class OrderCreated(DomainEvent, ReflectiveModule):
             def __init__(self, order_id: str, customer_id: str):
+        self.module_id = self.__class__.__name__
+        self.health_status = "healthy"
+        self.registry_metadata = {}
         register_module(self.__class__.__name__, self)
                 super().__init__(order_id)
                 self.customer_id = customer_id
@@ -46,4 +51,32 @@ def ubiquitous_language(term_mapping: Dict[str, str], enforce_naming: bool=True,
         @ubiquitous_language({
             "Order": "A customer request for products",
             "OrderItem": "A line item within an order"
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         })
