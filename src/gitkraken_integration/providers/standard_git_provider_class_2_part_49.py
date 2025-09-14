@@ -18,3 +18,20 @@ def delete_branch(self, name: str, force: bool=False) -> GitOperationResult:
         if 'not fully merged' in e.stderr:
             suggestions.extend([f"Branch '{name}' is not fully merged", 'Use force=True to delete anyway', 'Merge the branch first if you want to keep changes'])
         return self._create_result(success=False, message=f"Failed to delete branch '{name}': {e.stderr}", error_code='GIT_DELETE_BRANCH_FAILED', suggestions=suggestions, execution_time_ms=execution_time)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

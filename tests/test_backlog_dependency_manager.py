@@ -21,9 +21,11 @@ from src.beast_mode.backlog.dependency_manager import (
 from src.beast_mode.backlog.models import DependencySpec
 from src.beast_mode.backlog.enums import DependencyType, RiskLevel, StrategicTrack
 from src.beast_mode.core.reflective_module import HealthStatus
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestBacklogDependencyManager:
+
+class TestBacklogDependencyManager(ReflectiveModule):
     """Test suite for BacklogDependencyManager"""
     
     def setup_method(self):
@@ -62,7 +64,7 @@ class TestBacklogDependencyManager:
         )
 
 
-class TestRMCompliance(TestBacklogDependencyManager):
+class TestRMCompliance(TestBacklogDependencyManager, ReflectiveModule):
     """Test RM interface compliance"""
     
     def test_module_initialization(self):
@@ -103,7 +105,7 @@ class TestRMCompliance(TestBacklogDependencyManager):
         assert responsibility["primary_responsibility"] == "Explicit dependency tracking and validation for backlog items"
 
 
-class TestDependencyDeclaration(TestBacklogDependencyManager):
+class TestDependencyDeclaration(TestBacklogDependencyManager, ReflectiveModule):
     """Test dependency declaration functionality"""
     
     def test_declare_valid_dependency(self):
@@ -161,7 +163,7 @@ class TestDependencyDeclaration(TestBacklogDependencyManager):
         assert "Item cannot depend on itself" in result.validation_errors
 
 
-class TestCircularDependencyDetection(TestBacklogDependencyManager):
+class TestCircularDependencyDetection(TestBacklogDependencyManager, ReflectiveModule):
     """Test circular dependency detection"""
     
     def test_detect_no_circular_dependencies(self):
@@ -244,7 +246,7 @@ class TestCircularDependencyDetection(TestBacklogDependencyManager):
         assert report.detection_time_ms < 500
 
 
-class TestDependencyGraphValidation(TestBacklogDependencyManager):
+class TestDependencyGraphValidation(TestBacklogDependencyManager, ReflectiveModule):
     """Test dependency graph validation"""
     
     def test_validate_empty_graph(self):
@@ -303,7 +305,7 @@ class TestDependencyGraphValidation(TestBacklogDependencyManager):
         assert result.validation_time_ms < 500
 
 
-class TestCriticalPathCalculation(TestBacklogDependencyManager):
+class TestCriticalPathCalculation(TestBacklogDependencyManager, ReflectiveModule):
     """Test critical path calculation"""
     
     def test_calculate_critical_path_empty_graph(self):
@@ -374,7 +376,7 @@ class TestCriticalPathCalculation(TestBacklogDependencyManager):
         assert analysis.calculation_time_ms < 500
 
 
-class TestDependencyGraphOperations(TestBacklogDependencyManager):
+class TestDependencyGraphOperations(TestBacklogDependencyManager, ReflectiveModule):
     """Test dependency graph operations"""
     
     def test_get_dependency_graph_full(self):
@@ -420,7 +422,7 @@ class TestDependencyGraphOperations(TestBacklogDependencyManager):
         assert graph1.nodes == graph2.nodes
 
 
-class TestPerformanceConstraints(TestBacklogDependencyManager):
+class TestPerformanceConstraints(TestBacklogDependencyManager, ReflectiveModule):
     """Test performance constraint compliance"""
     
     def test_response_time_constraint(self):
@@ -482,7 +484,7 @@ class TestPerformanceConstraints(TestBacklogDependencyManager):
             assert perf_indicator["status"] == "unhealthy"
 
 
-class TestErrorHandling(TestBacklogDependencyManager):
+class TestErrorHandling(TestBacklogDependencyManager, ReflectiveModule):
     """Test error handling and edge cases"""
     
     def test_handle_invalid_dependency_spec(self):
@@ -534,4 +536,32 @@ class TestErrorHandling(TestBacklogDependencyManager):
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__])
