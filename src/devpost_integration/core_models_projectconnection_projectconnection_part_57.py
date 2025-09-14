@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_operation_id(self) -> str:
     """Generate unique operation ID."""

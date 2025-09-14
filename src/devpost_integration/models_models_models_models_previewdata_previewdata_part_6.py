@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def __init__(self, preview_data: Dict[str, Any]=None):
         """Initialize preview data with comprehensive functionality"""

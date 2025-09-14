@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_configuration(self) -> ModuleConfiguration:
         """get_configuration - Enhanced for compliance"""

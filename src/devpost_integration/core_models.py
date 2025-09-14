@@ -129,3 +129,4 @@ from .core_models_part_128 import *
 from .core_models_part_129 import *
 from .core_models_part_130 import *
 from .core_models_part_131 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -146,3 +146,4 @@ from .notification_models_part_145 import *
 from .notification_models_part_146 import *
 from .notification_models_part_147 import *
 from .notification_models_part_148 import *
+from src.rm_ddd.core.health import ModuleHealth

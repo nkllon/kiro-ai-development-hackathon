@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def update_project(self, project_id: str, **kwargs) -> Dict[str, Any]:
         """Update an existing project"""

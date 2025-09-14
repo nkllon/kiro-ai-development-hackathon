@@ -34,3 +34,4 @@ from .sync_manager_queuedsyncoperation_queuedsyncoperation_part_33 import *
 from .sync_manager_queuedsyncoperation_queuedsyncoperation_part_34 import *
 from .sync_manager_queuedsyncoperation_queuedsyncoperation_part_35 import *
 from .sync_manager_queuedsyncoperation_queuedsyncoperation_part_36 import *
+from src.rm_ddd.core.health import ModuleHealth

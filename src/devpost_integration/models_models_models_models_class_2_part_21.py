@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def set_preview_url(self, preview_url: str) -> bool:
         """Set preview URL"""

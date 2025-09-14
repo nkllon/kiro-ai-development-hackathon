@@ -12,3 +12,4 @@ from .api_client_methods_class_2_part_11 import *
 from .api_client_methods_class_2_part_12 import *
 from .api_client_methods_class_2_part_13 import *
 from .api_client_methods_class_2_part_14 import *
+from src.rm_ddd.core.health import ModuleHealth
