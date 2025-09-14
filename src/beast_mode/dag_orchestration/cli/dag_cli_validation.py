@@ -15,6 +15,8 @@ from tabulate import tabulate
 from ..core.orchestration_engine import OrchestrationEngine, ResourceConstraints, OrchestrationResult
 from ..optimization.mvp_calculator import MVPCriteria
 from ..optimization.risk_assessor import RiskImpact, SuccessProbabilityFactors
+from src.rm_ddd.core.health import ModuleHealth
+
 
 @beast_dag.command()
 @click.argument('spec_directory', type=click.Path(exists=True, file_okay=False, dir_okay=True))

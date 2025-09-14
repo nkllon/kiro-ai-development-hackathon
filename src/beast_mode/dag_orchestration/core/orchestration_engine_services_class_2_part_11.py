@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _extract_lessons_learned(self, orchestration: OrchestrationResult) -> List[str]:
         """_extract_lessons_learned - Enhanced for compliance"""

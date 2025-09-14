@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
 
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -113,8 +113,10 @@ from typing import Any, Dict, List, Optional, Tuple
 from pydantic import BaseModel, Field, ValidationError
 import yaml
 from .models import BeastModeMessage, MessageType
+from src.rm_ddd.core.health import ModuleHealth
 
-class SporeMetadata(BaseModel, ReflectiveModule):
+
+class SporeMetadata(BaseModel, ReflectiveModule, ModuleHealth):
     """Metadata for a Beast Mode spore"""
     name: str
     version: str

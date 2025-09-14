@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _execute_model_driven_build(self, implementation_plan: Dict[str, Any], component_spec: Dict[str, Any], gcp_requirements: Dict[str, Any]) -> Dict[str, Any]:
     """Execute model-driven building process"""

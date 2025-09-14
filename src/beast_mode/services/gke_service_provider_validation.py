@@ -17,6 +17,8 @@ from ..orchestration.pdca_orchestrator import PDCAOrchestrator
 from ..intelligence.registry_intelligence_engine import ProjectRegistryIntelligenceEngine
 from ..tools.makefile_health_manager import MakefileHealthManager
 from ..observability.monitoring_system_clean import ComprehensiveMonitoringSystem
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _check_compliance_status(self, quality_assessment: Dict[str, Any]) -> Dict[str, Any]:
     """Check compliance status against standards"""

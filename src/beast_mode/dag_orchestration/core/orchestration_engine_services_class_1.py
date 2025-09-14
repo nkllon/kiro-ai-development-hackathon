@@ -1,4 +1,4 @@
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -113,3 +113,5 @@ from ..optimization.parallel_optimizer import ParallelOptimizer as ParallelExecu
 from ..optimization.risk_assessor import RiskAssessor, RiskAssessmentResult
 from ..optimization.phase_optimizer import PhaseOptimizer
 from ..optimization.risk_assessor import RiskImpact
+from src.rm_ddd.core.health import ModuleHealth
+

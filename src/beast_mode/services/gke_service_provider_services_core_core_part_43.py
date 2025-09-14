@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_systematic_adoption_trends(self) -> Dict[str, Any]:
     """Analyze systematic approach adoption trends"""

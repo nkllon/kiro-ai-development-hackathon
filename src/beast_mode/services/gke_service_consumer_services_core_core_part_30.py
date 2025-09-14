@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_service_effectiveness(self, service_type: ServiceType) -> Dict[str, Any]:
     """Calculate effectiveness metrics for specific service"""

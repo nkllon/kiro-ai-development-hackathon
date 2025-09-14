@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _perform_quality_assessment(self, code_paths: List[str], quality_standards: str, validation_scope: str) -> Dict[str, Any]:
     """Perform comprehensive quality assessment"""

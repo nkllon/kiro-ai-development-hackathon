@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def request_quality_assurance_service(self, team_id: str, code_context: Dict[str, Any], qa_requirements: Dict[str, Any]) -> ServiceResponse:
     """

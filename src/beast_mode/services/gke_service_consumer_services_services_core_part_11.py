@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_service_usage_patterns(self) -> Dict[str, Any]:
     """

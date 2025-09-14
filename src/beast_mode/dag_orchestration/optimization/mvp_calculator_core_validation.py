@@ -14,6 +14,8 @@ from ..models.enums import TaskStatus, RiskType, RiskImpact
 from ..analysis.dependency_mapper import ConstraintGraph
 from datetime import datetime
 from datetime import datetime
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _check_dependencies_satisfied(self, selected_tasks: List[TaskNode], all_tasks: List[TaskNode]) -> bool:
     """Check if all dependencies are satisfied."""

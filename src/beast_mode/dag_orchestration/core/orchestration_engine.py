@@ -14,3 +14,5 @@ from ..optimization.risk_assessor import RiskImpact
 from .orchestration_engine_services import *
 from .orchestration_engine_core import *
 from .orchestration_engine_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

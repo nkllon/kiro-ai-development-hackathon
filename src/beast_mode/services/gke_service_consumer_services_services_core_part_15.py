@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_next_recommendations(self, pdca_result: Dict[str, Any]) -> List[str]:
     """Generate next step recommendations based on PDCA result"""

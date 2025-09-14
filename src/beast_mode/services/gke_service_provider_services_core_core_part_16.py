@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _update_service_metrics(self, request: ServiceRequest, response: ServiceResponse):
     """Update overall service metrics"""

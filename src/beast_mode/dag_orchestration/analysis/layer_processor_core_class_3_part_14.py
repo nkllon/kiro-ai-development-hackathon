@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _group_parallel_tasks(self, task_ids: List[str], constraint_graph: ConstraintGraph) -> List[List[str]]:
     try:

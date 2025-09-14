@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_qa_recommendations(self, team_id: str, qa_results: Dict[str, Any]) -> List[str]:
     """Generate QA-specific recommendations"""

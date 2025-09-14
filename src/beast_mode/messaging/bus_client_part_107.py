@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def register_message_handler(self, message_type: MessageType, handler: Callable[[BeastModeMessage], None]) -> None:
     """Register a custom message handler"""

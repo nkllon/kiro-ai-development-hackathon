@@ -29,3 +29,4 @@ from .layer_processor_core_part_28 import *
 from .layer_processor_core_part_29 import *
 from .layer_processor_core_part_30 import *
 from .layer_processor_core_part_31 import *
+from src.rm_ddd.core.health import ModuleHealth

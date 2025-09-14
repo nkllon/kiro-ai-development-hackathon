@@ -5,3 +5,5 @@ from ..models.dag_models import TaskNode, DependencyEdge, SpecificationNode
 from ..models.enums import TaskStatus
 from .dependency_mapper_core_core_validation import *
 from .dependency_mapper_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

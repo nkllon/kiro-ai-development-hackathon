@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_pdca_recommendations(self, team_id: str, pdca_result: Dict[str, Any]) -> List[str]:
     """Generate PDCA-specific recommendations for team"""

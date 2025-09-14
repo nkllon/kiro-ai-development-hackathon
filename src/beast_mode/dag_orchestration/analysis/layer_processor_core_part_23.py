@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def analyze_layer_dependencies(self, layer_number: int, specifications: List[SpecificationNode], all_specifications: List[SpecificationNode]) -> List[str]:
     try:

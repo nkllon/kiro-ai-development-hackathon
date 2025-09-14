@@ -33,3 +33,4 @@ from .gke_service_consumer_services_core_core_part_32 import *
 from .gke_service_consumer_services_core_core_part_33 import *
 from .gke_service_consumer_services_core_core_part_34 import *
 from .gke_service_consumer_services_core_core_part_35 import *
+from src.rm_ddd.core.health import ModuleHealth

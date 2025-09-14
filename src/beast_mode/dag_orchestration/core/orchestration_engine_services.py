@@ -22,3 +22,4 @@ from .orchestration_engine_services_part_21 import *
 from .orchestration_engine_services_part_22 import *
 from .orchestration_engine_services_part_23 import *
 from .orchestration_engine_services_part_24 import *
+from src.rm_ddd.core.health import ModuleHealth

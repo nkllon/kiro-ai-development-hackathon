@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_collaboration_recommendations(self) -> List[Dict[str, Any]]:
         """Get collaboration recommendations based on patterns"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_service_catalog(self) -> Dict[str, Any]:
     """Get comprehensive service catalog for GKE teams"""

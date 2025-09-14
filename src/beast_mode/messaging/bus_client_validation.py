@@ -18,6 +18,8 @@ from .agent_registry import AgentRegistry, DiscoveredAgent
 from .help_system import HelpWantedSystem, HelpUrgency
 from .message_router import StandardMessageRouter
 from .collaboration_scheduler import CollaborationScheduler, CollaborationType, OfficeHoursPattern
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_message_format(self, message_data: Dict[str, Any]) -> Dict[str, Any]:
     """

@@ -26,3 +26,5 @@ from ..optimization.parallel_optimizer import ParallelOptimizer as ParallelExecu
 from ..optimization.risk_assessor import RiskAssessor, RiskAssessmentResult
 from ..optimization.phase_optimizer import PhaseOptimizer
 from ..optimization.risk_assessor import RiskImpact
+from src.rm_ddd.core.health import ModuleHealth
+

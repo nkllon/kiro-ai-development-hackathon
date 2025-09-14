@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_velocity_improvements(self, service_result: Dict[str, Any]) -> Dict[str, float]:
     """Calculate velocity improvement metrics from service result"""

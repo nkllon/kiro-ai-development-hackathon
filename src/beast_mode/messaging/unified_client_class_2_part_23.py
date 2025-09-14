@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def register_handler(self, message_type: MessageType, handler: Callable[[BeastModeMessage], None]):
     try:

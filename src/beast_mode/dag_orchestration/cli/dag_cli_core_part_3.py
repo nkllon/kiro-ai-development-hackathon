@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def mvp_route(spec_directory: str, timeline: int, effort: int, strategy: str, output: str, save: Optional[str]):
     """

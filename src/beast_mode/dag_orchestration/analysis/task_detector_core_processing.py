@@ -11,6 +11,8 @@ from dataclasses import dataclass
 from ..models.dag_models import TaskNode, DependencyEdge
 from ..models.enums import TaskStatus
 from .spec_parser import ParsedSpec
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _parse_task_line(self, line: str, line_index: int, lines: List[str]) -> Optional[Tuple[str, str, TaskStatus, str, List[str], List[str]]]:
     """Parse a single line to extract task information."""

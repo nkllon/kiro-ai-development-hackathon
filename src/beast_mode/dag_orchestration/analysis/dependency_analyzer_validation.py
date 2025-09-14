@@ -17,6 +17,8 @@ from .critical_path_analyzer import CriticalPathAnalyzer, CriticalPathAnalysis
 from .layer_processor import LayerProcessor, LayerProcessingResult
 from datetime import datetime
 from ..models.dag_models import ParallelGroup
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_ecosystem_integrity(self, ecosystem_dag: EcosystemDAG) -> List[str]:
     """

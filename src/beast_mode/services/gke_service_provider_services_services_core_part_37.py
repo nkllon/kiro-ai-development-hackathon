@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_maintenance_schedule(self) -> Dict[str, str]:
     """Generate recommended maintenance schedule"""

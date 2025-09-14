@@ -21,3 +21,4 @@ from .redis_transport_part_20 import *
 from .redis_transport_part_21 import *
 from .redis_transport_part_22 import *
 from .redis_transport_part_23 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -14,6 +14,8 @@ from pathlib import Path
 import json
 from ..core.reflective_module import ReflectiveModule, HealthStatus
 from ..core.system_orchestrator import BeastModeSystemOrchestrator
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def provide_tool_health_management(self, gke_tools: List[str]) -> Dict[str, Any]:
     """

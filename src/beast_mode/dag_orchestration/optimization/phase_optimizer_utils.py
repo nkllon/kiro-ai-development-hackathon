@@ -11,6 +11,8 @@ from collections import defaultdict
 import math
 from ..models.dag_models import MVPPhase, TaskNode, ParallelGroup, ResourceRequirements, MVPRoute, RiskFactor
 from ..models.enums import TaskStatus, RiskType, RiskImpact
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _identify_required_tools(self, tasks: List[TaskNode]) -> List[str]:
     """Identify required tools for tasks."""

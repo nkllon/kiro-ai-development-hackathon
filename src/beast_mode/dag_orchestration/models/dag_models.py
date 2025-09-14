@@ -67,3 +67,4 @@ from .dag_models_part_66 import *
 from .dag_models_part_67 import *
 from .dag_models_part_68 import *
 from .dag_models_part_69 import *
+from src.rm_ddd.core.health import ModuleHealth

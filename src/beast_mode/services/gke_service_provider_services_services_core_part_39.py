@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _identify_improvement_areas(self, quality_assessment: Dict[str, Any]) -> List[str]:
     """Identify areas needing improvement"""

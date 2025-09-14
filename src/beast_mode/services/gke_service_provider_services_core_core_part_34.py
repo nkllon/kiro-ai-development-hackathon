@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _estimate_resource_requirements(self, component_type: str, requirements: List[str]) -> Dict[str, Any]:
     """Estimate GCP resource requirements"""

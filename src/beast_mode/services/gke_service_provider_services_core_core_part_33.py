@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _design_security_model(self, requirements: List[str], gcp_constraints: List[str]) -> Dict[str, Any]:
     """Design security model for component"""

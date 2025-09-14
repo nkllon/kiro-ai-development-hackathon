@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_gcp_component_design(self, component_type: str, requirements: List[str], gcp_constraints: List[str], model_analysis: Dict[str, Any]) -> Dict[str, Any]:
     """Generate GCP-specific component design"""

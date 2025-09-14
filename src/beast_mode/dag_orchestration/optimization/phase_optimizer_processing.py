@@ -11,6 +11,8 @@ from collections import defaultdict
 import math
 from ..models.dag_models import MVPPhase, TaskNode, ParallelGroup, ResourceRequirements, MVPRoute, RiskFactor
 from ..models.enums import TaskStatus, RiskType, RiskImpact
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def process_task(task: TaskNode):
     if task.task_id in processed:

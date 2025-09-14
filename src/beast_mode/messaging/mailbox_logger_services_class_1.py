@@ -1,4 +1,4 @@
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -111,3 +111,5 @@ from typing import Any, Dict, List, Optional, Set
 import redis.asyncio as redis
 from redis.exceptions import ConnectionError, TimeoutError
 from .models import BeastModeMessage, MessageType
+from src.rm_ddd.core.health import ModuleHealth
+

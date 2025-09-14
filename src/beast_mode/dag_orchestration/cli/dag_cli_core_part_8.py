@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_bobby_verdict(orchestration_result: OrchestrationResult) -> str:
     """Get Bobby's systematic verdict on ecosystem consumption."""

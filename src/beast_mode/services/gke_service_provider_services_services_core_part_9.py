@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _handle_quality_assurance_service(self, request: ServiceRequest) -> Dict[str, Any]:
     """

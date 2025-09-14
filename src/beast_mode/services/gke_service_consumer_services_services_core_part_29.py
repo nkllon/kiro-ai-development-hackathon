@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_expertise_service_correlation(self) -> Dict[str, Any]:
     """Analyze correlation between team expertise and service usage"""

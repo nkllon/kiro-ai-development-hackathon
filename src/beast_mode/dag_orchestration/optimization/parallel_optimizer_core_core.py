@@ -6,3 +6,5 @@ from ..models.dag_models import TaskNode, ParallelGroup, OptimizedExecution, Exe
 from ..models.enums import TaskStatus, OptimizationStrategy, ParallelizationLevel
 from ..analysis.dependency_mapper import ConstraintGraph
 from .parallel_optimizer_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

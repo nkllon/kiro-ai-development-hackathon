@@ -11,3 +11,5 @@ from ..intelligence.registry_intelligence_engine import RegistryIntelligenceEngi
 from ..tools.makefile_health_manager import MakefileHealthManager
 from ..testing.comprehensive_test_suite import ComprehensiveTestSuite
 from .gke_service_consumer_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

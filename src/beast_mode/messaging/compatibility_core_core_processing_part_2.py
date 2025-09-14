@@ -13,6 +13,8 @@ def _convert_from_version(self, message_data: Dict[str, Any], source_version: Me
             converted = self._convert_from_v1_0(converted)
     if 'id' not in converted:
         import uuid
+from src.rm_ddd.core.health import ModuleHealth
+
         converted['id'] = str(uuid.uuid4())
     if 'timestamp' not in converted:
         converted['timestamp'] = datetime.now()

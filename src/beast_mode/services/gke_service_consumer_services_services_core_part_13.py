@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _track_velocity_improvement(self, team_id: str, pdca_result: Dict[str, Any]):
     """Track development velocity improvement for team"""

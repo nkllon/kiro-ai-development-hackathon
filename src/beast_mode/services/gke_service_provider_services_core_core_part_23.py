@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_gcp_best_practices(self, component_type: str) -> List[str]:
     """Get GCP best practices for component type"""

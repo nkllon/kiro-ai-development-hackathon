@@ -11,3 +11,5 @@ from ..intelligence.registry_intelligence_engine import ProjectRegistryIntellige
 from ..tools.makefile_health_manager import MakefileHealthManager
 from ..observability.monitoring_system_clean import ComprehensiveMonitoringSystem
 from .gke_service_provider_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

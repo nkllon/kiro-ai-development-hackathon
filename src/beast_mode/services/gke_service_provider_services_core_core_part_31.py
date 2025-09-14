@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _select_gcp_services(self, component_type: str, requirements: List[str]) -> List[str]:
     """Select appropriate GCP services for component"""

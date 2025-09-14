@@ -13,6 +13,8 @@ from datetime import datetime
 from enum import Enum
 import threading
 from ..core.reflective_module import ReflectiveModule, HealthStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _handle_tool_health_service(self, request: ServiceRequest) -> Dict[str, Any]:
     """Handle tool health management service for GKE tool fixing (UC-09)"""

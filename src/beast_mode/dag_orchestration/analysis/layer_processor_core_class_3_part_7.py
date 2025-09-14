@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def analyze_layer_dependencies(self, layer_number: int, specifications: List[SpecificationNode], all_specifications: List[SpecificationNode]) -> List[str]:
     try:

@@ -7,3 +7,5 @@ from .dependency_mapper import ConstraintGraph
 from .layer_processor_services import *
 from .layer_processor_processing import *
 from .layer_processor_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

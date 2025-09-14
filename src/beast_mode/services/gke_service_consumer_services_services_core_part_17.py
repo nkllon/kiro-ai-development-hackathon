@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_gcp_implementation_plan(self, component_spec: Dict[str, Any], gcp_requirements: Dict[str, Any], intelligence_result: Dict[str, Any]) -> Dict[str, Any]:
     """Generate systematic implementation plan for GCP component"""

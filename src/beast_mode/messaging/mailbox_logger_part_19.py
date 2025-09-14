@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _write_to_file(self, log_line: str) -> None:
         """Synchronous file write operation"""

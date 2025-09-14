@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_most_popular_service(self) -> str:
     """Get most popular service across all teams"""

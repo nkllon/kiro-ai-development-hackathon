@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _estimate_development_time(self, component_design: Dict[str, Any]) -> Dict[str, int]:
     """Estimate development time for component"""

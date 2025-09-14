@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _output_results(data: Dict[str, Any], output_format: str, save_path: Optional[str]=None):
     """Output results in specified format."""

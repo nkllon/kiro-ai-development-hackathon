@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _estimate_implementation_effort(self, component_spec: Dict[str, Any], gcp_requirements: Dict[str, Any]) -> float:
     """Estimate implementation effort in hours"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_velocity_improvement(self, team_id: str) -> Dict[str, float]:
     """Calculate velocity improvement for team"""

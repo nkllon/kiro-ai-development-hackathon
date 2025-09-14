@@ -8,3 +8,5 @@ from uuid import uuid4
 from pydantic import BaseModel, Field, validator
 from .message_models_core_core import *
 from .message_models_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

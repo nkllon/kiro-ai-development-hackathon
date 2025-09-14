@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _generate_systematic_recommendations(self, ecosystem_analysis: EcosystemAnalysisResult, mvp_route: MVPRoute, optimized_execution: OptimizedExecution, risk_assessment: RiskAssessmentResult) -> List[str]:
         """_generate_systematic_recommendations - Enhanced for compliance"""

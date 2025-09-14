@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def __exit__(self, exc_type, exc_val, exc_tb):
     """Context manager exit"""

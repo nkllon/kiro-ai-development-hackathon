@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_quality_improvement_potential(self, quality_assessment: Dict[str, Any]) -> Dict[str, float]:
     """Calculate potential for quality improvement"""

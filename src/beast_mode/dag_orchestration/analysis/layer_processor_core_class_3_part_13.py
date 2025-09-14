@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _identify_critical_path_layers(self, task_layers: Dict[int, List[str]], constraint_graph: ConstraintGraph) -> List[int]:
     try:

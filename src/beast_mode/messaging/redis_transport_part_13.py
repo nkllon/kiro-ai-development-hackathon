@@ -19,4 +19,6 @@ from typing import Callable, Dict, Any, List
 from .transport import BeastModeTransport, TransportFactory
 from .models import BeastModeMessage
 from .daemon_client import BeastModeDaemon
+from src.rm_ddd.core.health import ModuleHealth
+
 

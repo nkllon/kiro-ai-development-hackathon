@@ -6,3 +6,4 @@ from .dag_cli_core_part_5 import *
 from .dag_cli_core_part_6 import *
 from .dag_cli_core_part_7 import *
 from .dag_cli_core_part_8 import *
+from src.rm_ddd.core.health import ModuleHealth

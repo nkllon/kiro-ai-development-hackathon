@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def request_model_driven_building_service(self, team_id: str, component_spec: Dict[str, Any], gcp_requirements: Dict[str, Any]) -> ServiceResponse:
     """

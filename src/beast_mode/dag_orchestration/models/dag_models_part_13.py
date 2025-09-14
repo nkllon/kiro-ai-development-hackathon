@@ -14,6 +14,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 from .enums import TaskStatus, RiskType, RiskImpact, ExecutionStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 
 @dataclass

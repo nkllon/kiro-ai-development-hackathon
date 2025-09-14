@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def find_agents_with_all_capabilities(self, required_capabilities: List[str]) -> List[DiscoveredAgent]:
         """

@@ -12,6 +12,8 @@ from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
 from ..models.dag_models import SpecificationNode, TaskNode
 from ..models.enums import TaskStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def parse_specification_directory(self, spec_directory: str) -> List[ParsedSpec]:
     """

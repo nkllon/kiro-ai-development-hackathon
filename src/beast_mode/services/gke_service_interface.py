@@ -12,3 +12,5 @@ from .gke_service_interface_core import *
 from .gke_service_interface_processing import *
 from .gke_service_interface_services import *
 from .gke_service_interface_utils import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_prevention_recommendations(self, health_assessment: Dict[str, Any]) -> List[str]:
     """Generate prevention recommendations from health assessment"""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_velocity_improvement_report(self) -> Dict[str, Any]:
     """Generate comprehensive velocity improvement report for GKE teams"""

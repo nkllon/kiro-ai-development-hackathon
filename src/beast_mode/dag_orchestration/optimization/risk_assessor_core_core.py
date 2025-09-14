@@ -6,3 +6,5 @@ from collections import defaultdict
 from ..models.dag_models import TaskNode, MVPRoute, MVPPhase, RiskFactor, ParallelGroup, ResourceRequirements
 from ..models.enums import TaskStatus, RiskType, RiskImpact
 from .risk_assessor_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

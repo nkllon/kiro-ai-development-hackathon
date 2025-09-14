@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def analyze(spec_directory: str, output: str, save: Optional[str], verbose: bool):
     """

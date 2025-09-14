@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_peak_usage_times(self) -> Dict[str, Any]:
     """Analyze peak usage times for capacity planning"""

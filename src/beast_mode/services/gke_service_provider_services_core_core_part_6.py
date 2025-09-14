@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def request_service(self, service_request: ServiceRequest) -> ServiceResponse:
     """

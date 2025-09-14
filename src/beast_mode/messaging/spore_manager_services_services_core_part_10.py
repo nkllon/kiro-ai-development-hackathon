@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def search_spores(self, query: str, tags: Optional[List[str]]=None) -> List[Dict[str, Any]]:
     """

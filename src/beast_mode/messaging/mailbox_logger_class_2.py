@@ -39,3 +39,4 @@ from .mailbox_logger_class_2_part_38 import *
 from .mailbox_logger_class_2_part_39 import *
 from .mailbox_logger_class_2_part_40 import *
 from .mailbox_logger_class_2_part_41 import *
+from src.rm_ddd.core.health import ModuleHealth

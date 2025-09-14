@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_building_recommendations(self, team_id: str, build_result: Dict[str, Any]) -> List[str]:
     """Generate building-specific recommendations"""

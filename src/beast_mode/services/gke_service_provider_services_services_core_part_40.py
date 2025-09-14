@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _recommend_systematic_patterns(self) -> List[str]:
     """Recommend systematic patterns for adoption"""

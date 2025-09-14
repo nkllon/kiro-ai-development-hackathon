@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_gke_insights(self, pdca_result: Dict[str, Any], request: ServiceRequest) -> Dict[str, Any]:
     """Generate GKE-specific insights from PDCA execution"""

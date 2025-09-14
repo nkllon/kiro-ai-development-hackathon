@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def cleanup_inactive_agents(self) -> int:
     """

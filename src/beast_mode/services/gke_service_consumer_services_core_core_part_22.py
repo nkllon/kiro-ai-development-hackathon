@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_quality_report(self, qa_results: Dict[str, Any], validation_results: Dict[str, Any], team_id: str) -> Dict[str, Any]:
     """Generate comprehensive quality report"""

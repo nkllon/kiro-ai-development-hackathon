@@ -7,3 +7,5 @@ from ..models.enums import TaskStatus, RiskType, RiskImpact
 from .phase_optimizer_core_core import *
 from .phase_optimizer_core_processing import *
 from .phase_optimizer_core_utils import *
+from src.rm_ddd.core.health import ModuleHealth
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _create_implementation_plan(self, component_design: Dict[str, Any], request: ServiceRequest) -> Dict[str, Any]:
     """Create systematic implementation plan"""

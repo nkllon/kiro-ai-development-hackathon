@@ -13,3 +13,4 @@ from .layer_processor_core_class_3_part_12 import *
 from .layer_processor_core_class_3_part_13 import *
 from .layer_processor_core_class_3_part_14 import *
 from .layer_processor_core_class_3_part_15 import *
+from src.rm_ddd.core.health import ModuleHealth

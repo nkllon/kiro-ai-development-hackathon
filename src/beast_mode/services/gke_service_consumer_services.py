@@ -14,3 +14,5 @@ from .gke_service_consumer_services_core import *
 from .gke_service_consumer_services_validation import *
 from .gke_service_consumer_services_utils import *
 from .gke_service_consumer_services_services import *
+from src.rm_ddd.core.health import ModuleHealth
+

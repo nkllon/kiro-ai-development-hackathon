@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_team_preferred_services(self, team_id: str) -> List[str]:
     """Get team's most used services"""

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _validate_execution_readiness(self, orchestration: OrchestrationResult) -> Dict[str, Any]:
         """_validate_execution_readiness - Enhanced for compliance"""

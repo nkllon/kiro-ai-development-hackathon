@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def request_pdca_cycle_service(self, team_id: str, project_context: Dict[str, Any], task_description: str, priority: str='normal') -> ServiceResponse:
     """

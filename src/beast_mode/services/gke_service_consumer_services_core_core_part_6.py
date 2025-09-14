@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def register_gke_team(self, team_id: str, team_name: str, expertise_level: str, preferred_tools: List[str], project_domains: List[str]) -> Dict[str, Any]:
     """

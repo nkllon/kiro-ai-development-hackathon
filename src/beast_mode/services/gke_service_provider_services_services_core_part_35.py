@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _identify_compliance_requirements(self, gcp_constraints: List[str]) -> List[str]:
     """Identify compliance requirements from constraints"""

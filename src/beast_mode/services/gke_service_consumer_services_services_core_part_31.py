@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_service_optimization_recommendations(self) -> List[str]:
     """Generate recommendations for service optimization"""

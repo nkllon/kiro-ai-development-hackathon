@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_quality_metrics(self, quality_assessment: Dict[str, Any]) -> Dict[str, float]:
     """Calculate comprehensive quality metrics"""

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def calculate_spec_layer(spec_name: str, visited: Set[str]) -> int:
     try:

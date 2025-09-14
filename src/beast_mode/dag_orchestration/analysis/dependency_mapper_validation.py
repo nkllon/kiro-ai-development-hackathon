@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from collections import defaultdict, deque
 from ..models.dag_models import TaskNode, DependencyEdge, SpecificationNode
 from ..models.enums import TaskStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_dependencies(self, constraint_graph: ConstraintGraph) -> List[DependencyConflict]:
     """

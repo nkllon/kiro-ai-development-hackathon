@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_service_usage_patterns(self) -> Dict[str, Any]:
     """Analyze service usage patterns across GKE teams"""

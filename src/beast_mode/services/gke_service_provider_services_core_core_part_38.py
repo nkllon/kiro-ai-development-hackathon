@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_overall_quality_score(self, quality_assessment: Dict[str, Any]) -> float:
     """Calculate overall quality score from assessment"""

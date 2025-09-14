@@ -10,3 +10,5 @@ from enum import Enum
 from .models import BeastModeMessage, MessageType, AgentCapabilities
 from .message_history_core import *
 from .message_history_services import *
+from src.rm_ddd.core.health import ModuleHealth
+

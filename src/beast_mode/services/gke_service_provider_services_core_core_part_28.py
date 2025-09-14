@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _create_quality_improvement_plan(self, quality_assessment: Dict[str, Any]) -> Dict[str, Any]:
     """Create systematic quality improvement plan"""

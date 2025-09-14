@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _execute_systematic_code_validation(self, code_context: Dict[str, Any], qa_requirements: Dict[str, Any], qa_results: Dict[str, Any]) -> Dict[str, Any]:
     """Execute systematic code validation"""

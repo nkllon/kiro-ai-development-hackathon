@@ -11,6 +11,8 @@ from collections import defaultdict
 from ..models.dag_models import SpecificationNode, TaskNode
 from ..models.enums import TaskStatus
 from .dependency_mapper import ConstraintGraph
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def process_layers(self, specifications: List[SpecificationNode], constraint_graph: ConstraintGraph) -> LayerProcessingResult:
     """

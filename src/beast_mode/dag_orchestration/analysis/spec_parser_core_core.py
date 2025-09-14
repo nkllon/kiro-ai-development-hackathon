@@ -7,3 +7,5 @@ from ..models.dag_models import SpecificationNode, TaskNode
 from ..models.enums import TaskStatus
 from .spec_parser_core_core_core import *
 from .spec_parser_core_core_processing import *
+from src.rm_ddd.core.health import ModuleHealth
+

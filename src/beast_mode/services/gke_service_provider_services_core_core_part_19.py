@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_pdca_velocity_improvement(self, pdca_result: Dict[str, Any]) -> float:
     """Calculate velocity improvement from PDCA execution"""

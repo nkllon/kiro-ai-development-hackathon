@@ -1,4 +1,4 @@
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -106,5 +106,7 @@ from collections import defaultdict
 from ..models.dag_models import SpecificationNode, TaskNode
 from ..models.enums import TaskStatus
 from .dependency_mapper import ConstraintGraph
+from src.rm_ddd.core.health import ModuleHealth
+
 
 @dataclass

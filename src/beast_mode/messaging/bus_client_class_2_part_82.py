@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def cleanup_expired_help_requests(self) -> int:
     """

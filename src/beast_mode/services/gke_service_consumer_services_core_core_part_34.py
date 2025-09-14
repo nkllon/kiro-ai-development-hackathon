@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_team_quality_trend(self, team_id: str) -> str:
     """Calculate quality trend for team"""

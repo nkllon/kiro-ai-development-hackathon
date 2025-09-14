@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _suggest_quality_goals(self, team_id: str, qa_results: Dict[str, Any]) -> List[str]:
     """Suggest next quality goals for team"""

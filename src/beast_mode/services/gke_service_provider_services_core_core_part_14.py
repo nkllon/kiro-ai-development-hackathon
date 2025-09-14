@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _create_error_response(self, request: ServiceRequest, error_message: str, start_time: float) -> ServiceResponse:
     """Create error response for failed service requests"""
