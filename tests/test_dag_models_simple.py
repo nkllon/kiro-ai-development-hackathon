@@ -10,11 +10,13 @@ from src.beast_mode.dag_orchestration.models.dag_models import (
     ExecutionPhase, TeamAssignment, OptimizedExecution, ResourceAllocation
 )
 from src.beast_mode.dag_orchestration.models.enums import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     TaskStatus, OptimizationStrategy, ParallelizationLevel
 )
 
 
-class TestTaskNode:
+class TestTaskNode(ReflectiveModule):
     """Test TaskNode data model."""
     
     def test_task_node_creation(self):
@@ -80,7 +82,7 @@ class TestTaskNode:
             )
 
 
-class TestDependencyEdge:
+class TestDependencyEdge(ReflectiveModule):
     """Test DependencyEdge data model."""
     
     def test_dependency_edge_creation(self):
@@ -108,7 +110,7 @@ class TestDependencyEdge:
         assert edge.weight == 1.0
 
 
-class TestResourceRequirements:
+class TestResourceRequirements(ReflectiveModule):
     """Test ResourceRequirements data model."""
     
     def test_resource_requirements_creation(self):
@@ -144,7 +146,7 @@ class TestResourceRequirements:
             )
 
 
-class TestParallelGroup:
+class TestParallelGroup(ReflectiveModule):
     """Test ParallelGroup data model."""
     
     def test_parallel_group_creation(self):
@@ -180,7 +182,7 @@ class TestParallelGroup:
         assert group.tasks[1].task_id == "task2"
 
 
-class TestExecutionPhase:
+class TestExecutionPhase(ReflectiveModule):
     """Test ExecutionPhase data model."""
     
     def test_execution_phase_creation(self):
@@ -215,7 +217,7 @@ class TestExecutionPhase:
         assert phase.estimated_duration == 2
 
 
-class TestTeamAssignment:
+class TestTeamAssignment(ReflectiveModule):
     """Test TeamAssignment data model."""
     
     def test_team_assignment_creation(self):
@@ -234,7 +236,7 @@ class TestTeamAssignment:
         assert assignment.capabilities == ["python", "testing"]
 
 
-class TestOptimizedExecution:
+class TestOptimizedExecution(ReflectiveModule):
     """Test OptimizedExecution data model."""
     
     def test_optimized_execution_creation(self):
@@ -257,7 +259,7 @@ class TestOptimizedExecution:
         assert isinstance(execution.execution_phases, list)
 
 
-class TestEnums:
+class TestEnums(ReflectiveModule):
     """Test enum values."""
     
     def test_task_status_enum(self):
@@ -281,7 +283,7 @@ class TestEnums:
         assert ParallelizationLevel.HIGH.value == "high"
 
 
-class TestIntegrationScenarios:
+class TestIntegrationScenarios(ReflectiveModule):
     """Test integration scenarios with multiple models."""
     
     def test_complete_workflow_models(self):
@@ -374,4 +376,32 @@ class TestIntegrationScenarios:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v"])

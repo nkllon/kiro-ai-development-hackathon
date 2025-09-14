@@ -27,3 +27,20 @@ from src.rm_ddd.core.health import ModuleHealth
                 if self._looks_like_text_region(region):
                     text_regions.append({'text': f'detected_text_{len(text_regions)}', 'bbox': region_bbox, 'estimated_size': 12, 'is_bold': False})
         return text_regions[:10]
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

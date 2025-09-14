@@ -20,3 +20,20 @@ def _identify_blocking_issues(self, analysis_result: ComplianceAnalysisResult) -
             blocking_issues.append(issue)
     blocking_issues.sort(key=lambda x: self._get_severity_weight(x.severity), reverse=True)
     return blocking_issues
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

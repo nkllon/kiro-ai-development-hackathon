@@ -36,3 +36,20 @@ def analyze_file_change(self, file_path: Path, change_type: str) -> Dict[str, An
     except Exception as e:
         logger.error(f'Error analyzing file change for {file_path}: {e}')
     return analysis
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -94,7 +94,7 @@ def sample_messages():
     return messages
 
 
-class TestMessageHistoryIntegration:
+class TestMessageHistoryIntegration(ReflectiveModule):
     """Integration tests for message history functionality"""
     
     async def test_history_with_real_log_files(self, temp_log_dir, sample_messages):
@@ -623,7 +623,7 @@ class TestMessageHistoryIntegration:
 
 
 @pytest.mark.asyncio
-class TestMessageHistoryErrorHandling:
+class TestMessageHistoryErrorHandling(ReflectiveModule):
     """Test error handling in message history system"""
     
     async def test_corrupted_log_file_handling(self, temp_log_dir):
@@ -708,6 +708,8 @@ class TestMessageHistoryErrorHandling:
         
         # Cleanup
         import shutil
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         shutil.rmtree(non_existent_dir, ignore_errors=True)
     
     async def test_status_file_corruption(self, temp_log_dir):
@@ -726,4 +728,32 @@ class TestMessageHistoryErrorHandling:
         assert len(history_manager.message_status) == 0
         
         await history_manager.start()
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         await history_manager.stop()

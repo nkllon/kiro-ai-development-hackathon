@@ -17,3 +17,20 @@ from src.rm_ddd.core.health import ModuleHealth
         self._update_session_progress(session_id, 0.2)
         self._log_interaction(session_id, 'deployment_created', {'deployment_id': model_result.deployment_id, 'cluster_name': config.cluster_name, 'status': model_result.status.value})
         return {'deployment_id': model_result.deployment_id, 'status': model_result.status.value, 'health_metrics': model_result.health_metrics, 'cost_metrics': model_result.cost_metrics, 'security_metrics': model_result.security_metrics, 'performance_metrics': model_result.performance_metrics}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

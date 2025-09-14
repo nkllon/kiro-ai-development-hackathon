@@ -24,3 +24,20 @@ def _calculate_contrast_ratio(self, color1: Tuple[int, int, int], color2: Tuple[
     darker = min(lum1, lum2)
     contrast_ratio = (lighter + 0.05) / (darker + 0.05)
     return contrast_ratio
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

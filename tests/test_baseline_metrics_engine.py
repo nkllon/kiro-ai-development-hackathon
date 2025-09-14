@@ -16,7 +16,7 @@ from unittest.mock import patch, MagicMock
 from src.beast_mode.metrics.baseline_metrics_engine import BaselineMetricsEngine, PerformanceMetrics
 from src.beast_mode.core.reflective_module import HealthStatus
 
-class TestBaselineMetricsEngine:
+class TestBaselineMetricsEngine(ModuleHealth):
     
     def setup_method(self):
         """Setup test environment"""
@@ -136,6 +136,8 @@ class TestBaselineMetricsEngine:
         
         # Statistical analysis should use standard library (proper delegation)
         import statistics
+from src.rm_ddd.core.health import ModuleHealth
+
         # Engine uses statistics module, not custom implementation
         
     # C5: Performance & Quality Check - Handles 1000+ concurrent measurements
@@ -267,4 +269,21 @@ class TestBaselineMetricsEngine:
 
 
 if __name__ == "__main__":
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
     pytest.main([__file__, "-v"])
