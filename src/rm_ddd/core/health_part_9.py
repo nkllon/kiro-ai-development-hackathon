@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def to_dict(self) -> Dict[str, Any]:
         try:

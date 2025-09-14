@@ -14,3 +14,4 @@ from .interface_registry_class_6_part_13 import *
 from .interface_registry_class_6_part_14 import *
 from .interface_registry_class_6_part_15 import *
 from .interface_registry_class_6_part_16 import *
+from src.rm_ddd.core.health import ModuleHealth

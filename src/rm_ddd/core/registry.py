@@ -70,3 +70,4 @@ from .registry_part_69 import *
 from .registry_part_70 import *
 from .registry_part_71 import *
 from .registry_part_72 import *
+from src.rm_ddd.core.health import ModuleHealth

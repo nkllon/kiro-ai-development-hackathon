@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def get_branch_details(self, branch_name: str) -> GitOperationResult:
         """Get detailed information about a specific branch"""

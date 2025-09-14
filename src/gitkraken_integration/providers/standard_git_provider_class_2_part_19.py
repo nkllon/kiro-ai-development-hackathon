@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def merge_branch(self, source: str, target: str=None) -> GitOperationResult:
         """Merge branches"""

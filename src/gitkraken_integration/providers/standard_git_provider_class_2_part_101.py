@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _find_git_executable(self) -> str:
     """Find the git executable on the system"""

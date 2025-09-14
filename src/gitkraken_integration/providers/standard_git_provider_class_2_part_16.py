@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def create_branch(self, name: str, from_branch: str='HEAD') -> GitOperationResult:
         """Create a new branch"""

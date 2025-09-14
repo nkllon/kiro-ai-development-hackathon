@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def set_upstream_branch(self, branch_name: str, upstream: str) -> GitOperationResult:
     """Set upstream tracking branch"""

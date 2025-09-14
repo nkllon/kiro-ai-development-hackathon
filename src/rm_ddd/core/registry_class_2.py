@@ -63,3 +63,4 @@ from .registry_class_2_part_62 import *
 from .registry_class_2_part_63 import *
 from .registry_class_2_part_64 import *
 from .registry_class_2_part_65 import *
+from src.rm_ddd.core.health import ModuleHealth

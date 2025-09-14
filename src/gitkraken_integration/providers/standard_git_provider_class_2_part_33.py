@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def push_changes(self, branch: str=None, remote: str='origin') -> GitOperationResult:
         """Push changes to remote - placeholder for next task"""

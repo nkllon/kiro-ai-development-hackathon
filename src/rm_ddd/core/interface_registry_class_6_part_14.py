@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_interface_governance_report(self) -> Dict[str, Any]:
         """Generate interface governance report"""

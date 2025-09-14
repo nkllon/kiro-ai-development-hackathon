@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def register_interface(self, interface: InterfaceMetadata) -> bool:
         """Register a new interface"""

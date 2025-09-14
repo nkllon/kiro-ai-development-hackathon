@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _validate_repository(self) -> None:
         """Validate that the repo_path is a valid git repository"""

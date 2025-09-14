@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def search_by_ubiquitous_language(self, terms: List[str], context: str = "") -> List[InterfaceSearchResult]:
         """Search interfaces using ubiquitous language terms"""

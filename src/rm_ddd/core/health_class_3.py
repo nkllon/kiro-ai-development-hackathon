@@ -36,3 +36,4 @@ from .health_class_3_part_35 import *
 from .health_class_3_part_36 import *
 from .health_class_3_part_37 import *
 from .health_class_3_part_38 import *
+from src.rm_ddd.core.health import ModuleHealth

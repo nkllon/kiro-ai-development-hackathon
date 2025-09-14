@@ -14,6 +14,8 @@ from typing import Dict, List, Optional, Any, Tuple
 from datetime import datetime
 from pathlib import Path
 from .git_provider import GitProvider, GitOperationResult, GitOperationStatus, BranchInfo, CommitInfo, FileStatus, MergeConflict
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _parse_status_output(self, output: str) -> List[FileStatus]:
     """Parse git status --porcelain output into FileStatus objects"""

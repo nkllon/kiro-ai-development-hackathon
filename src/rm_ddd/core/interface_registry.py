@@ -39,3 +39,4 @@ from .interface_registry_part_38 import *
 from .interface_registry_part_39 import *
 from .interface_registry_part_40 import *
 from .interface_registry_part_41 import *
+from src.rm_ddd.core.health import ModuleHealth

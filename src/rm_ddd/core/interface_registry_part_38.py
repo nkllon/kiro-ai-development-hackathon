@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def suggest_interface_name(self, purpose: str, domain_terms: List[str], 
                              interface_type: InterfaceType) -> List[str]:

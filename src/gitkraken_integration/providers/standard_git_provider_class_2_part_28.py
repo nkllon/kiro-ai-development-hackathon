@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def compare_branches(self, branch1: str, branch2: str) -> GitOperationResult:
         """Compare two branches and show differences"""

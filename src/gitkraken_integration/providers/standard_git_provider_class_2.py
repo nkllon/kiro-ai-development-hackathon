@@ -128,3 +128,4 @@ from .standard_git_provider_class_2_part_127 import *
 from .standard_git_provider_class_2_part_128 import *
 from .standard_git_provider_class_2_part_129 import *
 from .standard_git_provider_class_2_part_130 import *
+from src.rm_ddd.core.health import ModuleHealth

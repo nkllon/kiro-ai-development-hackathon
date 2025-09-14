@@ -10,3 +10,5 @@ from .git_provider import GitProvider, GitOperationResult, GitOperationStatus, B
 from .standard_git_provider_core_validation import *
 from .standard_git_provider_core_processing import *
 from .standard_git_provider_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

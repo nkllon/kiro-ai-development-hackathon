@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def resolve_conflict(self, file_path: str, resolution: str) -> GitOperationResult:
         """Resolve merge conflict - placeholder for next task"""

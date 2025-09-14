@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_interface_right_to_use(self, interface_name: str, interface_type: InterfaceType, 
                                  creator: str, purpose: str) -> tuple[bool, Optional[InterfaceMetadata], str]:

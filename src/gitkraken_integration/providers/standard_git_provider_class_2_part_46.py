@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _get_commit_details(self, commit_hash: str) -> Tuple[datetime, str]:
     """Get commit date and author for a specific commit"""

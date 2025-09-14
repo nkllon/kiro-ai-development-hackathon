@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def remove_dependency(self, dependent_id: str, dependency_id: str):
         try:

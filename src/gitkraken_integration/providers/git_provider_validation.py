@@ -10,6 +10,8 @@ from typing import Dict, List, Optional, Any, Union
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_branch_name(self, name: str) -> bool:
     """

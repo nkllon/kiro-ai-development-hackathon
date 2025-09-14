@@ -7,6 +7,8 @@ from typing import Dict, List, Any
         
         for rule in self.duplicate_rules:
             import re
+from src.rm_ddd.core.health import ModuleHealth
+
             if re.match(rule.pattern, interface.interface_name):
                 # Check for similar existing interfaces
                 similar_interfaces = []

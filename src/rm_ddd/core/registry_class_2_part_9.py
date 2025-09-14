@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_module(self, module_id: str) -> Optional[RegisteredModule]:
         try:

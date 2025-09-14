@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_modules_by_capability(self, capability_name: str) -> List[RegisteredModule]:
     try:

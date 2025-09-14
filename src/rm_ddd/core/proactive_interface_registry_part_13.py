@@ -19,5 +19,7 @@ from enum import Enum
 import json
 import os
 from .interface_registry import InterfaceRegistry, InterfaceMetadata, InterfaceType, InterfaceStatus
+from src.rm_ddd.core.health import ModuleHealth
+
 
 @dataclass

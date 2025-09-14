@@ -53,3 +53,4 @@ from .health_part_52 import *
 from .health_part_53 import *
 from .health_part_54 import *
 from .health_part_55 import *
+from src.rm_ddd.core.health import ModuleHealth

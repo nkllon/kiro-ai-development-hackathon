@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def calculate_name_similarity(self, name1: str, name2: str) -> float:
         """Calculate similarity between two interface names"""

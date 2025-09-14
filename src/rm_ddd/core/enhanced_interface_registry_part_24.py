@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def track_interface_usage(self, interface_id: str, success: bool = True):
         """Track interface usage for metrics"""

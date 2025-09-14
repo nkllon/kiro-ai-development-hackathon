@@ -35,3 +35,5 @@ from typing import Dict, List, Optional, Any, Tuple
 from datetime import datetime
 from pathlib import Path
 from .git_provider import GitProvider, GitOperationResult, GitOperationStatus, BranchInfo, CommitInfo, FileStatus, MergeConflict
+from src.rm_ddd.core.health import ModuleHealth
+

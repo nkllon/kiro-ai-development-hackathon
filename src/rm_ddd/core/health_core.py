@@ -6,3 +6,5 @@ from typing import Any, Dict, List, Optional, TYPE_CHECKING
 from uuid import uuid4
 from ..models import ModuleStatus, HealthIndicator, PerformanceMetrics
 from .health_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

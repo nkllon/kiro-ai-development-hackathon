@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _parse_status_output(self, output: str) -> List[FileStatus]:
         """Parse git status --porcelain output into FileStatus objects"""

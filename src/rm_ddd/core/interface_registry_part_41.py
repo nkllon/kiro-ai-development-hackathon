@@ -4,6 +4,8 @@ from typing import Dict, List, Any
     def _extract_domain_terms_from_path(self, file_path: str) -> List[str]:
         """Extract domain terms from file path"""
         import re
+from src.rm_ddd.core.health import ModuleHealth
+
         path_parts = Path(file_path).parts
         domain_terms = []
         

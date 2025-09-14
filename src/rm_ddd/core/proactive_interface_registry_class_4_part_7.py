@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def setup_default_rules(self):
         """Setup default duplicate prevention rules"""

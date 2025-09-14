@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def delete_branch(self, name: str, force: bool=False) -> GitOperationResult:
         """Delete a branch"""

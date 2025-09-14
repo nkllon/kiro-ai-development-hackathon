@@ -25,3 +25,4 @@ from .enhanced_interface_registry_part_24 import *
 from .enhanced_interface_registry_part_25 import *
 from .enhanced_interface_registry_part_26 import *
 from .enhanced_interface_registry_part_27 import *
+from src.rm_ddd.core.health import ModuleHealth
