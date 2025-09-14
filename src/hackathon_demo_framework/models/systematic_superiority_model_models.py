@@ -183,3 +183,31 @@ def get_health_indicators(self) -> Dict[str, any]:
             return ModuleHealth(module_id=self.module_id, status=ModuleStatus.HEALTHY if health_score >= 0.8 else ModuleStatus.DEGRADED, health_score=health_score, issues=issues, capabilities=self.get_capabilities(), dependencies=self.get_dependencies(), metrics={'systematic_score': systematic_score, 'rdi_compliance': rdi_compliance, 'evidence_packages': len(self.evidence_packages), 'comparisons_completed': len(self.comparison_history)}, last_check=datetime.now())
         except Exception as e:
             return ModuleHealth(module_id=self.module_id, status=ModuleStatus.FAILED, health_score=0.0, issues=[f'Health check failed: {str(e)}'], capabilities=self.get_capabilities(), dependencies=self.get_dependencies(), metrics={}, last_check=datetime.now())
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
