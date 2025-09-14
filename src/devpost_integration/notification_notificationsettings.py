@@ -22,3 +22,4 @@ from .notification_notificationsettings_part_21 import *
 from .notification_notificationsettings_part_22 import *
 from .notification_notificationsettings_part_23 import *
 from .notification_notificationsettings_part_24 import *
+from src.rm_ddd.core.health import ModuleHealth

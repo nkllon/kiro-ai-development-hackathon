@@ -11,3 +11,4 @@ from .sync_manager_queuedsyncoperation_class_4_part_10 import *
 from .sync_manager_queuedsyncoperation_class_4_part_11 import *
 from .sync_manager_queuedsyncoperation_class_4_part_12 import *
 from .sync_manager_queuedsyncoperation_class_4_part_13 import *
+from src.rm_ddd.core.health import ModuleHealth

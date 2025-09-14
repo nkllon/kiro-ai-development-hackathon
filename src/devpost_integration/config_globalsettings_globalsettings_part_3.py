@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_module_metadata(self) -> Dict[str, any]:
         """Get module metadata for registry."""

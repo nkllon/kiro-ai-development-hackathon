@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def get_setting(self, key: str, default: Any=None) -> Any:
     """Get setting value by key."""

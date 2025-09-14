@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def update_configuration(self, config: ModuleConfiguration) -> bool:
         """Update module configuration."""

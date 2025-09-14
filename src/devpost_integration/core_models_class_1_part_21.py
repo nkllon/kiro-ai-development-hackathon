@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def cancel_sync(self) -> bool:
         """Cancel synchronization operation."""

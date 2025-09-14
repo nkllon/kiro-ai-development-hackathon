@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def add_team_member(self, member_data: Dict[str, Any]) -> bool:
     """Add team member to project."""

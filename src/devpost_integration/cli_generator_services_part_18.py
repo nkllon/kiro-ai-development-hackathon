@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def process_output(self, output_data: Any, format_type: str='json') -> bytes:
         """Process output data for stdout"""
