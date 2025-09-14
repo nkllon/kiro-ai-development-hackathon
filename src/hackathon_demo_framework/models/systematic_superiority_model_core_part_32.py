@@ -22,3 +22,20 @@ def compare_approaches(self, systematic: Approach, adhoc: Approach) -> Compariso
     self.comparison_history.append(result)
     self.improvement_factors.append(overall_improvement)
     return result
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -14,3 +14,20 @@ def _generate_coordination_events(self, task: Task, agents: List[Agent]) -> List
     events.append({'event_type': 'collaboration_start', 'timestamp': datetime.now().isoformat(), 'message': 'Agents beginning collaborative analysis', 'agents_involved': [agent.agent_id for agent in agents], 'coordination_strategy': 'parallel_analysis_with_consensus'})
     events.append({'event_type': 'progress_update', 'timestamp': datetime.now().isoformat(), 'message': 'Collaborative analysis 50% complete', 'agents_involved': [agent.agent_id for agent in agents], 'status': 'in_progress'})
     return events
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

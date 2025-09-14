@@ -8,3 +8,20 @@ def _calculate_performance_metrics(self, code: str) -> Dict[str, Any]:
         raise
     """Calculate performance metrics for generated code"""
     return {'lines_of_code': len(code.split('\n')), 'cyclomatic_complexity': 3, 'maintainability_index': 85, 'performance_score': 0.92}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

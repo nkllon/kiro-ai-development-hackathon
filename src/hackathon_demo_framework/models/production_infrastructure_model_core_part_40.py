@@ -18,3 +18,20 @@ def deploy_gke_cluster(self, config: GKEConfig) -> DeploymentResult:
     result = DeploymentResult(deployment_id=deployment_id, config=config, status=status, deployment_time=deployment_time, health_metrics=health_metrics, cost_metrics=cost_metrics, security_metrics=security_metrics, performance_metrics=performance_metrics, created_at=start_time)
     self.deployment_history.append(result)
     return result
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

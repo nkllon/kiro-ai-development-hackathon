@@ -3,3 +3,20 @@ from src.rm_ddd.core.health import ModuleHealth
     def get_module_info(self) -> Dict[str, Any]:
         """Get comprehensive module information"""
         return {'module_id': self.module_id, 'version': self.version, 'name': 'Multi-Agent Collaboration Model', 'description': 'RDI/RM-DDD compliant model for AI agent collaboration and human amplification', 'author': 'Beast Mode Development Team', 'created_at': self._start_time.isoformat(), 'interface_version': self.get_interface_version(), 'requirements_traceability': len(self.requirements_traceability), 'active_agents': len(self.agents), 'collaborations_completed': len(self.collaboration_history), 'conflicts_resolved': len(self.conflict_resolution_history)}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -37,3 +37,20 @@ def _check_performance_patterns(self, content: str, file_path: Path) -> List[Fin
                 confidence = self._get_issue_confidence(issue_type)
                 findings.append(Finding(type=FindingType.PERFORMANCE_ISSUE, severity=severity, location=CodeLocation(str(file_path), line_num), description=self._get_issue_description(issue_type), confidence=confidence, evidence={'issue': issue_type, 'pattern': pattern}))
     return findings
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -34,3 +34,20 @@ def _check_solid_violations(self, content: str, file_path: Path) -> List[Finding
     if re.search(concrete_import_pattern, content):
         findings.append(Finding(type=FindingType.ARCHITECTURE_VIOLATION, severity=Severity.LOW, location=CodeLocation(str(file_path), 1), description='Potential Dependency Inversion Principle violation - concrete imports detected', confidence=0.5, evidence={'solid_violation': 'dip', 'issue': 'concrete_imports'}))
     return findings
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

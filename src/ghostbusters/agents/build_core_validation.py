@@ -60,3 +60,20 @@ def _check_known_vulnerable_packages(self, dependencies: Dict[str, str], file_pa
         if dep_name in known_vulnerable:
             findings.append(Finding(type=FindingType.SECURITY_VULNERABILITY, severity=Severity.HIGH, location=CodeLocation(str(file_path), 1), description=f'Known vulnerable package: {dep_name}@{version}', confidence=0.6, evidence={'package': dep_name, 'version': version, 'vulnerability': 'known_vulnerable'}))
     return findings
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
