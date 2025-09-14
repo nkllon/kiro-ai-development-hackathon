@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _identify_health_issues(self) -> List[str]:
         """Identify health issues"""

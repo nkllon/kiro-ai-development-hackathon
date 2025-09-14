@@ -21,3 +21,20 @@ from src.rm_ddd.core.health import ModuleHealth
             raise
         """Get current status of migration manager"""
         return {'module_name': 'LiveMigrationManager', 'components_in_migration': len(self.migration_states), 'rollback_snapshots_available': len(self.rollback_snapshots), 'migration_phases': {component: state.migration_phase for component, state in self.migration_states.items()}, 'traffic_routing_status': {component: state.traffic_routing_percentage for component, state in self.migration_states.items()}}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

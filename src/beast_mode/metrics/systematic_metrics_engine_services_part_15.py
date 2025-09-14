@@ -27,3 +27,20 @@ from src.rm_ddd.core.health import ModuleHealth
         base_score = 0.7
         learning_bonus = learning_events / total_events * 0.3 if total_events > 0 else 0
         return min(1.0, base_score + learning_bonus)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

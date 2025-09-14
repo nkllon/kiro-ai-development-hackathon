@@ -111,3 +111,4 @@ from .globalsettings_interface_part_110 import *
 from .globalsettings_interface_part_111 import *
 from .globalsettings_interface_part_112 import *
 from .globalsettings_interface_part_113 import *
+from src.rm_ddd.core.health import ModuleHealth

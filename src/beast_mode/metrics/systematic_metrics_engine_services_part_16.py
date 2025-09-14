@@ -24,3 +24,20 @@ from src.rm_ddd.core.health import ModuleHealth
         avg_improvement = superiority_demo['average_improvement']
         summary = f"\nSYSTO'S COLLABORATIVE EVIDENCE SUMMARY 🐺\n\nSystematic Superiority Demonstrated: {win_percentage:.1f}% win rate\nAverage Performance Improvement: {avg_improvement:.1f}%\nSysto Collaboration Score: {collaboration_score:.2f}\n\nKEY FINDINGS:\n• Systematic approaches consistently outperform ad-hoc methods\n• Beast Mode methodology delivers measurable improvements\n• Collaborative systematic learning enhances effectiveness over time\n• NO BLAME. ONLY LEARNING AND SYSTEMATIC IMPROVEMENT.\n\nSYSTO'S VERDICT: {superiority_demo['systo_collaborative_assessment']}\n\nThis evidence package demonstrates that systematic collaboration\nmakes everyone win through measurable, repeatable improvements.\nBEAST MODE: EVERYONE WINS! 🚀\n"
         return summary.strip()
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

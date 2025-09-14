@@ -27,3 +27,20 @@ from src.rm_ddd.core.health import ModuleHealth
         self.collect_adhoc_metric(f'{task_name}_execution_time', estimated_adhoc_time, {'task': task_name, 'approach': 'estimated_adhoc', 'estimation_basis': 'systo_collaborative_intelligence'})
         self.collect_adhoc_metric(f'{task_name}_success_rate', estimated_adhoc_success, {'task': task_name, 'approach': 'estimated_adhoc'})
         self._record_collaboration_event('beast_mode_performance_tracked', {'task': task_name, 'systematic_time': systematic_time, 'systematic_success': systematic_success, 'systo_learning': 'beast_mode_effectiveness_validated'})
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

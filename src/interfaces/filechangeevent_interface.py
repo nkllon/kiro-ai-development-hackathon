@@ -98,3 +98,4 @@ from .filechangeevent_interface_part_97 import *
 from .filechangeevent_interface_part_98 import *
 from .filechangeevent_interface_part_99 import *
 from .filechangeevent_interface_part_100 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -3,3 +3,20 @@ from src.rm_ddd.core.health import ModuleHealth
 def _load_file_patterns(self) -> Dict[str, List[str]]:
     """Load file categorization patterns"""
     return {'systematic_documents': ['*beast*', '*systematic*', '*test*summary*', '*analysis*'], 'temporary_files': ['.*', '*.tmp', '*.temp', '.coverage*'], 'development_artifacts': ['*.log', '*report*.json', '*audit*'], 'scripts': ['*.py', '*.sh', '*.js'], 'media': ['*.mov', '*.mp4', '*.pdf', '*.docx', '*.png']}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

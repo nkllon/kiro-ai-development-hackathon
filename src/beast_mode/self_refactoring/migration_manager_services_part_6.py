@@ -147,3 +147,20 @@
         """Rollback a specific component to its snapshot state"""
         await asyncio.sleep(0.5)
         return {'component': component, 'snapshot_restored': True, 'monolithic_state_active': True, 'rm_compliant_state_disabled': True}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

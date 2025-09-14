@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def complete_sync(self, success: bool=True) -> bool:
     """Complete synchronization operation."""

@@ -27,3 +27,20 @@ from src.rm_ddd.core.health import ModuleHealth
             indicators.append({'name': 'traffic_routing', 'status': 'healthy', 'average_routing_percentage': avg_routing, 'components_routing': len(self.migration_states)})
         indicators.append({'name': 'rollback_capability', 'status': 'healthy' if self.rollback_snapshots else 'not_available', 'snapshots_available': len(self.rollback_snapshots), 'rollback_ready': all((snapshot.get('rollback_available', False) for snapshot in self.rollback_snapshots.values()))})
         return indicators
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -27,3 +27,20 @@ from src.rm_ddd.core.health import ModuleHealth
         if systematic_values:
             self.systematic_baselines[metric_name] = statistics.mean(systematic_values)
         self._record_collaboration_event('systematic_metric_collected', {'metric_name': metric_name, 'value': value, 'systo_assessment': 'systematic_approach_validated'})
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

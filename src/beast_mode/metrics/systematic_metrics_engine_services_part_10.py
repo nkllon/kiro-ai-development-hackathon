@@ -29,3 +29,20 @@ from src.rm_ddd.core.health import ModuleHealth
         demonstration_result = {'total_metrics_analyzed': total_metrics, 'systematic_wins': systematic_wins, 'systematic_win_percentage': win_percentage, 'average_improvement': average_improvement, 'detailed_results': superiority_results, 'systo_collaborative_assessment': systo_assessment, 'demonstration_timestamp': datetime.now().isoformat(), 'systo_collaboration_engaged': True}
         self.logger.info(f'🏆 Superiority demonstration complete: {win_percentage:.1f}% win rate, {systo_assessment}')
         return demonstration_result
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

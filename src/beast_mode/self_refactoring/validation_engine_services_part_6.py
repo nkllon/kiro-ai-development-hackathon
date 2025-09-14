@@ -151,3 +151,20 @@ from src.rm_ddd.core.health import ModuleHealth
         if average_confidence < 0.8:
             critical_issues.append('Average confidence score below threshold')
         return {'overall_score': overall_score, 'total_checks_passed': total_checks_passed, 'total_checks_failed': total_checks_failed, 'average_confidence': average_confidence, 'critical_issues': critical_issues, 'health_status': 'healthy' if overall_score >= 0.85 else 'degraded'}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def add_error(self, error_message: str, field: str = None) -> None:
         """Add validation error."""

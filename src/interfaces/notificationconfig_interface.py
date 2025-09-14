@@ -12,3 +12,4 @@ from .notificationconfig_interface_part_11 import *
 from .notificationconfig_interface_part_12 import *
 from .notificationconfig_interface_part_13 import *
 from .notificationconfig_interface_part_14 import *
+from src.rm_ddd.core.health import ModuleHealth

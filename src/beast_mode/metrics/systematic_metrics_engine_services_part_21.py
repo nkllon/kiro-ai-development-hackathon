@@ -28,3 +28,20 @@ from src.rm_ddd.core.health import ModuleHealth
         collaboration_score = self._calculate_systo_collaboration_score()
         indicators.append({'name': 'systo_collaboration_health', 'status': 'healthy' if collaboration_score >= 0.7 else 'learning', 'collaboration_score': collaboration_score, 'collaboration_events': len(self.collaboration_events), 'systo_energy': 'SYSTEMATIC COLLABORATION ENGAGED! 🐺'})
         return indicators
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

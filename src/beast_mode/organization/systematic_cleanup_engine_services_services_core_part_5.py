@@ -32,3 +32,20 @@ def execute_systematic_cleanup(self, cleanup_plan: CleanupPlan, dry_run: bool=Fa
     success_rate = execution_results['actions_successful'] / execution_results['actions_executed'] if execution_results['actions_executed'] > 0 else 0
     self.logger.info(f"✅ Cleanup {('simulation' if dry_run else 'execution')} complete: {success_rate * 100:.1f}% success rate")
     return execution_results
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

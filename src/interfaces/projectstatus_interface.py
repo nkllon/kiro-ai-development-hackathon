@@ -13,3 +13,4 @@ from .projectstatus_interface_part_12 import *
 from .projectstatus_interface_part_13 import *
 from .projectstatus_interface_part_14 import *
 from .projectstatus_interface_part_15 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -1,3 +1,5 @@
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def import_configuration(self, config_export: Dict[str, Any]) -> bool:
     """Import configuration from backup."""

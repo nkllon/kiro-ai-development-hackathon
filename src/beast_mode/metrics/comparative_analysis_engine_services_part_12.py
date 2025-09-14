@@ -59,3 +59,20 @@ from src.rm_ddd.core.health import ModuleHealth
             if min(result.sample_sizes) < 10:
                 recommendations.append(f'Collect more {category} samples for better statistical power')
         return SuperiorityReport(overall_superiority_score=overall_superiority_score, evidence_quality_score=evidence_quality_score, comparison_results=comparison_results, statistical_summary=statistical_summary, recommendations=recommendations, timestamp=datetime.now())
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

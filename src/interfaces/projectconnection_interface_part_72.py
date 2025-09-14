@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def sync_with_devpost(self, data: Dict[str, Any]) -> bool:
     """Perform actual synchronization with DevPost."""

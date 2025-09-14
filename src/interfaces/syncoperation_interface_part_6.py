@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def __init__(self, operation_id: str=None, operation_type: str='sync'):
         """Initialize sync operation with optional ID and type."""

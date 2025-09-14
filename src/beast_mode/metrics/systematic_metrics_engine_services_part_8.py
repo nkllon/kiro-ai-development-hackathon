@@ -26,3 +26,20 @@ from src.rm_ddd.core.health import ModuleHealth
         adhoc_values = [dp.value for dp in self.metric_data if dp.metric_name == metric_name and dp.approach_type == 'adhoc']
         if adhoc_values:
             self.adhoc_baselines[metric_name] = statistics.mean(adhoc_values)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

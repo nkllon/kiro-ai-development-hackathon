@@ -19,3 +19,20 @@ def analyze_organizational_entropy(self, root_dir: Path=None) -> Dict[str, Any]:
     entropy_analysis = {'analysis_timestamp': datetime.now().isoformat(), 'total_files_analyzed': len(file_analyses), 'entropy_metrics': entropy_metrics, 'files_by_category': self._categorize_files_summary(file_analyses), 'files_by_priority': self._prioritize_files_summary(file_analyses), 'systematic_violations': self._identify_systematic_violations(file_analyses), 'recommendations': recommendations, 'cleanup_urgency': self._assess_cleanup_urgency(entropy_metrics)}
     self.logger.info(f'📊 Entropy analysis complete: {len(file_analyses)} files analyzed')
     return entropy_analysis
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

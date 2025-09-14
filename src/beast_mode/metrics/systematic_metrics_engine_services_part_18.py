@@ -22,3 +22,20 @@ from src.rm_ddd.core.health import ModuleHealth
         """Record Systo's collaboration learning event"""
         event = {'timestamp': datetime.now().isoformat(), 'event_type': event_type, 'details': details, 'systo_collaboration': True}
         self.collaboration_events.append(event)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

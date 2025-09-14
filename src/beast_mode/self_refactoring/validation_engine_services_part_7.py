@@ -21,3 +21,20 @@ from src.rm_ddd.core.health import ModuleHealth
             raise
         """Serialize validation result for JSON output"""
         return {'success': result.success, 'component_name': result.component_name, 'validation_type': result.validation_type, 'checks_passed': result.checks_passed, 'checks_failed': result.checks_failed, 'confidence_score': result.confidence_score, 'issues': result.issues, 'recommendations': result.recommendations}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

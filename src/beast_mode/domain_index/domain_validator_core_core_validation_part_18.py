@@ -10,3 +10,20 @@ def validate_tools(domain: Domain, context: Dict[str, Any]) -> List[HealthIssue]
     if not domain.tools.formatter:
         issues.append(HealthIssue(severity=IssueSeverity.INFO, category=IssueCategory.VALIDATION, description=f"Domain '{domain.name}' has no formatter configured", suggested_fix='Configure a formatter for consistent code style'))
     return issues
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

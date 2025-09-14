@@ -27,3 +27,20 @@ def _execute_cleanup_action(self, action: Dict[str, Any], dry_run: bool) -> bool
     except Exception as e:
         self.logger.error(f'❌ Action failed: {str(e)}')
         return False
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
