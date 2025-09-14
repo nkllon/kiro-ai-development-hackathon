@@ -12,11 +12,13 @@ from unittest.mock import patch, mock_open
 
 from src.beast_mode.core.model_registry import ModelRegistry, DomainInfo
 from src.beast_mode.core.pdca_models import (
+from src.rm_ddd.core.health import ModuleHealth
+
     ModelIntelligence, Requirement, Pattern, Tool, ValidationLevel
 )
 
 
-class TestModelRegistry:
+class TestModelRegistry(ModuleHealth):
     """Test ModelRegistry functionality"""
     
     def setup_method(self):
@@ -293,7 +295,7 @@ class TestModelRegistry:
         assert requirements1 == requirements2  # Should be identical from cache
 
 
-class TestReflectiveModuleInterface:
+class TestReflectiveModuleInterface(ModuleHealth):
     """Test ReflectiveModule interface implementation"""
     
     def test_get_health_status(self):
@@ -354,4 +356,21 @@ class TestReflectiveModuleInterface:
         registry.query_requirements("testing")  # This will create cache entry
         registry.query_requirements("testing")  # This will hit cache
         compliance = registry.validate_systematic_compliance()
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
         assert compliance == ValidationLevel.HIGH

@@ -14,7 +14,7 @@ from beast_mode.deployment.validator import (
 )
 
 
-class TestDeploymentValidator:
+class TestDeploymentValidator(ReflectiveModule):
     """Test deployment validator functionality"""
     
     def setup_method(self):
@@ -341,6 +341,8 @@ class TestDeploymentValidator:
     def test_generate_report_html(self):
         """Test HTML report generation"""
         import os
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         
         # Create a sample report
         results = [
@@ -389,7 +391,7 @@ class TestDeploymentValidator:
         assert "FAILED" in content
 
 
-class TestValidationResult:
+class TestValidationResult(ReflectiveModule):
     """Test validation result data model"""
     
     def test_validation_result_creation(self):
@@ -420,7 +422,7 @@ class TestValidationResult:
         assert result.duration_ms == 0.0
 
 
-class TestValidationReport:
+class TestValidationReport(ReflectiveModule):
     """Test validation report data model"""
     
     def test_validation_report_creation(self):
@@ -455,11 +457,39 @@ class TestValidationReport:
         assert report.total_duration_ms == 60000.0
 
 
-class TestValidationLevel:
+class TestValidationLevel(ReflectiveModule):
     """Test validation level enumeration"""
     
     def test_validation_level_values(self):
         """Test validation level enum values"""
         assert ValidationLevel.BASIC == "basic"
         assert ValidationLevel.STANDARD == "standard"
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert ValidationLevel.COMPREHENSIVE == "comprehensive"

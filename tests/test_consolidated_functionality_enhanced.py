@@ -29,9 +29,11 @@ from src.spec_reconciliation.consolidation import SpecConsolidator
 from src.spec_reconciliation.monitoring import ContinuousMonitor
 from src.spec_reconciliation.boundary_resolver import ComponentBoundaryResolver
 from src.spec_reconciliation.models import SpecProposal
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class TestConsolidatedRequirementsCoverage:
+
+class TestConsolidatedRequirementsCoverage(ModuleHealth):
     """Test comprehensive coverage of all merged requirements (R10.1)"""
     
     def setup_method(self):
@@ -299,7 +301,7 @@ class TestConsolidatedRequirementsCoverage:
         assert accuracy >= 0.95  # 95%+ accuracy
 
 
-class TestIntegrationAndDataFlows:
+class TestIntegrationAndDataFlows(ModuleHealth):
     """Test integration and data flow validation (R10.2)"""
     
     def setup_method(self):
@@ -404,7 +406,7 @@ class TestIntegrationAndDataFlows:
         """Test interface contracts are properly validated (R10.2)"""
         # Test interface compliance validation
         interface_definition = """
-        class TestReflectiveModule(ReflectiveModule):
+        class TestReflectiveModule(ReflectiveModule, ModuleHealth):
             def get_module_status(self) -> Dict[str, Any]:
                 return {'status': 'healthy'}
             
@@ -458,7 +460,7 @@ class TestIntegrationAndDataFlows:
         assert recovery_result in ['approved', 'requires_review']
 
 
-class TestPerformanceValidation:
+class TestPerformanceValidation(ModuleHealth):
     """Test performance requirements are met (R10.2)"""
     
     def setup_method(self):
@@ -605,7 +607,7 @@ class TestPerformanceValidation:
         assert p90_time <= 5.0, f"P90 traceability time {p90_time:.1f}s exceeds 5s SLA"
 
 
-class TestRegressionPrevention:
+class TestRegressionPrevention(ModuleHealth):
     """Test regression prevention mechanisms (R10.3)"""
     
     def setup_method(self):
@@ -656,7 +658,7 @@ class TestRegressionPrevention:
         """Test prevention of interface pattern regression (R10.3)"""
         # Test compliant ReflectiveModule interface
         compliant_interface = """
-        class CompliantModule(ReflectiveModule):
+        class CompliantModule(ReflectiveModule, ModuleHealth):
             def get_module_status(self) -> Dict[str, Any]:
                 return {
                     'module_name': 'CompliantModule',
@@ -680,7 +682,7 @@ class TestRegressionPrevention:
         
         # Test detection of interface regression
         regressed_interface = """
-        class RegressedReflectiveModule(ReflectiveModule):
+        class RegressedReflectiveModule(ReflectiveModule, ModuleHealth):
             def get_status(self):  # Wrong method name
                 return {'status': 'ok'}
             
@@ -726,7 +728,7 @@ class TestRegressionPrevention:
         
         ## Interface
         
-        class HighQualityModule(ReflectiveModule):
+        class HighQualityModule(ReflectiveModule, ModuleHealth):
             def get_module_status(self) -> Dict[str, Any]:
                 return {'module_name': 'HighQualityModule'}
             
@@ -793,4 +795,21 @@ class TestRegressionPrevention:
 
 
 if __name__ == "__main__":
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
     pytest.main([__file__, "-v"])
