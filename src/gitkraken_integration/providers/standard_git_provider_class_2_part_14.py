@@ -35,3 +35,20 @@ from src.rm_ddd.core.health import ModuleHealth
             ahead_behind = self._get_ahead_behind_counts(branch_name) if is_current else {'ahead': 0, 'behind': 0}
             branches.append(BranchInfo(name=branch_name, is_current=is_current, ahead_count=ahead_behind['ahead'], behind_count=ahead_behind['behind'], last_commit_hash=commit_hash, last_commit_message=commit_message, last_commit_date=commit_date, last_commit_author=commit_author, tracking_branch=tracking_branch))
         return branches
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

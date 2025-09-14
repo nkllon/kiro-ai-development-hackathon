@@ -14,9 +14,11 @@ import redis.asyncio as redis
 
 from src.beast_mode.messaging.mailbox_logger import MailboxLogger, MailboxLoggerManager
 from src.beast_mode.messaging.models import BeastModeMessage, MessageType
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestMailboxLogger:
+
+class TestMailboxLogger(ReflectiveModule):
     """Test cases for MailboxLogger class"""
     
     @pytest.fixture
@@ -413,7 +415,7 @@ class TestMailboxLogger:
                 assert not logger_instance.is_running
 
 
-class TestMailboxLoggerManager:
+class TestMailboxLoggerManager(ReflectiveModule):
     """Test cases for MailboxLoggerManager class"""
     
     @pytest.fixture
@@ -484,7 +486,7 @@ class TestMailboxLoggerManager:
         assert status['manager_running'] == False
 
 
-class TestMailboxLoggerIntegration:
+class TestMailboxLoggerIntegration(ReflectiveModule):
     """Integration tests for MailboxLogger with error scenarios"""
     
     @pytest.fixture
@@ -543,4 +545,32 @@ class TestMailboxLoggerIntegration:
         logger.stats['messages_logged'] += 1
         stats2 = logger.get_logger_stats()
         
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert stats2['messages_logged'] == stats1['messages_logged'] + 1

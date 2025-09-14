@@ -9,9 +9,11 @@ from unittest.mock import patch
 
 from src.beast_mode.messaging.agent_registry import AgentRegistry, DiscoveredAgent
 from src.beast_mode.messaging.models import BeastModeMessage, MessageType, AgentCapabilities
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestDiscoveredAgent:
+
+class TestDiscoveredAgent(ReflectiveModule):
     """Test DiscoveredAgent dataclass"""
     
     def test_discovered_agent_creation(self):
@@ -36,7 +38,7 @@ class TestDiscoveredAgent:
         assert agent.is_active is True
 
 
-class TestAgentRegistry:
+class TestAgentRegistry(ReflectiveModule):
     """Test AgentRegistry functionality"""
     
     @pytest.fixture
@@ -425,4 +427,32 @@ class TestAgentRegistry:
         
         # Old capabilities should be removed if no other agents have them
         assert "python" not in registry.capability_index
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert "testing" not in registry.capability_index

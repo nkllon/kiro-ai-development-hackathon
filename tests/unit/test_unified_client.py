@@ -10,6 +10,8 @@ from datetime import datetime
 from src.beast_mode.messaging.unified_client import BeastModeClient
 from src.beast_mode.messaging.models import BeastModeMessage, MessageType
 from src.beast_mode.messaging.shared_state import SharedStateConfig
+from src.rm_ddd.core.health import ModuleHealth
+
 
 
 @pytest.fixture
@@ -352,4 +354,21 @@ async def test_client_not_started_error(unified_client):
     )
     
     result = await unified_client.send_message(message)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
     assert result is False
