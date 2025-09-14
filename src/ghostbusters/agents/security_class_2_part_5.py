@@ -42,3 +42,20 @@ from src.rm_ddd.core.health import ModuleHealth
             logger.error(f'Security analysis failed for {context.target_path}: {str(e)}')
             analysis_duration = __import__('time').time() - start_time
             return AnalysisResult(agent_name=self.name, confidence=0.0, findings=[Finding(type=FindingType.SECURITY_VULNERABILITY, severity=Severity.CRITICAL, description=f'Security analysis failed: {str(e)}', confidence=1.0)], recommendations=[Recommendation(title='Fix Analysis Error', description=f'Resolve the issue preventing security analysis: {str(e)}', priority=Severity.CRITICAL)], analysis_duration=analysis_duration, context=context)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

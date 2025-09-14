@@ -6,6 +6,8 @@ import pytest
 from pydantic import ValidationError
 
 from src.multi_instance_orchestration.protocol.models import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     ActionResult,
     CommandPattern,
     StructuredAction,
@@ -13,7 +15,7 @@ from src.multi_instance_orchestration.protocol.models import (
 )
 
 
-class TestStructuredAction:
+class TestStructuredAction(ReflectiveModule):
     """Test StructuredAction model."""
 
     def test_valid_action_creation(self):
@@ -110,7 +112,7 @@ class TestStructuredAction:
         assert parsed.parameters == original.parameters
 
 
-class TestActionResult:
+class TestActionResult(ReflectiveModule):
     """Test ActionResult model."""
 
     def test_successful_result(self):
@@ -176,7 +178,7 @@ class TestActionResult:
         assert "rollback performed" in response
 
 
-class TestValidationResult:
+class TestValidationResult(ReflectiveModule):
     """Test ValidationResult model."""
 
     def test_valid_result(self):
@@ -220,7 +222,7 @@ class TestValidationResult:
         assert "Suggestion 1" in string_result
 
 
-class TestCommandPattern:
+class TestCommandPattern(ReflectiveModule):
     """Test CommandPattern model."""
 
     def test_pattern_creation(self):
@@ -309,3 +311,31 @@ class TestCommandPattern:
         assert result.is_valid is True  # Warnings don't make it invalid
         assert "Unknown modifier: unknown-modifier" in result.warnings
         assert "Available modifiers: beast-mode" in result.suggestions
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
