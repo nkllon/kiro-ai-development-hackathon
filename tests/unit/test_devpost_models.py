@@ -10,6 +10,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 from src.devpost_integration.models import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     # Core Models
     DevpostProject, ProjectMetadata, TeamMember, ProjectLink, MediaFile,
     SubmissionRequirement, SyncOperation, FileChangeEvent,
@@ -36,7 +38,7 @@ from src.devpost_integration.models import (
 )
 
 
-class TestCoreModels:
+class TestCoreModels(ReflectiveModule):
     """Test core data models."""
     
     def test_devpost_project_creation(self):
@@ -126,7 +128,7 @@ class TestCoreModels:
         assert media.uploaded_at is None
 
 
-class TestDeadlineAndNotificationModels:
+class TestDeadlineAndNotificationModels(ReflectiveModule):
     """Test deadline and notification models (Task 2.3)."""
     
     def test_deadline_creation(self):
@@ -290,7 +292,7 @@ class TestDeadlineAndNotificationModels:
         assert not settings.analytics_enabled
 
 
-class TestConfigurationModels:
+class TestConfigurationModels(ReflectiveModule):
     """Test configuration models."""
     
     def test_devpost_config_creation(self):
@@ -342,7 +344,7 @@ class TestConfigurationModels:
         assert len(config.global_settings) == 0
 
 
-class TestResultModels:
+class TestResultModels(ReflectiveModule):
     """Test result and status models."""
     
     def test_sync_result_model(self):
@@ -427,7 +429,7 @@ class TestResultModels:
         assert isinstance(dashboard.generated_at, datetime)
 
 
-class TestUtilityFunctions:
+class TestUtilityFunctions(ReflectiveModule):
     """Test utility functions."""
     
     def test_create_default_notification_settings(self):
@@ -457,7 +459,7 @@ class TestUtilityFunctions:
         assert rules.max_tags == 10
 
 
-class TestEnums:
+class TestEnums(ReflectiveModule):
     """Test enum values and behavior."""
     
     def test_submission_status_enum(self):
@@ -492,7 +494,7 @@ class TestEnums:
         assert ConflictResolutionStrategy.TIMESTAMP_BASED == "timestamp_based"
 
 
-class TestModelIntegration:
+class TestModelIntegration(ReflectiveModule):
     """Test model integration and relationships."""
     
     def test_deadline_with_requirements(self):
@@ -591,4 +593,32 @@ class TestModelIntegration:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v"])

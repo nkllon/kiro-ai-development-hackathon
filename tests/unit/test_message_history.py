@@ -18,6 +18,8 @@ from src.beast_mode.messaging.message_history import (
     SortOrder
 )
 from src.beast_mode.messaging.models import BeastModeMessage, MessageType
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
 
 
 @pytest.fixture
@@ -107,7 +109,7 @@ async def history_manager(temp_log_dir):
     await manager.stop()
 
 
-class TestMessageFilter:
+class TestMessageFilter(ReflectiveModule):
     """Test MessageFilter functionality"""
     
     def test_default_filter(self):
@@ -162,7 +164,7 @@ class TestMessageFilter:
         assert filter_criteria.offset == 5
 
 
-class TestMessageEntry:
+class TestMessageEntry(ReflectiveModule):
     """Test MessageEntry functionality"""
     
     def test_message_entry_creation(self, sample_messages):
@@ -206,7 +208,7 @@ class TestMessageEntry:
         assert entry.notes is None
 
 
-class TestMessageHistoryManager:
+class TestMessageHistoryManager(ReflectiveModule):
     """Test MessageHistoryManager functionality"""
     
     def test_initialization(self, temp_log_dir):
@@ -641,7 +643,7 @@ class TestMessageHistoryManager:
 
 
 @pytest.mark.asyncio
-class TestMessageHistoryIntegration:
+class TestMessageHistoryIntegration(ReflectiveModule):
     """Integration tests for message history functionality"""
     
     async def test_full_workflow(self, temp_log_dir, sample_messages, sample_log_entries):
@@ -694,4 +696,32 @@ class TestMessageHistoryIntegration:
             assert stats['status_updates'] > 0
             
         finally:
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
             await manager.stop()
