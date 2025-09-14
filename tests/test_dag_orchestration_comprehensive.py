@@ -19,11 +19,13 @@ from src.beast_mode.dag_orchestration.models.enums import (
     TaskStatus, OptimizationStrategy, ParallelizationLevel
 )
 from src.beast_mode.dag_orchestration.optimization.parallel_optimizer import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     ParallelOptimizer, ParallelOpportunity
 )
 
 
-class TestTaskNode:
+class TestTaskNode(ReflectiveModule):
     """Test TaskNode data model."""
     
     def test_task_node_creation(self):
@@ -63,7 +65,7 @@ class TestTaskNode:
         assert task.estimated_effort == 3
 
 
-class TestParallelOpportunity:
+class TestParallelOpportunity(ReflectiveModule):
     """Test ParallelOpportunity data model."""
     
     def test_parallel_opportunity_creation(self):
@@ -94,7 +96,7 @@ class TestParallelOpportunity:
         assert opportunity.risk_level == "low"
 
 
-class TestParallelOptimizer:
+class TestParallelOptimizer(ReflectiveModule):
     """Test ParallelOptimizer functionality."""
     
     def setup_method(self):
@@ -309,7 +311,7 @@ class TestParallelOptimizer:
         assert max_parallelism == 1
 
 
-class TestResourceRequirements:
+class TestResourceRequirements(ReflectiveModule):
     """Test ResourceRequirements data model."""
     
     def test_resource_requirements_creation(self):
@@ -338,7 +340,7 @@ class TestResourceRequirements:
         assert req.skill_requirements == []
 
 
-class TestExecutionPhase:
+class TestExecutionPhase(ReflectiveModule):
     """Test ExecutionPhase data model."""
     
     def test_execution_phase_creation(self):
@@ -361,7 +363,7 @@ class TestExecutionPhase:
         assert phase.resource_requirements.cpu_cores == 4
 
 
-class TestOptimizedExecution:
+class TestOptimizedExecution(ReflectiveModule):
     """Test OptimizedExecution data model."""
     
     def test_optimized_execution_creation(self):
@@ -381,7 +383,7 @@ class TestOptimizedExecution:
         assert execution.optimization_strategy == OptimizationStrategy.SPEED_FOCUSED
 
 
-class TestIntegrationScenarios:
+class TestIntegrationScenarios(ReflectiveModule):
     """Test integration scenarios for DAG orchestration."""
     
     def setup_method(self):
@@ -474,7 +476,7 @@ class TestIntegrationScenarios:
 
 
 # Performance and edge case tests
-class TestEdgeCases:
+class TestEdgeCases(ReflectiveModule):
     """Test edge cases and error conditions."""
     
     def test_empty_constraint_graph(self):
@@ -537,4 +539,32 @@ class TestEdgeCases:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v"])

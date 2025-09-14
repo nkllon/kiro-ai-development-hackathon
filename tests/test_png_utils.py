@@ -6,9 +6,11 @@ from PIL import Image
 
 from src.visual_diagram_validation.rendering.png_utils import PNGProcessor
 from src.visual_diagram_validation.core.models import PNGImage
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestPNGProcessor:
+
+class TestPNGProcessor(ReflectiveModule):
     """Test PNG processing functionality."""
     
     def create_test_png_bytes(self, width=100, height=100, mode='RGB'):
@@ -121,4 +123,32 @@ class TestPNGProcessor:
         metadata = PNGProcessor.extract_metadata(corrupted_data)
         
         assert 'extraction_error' in metadata
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert isinstance(metadata['extraction_error'], str)

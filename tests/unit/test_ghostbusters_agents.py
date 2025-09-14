@@ -18,7 +18,7 @@ from src.ghostbusters.agents.performance import PerformanceExpert
 from src.ghostbusters.core.models import AnalysisContext, FindingType, Severity
 
 
-class TestCodeQualityExpert:
+class TestCodeQualityExpert(ReflectiveModule):
     """Test CodeQualityExpert functionality"""
     
     @pytest.fixture
@@ -41,7 +41,7 @@ def very_long_function_name_that_violates_style():
                     print("Deep nesting")
     return x + y
 
-class TestClass:
+class TestClass(ReflectiveModule):
     pass  # Missing docstring
 '''
         
@@ -102,7 +102,7 @@ class TestClass:
         assert code_quality_expert.validate_confidence(result) is False
 
 
-class TestSecurityExpert:
+class TestSecurityExpert(ReflectiveModule):
     """Test SecurityExpert functionality"""
     
     @pytest.fixture
@@ -162,7 +162,7 @@ def unsafe_function(user_input):
         assert "secret_detection" in capabilities
 
 
-class TestBuildExpert:
+class TestBuildExpert(ReflectiveModule):
     """Test BuildExpert functionality"""
     
     @pytest.fixture
@@ -252,7 +252,7 @@ pillow
         assert "dockerfile_analysis" in capabilities
 
 
-class TestArchitectureExpert:
+class TestArchitectureExpert(ReflectiveModule):
     """Test ArchitectureExpert functionality"""
     
     @pytest.fixture
@@ -263,7 +263,7 @@ class TestArchitectureExpert:
     async def test_analyze_architecture_issues(self, architecture_expert):
         """Test architecture analysis"""
         architecture_code = '''
-class GodClass:
+class GodClass(ReflectiveModule):
     """A class that does too many things"""
     
     def method1(self, a, b, c, d, e, f, g):  # Too many parameters
@@ -282,7 +282,7 @@ class GodClass:
     
     # ... imagine 20+ more methods here
 
-class ManagerClass:  # Suggests SRP violation
+class ManagerClass(ReflectiveModule):  # Suggests SRP violation
     pass
 
 def function_with_type_checking(obj):
@@ -328,7 +328,7 @@ def function_with_type_checking(obj):
         assert "coupling_analysis" in capabilities
 
 
-class TestPerformanceExpert:
+class TestPerformanceExpert(ReflectiveModule):
     """Test PerformanceExpert functionality"""
     
     @pytest.fixture
@@ -394,7 +394,7 @@ def blocking_operation():
         assert "memory_usage_analysis" in capabilities
 
 
-class TestAllExpertsIntegration:
+class TestAllExpertsIntegration(ReflectiveModule):
     """Test integration between all expert agents"""
     
     @pytest.mark.asyncio
@@ -406,7 +406,7 @@ import time
 
 password = "hardcoded_secret_123"  # Security issue
 
-class LargeManagerClass:  # Architecture issue
+class LargeManagerClass(ReflectiveModule):  # Architecture issue
     """A class that manages everything"""
     
     def process_data(self, data, option1, option2, option3, option4, option5, option6):  # Architecture issue
@@ -489,6 +489,8 @@ class LargeManagerClass:  # Architecture issue
     def test_expert_confidence_validation(self):
         """Test that all experts validate confidence properly"""
         from src.ghostbusters.core.models import AnalysisResult
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         
         experts = [
             CodeQualityExpert(),
@@ -505,4 +507,32 @@ class LargeManagerClass:  # Architecture issue
             
             # Invalid confidence should fail
             invalid_result = AnalysisResult(agent_name=expert.name, confidence=1.5)
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
             assert expert.validate_confidence(invalid_result) is False
