@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def rename_branch(self, old_name: str, new_name: str) -> GitOperationResult:
         """Rename a branch"""

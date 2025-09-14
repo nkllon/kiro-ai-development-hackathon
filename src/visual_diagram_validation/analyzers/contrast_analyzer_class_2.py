@@ -75,3 +75,4 @@ from .contrast_analyzer_class_2_part_74 import *
 from .contrast_analyzer_class_2_part_75 import *
 from .contrast_analyzer_class_2_part_76 import *
 from .contrast_analyzer_class_2_part_77 import *
+from src.rm_ddd.core.health import ModuleHealth

@@ -12,4 +12,6 @@ import mimetypes
 from typing import List, Dict, Optional, Type
 from ..core.interfaces import ProcessorInterface
 from ..core.models import PNGImage
+from src.rm_ddd.core.health import ModuleHealth
+
 

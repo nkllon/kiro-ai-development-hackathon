@@ -33,3 +33,5 @@ from PIL import Image, ImageDraw
 import numpy as np
 from .base_analyzer import BaseQualityAnalyzer
 from ..core.models import PNGImage, Severity, ActionType, BoundingBox
+from src.rm_ddd.core.health import ModuleHealth
+

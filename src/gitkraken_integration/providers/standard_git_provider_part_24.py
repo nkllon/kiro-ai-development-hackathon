@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _get_ahead_behind_counts(self, branch: str) -> Dict[str, int]:
         """Get ahead/behind counts for current branch"""

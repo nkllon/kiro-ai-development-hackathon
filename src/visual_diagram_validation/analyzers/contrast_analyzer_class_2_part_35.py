@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _calculate_relative_luminance(self, color: Tuple[int, int, int]) -> float:
     try:

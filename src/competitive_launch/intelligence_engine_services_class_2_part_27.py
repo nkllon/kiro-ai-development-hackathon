@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _calculate_time_to_market_advantage(self) -> TimeToMarketAdvantage:
         """Calculate time-to-market competitive advantage."""

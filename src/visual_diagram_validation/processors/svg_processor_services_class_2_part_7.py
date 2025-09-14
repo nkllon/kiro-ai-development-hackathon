@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def render_to_png(self, input_data: bytes, width: int=2048, height: int=2048, dpi: int=300) -> PNGImage:
         """

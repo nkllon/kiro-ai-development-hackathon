@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _extract_text_elements(self, svg_text: str) -> list[str]:
         """Extract text content from SVG."""

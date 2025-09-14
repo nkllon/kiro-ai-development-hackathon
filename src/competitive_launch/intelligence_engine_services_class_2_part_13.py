@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _detect_market_trends(self) -> List[MarketTrend]:
         """Detect current market trends (simulated)."""

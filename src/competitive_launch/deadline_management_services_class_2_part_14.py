@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _find_critical_path(self, dependency_graph: Dict[str, List[str]], tasks: List[HackathonTask]) -> List[HackathonTask]:
         """Find critical path using topological sort."""

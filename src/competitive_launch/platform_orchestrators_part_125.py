@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _generate_cost_recommendations(self, analysis: Dict[str, Any]) -> List[str]:
     """Generate cost optimization recommendations."""

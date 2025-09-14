@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _analyze_text_contrast(self, image: Image.Image, text_region: Dict[str, Any]) -> None:
         try:

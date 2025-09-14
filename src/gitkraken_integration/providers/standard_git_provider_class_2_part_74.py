@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _get_ahead_behind_counts(self, branch: str) -> Dict[str, int]:
     """Get ahead/behind counts for current branch"""

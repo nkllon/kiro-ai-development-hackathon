@@ -6,3 +6,4 @@ from .png_utils_class_2_part_5 import *
 from .png_utils_class_2_part_6 import *
 from .png_utils_class_2_part_7 import *
 from .png_utils_class_2_part_8 import *
+from src.rm_ddd.core.health import ModuleHealth

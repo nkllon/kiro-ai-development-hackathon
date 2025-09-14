@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def can_process(self, input_data: bytes, filename: Optional[str] = None) -> bool:
         """

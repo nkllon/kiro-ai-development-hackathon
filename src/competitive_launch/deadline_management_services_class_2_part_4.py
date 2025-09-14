@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def __init__(self, hackathon_deadline: datetime=None):
         register_module(self.__class__.__name__, self)

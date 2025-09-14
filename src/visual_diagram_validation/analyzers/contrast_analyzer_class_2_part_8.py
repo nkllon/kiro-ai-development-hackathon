@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _detect_text_regions(self, image: Image.Image, metadata: Dict[str, Any]) -> List[Dict[str, Any]]:
         try:

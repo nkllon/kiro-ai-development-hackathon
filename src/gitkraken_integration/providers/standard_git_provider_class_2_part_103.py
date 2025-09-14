@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _create_result(self, success: bool, message: str, data: Optional[Dict[str, Any]]=None, error_code: Optional[str]=None, suggestions: List[str]=None, execution_time_ms: int=0) -> GitOperationResult:
     """Create a standardized GitOperationResult"""

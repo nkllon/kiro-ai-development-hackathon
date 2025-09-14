@@ -10,3 +10,5 @@ from .svg_processor_utils import *
 from .svg_processor_processing import *
 from .svg_processor_services import *
 from .svg_processor_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

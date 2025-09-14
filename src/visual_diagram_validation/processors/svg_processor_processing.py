@@ -13,6 +13,8 @@ import re
 from ..core.interfaces import ProcessorInterface
 from ..core.models import PNGImage
 from ..rendering.png_utils import PNGProcessor
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def can_process(self, input_data: bytes, filename: Optional[str]=None) -> bool:
     """

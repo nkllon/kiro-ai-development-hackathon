@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _draw_circles(self, draw, svg_text: str, img_width: int, img_height: int, svg_info: Dict[str, Any]):
         """Draw circle/ellipse elements from SVG."""

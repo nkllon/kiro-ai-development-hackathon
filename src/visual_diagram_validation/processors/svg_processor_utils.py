@@ -13,6 +13,8 @@ import re
 from ..core.interfaces import ProcessorInterface
 from ..core.models import PNGImage
 from ..rendering.png_utils import PNGProcessor
+from src.rm_ddd.core.health import ModuleHealth
+
 
 @property
 def supported_formats(self) -> list[str]:

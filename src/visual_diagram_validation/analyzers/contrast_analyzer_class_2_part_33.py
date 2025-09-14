@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _extract_element_background_colors(self, image: Image.Image, bbox: BoundingBox) -> Tuple[Tuple[int, int, int], Tuple[int, int, int]]:
     try:

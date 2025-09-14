@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _calculate_dimensions(self, svg_info: Dict[str, Any], max_width: int, max_height: int) -> Tuple[int, int]:
         """Calculate optimal rendering dimensions."""

@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _draw_text_placeholders(self, draw, svg_text: str, img_width: int, img_height: int):
         """Draw placeholder boxes for text elements."""

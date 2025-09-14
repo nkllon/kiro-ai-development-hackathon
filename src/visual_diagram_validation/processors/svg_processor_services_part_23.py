@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _parse_dimension(self, dim_str: str) -> float:
         """Parse dimension string (e.g., '100px', '50%', '2in') to pixels."""

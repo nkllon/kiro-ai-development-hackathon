@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _looks_like_graphical_element(self, region: np.ndarray) -> bool:
     try:

@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _analyze_graphical_contrast(self, image: Image.Image, element: Dict[str, Any]) -> None:
         try:

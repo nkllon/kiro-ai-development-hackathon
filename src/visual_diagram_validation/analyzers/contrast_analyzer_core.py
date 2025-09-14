@@ -6,3 +6,5 @@ import numpy as np
 from .base_analyzer import BaseQualityAnalyzer
 from ..core.models import PNGImage, Severity, ActionType, BoundingBox
 from .contrast_analyzer_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

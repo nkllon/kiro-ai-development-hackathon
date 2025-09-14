@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _count_shapes(self, svg_text: str) -> Dict[str, int]:
         """Count different shape types in SVG."""

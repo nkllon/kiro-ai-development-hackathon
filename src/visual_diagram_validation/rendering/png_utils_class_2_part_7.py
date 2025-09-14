@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def create_test_image(width: int = 800, height: int = 600, 
                          dpi: int = 300) -> PNGImage:

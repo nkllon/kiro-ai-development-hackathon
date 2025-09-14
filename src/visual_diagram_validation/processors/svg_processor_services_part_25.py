@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _calculate_dimensions(self, svg_info: Dict[str, Any], max_width: int, max_height: int) -> Tuple[int, int]:
         """Calculate optimal rendering dimensions."""

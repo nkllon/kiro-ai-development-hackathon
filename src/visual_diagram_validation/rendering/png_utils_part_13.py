@@ -14,4 +14,6 @@ from PIL import Image, ImageDraw
 import struct
 
 from ..core.models import PNGImage
+from src.rm_ddd.core.health import ModuleHealth
+
 

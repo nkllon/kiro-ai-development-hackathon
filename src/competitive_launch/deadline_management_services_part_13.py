@@ -21,3 +21,5 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from enum import Enum
 from .models import MarketConditions, CompetitiveThreat
+from src.rm_ddd.core.health import ModuleHealth
+

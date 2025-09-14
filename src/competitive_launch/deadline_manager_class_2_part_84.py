@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _setup_emergency_monitoring(self, delay_risk: Dict[str, Any]) -> Dict[str, Any]:
     """Set up emergency monitoring for deadline management."""

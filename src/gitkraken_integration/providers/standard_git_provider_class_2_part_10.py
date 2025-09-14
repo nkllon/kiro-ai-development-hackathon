@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _parse_status_output(self, output: str) -> List[FileStatus]:
         """Parse git status --porcelain output into FileStatus objects"""

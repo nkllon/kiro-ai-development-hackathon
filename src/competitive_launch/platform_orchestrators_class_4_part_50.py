@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def accelerate_development(self, resources: KiroResources) -> Dict[str, Any]:
     """

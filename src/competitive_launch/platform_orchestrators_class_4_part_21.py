@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _estimate_competitive_advantage(self, specs: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Estimate competitive advantage of generated features."""

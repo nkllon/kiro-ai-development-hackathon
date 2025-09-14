@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _parse_svg_text(self, text_content: str) -> Dict[str, Any]:
         """Parse SVG from text when XML parsing fails."""

@@ -17,3 +17,4 @@ from .svg_processor_services_class_2_part_16 import *
 from .svg_processor_services_class_2_part_17 import *
 from .svg_processor_services_class_2_part_18 import *
 from .svg_processor_services_class_2_part_19 import *
+from src.rm_ddd.core.health import ModuleHealth

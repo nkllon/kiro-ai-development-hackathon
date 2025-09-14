@@ -1,4 +1,4 @@
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -99,4 +99,6 @@ import mimetypes
 from typing import List, Dict, Optional, Type
 from ..core.interfaces import ProcessorInterface
 from ..core.models import PNGImage
+from src.rm_ddd.core.health import ModuleHealth
+
 

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def optimize_scope_for_deadline(self) -> Dict[str, Any]:
         """Optimize project scope to meet deadline."""

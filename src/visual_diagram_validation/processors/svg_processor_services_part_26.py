@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _rasterize_svg_simple(self, svg_data: bytes, width: int, height: int, svg_info: Dict[str, Any]) -> bytes:
         """

@@ -88,3 +88,4 @@ from .contrast_analyzer_part_87 import *
 from .contrast_analyzer_part_88 import *
 from .contrast_analyzer_part_89 import *
 from .contrast_analyzer_part_90 import *
+from src.rm_ddd.core.health import ModuleHealth

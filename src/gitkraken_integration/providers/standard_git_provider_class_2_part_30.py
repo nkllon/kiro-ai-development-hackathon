@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def unstage_files(self, files: List[str]=None) -> GitOperationResult:
         """Unstage files - placeholder for next task"""

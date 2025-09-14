@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _deploy_core_services(self, resources: GKEResources) -> List[str]:
     """Deploy core Beast Mode services on GKE."""

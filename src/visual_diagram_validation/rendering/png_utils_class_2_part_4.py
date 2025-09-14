@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def normalize_png(image_data: bytes, target_dpi: int = 300, 
                      retina_scale: float = 2.0) -> PNGImage:

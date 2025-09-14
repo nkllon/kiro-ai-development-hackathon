@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def resolve_conflict(self, file_path: str, resolution: str) -> GitOperationResult:
         """Resolve merge conflict - placeholder for next task"""

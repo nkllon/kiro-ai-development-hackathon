@@ -1,4 +1,4 @@
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -120,3 +120,5 @@ from PIL import Image, ImageDraw
 import numpy as np
 from .base_analyzer import BaseQualityAnalyzer
 from ..core.models import PNGImage, Severity, ActionType, BoundingBox
+from src.rm_ddd.core.health import ModuleHealth
+

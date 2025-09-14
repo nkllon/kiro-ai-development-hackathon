@@ -141,3 +141,4 @@ from .standard_git_provider_part_140 import *
 from .standard_git_provider_part_141 import *
 from .standard_git_provider_part_142 import *
 from .standard_git_provider_part_143 import *
+from src.rm_ddd.core.health import ModuleHealth

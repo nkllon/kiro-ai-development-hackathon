@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def list_branches(self, include_remote: bool=True) -> GitOperationResult:
     """List all branches with comprehensive metadata"""

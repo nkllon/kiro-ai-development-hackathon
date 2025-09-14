@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _parse_svg_text(self, text_content: str) -> Dict[str, Any]:
         """Parse SVG from text when XML parsing fails."""

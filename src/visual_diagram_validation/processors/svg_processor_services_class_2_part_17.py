@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _extract_attr(self, tag: str, attr_name: str, default: float) -> float:
         """Extract numeric attribute value from SVG tag."""

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _looks_like_text_region(self, region: np.ndarray) -> bool:
         try:
