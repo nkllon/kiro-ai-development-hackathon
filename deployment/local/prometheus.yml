@@ -1,0 +1,79 @@
+# Prometheus Configuration for Kiro AI Development Hackathon
+# This configuration sets up monitoring for the systematic PDCA orchestrator
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'kiro-ai-local'
+    environment: 'development'
+
+# Rule files to be loaded
+rule_files:
+  - "alert_rules.yml"
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    scrape_interval: 5s
+    metrics_path: /metrics
+
+  # Systematic PDCA Orchestrator monitoring
+  - job_name: 'systematic-pdca-orchestrator'
+    static_configs:
+      - targets: ['systematic-pdca-orchestrator:8080']
+    scrape_interval: 10s
+    metrics_path: /metrics
+    scrape_timeout: 5s
+
+  # Node exporter for system metrics (if available)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 15s
+
+  # Redis monitoring (if Redis is running)
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+    scrape_interval: 15s
+
+  # Custom application metrics
+  - job_name: 'kiro-ai-metrics'
+    static_configs:
+      - targets: ['systematic-pdca-orchestrator:8080']
+    scrape_interval: 30s
+    metrics_path: /api/v1/metrics
+    params:
+      format: ['prometheus']
+
+# Storage configuration
+storage:
+  tsdb:
+    retention.time: 30d
+    retention.size: 1GB
+    wal-compression: true
+
+# Remote write configuration (optional - for long-term storage)
+# remote_write:
+#   - url: "https://your-remote-storage/api/v1/write"
+#     basic_auth:
+#       username: "your-username"
+#       password: "your-password"
+
+# Remote read configuration (optional - for querying remote storage)
+# remote_read:
+#   - url: "https://your-remote-storage/api/v1/read"
+#     basic_auth:
+#       username: "your-username"
+#       password: "your-password"
