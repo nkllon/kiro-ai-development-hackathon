@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _generate_pacing_recommendations(self, demo_script: DemoScript, hackathon_config: HackathonConfig, pacing_strategy: PacingStrategy, template_name: str) -> List[PacingRecommendation]:
     try:

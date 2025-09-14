@@ -10,6 +10,8 @@ from datetime import datetime
 from typing import Callable, Optional
 from ..core.reflective_module import HealthIndicator, ModuleStatus, ReflectiveModule
 from .models import ActionResult, CommandPattern, StructuredAction, ValidationResult
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def parse_command(self, text: str) -> StructuredAction:
     """Parse human-readable text into structured action.

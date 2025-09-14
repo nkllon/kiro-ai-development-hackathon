@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_completed_tasks(self, swarm: SwarmState) -> List[str]:
     """Get list of completed tasks ready for integration."""

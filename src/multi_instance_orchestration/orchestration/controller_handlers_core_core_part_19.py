@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _update_average_metric(self, metric_name: str, new_value: float) -> None:
     """Update running average for performance metric."""

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _create_rehearsal_schedule(self, demo_script: DemoScript) -> List[str]:
         try:

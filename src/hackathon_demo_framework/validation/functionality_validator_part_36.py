@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _analyze_feature_implementation(self) -> Dict[str, List[str]]:
     """Analyze feature implementation completeness."""

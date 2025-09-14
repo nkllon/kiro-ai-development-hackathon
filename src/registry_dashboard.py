@@ -19,3 +19,4 @@ from .registry_dashboard_part_18 import *
 from .registry_dashboard_part_19 import *
 from .registry_dashboard_part_20 import *
 from .registry_dashboard_part_21 import *
+from src.rm_ddd.core.health import ModuleHealth

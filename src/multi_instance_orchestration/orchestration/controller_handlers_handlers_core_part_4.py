@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def monitor_swarm(self, swarm_id: Optional[str]=None) -> SwarmState:
     """Get real-time swarm health and progress with systematic monitoring.

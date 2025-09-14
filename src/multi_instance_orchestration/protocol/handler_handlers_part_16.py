@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_command_help(self, verb: Optional[str]=None, noun: Optional[str]=None) -> str:
         """Get help text for commands."""

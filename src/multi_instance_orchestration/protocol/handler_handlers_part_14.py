@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def execute_action(self, action: StructuredAction) -> ActionResult:
         """Execute structured action and return result."""

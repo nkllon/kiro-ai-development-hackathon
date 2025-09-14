@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def optimize_demo_timing(self, demo_script: DemoScript, hackathon_config: HackathonConfig, pacing_strategy: PacingStrategy=PacingStrategy.DEMO_FOCUSED, template_name: str='devpost_standard') -> TimingOptimization:
         try:

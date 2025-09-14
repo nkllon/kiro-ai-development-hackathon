@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _register_default_patterns(self) -> None:
         """Register default command patterns."""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _create_distribution_plan(self, tasks: List[Task], instance_count: int, parallel_groups: List[List[str]]) -> DistributionPlan:
     """Create distribution plan based on strategy."""

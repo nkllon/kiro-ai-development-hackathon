@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _calculate_coverage_score(self, coverage: Dict[str, Any]) -> float:
         """Calculate feature coverage score."""

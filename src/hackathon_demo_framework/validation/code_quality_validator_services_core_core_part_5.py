@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_file(self, file_path: Path) -> Dict[str, Any]:
     """Analyze a single Python file for quality metrics."""

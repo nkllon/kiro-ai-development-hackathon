@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def integrate_results(self, swarm_id: Optional[str]=None) -> IntegrationReport:
     """Systematically integrate completed work with quality gates.

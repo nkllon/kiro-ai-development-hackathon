@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_failure(self, failure: InstanceFailure) -> Dict[str, any]:
     """Analyze failure for recovery strategy."""

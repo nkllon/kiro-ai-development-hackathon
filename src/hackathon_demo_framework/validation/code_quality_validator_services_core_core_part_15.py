@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_recommendations(self, issues: List[CodeQualityIssue], scores: Dict[str, float]) -> List[str]:
     """Generate improvement recommendations based on issues and scores."""

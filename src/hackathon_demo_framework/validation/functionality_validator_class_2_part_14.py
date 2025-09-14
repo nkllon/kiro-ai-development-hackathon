@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _check_documentation_completeness(self) -> List[str]:
         """Check for missing documentation."""

@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_parallel_groups(self, dependency_graph: Dict[str, List[str]]) -> List[List[str]]:
     """Calculate parallel execution groups using topological sort."""

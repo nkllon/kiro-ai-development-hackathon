@@ -40,3 +40,4 @@ from .functionality_validator_class_2_part_39 import *
 from .functionality_validator_class_2_part_40 import *
 from .functionality_validator_class_2_part_41 import *
 from .functionality_validator_class_2_part_42 import *
+from src.rm_ddd.core.health import ModuleHealth

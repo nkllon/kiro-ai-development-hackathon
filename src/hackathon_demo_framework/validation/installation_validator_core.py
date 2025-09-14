@@ -21,3 +21,5 @@ import importlib.util
 import tomli as tomllib
 from .installation_validator_core_core import *
 from .installation_validator_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

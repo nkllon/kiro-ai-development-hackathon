@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def generate_real_time_timing_guide(self, demo_script: DemoScript) -> Dict[str, Any]:
     try:

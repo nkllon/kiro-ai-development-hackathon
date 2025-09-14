@@ -1,3 +1,5 @@
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _check_import_health(self) -> List[str]:
     """Check for broken imports in the project."""

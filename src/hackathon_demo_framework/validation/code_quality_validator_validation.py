@@ -16,6 +16,8 @@ from enum import Enum
 import re
 import json
 from ..models import ValidationResult, TechnicalAssessment
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def validate_code_quality(self, min_score: float=80.0) -> ValidationResult:
     """

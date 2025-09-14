@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_requirements_txt(self, file_path: Path, content: str) -> List[InstallationIssue]:
     """Validate requirements.txt file."""

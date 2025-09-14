@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_optimal_instances(self, tasks: List[Task], parallel_groups: List[List[str]]) -> int:
     """Calculate optimal number of instances based on tasks and parallelism."""

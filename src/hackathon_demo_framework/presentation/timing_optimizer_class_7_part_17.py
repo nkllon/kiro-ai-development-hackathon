@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _get_adjustment_reason(self, section: str, current: int, optimal: int, strategy: PacingStrategy) -> str:
         try:

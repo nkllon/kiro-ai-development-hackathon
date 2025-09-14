@@ -7,6 +7,8 @@ def _validate_pyproject_toml(self, file_path: Path, content: str) -> List[Instal
     except ImportError:
         try:
             import tomli as tomllib
+from src.rm_ddd.core.health import ModuleHealth
+
         except ImportError:
             issues.append(InstallationIssue(issue_type=InstallationIssueType.INSTALLATION_FAILURE, severity='minor', message='Cannot validate pyproject.toml - TOML parser not available', file_path=str(file_path), suggestion='Install tomli or use Python 3.11+'))
             return issues

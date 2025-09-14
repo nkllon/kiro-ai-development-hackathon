@@ -26,4 +26,6 @@ def _validate_swarm_config(self) -> None:
         raise ValueError('Max instances must be >= min instances')
     if not self.config.deployment_targets and self.config.instance_count > 1:
         from .models import DeploymentTarget
+from src.rm_ddd.core.health import ModuleHealth
+
         self.config.deployment_targets = [DeploymentTarget(name='local', type='local')]

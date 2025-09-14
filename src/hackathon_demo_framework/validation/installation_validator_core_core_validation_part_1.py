@@ -9,6 +9,8 @@ def validate_installation_setup(self) -> InstallationReport:
     self.logger.info('Starting installation and setup validation')
     try:
         import time
+from src.rm_ddd.core.health import ModuleHealth
+
         start_time = time.time()
         all_issues = []
         self.logger.info('Validating configuration files')

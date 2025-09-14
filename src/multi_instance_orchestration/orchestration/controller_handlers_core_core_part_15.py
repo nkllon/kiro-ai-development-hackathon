@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _generate_recovery_strategy(self, failure: InstanceFailure, analysis: Dict[str, any]) -> RecoveryPlan:
     """Generate recovery strategy based on failure analysis."""

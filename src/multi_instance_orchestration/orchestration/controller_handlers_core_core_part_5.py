@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def handle_failure(self, failure: InstanceFailure) -> RecoveryPlan:
     """Generate systematic recovery plan for failed instances.

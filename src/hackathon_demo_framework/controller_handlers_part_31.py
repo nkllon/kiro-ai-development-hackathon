@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _optimize_demo_package(self, demo_package: DemoPackage) -> DemoPackage:
         """Optimize demo package based on metrics and analysis."""

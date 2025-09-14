@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _discover_source_files(self) -> List[Path]:
     """Discover Python source files to analyze."""

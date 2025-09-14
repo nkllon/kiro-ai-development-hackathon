@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _update_swarm_metrics(self, swarm: SwarmState) -> None:
     """Update performance metrics for swarm."""

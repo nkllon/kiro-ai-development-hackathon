@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_config_file(self, file_path: Path) -> List[InstallationIssue]:
     """Validate a specific configuration file."""

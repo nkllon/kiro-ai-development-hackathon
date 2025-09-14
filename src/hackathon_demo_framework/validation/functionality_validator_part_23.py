@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _validate_integrations(self) -> Dict[str, Any]:
         """Validate integration points and end-to-end workflows."""

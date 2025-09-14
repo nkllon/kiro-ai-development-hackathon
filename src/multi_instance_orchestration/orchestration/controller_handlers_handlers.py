@@ -16,3 +16,5 @@ from pathlib import Path
 from .controller_handlers_handlers_handlers import *
 from .controller_handlers_handlers_core import *
 from .controller_handlers_handlers_validation import *
+from src.rm_ddd.core.health import ModuleHealth
+

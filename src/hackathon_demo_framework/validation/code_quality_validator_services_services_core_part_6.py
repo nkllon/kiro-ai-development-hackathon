@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_complexity(self, tree: ast.AST, file_path: Path) -> Dict[str, Any]:
     """Analyze code complexity metrics."""

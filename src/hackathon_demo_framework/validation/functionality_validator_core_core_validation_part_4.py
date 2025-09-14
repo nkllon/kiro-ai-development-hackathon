@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_interfaces(self) -> Dict[str, Any]:
     """Validate API and interface definitions."""

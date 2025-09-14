@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _get_node_length(self, node: ast.AST) -> int:
     """Get the length of an AST node in lines."""

@@ -8,3 +8,5 @@ import json
 from ..models import ValidationResult, TechnicalAssessment
 from .functionality_validator_core_core_validation import *
 from .functionality_validator_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

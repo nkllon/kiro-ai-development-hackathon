@@ -6,6 +6,8 @@ def _test_installation_process(self) -> Dict[str, Any]:
     try:
         if (self.project_path / 'src').exists():
             import importlib.util
+from src.rm_ddd.core.health import ModuleHealth
+
             init_file = self.project_path / 'src' / '__init__.py'
             if init_file.exists():
                 spec = importlib.util.spec_from_file_location('test_module', init_file)

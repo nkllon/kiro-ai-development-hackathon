@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_dependencies(self) -> Dict[str, Any]:
     """Validate dependency specifications and conflicts."""

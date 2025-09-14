@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _calculate_cyclomatic_complexity(self, node: ast.FunctionDef) -> int:
     """Calculate cyclomatic complexity for a function (simplified)."""

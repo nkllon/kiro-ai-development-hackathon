@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def assess_code_quality(self) -> CodeQualityReport:
     """

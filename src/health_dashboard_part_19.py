@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def get_overall_health(self) -> Dict[str, Any]:
         """Get overall system health status."""

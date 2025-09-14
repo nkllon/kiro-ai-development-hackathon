@@ -8,3 +8,5 @@ from .handler_handlers import *
 from .handler_validation import *
 from .handler_utils import *
 from .handler_processing import *
+from src.rm_ddd.core.health import ModuleHealth
+

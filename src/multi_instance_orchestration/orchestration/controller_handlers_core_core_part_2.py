@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def launch_swarm(self, tasks: List[Task]) -> SwarmState:
     """Launch distributed Beast Mode swarm with systematic approach.

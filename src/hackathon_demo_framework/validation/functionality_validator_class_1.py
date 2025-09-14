@@ -1,4 +1,4 @@
-class ReflectiveModule(ReflectiveModule):
+class ReflectiveModule(ReflectiveModule, ModuleHealth):
 def get_health_indicators(self) -> Dict[str, any]:
         """Get health indicators for this module."""
         return {
@@ -121,3 +121,5 @@ import importlib.util
 import ast
 import json
 from ..models import ValidationResult, TechnicalAssessment
+from src.rm_ddd.core.health import ModuleHealth
+

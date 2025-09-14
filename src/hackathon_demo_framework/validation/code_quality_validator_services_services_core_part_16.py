@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _create_empty_report(self, reason: str) -> CodeQualityReport:
     """Create an empty report with error information."""

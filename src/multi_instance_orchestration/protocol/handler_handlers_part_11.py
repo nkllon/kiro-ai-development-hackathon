@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _normalize_command_text(self, text: str) -> str:
         """Normalize command text for parsing."""

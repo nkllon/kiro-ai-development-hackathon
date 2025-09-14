@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def generate_quality_improvement_plan(self, report: CodeQualityReport) -> List[str]:
     """

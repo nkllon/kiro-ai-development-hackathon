@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import Dict, List, Any
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _apply_timing_optimizations(self, demo_script: DemoScript, recommendations: List[PacingRecommendation], hackathon_config: HackathonConfig) -> DemoScript:
     try:

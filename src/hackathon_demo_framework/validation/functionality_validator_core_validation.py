@@ -5,3 +5,4 @@ from .functionality_validator_core_validation_part_4 import *
 from .functionality_validator_core_validation_part_5 import *
 from .functionality_validator_core_validation_part_6 import *
 from .functionality_validator_core_validation_part_7 import *
+from src.rm_ddd.core.health import ModuleHealth

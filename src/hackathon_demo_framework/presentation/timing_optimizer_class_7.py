@@ -77,3 +77,4 @@ from .timing_optimizer_class_7_part_76 import *
 from .timing_optimizer_class_7_part_77 import *
 from .timing_optimizer_class_7_part_78 import *
 from .timing_optimizer_class_7_part_79 import *
+from src.rm_ddd.core.health import ModuleHealth

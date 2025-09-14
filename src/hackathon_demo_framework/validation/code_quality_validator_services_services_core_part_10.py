@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_security(self, tree: ast.AST, content: str, file_path: Path) -> Dict[str, Any]:
     """Analyze potential security issues."""

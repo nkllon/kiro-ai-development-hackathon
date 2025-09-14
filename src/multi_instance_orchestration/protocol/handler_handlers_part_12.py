@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def _parse_natural_language(self, text: str) -> StructuredAction:
         """Parse natural language command into structured action."""

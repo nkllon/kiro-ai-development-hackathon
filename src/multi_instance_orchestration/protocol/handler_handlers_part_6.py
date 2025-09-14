@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def __init__(self, instance_id: str):
         super().__init__('TextProtocolHandler', '1.0.0')

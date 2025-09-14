@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def parse_command(self, text: str) -> StructuredAction:
         """Parse human-readable text into structured action.

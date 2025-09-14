@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def register_pattern(self, pattern: CommandPattern) -> None:
         """Register a command pattern for validation."""

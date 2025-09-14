@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_health_indicators(self) -> list[HealthIndicator]:
         """Get current health indicators."""

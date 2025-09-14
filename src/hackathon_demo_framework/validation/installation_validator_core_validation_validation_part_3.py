@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_configuration_files(self) -> Dict[str, Any]:
     """Validate presence and quality of configuration files."""

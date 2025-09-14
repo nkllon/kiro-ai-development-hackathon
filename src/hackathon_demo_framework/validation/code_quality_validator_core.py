@@ -10,3 +10,5 @@ import re
 import json
 from ..models import ValidationResult, TechnicalAssessment
 from .code_quality_validator_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
+

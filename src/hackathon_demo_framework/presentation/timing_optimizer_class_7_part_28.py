@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _analyze_current_timing(self, demo_script: DemoScript, hackathon_config: HackathonConfig) -> TimingAnalysis:
     try:

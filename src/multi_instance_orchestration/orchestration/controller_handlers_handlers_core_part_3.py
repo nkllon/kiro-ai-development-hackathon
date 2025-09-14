@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def distribute_tasks(self, tasks: List[Task]) -> DistributionPlan:
     """Create optimal task distribution plan using systematic analysis.

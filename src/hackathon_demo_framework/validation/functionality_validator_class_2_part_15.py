@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _calculate_test_score(self, test_results: Dict[str, Any]) -> float:
         """Calculate test execution score."""

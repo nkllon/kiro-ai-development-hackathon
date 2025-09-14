@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
     def _validate_interfaces(self) -> Dict[str, Any]:
         """Validate API and interface definitions."""

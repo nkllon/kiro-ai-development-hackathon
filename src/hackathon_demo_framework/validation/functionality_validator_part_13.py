@@ -34,3 +34,5 @@ import importlib.util
 import ast
 import json
 from ..models import ValidationResult, TechnicalAssessment
+from src.rm_ddd.core.health import ModuleHealth
+

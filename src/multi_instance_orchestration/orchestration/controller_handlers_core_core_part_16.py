@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _execute_recovery_plan(self, plan: RecoveryPlan) -> bool:
     """Execute recovery plan (simplified implementation)."""

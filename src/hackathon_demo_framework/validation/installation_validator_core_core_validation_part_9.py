@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_setup_instructions(self) -> Dict[str, Any]:
     """Validate setup instructions in documentation."""

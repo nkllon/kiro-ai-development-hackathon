@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _analyze_style(self, content: str, file_path: Path) -> Dict[str, Any]:
     """Analyze code style and formatting."""

@@ -1,4 +1,6 @@
 from src.rm_ddd.core.registry import register_module
+from src.rm_ddd.core.health import ModuleHealth
+
 
 def _calculate_overall_pacing_score(self, section_ratios: Dict[str, float]) -> float:
     try:

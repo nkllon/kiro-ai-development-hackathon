@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def get_module_status(self) -> ModuleStatus:
         """Get current module status with health indicators."""

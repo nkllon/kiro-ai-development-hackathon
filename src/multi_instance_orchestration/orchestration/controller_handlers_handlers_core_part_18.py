@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _execute_integration(self, task_ids: List[str], swarm: SwarmState) -> IntegrationReport:
     """Execute integration of completed tasks."""

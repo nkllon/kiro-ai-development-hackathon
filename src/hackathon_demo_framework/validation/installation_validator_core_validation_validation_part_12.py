@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _test_single_installation(self, temp_dir: Path) -> Dict[str, Any]:
     """Test a single installation attempt in a temporary directory."""

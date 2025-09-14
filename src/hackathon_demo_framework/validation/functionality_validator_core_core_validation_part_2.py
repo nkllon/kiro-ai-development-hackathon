@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _discover_and_run_tests(self) -> Dict[str, Any]:
     """Discover and execute all tests in the project."""

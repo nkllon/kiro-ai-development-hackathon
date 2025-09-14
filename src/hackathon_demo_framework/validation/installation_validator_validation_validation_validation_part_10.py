@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def _validate_documentation(self) -> Dict[str, Any]:
     """Validate installation documentation quality."""

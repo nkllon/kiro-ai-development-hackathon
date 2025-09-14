@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
 def __init__(self, config: SwarmConfig):
     super().__init__('OrchestrationController', '1.0.0')

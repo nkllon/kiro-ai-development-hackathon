@@ -33,3 +33,5 @@ from dataclasses import dataclass
 from enum import Enum
 import statistics
 from ..models import DemoScript, HackathonConfig
+from src.rm_ddd.core.health import ModuleHealth
+

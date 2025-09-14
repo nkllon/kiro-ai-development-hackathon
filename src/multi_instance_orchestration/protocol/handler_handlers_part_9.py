@@ -1,3 +1,4 @@
+from src.rm_ddd.core.health import ModuleHealth
 
     def register_handler(self, verb: str, noun: str, handler: Callable[[StructuredAction], ActionResult]) -> None:
         """Register an action handler."""
