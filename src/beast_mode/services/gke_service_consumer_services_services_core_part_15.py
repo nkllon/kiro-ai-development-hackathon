@@ -10,3 +10,20 @@ def _generate_next_recommendations(self, pdca_result: Dict[str, Any]) -> List[st
         recommendations.append('Review systematic constraints and retry with refined approach')
         recommendations.append('Consider tool health check if implementation issues occurred')
     return recommendations
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

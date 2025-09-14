@@ -13,3 +13,20 @@ def _handle_model_driven_building_service(self, request: ServiceRequest) -> Dict
     component_design = self._generate_gcp_component_design(component_type, requirements, gcp_constraints, model_analysis)
     implementation_plan = self._create_implementation_plan(component_design, request)
     return {'model_analysis': model_analysis, 'component_design': component_design, 'implementation_plan': implementation_plan, 'gcp_best_practices': self._get_gcp_best_practices(component_type), 'systematic_validation': True, 'estimated_development_time': self._estimate_development_time(component_design), 'service_type': 'model_driven_building', 'team_id': request.gke_team_id}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

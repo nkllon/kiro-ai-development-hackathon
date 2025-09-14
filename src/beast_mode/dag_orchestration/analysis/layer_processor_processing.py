@@ -46,3 +46,20 @@ def _process_specification_layers(self, specifications: List[SpecificationNode],
         blocking_dependencies = self.analyze_layer_dependencies(layer_num, specs, specifications)
         spec_layers.append(SpecificationLayer(layer_number=layer_num, specifications=specs, total_tasks=total_tasks, completed_tasks=completed_tasks, completion_percentage=completion_percentage, estimated_effort=estimated_effort, can_start_parallel=can_start_parallel, blocking_dependencies=blocking_dependencies))
     return spec_layers
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

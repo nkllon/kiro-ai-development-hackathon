@@ -27,3 +27,20 @@ from src.rm_ddd.core.health import ModuleHealth
             recommendations.append(f'🛡️ Address {len(high_risk_factors)} high-risk factors before execution')
         recommendations.extend(['🔍 Implement systematic progress monitoring throughout execution', '📊 Establish systematic quality gates at each phase boundary', '🔄 Plan systematic retrospectives for continuous improvement'])
         return recommendations
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

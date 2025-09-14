@@ -6,3 +6,20 @@ def _convert_from_v1_1(self, message_data: Dict[str, Any]) -> Dict[str, Any]:
     if 'request_id' in converted and 'correlation_id' not in converted:
         converted['correlation_id'] = converted.pop('request_id')
     return converted
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

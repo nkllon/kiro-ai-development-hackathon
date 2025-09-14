@@ -33,4 +33,21 @@ def mvp_route(spec_directory: str, timeline: int, effort: int, strategy: str, ou
 @click.option('--parallel', '-p', type=int, default=8, help='Maximum parallel tasks')
 @click.option('--timeline', '-t', type=int, default=12, help='Maximum timeline in weeks')
 @click.option('--output', '-o', type=click.Choice(['json', 'yaml', 'table']), default='table')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
 @click.option('--monitor', '-m', is_flag=True, help='Enable real-time monitoring')

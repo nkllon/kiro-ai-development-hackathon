@@ -141,3 +141,20 @@ def _update_trust_score_from_test(self, test: CapabilityTest) -> None:
         trust_score.verification_tests_failed += 1
     trust_score.last_verification = test.completed_at
     self._calculate_trust_level(trust_score)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -49,3 +49,20 @@ def _convert_legacy_message(self, message_data: Dict[str, Any]) -> BeastModeMess
         return BeastModeMessage(**message_data)
     except Exception as e:
         raise MessageCompatibilityError(f'Failed to convert legacy message: {e}')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

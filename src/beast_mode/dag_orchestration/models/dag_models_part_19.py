@@ -25,4 +25,21 @@ from src.rm_ddd.core.health import ModuleHealth
     requirements_traced: List[str] = field(default_factory=list)
     priority: int = 1  # 1=highest, 5=lowest
     complexity: float = 1.0  # 1.0=simple, 5.0=very complex
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
     

@@ -12,3 +12,20 @@ def _calculate_pdca_velocity_improvement(self, pdca_result: Dict[str, Any]) -> f
     if pdca_result.get('act_phase_success', False):
         base_improvement += 5.0
     return min(base_improvement, 80.0)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

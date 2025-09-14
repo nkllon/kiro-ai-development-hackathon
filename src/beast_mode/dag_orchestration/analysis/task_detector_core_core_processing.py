@@ -45,3 +45,20 @@ def _parse_task_line(self, line: str, line_index: int, lines: List[str]) -> Opti
         description, requirements, dependencies = self._extract_task_details(line_index, lines)
         return (task_id, task_name, status, description, requirements, dependencies)
     return None
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

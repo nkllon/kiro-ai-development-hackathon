@@ -17,3 +17,20 @@ def get_gke_development_velocity_metrics(self, team_id: Optional[str]=None) -> D
         total_service_usage = sum((metrics['service_usage_count'] for metrics in self.team_performance_metrics.values()))
         average_satisfaction = sum((metrics['satisfaction_score'] for metrics in self.team_performance_metrics.values())) / total_teams
         return {'total_registered_teams': total_teams, 'aggregate_velocity_improvement': round(aggregate_improvement, 2), 'total_service_usage': total_service_usage, 'average_satisfaction_score': round(average_satisfaction, 2), 'service_success_rate': self._calculate_success_rate(), 'most_popular_service': self._get_most_popular_service(), 'average_response_time_ms': self.service_metrics['average_response_time_ms'], 'measurement_timestamp': datetime.now().isoformat()}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

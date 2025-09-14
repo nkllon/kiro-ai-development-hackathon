@@ -44,4 +44,21 @@ def orchestrate(spec_directory: str, execute: bool, parallel: int, timeline: int
 @beast_dag.command()
 @click.argument('orchestration_id', required=False)
 @click.option('--list', '-l', is_flag=True, help='List all active orchestrations')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
 @click.option('--output', '-o', type=click.Choice(['json', 'yaml', 'table']), default='table')

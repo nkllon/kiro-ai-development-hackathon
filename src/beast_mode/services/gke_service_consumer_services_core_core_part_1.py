@@ -13,3 +13,20 @@ def __init__(self):
     self.team_performance_metrics = {}
     self.service_metrics = {'total_requests': 0, 'successful_requests': 0, 'failed_requests': 0, 'average_response_time_ms': 0, 'gke_velocity_improvements': {}, 'service_usage_patterns': {}}
     self._update_health_indicator('gke_service_consumer', HealthStatus.HEALTHY, 'ready', 'GKE service consumer ready to serve teams')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

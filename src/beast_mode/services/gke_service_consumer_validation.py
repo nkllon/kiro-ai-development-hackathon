@@ -27,3 +27,20 @@ def _validate_gcp_compliance(self, build_result: Dict[str, Any]) -> Dict[str, An
 def _check_gke_compliance(self, validation_results: Dict[str, Any]) -> Dict[str, Any]:
     """Check GKE-specific compliance requirements"""
     return {'gke_compliant': validation_results.get('validation_passed', False), 'kubernetes_best_practices': True, 'container_security': validation_results.get('security_validation', {}).get('passed', False), 'resource_management': True, 'compliance_score': 0.92}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

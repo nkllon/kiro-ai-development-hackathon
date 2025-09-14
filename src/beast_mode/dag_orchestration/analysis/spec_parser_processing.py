@@ -59,3 +59,20 @@ def parse_specification_file(self, spec_file_path: str) -> ParsedSpec:
     completion_percentage = self._calculate_completion_percentage(content)
     dependencies = self._extract_spec_dependencies(content, spec_path)
     return ParsedSpec(spec_name=spec_name, spec_path=str(spec_path), requirements_count=requirements_count, tasks_count=tasks_count, completion_percentage=completion_percentage, dependencies=dependencies, raw_content=content)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

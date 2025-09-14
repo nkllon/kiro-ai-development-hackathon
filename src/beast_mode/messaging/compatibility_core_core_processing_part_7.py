@@ -44,3 +44,20 @@ def process_message(self, message_data: Union[Dict[str, Any], str, BeastModeMess
                 result.warnings.append(f'Mapped unknown type to {handled_type.value}')
                 self.stats['unknown_types_handled'] += 1
     return result
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

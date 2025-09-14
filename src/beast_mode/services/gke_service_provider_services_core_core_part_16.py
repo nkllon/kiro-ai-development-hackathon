@@ -17,3 +17,20 @@ def _update_service_metrics(self, request: ServiceRequest, response: ServiceResp
     self.request_history.append(response)
     if len(self.request_history) > 1000:
         self.request_history = self.request_history[-1000:]
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

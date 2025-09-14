@@ -26,3 +26,20 @@ def update_spore_stats(self, spore_name: str, success: bool) -> None:
             json.dump(metadata.model_dump(), f, indent=2, default=str)
     except Exception as e:
         logger.error(f'Failed to update stats for {spore_name}: {e}')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

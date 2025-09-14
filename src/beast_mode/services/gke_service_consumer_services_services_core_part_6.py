@@ -10,3 +10,20 @@ def register_gke_team(self, team_id: str, team_name: str, expertise_level: str, 
     self.team_performance_metrics[team_id] = {'baseline_velocity': 0.0, 'current_velocity': 0.0, 'improvement_percentage': 0.0, 'service_usage_count': 0, 'satisfaction_score': 0.0, 'last_updated': datetime.now()}
     self.logger.info(f'GKE team registered: {team_name} ({team_id}) - {expertise_level} level')
     return {'success': True, 'team_id': team_id, 'registration_time': datetime.now().isoformat(), 'available_services': [svc.value for svc in ServiceType], 'recommended_services': self._recommend_services_for_team(team_profile)}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

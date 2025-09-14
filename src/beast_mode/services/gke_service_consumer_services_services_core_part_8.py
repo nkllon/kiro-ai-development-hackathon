@@ -28,3 +28,20 @@ def request_model_driven_building_service(self, team_id: str, component_spec: Di
         if request_id in self.active_requests:
             del self.active_requests[request_id]
         return ServiceResponse(request_id=request_id, service_type=ServiceType.MODEL_DRIVEN_BUILDING, status='error', result={}, execution_time_ms=execution_time, timestamp=datetime.now(), error_message=str(e), recommendations=['Validate component specification', 'Check GCP requirements', 'Review model constraints'])
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

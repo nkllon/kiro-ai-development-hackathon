@@ -54,3 +54,20 @@ def bobby_test(spec_directory: str, complexity: str, output: str):
         click.echo('💀 ECOSYSTEM DECLARED BEYOND SYSTEMATIC SALVATION')
         bobby_results = {'consumption_successful': False, 'complexity_level': complexity, 'bobby_verdict': 'BEYOND_SYSTEMATIC_SALVATION', 'recommendation': 'Complete replacement required - even Bobby has limits'}
         _output_results(bobby_results, output)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

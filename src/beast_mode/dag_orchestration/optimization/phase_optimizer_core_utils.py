@@ -32,3 +32,20 @@ def _identify_required_tools(self, tasks: List[TaskNode]) -> List[str]:
         if any((keyword in task_text for keyword in ['api', 'rest', 'endpoint'])):
             tools.add('API Development Tools')
     return list(tools) if tools else ['Standard Development Environment']
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

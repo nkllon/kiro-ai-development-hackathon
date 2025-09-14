@@ -20,3 +20,20 @@ def __init__(self, redis_url: str='redis://localhost:6379', agent_id: str='beast
     self.retry_delay = 1.0
     self.connection_timeout = 10.0
     self.stats = {'messages_sent': 0, 'messages_received': 0, 'connection_errors': 0, 'last_activity': None}
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

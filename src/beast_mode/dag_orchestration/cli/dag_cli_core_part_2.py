@@ -33,4 +33,21 @@ def analyze(spec_directory: str, output: str, save: Optional[str], verbose: bool
 @click.option('--effort', '-e', type=int, default=1000, help='Maximum effort in hours')
 @click.option('--strategy', type=click.Choice(['minimum', 'value', 'risk', 'balanced']), default='balanced', help='MVP route strategy')
 @click.option('--output', '-o', type=click.Choice(['json', 'yaml', 'table']), default='table')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
 @click.option('--save', '-s', type=click.Path(), help='Save MVP route to file')

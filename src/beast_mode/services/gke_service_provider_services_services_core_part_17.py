@@ -23,3 +23,20 @@ def _update_gke_team_metrics(self, request: ServiceRequest, response: ServiceRes
             metrics.velocity_improvement = total_time_saved / 60.0 + total_efficiency_gain / 100.0
         systematic_requests = sum((1 for r in team_responses if r.systematic_approach_used))
         metrics.systematic_adoption_score = systematic_requests / len(team_responses) if team_responses else 0.0
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

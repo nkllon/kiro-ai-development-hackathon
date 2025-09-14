@@ -14,3 +14,20 @@ def __init__(self):
     self.service_metrics = {'total_requests_served': 0, 'successful_requests': 0, 'average_response_time': 0.0, 'velocity_improvements_delivered': 0, 'systematic_adoption_rate': 0.0, 'gke_teams_served': 0}
     self.integration_config = {'max_request_queue_size': 100, 'default_timeout_seconds': 300, 'service_discovery_enabled': True, 'metrics_reporting_interval': 60, 'health_check_interval': 30}
     self._update_health_indicator('gke_service_provider', HealthStatus.HEALTHY, 'ready', 'GKE service provider ready to serve systematic development workflows')
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
