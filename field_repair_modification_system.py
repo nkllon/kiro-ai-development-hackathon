@@ -314,13 +314,32 @@ class FieldModificationEngine:
         self.break_glass_protocols = {}
     
     def request_field_modification(self, request: FieldModificationRequest) -> FieldModificationResult:
-        """Process a field modification request"""
+        """Process a field modification request with pre-use registry validation"""
         
         print(f"🔧 FIELD MODIFICATION REQUEST: {request.modification_id}")
         print(f"   Component: {request.component_name}")
         print(f"   Type: {request.modification_type}")
         print(f"   Safety Level: {request.safety_level}")
         print(f"   Git Sync Required: {request.git_sync_required}")
+        
+        # Pre-use registry validation
+        from registry_availability_system import perform_pre_use_registry_validation
+        if not perform_pre_use_registry_validation(self.git_synchronizer.repo_path, self.memory_enhancer.memory_manager):
+            print("🚨 CRITICAL: Pre-use registry validation failed!")
+            print("   I can't fix myself. I'm dead in the water here.")
+            return FieldModificationResult(
+                modification_id=request.modification_id,
+                success=False,
+                git_sync_success=False,
+                code_applied=False,
+                tests_passed=False,
+                safety_validated=False,
+                memory_enhanced=False,
+                permanent_tools_created=[],
+                error_message="Registry availability check failed - cannot perform field modifications",
+                applied_at=datetime.now(),
+                git_commit_hash=None
+            )
         
         # Initialize result
         result = FieldModificationResult(
@@ -644,7 +663,23 @@ class BreakTheGlassProtocolManager:
 
 
 def create_field_modification_system(repo_path: str = ".", memory_manager=None) -> FieldModificationEngine:
-    """Factory function to create field modification system"""
+    """Factory function to create field modification system with registry availability check"""
+    
+    # Import registry health monitor
+    from registry_availability_system import perform_boot_time_registry_check
+    
+    # Perform boot-time registry availability check
+    print("🚀 BOOT TIME REGISTRY AVAILABILITY CHECK")
+    print("=" * 50)
+    
+    registry_check_results = perform_boot_time_registry_check(repo_path, memory_manager)
+    
+    # Check if field modifications are safe
+    if not registry_check_results['can_perform_field_modifications']:
+        print("🚨 CRITICAL: Cannot initialize field modification system!")
+        print(f"   System Status: {registry_check_results['system_status']}")
+        print("   I can't fix myself. I'm dead in the water here.")
+        raise RuntimeError(f"Registry availability check failed: {registry_check_results['system_status']}")
     
     # Create Git synchronizer
     git_synchronizer = GitHubSynchronizer(repo_path)
@@ -658,5 +693,6 @@ def create_field_modification_system(repo_path: str = ".", memory_manager=None) 
     print("🔧 Field Modification System initialized")
     print(f"   Git Sync: {'✅' if git_synchronizer.repo else '❌'}")
     print(f"   Memory Enhancement: {'✅' if memory_enhancer else '❌'}")
+    print(f"   Registry Health: {registry_check_results['overall_health']:.1%}")
     
     return field_engine
