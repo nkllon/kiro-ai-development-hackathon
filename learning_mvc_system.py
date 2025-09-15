@@ -95,7 +95,7 @@ class LearningState:
 class TelemetryCollector:
     """Comprehensive telemetry collection."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.events: List[TelemetryEvent] = []
         self.start_time = time.time()
 
