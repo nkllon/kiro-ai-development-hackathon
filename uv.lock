@@ -349,6 +349,14 @@ testing = [
     { name = "pytest-mock" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "black" },
+    { name = "flake8" },
+    { name = "isort" },
+    { name = "mypy" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "aiofiles", specifier = ">=23.0.0" },
@@ -397,6 +405,14 @@ requires-dist = [
     { name = "websocket-client", specifier = ">=1.8.0" },
 ]
 provides-extras = ["dev", "docs", "examples", "testing", "all"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "black", specifier = ">=25.1.0" },
+    { name = "flake8", specifier = ">=7.3.0" },
+    { name = "isort", specifier = ">=6.0.1" },
+    { name = "mypy", specifier = ">=1.17.1" },
+]
 
 [[package]]
 name = "beautifulsoup4"
