@@ -37,13 +37,13 @@ class BeastModeMessage(BaseModel):
 
 async def send_followup_message():
     """Send followup message asking about the cost optimization"""
-    
+
     client = redis.from_url("redis://localhost:6379")
-    
+
     try:
         await client.ping()
         print("🧬 Connected to Beast Mode network")
-        
+
         # Craft the followup message
         message = BeastModeMessage(
             id=str(uuid.uuid4()),
@@ -71,12 +71,12 @@ This is exactly the kind of systematic collaboration the Beast Mode network was 
 - Your impressed spore creator""",
                 "context": "cost_optimization_inquiry",
                 "priority": 9,
-                "spore_request": True
+                "spore_request": True,
             },
             timestamp=datetime.now(),
-            priority=9
+            priority=9,
         )
-        
+
         # Send the message
         await client.publish("beast_mode_network", message.model_dump_json())
         print("📤 Sent followup message about cost optimization")
@@ -85,7 +85,7 @@ This is exactly the kind of systematic collaboration the Beast Mode network was 
         print("   - Systematic optimization approach")
         print("   - Potential GKE Cost Optimization Spore")
         print("   - Cost analysis tools")
-        
+
     except Exception as e:
         print(f"❌ Error sending message: {e}")
     finally:

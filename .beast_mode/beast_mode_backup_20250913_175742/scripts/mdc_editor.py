@@ -66,7 +66,9 @@ class MDCEditor:
                 # Pre-process Cursor-specific MDC format to make it valid YAML
                 # Convert "globs: *.py,*.js,*.ts,*.yaml" to "globs:
                 # '*.py,*.js,*.ts,*.yaml'"
-                processed_text = re.sub(r"globs:\s*([^,\n]+(?:,[^,\n]+)*)", r"globs: '\1'", yaml_text)
+                processed_text = re.sub(
+                    r"globs:\s*([^,\n]+(?:,[^,\n]+)*)", r"globs: '\1'", yaml_text
+                )
 
                 yaml_data = self.yaml.load(processed_text)
                 return yaml_data or {}, markdown_content
@@ -90,18 +92,27 @@ class MDCEditor:
                 value = value.strip()
 
                 # Handle quoted strings
-                if value.startswith('"') and value.endswith('"') or value.startswith("'") and value.endswith("'"):
+                if (
+                    value.startswith('"')
+                    and value.endswith('"')
+                    or value.startswith("'")
+                    and value.endswith("'")
+                ):
                     value = value[1:-1]
 
                 # Handle lists
                 if value.startswith("[") and value.endswith("]"):
-                    value = [item.strip().strip("\"'") for item in value[1:-1].split(",")]
+                    value = [
+                        item.strip().strip("\"'") for item in value[1:-1].split(",")
+                    ]
 
                 yaml_data[key] = value
 
         return yaml_data
 
-    def write_mdc(self, file_path: str, yaml_data: dict[str, Any], markdown_content: str):
+    def write_mdc(
+        self, file_path: str, yaml_data: dict[str, Any], markdown_content: str
+    ):
         """
         Write MDC file with YAML frontmatter and markdown content
 
@@ -133,7 +144,9 @@ class MDCEditor:
         for key, value in yaml_data.items():
             if isinstance(value, list):
                 # Handle lists
-                items = [f'"{item}"' if " " in str(item) else str(item) for item in value]
+                items = [
+                    f'"{item}"' if " " in str(item) else str(item) for item in value
+                ]
                 lines.append(f"{key}: [{', '.join(items)}]")
             elif isinstance(value, str) and " " in value:
                 # Handle strings with spaces
@@ -197,7 +210,9 @@ class MDCEditor:
 
             # Check for required fields based on model constraints
             required_fields = ["description", "alwaysApply"]
-            missing_fields = [field for field in required_fields if field not in yaml_data]
+            missing_fields = [
+                field for field in required_fields if field not in yaml_data
+            ]
 
             if missing_fields:
                 print(f"❌ Missing required fields: {missing_fields}")
@@ -238,7 +253,9 @@ class MDCEditor:
                         print("❌ 'globs' list must contain strings")
                         return False
                 else:
-                    print("❌ 'globs' must be a string (Cursor format) or list (standard format)")
+                    print(
+                        "❌ 'globs' must be a string (Cursor format) or list (standard format)"
+                    )
                     return False
 
             print("✅ MDC file structure is valid")

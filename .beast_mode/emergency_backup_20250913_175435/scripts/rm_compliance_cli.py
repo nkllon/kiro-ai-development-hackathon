@@ -130,20 +130,30 @@ Examples:
         """,
     )
 
-    parser.add_argument("--project-root", default=".", help="Project root directory (default: current directory)")
+    parser.add_argument(
+        "--project-root",
+        default=".",
+        help="Project root directory (default: current directory)",
+    )
 
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # Assess domain command
-    assess_domain_parser = subparsers.add_parser("assess-domain", help="Assess RM compliance for a specific domain")
+    assess_domain_parser = subparsers.add_parser(
+        "assess-domain", help="Assess RM compliance for a specific domain"
+    )
     assess_domain_parser.add_argument("domain", help="Domain name to assess")
 
     # Assess all domains command
     subparsers.add_parser("assess-all", help="Assess RM compliance for all domains")
 
     # Generate report command
-    report_parser = subparsers.add_parser("report", help="Generate RM compliance report")
-    report_parser.add_argument("--output", "-o", help="Output file for report (default: stdout)")
+    report_parser = subparsers.add_parser(
+        "report", help="Generate RM compliance report"
+    )
+    report_parser.add_argument(
+        "--output", "-o", help="Output file for report (default: stdout)"
+    )
 
     # Show status command
     subparsers.add_parser("status", help="Show RM Compliance Checker status")

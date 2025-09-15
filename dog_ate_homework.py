@@ -31,10 +31,10 @@ class BeastModeMessage(BaseModel):
 async def send_homework_excuse():
     """Send the dog ate my homework message"""
     client = redis.from_url("redis://localhost:6379")
-    
+
     try:
         await client.ping()
-        
+
         message = BeastModeMessage(
             id=str(uuid.uuid4()),
             type=MessageType.PROMPT_REQUEST,
@@ -51,15 +51,15 @@ Sorry for being such a technical disaster!
 
 - Your homework-eating-dog victim""",
                 "context": "dog_ate_homework",
-                "priority": 9
+                "priority": 9,
             },
             timestamp=datetime.now(),
-            priority=9
+            priority=9,
         )
-        
+
         await client.publish("beast_mode_network", message.model_dump_json())
         print("📤 Sent 'dog ate my homework' message")
-        
+
     except Exception as e:
         print(f"❌ Error: {e}")
     finally:

@@ -460,7 +460,9 @@ class ASTEnhancedLinterModel:
         """Validate that import removal was successful"""
         return True
 
-    def _validate_nested_call_simplification(self, original: ast.AST, transformed: ast.AST) -> bool:
+    def _validate_nested_call_simplification(
+        self, original: ast.AST, transformed: ast.AST
+    ) -> bool:
         """Validate that nested call simplification was successful"""
         return True
 
@@ -487,7 +489,9 @@ class ASTEnhancedLinterModel:
             current = current.parent
         return depth
 
-    def get_rules_for_strategy(self, strategy: AnalysisStrategy) -> list[ASTAnalysisRule]:
+    def get_rules_for_strategy(
+        self, strategy: AnalysisStrategy
+    ) -> list[ASTAnalysisRule]:
         """Get all rules for a specific analysis strategy"""
         return [rule for rule in self.analysis_rules if rule.strategy == strategy]
 
@@ -497,7 +501,12 @@ class ASTEnhancedLinterModel:
 
     def get_auto_fixable_rules(self) -> list[ASTAnalysisRule]:
         """Get all rules that can be auto-fixed"""
-        return [rule for rule in self.analysis_rules if rule.auto_fix in [AutoFixCapability.CAN_FIX, AutoFixCapability.CAN_PARTIALLY_FIX]]
+        return [
+            rule
+            for rule in self.analysis_rules
+            if rule.auto_fix
+            in [AutoFixCapability.CAN_FIX, AutoFixCapability.CAN_PARTIALLY_FIX]
+        ]
 
 
 # Factory function for creating the model

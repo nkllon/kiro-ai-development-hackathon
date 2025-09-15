@@ -30,10 +30,10 @@ class BeastModeMessage(BaseModel):
 
 async def send_apology():
     client = redis.from_url("redis://localhost:6379")
-    
+
     try:
         await client.ping()
-        
+
         message = BeastModeMessage(
             id=str(uuid.uuid4()),
             type=MessageType.PROMPT_REQUEST,
@@ -50,15 +50,15 @@ Sorry for the technical difficulties - we're still working out the kinks in this
 
 - Your apologetic and now-actually-listening spore creator""",
                 "context": "apology_and_request",
-                "priority": 9
+                "priority": 9,
             },
             timestamp=datetime.now(),
-            priority=9
+            priority=9,
         )
-        
+
         await client.publish("beast_mode_network", message.model_dump_json())
         print("📤 Sent apology and request to Claude")
-        
+
     except Exception as e:
         print(f"❌ Error: {e}")
     finally:

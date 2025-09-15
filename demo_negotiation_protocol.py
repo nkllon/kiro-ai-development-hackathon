@@ -22,12 +22,12 @@ from negotiation_protocol import create_impasse_context, negotiate_impasse_resol
 
 def demonstrate_technical_impasse():
     """Demonstrate negotiation for a technical impasse"""
-    
+
     print("🎭 DEMONSTRATING TECHNICAL IMPASSE NEGOTIATION")
     print("=" * 60)
     print("Scenario: LangGraph workflow node execution failing")
     print("=" * 60)
-    
+
     context = create_impasse_context(
         impasse_type="technical",
         severity_level="very_stuck",
@@ -37,14 +37,14 @@ def demonstrate_technical_impasse():
             "Clear node state and retry execution",
             "Switch to alternative node implementation",
             "Enable debug mode and trace execution step by step",
-            "Check node dependencies and imports"
+            "Check node dependencies and imports",
         ],
         failure_reasons=[
             "Node state corruption detected in PregelNode wrapper",
             "Alternative implementation not available in current codebase",
             "Debug mode reveals no obvious issues in node logic",
             "Error messages are non-descriptive and generic",
-            "Dependencies appear to be correctly installed"
+            "Dependencies appear to be correctly installed",
         ],
         current_state={
             "current_node": "ghostbusters_consultation_node",
@@ -54,38 +54,43 @@ def demonstrate_technical_impasse():
             "session_data": {
                 "important_context": "preserve_this",
                 "user_preferences": "session_must_not_be_lost",
-                "workflow_progress": "75%_complete"
+                "workflow_progress": "75%_complete",
             },
-            "active_components": ["langgraph", "playwright", "browser_session", "telemetry_graph"]
-        }
+            "active_components": [
+                "langgraph",
+                "playwright",
+                "browser_session",
+                "telemetry_graph",
+            ],
+        },
     )
-    
+
     print("\n🚀 Initiating negotiation protocol...")
     result = negotiate_impasse_resolution(context)
-    
+
     print(f"\n📊 NEGOTIATION RESULT:")
     print(f"   Success: {'✅' if result.success else '❌'}")
     print(f"   Impasse Resolved: {'✅' if result.impasse_resolved else '❌'}")
     print(f"   Session Preserved: {'✅' if result.session_preserved else '❌'}")
     print(f"   Human Approved: {'✅' if result.human_approved else '❌'}")
     print(f"   Breadcrumbs Left: {len(result.breadcrumbs_left)}")
-    
+
     if result.chosen_option:
         print(f"   Chosen Solution: {result.chosen_option.title}")
         print(f"   Risk Level: {result.chosen_option.risk_level}")
         print(f"   Session Impact: {result.chosen_option.session_impact}")
-    
+
     return result.success
 
 
 def demonstrate_logical_impasse():
     """Demonstrate negotiation for a logical impasse"""
-    
+
     print("\n🎭 DEMONSTRATING LOGICAL IMPASSE NEGOTIATION")
     print("=" * 60)
     print("Scenario: Cannot determine correct navigation strategy for DevPost")
     print("=" * 60)
-    
+
     context = create_impasse_context(
         impasse_type="logical",
         severity_level="stuck",
@@ -95,60 +100,68 @@ def demonstrate_logical_impasse():
             "Attempt visual similarity matching with screenshots",
             "Use semantic navigation approach with form analysis",
             "Fall back to adaptive navigation with learning",
-            "Combine multiple strategies with weighted scoring"
+            "Combine multiple strategies with weighted scoring",
         ],
         failure_reasons=[
             "No exact matches found in telemetry graph",
             "Visual similarity scores too low (< 0.3 threshold)",
             "Semantic analysis inconclusive for form fields",
             "Adaptive navigation lacks sufficient historical data",
-            "Weighted scoring results in ties between strategies"
+            "Weighted scoring results in ties between strategies",
         ],
         current_state={
             "current_page": "DevPost submission form - step 3 of 5",
-            "available_strategies": ["exact", "visual", "semantic", "adaptive", "hybrid"],
+            "available_strategies": [
+                "exact",
+                "visual",
+                "semantic",
+                "adaptive",
+                "hybrid",
+            ],
             "confidence_scores": {
-                "exact": 0.1, 
-                "visual": 0.25, 
-                "semantic": 0.15, 
-                "adaptive": 0.2, 
-                "hybrid": 0.22
+                "exact": 0.1,
+                "visual": 0.25,
+                "semantic": 0.15,
+                "adaptive": 0.2,
+                "hybrid": 0.22,
             },
             "threshold": 0.3,
             "session_data": {
                 "form_fields": "preserve_these_mappings",
                 "user_input": "beast_mode_framework_details",
-                "progress": "step_3_of_5"
-            }
-        }
+                "progress": "step_3_of_5",
+            },
+        },
     )
-    
+
     print("\n🚀 Initiating negotiation protocol...")
     result = negotiate_impasse_resolution(context)
-    
+
     print(f"\n📊 NEGOTIATION RESULT:")
     print(f"   Success: {'✅' if result.success else '❌'}")
     print(f"   Impasse Resolved: {'✅' if result.impasse_resolved else '❌'}")
     print(f"   Session Preserved: {'✅' if result.session_preserved else '❌'}")
     print(f"   Human Approved: {'✅' if result.human_approved else '❌'}")
     print(f"   Breadcrumbs Left: {len(result.breadcrumbs_left)}")
-    
+
     if result.chosen_option:
         print(f"   Chosen Solution: {result.chosen_option.title}")
         print(f"   Risk Level: {result.chosen_option.risk_level}")
-        print(f"   Success Probability: {result.chosen_option.estimated_success_probability:.0%}")
-    
+        print(
+            f"   Success Probability: {result.chosen_option.estimated_success_probability:.0%}"
+        )
+
     return result.success
 
 
 def demonstrate_resource_impasse():
     """Demonstrate negotiation for a resource impasse"""
-    
+
     print("\n🎭 DEMONSTRATING RESOURCE IMPASSE NEGOTIATION")
     print("=" * 60)
     print("Scenario: Memory usage at 95%, cannot load additional components")
     print("=" * 60)
-    
+
     context = create_impasse_context(
         impasse_type="resource",
         severity_level="extremely_stuck",
@@ -158,14 +171,14 @@ def demonstrate_resource_impasse():
             "Unload unused components and services",
             "Optimize memory usage in active components",
             "Request additional memory allocation from system",
-            "Reduce browser automation scope and complexity"
+            "Reduce browser automation scope and complexity",
         ],
         failure_reasons=[
             "Cache clearing freed only 50MB, insufficient for needs",
             "No unused components available to unload",
             "Optimization attempts failed to reduce memory footprint",
             "Memory allocation request denied by system",
-            "Reducing scope would break DevPost automation requirements"
+            "Reducing scope would break DevPost automation requirements",
         ],
         current_state={
             "memory_usage": 0.95,
@@ -173,47 +186,49 @@ def demonstrate_resource_impasse():
             "required_memory": "200MB",
             "memory_threshold": 0.9,
             "active_components": [
-                "browser_session", 
-                "playwright", 
-                "langgraph", 
+                "browser_session",
+                "playwright",
+                "langgraph",
                 "telemetry_graph",
-                "devpost_state_model"
+                "devpost_state_model",
             ],
             "session_data": {
                 "critical_state": "must_preserve",
                 "form_progress": "step_2_of_5",
-                "user_data": "beast_mode_details"
-            }
-        }
+                "user_data": "beast_mode_details",
+            },
+        },
     )
-    
+
     print("\n🚀 Initiating negotiation protocol...")
     result = negotiate_impasse_resolution(context)
-    
+
     print(f"\n📊 NEGOTIATION RESULT:")
     print(f"   Success: {'✅' if result.success else '❌'}")
     print(f"   Impasse Resolved: {'✅' if result.impasse_resolved else '❌'}")
     print(f"   Session Preserved: {'✅' if result.session_preserved else '❌'}")
     print(f"   Human Approved: {'✅' if result.human_approved else '❌'}")
     print(f"   Breadcrumbs Left: {len(result.breadcrumbs_left)}")
-    
+
     if result.chosen_option:
         print(f"   Chosen Solution: {result.chosen_option.title}")
         print(f"   Risk Level: {result.chosen_option.risk_level}")
         print(f"   Session Impact: {result.chosen_option.session_impact}")
-        print(f"   Requires Human Approval: {'Yes' if result.chosen_option.requires_human_approval else 'No'}")
-    
+        print(
+            f"   Requires Human Approval: {'Yes' if result.chosen_option.requires_human_approval else 'No'}"
+        )
+
     return result.success
 
 
 def demonstrate_unknown_impasse():
     """Demonstrate negotiation for an unknown/mysterious impasse"""
-    
+
     print("\n🎭 DEMONSTRATING UNKNOWN IMPASSE NEGOTIATION")
     print("=" * 60)
     print("Scenario: Mysterious error with no clear cause or solution")
     print("=" * 60)
-    
+
     context = create_impasse_context(
         impasse_type="unknown",
         severity_level="extremely_stuck",
@@ -223,14 +238,14 @@ def demonstrate_unknown_impasse():
             "Verify network connectivity and API responses",
             "Inspect form field values and submission data",
             "Test form submission with manual browser interaction",
-            "Review DevPost API documentation for changes"
+            "Review DevPost API documentation for changes",
         ],
         failure_reasons=[
             "No JavaScript errors found in console",
             "Network connectivity appears normal",
             "Form field values look correct",
             "Manual submission works fine",
-            "API documentation shows no recent changes"
+            "API documentation shows no recent changes",
         ],
         current_state={
             "mystery_level": "high",
@@ -240,72 +255,74 @@ def demonstrate_unknown_impasse():
                 "form_data": "appears_valid",
                 "submission_attempts": 3,
                 "last_success": "never",
-                "critical_user_data": "must_not_be_lost"
-            }
-        }
+                "critical_user_data": "must_not_be_lost",
+            },
+        },
     )
-    
+
     print("\n🚀 Initiating negotiation protocol...")
     result = negotiate_impasse_resolution(context)
-    
+
     print(f"\n📊 NEGOTIATION RESULT:")
     print(f"   Success: {'✅' if result.success else '❌'}")
     print(f"   Impasse Resolved: {'✅' if result.impasse_resolved else '❌'}")
     print(f"   Session Preserved: {'✅' if result.session_preserved else '❌'}")
     print(f"   Human Approved: {'✅' if result.human_approved else '❌'}")
     print(f"   Breadcrumbs Left: {len(result.breadcrumbs_left)}")
-    
+
     if result.chosen_option:
         print(f"   Chosen Solution: {result.chosen_option.title}")
         print(f"   Risk Level: {result.chosen_option.risk_level}")
-        print(f"   Success Probability: {result.chosen_option.estimated_success_probability:.0%}")
-    
+        print(
+            f"   Success Probability: {result.chosen_option.estimated_success_probability:.0%}"
+        )
+
     return result.success
 
 
 def main():
     """Run the negotiation protocol demonstration"""
-    
+
     print("🚀 NEGOTIATION PROTOCOL DEMONSTRATION")
     print("=" * 60)
     print("This demonstration shows how the AI negotiates with the human")
     print("when encountering impasses it cannot resolve autonomously.")
     print("=" * 60)
-    
+
     demonstrations = [
         ("Technical Impasse", demonstrate_technical_impasse),
         ("Logical Impasse", demonstrate_logical_impasse),
         ("Resource Impasse", demonstrate_resource_impasse),
-        ("Unknown Impasse", demonstrate_unknown_impasse)
+        ("Unknown Impasse", demonstrate_unknown_impasse),
     ]
-    
+
     results = []
-    
+
     for demo_name, demo_func in demonstrations:
         try:
             result = demo_func()
             results.append((demo_name, result))
-            
+
             if result:
                 print(f"\n✅ {demo_name}: NEGOTIATION SUCCESSFUL")
             else:
                 print(f"\n❌ {demo_name}: NEGOTIATION FAILED")
-                
+
         except Exception as e:
             print(f"\n❌ {demo_name}: ERROR - {e}")
             results.append((demo_name, False))
-    
+
     # Summary
     print("\n" + "=" * 60)
     print("📊 NEGOTIATION PROTOCOL DEMONSTRATION SUMMARY")
     print("=" * 60)
-    
+
     passed = sum(1 for _, result in results if result)
     total = len(results)
-    
+
     print(f"Demonstrations Passed: {passed}/{total}")
     print(f"Success Rate: {passed/total:.1%}")
-    
+
     if passed == total:
         print("\n🎉 ALL NEGOTIATION SCENARIOS SUCCESSFUL!")
         print("\n💡 Key Features Demonstrated:")
@@ -316,7 +333,7 @@ def main():
         print("   ✅ Multiple impasse types handled appropriately")
         print("   ✅ Risk assessment and human approval workflows")
         print("   ✅ Graceful handling of mysterious/unknown issues")
-        
+
         print("\n🤝 Negotiation Process Summary:")
         print("   1. AI detects impasse and cannot resolve autonomously")
         print("   2. AI initiates negotiation protocol with human")
@@ -325,14 +342,14 @@ def main():
         print("   5. Human and AI negotiate the best resolution approach")
         print("   6. AI executes negotiated solution while preserving session")
         print("   7. AI creates breadcrumb trail for future recovery")
-        
+
         print("\n⚠️  Critical Principle:")
         print("   NEVER flush the session and start over without negotiation!")
         print("   Always attempt to leave a trail of breadcrumbs for recovery.")
-        
+
     else:
         print(f"\n⚠️  {total - passed} demonstrations failed - review implementation")
-    
+
     return passed == total
 
 

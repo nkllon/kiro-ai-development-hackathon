@@ -22,14 +22,14 @@ from test_coverage_analyzer import TestCoverageAnalyzer
 
 class Phase2TestGenerator:
     """Enhanced generator for Phase 2 test files."""
-    
+
     def __init__(self):
         self.repository_root = Path.cwd()
         self.src_dir = self.repository_root / "src"
         self.tests_dir = self.repository_root / "tests"
         self.coverage_data = None
         self.generated_tests = []
-        
+
         # Phase 2 priorities
         self.phase2_priorities = {
             "service": 80,
@@ -41,87 +41,95 @@ class Phase2TestGenerator:
             "compliance": 75,
             "external": 65,
             "load": 85,
-            "stress": 80
+            "stress": 80,
         }
-        
+
     def load_coverage_data(self):
         """Load the coverage analysis data."""
         coverage_file = "test_coverage_analysis_report.json"
         if os.path.exists(coverage_file):
-            with open(coverage_file, 'r') as f:
+            with open(coverage_file, "r") as f:
                 self.coverage_data = json.load(f)
         else:
             print("❌ Coverage analysis data not found. Running analysis...")
             analyzer = TestCoverageAnalyzer()
             self.coverage_data = analyzer.run_analysis()
-    
+
     def identify_phase2_modules(self) -> List[Dict[str, Any]]:
         """Identify modules for Phase 2 testing."""
         if not self.coverage_data:
             self.load_coverage_data()
-        
+
         critical_gaps = self.coverage_data["gaps_analysis"]["critical_gaps"]
         coverage_mapping = self.coverage_data["gaps_analysis"]["coverage_mapping"]
-        
+
         phase2_modules = []
-        
+
         for file_path in critical_gaps:
             module_info = coverage_mapping.get(file_path, {})
             module_name = module_info.get("module_name", "")
-            
+
             # Calculate Phase 2 importance score
-            importance_score = self._calculate_phase2_importance_score(file_path, module_name)
-            
+            importance_score = self._calculate_phase2_importance_score(
+                file_path, module_name
+            )
+
             # Only include modules with Phase 2 relevance
             if importance_score >= 50:
-                phase2_modules.append({
-                    "file_path": file_path,
-                    "module_name": module_name,
-                    "importance_score": importance_score,
-                    "category": self._categorize_phase2_module(file_path),
-                    "test_priority": self._determine_phase2_priority(file_path, importance_score),
-                    "phase2_type": self._determine_phase2_type(file_path)
-                })
-        
+                phase2_modules.append(
+                    {
+                        "file_path": file_path,
+                        "module_name": module_name,
+                        "importance_score": importance_score,
+                        "category": self._categorize_phase2_module(file_path),
+                        "test_priority": self._determine_phase2_priority(
+                            file_path, importance_score
+                        ),
+                        "phase2_type": self._determine_phase2_type(file_path),
+                    }
+                )
+
         # Sort by importance score (highest first)
         phase2_modules.sort(key=lambda x: x["importance_score"], reverse=True)
-        
+
         return phase2_modules[:150]  # Top 150 most relevant modules
-    
-    def _calculate_phase2_importance_score(self, file_path: str, module_name: str) -> int:
+
+    def _calculate_phase2_importance_score(
+        self, file_path: str, module_name: str
+    ) -> int:
         """Calculate Phase 2 importance score for a module."""
         score = 0
-        
+
         # Phase 2 priority keywords
         for keyword, weight in self.phase2_priorities.items():
             if keyword in file_path.lower():
                 score += weight
-        
+
         # Domain-specific scoring
         if "beast_mode" in file_path:
             score += 20
-        
+
         if "other" in file_path or "src/" in file_path:
             score += 25  # Higher priority for other domain
-        
+
         # Service-specific scoring
         if "service" in file_path.lower():
             score += 30
-        
+
         # Validation-specific scoring
         if "validation" in file_path.lower() or "validator" in file_path.lower():
             score += 35
-        
+
         # Integration-specific scoring
         if "integration" in file_path.lower():
             score += 25
-        
+
         # Performance-specific scoring
         if "performance" in file_path.lower() or "load" in file_path.lower():
             score += 40
-        
+
         return score
-    
+
     def _categorize_phase2_module(self, file_path: str) -> str:
         """Categorize module by Phase 2 type."""
         if "service" in file_path.lower():
@@ -138,7 +146,7 @@ class Phase2TestGenerator:
             return "business"
         else:
             return "general"
-    
+
     def _determine_phase2_priority(self, file_path: str, importance_score: int) -> str:
         """Determine Phase 2 test priority level."""
         if importance_score >= 120:
@@ -149,7 +157,7 @@ class Phase2TestGenerator:
             return "MEDIUM"
         else:
             return "LOW"
-    
+
     def _determine_phase2_type(self, file_path: str) -> str:
         """Determine Phase 2 implementation type."""
         if "performance" in file_path.lower() or "load" in file_path.lower():
@@ -162,21 +170,21 @@ class Phase2TestGenerator:
             return "service"
         else:
             return "general"
-    
+
     def generate_phase2_test_file(self, module_info: Dict[str, Any]) -> str:
         """Generate Phase 2 test file content for a module."""
         file_path = module_info["file_path"]
         category = module_info["category"]
         priority = module_info["test_priority"]
         phase2_type = module_info["phase2_type"]
-        
+
         # Extract module details
         module_parts = file_path.replace("src/", "").split("/")
         module_file = module_parts[-1].replace(".py", "")
-        
+
         # Determine class name from file
         class_name = self._extract_class_name(file_path)
-        
+
         # Generate test content based on Phase 2 type
         if phase2_type == "performance":
             return self._generate_performance_test(module_info, module_file, class_name)
@@ -187,30 +195,34 @@ class Phase2TestGenerator:
         elif phase2_type == "service":
             return self._generate_service_test(module_info, module_file, class_name)
         else:
-            return self._generate_enhanced_general_test(module_info, module_file, class_name)
-    
+            return self._generate_enhanced_general_test(
+                module_info, module_file, class_name
+            )
+
     def _extract_class_name(self, file_path: str) -> str:
         """Extract likely class name from file path."""
         file_name = Path(file_path).stem
-        
+
         # Convert snake_case to PascalCase
         parts = file_name.split("_")
         class_name = "".join(word.capitalize() for word in parts)
-        
+
         # Handle common suffixes
         if class_name.endswith("Part"):
             class_name = class_name[:-4]
         if class_name.endswith("Class"):
             class_name = class_name[:-5]
-        
+
         return class_name or "TestClass"
-    
-    def _generate_performance_test(self, module_info: Dict[str, Any], module_file: str, class_name: str) -> str:
+
+    def _generate_performance_test(
+        self, module_info: Dict[str, Any], module_file: str, class_name: str
+    ) -> str:
         """Generate performance test."""
         file_path = module_info["file_path"]
         priority = module_info["test_priority"]
         module_path = file_path.replace("src/", "").replace(".py", "").replace("/", ".")
-        
+
         return f'''"""
 Performance test module for {class_name}.
 
@@ -332,13 +344,15 @@ class Test{class_name}Performance:
         # Log performance metrics
         print(f"Performance Metrics: {{self.performance_metrics}}")
 '''
-    
-    def _generate_integration_test(self, module_info: Dict[str, Any], module_file: str, class_name: str) -> str:
+
+    def _generate_integration_test(
+        self, module_info: Dict[str, Any], module_file: str, class_name: str
+    ) -> str:
         """Generate integration test."""
         file_path = module_info["file_path"]
         priority = module_info["test_priority"]
         module_path = file_path.replace("src/", "").replace(".py", "").replace("/", ".")
-        
+
         return f'''"""
 Integration test module for {class_name}.
 
@@ -452,13 +466,15 @@ class Test{class_name}Integration:
         # Clean up any integration resources
         pass
 '''
-    
-    def _generate_validation_test(self, module_info: Dict[str, Any], module_file: str, class_name: str) -> str:
+
+    def _generate_validation_test(
+        self, module_info: Dict[str, Any], module_file: str, class_name: str
+    ) -> str:
         """Generate validation test."""
         file_path = module_info["file_path"]
         priority = module_info["test_priority"]
         module_path = file_path.replace("src/", "").replace(".py", "").replace("/", ".")
-        
+
         return f'''"""
 Validation test module for {class_name}.
 
@@ -602,13 +618,15 @@ class Test{class_name}Validation:
         assert 'average_validation_time' in metrics
         assert 'error_distribution' in metrics
 '''
-    
-    def _generate_service_test(self, module_info: Dict[str, Any], module_file: str, class_name: str) -> str:
+
+    def _generate_service_test(
+        self, module_info: Dict[str, Any], module_file: str, class_name: str
+    ) -> str:
         """Generate service test."""
         file_path = module_info["file_path"]
         priority = module_info["test_priority"]
         module_path = file_path.replace("src/", "").replace(".py", "").replace("/", ".")
-        
+
         return f'''"""
 Service test module for {class_name}.
 
@@ -780,13 +798,15 @@ class Test{class_name}Service:
         if hasattr(self.service, 'stop'):
             self.service.stop()
 '''
-    
-    def _generate_enhanced_general_test(self, module_info: Dict[str, Any], module_file: str, class_name: str) -> str:
+
+    def _generate_enhanced_general_test(
+        self, module_info: Dict[str, Any], module_file: str, class_name: str
+    ) -> str:
         """Generate enhanced general test."""
         file_path = module_info["file_path"]
         priority = module_info["test_priority"]
         module_path = file_path.replace("src/", "").replace(".py", "").replace("/", ".")
-        
+
         return f'''"""
 Enhanced general test module for {class_name}.
 
@@ -879,63 +899,67 @@ class Test{class_name}Enhanced:
         # Clean up any resources
         pass
 '''
-    
+
     def create_test_directory_structure(self, file_path: str) -> Path:
         """Create appropriate test directory structure."""
         # Convert source path to test path
         test_path = file_path.replace("src/", "tests/unit/")
         test_dir = Path(test_path).parent
-        
+
         # Create directory if it doesn't exist
         test_dir.mkdir(parents=True, exist_ok=True)
-        
+
         return test_dir
-    
+
     def generate_phase2_tests(self, limit: int = 100) -> List[str]:
         """Generate Phase 2 tests for the most relevant modules."""
         print("🚀 Generating Phase 2 tests...")
-        
+
         # Load coverage data
         self.load_coverage_data()
-        
+
         # Identify Phase 2 modules
         phase2_modules = self.identify_phase2_modules()
-        
+
         generated_tests = []
-        
+
         for i, module_info in enumerate(phase2_modules[:limit]):
             file_path = module_info["file_path"]
             priority = module_info["test_priority"]
             importance_score = module_info["importance_score"]
             phase2_type = module_info["phase2_type"]
-            
-            print(f"📝 Generating Phase 2 test for {file_path} (Priority: {priority}, Score: {importance_score}, Type: {phase2_type})")
-            
+
+            print(
+                f"📝 Generating Phase 2 test for {file_path} (Priority: {priority}, Score: {importance_score}, Type: {phase2_type})"
+            )
+
             # Generate test content
             test_content = self.generate_phase2_test_file(module_info)
-            
+
             # Create test file path
             test_dir = self.create_test_directory_structure(file_path)
             test_file_name = f"test_{Path(file_path).stem}_phase2.py"
             test_file_path = test_dir / test_file_name
-            
+
             # Write test file
-            with open(test_file_path, 'w') as f:
+            with open(test_file_path, "w") as f:
                 f.write(test_content)
-            
+
             generated_tests.append(str(test_file_path))
-            self.generated_tests.append({
-                "source_file": file_path,
-                "test_file": str(test_file_path),
-                "priority": priority,
-                "importance_score": importance_score,
-                "category": module_info["category"],
-                "phase2_type": phase2_type
-            })
-        
+            self.generated_tests.append(
+                {
+                    "source_file": file_path,
+                    "test_file": str(test_file_path),
+                    "priority": priority,
+                    "importance_score": importance_score,
+                    "category": module_info["category"],
+                    "phase2_type": phase2_type,
+                }
+            )
+
         print(f"✅ Generated {len(generated_tests)} Phase 2 test files")
         return generated_tests
-    
+
     def save_phase2_report(self):
         """Save Phase 2 generation report."""
         report = {
@@ -945,46 +969,48 @@ class Test{class_name}Enhanced:
             "generated_tests": self.generated_tests,
             "summary_by_priority": {},
             "summary_by_category": {},
-            "summary_by_phase2_type": {}
+            "summary_by_phase2_type": {},
         }
-        
+
         # Summary by priority
         for test in self.generated_tests:
             priority = test["priority"]
             if priority not in report["summary_by_priority"]:
                 report["summary_by_priority"][priority] = 0
             report["summary_by_priority"][priority] += 1
-        
+
         # Summary by category
         for test in self.generated_tests:
             category = test["category"]
             if category not in report["summary_by_category"]:
                 report["summary_by_category"][category] = 0
             report["summary_by_category"][category] += 1
-        
+
         # Summary by Phase 2 type
         for test in self.generated_tests:
             phase2_type = test["phase2_type"]
             if phase2_type not in report["summary_by_phase2_type"]:
                 report["summary_by_phase2_type"][phase2_type] = 0
             report["summary_by_phase2_type"][phase2_type] += 1
-        
+
         # Save report
-        with open("phase2_tests_generation_report.json", 'w') as f:
+        with open("phase2_tests_generation_report.json", "w") as f:
             json.dump(report, f, indent=2)
-        
-        print(f"📄 Phase 2 generation report saved to: phase2_tests_generation_report.json")
+
+        print(
+            f"📄 Phase 2 generation report saved to: phase2_tests_generation_report.json"
+        )
 
 
 if __name__ == "__main__":
     generator = Phase2TestGenerator()
-    
+
     # Generate Phase 2 tests for top 100 most relevant modules
     generated_tests = generator.generate_phase2_tests(limit=100)
-    
+
     # Save Phase 2 generation report
     generator.save_phase2_report()
-    
+
     print(f"\n🎉 Phase 2 test generation complete!")
     print(f"📊 Generated {len(generated_tests)} Phase 2 test files")
     print(f"📋 Report saved to: phase2_tests_generation_report.json")

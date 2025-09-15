@@ -27,7 +27,12 @@ def find_python_files(directory: str = ".") -> list[Path]:
     python_files = []
     for root, dirs, files in os.walk(directory):
         # Skip certain directories
-        dirs[:] = [d for d in dirs if not d.startswith(".") and d not in ["__pycache__", "node_modules", "venv", "env"]]
+        dirs[:] = [
+            d
+            for d in dirs
+            if not d.startswith(".")
+            and d not in ["__pycache__", "node_modules", "venv", "env"]
+        ]
 
         for file in files:
             if file.endswith(".py"):

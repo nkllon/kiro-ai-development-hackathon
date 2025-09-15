@@ -59,7 +59,9 @@ class RoundTripHairballAnalyzer:
 
                 # Count method extraction calls
                 method_extraction_calls = content.count("_extract_method_info_enhanced")
-                method_generation_calls = content.count("_generate_method_from_extracted_model")
+                method_generation_calls = content.count(
+                    "_generate_method_from_extracted_model"
+                )
 
                 print(f"  📄 {source_file}:")
                 print(f"    - Method extraction calls: {method_extraction_calls}")
@@ -148,8 +150,12 @@ class RoundTripHairballAnalyzer:
         print("  🧶 Hairball Pattern Analysis:")
 
         # Check for multiple round-trip runs
-        root_files = [f for f in os.listdir(".") if f.endswith(".py") and "Quality" in f]
-        generated_files = [f for f in os.listdir("src/round_trip_generated") if f.endswith(".py")]
+        root_files = [
+            f for f in os.listdir(".") if f.endswith(".py") and "Quality" in f
+        ]
+        generated_files = [
+            f for f in os.listdir("src/round_trip_generated") if f.endswith(".py")
+        ]
 
         print(f"    - Root directory generated files: {len(root_files)}")
         print(f"    - Generated directory files: {len(generated_files)}")
@@ -160,7 +166,11 @@ class RoundTripHairballAnalyzer:
             print(f"    - Last generated file modified: {stat.st_mtime}")
 
         # Check for cascading duplication
-        total_duplicates = sum(result.get("duplicate_returns", 0) for key, result in self.analysis_results.items() if key.startswith("generated_"))
+        total_duplicates = sum(
+            result.get("duplicate_returns", 0)
+            for key, result in self.analysis_results.items()
+            if key.startswith("generated_")
+        )
 
         print(f"    - Total duplicate return statements: {total_duplicates}")
 
@@ -175,7 +185,9 @@ class RoundTripHairballAnalyzer:
         print("  💡 Recommendations:")
 
         # Check if we have a hairball
-        total_duplicates = self.analysis_results.get("hairball_patterns", {}).get("total_duplicates", 0)
+        total_duplicates = self.analysis_results.get("hairball_patterns", {}).get(
+            "total_duplicates", 0
+        )
 
         if total_duplicates > 0:
             print("    🚨 CRITICAL: Duplication detected!")
@@ -187,7 +199,9 @@ class RoundTripHairballAnalyzer:
 
             # Specific recommendations
             if total_duplicates > 10:
-                print("    ⚠️  HIGH duplication count - system may be fundamentally broken")
+                print(
+                    "    ⚠️  HIGH duplication count - system may be fundamentally broken"
+                )
             elif total_duplicates > 5:
                 print("    ⚠️  MEDIUM duplication count - bug in code generation")
             else:
@@ -196,7 +210,9 @@ class RoundTripHairballAnalyzer:
             print("    ✅ No duplications detected - system appears clean")
 
         # Check for multiple round-trip runs
-        root_files = self.analysis_results.get("hairball_patterns", {}).get("root_files", 0)
+        root_files = self.analysis_results.get("hairball_patterns", {}).get(
+            "root_files", 0
+        )
         if root_files > 0:
             print("    🔄 Multiple round-trip runs detected - clean up needed")
 
@@ -204,9 +220,17 @@ class RoundTripHairballAnalyzer:
         """Generate a comprehensive analysis report"""
         report = {
             "summary": {
-                "total_duplicates": self.analysis_results.get("hairball_patterns", {}).get("total_duplicates", 0),
-                "has_hairball": self.analysis_results.get("hairball_patterns", {}).get("total_duplicates", 0) > 0,
-                "multiple_runs": self.analysis_results.get("hairball_patterns", {}).get("root_files", 0) > 0,
+                "total_duplicates": self.analysis_results.get(
+                    "hairball_patterns", {}
+                ).get("total_duplicates", 0),
+                "has_hairball": self.analysis_results.get("hairball_patterns", {}).get(
+                    "total_duplicates", 0
+                )
+                > 0,
+                "multiple_runs": self.analysis_results.get("hairball_patterns", {}).get(
+                    "root_files", 0
+                )
+                > 0,
             },
             "detailed_analysis": self.analysis_results,
             "recommendations": [

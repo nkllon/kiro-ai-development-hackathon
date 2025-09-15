@@ -22,64 +22,70 @@ from typing import Dict, List, Set
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
+
 class TargetedModuleFixer:
     """Specialized fixer for targeted modules based on actual errors."""
-    
+
     def __init__(self):
         self.project_root = project_root
         self.fixed_modules = []
         self.failed_fixes = []
         self.error_patterns = []
-    
+
     def analyze_current_errors(self) -> List[str]:
         """Analyze current test collection errors to identify missing modules."""
         print("🔍 Analyzing current test collection errors...")
-        
+
         try:
-            result = subprocess.run([
-                'python3', '-m', 'pytest', 'tests/unit/beast_mode/', '--collect-only'
-            ], capture_output=True, text=True, timeout=120)
-            
+            result = subprocess.run(
+                ["python3", "-m", "pytest", "tests/unit/beast_mode/", "--collect-only"],
+                capture_output=True,
+                text=True,
+                timeout=120,
+            )
+
             missing_modules = set()
-            
+
             # Parse error output for missing modules
-            error_lines = result.stderr.split('\n')
+            error_lines = result.stderr.split("\n")
             for line in error_lines:
-                if 'No module named' in line:
+                if "No module named" in line:
                     # Extract module name
                     match = re.search(r"No module named '([^']+)'", line)
                     if match:
                         missing_modules.add(match.group(1))
-                
-                elif 'cannot import name' in line:
+
+                elif "cannot import name" in line:
                     # Extract module and class
-                    match = re.search(r"cannot import name '([^']+)' from '([^']+)'", line)
+                    match = re.search(
+                        r"cannot import name '([^']+)' from '([^']+)'", line
+                    )
                     if match:
                         missing_class = match.group(1)
                         missing_module = match.group(2)
                         missing_modules.add(missing_module)
-            
+
             return list(missing_modules)
-        
+
         except Exception as e:
             print(f"⚠️  Error analyzing current errors: {e}")
             return []
-    
+
     def fix_targeted_modules(self) -> Dict[str, int]:
         """Fix targeted modules based on current error analysis."""
         print("🔍 Agent: Fixing targeted modules based on error analysis...")
-        
+
         # Get missing modules from current errors
         missing_modules = self.analyze_current_errors()
-        
+
         if not missing_modules:
             print("✅ No missing modules found in current errors")
             return {"successful": 0, "failed": 0}
-        
+
         print(f"📋 Found {len(missing_modules)} missing modules to fix")
-        
+
         stats = {"successful": 0, "failed": 0}
-        
+
         for module_name in missing_modules:
             if self._fix_targeted_module(module_name):
                 stats["successful"] += 1
@@ -87,23 +93,23 @@ class TargetedModuleFixer:
             else:
                 stats["failed"] += 1
                 print(f"❌ Failed {module_name}")
-        
+
         return stats
-    
+
     def _fix_targeted_module(self, module_name: str) -> bool:
         """Fix a specific targeted module."""
         try:
             # Convert module name to file path
-            module_path = module_name.replace('.', '/') + '.py'
+            module_path = module_name.replace(".", "/") + ".py"
             full_path = self.project_root / module_path
-            
+
             if not full_path.exists():
                 # Create the module
                 full_path.parent.mkdir(parents=True, exist_ok=True)
-                
+
                 # Generate class name from module name
                 class_name = self._generate_class_name_from_module(module_name)
-                
+
                 content = f'''#!/usr/bin/env python3
 """
 {module_name} - Targeted module
@@ -185,64 +191,66 @@ class {class_name}(ReflectiveModule):
             'capabilities': []
         }}
 '''
-                
-                with open(full_path, 'w') as f:
+
+                with open(full_path, "w") as f:
                     f.write(content)
-                
+
                 return True
-            
+
             else:
                 # Module exists, may need fixes
                 return self._fix_existing_targeted_module(full_path, module_name)
-                
+
         except Exception as e:
             print(f"Error fixing {module_name}: {e}")
             return False
-    
+
     def _generate_class_name_from_module(self, module_name: str) -> str:
         """Generate class name from module name."""
         # Get the last part of the module name
-        parts = module_name.split('.')
+        parts = module_name.split(".")
         last_part = parts[-1]
-        
+
         # Convert snake_case to PascalCase
-        class_parts = last_part.split('_')
-        return ''.join(word.capitalize() for word in class_parts)
-    
+        class_parts = last_part.split("_")
+        return "".join(word.capitalize() for word in class_parts)
+
     def _fix_existing_targeted_module(self, file_path: Path, module_name: str) -> bool:
         """Fix existing targeted module."""
         try:
             content = file_path.read_text()
-            
+
             # Check if it needs proper class structure
-            if 'def ' in content and 'class ' not in content:
+            if "def " in content and "class " not in content:
                 # Module exists but may need fixes
                 return True
-            
+
             return True
-            
+
         except Exception as e:
             print(f"Error fixing existing module {file_path}: {e}")
             return False
 
+
 def main():
     """Main function for targeted agent."""
     fixer = TargetedModuleFixer()
-    
+
     print("🚀 Starting Targeted Module Fixer Agent...")
-    
+
     stats = fixer.fix_targeted_modules()
-    
+
     result = {
         "agent_id": "targeted_fixer",
         "category": "targeted",
         "modules_fixed": stats["successful"],
         "errors_fixed": stats["failed"],
-        "success": stats["successful"] > 0
+        "success": stats["successful"] > 0,
     }
-    
+
     print(json.dumps(result))
     return 0 if result["success"] else 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

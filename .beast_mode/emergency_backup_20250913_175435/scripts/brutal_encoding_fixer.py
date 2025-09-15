@@ -89,7 +89,9 @@ def main() -> None:
     fixer = BrutalEncodingFixer()
 
     # Fix the problematic file
-    problem_file = Path(".venv/lib/python3.12/site-packages/joblib/test/test_func_inspect_special_encoding.py")
+    problem_file = Path(
+        ".venv/lib/python3.12/site-packages/joblib/test/test_func_inspect_special_encoding.py"
+    )
 
     if problem_file.exists():
         print(f"🔨 Fixing problematic file: {problem_file}")

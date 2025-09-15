@@ -75,7 +75,11 @@ def regenerate_ghostbusters_code():
         # Show a preview of the generated code
         print("\n📋 Generated Code Preview (first 500 chars):")
         print("-" * 50)
-        print(generated_code[:500] + "..." if len(generated_code) > 500 else generated_code)
+        print(
+            generated_code[:500] + "..."
+            if len(generated_code) > 500
+            else generated_code
+        )
         print("-" * 50)
 
     except Exception as e:

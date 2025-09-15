@@ -72,7 +72,9 @@ Examples:
             ],
             help="Implementation name (for registration only)",
         )
-        parser.add_argument("--config", help="JSON configuration (for registration only)")
+        parser.add_argument(
+            "--config", help="JSON configuration (for registration only)"
+        )
 
         # Model CRUD Parameters (business operations - NO auth/config needed)
         parser.add_argument("--id", help="Item ID")
@@ -87,7 +89,9 @@ Examples:
         # Domain operation parameters
         parser.add_argument("--domain", help="Domain name for list-domain-requirements")
         parser.add_argument("--search", help="Search term for filtering requirements")
-        parser.add_argument("--category", help="Category filter (demo_core, demo_tools, etc.)")
+        parser.add_argument(
+            "--category", help="Category filter (demo_core, demo_tools, etc.)"
+        )
         parser.add_argument(
             "--format",
             choices=["text", "json", "csv"],

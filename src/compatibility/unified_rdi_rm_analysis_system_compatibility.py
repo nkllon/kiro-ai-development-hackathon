@@ -16,14 +16,11 @@ from datetime import datetime
 
 class UnifiedRdiRmAnalysisSystemCompatibility:
     """Minimal valid class."""
-    
+
     def __init__(self):
         self.module_id = "unified_rdi_rm_analysis_system_compatibility"
         self.timestamp = datetime.now()
-    
+
     def get_info(self) -> Dict[str, Any]:
         """Get module info."""
-        return {
-            'module_id': self.module_id,
-            'timestamp': self.timestamp.isoformat()
-        }
+        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

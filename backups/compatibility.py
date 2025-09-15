@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 
 class MessageVersion(str, Enum):
     """Supported message format versions"""
+
     V1_0 = "1.0"  # Original format
     V1_1 = "1.1"  # Added correlation_id and priority
     V1_2 = "1.2"  # Added collaboration message types
@@ -31,31 +32,35 @@ class MessageVersion(str, Enum):
 
 class CompatibilityMode(str, Enum):
     """Compatibility handling modes"""
-    STRICT = "strict"        # Reject incompatible messages
-    CONVERT = "convert"      # Auto-convert when possible
+
+    STRICT = "strict"  # Reject incompatible messages
+    CONVERT = "convert"  # Auto-convert when possible
     PASSTHROUGH = "passthrough"  # Accept all, minimal validation
 
 
 class MessageCompatibilityError(Exception):
     """Raised when message compatibility issues occur"""
+
     pass
 
 
 class MessageConversionError(Exception):
     """Raised when message conversion fails"""
+
     pass
 
 
 @dataclass
 class ConversionResult:
     """Result of message conversion attempt"""
+
     success: bool
     message: Optional[BeastModeMessage] = None
     original_version: Optional[MessageVersion] = None
     target_version: Optional[MessageVersion] = None
     warnings: List[str] = None
     errors: List[str] = None
-    
+
     def __post_init__(self):
         if self.warnings is None:
             self.warnings = []
@@ -65,6 +70,7 @@ class ConversionResult:
 
 class LegacyMessageType(str, Enum):
     """Legacy message type mappings"""
+
     # V1.0 types
     MESSAGE = "message"
     REQUEST = "request"
@@ -72,12 +78,12 @@ class LegacyMessageType(str, Enum):
     DISCOVERY = "discovery"
     HELP = "help"
     SPORE = "spore"
-    
+
     # V1.1 types
     TEXT_MESSAGE = "text_message"
     AGENT_ANNOUNCE = "agent_announce"
     CAPABILITY_REQUEST = "capability_request"
-    
+
     # Unknown/custom types
     CUSTOM = "custom"
     UNKNOWN = "unknown"
@@ -85,7 +91,7 @@ class LegacyMessageType(str, Enum):
 
 class MessageTypeTranslator:
     """Translates message types between different versions"""
-    
+
     def __init__(self):
         # Legacy to current type mappings
         self.legacy_mappings = {
@@ -96,12 +102,10 @@ class MessageTypeTranslator:
             LegacyMessageType.DISCOVERY: MessageType.AGENT_DISCOVERY,
             LegacyMessageType.HELP: MessageType.HELP_WANTED,
             LegacyMessageType.SPORE: MessageType.SPORE_DELIVERY,
-            
             # V1.1 mappings
             LegacyMessageType.TEXT_MESSAGE: MessageType.SIMPLE_MESSAGE,
             LegacyMessageType.AGENT_ANNOUNCE: MessageType.AGENT_DISCOVERY,
             LegacyMessageType.CAPABILITY_REQUEST: MessageType.HELP_WANTED,
-            
             # String mappings for common variations
             "msg": MessageType.SIMPLE_MESSAGE,
             "text": MessageType.SIMPLE_MESSAGE,
@@ -116,7 +120,7 @@ class MessageTypeTranslator:
             "health": MessageType.SYSTEM_HEALTH,
             "status": MessageType.SYSTEM_HEALTH,
         }
-        
+
         # Reverse mappings for downgrade scenarios
         self.current_to_legacy = {
             MessageType.SIMPLE_MESSAGE: LegacyMessageType.MESSAGE,
@@ -126,17 +130,19 @@ class MessageTypeTranslator:
             MessageType.HELP_WANTED: LegacyMessageType.HELP,
             MessageType.SPORE_DELIVERY: LegacyMessageType.SPORE,
         }
-    
-    def translate_to_current(self, legacy_type: Union[str, LegacyMessageType]) -> MessageType:
+
+    def translate_to_current(
+        self, legacy_type: Union[str, LegacyMessageType]
+    ) -> MessageType:
         """
         Translate legacy message type to current format.
-        
+
         Args:
             legacy_type: Legacy message type
-            
+
         Returns:
             MessageType: Current message type
-            
+
         Raises:
             MessageConversionError: If translation fails
         """
@@ -146,12 +152,12 @@ class MessageTypeTranslator:
                 return MessageType(legacy_type)
             except ValueError:
                 pass
-            
+
             # Try legacy mappings
             legacy_type_lower = legacy_type.lower()
             if legacy_type_lower in self.legacy_mappings:
                 return self.legacy_mappings[legacy_type_lower]
-            
+
             # Try enum conversion of legacy types
             try:
                 legacy_enum = LegacyMessageType(legacy_type_lower)
@@ -159,29 +165,35 @@ class MessageTypeTranslator:
                     return self.legacy_mappings[legacy_enum]
             except ValueError:
                 pass
-        
+
         elif isinstance(legacy_type, LegacyMessageType):
             if legacy_type in self.legacy_mappings:
                 return self.legacy_mappings[legacy_type]
-        
+
         # Default to simple message for unknown types
-        logger.warning(f"Unknown message type '{legacy_type}', defaulting to SIMPLE_MESSAGE")
+        logger.warning(
+            f"Unknown message type '{legacy_type}', defaulting to SIMPLE_MESSAGE"
+        )
         return MessageType.SIMPLE_MESSAGE
-    
-    def translate_to_legacy(self, current_type: MessageType, target_version: MessageVersion = MessageVersion.V1_0) -> str:
+
+    def translate_to_legacy(
+        self,
+        current_type: MessageType,
+        target_version: MessageVersion = MessageVersion.V1_0,
+    ) -> str:
         """
         Translate current message type to legacy format.
-        
+
         Args:
             current_type: Current message type
             target_version: Target legacy version
-            
+
         Returns:
             str: Legacy message type string
         """
         if current_type in self.current_to_legacy:
             return self.current_to_legacy[current_type].value
-        
+
         # For newer types not supported in legacy versions, map to closest equivalent
         fallback_mappings = {
             MessageType.SPORE_REQUEST: LegacyMessageType.REQUEST.value,
@@ -195,112 +207,146 @@ class MessageTypeTranslator:
             MessageType.COLLABORATION_END: LegacyMessageType.MESSAGE.value,
             MessageType.COLLABORATION_UPDATE: LegacyMessageType.MESSAGE.value,
         }
-        
+
         return fallback_mappings.get(current_type, LegacyMessageType.MESSAGE.value)
 
 
 class MessageVersionDetector:
     """Detects message format version from message structure"""
-    
+
     def __init__(self):
         self.version_signatures = {
             MessageVersion.V1_0: {
-                'required_fields': {'type', 'source'},
-                'optional_fields': {'target', 'payload', 'timestamp'},
-                'forbidden_fields': {'correlation_id', 'priority', 'id'},
-                'type_format': 'string'
+                "required_fields": {"type", "source"},
+                "optional_fields": {"target", "payload", "timestamp"},
+                "forbidden_fields": {"correlation_id", "priority", "id"},
+                "type_format": "string",
             },
             MessageVersion.V1_1: {
-                'required_fields': {'type', 'source'},
-                'optional_fields': {'target', 'payload', 'timestamp', 'correlation_id', 'priority'},
-                'forbidden_fields': {'id'},
-                'type_format': 'string'
+                "required_fields": {"type", "source"},
+                "optional_fields": {
+                    "target",
+                    "payload",
+                    "timestamp",
+                    "correlation_id",
+                    "priority",
+                },
+                "forbidden_fields": {"id"},
+                "type_format": "string",
             },
             MessageVersion.V1_2: {
-                'required_fields': {'type', 'source'},
-                'optional_fields': {'target', 'payload', 'timestamp', 'correlation_id', 'priority', 'id'},
-                'forbidden_fields': set(),
-                'type_format': 'string',
-                'collaboration_types': True
+                "required_fields": {"type", "source"},
+                "optional_fields": {
+                    "target",
+                    "payload",
+                    "timestamp",
+                    "correlation_id",
+                    "priority",
+                    "id",
+                },
+                "forbidden_fields": set(),
+                "type_format": "string",
+                "collaboration_types": True,
             },
             MessageVersion.V2_0: {
-                'required_fields': {'type', 'source', 'id'},
-                'optional_fields': {'target', 'payload', 'timestamp', 'correlation_id', 'priority'},
-                'forbidden_fields': set(),
-                'type_format': 'enum',
-                'full_validation': True
-            }
+                "required_fields": {"type", "source", "id"},
+                "optional_fields": {
+                    "target",
+                    "payload",
+                    "timestamp",
+                    "correlation_id",
+                    "priority",
+                },
+                "forbidden_fields": set(),
+                "type_format": "enum",
+                "full_validation": True,
+            },
         }
-    
+
     def detect_version(self, message_data: Dict[str, Any]) -> MessageVersion:
         """
         Detect message format version from message structure.
-        
+
         Args:
             message_data: Raw message data
-            
+
         Returns:
             MessageVersion: Detected version
         """
         if not isinstance(message_data, dict):
             return MessageVersion.UNKNOWN
-        
+
         message_fields = set(message_data.keys())
-        
+
         # Check for V2.0 first (most specific)
-        if 'id' in message_fields and 'type' in message_fields and 'source' in message_fields:
-            msg_id = message_data.get('id')
+        if (
+            "id" in message_fields
+            and "type" in message_fields
+            and "source" in message_fields
+        ):
+            msg_id = message_data.get("id")
             if msg_id and isinstance(msg_id, str) and len(msg_id) == 36:
                 try:
                     # Try to validate as UUID
                     import uuid
+
                     uuid.UUID(msg_id)
                     return MessageVersion.V2_0
                 except ValueError:
                     pass
-        
+
         # Check for V1.2 (collaboration types)
-        if 'type' in message_fields and 'source' in message_fields:
-            msg_type = message_data.get('type', '')
-            if 'collaboration' in msg_type.lower() or 'office_hours' in msg_type.lower():
+        if "type" in message_fields and "source" in message_fields:
+            msg_type = message_data.get("type", "")
+            if (
+                "collaboration" in msg_type.lower()
+                or "office_hours" in msg_type.lower()
+            ):
                 return MessageVersion.V1_2
-        
+
         # Check for V1.1 (has correlation_id, priority, or request_id, uses 'source' not 'from')
-        if 'source' in message_fields and 'type' in message_fields:
-            if ('correlation_id' in message_fields or 'priority' in message_fields or 
-                'request_id' in message_fields):
+        if "source" in message_fields and "type" in message_fields:
+            if (
+                "correlation_id" in message_fields
+                or "priority" in message_fields
+                or "request_id" in message_fields
+            ):
                 return MessageVersion.V1_1
-        
+
         # Check for V1.0 (uses 'from'/'to' instead of 'source'/'target')
-        if 'from' in message_fields and 'type' in message_fields:
+        if "from" in message_fields and "type" in message_fields:
             return MessageVersion.V1_0
-        
+
         # Check each version signature as fallback
         for version, signature in self.version_signatures.items():
-            required_fields = signature['required_fields']
-            forbidden_fields = signature['forbidden_fields']
-            
+            required_fields = signature["required_fields"]
+            forbidden_fields = signature["forbidden_fields"]
+
             # Check required fields
             if not required_fields.issubset(message_fields):
                 continue
-            
+
             # Check forbidden fields
             if forbidden_fields.intersection(message_fields):
                 continue
-            
+
             # If we get here, this version is a candidate
             return version
-        
+
         return MessageVersion.UNKNOWN
-    
-    def is_compatible_version(self, version: MessageVersion, target_version: MessageVersion = MessageVersion.V2_0) -> bool:
+
+    def is_compatible_version(
+        self,
+        version: MessageVersion,
+        target_version: MessageVersion = MessageVersion.V2_0,
+    ) -> bool:
         """
         Check if a version is compatible with target version.
-        
+
         Args:
             version: Source version
             target_version: Target version
-            
+
         Returns:
             bool: True if compatible
         """
@@ -308,16 +354,16 @@ class MessageVersionDetector:
             MessageVersion.V1_0,
             MessageVersion.V1_1,
             MessageVersion.V1_2,
-            MessageVersion.V2_0
+            MessageVersion.V2_0,
         ]
-        
+
         if version == MessageVersion.UNKNOWN:
             return False
-        
+
         try:
             source_idx = version_order.index(version)
             target_idx = version_order.index(target_version)
-            
+
             # Can upgrade from older to newer, but not downgrade without conversion
             return source_idx <= target_idx
         except ValueError:
@@ -326,23 +372,25 @@ class MessageVersionDetector:
 
 class MessageConverter:
     """Converts messages between different format versions"""
-    
+
     def __init__(self):
         self.translator = MessageTypeTranslator()
         self.detector = MessageVersionDetector()
-    
-    def convert_to_current(self, message_data: Union[Dict[str, Any], str]) -> ConversionResult:
+
+    def convert_to_current(
+        self, message_data: Union[Dict[str, Any], str]
+    ) -> ConversionResult:
         """
         Convert message to current format (V2.0).
-        
+
         Args:
             message_data: Raw message data (dict or JSON string)
-            
+
         Returns:
             ConversionResult: Conversion result with message or errors
         """
         result = ConversionResult(success=False, target_version=MessageVersion.V2_0)
-        
+
         try:
             # Parse JSON if string
             if isinstance(message_data, str):
@@ -351,53 +399,61 @@ class MessageConverter:
                 except json.JSONDecodeError as e:
                     result.errors.append(f"Invalid JSON: {e}")
                     return result
-            
+
             if not isinstance(message_data, dict):
                 result.errors.append("Message data must be a dictionary")
                 return result
-            
+
             # Detect source version
             source_version = self.detector.detect_version(message_data)
             result.original_version = source_version
-            
+
             if source_version == MessageVersion.UNKNOWN:
-                result.warnings.append("Unknown message format, attempting best-effort conversion")
-            
+                result.warnings.append(
+                    "Unknown message format, attempting best-effort conversion"
+                )
+
             # Convert based on source version
             converted_data = self._convert_from_version(message_data, source_version)
-            
+
             # Validate and create BeastModeMessage
             try:
                 message = BeastModeMessage(**converted_data)
                 result.success = True
                 result.message = message
-                
+
                 if source_version != MessageVersion.V2_0:
-                    result.warnings.append(f"Converted from {source_version.value} to {MessageVersion.V2_0.value}")
-                
+                    result.warnings.append(
+                        f"Converted from {source_version.value} to {MessageVersion.V2_0.value}"
+                    )
+
             except ValidationError as e:
                 result.errors.append(f"Validation failed: {e}")
-                
+
                 # Try with more lenient conversion
                 try:
                     lenient_data = self._apply_lenient_conversion(converted_data)
                     message = BeastModeMessage(**lenient_data)
                     result.success = True
                     result.message = message
-                    result.warnings.append("Applied lenient conversion due to validation errors")
+                    result.warnings.append(
+                        "Applied lenient conversion due to validation errors"
+                    )
                 except ValidationError as e2:
                     result.errors.append(f"Lenient conversion also failed: {e2}")
-        
+
         except Exception as e:
             result.errors.append(f"Conversion error: {e}")
             logger.error(f"Message conversion error: {e}")
-        
+
         return result
-    
-    def _convert_from_version(self, message_data: Dict[str, Any], source_version: MessageVersion) -> Dict[str, Any]:
+
+    def _convert_from_version(
+        self, message_data: Dict[str, Any], source_version: MessageVersion
+    ) -> Dict[str, Any]:
         """Convert message from specific version to current format"""
         converted = message_data.copy()
-        
+
         # Version-specific conversions FIRST (before adding defaults)
         if source_version == MessageVersion.V1_0:
             converted = self._convert_from_v1_0(converted)
@@ -407,273 +463,316 @@ class MessageConverter:
             converted = self._convert_from_v1_2(converted)
         elif source_version == MessageVersion.UNKNOWN:
             # Try V1.0 conversion as fallback for unknown messages
-            if 'from' in converted or 'content' in converted:
+            if "from" in converted or "content" in converted:
                 converted = self._convert_from_v1_0(converted)
-        
+
         # Add missing required fields
-        if 'id' not in converted:
+        if "id" not in converted:
             import uuid
-            converted['id'] = str(uuid.uuid4())
-        
-        if 'timestamp' not in converted:
-            converted['timestamp'] = datetime.now()
-        elif isinstance(converted['timestamp'], str):
+
+            converted["id"] = str(uuid.uuid4())
+
+        if "timestamp" not in converted:
+            converted["timestamp"] = datetime.now()
+        elif isinstance(converted["timestamp"], str):
             try:
-                converted['timestamp'] = datetime.fromisoformat(converted['timestamp'].replace('Z', '+00:00'))
+                converted["timestamp"] = datetime.fromisoformat(
+                    converted["timestamp"].replace("Z", "+00:00")
+                )
             except ValueError:
-                converted['timestamp'] = datetime.now()
-        
-        if 'priority' not in converted:
-            converted['priority'] = 5
-        
-        if 'payload' not in converted:
-            converted['payload'] = {}
-        
+                converted["timestamp"] = datetime.now()
+
+        if "priority" not in converted:
+            converted["priority"] = 5
+
+        if "payload" not in converted:
+            converted["payload"] = {}
+
         # Convert message type
-        if 'type' in converted:
+        if "type" in converted:
             try:
                 # Try direct conversion first
-                MessageType(converted['type'])
+                MessageType(converted["type"])
             except ValueError:
                 # Use translator for legacy types
-                converted['type'] = self.translator.translate_to_current(converted['type']).value
+                converted["type"] = self.translator.translate_to_current(
+                    converted["type"]
+                ).value
         else:
-            converted['type'] = MessageType.SIMPLE_MESSAGE.value
-        
+            converted["type"] = MessageType.SIMPLE_MESSAGE.value
+
         # Ensure source is present (after version-specific conversion)
-        if 'source' not in converted:
-            converted['source'] = 'unknown_agent'
-        
+        if "source" not in converted:
+            converted["source"] = "unknown_agent"
+
         return converted
-    
+
     def _convert_from_v1_0(self, message_data: Dict[str, Any]) -> Dict[str, Any]:
         """Convert from V1.0 format"""
         converted = message_data.copy()
-        
+
         # V1.0 used 'from' instead of 'source' - convert first
-        if 'from' in converted:
-            converted['source'] = converted.pop('from')
-        
+        if "from" in converted:
+            converted["source"] = converted.pop("from")
+
         # V1.0 used 'to' instead of 'target'
-        if 'to' in converted:
-            converted['target'] = converted.pop('to')
-        
+        if "to" in converted:
+            converted["target"] = converted.pop("to")
+
         # V1.0 had different payload structure - preserve all non-standard fields
-        if 'payload' not in converted:
+        if "payload" not in converted:
             # Create payload from remaining fields that aren't standard message fields
-            standard_fields = {'type', 'source', 'target', 'timestamp', 'priority', 'id', 'correlation_id'}
+            standard_fields = {
+                "type",
+                "source",
+                "target",
+                "timestamp",
+                "priority",
+                "id",
+                "correlation_id",
+            }
             payload_data = {}
-            
+
             # Move non-standard fields to payload
             fields_to_move = []
             for key, value in converted.items():
                 if key not in standard_fields:
                     payload_data[key] = value
                     fields_to_move.append(key)
-            
+
             # Remove moved fields from top level
             for key in fields_to_move:
                 converted.pop(key)
-            
+
             # Set payload
-            converted['payload'] = payload_data
-        
+            converted["payload"] = payload_data
+
         return converted
-    
+
     def _convert_from_v1_1(self, message_data: Dict[str, Any]) -> Dict[str, Any]:
         """Convert from V1.1 format"""
         converted = message_data.copy()
-        
+
         # V1.1 had basic correlation support but different field names
-        if 'request_id' in converted and 'correlation_id' not in converted:
-            converted['correlation_id'] = converted.pop('request_id')
-        
+        if "request_id" in converted and "correlation_id" not in converted:
+            converted["correlation_id"] = converted.pop("request_id")
+
         return converted
-    
+
     def _convert_from_v1_2(self, message_data: Dict[str, Any]) -> Dict[str, Any]:
         """Convert from V1.2 format"""
         # V1.2 is mostly compatible, just ensure all fields are present
         return message_data
-    
+
     def _apply_lenient_conversion(self, message_data: Dict[str, Any]) -> Dict[str, Any]:
         """Apply lenient conversion rules for problematic messages"""
         converted = message_data.copy()
-        
+
         # Ensure priority is in valid range
-        if 'priority' in converted:
+        if "priority" in converted:
             try:
-                priority = int(converted['priority'])
-                converted['priority'] = max(1, min(10, priority))
+                priority = int(converted["priority"])
+                converted["priority"] = max(1, min(10, priority))
             except (ValueError, TypeError):
-                converted['priority'] = 5
-        
+                converted["priority"] = 5
+
         # Ensure payload is a dict
-        if 'payload' in converted and not isinstance(converted['payload'], dict):
-            if isinstance(converted['payload'], str):
+        if "payload" in converted and not isinstance(converted["payload"], dict):
+            if isinstance(converted["payload"], str):
                 try:
-                    converted['payload'] = json.loads(converted['payload'])
+                    converted["payload"] = json.loads(converted["payload"])
                 except json.JSONDecodeError:
-                    converted['payload'] = {'content': converted['payload']}
+                    converted["payload"] = {"content": converted["payload"]}
             else:
-                converted['payload'] = {'data': converted['payload']}
-        
+                converted["payload"] = {"data": converted["payload"]}
+
         # Handle malformed timestamps
-        if 'timestamp' in converted and not isinstance(converted['timestamp'], datetime):
-            converted['timestamp'] = datetime.now()
-        
+        if "timestamp" in converted and not isinstance(
+            converted["timestamp"], datetime
+        ):
+            converted["timestamp"] = datetime.now()
+
         return converted
-    
-    def convert_to_legacy(self, message: BeastModeMessage, target_version: MessageVersion = MessageVersion.V1_0) -> Dict[str, Any]:
+
+    def convert_to_legacy(
+        self,
+        message: BeastModeMessage,
+        target_version: MessageVersion = MessageVersion.V1_0,
+    ) -> Dict[str, Any]:
         """
         Convert current message to legacy format.
-        
+
         Args:
             message: Current format message
             target_version: Target legacy version
-            
+
         Returns:
             Dict[str, Any]: Legacy format message data
         """
         # Start with current message data
         legacy_data = message.model_dump()
-        
+
         # Convert message type to legacy format
-        legacy_data['type'] = self.translator.translate_to_legacy(message.type, target_version)
-        
+        legacy_data["type"] = self.translator.translate_to_legacy(
+            message.type, target_version
+        )
+
         # Remove fields not supported in target version
         if target_version == MessageVersion.V1_0:
             # V1.0 doesn't support correlation_id, priority, or id
-            legacy_data.pop('correlation_id', None)
-            legacy_data.pop('priority', None)
-            legacy_data.pop('id', None)
-            
+            legacy_data.pop("correlation_id", None)
+            legacy_data.pop("priority", None)
+            legacy_data.pop("id", None)
+
             # V1.0 used different field names
-            if 'target' in legacy_data:
-                legacy_data['to'] = legacy_data.pop('target')
-            if 'source' in legacy_data:
-                legacy_data['from'] = legacy_data.pop('source')
-        
+            if "target" in legacy_data:
+                legacy_data["to"] = legacy_data.pop("target")
+            if "source" in legacy_data:
+                legacy_data["from"] = legacy_data.pop("source")
+
         elif target_version == MessageVersion.V1_1:
             # V1.1 doesn't support id field
-            legacy_data.pop('id', None)
-            
+            legacy_data.pop("id", None)
+
             # V1.1 used request_id instead of correlation_id
-            if 'correlation_id' in legacy_data:
-                legacy_data['request_id'] = legacy_data.pop('correlation_id')
-        
+            if "correlation_id" in legacy_data:
+                legacy_data["request_id"] = legacy_data.pop("correlation_id")
+
         # Convert timestamp to string
-        if 'timestamp' in legacy_data and isinstance(legacy_data['timestamp'], datetime):
-            legacy_data['timestamp'] = legacy_data['timestamp'].isoformat()
-        
+        if "timestamp" in legacy_data and isinstance(
+            legacy_data["timestamp"], datetime
+        ):
+            legacy_data["timestamp"] = legacy_data["timestamp"].isoformat()
+
         return legacy_data
 
 
 class MessageCompatibilityLayer:
     """Main compatibility layer for handling different message formats"""
-    
+
     def __init__(self, mode: CompatibilityMode = CompatibilityMode.CONVERT):
         self.mode = mode
         self.converter = MessageConverter()
         self.detector = MessageVersionDetector()
-        
+
         # Statistics
         self.stats = {
-            'messages_processed': 0,
-            'conversions_successful': 0,
-            'conversions_failed': 0,
-            'unknown_types_handled': 0,
-            'validation_errors': 0,
-            'version_distribution': {},
-            'last_activity': None
+            "messages_processed": 0,
+            "conversions_successful": 0,
+            "conversions_failed": 0,
+            "unknown_types_handled": 0,
+            "validation_errors": 0,
+            "version_distribution": {},
+            "last_activity": None,
         }
-        
+
         # Configuration
         self.strict_validation = mode == CompatibilityMode.STRICT
-        self.auto_convert = mode in [CompatibilityMode.CONVERT, CompatibilityMode.PASSTHROUGH]
+        self.auto_convert = mode in [
+            CompatibilityMode.CONVERT,
+            CompatibilityMode.PASSTHROUGH,
+        ]
         self.log_unknown_types = True
-        
+
         # Unknown type handling
         self.unknown_type_handlers: Dict[str, MessageType] = {}
         self.custom_type_registry: Set[str] = set()
-    
-    def register_unknown_type_handler(self, unknown_type: str, mapped_type: MessageType) -> None:
+
+    def register_unknown_type_handler(
+        self, unknown_type: str, mapped_type: MessageType
+    ) -> None:
         """
         Register a handler for unknown message types.
-        
+
         Args:
             unknown_type: The unknown type string
             mapped_type: MessageType to map it to
         """
         self.unknown_type_handlers[unknown_type] = mapped_type
-        logger.info(f"Registered unknown type handler: {unknown_type} -> {mapped_type.value}")
-    
+        logger.info(
+            f"Registered unknown type handler: {unknown_type} -> {mapped_type.value}"
+        )
+
     def register_custom_type(self, custom_type: str) -> None:
         """
         Register a custom message type as valid.
-        
+
         Args:
             custom_type: Custom type string to accept
         """
         self.custom_type_registry.add(custom_type)
         logger.info(f"Registered custom message type: {custom_type}")
-    
-    def process_message(self, message_data: Union[Dict[str, Any], str, BeastModeMessage]) -> ConversionResult:
+
+    def process_message(
+        self, message_data: Union[Dict[str, Any], str, BeastModeMessage]
+    ) -> ConversionResult:
         """
         Process incoming message with compatibility handling.
-        
+
         Args:
             message_data: Raw message data in any supported format
-            
+
         Returns:
             ConversionResult: Processing result
         """
-        self.stats['messages_processed'] += 1
-        self.stats['last_activity'] = datetime.now()
-        
+        self.stats["messages_processed"] += 1
+        self.stats["last_activity"] = datetime.now()
+
         # If already a BeastModeMessage, return as-is
         if isinstance(message_data, BeastModeMessage):
             result = ConversionResult(success=True, message=message_data)
             result.original_version = MessageVersion.V2_0
             result.target_version = MessageVersion.V2_0
             return result
-        
+
         # Convert to current format
         result = self.converter.convert_to_current(message_data)
-        
+
         # In strict mode, reject messages that can't be converted cleanly
-        if self.strict_validation and (not result.success or result.original_version == MessageVersion.UNKNOWN):
+        if self.strict_validation and (
+            not result.success or result.original_version == MessageVersion.UNKNOWN
+        ):
             result.success = False
             if not result.errors:
                 result.errors.append("Message format not supported in strict mode")
-            self.stats['conversions_failed'] += 1
+            self.stats["conversions_failed"] += 1
             return result
-        
+
         # Update statistics
         if result.success:
-            self.stats['conversions_successful'] += 1
+            self.stats["conversions_successful"] += 1
             if result.original_version:
                 version_key = result.original_version.value
-                self.stats['version_distribution'][version_key] = \
-                    self.stats['version_distribution'].get(version_key, 0) + 1
+                self.stats["version_distribution"][version_key] = (
+                    self.stats["version_distribution"].get(version_key, 0) + 1
+                )
         else:
-            self.stats['conversions_failed'] += 1
-        
+            self.stats["conversions_failed"] += 1
+
         # Handle unknown message types
         if result.message:
-            original_type_str = str(message_data.get('type', '')) if isinstance(message_data, dict) else ''
+            original_type_str = (
+                str(message_data.get("type", ""))
+                if isinstance(message_data, dict)
+                else ""
+            )
             if original_type_str and original_type_str in self.unknown_type_handlers:
                 result.message.type = self.unknown_type_handlers[original_type_str]
-                result.warnings.append(f"Mapped unknown type to {result.message.type.value}")
-                self.stats['unknown_types_handled'] += 1
+                result.warnings.append(
+                    f"Mapped unknown type to {result.message.type.value}"
+                )
+                self.stats["unknown_types_handled"] += 1
             elif self._is_unknown_type(result.message.type):
                 handled_type = self._handle_unknown_type(result.message.type)
                 if handled_type and handled_type != result.message.type:
                     result.message.type = handled_type
-                    result.warnings.append(f"Mapped unknown type to {handled_type.value}")
-                    self.stats['unknown_types_handled'] += 1
-        
+                    result.warnings.append(
+                        f"Mapped unknown type to {handled_type.value}"
+                    )
+                    self.stats["unknown_types_handled"] += 1
+
         return result
-    
+
     def _is_unknown_type(self, message_type: MessageType) -> bool:
         """Check if message type is unknown/custom"""
         try:
@@ -681,51 +780,55 @@ class MessageCompatibilityLayer:
             return False
         except ValueError:
             return True
-    
+
     def _handle_unknown_type(self, message_type: MessageType) -> Optional[MessageType]:
         """Handle unknown message type"""
-        type_str = message_type.value if hasattr(message_type, 'value') else str(message_type)
-        
+        type_str = (
+            message_type.value if hasattr(message_type, "value") else str(message_type)
+        )
+
         # Check registered handlers
         if type_str in self.unknown_type_handlers:
             return self.unknown_type_handlers[type_str]
-        
+
         # Check custom type registry
         if type_str in self.custom_type_registry:
             return message_type  # Accept as-is
-        
+
         # Log unknown type if enabled
         if self.log_unknown_types:
             logger.warning(f"Unknown message type encountered: {type_str}")
-        
+
         # Default mapping based on type name patterns
         type_lower = type_str.lower()
-        if any(keyword in type_lower for keyword in ['request', 'query', 'ask']):
+        if any(keyword in type_lower for keyword in ["request", "query", "ask"]):
             return MessageType.PROMPT_REQUEST
-        elif any(keyword in type_lower for keyword in ['response', 'reply', 'answer']):
+        elif any(keyword in type_lower for keyword in ["response", "reply", "answer"]):
             return MessageType.PROMPT_RESPONSE
-        elif any(keyword in type_lower for keyword in ['help', 'assist', 'support']):
+        elif any(keyword in type_lower for keyword in ["help", "assist", "support"]):
             return MessageType.HELP_WANTED
-        elif any(keyword in type_lower for keyword in ['spore', 'share', 'deliver']):
+        elif any(keyword in type_lower for keyword in ["spore", "share", "deliver"]):
             return MessageType.SPORE_DELIVERY
-        elif any(keyword in type_lower for keyword in ['health', 'status', 'ping']):
+        elif any(keyword in type_lower for keyword in ["health", "status", "ping"]):
             return MessageType.SYSTEM_HEALTH
         else:
             return MessageType.SIMPLE_MESSAGE  # Default fallback
-    
-    def validate_message_compatibility(self, message: BeastModeMessage, target_agents: List[str] = None) -> List[str]:
+
+    def validate_message_compatibility(
+        self, message: BeastModeMessage, target_agents: List[str] = None
+    ) -> List[str]:
         """
         Validate message compatibility with target agents.
-        
+
         Args:
             message: Message to validate
             target_agents: List of target agent IDs (optional)
-            
+
         Returns:
             List[str]: List of compatibility warnings
         """
         warnings = []
-        
+
         # Check for newer message types that might not be supported by older agents
         newer_types = {
             MessageType.SPORE_SPAWN,
@@ -736,27 +839,33 @@ class MessageCompatibilityLayer:
             MessageType.COLLABORATION_END,
             MessageType.COLLABORATION_UPDATE,
         }
-        
+
         if message.type in newer_types:
-            warnings.append(f"Message type {message.type.value} may not be supported by older agents")
-        
+            warnings.append(
+                f"Message type {message.type.value} may not be supported by older agents"
+            )
+
         # Check payload complexity
         if message.payload:
             payload_size = len(json.dumps(message.payload))
             if payload_size > 10000:  # 10KB threshold
                 warnings.append("Large payload may cause issues with older agents")
-            
+
             # Check for nested objects that might not be supported
             if self._has_complex_payload(message.payload):
-                warnings.append("Complex payload structure may not be compatible with all agents")
-        
+                warnings.append(
+                    "Complex payload structure may not be compatible with all agents"
+                )
+
         return warnings
-    
-    def _has_complex_payload(self, payload: Dict[str, Any], max_depth: int = 3, current_depth: int = 0) -> bool:
+
+    def _has_complex_payload(
+        self, payload: Dict[str, Any], max_depth: int = 3, current_depth: int = 0
+    ) -> bool:
         """Check if payload has complex nested structure"""
         if current_depth >= max_depth:
             return True
-        
+
         for value in payload.values():
             if isinstance(value, dict):
                 if self._has_complex_payload(value, max_depth, current_depth + 1):
@@ -764,60 +873,67 @@ class MessageCompatibilityLayer:
             elif isinstance(value, list) and value:
                 if isinstance(value[0], dict):
                     return True
-        
+
         return False
-    
+
     def get_compatibility_stats(self) -> Dict[str, Any]:
         """Get compatibility layer statistics"""
         return {
-            'mode': self.mode.value,
-            'stats': self.stats.copy(),
-            'unknown_handlers': len(self.unknown_type_handlers),
-            'custom_types': len(self.custom_type_registry),
-            'strict_validation': self.strict_validation,
-            'auto_convert': self.auto_convert
+            "mode": self.mode.value,
+            "stats": self.stats.copy(),
+            "unknown_handlers": len(self.unknown_type_handlers),
+            "custom_types": len(self.custom_type_registry),
+            "strict_validation": self.strict_validation,
+            "auto_convert": self.auto_convert,
         }
-    
+
     def create_compatibility_report(self) -> Dict[str, Any]:
         """Create detailed compatibility report"""
-        total_processed = self.stats['messages_processed']
-        success_rate = (self.stats['conversions_successful'] / total_processed * 100) if total_processed > 0 else 0
-        
+        total_processed = self.stats["messages_processed"]
+        success_rate = (
+            (self.stats["conversions_successful"] / total_processed * 100)
+            if total_processed > 0
+            else 0
+        )
+
         return {
-            'summary': {
-                'total_messages_processed': total_processed,
-                'conversion_success_rate': f"{success_rate:.1f}%",
-                'unknown_types_handled': self.stats['unknown_types_handled'],
-                'mode': self.mode.value
+            "summary": {
+                "total_messages_processed": total_processed,
+                "conversion_success_rate": f"{success_rate:.1f}%",
+                "unknown_types_handled": self.stats["unknown_types_handled"],
+                "mode": self.mode.value,
             },
-            'version_distribution': self.stats['version_distribution'],
-            'registered_handlers': {
-                'unknown_type_mappings': dict(self.unknown_type_handlers),
-                'custom_types': list(self.custom_type_registry)
+            "version_distribution": self.stats["version_distribution"],
+            "registered_handlers": {
+                "unknown_type_mappings": dict(self.unknown_type_handlers),
+                "custom_types": list(self.custom_type_registry),
             },
-            'configuration': {
-                'strict_validation': self.strict_validation,
-                'auto_convert': self.auto_convert,
-                'log_unknown_types': self.log_unknown_types
-            }
+            "configuration": {
+                "strict_validation": self.strict_validation,
+                "auto_convert": self.auto_convert,
+                "log_unknown_types": self.log_unknown_types,
+            },
         }
 
 
 # Convenience functions for common operations
 
-def convert_message(message_data: Union[Dict[str, Any], str]) -> Optional[BeastModeMessage]:
+
+def convert_message(
+    message_data: Union[Dict[str, Any], str],
+) -> Optional[BeastModeMessage]:
     """
     Convert message data to BeastModeMessage with compatibility handling.
-    
+
     Args:
         message_data: Raw message data
-        
+
     Returns:
         BeastModeMessage or None if conversion fails
     """
     compatibility_layer = MessageCompatibilityLayer(CompatibilityMode.CONVERT)
     result = compatibility_layer.process_message(message_data)
-    
+
     if result.success:
         return result.message
     else:
@@ -828,10 +944,10 @@ def convert_message(message_data: Union[Dict[str, Any], str]) -> Optional[BeastM
 def detect_message_version(message_data: Dict[str, Any]) -> MessageVersion:
     """
     Detect message format version.
-    
+
     Args:
         message_data: Raw message data
-        
+
     Returns:
         MessageVersion: Detected version
     """
@@ -842,10 +958,10 @@ def detect_message_version(message_data: Dict[str, Any]) -> MessageVersion:
 def is_compatible_message(message_data: Union[Dict[str, Any], str]) -> bool:
     """
     Check if message data is compatible with current format.
-    
+
     Args:
         message_data: Raw message data
-        
+
     Returns:
         bool: True if compatible
     """

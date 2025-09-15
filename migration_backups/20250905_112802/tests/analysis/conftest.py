@@ -25,27 +25,27 @@ def mock_analyzer():
             "is_safe": True,
             "resource_usage": {"cpu_percent": 25.0, "memory_mb": 100.0},
             "violations": [],
-            "kill_switch_armed": True
+            "kill_switch_armed": True,
         },
         "guarantees": [
             "READ_ONLY_OPERATIONS",
             "RESOURCE_LIMITED",
             "EMERGENCY_SHUTDOWN_AVAILABLE",
-            "CANNOT_IMPACT_EXISTING_SYSTEMS"
-        ]
+            "CANNOT_IMPACT_EXISTING_SYSTEMS",
+        ],
     }
     analyzer.get_health_indicators.return_value = {
         "analyzer_health": {
             "analyzer_name": "test_analyzer",
             "analysis_in_progress": False,
-            "last_analysis": None
+            "last_analysis": None,
         },
         "safety_health": {
             "safety_systems_operational": True,
             "resource_usage": {"cpu_percent": 25.0, "memory_mb": 100.0},
             "safety_violations": [],
-            "emergency_shutdown_available": True
-        }
+            "emergency_shutdown_available": True,
+        },
     }
     return analyzer
 
@@ -53,8 +53,11 @@ def mock_analyzer():
 @pytest.fixture
 def mock_analysis_result():
     """Mock analysis result for testing"""
-    from src.beast_mode.analysis.rm_rdi.data_models import AnalysisResult, AnalysisStatus
-    
+    from src.beast_mode.analysis.rm_rdi.data_models import (
+        AnalysisResult,
+        AnalysisStatus,
+    )
+
     return AnalysisResult(
         analysis_id="test_analysis_001",
         timestamp=datetime.now(),
@@ -67,8 +70,8 @@ def mock_analysis_result():
         operator_notes=[
             "This analysis is READ-ONLY and cannot impact existing systems",
             "Use 'make analysis-kill' for emergency shutdown",
-            "Analysis can be safely ignored or disabled at any time"
-        ]
+            "Analysis can be safely ignored or disabled at any time",
+        ],
     )
 
 
@@ -90,8 +93,8 @@ def mock_orchestrator():
             "is_safe": True,
             "resource_usage": {"cpu_percent": 25.0, "memory_mb": 100.0},
             "violations": [],
-            "kill_switch_armed": True
-        }
+            "kill_switch_armed": True,
+        },
     }
     return orchestrator
 
@@ -104,10 +107,7 @@ def sample_workflow_config():
         "analyzers": ["analyzer1", "analyzer2"],
         "execution_mode": "parallel",
         "timeout_seconds": 300,
-        "safety_constraints": {
-            "max_memory_mb": 1024,
-            "max_cpu_percent": 50
-        }
+        "safety_constraints": {"max_memory_mb": 1024, "max_cpu_percent": 50},
     }
 
 
@@ -119,11 +119,9 @@ def mock_workflow_coordinator():
         "workflow_id": "test_workflow",
         "execution_plan": ["step1", "step2"],
         "estimated_duration": 120,
-        "safety_validated": True
+        "safety_validated": True,
     }
     coordinator.execute_workflow.return_value = Mock(
-        workflow_id="test_workflow",
-        status="completed",
-        results=[]
+        workflow_id="test_workflow", status="completed", results=[]
     )
     return coordinator

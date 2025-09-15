@@ -15,14 +15,19 @@ from typing import Dict, List, Any, Optional, Union
 from dataclasses import dataclass
 
 from .reflective_module import (
-    ReflectiveModule, ModuleHealth, ModuleStatus, ModuleCapability, 
-    ModuleConfiguration, register_module
+    ReflectiveModule,
+    ModuleHealth,
+    ModuleStatus,
+    ModuleCapability,
+    ModuleConfiguration,
+    register_module,
 )
 
 
 @dataclass
 class ProcessedInput:
     """Represents processed stdin input"""
+
     format: str
     data: Any
     success: bool
@@ -32,6 +37,7 @@ class ProcessedInput:
 @dataclass
 class CLIResult:
     """Represents CLI command result"""
+
     success: bool
     data: Any = None
     error: Optional[str] = None
@@ -41,6 +47,7 @@ class CLIResult:
 @dataclass
 class CLICommand:
     """Represents a CLI command"""
+
     name: str
     description: str
     arguments: List[Dict[str, Any]]
@@ -50,6 +57,7 @@ class CLICommand:
 @dataclass
 class ModuleAnalysis:
     """Represents analysis of a ReflectiveModule"""
+
     module: ReflectiveModule
     capabilities: List[ModuleCapability]
     methods: List[Dict[str, Any]]
@@ -60,176 +68,163 @@ class ModuleAnalysis:
 
 class StdinProcessor:
     """Handles stdin input processing for CLI pipes"""
-    
+
     def __init__(self):
         self.formats = {
-            'json': self.process_json_input,
-            'text': self.process_text_input,
-            'binary': self.process_binary_input
+            "json": self.process_json_input,
+            "text": self.process_text_input,
+            "binary": self.process_binary_input,
         }
-    
-    def process_input(self, input_data: bytes, format_type: str = 'auto') -> ProcessedInput:
+
+    def process_input(
+        self, input_data: bytes, format_type: str = "auto"
+    ) -> ProcessedInput:
         """Process stdin input based on format"""
-        if format_type == 'auto':
+        if format_type == "auto":
             format_type = self.detect_format(input_data)
-        
+
         processor = self.formats.get(format_type, self.process_text_input)
         return processor(input_data)
-    
+
     def detect_format(self, input_data: bytes) -> str:
         """Auto-detect input format"""
         try:
             # Try JSON first
-            json.loads(input_data.decode('utf-8'))
-            return 'json'
+            json.loads(input_data.decode("utf-8"))
+            return "json"
         except (json.JSONDecodeError, UnicodeDecodeError):
             # Check if it's text
             try:
-                input_data.decode('utf-8')
-                return 'text'
+                input_data.decode("utf-8")
+                return "text"
             except UnicodeDecodeError:
-                return 'binary'
-    
+                return "binary"
+
     def process_json_input(self, input_data: bytes) -> ProcessedInput:
         """Process JSON input from stdin"""
         try:
-            data = json.loads(input_data.decode('utf-8'))
-            return ProcessedInput(
-                format='json',
-                data=data,
-                success=True
-            )
+            data = json.loads(input_data.decode("utf-8"))
+            return ProcessedInput(format="json", data=data, success=True)
         except json.JSONDecodeError as e:
-            return ProcessedInput(
-                format='json',
-                data=None,
-                success=False,
-                error=str(e)
-            )
-    
+            return ProcessedInput(format="json", data=None, success=False, error=str(e))
+
     def process_text_input(self, input_data: bytes) -> ProcessedInput:
         """Process text input from stdin"""
         try:
-            text = input_data.decode('utf-8')
-            lines = text.strip().split('\n') if text.strip() else []
-            return ProcessedInput(
-                format='text',
-                data=lines,
-                success=True
-            )
+            text = input_data.decode("utf-8")
+            lines = text.strip().split("\n") if text.strip() else []
+            return ProcessedInput(format="text", data=lines, success=True)
         except UnicodeDecodeError as e:
-            return ProcessedInput(
-                format='text',
-                data=None,
-                success=False,
-                error=str(e)
-            )
-    
+            return ProcessedInput(format="text", data=None, success=False, error=str(e))
+
     def process_binary_input(self, input_data: bytes) -> ProcessedInput:
         """Process binary input from stdin"""
-        return ProcessedInput(
-            format='binary',
-            data=input_data,
-            success=True
-        )
+        return ProcessedInput(format="binary", data=input_data, success=True)
 
 
 class StdoutProcessor:
     """Handles stdout output processing for CLI pipes"""
-    
+
     def __init__(self):
         self.formats = {
-            'json': self.output_json,
-            'text': self.output_text,
-            'table': self.output_table
+            "json": self.output_json,
+            "text": self.output_text,
+            "table": self.output_table,
         }
-    
-    def process_output(self, output_data: Any, format_type: str = 'json') -> bytes:
+
+    def process_output(self, output_data: Any, format_type: str = "json") -> bytes:
         """Process output data for stdout"""
         processor = self.formats.get(format_type, self.output_json)
         return processor(output_data)
-    
+
     def output_json(self, data: Any) -> bytes:
         """Output data as JSON"""
         try:
             json_str = json.dumps(data, indent=2, default=str)
-            return json_str.encode('utf-8')
+            return json_str.encode("utf-8")
         except (TypeError, ValueError) as e:
-            error_data = {'error': str(e), 'data': str(data)}
-            return json.dumps(error_data).encode('utf-8')
-    
+            error_data = {"error": str(e), "data": str(data)}
+            return json.dumps(error_data).encode("utf-8")
+
     def output_text(self, data: Any) -> bytes:
         """Output data as text"""
         if isinstance(data, list):
-            return '\n'.join(str(item) for item in data).encode('utf-8')
+            return "\n".join(str(item) for item in data).encode("utf-8")
         else:
-            return str(data).encode('utf-8')
-    
+            return str(data).encode("utf-8")
+
     def output_table(self, data: Any) -> bytes:
         """Output data as table"""
         if isinstance(data, list) and data and isinstance(data[0], dict):
             # Simple table output for list of dicts
             if not data:
                 return b"No data"
-            
+
             # Get headers
             headers = list(data[0].keys())
-            
+
             # Calculate column widths
             col_widths = {header: len(header) for header in headers}
             for row in data:
                 for header in headers:
-                    col_widths[header] = max(col_widths[header], len(str(row.get(header, ''))))
-            
+                    col_widths[header] = max(
+                        col_widths[header], len(str(row.get(header, "")))
+                    )
+
             # Build table
             lines = []
             # Header
-            header_line = ' | '.join(header.ljust(col_widths[header]) for header in headers)
+            header_line = " | ".join(
+                header.ljust(col_widths[header]) for header in headers
+            )
             lines.append(header_line)
-            lines.append('-' * len(header_line))
-            
+            lines.append("-" * len(header_line))
+
             # Rows
             for row in data:
-                row_line = ' | '.join(str(row.get(header, '')).ljust(col_widths[header]) for header in headers)
+                row_line = " | ".join(
+                    str(row.get(header, "")).ljust(col_widths[header])
+                    for header in headers
+                )
                 lines.append(row_line)
-            
-            return '\n'.join(lines).encode('utf-8')
+
+            return "\n".join(lines).encode("utf-8")
         else:
             return self.output_text(data)
 
 
 class CLIGeneratorEngine:
     """Generates CLI code for ReflectiveModule instances"""
-    
+
     def __init__(self):
         self.stdin_processor = StdinProcessor()
         self.stdout_processor = StdoutProcessor()
-    
+
     def analyze_module(self, module: ReflectiveModule) -> ModuleAnalysis:
         """Analyze ReflectiveModule and extract CLI-relevant information"""
         try:
             # Get module capabilities
             capabilities = module.get_capabilities()
-            
+
             # Analyze methods
             methods = self._analyze_methods(module)
-            
+
             # Get configuration
             configuration = module.get_configuration()
-            
+
             # Get health status
             health = module.check_health()
-            
+
             # Get metrics
             metrics = module.get_metrics()
-            
+
             return ModuleAnalysis(
                 module=module,
                 capabilities=capabilities,
                 methods=methods,
                 configuration=configuration,
                 health=health,
-                metrics=metrics
+                metrics=metrics,
             )
         except Exception as e:
             # Return minimal analysis on error
@@ -237,7 +232,9 @@ class CLIGeneratorEngine:
                 module=module,
                 capabilities=[],
                 methods=[],
-                configuration=ModuleConfiguration(module_id=module.module_id, settings={}, last_updated=datetime.now()),
+                configuration=ModuleConfiguration(
+                    module_id=module.module_id, settings={}, last_updated=datetime.now()
+                ),
                 health=ModuleHealth(
                     module_id=module.module_id,
                     status=ModuleStatus.ERROR,
@@ -246,62 +243,70 @@ class CLIGeneratorEngine:
                     capabilities=[],
                     dependencies=[],
                     metrics={},
-                    last_check=datetime.now()
+                    last_check=datetime.now(),
                 ),
-                metrics={}
+                metrics={},
             )
-    
+
     def _analyze_methods(self, module: ReflectiveModule) -> List[Dict[str, Any]]:
         """Analyze module methods for CLI generation"""
         methods = []
-        
+
         try:
             # Get all methods from the module
             for method_name in dir(module):
-                if not method_name.startswith('_'):
+                if not method_name.startswith("_"):
                     method = getattr(module, method_name)
                     if callable(method) and not isinstance(method, property):
                         # Extract method information
                         method_info = {
-                            'name': method_name,
-                            'description': self._extract_method_docstring(method),
-                            'arguments': self._extract_method_arguments(method),
-                            'return_type': self._extract_method_return_type(method)
+                            "name": method_name,
+                            "description": self._extract_method_docstring(method),
+                            "arguments": self._extract_method_arguments(method),
+                            "return_type": self._extract_method_return_type(method),
                         }
                         methods.append(method_info)
         except Exception as e:
             # If method analysis fails, return empty list
             pass
-        
+
         return methods
-    
+
     def _extract_method_docstring(self, method: callable) -> str:
         """Extract docstring from method"""
         try:
             return method.__doc__ or f"Execute {method.__name__} operation"
         except:
             return f"Execute {method.__name__} operation"
-    
+
     def _extract_method_arguments(self, method: callable) -> List[Dict[str, Any]]:
         """Extract method arguments for CLI generation"""
         try:
             sig = inspect.signature(method)
             arguments = []
-            
+
             for param_name, param in sig.parameters.items():
-                if param_name != 'self':
+                if param_name != "self":
                     arg_info = {
-                        'name': param_name,
-                        'type': str(param.annotation) if param.annotation != inspect.Parameter.empty else 'str',
-                        'default': param.default if param.default != inspect.Parameter.empty else None,
-                        'required': param.default == inspect.Parameter.empty
+                        "name": param_name,
+                        "type": (
+                            str(param.annotation)
+                            if param.annotation != inspect.Parameter.empty
+                            else "str"
+                        ),
+                        "default": (
+                            param.default
+                            if param.default != inspect.Parameter.empty
+                            else None
+                        ),
+                        "required": param.default == inspect.Parameter.empty,
                     }
                     arguments.append(arg_info)
-            
+
             return arguments
         except:
             return []
-    
+
     def _extract_method_return_type(self, method: callable) -> str:
         """Extract return type from method"""
         try:
@@ -310,15 +315,15 @@ class CLIGeneratorEngine:
             if return_type != inspect.Parameter.empty:
                 return str(return_type)
             else:
-                return 'Any'
+                return "Any"
         except:
-            return 'Any'
-    
+            return "Any"
+
     def generate_cli_code(self, analysis: ModuleAnalysis) -> str:
         """Generate complete CLI code for module"""
         module = analysis.module
         module_info = module.get_module_info()
-        
+
         # Generate CLI template
         cli_code = f'''#!/usr/bin/env python3
 """
@@ -649,13 +654,13 @@ def main():
 if __name__ == '__main__':
     main()
 '''
-        
+
         return cli_code
-    
+
     def generate_cli_entry_point(self, module: ReflectiveModule) -> str:
         """Generate CLI entry point script"""
         module_info = module.get_module_info()
-        
+
         entry_point = f'''#!/usr/bin/env python3
 """
 Auto-generated CLI entry point for {module_info['name']}
@@ -688,56 +693,56 @@ def main():
 if __name__ == '__main__':
     main()
 '''
-        
+
         return entry_point
 
 
 class CLIRegistry:
     """Registry for managing module CLIs"""
-    
+
     _instance = None
     _clis = {}
-    
+
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
-    
+
     @classmethod
     def get_instance(cls):
         """Get singleton instance"""
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
-    
+
     def register_cli(self, module: ReflectiveModule, cli_code: str) -> None:
         """Register CLI for module"""
         self._clis[module.module_id] = {
-            'module': module,
-            'cli_code': cli_code,
-            'registered_at': datetime.now()
+            "module": module,
+            "cli_code": cli_code,
+            "registered_at": datetime.now(),
         }
-    
+
     def get_cli(self, module_id: str) -> Optional[Dict[str, Any]]:
         """Get CLI for module"""
         return self._clis.get(module_id)
-    
+
     def get_all_clis(self) -> Dict[str, Dict[str, Any]]:
         """Get all registered CLIs"""
         return self._clis.copy()
-    
+
     def discover_module_clis(self) -> List[Dict[str, Any]]:
         """Discover CLIs for all registered modules"""
         from .reflective_module import ReflectiveModuleRegistry
-        
+
         registry = ReflectiveModuleRegistry.get_instance()
         clis = []
-        
+
         for module in registry.get_all_modules():
             cli_info = self.get_cli(module.module_id)
             if cli_info:
                 clis.append(cli_info)
-        
+
         return clis
 
 

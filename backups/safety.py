@@ -17,54 +17,60 @@ import logging
 # Optional dependency - graceful fallback if not available
 try:
     import psutil
+
     PSUTIL_AVAILABLE = True
 except ImportError:
     PSUTIL_AVAILABLE = False
+
     # Mock psutil for basic functionality
     class MockProcess:
         def memory_info(self):
             class MockMemInfo:
                 rss = 100 * 1024 * 1024  # 100MB
+
             return MockMemInfo()
-            
+
         def cpu_percent(self):
             return 25.0
-            
+
         def is_running(self):
             return True
-            
+
         def num_threads(self):
             return 4
-    
+
     class MockPsutil:
         @staticmethod
         def virtual_memory():
             class MockMemory:
                 percent = 50.0  # Default safe value
+
             return MockMemory()
-        
+
         @staticmethod
         def cpu_percent():
             return 25.0  # Default safe value
-            
+
         @staticmethod
         def disk_usage(path):
             class MockDisk:
                 percent = 30.0  # Default safe value
+
             return MockDisk()
-            
+
         @staticmethod
         def Process():
             return MockProcess()
-    
+
     psutil = MockPsutil()
 
 
 @dataclass
 class ResourceLimits:
     """Hard resource limits for operator safety"""
+
     max_cpu_percent: float = 25.0  # Never use more than 25% CPU
-    max_memory_mb: float = 512.0   # Never use more than 512MB RAM
+    max_memory_mb: float = 512.0  # Never use more than 512MB RAM
     max_disk_io_mb: float = 100.0  # Limit disk I/O
     max_analysis_time_seconds: int = 300  # 5 minute timeout
     max_concurrent_operations: int = 2
@@ -73,6 +79,7 @@ class ResourceLimits:
 @dataclass
 class SafetyStatus:
     """Current safety status"""
+
     is_safe: bool
     resource_usage: Dict[str, float]
     violations: List[str]
@@ -82,34 +89,34 @@ class SafetyStatus:
 
 class KillSwitch:
     """Emergency shutdown system - INSTANT STOP capability"""
-    
+
     def __init__(self):
         self.is_armed = True
         self.shutdown_callbacks: List[Callable] = []
         self.logger = logging.getLogger("rm_rdi_analysis.kill_switch")
-        
+
         # Register signal handlers for emergency shutdown
         signal.signal(signal.SIGTERM, self._emergency_shutdown)
         signal.signal(signal.SIGINT, self._emergency_shutdown)
-        
+
     def register_shutdown_callback(self, callback: Callable) -> None:
         """Register callback to be called during emergency shutdown"""
         self.shutdown_callbacks.append(callback)
-        
+
     def emergency_shutdown(self, reason: str = "Operator initiated") -> None:
         """INSTANT SHUTDOWN - Stops all analysis operations immediately"""
         self.logger.critical(f"EMERGENCY SHUTDOWN INITIATED: {reason}")
-        
+
         # Call all shutdown callbacks
         for callback in self.shutdown_callbacks:
             try:
                 callback()
             except Exception as e:
                 self.logger.error(f"Shutdown callback failed: {e}")
-        
+
         # Force terminate current process if needed
         self.logger.info("Emergency shutdown complete")
-        
+
     def _emergency_shutdown(self, signum, frame):
         """Signal handler for emergency shutdown"""
         self.emergency_shutdown(f"Signal {signum} received")
@@ -117,7 +124,7 @@ class KillSwitch:
 
 class ResourceMonitor:
     """Continuous resource monitoring with automatic throttling"""
-    
+
     def __init__(self, limits: ResourceLimits):
         self.limits = limits
         self.current_process = psutil.Process()
@@ -125,58 +132,66 @@ class ResourceMonitor:
         self.monitor_thread: Optional[threading.Thread] = None
         self.logger = logging.getLogger("rm_rdi_analysis.resource_monitor")
         self.violation_callbacks: List[Callable] = []
-        
+
     def start_monitoring(self) -> None:
         """Start continuous resource monitoring"""
         if self.monitoring:
             return
-            
+
         self.monitoring = True
         self.monitor_thread = threading.Thread(target=self._monitor_loop, daemon=True)
         self.monitor_thread.start()
         self.logger.info("Resource monitoring started")
-        
+
     def stop_monitoring(self) -> None:
         """Stop resource monitoring"""
         self.monitoring = False
         if self.monitor_thread:
             self.monitor_thread.join(timeout=1.0)
         self.logger.info("Resource monitoring stopped")
-        
+
     def register_violation_callback(self, callback: Callable) -> None:
         """Register callback for resource violations"""
         self.violation_callbacks.append(callback)
-        
+
     def get_current_usage(self) -> Dict[str, float]:
         """Get current resource usage"""
         try:
             cpu_percent = self.current_process.cpu_percent()
             memory_info = self.current_process.memory_info()
             memory_mb = memory_info.rss / 1024 / 1024
-            
+
             return {
                 "cpu_percent": cpu_percent,
                 "memory_mb": memory_mb,
                 "num_threads": self.current_process.num_threads(),
-                "num_fds": self.current_process.num_fds() if hasattr(self.current_process, 'num_fds') else 0
+                "num_fds": (
+                    self.current_process.num_fds()
+                    if hasattr(self.current_process, "num_fds")
+                    else 0
+                ),
             }
         except Exception as e:
             self.logger.error(f"Failed to get resource usage: {e}")
             return {}
-            
+
     def check_limits(self) -> List[str]:
         """Check if resource usage exceeds limits"""
         violations = []
         usage = self.get_current_usage()
-        
+
         if usage.get("cpu_percent", 0) > self.limits.max_cpu_percent:
-            violations.append(f"CPU usage {usage['cpu_percent']:.1f}% exceeds limit {self.limits.max_cpu_percent}%")
-            
+            violations.append(
+                f"CPU usage {usage['cpu_percent']:.1f}% exceeds limit {self.limits.max_cpu_percent}%"
+            )
+
         if usage.get("memory_mb", 0) > self.limits.max_memory_mb:
-            violations.append(f"Memory usage {usage['memory_mb']:.1f}MB exceeds limit {self.limits.max_memory_mb}MB")
-            
+            violations.append(
+                f"Memory usage {usage['memory_mb']:.1f}MB exceeds limit {self.limits.max_memory_mb}MB"
+            )
+
         return violations
-        
+
     def _monitor_loop(self) -> None:
         """Main monitoring loop"""
         while self.monitoring:
@@ -189,7 +204,7 @@ class ResourceMonitor:
                             callback(violations)
                         except Exception as e:
                             self.logger.error(f"Violation callback failed: {e}")
-                            
+
                 time.sleep(1.0)  # Check every second
             except Exception as e:
                 self.logger.error(f"Monitor loop error: {e}")
@@ -198,36 +213,38 @@ class ResourceMonitor:
 
 class SafetyValidator:
     """Validates that all operations are safe for production"""
-    
+
     def __init__(self):
         self.logger = logging.getLogger("rm_rdi_analysis.safety_validator")
-        
+
     def validate_read_only_access(self, file_path: Path) -> bool:
         """Validate that we only have read access to files"""
         try:
             # Check if file exists and is readable
             if not file_path.exists():
                 return False
-                
+
             if not os.access(file_path, os.R_OK):
                 return False
-                
+
             # Ensure we don't have write access (safety check)
             if os.access(file_path, os.W_OK):
-                self.logger.warning(f"Write access detected for {file_path} - SAFETY VIOLATION")
+                self.logger.warning(
+                    f"Write access detected for {file_path} - SAFETY VIOLATION"
+                )
                 return False
-                
+
             return True
         except Exception as e:
             self.logger.error(f"Safety validation failed for {file_path}: {e}")
             return False
-            
+
     def validate_no_system_modifications(self) -> bool:
         """Validate that we're not modifying any system files"""
         # This is a placeholder for more sophisticated checks
         # In production, this would verify no writes to critical directories
         return True
-        
+
     def validate_isolation(self) -> bool:
         """Validate that analysis runs in isolation"""
         # Check that we're not interfering with other processes
@@ -237,109 +254,117 @@ class SafetyValidator:
 
 class OperatorSafetyManager:
     """Main safety management system - Coordinates all safety measures"""
-    
+
     def __init__(self, limits: Optional[ResourceLimits] = None):
         self.limits = limits or ResourceLimits()
         self.kill_switch = KillSwitch()
         self.resource_monitor = ResourceMonitor(self.limits)
         self.safety_validator = SafetyValidator()
         self.logger = logging.getLogger("rm_rdi_analysis.safety_manager")
-        
+
         # Safety state
         self.is_safe_mode = True
         self.analysis_allowed = True
         self.emergency_shutdown_triggered = False
-        
+
         # Register safety callbacks
         self.kill_switch.register_shutdown_callback(self._emergency_shutdown_callback)
-        self.resource_monitor.register_violation_callback(self._resource_violation_callback)
-        
+        self.resource_monitor.register_violation_callback(
+            self._resource_violation_callback
+        )
+
     def initialize_safety_systems(self) -> bool:
         """Initialize all safety systems"""
         try:
             self.logger.info("Initializing operator safety systems...")
-            
+
             # Start resource monitoring
             self.resource_monitor.start_monitoring()
-            
+
             # Validate initial safety state
             if not self._validate_initial_safety():
                 self.logger.error("Initial safety validation failed")
                 return False
-                
+
             self.logger.info("Safety systems initialized successfully")
             return True
-            
+
         except Exception as e:
             self.logger.error(f"Failed to initialize safety systems: {e}")
             return False
-            
+
     def shutdown_safety_systems(self) -> None:
         """Shutdown all safety systems"""
         self.logger.info("Shutting down safety systems...")
         self.resource_monitor.stop_monitoring()
         self.logger.info("Safety systems shutdown complete")
-        
+
     def get_safety_status(self) -> SafetyStatus:
         """Get current safety status"""
         violations = self.resource_monitor.check_limits()
         usage = self.resource_monitor.get_current_usage()
-        
+
         return SafetyStatus(
             is_safe=len(violations) == 0 and not self.emergency_shutdown_triggered,
             resource_usage=usage,
             violations=violations,
             last_check=datetime.now(),
-            kill_switch_armed=self.kill_switch.is_armed
+            kill_switch_armed=self.kill_switch.is_armed,
         )
-        
+
     def is_operation_safe(self, operation_name: str) -> bool:
         """Check if an operation is safe to perform"""
         if self.emergency_shutdown_triggered:
-            self.logger.warning(f"Operation {operation_name} blocked - emergency shutdown active")
+            self.logger.warning(
+                f"Operation {operation_name} blocked - emergency shutdown active"
+            )
             return False
-            
+
         if not self.analysis_allowed:
-            self.logger.warning(f"Operation {operation_name} blocked - analysis disabled")
+            self.logger.warning(
+                f"Operation {operation_name} blocked - analysis disabled"
+            )
             return False
-            
+
         # Check resource limits
         violations = self.resource_monitor.check_limits()
         if violations:
-            self.logger.warning(f"Operation {operation_name} blocked - resource violations: {violations}")
+            self.logger.warning(
+                f"Operation {operation_name} blocked - resource violations: {violations}"
+            )
             return False
-            
+
         return True
-        
+
     def emergency_shutdown(self, reason: str = "Operator request") -> None:
         """Trigger emergency shutdown"""
         self.emergency_shutdown_triggered = True
         self.analysis_allowed = False
         self.kill_switch.emergency_shutdown(reason)
-        
+
     def _validate_initial_safety(self) -> bool:
         """Validate initial safety conditions"""
         # Check that we're not running as root (safety measure)
         if os.getuid() == 0:
             self.logger.error("SAFETY VIOLATION: Running as root user")
             return False
-            
+
         # Validate resource limits are reasonable
         if self.limits.max_cpu_percent > 50:
             self.logger.warning("CPU limit >50% may impact system performance")
-            
+
         return True
-        
+
     def _emergency_shutdown_callback(self) -> None:
         """Callback for emergency shutdown"""
         self.emergency_shutdown_triggered = True
         self.analysis_allowed = False
         self.logger.critical("Emergency shutdown callback executed")
-        
+
     def _resource_violation_callback(self, violations: List[str]) -> None:
         """Callback for resource violations"""
         self.logger.warning(f"Resource violations detected: {violations}")
-        
+
         # If violations are severe, trigger emergency shutdown
         for violation in violations:
             if "CPU usage" in violation and "exceeds limit" in violation:
@@ -347,12 +372,14 @@ class OperatorSafetyManager:
                 try:
                     cpu_str = violation.split("CPU usage ")[1].split("%")[0]
                     cpu_percent = float(cpu_str)
-                    if cpu_percent > self.limits.max_cpu_percent * 2:  # Double the limit
+                    if (
+                        cpu_percent > self.limits.max_cpu_percent * 2
+                    ):  # Double the limit
                         self.emergency_shutdown("Severe CPU usage violation")
                         return
                 except:
                     pass
-                    
+
             if "Memory usage" in violation and "exceeds limit" in violation:
                 # Extract memory usage
                 try:
@@ -364,70 +391,96 @@ class OperatorSafetyManager:
                 except:
                     pass
 
-    def validate_workflow_safety(self, workflow_id: str, workflow_config: Dict[str, Any] = None) -> bool:
+    def validate_workflow_safety(
+        self, workflow_id: str, workflow_config: Dict[str, Any] = None
+    ) -> bool:
         """Validate that a workflow is safe to execute"""
         if workflow_config is None:
             workflow_config = {}
-            
+
         self.logger.info(f"Validating workflow safety: {workflow_id}")
-        
+
         # Check if emergency shutdown is active
         if self.emergency_shutdown_triggered:
-            self.logger.warning(f"Workflow {workflow_id} blocked - emergency shutdown active")
+            self.logger.warning(
+                f"Workflow {workflow_id} blocked - emergency shutdown active"
+            )
             return False
-            
+
         # Check if analysis is allowed
         if not self.analysis_allowed:
             self.logger.warning(f"Workflow {workflow_id} blocked - analysis disabled")
             return False
-            
+
         # Validate workflow configuration safety
         try:
             # Check resource requirements
-            max_memory = workflow_config.get('max_memory_mb', 0)
-            max_cpu = workflow_config.get('max_cpu_percent', 0)
-            timeout = workflow_config.get('timeout_seconds', 300)
-            
+            max_memory = workflow_config.get("max_memory_mb", 0)
+            max_cpu = workflow_config.get("max_cpu_percent", 0)
+            timeout = workflow_config.get("timeout_seconds", 300)
+
             # Validate against safety limits
             if max_memory > self.limits.max_memory_mb:
-                self.logger.warning(f"Workflow {workflow_id} memory requirement ({max_memory}MB) exceeds limit ({self.limits.max_memory_mb}MB)")
+                self.logger.warning(
+                    f"Workflow {workflow_id} memory requirement ({max_memory}MB) exceeds limit ({self.limits.max_memory_mb}MB)"
+                )
                 return False
-                
+
             if max_cpu > self.limits.max_cpu_percent:
-                self.logger.warning(f"Workflow {workflow_id} CPU requirement ({max_cpu}%) exceeds limit ({self.limits.max_cpu_percent}%)")
+                self.logger.warning(
+                    f"Workflow {workflow_id} CPU requirement ({max_cpu}%) exceeds limit ({self.limits.max_cpu_percent}%)"
+                )
                 return False
-                
+
             if timeout > self.limits.max_analysis_time_seconds:
-                self.logger.warning(f"Workflow {workflow_id} timeout ({timeout}s) exceeds limit ({self.limits.max_analysis_time_seconds}s)")
+                self.logger.warning(
+                    f"Workflow {workflow_id} timeout ({timeout}s) exceeds limit ({self.limits.max_analysis_time_seconds}s)"
+                )
                 return False
-                
+
             # Check current resource usage
             current_usage = self.resource_monitor.get_current_usage()
-            if current_usage.get('cpu_percent', 0) + max_cpu > self.limits.max_cpu_percent:
-                self.logger.warning(f"Workflow {workflow_id} would exceed CPU limits with current usage")
+            if (
+                current_usage.get("cpu_percent", 0) + max_cpu
+                > self.limits.max_cpu_percent
+            ):
+                self.logger.warning(
+                    f"Workflow {workflow_id} would exceed CPU limits with current usage"
+                )
                 return False
-                
-            if current_usage.get('memory_mb', 0) + max_memory > self.limits.max_memory_mb:
-                self.logger.warning(f"Workflow {workflow_id} would exceed memory limits with current usage")
+
+            if (
+                current_usage.get("memory_mb", 0) + max_memory
+                > self.limits.max_memory_mb
+            ):
+                self.logger.warning(
+                    f"Workflow {workflow_id} would exceed memory limits with current usage"
+                )
                 return False
-                
+
             # Validate workflow type safety
-            workflow_type = workflow_config.get('type', 'analysis')
-            if workflow_type not in ['analysis', 'validation', 'monitoring']:
-                self.logger.warning(f"Workflow {workflow_id} has unsafe type: {workflow_type}")
+            workflow_type = workflow_config.get("type", "analysis")
+            if workflow_type not in ["analysis", "validation", "monitoring"]:
+                self.logger.warning(
+                    f"Workflow {workflow_id} has unsafe type: {workflow_type}"
+                )
                 return False
-                
+
             # Check for read-only constraint
-            read_only = workflow_config.get('read_only', True)
+            read_only = workflow_config.get("read_only", True)
             if not read_only:
-                self.logger.warning(f"Workflow {workflow_id} is not read-only - safety violation")
+                self.logger.warning(
+                    f"Workflow {workflow_id} is not read-only - safety violation"
+                )
                 return False
-                
+
             self.logger.info(f"Workflow {workflow_id} passed safety validation")
             return True
-            
+
         except Exception as e:
-            self.logger.error(f"Workflow safety validation failed for {workflow_id}: {e}")
+            self.logger.error(
+                f"Workflow safety validation failed for {workflow_id}: {e}"
+            )
             return False
 
 

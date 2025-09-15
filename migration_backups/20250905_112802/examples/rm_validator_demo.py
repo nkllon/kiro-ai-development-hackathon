@@ -70,13 +70,13 @@ class BadModule:
 '''
         # Add many lines to exceed size limit
         for i in range(60):
-            content += f'''
+            content += f"""
     def method_{i}(self):
         result = "method_{i}_result"
         value = {i}
         return result + str(value)
-'''
-    
+"""
+
     return content
 
 
@@ -84,63 +84,67 @@ def demo_rm_validation():
     """Demonstrate RM validation capabilities."""
     print("🔍 Beast Mode RM Architectural Compliance Validator Demo")
     print("=" * 60)
-    
+
     validator = RMValidator()
-    
+
     # Test compliant RM
     print("\n✅ Testing Compliant RM Module:")
     print("-" * 40)
-    
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
+
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
         f.write(create_sample_rm_module(compliant=True))
         compliant_path = f.name
-    
+
     try:
         result = validator.validate_rm_compliance(compliant_path)
-        
+
         print(f"Interface Implemented: {result.interface_implemented}")
         print(f"Size Constraints Met: {result.size_constraints_met}")
         print(f"Health Monitoring Present: {result.health_monitoring_present}")
         print(f"Registry Integrated: {result.registry_integrated}")
         print(f"Overall Compliance Score: {result.compliance_score:.2f}")
         print(f"Issues Found: {len(result.issues)}")
-        
+
         if result.issues:
             print("\nIssues:")
             for issue in result.issues:
                 print(f"  - {issue.severity.value.upper()}: {issue.description}")
-    
+
     finally:
         os.unlink(compliant_path)
-    
+
     # Test non-compliant RM
     print("\n❌ Testing Non-Compliant Module:")
     print("-" * 40)
-    
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
+
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
         f.write(create_sample_rm_module(compliant=False))
         non_compliant_path = f.name
-    
+
     try:
         result = validator.validate_rm_compliance(non_compliant_path)
-        
+
         print(f"Interface Implemented: {result.interface_implemented}")
         print(f"Size Constraints Met: {result.size_constraints_met}")
         print(f"Health Monitoring Present: {result.health_monitoring_present}")
         print(f"Registry Integrated: {result.registry_integrated}")
         print(f"Overall Compliance Score: {result.compliance_score:.2f}")
         print(f"Issues Found: {len(result.issues)}")
-        
+
         if result.issues:
             print("\nCritical Issues:")
-            critical_issues = [i for i in result.issues if i.severity.value == 'critical']
+            critical_issues = [
+                i for i in result.issues if i.severity.value == "critical"
+            ]
             for issue in critical_issues[:3]:  # Show first 3 critical issues
                 print(f"  - {issue.severity.value.upper()}: {issue.description}")
-                print(f"    Remediation: {issue.remediation_steps[0] if issue.remediation_steps else 'N/A'}")
-    
+                print(
+                    f"    Remediation: {issue.remediation_steps[0] if issue.remediation_steps else 'N/A'}"
+                )
+
     finally:
         os.unlink(non_compliant_path)
-    
+
     print("\n🎯 RM Validation Demo Complete!")
     print("\nThe RMValidator ensures all Beast Mode components follow:")
     print("  • ReflectiveModule interface compliance")

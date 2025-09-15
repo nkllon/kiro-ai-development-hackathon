@@ -1,4 +1,4 @@
-#!/bin/bash
+set -euo pipefail#!/bin/bash
 
 # Beast Mode Ontology Validation Script
 # Provides easy commands for SHACL validation, SPARQL queries, and Protégé setup

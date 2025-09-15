@@ -16,14 +16,11 @@ from datetime import datetime
 
 class HelpSystemCoreCoreProcessing:
     """Minimal valid class."""
-    
+
     def __init__(self):
         self.module_id = "help_system_core_core_processing"
         self.timestamp = datetime.now()
-    
+
     def get_info(self) -> Dict[str, Any]:
         """Get module info."""
-        return {
-            'module_id': self.module_id,
-            'timestamp': self.timestamp.isoformat()
-        }
+        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

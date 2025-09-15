@@ -83,13 +83,20 @@ class ModelConformanceChecker:
         component_analysis = {}
         for class_name, class_info in components.items():
             methods = class_info.get("methods", [])
-            implemented_methods = [m for m in methods if m.get("implementation_status") == "implemented"]
+            implemented_methods = [
+                m for m in methods if m.get("implementation_status") == "implemented"
+            ]
 
             component_analysis[class_name] = {
                 "total_methods": len(methods),
                 "implemented_methods": len(implemented_methods),
-                "implementation_ratio": (len(implemented_methods) / len(methods) if methods else 0),
-                "has_body_content": all(m.get("body") and len(m.get("body", [])) > 0 for m in implemented_methods),
+                "implementation_ratio": (
+                    len(implemented_methods) / len(methods) if methods else 0
+                ),
+                "has_body_content": all(
+                    m.get("body") and len(m.get("body", [])) > 0
+                    for m in implemented_methods
+                ),
             }
 
         # Check import completeness
@@ -104,14 +111,23 @@ class ModelConformanceChecker:
             "has_components": len(components) > 0,
             "has_imports": len(imports) > 0,
             "has_used_names": len(used_names) > 0,
-            "components_complete": (all(analysis["implementation_ratio"] > 0.8 for analysis in component_analysis.values()) if component_analysis else False),
+            "components_complete": (
+                all(
+                    analysis["implementation_ratio"] > 0.8
+                    for analysis in component_analysis.values()
+                )
+                if component_analysis
+                else False
+            ),
         }
 
         return {
             "components": component_analysis,
             "imports": import_analysis,
             "quality": model_quality,
-            "overall_score": self.calculate_conformance_score(component_analysis, import_analysis, model_quality),
+            "overall_score": self.calculate_conformance_score(
+                component_analysis, import_analysis, model_quality
+            ),
         }
 
     def categorize_imports(self, imports: list[str]) -> dict[str, int]:
@@ -138,13 +154,17 @@ class ModelConformanceChecker:
 
         return categories
 
-    def calculate_conformance_score(self, components: dict, imports: dict, quality: dict) -> float:
+    def calculate_conformance_score(
+        self, components: dict, imports: dict, quality: dict
+    ) -> float:
         """Calculate overall conformance score (0.0 to 1.0)"""
         scores = []
 
         # Component completeness score
         if components:
-            component_scores = [analysis["implementation_ratio"] for analysis in components.values()]
+            component_scores = [
+                analysis["implementation_ratio"] for analysis in components.values()
+            ]
             scores.append(sum(component_scores) / len(component_scores))
         else:
             scores.append(0.0)
@@ -180,7 +200,9 @@ def main():
                 text=True,
                 check=True,
             )
-            python_files = [f for f in result.stdout.strip().split("\n") if f.endswith(".py") and f]
+            python_files = [
+                f for f in result.stdout.strip().split("\n") if f.endswith(".py") and f
+            ]
 
             if not python_files:
                 print("✅ No Python files to check")
@@ -201,7 +223,9 @@ def main():
 
             sys.exit(0 if all_success else 1)
         except subprocess.CalledProcessError:
-            print("⚠️  Could not determine staged files, skipping model conformance check")
+            print(
+                "⚠️  Could not determine staged files, skipping model conformance check"
+            )
             sys.exit(0)
     elif len(sys.argv) != 2:
         print("Usage: python scripts/check_model_conformance.py <python_file>")
@@ -236,7 +260,9 @@ def main():
 
             # Component analysis
             for class_name, analysis in conformance["components"].items():
-                print(f"   🏗️  {class_name}: {analysis['implemented_methods']}/{analysis['total_methods']} methods implemented")
+                print(
+                    f"   🏗️  {class_name}: {analysis['implemented_methods']}/{analysis['total_methods']} methods implemented"
+                )
 
             # Import analysis
             import_cats = conformance["imports"]["import_types"]

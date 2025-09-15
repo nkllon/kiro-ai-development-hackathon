@@ -13,7 +13,9 @@ from typing import Dict, Any
 def run_command(cmd: list[str], capture_output: bool = True) -> tuple[int, str, str]:
     """Run a command and return exit code, stdout, stderr"""
     try:
-        result = subprocess.run(cmd, capture_output=capture_output, text=True, check=False)
+        result = subprocess.run(
+            cmd, capture_output=capture_output, text=True, check=False
+        )
         return result.returncode, result.stdout.strip(), result.stderr.strip()
     except Exception as e:
         return 1, "", str(e)
@@ -47,7 +49,9 @@ def get_code_quality_status() -> Dict[str, Any]:
     quality["uv_available"] = uv_version != ""
 
     # Flake8 count (quiet mode)
-    _, flake8_output, _ = run_command(["uv", "run", "flake8", "--count", "--statistics", "src/"], capture_output=True)
+    _, flake8_output, _ = run_command(
+        ["uv", "run", "flake8", "--count", "--statistics", "src/"], capture_output=True
+    )
     if flake8_output:
         try:
             # Extract count from last line
@@ -75,7 +79,9 @@ def get_code_quality_status() -> Dict[str, Any]:
         quality["mypy_errors"] = 0
 
     # Black formatting check (quiet mode)
-    _, black_output, _ = run_command(["uv", "run", "black", "--check", "--quiet", "src/"], capture_output=True)
+    _, black_output, _ = run_command(
+        ["uv", "run", "black", "--check", "--quiet", "src/"], capture_output=True
+    )
     quality["black_formatted"] = black_output == ""
 
     return quality
@@ -126,7 +132,9 @@ def print_status():
     info = get_project_info()
     print(f"  Python: {info['python_version']}")
     print(f"  UV: {'✅' if quality['uv_available'] else '❌'}")
-    print(f"  Dependencies: {'✅' if info['pyproject_toml'] and info['uv_lock'] else '❌'}")
+    print(
+        f"  Dependencies: {'✅' if info['pyproject_toml'] and info['uv_lock'] else '❌'}"
+    )
 
     # System Components
     print("\n⚙️  Components:")

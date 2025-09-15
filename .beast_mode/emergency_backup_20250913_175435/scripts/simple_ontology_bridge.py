@@ -70,7 +70,9 @@ class SimpleOntologyBridge:
             },
         }
 
-    def analyze_vocabulary_mismatch(self, reverse_engineering_data: Any, code_generation_data: Any) -> Dict[str, Any]:
+    def analyze_vocabulary_mismatch(
+        self, reverse_engineering_data: Any, code_generation_data: Any
+    ) -> Dict[str, Any]:
         """
         Analyze vocabulary mismatch using ontological validation.
 
@@ -85,8 +87,12 @@ class SimpleOntologyBridge:
             logger.info("🔍 Analyzing vocabulary mismatch using ontology...")
 
             # Analyze the data structures
-            re_analysis = self._analyze_data_structure(reverse_engineering_data, "reverse_engineering")
-            cg_analysis = self._analyze_data_structure(code_generation_data, "code_generation")
+            re_analysis = self._analyze_data_structure(
+                reverse_engineering_data, "reverse_engineering"
+            )
+            cg_analysis = self._analyze_data_structure(
+                code_generation_data, "code_generation"
+            )
 
             # Check for vocabulary mismatches
             mismatches = self._identify_vocabulary_mismatches(re_analysis, cg_analysis)
@@ -156,9 +162,13 @@ class SimpleOntologyBridge:
         """Calculate the maximum depth of nested data structures."""
         if isinstance(data, (dict, list)) and data:
             if isinstance(data, dict):
-                return max(self._calculate_depth(v, current_depth + 1) for v in data.values())
+                return max(
+                    self._calculate_depth(v, current_depth + 1) for v in data.values()
+                )
             else:  # list
-                return max(self._calculate_depth(item, current_depth + 1) for item in data)
+                return max(
+                    self._calculate_depth(item, current_depth + 1) for item in data
+                )
         return current_depth
 
     def _extract_components(self, data: Any) -> List[Dict[str, Any]]:
@@ -218,7 +228,9 @@ class SimpleOntologyBridge:
 
         return methods
 
-    def _extract_methods_from_component(self, component: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _extract_methods_from_component(
+        self, component: Dict[str, Any]
+    ) -> List[Dict[str, Any]]:
         """Extract methods from a single component."""
         methods = []
 
@@ -265,7 +277,9 @@ class SimpleOntologyBridge:
             "structures": list(vocabulary["structures"]),
         }
 
-    def _identify_vocabulary_mismatches(self, re_analysis: Dict[str, Any], cg_analysis: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _identify_vocabulary_mismatches(
+        self, re_analysis: Dict[str, Any], cg_analysis: Dict[str, Any]
+    ) -> List[Dict[str, Any]]:
         """Identify vocabulary mismatches between domains."""
         mismatches = []
 
@@ -318,13 +332,18 @@ class SimpleOntologyBridge:
 
         return mismatches
 
-    def _recommend_transformations(self, mismatches: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _recommend_transformations(
+        self, mismatches: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
         """Recommend transformations to resolve vocabulary mismatches."""
         transformations = []
 
         for mismatch in mismatches:
             if mismatch["type"] == "structure_mismatch":
-                if mismatch["reverse_engineering"] == "list" and mismatch["code_generation"] == "dictionary":
+                if (
+                    mismatch["reverse_engineering"] == "list"
+                    and mismatch["code_generation"] == "dictionary"
+                ):
                     transformations.append(
                         {
                             "type": "list_to_dict",
@@ -335,7 +354,10 @@ class SimpleOntologyBridge:
                             "ontology_rule": "list_to_dict_transformation",
                         }
                     )
-                elif mismatch["reverse_engineering"] == "dictionary" and mismatch["code_generation"] == "list":
+                elif (
+                    mismatch["reverse_engineering"] == "dictionary"
+                    and mismatch["code_generation"] == "list"
+                ):
                     transformations.append(
                         {
                             "type": "dict_to_list",
@@ -349,7 +371,9 @@ class SimpleOntologyBridge:
 
         return transformations
 
-    def resolve_vocabulary_mismatch(self, reverse_engineering_data: Any, target_format: str = "dict") -> Any:
+    def resolve_vocabulary_mismatch(
+        self, reverse_engineering_data: Any, target_format: str = "dict"
+    ) -> Any:
         """
         Resolve vocabulary mismatch by transforming data to target format.
 
@@ -361,7 +385,9 @@ class SimpleOntologyBridge:
             Transformed data in target format
         """
         try:
-            logger.info(f"🔄 Resolving vocabulary mismatch to {target_format} format...")
+            logger.info(
+                f"🔄 Resolving vocabulary mismatch to {target_format} format..."
+            )
 
             # Determine transformation type
             if target_format == "dict" and isinstance(reverse_engineering_data, list):
@@ -369,18 +395,26 @@ class SimpleOntologyBridge:
             elif target_format == "list" and isinstance(reverse_engineering_data, dict):
                 transformation_type = "dict_to_list"
             else:
-                logger.warning(f"⚠️ No transformation needed for {type(reverse_engineering_data)} to {target_format}")
+                logger.warning(
+                    f"⚠️ No transformation needed for {type(reverse_engineering_data)} to {target_format}"
+                )
                 return reverse_engineering_data
 
             # Apply transformation
             if transformation_type == "list_to_dict":
-                transformed_data = self._transform_list_to_dict(reverse_engineering_data)
+                transformed_data = self._transform_list_to_dict(
+                    reverse_engineering_data
+                )
             elif transformation_type == "dict_to_list":
-                transformed_data = self._transform_dict_to_list(reverse_engineering_data)
+                transformed_data = self._transform_dict_to_list(
+                    reverse_engineering_data
+                )
             else:
                 raise ValueError(f"Unknown transformation type: {transformation_type}")
 
-            logger.info(f"✅ Transformation successful: {type(reverse_engineering_data)} -> {type(transformed_data)}")
+            logger.info(
+                f"✅ Transformation successful: {type(reverse_engineering_data)} -> {type(transformed_data)}"
+            )
 
             return transformed_data
 
@@ -388,7 +422,9 @@ class SimpleOntologyBridge:
             logger.error(f"❌ Vocabulary mismatch resolution failed: {e}")
             raise
 
-    def _transform_list_to_dict(self, component_list: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _transform_list_to_dict(
+        self, component_list: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """Transform list of components to dictionary keyed by name."""
         if not isinstance(component_list, list):
             raise ValueError("Input must be a list")
@@ -464,7 +500,9 @@ def main():
         # Get ontology insights
         print("\n🔍 Getting ontology insights...")
         insights = bridge.get_ontology_insights()
-        print(f"📊 Ontology Summary: {json.dumps(insights['ontology_summary'], indent=2)}")
+        print(
+            f"📊 Ontology Summary: {json.dumps(insights['ontology_summary'], indent=2)}"
+        )
 
         print("\n📋 Vocabulary Alignment Rules:")
         for rule in insights["vocabulary_alignment_rules"]:
@@ -483,7 +521,9 @@ def main():
                 "name": "TestComponent",
                 "type": "class",
                 "description": "A test component",
-                "methods": [{"name": "test_method", "type": "method", "return_type": "str"}],
+                "methods": [
+                    {"name": "test_method", "type": "method", "return_type": "str"}
+                ],
             }
         ]
 
@@ -519,8 +559,12 @@ def main():
         transformed = bridge.resolve_vocabulary_mismatch(sample_re_data, "dict")
 
         print("✅ Transformation successful!")
-        print(f"📊 Original: {type(sample_re_data).__name__} with {len(sample_re_data)} items")
-        print(f"📊 Transformed: {type(transformed).__name__} with {len(transformed)} keys")
+        print(
+            f"📊 Original: {type(sample_re_data).__name__} with {len(sample_re_data)} items"
+        )
+        print(
+            f"📊 Transformed: {type(transformed).__name__} with {len(transformed)} keys"
+        )
         print(f"📊 Keys: {list(transformed.keys())}")
 
         print("\n🎉 Simple ontology vocabulary bridge test completed successfully!")

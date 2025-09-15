@@ -14,13 +14,18 @@ from datetime import datetime
 from .base import DomainSystemComponent
 from .interfaces import MakefileIntegratorInterface
 from .models import Domain, MakeTarget, ExecutionResult, ValidationResult
-from .exceptions import MakefileIntegrationError, MakefileNotFoundError, MakeTargetExecutionError
+from .exceptions import (
+    MakefileIntegrationError,
+    MakefileNotFoundError,
+    MakeTargetExecutionError,
+)
 from .config import get_config
+
 
 class MakefileIntegrator(DomainSystemComponent, MakefileIntegratorInterface):
     """
     Integrates domain operations with makefile system
-    
+
     Provides makefile integration capabilities including:
     - Parsing existing makefile structure
     - Mapping domains to makefile targets
@@ -29,13 +34,17 @@ class MakefileIntegrator(DomainSystemComponent, MakefileIntegratorInterface):
     - Validating makefile integration completeness
     """
 
-    def __init__(self, registry_manager=None, config: Optional[Dict[str, Any]]=None):
-        super().__init__('makefile_integrator', config)
+    def __init__(self, registry_manager=None, config: Optional[Dict[str, Any]] = None):
+        super().__init__("makefile_integrator", config)
         self.config_obj = get_config()
-        self.makefile_base_path = Path(self.config_obj.get('makefile_base_path', 'makefiles'))
-        self.execution_timeout = self.config_obj.get('makefile_timeout_seconds', 300)
-        self.parallel_execution = self.config_obj.get('makefile_parallel_execution', True)
-        self.log_output = self.config_obj.get('makefile_log_output', True)
+        self.makefile_base_path = Path(
+            self.config_obj.get("makefile_base_path", "makefiles")
+        )
+        self.execution_timeout = self.config_obj.get("makefile_timeout_seconds", 300)
+        self.parallel_execution = self.config_obj.get(
+            "makefile_parallel_execution", True
+        )
+        self.log_output = self.config_obj.get("makefile_log_output", True)
         self.registry_manager = registry_manager
         self._makefile_cache = {}
         self._target_cache = {}
@@ -46,7 +55,9 @@ class MakefileIntegrator(DomainSystemComponent, MakefileIntegratorInterface):
         self.failed_executions = 0
         self.total_execution_time = 0.0
         self.project_root = Path.cwd()
-        self.logger.info(f'Initialized MakefileIntegrator with base path: {self.makefile_base_path}')
+        self.logger.info(
+            f"Initialized MakefileIntegrator with base path: {self.makefile_base_path}"
+        )
         self._scan_makefiles()
 
     def set_registry_manager(self, registry_manager):
@@ -57,20 +68,22 @@ class MakefileIntegrator(DomainSystemComponent, MakefileIntegratorInterface):
     def set_project_root(self, project_root: str):
         """Set the project root directory"""
         self.project_root = Path(project_root)
-        self.makefile_base_path = self.project_root / 'makefiles'
-        self.logger.info(f'Set project root to: {self.project_root}')
+        self.makefile_base_path = self.project_root / "makefiles"
+        self.logger.info(f"Set project root to: {self.project_root}")
         self._scan_makefiles()
 
     def _scan_makefiles(self):
         """Scan and parse all makefiles in the base path"""
-        with self._time_operation('scan_makefiles'):
+        with self._time_operation("scan_makefiles"):
             try:
                 if not self.makefile_base_path.exists():
-                    self.logger.warning(f'Makefile base path does not exist: {self.makefile_base_path}')
+                    self.logger.warning(
+                        f"Makefile base path does not exist: {self.makefile_base_path}"
+                    )
                     return
                 self._makefile_cache = {}
                 self._target_cache = {}
-                makefile_patterns = ['*.mk', 'Makefile*', 'makefile*']
+                makefile_patterns = ["*.mk", "Makefile*", "makefile*"]
                 makefile_files = []
                 for pattern in makefile_patterns:
                     makefile_files.extend(self.makefile_base_path.glob(pattern))
@@ -80,62 +93,99 @@ class MakefileIntegrator(DomainSystemComponent, MakefileIntegratorInterface):
                         self._makefile_cache[str(makefile_path)] = targets
                         for target in targets:
                             self._target_cache[target.name] = target
-                        self.logger.debug(f'Parsed {len(targets)} targets from {makefile_path}')
+                        self.logger.debug(
+                            f"Parsed {len(targets)} targets from {makefile_path}"
+                        )
                     except Exception as e:
-                        self.logger.error(f'Failed to parse makefile {makefile_path}: {e}')
+                        self.logger.error(
+                            f"Failed to parse makefile {makefile_path}: {e}"
+                        )
                 self._last_scan_time = datetime.now()
-                self.logger.info(f'Scanned {len(makefile_files)} makefiles, found {len(self._target_cache)} targets')
+                self.logger.info(
+                    f"Scanned {len(makefile_files)} makefiles, found {len(self._target_cache)} targets"
+                )
             except Exception as e:
-                self._handle_error(e, 'scan_makefiles')
+                self._handle_error(e, "scan_makefiles")
 
     def _parse_makefile(self, makefile_path: Path) -> List[MakeTarget]:
         """Parse a makefile and extract targets"""
         targets = []
         try:
-            with open(makefile_path, 'r', encoding='utf-8') as f:
+            with open(makefile_path, "r", encoding="utf-8") as f:
                 content = f.read()
-            lines = content.split('\n')
+            lines = content.split("\n")
             current_target = None
             current_commands = []
-            current_description = ''
+            current_description = ""
             for line in lines:
                 line = line.rstrip()
                 if not line:
                     continue
-                if line.startswith('#') and current_target is None:
+                if line.startswith("#") and current_target is None:
                     current_description = line[1:].strip()
                     continue
-                if ':' in line and (not line.startswith('\t')) and (not line.startswith(' ')):
+                if (
+                    ":" in line
+                    and (not line.startswith("\t"))
+                    and (not line.startswith(" "))
+                ):
                     if current_target:
-                        target = MakeTarget(name=current_target, description=current_description, dependencies=self._parse_dependencies(current_target), commands=current_commands.copy(), domain_specific=self._is_domain_specific_target(current_target))
+                        target = MakeTarget(
+                            name=current_target,
+                            description=current_description,
+                            dependencies=self._parse_dependencies(current_target),
+                            commands=current_commands.copy(),
+                            domain_specific=self._is_domain_specific_target(
+                                current_target
+                            ),
+                        )
                         targets.append(target)
-                    target_line = line.split(':')[0].strip()
+                    target_line = line.split(":")[0].strip()
                     current_target = target_line
                     current_commands = []
-                elif line.startswith('\t') or (line.startswith(' ') and current_target):
+                elif line.startswith("\t") or (line.startswith(" ") and current_target):
                     command = line.strip()
-                    if command and (not command.startswith('#')):
+                    if command and (not command.startswith("#")):
                         current_commands.append(command)
-                elif current_target and (not line.startswith('\t')) and (not line.startswith(' ')):
-                    current_description = ''
+                elif (
+                    current_target
+                    and (not line.startswith("\t"))
+                    and (not line.startswith(" "))
+                ):
+                    current_description = ""
             if current_target:
-                target = MakeTarget(name=current_target, description=current_description, dependencies=self._parse_dependencies(current_target), commands=current_commands.copy(), domain_specific=self._is_domain_specific_target(current_target))
+                target = MakeTarget(
+                    name=current_target,
+                    description=current_description,
+                    dependencies=self._parse_dependencies(current_target),
+                    commands=current_commands.copy(),
+                    domain_specific=self._is_domain_specific_target(current_target),
+                )
                 targets.append(target)
         except Exception as e:
-            self.logger.error(f'Error parsing makefile {makefile_path}: {e}')
+            self.logger.error(f"Error parsing makefile {makefile_path}: {e}")
         return targets
 
     def _parse_dependencies(self, target_line: str) -> List[str]:
         """Parse target dependencies from target line"""
-        if ':' in target_line:
-            parts = target_line.split(':', 1)
+        if ":" in target_line:
+            parts = target_line.split(":", 1)
             if len(parts) > 1 and parts[1].strip():
                 return [dep.strip() for dep in parts[1].split()]
         return []
 
     def _is_domain_specific_target(self, target_name: str) -> bool:
         """Check if a target is domain-specific"""
-        domain_indicators = ['domain', 'component', 'module', 'service', 'test-', 'lint-', 'format-', 'validate-']
+        domain_indicators = [
+            "domain",
+            "component",
+            "module",
+            "service",
+            "test-",
+            "lint-",
+            "format-",
+            "validate-",
+        ]
         target_lower = target_name.lower()
         return any((indicator in target_lower for indicator in domain_indicators))
 
@@ -143,28 +193,34 @@ class MakefileIntegrator(DomainSystemComponent, MakefileIntegratorInterface):
         """Build mapping between domains and makefile targets"""
         if not self.registry_manager:
             return
-        with self._time_operation('build_domain_mapping'):
+        with self._time_operation("build_domain_mapping"):
             try:
                 self._domain_target_mapping = {}
                 all_domains = self.registry_manager.get_all_domains()
                 for domain_name, domain in all_domains.items():
                     matching_targets = []
                     for target_name, target in self._target_cache.items():
-                        if self._target_matches_domain(target_name, domain_name, domain):
+                        if self._target_matches_domain(
+                            target_name, domain_name, domain
+                        ):
                             matching_targets.append(target)
                     self._domain_target_mapping[domain_name] = matching_targets
-                self.logger.info(f'Built domain-target mapping for {len(all_domains)} domains')
+                self.logger.info(
+                    f"Built domain-target mapping for {len(all_domains)} domains"
+                )
             except Exception as e:
-                self._handle_error(e, 'build_domain_mapping')
+                self._handle_error(e, "build_domain_mapping")
 
-    def _target_matches_domain(self, target_name: str, domain_name: str, domain: Domain) -> bool:
+    def _target_matches_domain(
+        self, target_name: str, domain_name: str, domain: Domain
+    ) -> bool:
         """Check if a makefile target matches a domain"""
         target_lower = target_name.lower()
         domain_lower = domain_name.lower()
         if domain_lower in target_lower:
             return True
         for pattern in domain.patterns:
-            pattern_parts = pattern.lower().split('/')
+            pattern_parts = pattern.lower().split("/")
             for part in pattern_parts:
                 if part and part in target_lower:
                     return True
@@ -175,22 +231,22 @@ class MakefileIntegrator(DomainSystemComponent, MakefileIntegratorInterface):
 
     def get_domain_targets(self, domain_name: str) -> List[MakeTarget]:
         """Get available makefile targets for a domain"""
-        with self._time_operation('get_domain_targets'):
+        with self._time_operation("get_domain_targets"):
             try:
                 if not self._domain_target_mapping and self.registry_manager:
                     self._build_domain_target_mapping()
                 return self._domain_target_mapping.get(domain_name, [])
             except Exception as e:
-                self._handle_error(e, 'get_domain_targets')
+                self._handle_error(e, "get_domain_targets")
                 return []
 
     def execute_domain_operation(self, domain: str, operation: str) -> ExecutionResult:
         """Execute makefile operation for a domain"""
-        with self._time_operation('execute_domain_operation'):
+        with self._time_operation("execute_domain_operation"):
             start_time = time.time()
             self.executions_count += 1
             try:
-                target_name = f'{operation}-{domain}' if operation != domain else domain
+                target_name = f"{operation}-{domain}" if operation != domain else domain
                 target = self._target_cache.get(target_name)
                 if not target:
                     for name, tgt in self._target_cache.items():
@@ -199,7 +255,9 @@ class MakefileIntegrator(DomainSystemComponent, MakefileIntegratorInterface):
                             target_name = name
                             break
                 if not target:
-                    raise MakefileIntegrationError(f"No makefile target found for domain '{domain}' operation '{operation}'")
+                    raise MakefileIntegrationError(
+                        f"No makefile target found for domain '{domain}' operation '{operation}'"
+                    )
                 result = self._execute_make_target(target_name)
                 if result.success:
                     self.successful_executions += 1
@@ -210,58 +268,146 @@ class MakefileIntegrator(DomainSystemComponent, MakefileIntegratorInterface):
                 return result
             except Exception as e:
                 self.failed_executions += 1
-                self._handle_error(e, 'execute_domain_operation')
-                return ExecutionResult(success=False, target=f'{operation}-{domain}', output='', error_output=str(e), execution_time_ms=int((time.time() - start_time) * 1000), exit_code=-1)
+                self._handle_error(e, "execute_domain_operation")
+                return ExecutionResult(
+                    success=False,
+                    target=f"{operation}-{domain}",
+                    output="",
+                    error_output=str(e),
+                    execution_time_ms=int((time.time() - start_time) * 1000),
+                    exit_code=-1,
+                )
 
     def _execute_make_target(self, target_name: str) -> ExecutionResult:
         """Execute a specific makefile target"""
         start_time = time.time()
         try:
-            cmd = ['make', '-C', str(self.project_root), target_name]
-            process = subprocess.run(cmd, capture_output=True, text=True, timeout=self.execution_timeout, cwd=self.project_root)
+            cmd = ["make", "-C", str(self.project_root), target_name]
+            process = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=self.execution_timeout,
+                cwd=self.project_root,
+            )
             execution_time_ms = int((time.time() - start_time) * 1000)
             if self.log_output:
                 if process.stdout:
-                    self.logger.debug(f'Make output for {target_name}: {process.stdout}')
+                    self.logger.debug(
+                        f"Make output for {target_name}: {process.stdout}"
+                    )
                 if process.stderr:
-                    self.logger.debug(f'Make errors for {target_name}: {process.stderr}')
+                    self.logger.debug(
+                        f"Make errors for {target_name}: {process.stderr}"
+                    )
             success = process.returncode == 0
-            return ExecutionResult(success=success, target=target_name, output=process.stdout or '', error_output=process.stderr or '', execution_time_ms=execution_time_ms, exit_code=process.returncode)
+            return ExecutionResult(
+                success=success,
+                target=target_name,
+                output=process.stdout or "",
+                error_output=process.stderr or "",
+                execution_time_ms=execution_time_ms,
+                exit_code=process.returncode,
+            )
         except subprocess.TimeoutExpired:
             execution_time_ms = int((time.time() - start_time) * 1000)
-            return ExecutionResult(success=False, target=target_name, output='', error_output=f'Execution timed out after {self.execution_timeout} seconds', execution_time_ms=execution_time_ms, exit_code=-1)
+            return ExecutionResult(
+                success=False,
+                target=target_name,
+                output="",
+                error_output=f"Execution timed out after {self.execution_timeout} seconds",
+                execution_time_ms=execution_time_ms,
+                exit_code=-1,
+            )
         except Exception as e:
             execution_time_ms = int((time.time() - start_time) * 1000)
-            return ExecutionResult(success=False, target=target_name, output='', error_output=str(e), execution_time_ms=execution_time_ms, exit_code=-1)
+            return ExecutionResult(
+                success=False,
+                target=target_name,
+                output="",
+                error_output=str(e),
+                execution_time_ms=execution_time_ms,
+                exit_code=-1,
+            )
 
     def generate_domain_targets(self, domain: Domain) -> List[MakeTarget]:
         """Generate makefile targets for a domain"""
-        with self._time_operation('generate_domain_targets'):
+        with self._time_operation("generate_domain_targets"):
             try:
                 targets = []
                 domain_name = domain.name
-                target_templates = [{'name': f'test-{domain_name}', 'description': f'Run tests for {domain_name} domain', 'commands': [f"@echo 'Running tests for {domain_name} domain'", f'python3 -m pytest tests/unit/{domain_name}/ -v']}, {'name': f'lint-{domain_name}', 'description': f'Run linter for {domain_name} domain', 'commands': [f"@echo 'Linting {domain_name} domain'", f'{domain.tools.linter} src/**/{domain_name}/**/*.py']}, {'name': f'format-{domain_name}', 'description': f'Format code for {domain_name} domain', 'commands': [f"@echo 'Formatting {domain_name} domain'", f'{domain.tools.formatter} src/**/{domain_name}/**/*.py']}, {'name': f'validate-{domain_name}', 'description': f'Validate {domain_name} domain', 'commands': [f"@echo 'Validating {domain_name} domain'", f'{domain.tools.validator} src/**/{domain_name}/**/*.py']}, {'name': f'health-{domain_name}', 'description': f'Check health of {domain_name} domain', 'commands': [f"@echo 'Checking health of {domain_name} domain'", f'''python3 -c "from src.beast_mode.domain_index import DomainHealthMonitor; monitor = DomainHealthMonitor(); print(monitor.check_domain_health('{domain_name}'))"''']}]
+                target_templates = [
+                    {
+                        "name": f"test-{domain_name}",
+                        "description": f"Run tests for {domain_name} domain",
+                        "commands": [
+                            f"@echo 'Running tests for {domain_name} domain'",
+                            f"python3 -m pytest tests/unit/{domain_name}/ -v",
+                        ],
+                    },
+                    {
+                        "name": f"lint-{domain_name}",
+                        "description": f"Run linter for {domain_name} domain",
+                        "commands": [
+                            f"@echo 'Linting {domain_name} domain'",
+                            f"{domain.tools.linter} src/**/{domain_name}/**/*.py",
+                        ],
+                    },
+                    {
+                        "name": f"format-{domain_name}",
+                        "description": f"Format code for {domain_name} domain",
+                        "commands": [
+                            f"@echo 'Formatting {domain_name} domain'",
+                            f"{domain.tools.formatter} src/**/{domain_name}/**/*.py",
+                        ],
+                    },
+                    {
+                        "name": f"validate-{domain_name}",
+                        "description": f"Validate {domain_name} domain",
+                        "commands": [
+                            f"@echo 'Validating {domain_name} domain'",
+                            f"{domain.tools.validator} src/**/{domain_name}/**/*.py",
+                        ],
+                    },
+                    {
+                        "name": f"health-{domain_name}",
+                        "description": f"Check health of {domain_name} domain",
+                        "commands": [
+                            f"@echo 'Checking health of {domain_name} domain'",
+                            f'''python3 -c "from src.beast_mode.domain_index import DomainHealthMonitor; monitor = DomainHealthMonitor(); print(monitor.check_domain_health('{domain_name}'))"''',
+                        ],
+                    },
+                ]
                 for template in target_templates:
-                    target = MakeTarget(name=template['name'], description=template['description'], dependencies=[], commands=template['commands'], domain_specific=True, estimated_duration='1-5 minutes')
+                    target = MakeTarget(
+                        name=template["name"],
+                        description=template["description"],
+                        dependencies=[],
+                        commands=template["commands"],
+                        domain_specific=True,
+                        estimated_duration="1-5 minutes",
+                    )
                     targets.append(target)
                 return targets
             except Exception as e:
-                self._handle_error(e, 'generate_domain_targets')
+                self._handle_error(e, "generate_domain_targets")
                 return []
 
     def validate_makefile_integration(self) -> ValidationResult:
         """Validate makefile integration completeness"""
-        with self._time_operation('validate_makefile_integration'):
+        with self._time_operation("validate_makefile_integration"):
             try:
                 errors = []
                 warnings = []
                 suggestions = []
                 if not self.makefile_base_path.exists():
-                    errors.append(f'Makefile base path does not exist: {self.makefile_base_path}')
+                    errors.append(
+                        f"Makefile base path does not exist: {self.makefile_base_path}"
+                    )
                 if not self._makefile_cache:
-                    warnings.append('No makefiles found in base path')
+                    warnings.append("No makefiles found in base path")
                 if not self._target_cache:
-                    warnings.append('No makefile targets found')
+                    warnings.append("No makefile targets found")
                 if self.registry_manager:
                     all_domains = self.registry_manager.get_all_domains()
                     domains_without_targets = []
@@ -270,85 +416,163 @@ class MakefileIntegrator(DomainSystemComponent, MakefileIntegratorInterface):
                         if not domain_targets:
                             domains_without_targets.append(domain_name)
                     if domains_without_targets:
-                        warnings.append(f"Domains without makefile targets: {', '.join(domains_without_targets[:5])}")
+                        warnings.append(
+                            f"Domains without makefile targets: {', '.join(domains_without_targets[:5])}"
+                        )
                         if len(domains_without_targets) > 5:
-                            warnings.append(f'... and {len(domains_without_targets) - 5} more')
-                        suggestions.append('Generate makefile targets for domains without coverage')
-                common_targets = ['test', 'lint', 'format', 'clean', 'build']
-                missing_common = [target for target in common_targets if target not in self._target_cache]
+                            warnings.append(
+                                f"... and {len(domains_without_targets) - 5} more"
+                            )
+                        suggestions.append(
+                            "Generate makefile targets for domains without coverage"
+                        )
+                common_targets = ["test", "lint", "format", "clean", "build"]
+                missing_common = [
+                    target
+                    for target in common_targets
+                    if target not in self._target_cache
+                ]
                 if missing_common:
-                    suggestions.append(f"Consider adding common targets: {', '.join(missing_common)}")
+                    suggestions.append(
+                        f"Consider adding common targets: {', '.join(missing_common)}"
+                    )
                 for makefile_path, targets in self._makefile_cache.items():
                     if not targets:
-                        warnings.append(f'No targets found in {makefile_path}')
-                return ValidationResult(is_valid=len(errors) == 0, errors=errors, warnings=warnings, suggestions=suggestions)
+                        warnings.append(f"No targets found in {makefile_path}")
+                return ValidationResult(
+                    is_valid=len(errors) == 0,
+                    errors=errors,
+                    warnings=warnings,
+                    suggestions=suggestions,
+                )
             except Exception as e:
-                self._handle_error(e, 'validate_makefile_integration')
-                return ValidationResult(is_valid=False, errors=[f'Validation failed: {str(e)}'], warnings=[], suggestions=[])
+                self._handle_error(e, "validate_makefile_integration")
+                return ValidationResult(
+                    is_valid=False,
+                    errors=[f"Validation failed: {str(e)}"],
+                    warnings=[],
+                    suggestions=[],
+                )
 
-    def update_makefile_targets(self, domain: Domain, targets: List[MakeTarget]) -> bool:
+    def update_makefile_targets(
+        self, domain: Domain, targets: List[MakeTarget]
+    ) -> bool:
         """Update makefile targets for a domain"""
-        with self._time_operation('update_makefile_targets'):
+        with self._time_operation("update_makefile_targets"):
             try:
                 makefile_content = self._generate_makefile_content(domain, targets)
-                domain_makefile = self.makefile_base_path / f'{domain.name}.mk'
-                with open(domain_makefile, 'w', encoding='utf-8') as f:
+                domain_makefile = self.makefile_base_path / f"{domain.name}.mk"
+                with open(domain_makefile, "w", encoding="utf-8") as f:
                     f.write(makefile_content)
                 self._makefile_cache[str(domain_makefile)] = targets
                 for target in targets:
                     self._target_cache[target.name] = target
-                self.logger.info(f'Updated makefile targets for domain {domain.name}')
+                self.logger.info(f"Updated makefile targets for domain {domain.name}")
                 return True
             except Exception as e:
-                self._handle_error(e, 'update_makefile_targets')
+                self._handle_error(e, "update_makefile_targets")
                 return False
 
-    def _generate_makefile_content(self, domain: Domain, targets: List[MakeTarget]) -> str:
+    def _generate_makefile_content(
+        self, domain: Domain, targets: List[MakeTarget]
+    ) -> str:
         """Generate makefile content for domain targets"""
-        lines = [f'# Makefile for {domain.name} domain', f'# Generated by Beast Mode Domain Index System', f'# Generated at: {datetime.now().isoformat()}', '', f'# Domain: {domain.name}', f'# Description: {domain.description}', '']
+        lines = [
+            f"# Makefile for {domain.name} domain",
+            f"# Generated by Beast Mode Domain Index System",
+            f"# Generated at: {datetime.now().isoformat()}",
+            "",
+            f"# Domain: {domain.name}",
+            f"# Description: {domain.description}",
+            "",
+        ]
         for target in targets:
-            lines.append(f'# {target.description}')
+            lines.append(f"# {target.description}")
             target_line = target.name
             if target.dependencies:
                 target_line += f": {' '.join(target.dependencies)}"
-            lines.append(f'{target_line}:')
+            lines.append(f"{target_line}:")
             for command in target.commands:
-                lines.append(f'\t{command}')
-            lines.append('')
-        return '\n'.join(lines)
+                lines.append(f"\t{command}")
+            lines.append("")
+        return "\n".join(lines)
 
     def get_makefile_health(self) -> Dict[str, Any]:
         """Get health status of makefile integration"""
         try:
             validation = self.validate_makefile_integration()
-            return {'integration_valid': validation.is_valid, 'total_makefiles': len(self._makefile_cache), 'total_targets': len(self._target_cache), 'domain_specific_targets': sum((1 for t in self._target_cache.values() if t.domain_specific)), 'domains_with_targets': len([d for d in self._domain_target_mapping.values() if d]), 'last_scan_time': self._last_scan_time.isoformat() if self._last_scan_time else None, 'execution_statistics': {'total_executions': self.executions_count, 'successful_executions': self.successful_executions, 'failed_executions': self.failed_executions, 'success_rate': self.successful_executions / max(self.executions_count, 1), 'average_execution_time_ms': self.total_execution_time / max(self.executions_count, 1) * 1000}, 'validation_results': {'errors': validation.errors, 'warnings': validation.warnings, 'suggestions': validation.suggestions}}
+            return {
+                "integration_valid": validation.is_valid,
+                "total_makefiles": len(self._makefile_cache),
+                "total_targets": len(self._target_cache),
+                "domain_specific_targets": sum(
+                    (1 for t in self._target_cache.values() if t.domain_specific)
+                ),
+                "domains_with_targets": len(
+                    [d for d in self._domain_target_mapping.values() if d]
+                ),
+                "last_scan_time": (
+                    self._last_scan_time.isoformat() if self._last_scan_time else None
+                ),
+                "execution_statistics": {
+                    "total_executions": self.executions_count,
+                    "successful_executions": self.successful_executions,
+                    "failed_executions": self.failed_executions,
+                    "success_rate": self.successful_executions
+                    / max(self.executions_count, 1),
+                    "average_execution_time_ms": self.total_execution_time
+                    / max(self.executions_count, 1)
+                    * 1000,
+                },
+                "validation_results": {
+                    "errors": validation.errors,
+                    "warnings": validation.warnings,
+                    "suggestions": validation.suggestions,
+                },
+            }
         except Exception as e:
-            self._handle_error(e, 'get_makefile_health')
-            return {'error': str(e)}
+            self._handle_error(e, "get_makefile_health")
+            return {"error": str(e)}
 
     def rescan_makefiles(self) -> bool:
         """Rescan makefiles and rebuild caches"""
         try:
-            self.logger.info('Rescanning makefiles')
+            self.logger.info("Rescanning makefiles")
             self._scan_makefiles()
             if self.registry_manager:
                 self._build_domain_target_mapping()
             return True
         except Exception as e:
-            self._handle_error(e, 'rescan_makefiles')
+            self._handle_error(e, "rescan_makefiles")
             return False
 
     def get_integrator_stats(self) -> Dict[str, Any]:
         """Get makefile integrator statistics"""
-        return {'makefiles_found': len(self._makefile_cache), 'targets_found': len(self._target_cache), 'domain_mappings': len(self._domain_target_mapping), 'executions_performed': self.executions_count, 'execution_success_rate': self.successful_executions / max(self.executions_count, 1), 'last_scan_time': self._last_scan_time.isoformat() if self._last_scan_time else None, 'makefile_base_path': str(self.makefile_base_path), 'parallel_execution_enabled': self.parallel_execution, 'performance_metrics': self.performance_metrics}
+        return {
+            "makefiles_found": len(self._makefile_cache),
+            "targets_found": len(self._target_cache),
+            "domain_mappings": len(self._domain_target_mapping),
+            "executions_performed": self.executions_count,
+            "execution_success_rate": self.successful_executions
+            / max(self.executions_count, 1),
+            "last_scan_time": (
+                self._last_scan_time.isoformat() if self._last_scan_time else None
+            ),
+            "makefile_base_path": str(self.makefile_base_path),
+            "parallel_execution_enabled": self.parallel_execution,
+            "performance_metrics": self.performance_metrics,
+        }
 
-def __init__(self, registry_manager=None, config: Optional[Dict[str, Any]]=None):
-    super().__init__('makefile_integrator', config)
+
+def __init__(self, registry_manager=None, config: Optional[Dict[str, Any]] = None):
+    super().__init__("makefile_integrator", config)
     self.config_obj = get_config()
-    self.makefile_base_path = Path(self.config_obj.get('makefile_base_path', 'makefiles'))
-    self.execution_timeout = self.config_obj.get('makefile_timeout_seconds', 300)
-    self.parallel_execution = self.config_obj.get('makefile_parallel_execution', True)
-    self.log_output = self.config_obj.get('makefile_log_output', True)
+    self.makefile_base_path = Path(
+        self.config_obj.get("makefile_base_path", "makefiles")
+    )
+    self.execution_timeout = self.config_obj.get("makefile_timeout_seconds", 300)
+    self.parallel_execution = self.config_obj.get("makefile_parallel_execution", True)
+    self.log_output = self.config_obj.get("makefile_log_output", True)
     self.registry_manager = registry_manager
     self._makefile_cache = {}
     self._target_cache = {}
@@ -359,31 +583,38 @@ def __init__(self, registry_manager=None, config: Optional[Dict[str, Any]]=None)
     self.failed_executions = 0
     self.total_execution_time = 0.0
     self.project_root = Path.cwd()
-    self.logger.info(f'Initialized MakefileIntegrator with base path: {self.makefile_base_path}')
+    self.logger.info(
+        f"Initialized MakefileIntegrator with base path: {self.makefile_base_path}"
+    )
     self._scan_makefiles()
+
 
 def set_registry_manager(self, registry_manager):
     """Set the registry manager (dependency injection)"""
     self.registry_manager = registry_manager
     self._build_domain_target_mapping()
 
+
 def set_project_root(self, project_root: str):
     """Set the project root directory"""
     self.project_root = Path(project_root)
-    self.makefile_base_path = self.project_root / 'makefiles'
-    self.logger.info(f'Set project root to: {self.project_root}')
+    self.makefile_base_path = self.project_root / "makefiles"
+    self.logger.info(f"Set project root to: {self.project_root}")
     self._scan_makefiles()
+
 
 def _scan_makefiles(self):
     """Scan and parse all makefiles in the base path"""
-    with self._time_operation('scan_makefiles'):
+    with self._time_operation("scan_makefiles"):
         try:
             if not self.makefile_base_path.exists():
-                self.logger.warning(f'Makefile base path does not exist: {self.makefile_base_path}')
+                self.logger.warning(
+                    f"Makefile base path does not exist: {self.makefile_base_path}"
+                )
                 return
             self._makefile_cache = {}
             self._target_cache = {}
-            makefile_patterns = ['*.mk', 'Makefile*', 'makefile*']
+            makefile_patterns = ["*.mk", "Makefile*", "makefile*"]
             makefile_files = []
             for pattern in makefile_patterns:
                 makefile_files.extend(self.makefile_base_path.glob(pattern))
@@ -393,25 +624,40 @@ def _scan_makefiles(self):
                     self._makefile_cache[str(makefile_path)] = targets
                     for target in targets:
                         self._target_cache[target.name] = target
-                    self.logger.debug(f'Parsed {len(targets)} targets from {makefile_path}')
+                    self.logger.debug(
+                        f"Parsed {len(targets)} targets from {makefile_path}"
+                    )
                 except Exception as e:
-                    self.logger.error(f'Failed to parse makefile {makefile_path}: {e}')
+                    self.logger.error(f"Failed to parse makefile {makefile_path}: {e}")
             self._last_scan_time = datetime.now()
-            self.logger.info(f'Scanned {len(makefile_files)} makefiles, found {len(self._target_cache)} targets')
+            self.logger.info(
+                f"Scanned {len(makefile_files)} makefiles, found {len(self._target_cache)} targets"
+            )
         except Exception as e:
-            self._handle_error(e, 'scan_makefiles')
+            self._handle_error(e, "scan_makefiles")
+
 
 def _is_domain_specific_target(self, target_name: str) -> bool:
     """Check if a target is domain-specific"""
-    domain_indicators = ['domain', 'component', 'module', 'service', 'test-', 'lint-', 'format-', 'validate-']
+    domain_indicators = [
+        "domain",
+        "component",
+        "module",
+        "service",
+        "test-",
+        "lint-",
+        "format-",
+        "validate-",
+    ]
     target_lower = target_name.lower()
     return any((indicator in target_lower for indicator in domain_indicators))
+
 
 def _build_domain_target_mapping(self):
     """Build mapping between domains and makefile targets"""
     if not self.registry_manager:
         return
-    with self._time_operation('build_domain_mapping'):
+    with self._time_operation("build_domain_mapping"):
         try:
             self._domain_target_mapping = {}
             all_domains = self.registry_manager.get_all_domains()
@@ -421,18 +667,23 @@ def _build_domain_target_mapping(self):
                     if self._target_matches_domain(target_name, domain_name, domain):
                         matching_targets.append(target)
                 self._domain_target_mapping[domain_name] = matching_targets
-            self.logger.info(f'Built domain-target mapping for {len(all_domains)} domains')
+            self.logger.info(
+                f"Built domain-target mapping for {len(all_domains)} domains"
+            )
         except Exception as e:
-            self._handle_error(e, 'build_domain_mapping')
+            self._handle_error(e, "build_domain_mapping")
 
-def _target_matches_domain(self, target_name: str, domain_name: str, domain: Domain) -> bool:
+
+def _target_matches_domain(
+    self, target_name: str, domain_name: str, domain: Domain
+) -> bool:
     """Check if a makefile target matches a domain"""
     target_lower = target_name.lower()
     domain_lower = domain_name.lower()
     if domain_lower in target_lower:
         return True
     for pattern in domain.patterns:
-        pattern_parts = pattern.lower().split('/')
+        pattern_parts = pattern.lower().split("/")
         for part in pattern_parts:
             if part and part in target_lower:
                 return True
@@ -441,24 +692,26 @@ def _target_matches_domain(self, target_name: str, domain_name: str, domain: Dom
             return True
     return False
 
+
 def get_domain_targets(self, domain_name: str) -> List[MakeTarget]:
     """Get available makefile targets for a domain"""
-    with self._time_operation('get_domain_targets'):
+    with self._time_operation("get_domain_targets"):
         try:
             if not self._domain_target_mapping and self.registry_manager:
                 self._build_domain_target_mapping()
             return self._domain_target_mapping.get(domain_name, [])
         except Exception as e:
-            self._handle_error(e, 'get_domain_targets')
+            self._handle_error(e, "get_domain_targets")
             return []
+
 
 def execute_domain_operation(self, domain: str, operation: str) -> ExecutionResult:
     """Execute makefile operation for a domain"""
-    with self._time_operation('execute_domain_operation'):
+    with self._time_operation("execute_domain_operation"):
         start_time = time.time()
         self.executions_count += 1
         try:
-            target_name = f'{operation}-{domain}' if operation != domain else domain
+            target_name = f"{operation}-{domain}" if operation != domain else domain
             target = self._target_cache.get(target_name)
             if not target:
                 for name, tgt in self._target_cache.items():
@@ -467,7 +720,9 @@ def execute_domain_operation(self, domain: str, operation: str) -> ExecutionResu
                         target_name = name
                         break
             if not target:
-                raise MakefileIntegrationError(f"No makefile target found for domain '{domain}' operation '{operation}'")
+                raise MakefileIntegrationError(
+                    f"No makefile target found for domain '{domain}' operation '{operation}'"
+                )
             result = self._execute_make_target(target_name)
             if result.success:
                 self.successful_executions += 1
@@ -478,108 +733,249 @@ def execute_domain_operation(self, domain: str, operation: str) -> ExecutionResu
             return result
         except Exception as e:
             self.failed_executions += 1
-            self._handle_error(e, 'execute_domain_operation')
-            return ExecutionResult(success=False, target=f'{operation}-{domain}', output='', error_output=str(e), execution_time_ms=int((time.time() - start_time) * 1000), exit_code=-1)
+            self._handle_error(e, "execute_domain_operation")
+            return ExecutionResult(
+                success=False,
+                target=f"{operation}-{domain}",
+                output="",
+                error_output=str(e),
+                execution_time_ms=int((time.time() - start_time) * 1000),
+                exit_code=-1,
+            )
+
 
 def _execute_make_target(self, target_name: str) -> ExecutionResult:
     """Execute a specific makefile target"""
     start_time = time.time()
     try:
-        cmd = ['make', '-C', str(self.project_root), target_name]
-        process = subprocess.run(cmd, capture_output=True, text=True, timeout=self.execution_timeout, cwd=self.project_root)
+        cmd = ["make", "-C", str(self.project_root), target_name]
+        process = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=self.execution_timeout,
+            cwd=self.project_root,
+        )
         execution_time_ms = int((time.time() - start_time) * 1000)
         if self.log_output:
             if process.stdout:
-                self.logger.debug(f'Make output for {target_name}: {process.stdout}')
+                self.logger.debug(f"Make output for {target_name}: {process.stdout}")
             if process.stderr:
-                self.logger.debug(f'Make errors for {target_name}: {process.stderr}')
+                self.logger.debug(f"Make errors for {target_name}: {process.stderr}")
         success = process.returncode == 0
-        return ExecutionResult(success=success, target=target_name, output=process.stdout or '', error_output=process.stderr or '', execution_time_ms=execution_time_ms, exit_code=process.returncode)
+        return ExecutionResult(
+            success=success,
+            target=target_name,
+            output=process.stdout or "",
+            error_output=process.stderr or "",
+            execution_time_ms=execution_time_ms,
+            exit_code=process.returncode,
+        )
     except subprocess.TimeoutExpired:
         execution_time_ms = int((time.time() - start_time) * 1000)
-        return ExecutionResult(success=False, target=target_name, output='', error_output=f'Execution timed out after {self.execution_timeout} seconds', execution_time_ms=execution_time_ms, exit_code=-1)
+        return ExecutionResult(
+            success=False,
+            target=target_name,
+            output="",
+            error_output=f"Execution timed out after {self.execution_timeout} seconds",
+            execution_time_ms=execution_time_ms,
+            exit_code=-1,
+        )
     except Exception as e:
         execution_time_ms = int((time.time() - start_time) * 1000)
-        return ExecutionResult(success=False, target=target_name, output='', error_output=str(e), execution_time_ms=execution_time_ms, exit_code=-1)
+        return ExecutionResult(
+            success=False,
+            target=target_name,
+            output="",
+            error_output=str(e),
+            execution_time_ms=execution_time_ms,
+            exit_code=-1,
+        )
+
 
 def generate_domain_targets(self, domain: Domain) -> List[MakeTarget]:
     """Generate makefile targets for a domain"""
-    with self._time_operation('generate_domain_targets'):
+    with self._time_operation("generate_domain_targets"):
         try:
             targets = []
             domain_name = domain.name
-            target_templates = [{'name': f'test-{domain_name}', 'description': f'Run tests for {domain_name} domain', 'commands': [f"@echo 'Running tests for {domain_name} domain'", f'python3 -m pytest tests/unit/{domain_name}/ -v']}, {'name': f'lint-{domain_name}', 'description': f'Run linter for {domain_name} domain', 'commands': [f"@echo 'Linting {domain_name} domain'", f'{domain.tools.linter} src/**/{domain_name}/**/*.py']}, {'name': f'format-{domain_name}', 'description': f'Format code for {domain_name} domain', 'commands': [f"@echo 'Formatting {domain_name} domain'", f'{domain.tools.formatter} src/**/{domain_name}/**/*.py']}, {'name': f'validate-{domain_name}', 'description': f'Validate {domain_name} domain', 'commands': [f"@echo 'Validating {domain_name} domain'", f'{domain.tools.validator} src/**/{domain_name}/**/*.py']}, {'name': f'health-{domain_name}', 'description': f'Check health of {domain_name} domain', 'commands': [f"@echo 'Checking health of {domain_name} domain'", f'''python3 -c "from src.beast_mode.domain_index import DomainHealthMonitor; monitor = DomainHealthMonitor(); print(monitor.check_domain_health('{domain_name}'))"''']}]
+            target_templates = [
+                {
+                    "name": f"test-{domain_name}",
+                    "description": f"Run tests for {domain_name} domain",
+                    "commands": [
+                        f"@echo 'Running tests for {domain_name} domain'",
+                        f"python3 -m pytest tests/unit/{domain_name}/ -v",
+                    ],
+                },
+                {
+                    "name": f"lint-{domain_name}",
+                    "description": f"Run linter for {domain_name} domain",
+                    "commands": [
+                        f"@echo 'Linting {domain_name} domain'",
+                        f"{domain.tools.linter} src/**/{domain_name}/**/*.py",
+                    ],
+                },
+                {
+                    "name": f"format-{domain_name}",
+                    "description": f"Format code for {domain_name} domain",
+                    "commands": [
+                        f"@echo 'Formatting {domain_name} domain'",
+                        f"{domain.tools.formatter} src/**/{domain_name}/**/*.py",
+                    ],
+                },
+                {
+                    "name": f"validate-{domain_name}",
+                    "description": f"Validate {domain_name} domain",
+                    "commands": [
+                        f"@echo 'Validating {domain_name} domain'",
+                        f"{domain.tools.validator} src/**/{domain_name}/**/*.py",
+                    ],
+                },
+                {
+                    "name": f"health-{domain_name}",
+                    "description": f"Check health of {domain_name} domain",
+                    "commands": [
+                        f"@echo 'Checking health of {domain_name} domain'",
+                        f'''python3 -c "from src.beast_mode.domain_index import DomainHealthMonitor; monitor = DomainHealthMonitor(); print(monitor.check_domain_health('{domain_name}'))"''',
+                    ],
+                },
+            ]
             for template in target_templates:
-                target = MakeTarget(name=template['name'], description=template['description'], dependencies=[], commands=template['commands'], domain_specific=True, estimated_duration='1-5 minutes')
+                target = MakeTarget(
+                    name=template["name"],
+                    description=template["description"],
+                    dependencies=[],
+                    commands=template["commands"],
+                    domain_specific=True,
+                    estimated_duration="1-5 minutes",
+                )
                 targets.append(target)
             return targets
         except Exception as e:
-            self._handle_error(e, 'generate_domain_targets')
+            self._handle_error(e, "generate_domain_targets")
             return []
+
 
 def update_makefile_targets(self, domain: Domain, targets: List[MakeTarget]) -> bool:
     """Update makefile targets for a domain"""
-    with self._time_operation('update_makefile_targets'):
+    with self._time_operation("update_makefile_targets"):
         try:
             makefile_content = self._generate_makefile_content(domain, targets)
-            domain_makefile = self.makefile_base_path / f'{domain.name}.mk'
-            with open(domain_makefile, 'w', encoding='utf-8') as f:
+            domain_makefile = self.makefile_base_path / f"{domain.name}.mk"
+            with open(domain_makefile, "w", encoding="utf-8") as f:
                 f.write(makefile_content)
             self._makefile_cache[str(domain_makefile)] = targets
             for target in targets:
                 self._target_cache[target.name] = target
-            self.logger.info(f'Updated makefile targets for domain {domain.name}')
+            self.logger.info(f"Updated makefile targets for domain {domain.name}")
             return True
         except Exception as e:
-            self._handle_error(e, 'update_makefile_targets')
+            self._handle_error(e, "update_makefile_targets")
             return False
+
 
 def _generate_makefile_content(self, domain: Domain, targets: List[MakeTarget]) -> str:
     """Generate makefile content for domain targets"""
-    lines = [f'# Makefile for {domain.name} domain', f'# Generated by Beast Mode Domain Index System', f'# Generated at: {datetime.now().isoformat()}', '', f'# Domain: {domain.name}', f'# Description: {domain.description}', '']
+    lines = [
+        f"# Makefile for {domain.name} domain",
+        f"# Generated by Beast Mode Domain Index System",
+        f"# Generated at: {datetime.now().isoformat()}",
+        "",
+        f"# Domain: {domain.name}",
+        f"# Description: {domain.description}",
+        "",
+    ]
     for target in targets:
-        lines.append(f'# {target.description}')
+        lines.append(f"# {target.description}")
         target_line = target.name
         if target.dependencies:
             target_line += f": {' '.join(target.dependencies)}"
-        lines.append(f'{target_line}:')
+        lines.append(f"{target_line}:")
         for command in target.commands:
-            lines.append(f'\t{command}')
-        lines.append('')
-    return '\n'.join(lines)
+            lines.append(f"\t{command}")
+        lines.append("")
+    return "\n".join(lines)
+
 
 def get_makefile_health(self) -> Dict[str, Any]:
     """Get health status of makefile integration"""
     try:
         validation = self.validate_makefile_integration()
-        return {'integration_valid': validation.is_valid, 'total_makefiles': len(self._makefile_cache), 'total_targets': len(self._target_cache), 'domain_specific_targets': sum((1 for t in self._target_cache.values() if t.domain_specific)), 'domains_with_targets': len([d for d in self._domain_target_mapping.values() if d]), 'last_scan_time': self._last_scan_time.isoformat() if self._last_scan_time else None, 'execution_statistics': {'total_executions': self.executions_count, 'successful_executions': self.successful_executions, 'failed_executions': self.failed_executions, 'success_rate': self.successful_executions / max(self.executions_count, 1), 'average_execution_time_ms': self.total_execution_time / max(self.executions_count, 1) * 1000}, 'validation_results': {'errors': validation.errors, 'warnings': validation.warnings, 'suggestions': validation.suggestions}}
+        return {
+            "integration_valid": validation.is_valid,
+            "total_makefiles": len(self._makefile_cache),
+            "total_targets": len(self._target_cache),
+            "domain_specific_targets": sum(
+                (1 for t in self._target_cache.values() if t.domain_specific)
+            ),
+            "domains_with_targets": len(
+                [d for d in self._domain_target_mapping.values() if d]
+            ),
+            "last_scan_time": (
+                self._last_scan_time.isoformat() if self._last_scan_time else None
+            ),
+            "execution_statistics": {
+                "total_executions": self.executions_count,
+                "successful_executions": self.successful_executions,
+                "failed_executions": self.failed_executions,
+                "success_rate": self.successful_executions
+                / max(self.executions_count, 1),
+                "average_execution_time_ms": self.total_execution_time
+                / max(self.executions_count, 1)
+                * 1000,
+            },
+            "validation_results": {
+                "errors": validation.errors,
+                "warnings": validation.warnings,
+                "suggestions": validation.suggestions,
+            },
+        }
     except Exception as e:
-        self._handle_error(e, 'get_makefile_health')
-        return {'error': str(e)}
+        self._handle_error(e, "get_makefile_health")
+        return {"error": str(e)}
+
 
 def rescan_makefiles(self) -> bool:
     """Rescan makefiles and rebuild caches"""
     try:
-        self.logger.info('Rescanning makefiles')
+        self.logger.info("Rescanning makefiles")
         self._scan_makefiles()
         if self.registry_manager:
             self._build_domain_target_mapping()
         return True
     except Exception as e:
-        self._handle_error(e, 'rescan_makefiles')
+        self._handle_error(e, "rescan_makefiles")
         return False
+
 
 def get_integrator_stats(self) -> Dict[str, Any]:
     """Get makefile integrator statistics"""
-    return {'makefiles_found': len(self._makefile_cache), 'targets_found': len(self._target_cache), 'domain_mappings': len(self._domain_target_mapping), 'executions_performed': self.executions_count, 'execution_success_rate': self.successful_executions / max(self.executions_count, 1), 'last_scan_time': self._last_scan_time.isoformat() if self._last_scan_time else None, 'makefile_base_path': str(self.makefile_base_path), 'parallel_execution_enabled': self.parallel_execution, 'performance_metrics': self.performance_metrics}
+    return {
+        "makefiles_found": len(self._makefile_cache),
+        "targets_found": len(self._target_cache),
+        "domain_mappings": len(self._domain_target_mapping),
+        "executions_performed": self.executions_count,
+        "execution_success_rate": self.successful_executions
+        / max(self.executions_count, 1),
+        "last_scan_time": (
+            self._last_scan_time.isoformat() if self._last_scan_time else None
+        ),
+        "makefile_base_path": str(self.makefile_base_path),
+        "parallel_execution_enabled": self.parallel_execution,
+        "performance_metrics": self.performance_metrics,
+    }
 
-def __init__(self, registry_manager=None, config: Optional[Dict[str, Any]]=None):
-    super().__init__('makefile_integrator', config)
+
+def __init__(self, registry_manager=None, config: Optional[Dict[str, Any]] = None):
+    super().__init__("makefile_integrator", config)
     self.config_obj = get_config()
-    self.makefile_base_path = Path(self.config_obj.get('makefile_base_path', 'makefiles'))
-    self.execution_timeout = self.config_obj.get('makefile_timeout_seconds', 300)
-    self.parallel_execution = self.config_obj.get('makefile_parallel_execution', True)
-    self.log_output = self.config_obj.get('makefile_log_output', True)
+    self.makefile_base_path = Path(
+        self.config_obj.get("makefile_base_path", "makefiles")
+    )
+    self.execution_timeout = self.config_obj.get("makefile_timeout_seconds", 300)
+    self.parallel_execution = self.config_obj.get("makefile_parallel_execution", True)
+    self.log_output = self.config_obj.get("makefile_log_output", True)
     self.registry_manager = registry_manager
     self._makefile_cache = {}
     self._target_cache = {}
@@ -590,31 +986,38 @@ def __init__(self, registry_manager=None, config: Optional[Dict[str, Any]]=None)
     self.failed_executions = 0
     self.total_execution_time = 0.0
     self.project_root = Path.cwd()
-    self.logger.info(f'Initialized MakefileIntegrator with base path: {self.makefile_base_path}')
+    self.logger.info(
+        f"Initialized MakefileIntegrator with base path: {self.makefile_base_path}"
+    )
     self._scan_makefiles()
+
 
 def set_registry_manager(self, registry_manager):
     """Set the registry manager (dependency injection)"""
     self.registry_manager = registry_manager
     self._build_domain_target_mapping()
 
+
 def set_project_root(self, project_root: str):
     """Set the project root directory"""
     self.project_root = Path(project_root)
-    self.makefile_base_path = self.project_root / 'makefiles'
-    self.logger.info(f'Set project root to: {self.project_root}')
+    self.makefile_base_path = self.project_root / "makefiles"
+    self.logger.info(f"Set project root to: {self.project_root}")
     self._scan_makefiles()
+
 
 def _scan_makefiles(self):
     """Scan and parse all makefiles in the base path"""
-    with self._time_operation('scan_makefiles'):
+    with self._time_operation("scan_makefiles"):
         try:
             if not self.makefile_base_path.exists():
-                self.logger.warning(f'Makefile base path does not exist: {self.makefile_base_path}')
+                self.logger.warning(
+                    f"Makefile base path does not exist: {self.makefile_base_path}"
+                )
                 return
             self._makefile_cache = {}
             self._target_cache = {}
-            makefile_patterns = ['*.mk', 'Makefile*', 'makefile*']
+            makefile_patterns = ["*.mk", "Makefile*", "makefile*"]
             makefile_files = []
             for pattern in makefile_patterns:
                 makefile_files.extend(self.makefile_base_path.glob(pattern))
@@ -624,25 +1027,40 @@ def _scan_makefiles(self):
                     self._makefile_cache[str(makefile_path)] = targets
                     for target in targets:
                         self._target_cache[target.name] = target
-                    self.logger.debug(f'Parsed {len(targets)} targets from {makefile_path}')
+                    self.logger.debug(
+                        f"Parsed {len(targets)} targets from {makefile_path}"
+                    )
                 except Exception as e:
-                    self.logger.error(f'Failed to parse makefile {makefile_path}: {e}')
+                    self.logger.error(f"Failed to parse makefile {makefile_path}: {e}")
             self._last_scan_time = datetime.now()
-            self.logger.info(f'Scanned {len(makefile_files)} makefiles, found {len(self._target_cache)} targets')
+            self.logger.info(
+                f"Scanned {len(makefile_files)} makefiles, found {len(self._target_cache)} targets"
+            )
         except Exception as e:
-            self._handle_error(e, 'scan_makefiles')
+            self._handle_error(e, "scan_makefiles")
+
 
 def _is_domain_specific_target(self, target_name: str) -> bool:
     """Check if a target is domain-specific"""
-    domain_indicators = ['domain', 'component', 'module', 'service', 'test-', 'lint-', 'format-', 'validate-']
+    domain_indicators = [
+        "domain",
+        "component",
+        "module",
+        "service",
+        "test-",
+        "lint-",
+        "format-",
+        "validate-",
+    ]
     target_lower = target_name.lower()
     return any((indicator in target_lower for indicator in domain_indicators))
+
 
 def _build_domain_target_mapping(self):
     """Build mapping between domains and makefile targets"""
     if not self.registry_manager:
         return
-    with self._time_operation('build_domain_mapping'):
+    with self._time_operation("build_domain_mapping"):
         try:
             self._domain_target_mapping = {}
             all_domains = self.registry_manager.get_all_domains()
@@ -652,18 +1070,23 @@ def _build_domain_target_mapping(self):
                     if self._target_matches_domain(target_name, domain_name, domain):
                         matching_targets.append(target)
                 self._domain_target_mapping[domain_name] = matching_targets
-            self.logger.info(f'Built domain-target mapping for {len(all_domains)} domains')
+            self.logger.info(
+                f"Built domain-target mapping for {len(all_domains)} domains"
+            )
         except Exception as e:
-            self._handle_error(e, 'build_domain_mapping')
+            self._handle_error(e, "build_domain_mapping")
 
-def _target_matches_domain(self, target_name: str, domain_name: str, domain: Domain) -> bool:
+
+def _target_matches_domain(
+    self, target_name: str, domain_name: str, domain: Domain
+) -> bool:
     """Check if a makefile target matches a domain"""
     target_lower = target_name.lower()
     domain_lower = domain_name.lower()
     if domain_lower in target_lower:
         return True
     for pattern in domain.patterns:
-        pattern_parts = pattern.lower().split('/')
+        pattern_parts = pattern.lower().split("/")
         for part in pattern_parts:
             if part and part in target_lower:
                 return True
@@ -672,24 +1095,26 @@ def _target_matches_domain(self, target_name: str, domain_name: str, domain: Dom
             return True
     return False
 
+
 def get_domain_targets(self, domain_name: str) -> List[MakeTarget]:
     """Get available makefile targets for a domain"""
-    with self._time_operation('get_domain_targets'):
+    with self._time_operation("get_domain_targets"):
         try:
             if not self._domain_target_mapping and self.registry_manager:
                 self._build_domain_target_mapping()
             return self._domain_target_mapping.get(domain_name, [])
         except Exception as e:
-            self._handle_error(e, 'get_domain_targets')
+            self._handle_error(e, "get_domain_targets")
             return []
+
 
 def execute_domain_operation(self, domain: str, operation: str) -> ExecutionResult:
     """Execute makefile operation for a domain"""
-    with self._time_operation('execute_domain_operation'):
+    with self._time_operation("execute_domain_operation"):
         start_time = time.time()
         self.executions_count += 1
         try:
-            target_name = f'{operation}-{domain}' if operation != domain else domain
+            target_name = f"{operation}-{domain}" if operation != domain else domain
             target = self._target_cache.get(target_name)
             if not target:
                 for name, tgt in self._target_cache.items():
@@ -698,7 +1123,9 @@ def execute_domain_operation(self, domain: str, operation: str) -> ExecutionResu
                         target_name = name
                         break
             if not target:
-                raise MakefileIntegrationError(f"No makefile target found for domain '{domain}' operation '{operation}'")
+                raise MakefileIntegrationError(
+                    f"No makefile target found for domain '{domain}' operation '{operation}'"
+                )
             result = self._execute_make_target(target_name)
             if result.success:
                 self.successful_executions += 1
@@ -709,97 +1136,235 @@ def execute_domain_operation(self, domain: str, operation: str) -> ExecutionResu
             return result
         except Exception as e:
             self.failed_executions += 1
-            self._handle_error(e, 'execute_domain_operation')
-            return ExecutionResult(success=False, target=f'{operation}-{domain}', output='', error_output=str(e), execution_time_ms=int((time.time() - start_time) * 1000), exit_code=-1)
+            self._handle_error(e, "execute_domain_operation")
+            return ExecutionResult(
+                success=False,
+                target=f"{operation}-{domain}",
+                output="",
+                error_output=str(e),
+                execution_time_ms=int((time.time() - start_time) * 1000),
+                exit_code=-1,
+            )
+
 
 def _execute_make_target(self, target_name: str) -> ExecutionResult:
     """Execute a specific makefile target"""
     start_time = time.time()
     try:
-        cmd = ['make', '-C', str(self.project_root), target_name]
-        process = subprocess.run(cmd, capture_output=True, text=True, timeout=self.execution_timeout, cwd=self.project_root)
+        cmd = ["make", "-C", str(self.project_root), target_name]
+        process = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=self.execution_timeout,
+            cwd=self.project_root,
+        )
         execution_time_ms = int((time.time() - start_time) * 1000)
         if self.log_output:
             if process.stdout:
-                self.logger.debug(f'Make output for {target_name}: {process.stdout}')
+                self.logger.debug(f"Make output for {target_name}: {process.stdout}")
             if process.stderr:
-                self.logger.debug(f'Make errors for {target_name}: {process.stderr}')
+                self.logger.debug(f"Make errors for {target_name}: {process.stderr}")
         success = process.returncode == 0
-        return ExecutionResult(success=success, target=target_name, output=process.stdout or '', error_output=process.stderr or '', execution_time_ms=execution_time_ms, exit_code=process.returncode)
+        return ExecutionResult(
+            success=success,
+            target=target_name,
+            output=process.stdout or "",
+            error_output=process.stderr or "",
+            execution_time_ms=execution_time_ms,
+            exit_code=process.returncode,
+        )
     except subprocess.TimeoutExpired:
         execution_time_ms = int((time.time() - start_time) * 1000)
-        return ExecutionResult(success=False, target=target_name, output='', error_output=f'Execution timed out after {self.execution_timeout} seconds', execution_time_ms=execution_time_ms, exit_code=-1)
+        return ExecutionResult(
+            success=False,
+            target=target_name,
+            output="",
+            error_output=f"Execution timed out after {self.execution_timeout} seconds",
+            execution_time_ms=execution_time_ms,
+            exit_code=-1,
+        )
     except Exception as e:
         execution_time_ms = int((time.time() - start_time) * 1000)
-        return ExecutionResult(success=False, target=target_name, output='', error_output=str(e), execution_time_ms=execution_time_ms, exit_code=-1)
+        return ExecutionResult(
+            success=False,
+            target=target_name,
+            output="",
+            error_output=str(e),
+            execution_time_ms=execution_time_ms,
+            exit_code=-1,
+        )
+
 
 def generate_domain_targets(self, domain: Domain) -> List[MakeTarget]:
     """Generate makefile targets for a domain"""
-    with self._time_operation('generate_domain_targets'):
+    with self._time_operation("generate_domain_targets"):
         try:
             targets = []
             domain_name = domain.name
-            target_templates = [{'name': f'test-{domain_name}', 'description': f'Run tests for {domain_name} domain', 'commands': [f"@echo 'Running tests for {domain_name} domain'", f'python3 -m pytest tests/unit/{domain_name}/ -v']}, {'name': f'lint-{domain_name}', 'description': f'Run linter for {domain_name} domain', 'commands': [f"@echo 'Linting {domain_name} domain'", f'{domain.tools.linter} src/**/{domain_name}/**/*.py']}, {'name': f'format-{domain_name}', 'description': f'Format code for {domain_name} domain', 'commands': [f"@echo 'Formatting {domain_name} domain'", f'{domain.tools.formatter} src/**/{domain_name}/**/*.py']}, {'name': f'validate-{domain_name}', 'description': f'Validate {domain_name} domain', 'commands': [f"@echo 'Validating {domain_name} domain'", f'{domain.tools.validator} src/**/{domain_name}/**/*.py']}, {'name': f'health-{domain_name}', 'description': f'Check health of {domain_name} domain', 'commands': [f"@echo 'Checking health of {domain_name} domain'", f'''python3 -c "from src.beast_mode.domain_index import DomainHealthMonitor; monitor = DomainHealthMonitor(); print(monitor.check_domain_health('{domain_name}'))"''']}]
+            target_templates = [
+                {
+                    "name": f"test-{domain_name}",
+                    "description": f"Run tests for {domain_name} domain",
+                    "commands": [
+                        f"@echo 'Running tests for {domain_name} domain'",
+                        f"python3 -m pytest tests/unit/{domain_name}/ -v",
+                    ],
+                },
+                {
+                    "name": f"lint-{domain_name}",
+                    "description": f"Run linter for {domain_name} domain",
+                    "commands": [
+                        f"@echo 'Linting {domain_name} domain'",
+                        f"{domain.tools.linter} src/**/{domain_name}/**/*.py",
+                    ],
+                },
+                {
+                    "name": f"format-{domain_name}",
+                    "description": f"Format code for {domain_name} domain",
+                    "commands": [
+                        f"@echo 'Formatting {domain_name} domain'",
+                        f"{domain.tools.formatter} src/**/{domain_name}/**/*.py",
+                    ],
+                },
+                {
+                    "name": f"validate-{domain_name}",
+                    "description": f"Validate {domain_name} domain",
+                    "commands": [
+                        f"@echo 'Validating {domain_name} domain'",
+                        f"{domain.tools.validator} src/**/{domain_name}/**/*.py",
+                    ],
+                },
+                {
+                    "name": f"health-{domain_name}",
+                    "description": f"Check health of {domain_name} domain",
+                    "commands": [
+                        f"@echo 'Checking health of {domain_name} domain'",
+                        f'''python3 -c "from src.beast_mode.domain_index import DomainHealthMonitor; monitor = DomainHealthMonitor(); print(monitor.check_domain_health('{domain_name}'))"''',
+                    ],
+                },
+            ]
             for template in target_templates:
-                target = MakeTarget(name=template['name'], description=template['description'], dependencies=[], commands=template['commands'], domain_specific=True, estimated_duration='1-5 minutes')
+                target = MakeTarget(
+                    name=template["name"],
+                    description=template["description"],
+                    dependencies=[],
+                    commands=template["commands"],
+                    domain_specific=True,
+                    estimated_duration="1-5 minutes",
+                )
                 targets.append(target)
             return targets
         except Exception as e:
-            self._handle_error(e, 'generate_domain_targets')
+            self._handle_error(e, "generate_domain_targets")
             return []
+
 
 def update_makefile_targets(self, domain: Domain, targets: List[MakeTarget]) -> bool:
     """Update makefile targets for a domain"""
-    with self._time_operation('update_makefile_targets'):
+    with self._time_operation("update_makefile_targets"):
         try:
             makefile_content = self._generate_makefile_content(domain, targets)
-            domain_makefile = self.makefile_base_path / f'{domain.name}.mk'
-            with open(domain_makefile, 'w', encoding='utf-8') as f:
+            domain_makefile = self.makefile_base_path / f"{domain.name}.mk"
+            with open(domain_makefile, "w", encoding="utf-8") as f:
                 f.write(makefile_content)
             self._makefile_cache[str(domain_makefile)] = targets
             for target in targets:
                 self._target_cache[target.name] = target
-            self.logger.info(f'Updated makefile targets for domain {domain.name}')
+            self.logger.info(f"Updated makefile targets for domain {domain.name}")
             return True
         except Exception as e:
-            self._handle_error(e, 'update_makefile_targets')
+            self._handle_error(e, "update_makefile_targets")
             return False
+
 
 def _generate_makefile_content(self, domain: Domain, targets: List[MakeTarget]) -> str:
     """Generate makefile content for domain targets"""
-    lines = [f'# Makefile for {domain.name} domain', f'# Generated by Beast Mode Domain Index System', f'# Generated at: {datetime.now().isoformat()}', '', f'# Domain: {domain.name}', f'# Description: {domain.description}', '']
+    lines = [
+        f"# Makefile for {domain.name} domain",
+        f"# Generated by Beast Mode Domain Index System",
+        f"# Generated at: {datetime.now().isoformat()}",
+        "",
+        f"# Domain: {domain.name}",
+        f"# Description: {domain.description}",
+        "",
+    ]
     for target in targets:
-        lines.append(f'# {target.description}')
+        lines.append(f"# {target.description}")
         target_line = target.name
         if target.dependencies:
             target_line += f": {' '.join(target.dependencies)}"
-        lines.append(f'{target_line}:')
+        lines.append(f"{target_line}:")
         for command in target.commands:
-            lines.append(f'\t{command}')
-        lines.append('')
-    return '\n'.join(lines)
+            lines.append(f"\t{command}")
+        lines.append("")
+    return "\n".join(lines)
+
 
 def get_makefile_health(self) -> Dict[str, Any]:
     """Get health status of makefile integration"""
     try:
         validation = self.validate_makefile_integration()
-        return {'integration_valid': validation.is_valid, 'total_makefiles': len(self._makefile_cache), 'total_targets': len(self._target_cache), 'domain_specific_targets': sum((1 for t in self._target_cache.values() if t.domain_specific)), 'domains_with_targets': len([d for d in self._domain_target_mapping.values() if d]), 'last_scan_time': self._last_scan_time.isoformat() if self._last_scan_time else None, 'execution_statistics': {'total_executions': self.executions_count, 'successful_executions': self.successful_executions, 'failed_executions': self.failed_executions, 'success_rate': self.successful_executions / max(self.executions_count, 1), 'average_execution_time_ms': self.total_execution_time / max(self.executions_count, 1) * 1000}, 'validation_results': {'errors': validation.errors, 'warnings': validation.warnings, 'suggestions': validation.suggestions}}
+        return {
+            "integration_valid": validation.is_valid,
+            "total_makefiles": len(self._makefile_cache),
+            "total_targets": len(self._target_cache),
+            "domain_specific_targets": sum(
+                (1 for t in self._target_cache.values() if t.domain_specific)
+            ),
+            "domains_with_targets": len(
+                [d for d in self._domain_target_mapping.values() if d]
+            ),
+            "last_scan_time": (
+                self._last_scan_time.isoformat() if self._last_scan_time else None
+            ),
+            "execution_statistics": {
+                "total_executions": self.executions_count,
+                "successful_executions": self.successful_executions,
+                "failed_executions": self.failed_executions,
+                "success_rate": self.successful_executions
+                / max(self.executions_count, 1),
+                "average_execution_time_ms": self.total_execution_time
+                / max(self.executions_count, 1)
+                * 1000,
+            },
+            "validation_results": {
+                "errors": validation.errors,
+                "warnings": validation.warnings,
+                "suggestions": validation.suggestions,
+            },
+        }
     except Exception as e:
-        self._handle_error(e, 'get_makefile_health')
-        return {'error': str(e)}
+        self._handle_error(e, "get_makefile_health")
+        return {"error": str(e)}
+
 
 def rescan_makefiles(self) -> bool:
     """Rescan makefiles and rebuild caches"""
     try:
-        self.logger.info('Rescanning makefiles')
+        self.logger.info("Rescanning makefiles")
         self._scan_makefiles()
         if self.registry_manager:
             self._build_domain_target_mapping()
         return True
     except Exception as e:
-        self._handle_error(e, 'rescan_makefiles')
+        self._handle_error(e, "rescan_makefiles")
         return False
+
 
 def get_integrator_stats(self) -> Dict[str, Any]:
     """Get makefile integrator statistics"""
-    return {'makefiles_found': len(self._makefile_cache), 'targets_found': len(self._target_cache), 'domain_mappings': len(self._domain_target_mapping), 'executions_performed': self.executions_count, 'execution_success_rate': self.successful_executions / max(self.executions_count, 1), 'last_scan_time': self._last_scan_time.isoformat() if self._last_scan_time else None, 'makefile_base_path': str(self.makefile_base_path), 'parallel_execution_enabled': self.parallel_execution, 'performance_metrics': self.performance_metrics}
+    return {
+        "makefiles_found": len(self._makefile_cache),
+        "targets_found": len(self._target_cache),
+        "domain_mappings": len(self._domain_target_mapping),
+        "executions_performed": self.executions_count,
+        "execution_success_rate": self.successful_executions
+        / max(self.executions_count, 1),
+        "last_scan_time": (
+            self._last_scan_time.isoformat() if self._last_scan_time else None
+        ),
+        "makefile_base_path": str(self.makefile_base_path),
+        "parallel_execution_enabled": self.parallel_execution,
+        "performance_metrics": self.performance_metrics,
+    }

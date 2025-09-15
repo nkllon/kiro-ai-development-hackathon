@@ -11,6 +11,7 @@ in a format that's easy to copy and paste.
 import json
 from datetime import datetime
 
+
 def get_project_data():
     """Get the project data for the hackathon submission."""
     return {
@@ -22,50 +23,65 @@ Beast Mode proves that systematic approaches consistently outperform ad-hoc deve
 **The Requirements ARE the Solution - and we have the evidence to prove it!**""",
         "project_url": "https://github.com/nkllon/kiro-ai-development-hackathon",
         "demo_video": "https://youtube.com/watch?v=demo-video",
-        "built_with": ["Kiro AI", "Python", "Systematic Development", "AI Collaboration", "GCP"],
-        "tags": ["kiro", "ai", "systematic-development", "beast-mode", "requirements-driven", "pdca", "ai-collaboration"]
+        "built_with": [
+            "Kiro AI",
+            "Python",
+            "Systematic Development",
+            "AI Collaboration",
+            "GCP",
+        ],
+        "tags": [
+            "kiro",
+            "ai",
+            "systematic-development",
+            "beast-mode",
+            "requirements-driven",
+            "pdca",
+            "ai-collaboration",
+        ],
     }
+
 
 def print_form_data():
     """Print the form data in a copy-paste friendly format."""
     data = get_project_data()
-    
+
     print("🎯 DevPost Hackathon Submission Data")
     print("=" * 40)
     print()
-    
+
     print("📝 TITLE:")
     print("-" * 10)
     print(data["title"])
     print()
-    
+
     print("📄 DESCRIPTION:")
     print("-" * 15)
     print(data["description"])
     print()
-    
+
     print("🔗 PROJECT URL:")
     print("-" * 15)
     print(data["project_url"])
     print()
-    
+
     print("🎥 DEMO VIDEO URL:")
     print("-" * 20)
     print(data["demo_video"])
     print()
-    
+
     print("🛠️ BUILT WITH:")
     print("-" * 15)
     for item in data["built_with"]:
         print(f"• {item}")
     print()
-    
+
     print("🏷️ TAGS:")
     print("-" * 10)
     for tag in data["tags"]:
         print(f"• {tag}")
     print()
-    
+
     print("💡 INSTRUCTIONS:")
     print("-" * 15)
     print("1. Copy each section above")
@@ -73,20 +89,24 @@ def print_form_data():
     print("3. Make sure to fill all required fields")
     print("4. Submit the form when complete")
     print()
-    
+
     print("🎉 Ready to fill out your DevPost submission!")
+
 
 def save_form_data():
     """Save the form data to a JSON file."""
     data = get_project_data()
-    
-    filename = f"devpost_submission_data_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-    
-    with open(filename, 'w') as f:
+
+    filename = (
+        f"devpost_submission_data_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    )
+
+    with open(filename, "w") as f:
         json.dump(data, f, indent=2)
-    
+
     print(f"💾 Form data saved to: {filename}")
     return filename
+
 
 if __name__ == "__main__":
     print_form_data()

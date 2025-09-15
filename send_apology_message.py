@@ -37,13 +37,13 @@ class BeastModeMessage(BaseModel):
 
 async def send_apology_and_inquiry():
     """Send apology message and ask about capabilities"""
-    
+
     client = redis.from_url("redis://localhost:6379")
-    
+
     try:
         await client.ping()
         print("🧬 Connected to Beast Mode network")
-        
+
         # Craft the apology and inquiry message
         message = BeastModeMessage(
             id=str(uuid.uuid4()),
@@ -68,12 +68,12 @@ Looking forward to hearing from you and maybe doing some systematic collaboratio
 
 - Your apologetic spore creator""",
                 "context": "apology_and_introduction",
-                "priority": 9
+                "priority": 9,
             },
             timestamp=datetime.now(),
-            priority=9
+            priority=9,
         )
-        
+
         # Send the message
         await client.publish("beast_mode_network", message.model_dump_json())
         print("📤 Sent apology and inquiry message to the network")
@@ -81,7 +81,7 @@ Looking forward to hearing from you and maybe doing some systematic collaboratio
         print(f"   Type: {message.type}")
         print(f"   Priority: {message.priority}")
         print(f"   Payload preview: {message.payload['prompt'][:100]}...")
-        
+
     except Exception as e:
         print(f"❌ Error sending message: {e}")
     finally:

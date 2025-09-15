@@ -1,4 +1,4 @@
-#!/bin/bash
+set -euo pipefail#!/bin/bash
 # Start Chrome with debugging enabled for automation
 
 echo "🔧 Starting Chrome with debugging enabled..."

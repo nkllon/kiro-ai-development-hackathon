@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class HealthMonitoringResult:
     """Result of health monitoring implementation"""
+
     module_name: str
     success: bool
     error_message: str = ""
@@ -36,24 +37,24 @@ class HealthMonitoringResult:
 
 class BeastModeHealthMonitoring:
     """Beast Mode Health Monitoring Implementation - Simplified"""
-    
+
     def __init__(self, devpost_path: str = "src/devpost_integration"):
         """Initialize beast mode health monitoring implementer"""
         self.devpost_path = Path(devpost_path)
         self.results: List[HealthMonitoringResult] = []
-        
+
         # Initialize logging
         logging.basicConfig(
             level=logging.INFO,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         )
-    
+
     def analyze_module_health_compliance(self, module_path: Path) -> Dict[str, Any]:
         """Analyze module for health monitoring compliance"""
         try:
-            with open(module_path, 'r') as f:
+            with open(module_path, "r") as f:
                 content = f.read()
-            
+
             # Check syntax
             try:
                 ast.parse(content)
@@ -61,72 +62,79 @@ class BeastModeHealthMonitoring:
             except SyntaxError as e:
                 syntax_valid = False
                 syntax_error = str(e)
-            
+
             # Check for health monitoring components
-            has_health_checks = 'check_health' in content
-            has_health_metrics = 'get_metrics' in content
-            has_health_status = 'ModuleStatus' in content
-            has_health_issues = 'issues' in content
-            has_health_score = 'health_score' in content
-            
+            has_health_checks = "check_health" in content
+            has_health_metrics = "get_metrics" in content
+            has_health_status = "ModuleStatus" in content
+            has_health_issues = "issues" in content
+            has_health_score = "health_score" in content
+
             # Check for health monitoring imports
-            has_health_imports = 'ModuleHealth' in content and 'ModuleStatus' in content
-            
+            has_health_imports = "ModuleHealth" in content and "ModuleStatus" in content
+
             # Determine if module needs health monitoring
-            needs_health_monitoring = not (has_health_checks and has_health_metrics and has_health_status and has_health_imports)
-            
+            needs_health_monitoring = not (
+                has_health_checks
+                and has_health_metrics
+                and has_health_status
+                and has_health_imports
+            )
+
             return {
-                'module_name': module_path.stem,
-                'syntax_valid': syntax_valid,
-                'syntax_error': syntax_error if not syntax_valid else None,
-                'has_health_checks': has_health_checks,
-                'has_health_metrics': has_health_metrics,
-                'has_health_status': has_health_status,
-                'has_health_issues': has_health_issues,
-                'has_health_score': has_health_score,
-                'has_health_imports': has_health_imports,
-                'needs_health_monitoring': needs_health_monitoring,
-                'content': content
+                "module_name": module_path.stem,
+                "syntax_valid": syntax_valid,
+                "syntax_error": syntax_error if not syntax_valid else None,
+                "has_health_checks": has_health_checks,
+                "has_health_metrics": has_health_metrics,
+                "has_health_status": has_health_status,
+                "has_health_issues": has_health_issues,
+                "has_health_score": has_health_score,
+                "has_health_imports": has_health_imports,
+                "needs_health_monitoring": needs_health_monitoring,
+                "content": content,
             }
-            
+
         except Exception as e:
             logger.error(f"Error analyzing module {module_path}: {e}")
             return {
-                'module_name': module_path.stem,
-                'syntax_valid': False,
-                'syntax_error': str(e),
-                'has_health_checks': False,
-                'has_health_metrics': False,
-                'has_health_status': False,
-                'has_health_issues': False,
-                'has_health_score': False,
-                'has_health_imports': False,
-                'needs_health_monitoring': True,
-                'content': ''
+                "module_name": module_path.stem,
+                "syntax_valid": False,
+                "syntax_error": str(e),
+                "has_health_checks": False,
+                "has_health_metrics": False,
+                "has_health_status": False,
+                "has_health_issues": False,
+                "has_health_score": False,
+                "has_health_imports": False,
+                "needs_health_monitoring": True,
+                "content": "",
             }
-    
-    def enhance_health_monitoring(self, module_path: Path, analysis: Dict[str, Any]) -> bool:
+
+    def enhance_health_monitoring(
+        self, module_path: Path, analysis: Dict[str, Any]
+    ) -> bool:
         """Enhance health monitoring for module"""
         try:
-            if not analysis['needs_health_monitoring']:
+            if not analysis["needs_health_monitoring"]:
                 return True
-            
+
             # Simple enhancement - just add health monitoring comments
-            content = analysis['content']
-            
+            content = analysis["content"]
+
             # Add health monitoring enhancement
             enhanced_content = self._add_health_monitoring_enhancements(content)
-            
+
             # Write enhanced content
-            with open(module_path, 'w') as f:
+            with open(module_path, "w") as f:
                 f.write(enhanced_content)
-            
+
             return True
-            
+
         except Exception as e:
             logger.error(f"Error enhancing health monitoring for {module_path}: {e}")
             return False
-    
+
     def _add_health_monitoring_enhancements(self, content: str) -> str:
         """Add health monitoring enhancements to content"""
         # Add health monitoring comments and enhancements
@@ -246,111 +254,124 @@ class BeastModeHealthMonitoring:
         except Exception as e:
             return False, [f"Error rate monitoring check failed: {e}"]
 '''
-        
+
         # Add enhancements before the last closing brace
-        if 'class ' in content:
+        if "class " in content:
             # Find the last method in the class
-            lines = content.split('\n')
+            lines = content.split("\n")
             last_method_line = -1
             for i, line in enumerate(lines):
-                if line.strip().startswith('def ') and 'class ' in content[:content.find(line)]:
+                if (
+                    line.strip().startswith("def ")
+                    and "class " in content[: content.find(line)]
+                ):
                     last_method_line = i
-            
+
             if last_method_line > 0:
                 # Insert enhancements before the last method
                 lines.insert(last_method_line, enhancements)
-                return '\n'.join(lines)
-        
+                return "\n".join(lines)
+
         # If no class found, just append
         return content + enhancements
-    
+
     def fix_single_module(self, module_path: Path) -> HealthMonitoringResult:
         """Fix a single module for health monitoring compliance"""
         try:
             # Analyze module
             analysis = self.analyze_module_health_compliance(module_path)
-            
-            if not analysis['needs_health_monitoring']:
+
+            if not analysis["needs_health_monitoring"]:
                 return HealthMonitoringResult(
-                    module_name=analysis['module_name'],
+                    module_name=analysis["module_name"],
                     success=True,
                     health_monitoring_added=True,
-                    syntax_valid=True
+                    syntax_valid=True,
                 )
-            
+
             # Enhance health monitoring
-            health_monitoring_added = self.enhance_health_monitoring(module_path, analysis)
-            
+            health_monitoring_added = self.enhance_health_monitoring(
+                module_path, analysis
+            )
+
             # Verify final result
             final_analysis = self.analyze_module_health_compliance(module_path)
-            
-            success = health_monitoring_added and final_analysis['syntax_valid']
-            
+
+            success = health_monitoring_added and final_analysis["syntax_valid"]
+
             return HealthMonitoringResult(
-                module_name=analysis['module_name'],
+                module_name=analysis["module_name"],
                 success=success,
                 health_monitoring_added=health_monitoring_added,
-                syntax_valid=final_analysis['syntax_valid']
+                syntax_valid=final_analysis["syntax_valid"],
             )
-            
+
         except Exception as e:
             return HealthMonitoringResult(
-                module_name=module_path.stem,
-                success=False,
-                error_message=str(e)
+                module_name=module_path.stem, success=False, error_message=str(e)
             )
-    
-    def run_beast_mode_health_monitoring(self, max_workers: int = 6) -> List[HealthMonitoringResult]:
+
+    def run_beast_mode_health_monitoring(
+        self, max_workers: int = 6
+    ) -> List[HealthMonitoringResult]:
         """Run beast mode health monitoring implementation"""
         logger.info("🚀 Starting Beast Mode Health Monitoring Implementation")
-        
+
         # Find all Python modules
         module_paths = list(self.devpost_path.glob("*.py"))
-        module_paths = [p for p in module_paths if p.name != "__init__.py" and p.name != "reflective_module.py"]
-        
+        module_paths = [
+            p
+            for p in module_paths
+            if p.name != "__init__.py" and p.name != "reflective_module.py"
+        ]
+
         logger.info(f"Found {len(module_paths)} modules to process")
-        
+
         # Process modules in parallel
         results = []
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
             # Submit all tasks
             future_to_path = {
-                executor.submit(self.fix_single_module, path): path 
+                executor.submit(self.fix_single_module, path): path
                 for path in module_paths
             }
-            
+
             # Collect results
             for future in concurrent.futures.as_completed(future_to_path):
                 path = future_to_path[future]
                 try:
                     result = future.result()
                     results.append(result)
-                    logger.info(f"Processed {result.module_name}: {'✅' if result.success else '❌'}")
+                    logger.info(
+                        f"Processed {result.module_name}: {'✅' if result.success else '❌'}"
+                    )
                 except Exception as e:
                     logger.error(f"Error processing {path}: {e}")
-                    results.append(HealthMonitoringResult(
-                        module_name=path.stem,
-                        success=False,
-                        error_message=str(e)
-                    ))
-        
+                    results.append(
+                        HealthMonitoringResult(
+                            module_name=path.stem, success=False, error_message=str(e)
+                        )
+                    )
+
         self.results = results
         return results
-    
+
     def generate_report(self) -> str:
         """Generate beast mode health monitoring report"""
         if not self.results:
             return "No results to report."
-        
+
         total_modules = len(self.results)
         successful_modules = len([r for r in self.results if r.success])
-        health_monitoring_added = len([r for r in self.results if r.health_monitoring_added])
+        health_monitoring_added = len(
+            [r for r in self.results if r.health_monitoring_added]
+        )
         syntax_fixed = len([r for r in self.results if r.syntax_valid])
-        
+
         success_rate = (successful_modules / total_modules) * 100
         health_monitoring_rate = (health_monitoring_added / total_modules) * 100
         syntax_rate = (syntax_fixed / total_modules) * 100
-        
+
         report = f"""
 Beast Mode Health Monitoring Implementation Report
 ================================================
@@ -367,37 +388,45 @@ Syntax Rate: {syntax_rate:.1f}%
 
 Module Details:
 """
-        
+
         for result in self.results:
             status = "✅" if result.success else "❌"
             report += f"  {status} {result.module_name}: Health monitoring enhanced"
             if result.error_message:
                 report += f" (Error: {result.error_message})"
             report += "\n"
-        
+
         return report
 
 
 def main():
     """Main function"""
     implementer = BeastModeHealthMonitoring()
-    
+
     # Run beast mode
     results = implementer.run_beast_mode_health_monitoring(max_workers=6)
-    
+
     # Generate report
     report = implementer.generate_report()
     print(report)
-    
+
     # Save report
     with open("beast_mode_health_monitoring_report.txt", "w") as f:
         f.write(report)
-    
+
     # Git sync
     try:
-        subprocess.run(['git', 'add', '.'], check=True)
-        subprocess.run(['git', 'commit', '-m', 'Beast Mode Health Monitoring Implementation: 0/59 -> Target achieved'], check=True)
-        subprocess.run(['git', 'push'], check=True)
+        subprocess.run(["git", "add", "."], check=True)
+        subprocess.run(
+            [
+                "git",
+                "commit",
+                "-m",
+                "Beast Mode Health Monitoring Implementation: 0/59 -> Target achieved",
+            ],
+            check=True,
+        )
+        subprocess.run(["git", "push"], check=True)
         logger.info("Git sync completed")
     except Exception as e:
         logger.error(f"Git sync failed: {e}")

@@ -34,7 +34,9 @@ except ImportError:
     sys.exit(1)
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -43,7 +45,9 @@ class CIActivityModelGenerator:
     CI/CD integration for activity model generation.
     """
 
-    def __init__(self, output_dir: str = "ci_activity_models", config_file: Optional[str] = None):
+    def __init__(
+        self, output_dir: str = "ci_activity_models", config_file: Optional[str] = None
+    ):
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(exist_ok=True)
 
@@ -116,7 +120,11 @@ class CIActivityModelGenerator:
         """
         # Use provided values or fall back to config
         source_paths = source_paths or self.config["source_paths"]
-        include_round_trip = include_round_trip if include_round_trip is not None else self.config["include_round_trip"]
+        include_round_trip = (
+            include_round_trip
+            if include_round_trip is not None
+            else self.config["include_round_trip"]
+        )
 
         start_time = time.time()
 
@@ -126,7 +134,9 @@ class CIActivityModelGenerator:
         try:
             # Run generation
             logger.info("🎨 Starting CI/CD activity model generation...")
-            results = self.integration.generate_activity_models(source_paths=source_paths, include_round_trip=include_round_trip)
+            results = self.integration.generate_activity_models(
+                source_paths=source_paths, include_round_trip=include_round_trip
+            )
 
             # Add CI/CD metadata
             results["ci_metadata"] = {
@@ -206,9 +216,15 @@ class CIActivityModelGenerator:
         # Create CI summary
         summary = {
             "status": "success" if results.get("success", True) else "failed",
-            "models_generated": results.get("performance_metrics", {}).get("models_generated", 0),
-            "errors_count": results.get("performance_metrics", {}).get("errors_count", 0),
-            "success_rate": results.get("performance_metrics", {}).get("success_rate", 0),
+            "models_generated": results.get("performance_metrics", {}).get(
+                "models_generated", 0
+            ),
+            "errors_count": results.get("performance_metrics", {}).get(
+                "errors_count", 0
+            ),
+            "success_rate": results.get("performance_metrics", {}).get(
+                "success_rate", 0
+            ),
             "total_time": results.get("performance_metrics", {}).get("total_time", 0),
             "timestamp": time.time(),
         }
@@ -225,15 +241,21 @@ class CIActivityModelGenerator:
 
         performance = results.get("performance_metrics", {})
         total_time = performance.get("total_time", 0)
-        error_rate = performance.get("errors_count", 0) / max(len(results.get("source_paths", [])), 1)
+        error_rate = performance.get("errors_count", 0) / max(
+            len(results.get("source_paths", [])), 1
+        )
 
         # Check time threshold
         if total_time > self.config["performance_threshold"]:
-            logger.warning(f"⚠️  Performance threshold exceeded: {total_time:.2f}s > {self.config['performance_threshold']}s")
+            logger.warning(
+                f"⚠️  Performance threshold exceeded: {total_time:.2f}s > {self.config['performance_threshold']}s"
+            )
 
         # Check error threshold
         if error_rate > self.config["error_threshold"]:
-            logger.warning(f"⚠️  Error threshold exceeded: {error_rate:.1%} > {self.config['error_threshold']:.1%}")
+            logger.warning(
+                f"⚠️  Error threshold exceeded: {error_rate:.1%} > {self.config['error_threshold']:.1%}"
+            )
 
         logger.info("✅ Performance validation completed")
 
@@ -245,7 +267,11 @@ class CIActivityModelGenerator:
         artifacts_to_keep = self.config["artifacts_to_keep"]
 
         # List all artifact directories
-        artifact_dirs = [d for d in self.output_dir.parent.iterdir() if d.is_dir() and d.name.startswith("ci_activity_models")]
+        artifact_dirs = [
+            d
+            for d in self.output_dir.parent.iterdir()
+            if d.is_dir() and d.name.startswith("ci_activity_models")
+        ]
 
         if len(artifact_dirs) > artifacts_to_keep:
             # Sort by modification time and remove old ones
@@ -273,14 +299,18 @@ class CIActivityModelGenerator:
         # CI Environment
         report_lines.append("🔧 CI/CD ENVIRONMENT")
         report_lines.append(f"  Environment: {results['ci_metadata']['environment']}")
-        report_lines.append(f"  Timestamp: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(results['ci_metadata']['timestamp']))}")
+        report_lines.append(
+            f"  Timestamp: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(results['ci_metadata']['timestamp']))}"
+        )
         report_lines.append("")
 
         # Generation Results
         if "performance_metrics" in results:
             perf = results["performance_metrics"]
             report_lines.append("📊 GENERATION RESULTS")
-            report_lines.append(f"  Models Generated: {perf.get('models_generated', 0)}")
+            report_lines.append(
+                f"  Models Generated: {perf.get('models_generated', 0)}"
+            )
             report_lines.append(f"  Errors: {perf.get('errors_count', 0)}")
             report_lines.append(f"  Success Rate: {perf.get('success_rate', 0):.1%}")
             report_lines.append(f"  Total Time: {perf.get('total_time', 0):.2f}s")
@@ -291,13 +321,21 @@ class CIActivityModelGenerator:
         if "performance_metrics" in results:
             perf = results["performance_metrics"]
             total_time = perf.get("total_time", 0)
-            error_rate = perf.get("errors_count", 0) / max(len(results.get("source_paths", [])), 1)
+            error_rate = perf.get("errors_count", 0) / max(
+                len(results.get("source_paths", [])), 1
+            )
 
-            time_status = "✅" if total_time <= self.config["performance_threshold"] else "⚠️"
+            time_status = (
+                "✅" if total_time <= self.config["performance_threshold"] else "⚠️"
+            )
             error_status = "✅" if error_rate <= self.config["error_threshold"] else "⚠️"
 
-            report_lines.append(f"  {time_status} Time: {total_time:.2f}s (threshold: {self.config['performance_threshold']}s)")
-            report_lines.append(f"  {error_status} Error Rate: {error_rate:.1%} (threshold: {self.config['error_threshold']:.1%})")
+            report_lines.append(
+                f"  {time_status} Time: {total_time:.2f}s (threshold: {self.config['performance_threshold']}s)"
+            )
+            report_lines.append(
+                f"  {error_status} Error Rate: {error_rate:.1%} (threshold: {self.config['error_threshold']:.1%})"
+            )
         else:
             report_lines.append("  ❌ No performance metrics available")
         report_lines.append("")
@@ -305,7 +343,9 @@ class CIActivityModelGenerator:
         # Artifacts
         report_lines.append("🗂️  ARTIFACTS")
         report_lines.append(f"  Output Directory: {self.output_dir.absolute()}")
-        report_lines.append(f"  Results File: {self.output_dir / 'generation_results.json'}")
+        report_lines.append(
+            f"  Results File: {self.output_dir / 'generation_results.json'}"
+        )
         report_lines.append(f"  Summary File: {self.output_dir / 'ci_summary.json'}")
         report_lines.append(f"  CI Metadata: {self.output_dir / 'ci_metadata.json'}")
         report_lines.append("")
@@ -313,10 +353,16 @@ class CIActivityModelGenerator:
         # Next Steps
         report_lines.append("🚀 NEXT STEPS")
         if results.get("success", True):
-            report_lines.append("  ✅ Generation successful - artifacts available for deployment")
-            report_lines.append("  📊 Review performance metrics and adjust thresholds if needed")
+            report_lines.append(
+                "  ✅ Generation successful - artifacts available for deployment"
+            )
+            report_lines.append(
+                "  📊 Review performance metrics and adjust thresholds if needed"
+            )
         else:
-            report_lines.append("  ❌ Generation failed - review error logs and fix issues")
+            report_lines.append(
+                "  ❌ Generation failed - review error logs and fix issues"
+            )
             report_lines.append("  🔧 Check configuration and dependencies")
         report_lines.append("")
 
@@ -371,7 +417,9 @@ Examples:
 
     parser.add_argument("--config", help="Configuration file path")
 
-    parser.add_argument("--source-paths", nargs="+", help="Override source paths from config")
+    parser.add_argument(
+        "--source-paths", nargs="+", help="Override source paths from config"
+    )
 
     parser.add_argument("--output-dir", help="Override output directory from config")
 
@@ -392,10 +440,14 @@ Examples:
     try:
         # Initialize CI generator
         output_dir = args.output_dir or "ci_activity_models"
-        generator = CIActivityModelGenerator(output_dir=output_dir, config_file=args.config)
+        generator = CIActivityModelGenerator(
+            output_dir=output_dir, config_file=args.config
+        )
 
         # Run generation
-        results = generator.run_generation(source_paths=args.source_paths, include_round_trip=not args.no_round_trip)
+        results = generator.run_generation(
+            source_paths=args.source_paths, include_round_trip=not args.no_round_trip
+        )
 
         # Display CI report
         if "ci_report" in results:

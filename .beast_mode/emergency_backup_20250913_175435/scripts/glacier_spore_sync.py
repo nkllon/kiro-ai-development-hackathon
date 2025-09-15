@@ -85,7 +85,9 @@ class ChangeLog:
     spore_id: str
     version_id: str
     change_type: str
-    change_timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    change_timestamp: datetime = field(
+        default_factory=lambda: datetime.now(timezone.utc)
+    )
 
     # Change details
     field_name: Optional[str] = None
@@ -231,11 +233,21 @@ class GlacierSporeSyncDatabase:
             )
 
             # Create indexes
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_versions_parent ON model_versions (parent_version_id)")
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_versions_hash ON model_versions (model_hash)")
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_changes_spore ON change_log (spore_id)")
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_changes_version ON change_log (version_id)")
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_sync_status ON sync_operations (status)")
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_versions_parent ON model_versions (parent_version_id)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_versions_hash ON model_versions (model_hash)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_changes_spore ON change_log (spore_id)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_changes_version ON change_log (version_id)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_sync_status ON sync_operations (status)"
+            )
 
             conn.commit()
 
@@ -273,7 +285,11 @@ class GlacierSporeSyncDatabase:
                             version.change_count,
                             json.dumps(list(version.change_types)),
                             version.sync_status,
-                            (version.last_sync.isoformat() if version.last_sync else None),
+                            (
+                                version.last_sync.isoformat()
+                                if version.last_sync
+                                else None
+                            ),
                             json.dumps(version.conflicts),
                         ),
                     )
@@ -347,7 +363,11 @@ class GlacierSporeSyncDatabase:
                             operation.conflict_resolution.value,
                             operation.status,
                             operation.started_at.isoformat(),
-                            (operation.completed_at.isoformat() if operation.completed_at else None),
+                            (
+                                operation.completed_at.isoformat()
+                                if operation.completed_at
+                                else None
+                            ),
                             operation.conflicts_found,
                             operation.conflicts_resolved,
                             operation.changes_applied,
@@ -383,7 +403,9 @@ class ModelSynchronizer:
         self.running = True
 
         for i in range(num_workers):
-            worker = threading.Thread(target=self._sync_worker_loop, args=(i,), daemon=True)
+            worker = threading.Thread(
+                target=self._sync_worker_loop, args=(i,), daemon=True
+            )
             worker.start()
             self.worker_threads.append(worker)
 
@@ -617,7 +639,9 @@ class GlacierSporeSyncSystem:
             )
 
             self.database.store_model_version(current_version)
-            logging.info(f"Initialized current model version: {current_version.version_id}")
+            logging.info(
+                f"Initialized current model version: {current_version.version_id}"
+            )
 
         except Exception as e:
             logging.error(f"Failed to initialize current model version: {e}")
@@ -656,7 +680,9 @@ class GlacierSporeSyncSystem:
                     field_name=change.get("field_name"),
                     old_value=change.get("old_value"),
                     new_value=change.get("new_value"),
-                    change_hash=hashlib.sha256(json.dumps(change, sort_keys=True).encode()).hexdigest(),
+                    change_hash=hashlib.sha256(
+                        json.dumps(change, sort_keys=True).encode()
+                    ).hexdigest(),
                 )
                 self.database.store_change_log(change_log)
 
@@ -715,7 +741,9 @@ class GlacierSporeSyncSystem:
         try:
             with self.database._get_connection() as conn:
                 cursor = conn.cursor()
-                cursor.execute("SELECT * FROM sync_operations WHERE sync_id = ?", (sync_id,))
+                cursor.execute(
+                    "SELECT * FROM sync_operations WHERE sync_id = ?", (sync_id,)
+                )
                 row = cursor.fetchone()
 
                 if row:
@@ -725,10 +753,16 @@ class GlacierSporeSyncSystem:
                         source_version_id=row["source_version_id"],
                         target_version_id=row["target_version_id"],
                         strategy=SyncStrategy(row["strategy"]),
-                        conflict_resolution=ConflictResolution(row["conflict_resolution"]),
+                        conflict_resolution=ConflictResolution(
+                            row["conflict_resolution"]
+                        ),
                         status=row["status"],
                         started_at=datetime.fromisoformat(row["started_at"]),
-                        completed_at=(datetime.fromisoformat(row["completed_at"]) if row["completed_at"] else None),
+                        completed_at=(
+                            datetime.fromisoformat(row["completed_at"])
+                            if row["completed_at"]
+                            else None
+                        ),
                         conflicts_found=row["conflicts_found"],
                         conflicts_resolved=row["conflicts_resolved"],
                         changes_applied=row["changes_applied"],

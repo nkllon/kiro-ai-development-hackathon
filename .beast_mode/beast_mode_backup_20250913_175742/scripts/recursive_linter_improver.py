@@ -137,14 +137,20 @@ class RecursiveLinterImprover:
             print(f"   Current Issues: {current_issues['total_issues']}")
 
             # Apply improvements
-            improvements_made = self._apply_improvement_iteration(target_file, current_issues, iteration)
+            improvements_made = self._apply_improvement_iteration(
+                target_file, current_issues, iteration
+            )
 
             # Reassess quality
             new_issues = self._assess_file_quality(target_file)
 
             # Calculate improvement metrics
-            improvement_score = self._calculate_improvement_score(current_issues, new_issues)
-            convergence_metric = self._calculate_convergence_metric(current_issues, new_issues)
+            improvement_score = self._calculate_improvement_score(
+                current_issues, new_issues
+            )
+            convergence_metric = self._calculate_convergence_metric(
+                current_issues, new_issues
+            )
 
             # Record iteration
             iteration_record = ImprovementIteration(
@@ -168,23 +174,31 @@ class RecursiveLinterImprover:
 
             # Check for convergence
             if convergence_metric < convergence_threshold:
-                print(f"🎯 Convergence Reached! Metric: {convergence_metric:.4f}< {convergence_threshold}")
+                print(
+                    f"🎯 Convergence Reached! Metric: {convergence_metric:.4f}< {convergence_threshold}"
+                )
                 session.convergence_reached = True
                 break
 
             # Check for diminishing returns
             if improvement_score < 0.01:  # Less than 1% improvement
-                print(f"📉 Diminishing Returns Detected. Improvement: {improvement_score:.2%}")
+                print(
+                    f"📉 Diminishing Returns Detected. Improvement: {improvement_score:.2%}"
+                )
                 break
 
             current_issues = new_issues
 
         # Final session summary
         if initial_issues["total_issues"] > 0:
-            session.final_quality_score = 1.0 - (new_issues["total_issues"] / initial_issues["total_issues"])
+            session.final_quality_score = 1.0 - (
+                new_issues["total_issues"] / initial_issues["total_issues"]
+            )
         else:
             session.final_quality_score = 1.0  # Perfect score if no initial issues
-        session.total_improvement = initial_issues["total_issues"] - new_issues["total_issues"]
+        session.total_improvement = (
+            initial_issues["total_issues"] - new_issues["total_issues"]
+        )
 
         print(f"🏁 Recursive Improvement Session Complete!")
         print(f"   Final Quality Score: {session.final_quality_score:.2%}")
@@ -198,7 +212,9 @@ class RecursiveLinterImprover:
     def _generate_session_id(self) -> str:
         """Generate a unique session ID"""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        random_suffix = hashlib.md5(f"{timestamp}{os.getpid()}".encode()).hexdigest()[:8]
+        random_suffix = hashlib.md5(f"{timestamp}{os.getpid()}".encode()).hexdigest()[
+            :8
+        ]
         return f"recursive_improvement_{timestamp}_{random_suffix}"
 
     def _assess_file_quality(self, file_path: str) -> dict[str, Any]:
@@ -246,7 +262,9 @@ class RecursiveLinterImprover:
                 "suggestion_count": 0,
             }
 
-    def _apply_improvement_iteration(self, target_file: str, current_issues: dict[str, Any], iteration: int) -> list[str]:
+    def _apply_improvement_iteration(
+        self, target_file: str, current_issues: dict[str, Any], iteration: int
+    ) -> list[str]:
         """Apply one iteration of improvements"""
         improvements_made = []
 
@@ -264,12 +282,16 @@ class RecursiveLinterImprover:
 
         # Apply the selected strategy
         if strategy in self.improvement_strategies:
-            improvements = self.improvement_strategies[strategy](target_file, current_issues, iteration)
+            improvements = self.improvement_strategies[strategy](
+                target_file, current_issues, iteration
+            )
             improvements_made.extend(improvements)
 
         return improvements_made
 
-    def _improve_code_quality(self, target_file: str, current_issues: dict[str, Any], iteration: int) -> list[str]:
+    def _improve_code_quality(
+        self, target_file: str, current_issues: dict[str, Any], iteration: int
+    ) -> list[str]:
         """Improve code quality aspects"""
         improvements = []
 
@@ -307,7 +329,9 @@ class RecursiveLinterImprover:
                     lines.insert(i, "")
                     lines.insert(i, "")
                     modified = True
-                    improvements.append(f"Added blank lines before definition at {i + 1}")
+                    improvements.append(
+                        f"Added blank lines before definition at {i + 1}"
+                    )
 
         # Write back if modified
         if modified:
@@ -320,7 +344,9 @@ class RecursiveLinterImprover:
 
         return improvements
 
-    def _improve_performance(self, target_file: str, current_issues: dict[str, Any], iteration: int) -> list[str]:
+    def _improve_performance(
+        self, target_file: str, current_issues: dict[str, Any], iteration: int
+    ) -> list[str]:
         """Improve performance aspects"""
         improvements = []
 
@@ -335,7 +361,9 @@ class RecursiveLinterImprover:
         # Look for performance improvement opportunities
         if "for item in items:" in content and "list(" in content:
             # Suggest list comprehension
-            improvements.append("Performance: Consider list comprehension for better performance")
+            improvements.append(
+                "Performance: Consider list comprehension for better performance"
+            )
 
         if "import *" in content:
             # Suggest specific imports
@@ -344,7 +372,9 @@ class RecursiveLinterImprover:
         print(f"      💡 Identified {len(improvements)} performance improvements")
         return improvements
 
-    def _improve_error_handling(self, target_file: str, current_issues: dict[str, Any], iteration: int) -> list[str]:
+    def _improve_error_handling(
+        self, target_file: str, current_issues: dict[str, Any], iteration: int
+    ) -> list[str]:
         """Improve error handling"""
         improvements = []
 
@@ -358,15 +388,21 @@ class RecursiveLinterImprover:
 
         # Look for error handling improvements
         if "except:" in content:
-            improvements.append("Error Handling: Use specific exception types instead of bare except")
+            improvements.append(
+                "Error Handling: Use specific exception types instead of bare except"
+            )
 
         if "print(" in content and "error" in content.lower():
-            improvements.append("Error Handling: Consider using logging instead of print for errors")
+            improvements.append(
+                "Error Handling: Consider using logging instead of print for errors"
+            )
 
         print(f"      🛡️  Identified {len(improvements)} error handling improvements")
         return improvements
 
-    def _improve_documentation(self, target_file: str, current_issues: dict[str, Any], iteration: int) -> list[str]:
+    def _improve_documentation(
+        self, target_file: str, current_issues: dict[str, Any], iteration: int
+    ) -> list[str]:
         """Improve documentation"""
         improvements = []
 
@@ -388,7 +424,9 @@ class RecursiveLinterImprover:
         print(f"      📚 Identified {len(improvements)} documentation improvements")
         return improvements
 
-    def _improve_testing(self, target_file: str, current_issues: dict[str, Any], iteration: int) -> list[str]:
+    def _improve_testing(
+        self, target_file: str, current_issues: dict[str, Any], iteration: int
+    ) -> list[str]:
         """Improve testing coverage"""
         improvements = []
 
@@ -399,7 +437,9 @@ class RecursiveLinterImprover:
         print(f"      🧪 Identified {len(improvements)} testing improvements")
         return improvements
 
-    def _improve_architecture(self, target_file: str, current_issues: dict[str, Any], iteration: int) -> list[str]:
+    def _improve_architecture(
+        self, target_file: str, current_issues: dict[str, Any], iteration: int
+    ) -> list[str]:
         """Improve architectural patterns"""
         improvements = []
 
@@ -413,15 +453,21 @@ class RecursiveLinterImprover:
 
         # Look for architectural improvements
         if len(content.split("\n")) > 500:
-            improvements.append("Architecture: Consider breaking large file into smaller modules")
+            improvements.append(
+                "Architecture: Consider breaking large file into smaller modules"
+            )
 
         if content.count("class ") > 10:
-            improvements.append("Architecture: Consider splitting classes into separate files")
+            improvements.append(
+                "Architecture: Consider splitting classes into separate files"
+            )
 
         print(f"      🏗️  Identified {len(improvements)} architectural improvements")
         return improvements
 
-    def _calculate_improvement_score(self, before: dict[str, Any], after: dict[str, Any]) -> float:
+    def _calculate_improvement_score(
+        self, before: dict[str, Any], after: dict[str, Any]
+    ) -> float:
         """Calculate how much improvement was achieved"""
         if before["total_issues"] == 0:
             return 0.0
@@ -429,14 +475,20 @@ class RecursiveLinterImprover:
         improvement = before["total_issues"] - after["total_issues"]
         return improvement / before["total_issues"]
 
-    def _calculate_convergence_metric(self, before: dict[str, Any], after: dict[str, Any]) -> float:
+    def _calculate_convergence_metric(
+        self, before: dict[str, Any], after: dict[str, Any]
+    ) -> float:
         """Calculate convergence metric (lower = more converged)"""
         if before["total_issues"] == 0:
             return 0.0
 
-        return abs(after["total_issues"] - before["total_issues"]) / before["total_issues"]
+        return (
+            abs(after["total_issues"] - before["total_issues"]) / before["total_issues"]
+        )
 
-    def generate_improvement_report(self, session: RecursiveImprovementSession, output_file: str = None) -> str:
+    def generate_improvement_report(
+        self, session: RecursiveImprovementSession, output_file: str = None
+    ) -> str:
         """Generate a comprehensive report of the improvement session"""
         report_lines = [
             "# 🚀 Recursive Linter Improvement Report",
@@ -562,10 +614,18 @@ Examples:
         """,
     )
 
-    parser.add_argument("--demo", action="store_true", help="Run recursive self-improvement demo")
-    parser.add_argument("--improve", metavar="FILE", help="Improve a specific file recursively")
-    parser.add_argument("--analyze", metavar="FILE", help="Analyze file quality without improving")
-    parser.add_argument("--max-iterations", type=int, default=10, help="Maximum improvement iterations")
+    parser.add_argument(
+        "--demo", action="store_true", help="Run recursive self-improvement demo"
+    )
+    parser.add_argument(
+        "--improve", metavar="FILE", help="Improve a specific file recursively"
+    )
+    parser.add_argument(
+        "--analyze", metavar="FILE", help="Analyze file quality without improving"
+    )
+    parser.add_argument(
+        "--max-iterations", type=int, default=10, help="Maximum improvement iterations"
+    )
     parser.add_argument(
         "--convergence-threshold",
         type=float,

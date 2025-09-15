@@ -62,7 +62,9 @@ class AdvancedNeo4jIntegration:
 
         return credentials
 
-    def execute_cypher_query(self, query: str, credentials: dict[str, str]) -> list[dict[str, Any]]:
+    def execute_cypher_query(
+        self, query: str, credentials: dict[str, str]
+    ) -> list[dict[str, Any]]:
         """Execute Cypher query with secure credentials"""
         username = credentials.get("neo4j_username", "neo4j")
         password = credentials.get("neo4j_password", "")
@@ -142,14 +144,18 @@ class AdvancedNeo4jIntegration:
         ORDER BY size DESC
         """
         try:
-            components_results = self.execute_cypher_query(components_query, credentials)
+            components_results = self.execute_cypher_query(
+                components_query, credentials
+            )
             analysis["connected_components"] = components_results
         except Exception:
             analysis["connected_components"] = [{"note": "GDS library not available"}]
 
         return analysis
 
-    def discover_cross_domain_patterns(self, credentials: dict[str, str]) -> dict[str, Any]:
+    def discover_cross_domain_patterns(
+        self, credentials: dict[str, str]
+    ) -> dict[str, Any]:
         """Discover patterns across different domains"""
         print("🔗 Discovering cross-domain patterns...")
 
@@ -214,10 +220,14 @@ class AdvancedNeo4jIntegration:
         LIMIT 10
         """
         try:
-            performance_results = self.execute_cypher_query(performance_query, credentials)
+            performance_results = self.execute_cypher_query(
+                performance_query, credentials
+            )
             optimizations["query_performance"] = performance_results
         except Exception:
-            optimizations["query_performance"] = [{"note": "Performance monitoring not available"}]
+            optimizations["query_performance"] = [
+                {"note": "Performance monitoring not available"}
+            ]
 
         # 3. Memory usage
         memory_query = "CALL dbms.listConfig('dbms.memory') YIELD name, value"
@@ -265,7 +275,9 @@ class AdvancedNeo4jIntegration:
         if "graph_density" in analysis_data:
             for metric in analysis_data["graph_density"]:
                 structure_summary += f"- Nodes: {metric.get('col_0', 'Unknown')}\n"
-                structure_summary += f"- Relationships: {metric.get('col_1', 'Unknown')}\n"
+                structure_summary += (
+                    f"- Relationships: {metric.get('col_1', 'Unknown')}\n"
+                )
                 structure_summary += f"- Density: {metric.get('col_2', 'Unknown')}\n"
 
         with open(viz_dir / "ADVANCED_NEO4J_ANALYSIS.md", "w") as f:
@@ -296,15 +308,21 @@ class AdvancedNeo4jIntegration:
 
             # 1. Graph structure analysis
             graph_analysis = self.analyze_graph_structure(credentials)
-            print(f"✅ Graph structure analysis complete: {len(graph_analysis)} metrics")
+            print(
+                f"✅ Graph structure analysis complete: {len(graph_analysis)} metrics"
+            )
 
             # 2. Cross-domain pattern discovery
             cross_domain_patterns = self.discover_cross_domain_patterns(credentials)
-            print(f"✅ Cross-domain pattern discovery complete: {len(cross_domain_patterns)} pattern types")
+            print(
+                f"✅ Cross-domain pattern discovery complete: {len(cross_domain_patterns)} pattern types"
+            )
 
             # 3. Performance optimization analysis
             performance_analysis = self.optimize_neo4j_performance(credentials)
-            print(f"✅ Performance analysis complete: {len(performance_analysis)} optimization areas")
+            print(
+                f"✅ Performance analysis complete: {len(performance_analysis)} optimization areas"
+            )
 
             # 4. Create advanced visualizations
             all_analysis = {

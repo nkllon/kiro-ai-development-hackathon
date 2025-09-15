@@ -12,13 +12,16 @@ from dataclasses import dataclass
 from enum import Enum
 
 from ..models import (
-    SpecToCodeModel, SystematicSuperiorityModel, 
-    MultiAgentCollaborationModel, ProductionInfrastructureModel
+    SpecToCodeModel,
+    SystematicSuperiorityModel,
+    MultiAgentCollaborationModel,
+    ProductionInfrastructureModel,
 )
 
 
 class DemoPhase(Enum):
     """Phase of the hackathon demo"""
+
     HOOK = "hook"  # 30-second value proposition
     CORE_DEMO = "core_demo"  # Core feature demonstrations
     DEEP_DIVE = "deep_dive"  # Optional deep-dive modes
@@ -28,6 +31,7 @@ class DemoPhase(Enum):
 @dataclass
 class DemoContent:
     """Content for demo presentation"""
+
     phase: DemoPhase
     title: str
     content: str
@@ -39,22 +43,22 @@ class DemoContent:
 class HackathonDemoView:
     """
     Main demo view for 3-minute judge experience.
-    
+
     Provides clear value proposition, core demonstrations, and next steps
     for hackathon judges to quickly evaluate the submission's merit.
     """
-    
+
     def __init__(self):
         self.demo_phases: List[DemoPhase] = [
             DemoPhase.HOOK,
             DemoPhase.CORE_DEMO,
             DemoPhase.DEEP_DIVE,
-            DemoPhase.NEXT_STEPS
+            DemoPhase.NEXT_STEPS,
         ]
         self.current_phase = DemoPhase.HOOK
         self.demo_start_time = None
         self.interaction_log: List[Dict[str, Any]] = []
-    
+
     def render_30_second_hook(self) -> DemoContent:
         """Render 30-second value proposition hook"""
         content = """
@@ -76,7 +80,7 @@ class HackathonDemoView:
 
 **Ready to see systematic development in action?**
         """
-        
+
         return DemoContent(
             phase=DemoPhase.HOOK,
             title="30-Second Value Proposition",
@@ -85,19 +89,19 @@ class HackathonDemoView:
             interactive_elements=[
                 "Live systematic score display",
                 "Real-time requirements input",
-                "Interactive progress indicators"
+                "Interactive progress indicators",
             ],
             success_metrics={
                 "judge_engagement": "high",
                 "value_clarity": "crystal_clear",
-                "time_efficiency": "30_seconds_exact"
-            }
+                "time_efficiency": "30_seconds_exact",
+            },
         )
-    
+
     def render_core_demonstrations(self) -> List[DemoContent]:
         """Render core feature demonstrations (45 seconds each)"""
         demonstrations = []
-        
+
         # 1. Spec-to-Code Transformation
         spec_demo = DemoContent(
             phase=DemoPhase.CORE_DEMO,
@@ -126,16 +130,16 @@ class HackathonDemoView:
                 "Live code generation display",
                 "Real-time quality metrics",
                 "Interactive spec input",
-                "Progress visualization"
+                "Progress visualization",
             ],
             success_metrics={
                 "transformation_speed": "40_seconds",
                 "code_quality": "production_ready",
-                "systematic_score": 0.908
-            }
+                "systematic_score": 0.908,
+            },
         )
         demonstrations.append(spec_demo)
-        
+
         # 2. Systematic Superiority Demonstration
         superiority_demo = DemoContent(
             phase=DemoPhase.CORE_DEMO,
@@ -167,16 +171,16 @@ class HackathonDemoView:
                 "Side-by-side comparison charts",
                 "Real-time metrics display",
                 "Statistical validation proof",
-                "ROI calculator"
+                "ROI calculator",
             ],
             success_metrics={
                 "improvement_factor": 1.204,
                 "statistical_significance": 0.95,
-                "roi_percentage": 300
-            }
+                "roi_percentage": 300,
+            },
         )
         demonstrations.append(superiority_demo)
-        
+
         # 3. Multi-Agent Collaboration
         agent_demo = DemoContent(
             phase=DemoPhase.CORE_DEMO,
@@ -206,17 +210,17 @@ class HackathonDemoView:
                 "Live agent coordination display",
                 "Conflict resolution visualization",
                 "Human input amplification",
-                "Learning pattern generation"
+                "Learning pattern generation",
             ],
             success_metrics={
                 "agent_coordination": 0.92,
                 "conflict_resolution": 0.88,
                 "human_amplification": 0.95,
-                "synergy_score": 0.91
-            }
+                "synergy_score": 0.91,
+            },
         )
         demonstrations.append(agent_demo)
-        
+
         # 4. Production Infrastructure
         infra_demo = DemoContent(
             phase=DemoPhase.CORE_DEMO,
@@ -249,19 +253,19 @@ class HackathonDemoView:
                 "Live GKE dashboard",
                 "Real-time cost monitoring",
                 "Security scan results",
-                "Performance metrics"
+                "Performance metrics",
             ],
             success_metrics={
                 "uptime": "99.9%",
                 "cost_savings": "25%",
                 "security_score": 95,
-                "performance_score": 0.92
-            }
+                "performance_score": 0.92,
+            },
         )
         demonstrations.append(infra_demo)
-        
+
         return demonstrations
-    
+
     def render_deep_dive_options(self) -> DemoContent:
         """Render optional deep-dive modes for interested judges"""
         content = """
@@ -293,7 +297,7 @@ class HackathonDemoView:
 
 **Choose Your Adventure**: Interactive exploration based on judge interests
         """
-        
+
         return DemoContent(
             phase=DemoPhase.DEEP_DIVE,
             title="Deep Dive Options",
@@ -303,15 +307,15 @@ class HackathonDemoView:
                 "Interactive menu selection",
                 "Customizable demo paths",
                 "Expert Q&A mode",
-                "Hands-on exploration"
+                "Hands-on exploration",
             ],
             success_metrics={
                 "judge_engagement": "high",
                 "customization": "full",
-                "expertise_demonstration": "comprehensive"
-            }
+                "expertise_demonstration": "comprehensive",
+            },
         )
-    
+
     def render_next_steps(self) -> DemoContent:
         """Render clear next steps for hands-on evaluation"""
         content = """
@@ -337,7 +341,7 @@ class HackathonDemoView:
 
 **Ready to Experience Systematic Development?**
         """
-        
+
         return DemoContent(
             phase=DemoPhase.NEXT_STEPS,
             title="Next Steps for Evaluation",
@@ -347,34 +351,34 @@ class HackathonDemoView:
                 "Repository links",
                 "Demo commands",
                 "Documentation access",
-                "Contact information"
+                "Contact information",
             ],
             success_metrics={
                 "clarity": "crystal_clear",
                 "actionability": "immediate",
-                "completeness": "comprehensive"
-            }
+                "completeness": "comprehensive",
+            },
         )
-    
+
     def render_complete_demo(self) -> Dict[str, Any]:
         """Render complete 3-minute demo experience"""
         demo_start = datetime.now()
         self.demo_start_time = demo_start
-        
+
         # Generate complete demo content
         hook = self.render_30_second_hook()
         core_demos = self.render_core_demonstrations()
         deep_dive = self.render_deep_dive_options()
         next_steps = self.render_next_steps()
-        
+
         # Calculate total duration
         total_duration = (
-            hook.duration_seconds + 
-            sum(demo.duration_seconds for demo in core_demos) +
-            deep_dive.duration_seconds + 
-            next_steps.duration_seconds
+            hook.duration_seconds
+            + sum(demo.duration_seconds for demo in core_demos)
+            + deep_dive.duration_seconds
+            + next_steps.duration_seconds
         )
-        
+
         # Generate demo summary
         demo_summary = {
             "demo_id": f"DEMO-{demo_start.strftime('%Y%m%d%H%M%S')}",
@@ -384,70 +388,74 @@ class HackathonDemoView:
                 "hook": {
                     "title": hook.title,
                     "duration": hook.duration_seconds,
-                    "success_metrics": hook.success_metrics
+                    "success_metrics": hook.success_metrics,
                 },
                 "core_demonstrations": [
                     {
                         "title": demo.title,
                         "duration": demo.duration_seconds,
-                        "success_metrics": demo.success_metrics
-                    } for demo in core_demos
+                        "success_metrics": demo.success_metrics,
+                    }
+                    for demo in core_demos
                 ],
                 "deep_dive": {
                     "title": deep_dive.title,
                     "duration": deep_dive.duration_seconds,
-                    "success_metrics": deep_dive.success_metrics
+                    "success_metrics": deep_dive.success_metrics,
                 },
                 "next_steps": {
                     "title": next_steps.title,
                     "duration": next_steps.duration_seconds,
-                    "success_metrics": next_steps.success_metrics
-                }
+                    "success_metrics": next_steps.success_metrics,
+                },
             },
             "interactive_elements": [
-                element for demo in [hook] + core_demos + [deep_dive, next_steps]
+                element
+                for demo in [hook] + core_demos + [deep_dive, next_steps]
                 for element in demo.interactive_elements
             ],
             "overall_success_metrics": {
                 "time_efficiency": "3_minutes_exact",
                 "judge_engagement": "high",
                 "value_demonstration": "comprehensive",
-                "actionability": "immediate"
+                "actionability": "immediate",
             },
-            "created_at": demo_start.isoformat()
+            "created_at": demo_start.isoformat(),
         }
-        
+
         return demo_summary
-    
+
     def log_interaction(self, interaction_type: str, details: Dict[str, Any]) -> None:
         """Log judge interactions for analysis"""
         interaction = {
             "timestamp": datetime.now().isoformat(),
             "interaction_type": interaction_type,
             "details": details,
-            "demo_phase": self.current_phase.value
+            "demo_phase": self.current_phase.value,
         }
-        
+
         self.interaction_log.append(interaction)
-    
+
     def get_demo_analytics(self) -> Dict[str, Any]:
         """Get analytics on demo performance"""
         if not self.interaction_log:
             return {"message": "No interactions logged yet"}
-        
+
         # Analyze interactions
         interaction_types = [log["interaction_type"] for log in self.interaction_log]
-        interaction_counts = {t: interaction_types.count(t) for t in set(interaction_types)}
-        
+        interaction_counts = {
+            t: interaction_types.count(t) for t in set(interaction_types)
+        }
+
         # Calculate engagement metrics
         total_interactions = len(self.interaction_log)
         unique_interaction_types = len(set(interaction_types))
-        
+
         return {
             "total_interactions": total_interactions,
             "unique_interaction_types": unique_interaction_types,
             "interaction_breakdown": interaction_counts,
             "engagement_score": min(total_interactions / 10, 1.0),  # Normalized to 0-1
             "demo_effectiveness": "high" if total_interactions > 5 else "medium",
-            "interaction_log": self.interaction_log
+            "interaction_log": self.interaction_log,
         }

@@ -1,4 +1,4 @@
-#!/bin/bash
+set -euo pipefail#!/bin/bash
 
 # Beast Mode Self-Refactoring Recording Controls
 

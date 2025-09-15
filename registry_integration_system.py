@@ -11,9 +11,10 @@ import re
 import json
 from pathlib import Path
 
+
 class RegistryIntegrationSystem:
     """System for implementing registry integration in modules."""
-    
+
     def __init__(self):
         self.modules_needing_registry = []
         self.registry_template = '''
@@ -111,109 +112,115 @@ class RegistryIntegrationSystem:
         """Check if this module is registered with the registry."""
         return getattr(self, '_registry_registered', False)
 '''
-    
+
     def scan_modules_needing_registry(self, directory="src"):
         """Scan for modules that need registry integration."""
         print("🔍 Scanning for modules needing registry integration...")
-        
+
         for root, dirs, files in os.walk(directory):
             for file in files:
-                if file.endswith('.py'):
+                if file.endswith(".py"):
                     file_path = os.path.join(root, file)
                     if self._needs_registry_integration(file_path):
                         self.modules_needing_registry.append(file_path)
-        
-        print(f"Found {len(self.modules_needing_registry)} modules needing registry integration")
-    
+
+        print(
+            f"Found {len(self.modules_needing_registry)} modules needing registry integration"
+        )
+
     def _needs_registry_integration(self, file_path):
         """Check if a module needs registry integration."""
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path, "r") as f:
                 content = f.read()
-            
+
             # Check if it's a ReflectiveModule
-            if 'ReflectiveModule' not in content:
+            if "ReflectiveModule" not in content:
                 return False
-            
+
             # Check if it already has registry integration
-            if 'get_module_info' in content and 'get_capabilities' in content:
+            if "get_module_info" in content and "get_capabilities" in content:
                 return False
-            
+
             return True
-        
+
         except Exception as e:
             print(f"Error checking {file_path}: {e}")
             return False
-    
+
     def implement_registry_integration(self):
         """Implement registry integration in all modules that need it."""
         print("📋 Implementing registry integration...")
-        
+
         for file_path in self.modules_needing_registry:
             self._implement_registry_in_file(file_path)
-    
+
     def _implement_registry_in_file(self, file_path):
         """Implement registry integration in a specific file."""
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path, "r") as f:
                 content = f.read()
-            
+
             # Check if it's already implemented
-            if 'get_module_info' in content:
+            if "get_module_info" in content:
                 return
-            
+
             # Find the class definition
-            class_pattern = r'^class (\w+)\(ReflectiveModule\):'
+            class_pattern = r"^class (\w+)\(ReflectiveModule\):"
             match = re.search(class_pattern, content, re.MULTILINE)
-            
+
             if not match:
                 return
-            
+
             class_name = match.group(1)
-            
+
             # Find the __init__ method
-            init_pattern = rf'def __init__\(self[^)]*\):'
+            init_pattern = rf"def __init__\(self[^)]*\):"
             init_match = re.search(init_pattern, content, re.MULTILINE)
-            
+
             if not init_match:
                 return
-            
+
             # Add registry integration initialization to __init__
             init_end = init_match.end()
-            init_content = content[init_match.start():init_end]
-            
+            init_content = content[init_match.start() : init_end]
+
             # Add registry integration initialization
-            if 'self.register_with_registry()' not in init_content:
-                new_init = init_content.rstrip() + '\n        self.register_with_registry()\n'
+            if "self.register_with_registry()" not in init_content:
+                new_init = (
+                    init_content.rstrip() + "\n        self.register_with_registry()\n"
+                )
                 content = content.replace(init_content, new_init)
-            
+
             # Add registry integration methods
             # Find the end of the class (next class or end of file)
-            next_class_pattern = r'^class \w+\(ReflectiveModule\):'
-            next_class_match = re.search(next_class_pattern, content[init_end:], re.MULTILINE)
-            
+            next_class_pattern = r"^class \w+\(ReflectiveModule\):"
+            next_class_match = re.search(
+                next_class_pattern, content[init_end:], re.MULTILINE
+            )
+
             if next_class_match:
                 insert_pos = init_end + next_class_match.start()
             else:
                 insert_pos = len(content)
-            
+
             # Insert registry integration methods
             registry_methods = self.registry_template.format(class_name=class_name)
             content = content[:insert_pos] + registry_methods + content[insert_pos:]
-            
+
             # Write the updated content
-            with open(file_path, 'w') as f:
+            with open(file_path, "w") as f:
                 f.write(content)
-            
+
             print(f"  ✅ Implemented registry integration in {file_path}")
-        
+
         except Exception as e:
             print(f"  ❌ Error implementing registry integration in {file_path}: {e}")
-    
+
     def create_registry_dashboard(self):
         """Create a registry monitoring dashboard."""
         print("📊 Creating registry monitoring dashboard...")
-        
+
         dashboard_content = '''"""
 Registry Monitoring Dashboard
 
@@ -315,30 +322,34 @@ def main():
 if __name__ == "__main__":
     main()
 '''
-        
-        with open('src/registry_dashboard.py', 'w') as f:
+
+        with open("src/registry_dashboard.py", "w") as f:
             f.write(dashboard_content)
-        
+
         print("  Created registry monitoring dashboard: src/registry_dashboard.py")
+
 
 def main():
     """Main registry integration implementation."""
     print("🚀 Starting Registry Integration System...")
     print("Implementing registry integration for 11 modules...")
-    
+
     system = RegistryIntegrationSystem()
-    
+
     # Step 1: Scan for modules needing registry integration
     system.scan_modules_needing_registry()
-    
+
     # Step 2: Implement registry integration
     system.implement_registry_integration()
-    
+
     # Step 3: Create registry dashboard
     system.create_registry_dashboard()
-    
+
     print(f"\n✅ Registry integration complete!")
-    print(f"Implemented registry integration in {len(system.modules_needing_registry)} modules")
+    print(
+        f"Implemented registry integration in {len(system.modules_needing_registry)} modules"
+    )
+
 
 if __name__ == "__main__":
     main()

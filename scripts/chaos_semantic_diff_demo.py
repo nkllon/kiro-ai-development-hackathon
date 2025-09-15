@@ -65,7 +65,9 @@ except ImportError as e:
         def __init__(self):
             self.chaos_level = "MAXIMUM"
 
-        def diff_spores(self, old_spore: GlacierSpore, new_spore: GlacierSpore) -> list[dict[str, Any]]:
+        def diff_spores(
+            self, old_spore: GlacierSpore, new_spore: GlacierSpore
+        ) -> list[dict[str, Any]]:
             """Create semantic diffs between spores with MAXIMUM CHAOS"""
             print(f"🔥 CHAOS DIFFING: {old_spore.spore_type} vs {new_spore.spore_type}")
 
@@ -353,7 +355,9 @@ def run_chaos_diffing(chaos_spores: dict[str, GlacierSpore]):
     for i, type1 in enumerate(spore_types):
         for j, type2 in enumerate(spore_types):
             if i != j:  # Don't diff with self
-                print(f"🔥 CHAOS DIFF #{total_diffs + 1}: {type1.upper()} vs {type2.upper()}")
+                print(
+                    f"🔥 CHAOS DIFF #{total_diffs + 1}: {type1.upper()} vs {type2.upper()}"
+                )
                 print("-" * 40)
 
                 spore1 = chaos_spores[type1]
@@ -366,7 +370,9 @@ def run_chaos_diffing(chaos_spores: dict[str, GlacierSpore]):
                         print(f"   📊 Found {len(diffs)} semantic differences:")
                         for diff in diffs:
                             print(f"      • {diff.change_type}: {diff.field_path}")
-                            print(f"        Impact: {diff.impact_score:.2f}, Breaking: {diff.is_breaking_change}")
+                            print(
+                                f"        Impact: {diff.impact_score:.2f}, Breaking: {diff.is_breaking_change}"
+                            )
                             chaos_score += diff.impact_score
                     else:
                         print("   ✅ No differences found (boring!)")
@@ -386,7 +392,9 @@ def run_chaos_diffing(chaos_spores: dict[str, GlacierSpore]):
     print("=" * 60)
     print(f"📊 Total Diffs: {total_diffs}")
     print(f"🔥 Chaos Score: {final_chaos_score:.2f}")
-    print(f"🚨 Chaos Level: {'MAXIMUM' if final_chaos_score > 0.8 else 'HIGH' if final_chaos_score > 0.6 else 'MEDIUM' if final_chaos_score > 0.4 else 'LOW'}")
+    print(
+        f"🚨 Chaos Level: {'MAXIMUM' if final_chaos_score > 0.8 else 'HIGH' if final_chaos_score > 0.6 else 'MEDIUM' if final_chaos_score > 0.4 else 'LOW'}"
+    )
 
     if final_chaos_score > 0.8:
         print("🎉 SUCCESS: MAXIMUM CHAOS ACHIEVED!")
@@ -419,10 +427,16 @@ def test_ghostbusters_investigation(chaos_files: dict[str, str]):
                 print(f"🔍 Investigating {file_type.upper()} chaos file...")
                 result = processor.investigate_file(temp_path)
 
-                print(f"   👻 Ghost Class: {result['ghost_classification'].ghost_class.value}")
+                print(
+                    f"   👻 Ghost Class: {result['ghost_classification'].ghost_class.value}"
+                )
                 print(f"   📡 PKE Energy: {result['pke_reading'].energy_level.value}")
-                print(f"   ⚡ Proton Status: {result['proton_pack_status'].stream_mode.value}")
-                print(f"   ✅ Containment: {'Success' if result['proton_pack_status'].containment_success else 'Failed'}")
+                print(
+                    f"   ⚡ Proton Status: {result['proton_pack_status'].stream_mode.value}"
+                )
+                print(
+                    f"   ✅ Containment: {'Success' if result['proton_pack_status'].containment_success else 'Failed'}"
+                )
                 print()
 
         print("👻 Ghostbusters investigation complete!")

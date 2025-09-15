@@ -10,7 +10,13 @@ from dataclasses import dataclass
 from ..exceptions import DevPostAuthenticationError, DevPostAPIError
 import sys
 import os
-from src.devpost_integration.reflective_module import ReflectiveModule, register_module, ModuleHealth, ModuleStatus, ModuleCapability
+from src.devpost_integration.reflective_module import (
+    ReflectiveModule,
+    register_module,
+    ModuleHealth,
+    ModuleStatus,
+    ModuleCapability,
+)
 import logging
 from ..api.client import DevPostAPIClient
 from ..api.client import DevPostAPIClient

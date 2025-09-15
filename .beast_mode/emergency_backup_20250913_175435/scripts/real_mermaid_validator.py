@@ -35,13 +35,17 @@ def validate_mermaid_syntax():
     unclosed_pattern = r"```mermaid\s*\n(.*?)(?=\n```|\n---|\n##|\n###|\n$|\n\n)"
     unclosed_blocks = re.findall(unclosed_pattern, content, re.DOTALL)
     if len(unclosed_blocks) != len(mermaid_blocks):
-        issues.append(f"❌ Mismatch: {len(unclosed_blocks)} unclosed vs {len(mermaid_blocks)} closed")
+        issues.append(
+            f"❌ Mismatch: {len(unclosed_blocks)} unclosed vs {len(mermaid_blocks)} closed"
+        )
 
     # Look for malformed blocks
     malformed_pattern = r"```mermaid\s*\n.*?\n```\s*\n```"
     malformed_blocks = re.findall(malformed_pattern, content, re.DOTALL)
     if malformed_blocks:
-        issues.append(f"❌ Found {len(malformed_blocks)} malformed blocks with extra backticks")
+        issues.append(
+            f"❌ Found {len(malformed_blocks)} malformed blocks with extra backticks"
+        )
 
     if issues:
         print("\n🚨 SYNTAX ISSUES FOUND:")

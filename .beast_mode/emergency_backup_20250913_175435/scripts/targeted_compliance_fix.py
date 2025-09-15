@@ -12,16 +12,17 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 
+
 class TargetedComplianceFixer:
     def __init__(self):
         self.project_root = Path.cwd()
         self.fixes_applied = 0
         self.errors_fixed = 0
-        
+
     def create_syntax_validation_gate(self):
         """Create syntax validation gate for all scripts"""
         print("🔧 Creating syntax validation gate...")
-        
+
         validation_script = '''#!/usr/bin/env python3
 """
 Syntax validation gate for automated scripts
@@ -69,50 +70,50 @@ if __name__ == "__main__":
         print(f"✅ All {total} Python files have valid syntax")
         sys.exit(0)
 '''
-        
-        with open('scripts/validate_syntax.py', 'w') as f:
+
+        with open("scripts/validate_syntax.py", "w") as f:
             f.write(validation_script)
-        
-        os.chmod('scripts/validate_syntax.py', 0o755)
+
+        os.chmod("scripts/validate_syntax.py", 0o755)
         print("   ✅ Syntax validation gate created")
         self.fixes_applied += 1
-        
+
     def fix_import_paths_in_scripts(self):
         """Fix import path issues in compliance scripts"""
         print("🔧 Fixing import path issues...")
-        
+
         script_fixes = {
-            'scripts/pre_commit_compliance_check.py': {
-                'old': 'from scripts.continuous_compliance_monitor import',
-                'new': 'from .continuous_compliance_monitor import'
+            "scripts/pre_commit_compliance_check.py": {
+                "old": "from scripts.continuous_compliance_monitor import",
+                "new": "from .continuous_compliance_monitor import",
             },
-            'scripts/automated_compliance_enforcement.py': {
-                'old': 'from scripts.',
-                'new': 'from .'
-            }
+            "scripts/automated_compliance_enforcement.py": {
+                "old": "from scripts.",
+                "new": "from .",
+            },
         }
-        
+
         for script_path, fixes in script_fixes.items():
             if os.path.exists(script_path):
                 try:
-                    with open(script_path, 'r') as f:
+                    with open(script_path, "r") as f:
                         content = f.read()
-                    
-                    content = content.replace(fixes['old'], fixes['new'])
-                    
-                    with open(script_path, 'w') as f:
+
+                    content = content.replace(fixes["old"], fixes["new"])
+
+                    with open(script_path, "w") as f:
                         f.write(content)
-                    
+
                     print(f"   ✅ Fixed imports in {script_path}")
                     self.fixes_applied += 1
-                    
+
                 except Exception as e:
                     print(f"   ❌ Failed to fix {script_path}: {e}")
-    
+
     def create_honest_compliance_reporter(self):
         """Create honest compliance reporting system"""
         print("🔧 Creating honest compliance reporter...")
-        
+
         honest_reporter = '''#!/usr/bin/env python3
 """
 Honest Compliance Reporter
@@ -191,18 +192,18 @@ if __name__ == "__main__":
     with open('.beast_mode/honest_compliance_report.json', 'w') as f:
         json.dump(report, f, indent=2)
 '''
-        
-        with open('scripts/honest_compliance_reporter.py', 'w') as f:
+
+        with open("scripts/honest_compliance_reporter.py", "w") as f:
             f.write(honest_reporter)
-        
-        os.chmod('scripts/honest_compliance_reporter.py', 0o755)
+
+        os.chmod("scripts/honest_compliance_reporter.py", 0o755)
         print("   ✅ Honest compliance reporter created")
         self.fixes_applied += 1
-        
+
     def create_rollback_mechanism(self):
         """Create rollback mechanism for failed changes"""
         print("🔧 Creating rollback mechanism...")
-        
+
         rollback_script = '''#!/usr/bin/env python3
 """
 Rollback mechanism for failed automated changes
@@ -307,32 +308,34 @@ if __name__ == "__main__":
         # Create current backup
         manager.create_backup("Before targeted fixes")
 '''
-        
-        with open('scripts/rollback_manager.py', 'w') as f:
+
+        with open("scripts/rollback_manager.py", "w") as f:
             f.write(rollback_script)
-        
-        os.chmod('scripts/rollback_manager.py', 0o755)
+
+        os.chmod("scripts/rollback_manager.py", 0o755)
         print("   ✅ Rollback mechanism created")
         self.fixes_applied += 1
-        
+
     def run_targeted_fixes(self):
         """Run all targeted fixes"""
         print("🎯 TARGETED COMPLIANCE FIXES")
         print("=" * 40)
-        
+
         # Create backup before fixes
         print("📦 Creating backup before fixes...")
         os.system("python3 scripts/rollback_manager.py")
-        
+
         self.create_syntax_validation_gate()
         self.fix_import_paths_in_scripts()
         self.create_honest_compliance_reporter()
         self.create_rollback_mechanism()
-        
+
         print("\n🎯 TARGETED FIX SUMMARY")
         print("=" * 25)
         print(f"Fixes Applied: {self.fixes_applied}")
-        print(f"Status: {'🟡 PARTIALLY FIXED' if self.fixes_applied > 0 else '🔴 CRITICAL'}")
+        print(
+            f"Status: {'🟡 PARTIALLY FIXED' if self.fixes_applied > 0 else '🔴 CRITICAL'}"
+        )
         print()
         print("✅ IMPLEMENTED:")
         print("   • Syntax validation gate")
@@ -344,15 +347,18 @@ if __name__ == "__main__":
         print("   • Fix 179 syntax errors manually")
         print("   • Validate all compliance scripts")
         print("   • Re-run comprehensive testing")
-        
+
         return self.fixes_applied > 0
+
 
 if __name__ == "__main__":
     fixer = TargetedComplianceFixer()
     success = fixer.run_targeted_fixes()
-    
+
     if success:
-        print("\n✅ Targeted fixes applied. Manual intervention still required for syntax errors.")
+        print(
+            "\n✅ Targeted fixes applied. Manual intervention still required for syntax errors."
+        )
         sys.exit(0)
     else:
         print("\n❌ Targeted fixes failed.")

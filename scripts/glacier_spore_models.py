@@ -72,18 +72,24 @@ class ModelVersion(BaseModel):
 
     version_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     model_hash: str = Field(..., description="SHA256 hash of model content")
-    parent_version_id: Optional[str] = Field(None, description="Parent version for lineage")
+    parent_version_id: Optional[str] = Field(
+        None, description="Parent version for lineage"
+    )
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     created_by: str = Field(default="system", description="Who created this version")
 
     # Change metadata - semantic tracking
     change_count: int = Field(default=0, ge=0, description="Number of semantic changes")
-    change_types: set[str] = Field(default_factory=set, description="Types of semantic changes")
+    change_types: set[str] = Field(
+        default_factory=set, description="Types of semantic changes"
+    )
 
     # Synchronization metadata - semantic state
     sync_status: str = Field(default="pending", description="Current sync state")
     last_sync: Optional[datetime] = Field(None, description="Last synchronization time")
-    conflicts: list[str] = Field(default_factory=list, description="Semantic conflicts found")
+    conflicts: list[str] = Field(
+        default_factory=list, description="Semantic conflicts found"
+    )
 
     # Computed fields - derived from model state
     @computed_field
@@ -150,9 +156,15 @@ class Dimension(BaseModel):
     description: str = Field(..., min_length=1, description="Semantic description")
 
     # Dimensional properties - semantic constraints
-    cardinality: Optional[int] = Field(None, ge=0, description="Number of distinct semantic values")
-    range_min: Optional[Union[int, float, str]] = Field(None, description="Minimum semantic value")
-    range_max: Optional[Union[int, float, str]] = Field(None, description="Maximum semantic value")
+    cardinality: Optional[int] = Field(
+        None, ge=0, description="Number of distinct semantic values"
+    )
+    range_min: Optional[Union[int, float, str]] = Field(
+        None, description="Minimum semantic value"
+    )
+    range_max: Optional[Union[int, float, str]] = Field(
+        None, description="Maximum semantic value"
+    )
     unit: Optional[str] = Field(None, description="Semantic unit of measurement")
 
     # Metadata - semantic context
@@ -161,8 +173,12 @@ class Dimension(BaseModel):
     tags: set[str] = Field(default_factory=set, description="Semantic tags")
 
     # Relationships - semantic connections
-    parent_dimension_id: Optional[str] = Field(None, description="Parent dimension for hierarchy")
-    child_dimension_ids: list[str] = Field(default_factory=list, description="Child dimensions")
+    parent_dimension_id: Optional[str] = Field(
+        None, description="Parent dimension for hierarchy"
+    )
+    child_dimension_ids: list[str] = Field(
+        default_factory=list, description="Child dimensions"
+    )
 
     # Usage tracking - semantic usage patterns
     usage_count: int = Field(default=0, ge=0, description="Number of semantic usages")
@@ -191,7 +207,9 @@ class Dimension(BaseModel):
             complexity += min(self.cardinality / 100, 1.0)
 
         if self.range_min is not None and self.range_max is not None:
-            if isinstance(self.range_min, (int, float)) and isinstance(self.range_max, (int, float)):
+            if isinstance(self.range_min, (int, float)) and isinstance(
+                self.range_max, (int, float)
+            ):
                 range_size = abs(self.range_max - self.range_min)
                 complexity += min(range_size / 1000, 1.0)
 
@@ -218,7 +236,9 @@ class Dimension(BaseModel):
             min_val = values["range_min"]
             max_val = values["range_max"]
             if min_val is not None and max_val is not None:
-                if isinstance(min_val, (int, float)) and isinstance(max_val, (int, float)):
+                if isinstance(min_val, (int, float)) and isinstance(
+                    max_val, (int, float)
+                ):
                     if min_val >= max_val:
                         msg = "Range min must be less than range max"
                         raise ValueError(msg)
@@ -237,16 +257,24 @@ class SemanticDiff(BaseModel):
     change_type: str = Field(..., description="Type of semantic change")
 
     # Semantic change details
-    old_semantic_value: Optional[Any] = Field(None, description="Previous semantic meaning")
+    old_semantic_value: Optional[Any] = Field(
+        None, description="Previous semantic meaning"
+    )
     new_semantic_value: Optional[Any] = Field(None, description="New semantic meaning")
 
     # Semantic context
-    semantic_context: dict[str, Any] = Field(default_factory=dict, description="Semantic context")
-    impact_score: float = Field(default=0.0, ge=0.0, le=1.0, description="Semantic impact score")
+    semantic_context: dict[str, Any] = Field(
+        default_factory=dict, description="Semantic context"
+    )
+    impact_score: float = Field(
+        default=0.0, ge=0.0, le=1.0, description="Semantic impact score"
+    )
 
     # Metadata
     detected_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    confidence: float = Field(default=1.0, ge=0.0, le=1.0, description="Confidence in semantic change")
+    confidence: float = Field(
+        default=1.0, ge=0.0, le=1.0, description="Confidence in semantic change"
+    )
 
     # Computed fields
     @computed_field
@@ -259,7 +287,9 @@ class SemanticDiff(BaseModel):
     @property
     def semantic_summary(self) -> str:
         """Human-readable semantic change summary"""
-        return f"{self.change_type} at {self.field_path}: {self.impact_score:.2f} impact"
+        return (
+            f"{self.change_type} at {self.field_path}: {self.impact_score:.2f} impact"
+        )
 
     class Config:
         json_encoders = {datetime: lambda v: v.isoformat()}
@@ -275,38 +305,64 @@ class GlacierSpore(BaseModel):
     content_hash: str = Field(..., description="SHA256 hash of semantic content")
 
     # Self-describing schemata - semantic definitions
-    embedded_schema: dict[str, Any] = Field(..., description="Schema that describes this spore semantically")
-    content_schema: dict[str, Any] = Field(..., description="Schema for semantic content")
+    embedded_schema: dict[str, Any] = Field(
+        ..., description="Schema that describes this spore semantically"
+    )
+    content_schema: dict[str, Any] = Field(
+        ..., description="Schema for semantic content"
+    )
 
     # Content and data - semantic payload
     content: dict[str, Any] = Field(..., description="Semantic content payload")
-    metadata: dict[str, Any] = Field(default_factory=dict, description="Semantic metadata")
+    metadata: dict[str, Any] = Field(
+        default_factory=dict, description="Semantic metadata"
+    )
 
     # Dimensional vectors - semantic dimensions
-    dimensions: dict[str, Any] = Field(default_factory=dict, description="Semantic dimension values")
-    dimension_refs: list[str] = Field(default_factory=list, description="Referenced semantic dimensions")
+    dimensions: dict[str, Any] = Field(
+        default_factory=dict, description="Semantic dimension values"
+    )
+    dimension_refs: list[str] = Field(
+        default_factory=list, description="Referenced semantic dimensions"
+    )
 
     # Processing instructions - semantic behavior
-    processing_triggers: list[str] = Field(default_factory=list, description="Semantic processing triggers")
-    processor_requirements: dict[str, Any] = Field(default_factory=dict, description="Semantic processor requirements")
+    processing_triggers: list[str] = Field(
+        default_factory=list, description="Semantic processing triggers"
+    )
+    processor_requirements: dict[str, Any] = Field(
+        default_factory=dict, description="Semantic processor requirements"
+    )
 
     # Relationships - semantic connections
-    parent_spore_id: Optional[str] = Field(None, description="Parent spore for semantic hierarchy")
+    parent_spore_id: Optional[str] = Field(
+        None, description="Parent spore for semantic hierarchy"
+    )
     child_spore_ids: list[str] = Field(default_factory=list, description="Child spores")
-    related_spore_ids: list[str] = Field(default_factory=list, description="Semantically related spores")
+    related_spore_ids: list[str] = Field(
+        default_factory=list, description="Semantically related spores"
+    )
 
     # Temporal metadata - semantic timing
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     expires_at: Optional[datetime] = Field(None, description="Semantic expiration time")
-    last_processed: Optional[datetime] = Field(None, description="Last semantic processing")
+    last_processed: Optional[datetime] = Field(
+        None, description="Last semantic processing"
+    )
 
     # Processing state - semantic state
     processed: bool = Field(default=False, description="Semantic processing status")
-    processing_errors: list[str] = Field(default_factory=list, description="Semantic processing errors")
-    processing_history: list[dict[str, Any]] = Field(default_factory=list, description="Semantic processing history")
+    processing_errors: list[str] = Field(
+        default_factory=list, description="Semantic processing errors"
+    )
+    processing_history: list[dict[str, Any]] = Field(
+        default_factory=list, description="Semantic processing history"
+    )
 
     # Integrity and validation - semantic integrity
-    validation_checksum: Optional[str] = Field(None, description="Semantic validation checksum")
+    validation_checksum: Optional[str] = Field(
+        None, description="Semantic validation checksum"
+    )
     signature: Optional[str] = Field(None, description="Semantic signature")
 
     # Computed fields - derived semantic properties
@@ -480,17 +536,25 @@ class ChangeLog(BaseModel):
     spore_id: str = Field(..., description="ID of affected spore")
     version_id: str = Field(..., description="Model version containing this change")
     change_type: str = Field(..., description="Type of semantic change")
-    change_timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    change_timestamp: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc)
+    )
 
     # Semantic change details
     field_name: Optional[str] = Field(None, description="Semantic field that changed")
-    old_semantic_value: Optional[Any] = Field(None, description="Previous semantic value")
+    old_semantic_value: Optional[Any] = Field(
+        None, description="Previous semantic value"
+    )
     new_semantic_value: Optional[Any] = Field(None, description="New semantic value")
 
     # Semantic metadata
     change_hash: str = Field(default="", description="Hash of semantic change")
-    conflict_resolved: bool = Field(default=False, description="Semantic conflict resolution status")
-    resolution_method: Optional[str] = Field(None, description="Method used to resolve semantic conflict")
+    conflict_resolved: bool = Field(
+        default=False, description="Semantic conflict resolution status"
+    )
+    resolution_method: Optional[str] = Field(
+        None, description="Method used to resolve semantic conflict"
+    )
 
     # Computed fields
     @computed_field
@@ -521,7 +585,9 @@ class SyncOperation(BaseModel):
 
     # Semantic operation details
     strategy: SyncStrategy = Field(..., description="Semantic sync strategy")
-    conflict_resolution: ConflictResolution = Field(..., description="Semantic conflict resolution")
+    conflict_resolution: ConflictResolution = Field(
+        ..., description="Semantic conflict resolution"
+    )
 
     # Status - semantic state
     status: str = Field(default="pending", description="Current semantic status")
@@ -529,9 +595,15 @@ class SyncOperation(BaseModel):
     completed_at: Optional[datetime] = Field(None, description="Completion time")
 
     # Results - semantic outcomes
-    conflicts_found: int = Field(default=0, ge=0, description="Semantic conflicts found")
-    conflicts_resolved: int = Field(default=0, ge=0, description="Semantic conflicts resolved")
-    changes_applied: int = Field(default=0, ge=0, description="Semantic changes applied")
+    conflicts_found: int = Field(
+        default=0, ge=0, description="Semantic conflicts found"
+    )
+    conflicts_resolved: int = Field(
+        default=0, ge=0, description="Semantic conflicts resolved"
+    )
+    changes_applied: int = Field(
+        default=0, ge=0, description="Semantic changes applied"
+    )
     errors: list[str] = Field(default_factory=list, description="Semantic errors")
 
     # Computed fields

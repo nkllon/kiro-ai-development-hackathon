@@ -1,4 +1,4 @@
-#!/bin/bash
+set -euo pipefail#!/bin/bash
 # Beast Mode Network Bootstrap - Single macOS Box Deployment
 
 echo "🧬 Beast Mode Network Bootstrap"

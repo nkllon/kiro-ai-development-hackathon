@@ -41,15 +41,25 @@ def show_system_status():
         # Code Generation Status
         if "code_generation_status" in status:
             cg_status = status["code_generation_status"]
-            print(f"Code Generation: {cg_status.get('code_generation_status', 'Unknown')}")
-            print(f"Vocabulary Alignment: {cg_status.get('vocabulary_alignment_status', 'Unknown')}")
-            print(f"Duplication Cleaning: {cg_status.get('duplication_cleaning_status', 'Unknown')}")
+            print(
+                f"Code Generation: {cg_status.get('code_generation_status', 'Unknown')}"
+            )
+            print(
+                f"Vocabulary Alignment: {cg_status.get('vocabulary_alignment_status', 'Unknown')}"
+            )
+            print(
+                f"Duplication Cleaning: {cg_status.get('duplication_cleaning_status', 'Unknown')}"
+            )
 
         # ArtifactForge Status
         if "artifact_forge_status" in status:
             af_status = status["artifact_forge_status"]
-            print(f"ArtifactForge Integration: {af_status.get('integration_health', 'Unknown')}")
-            print(f"Enhanced Parser: {'✅ Available' if af_status.get('enhanced_parser_available', False) else '❌ Not Available'}")
+            print(
+                f"ArtifactForge Integration: {af_status.get('integration_health', 'Unknown')}"
+            )
+            print(
+                f"Enhanced Parser: {'✅ Available' if af_status.get('enhanced_parser_available', False) else '❌ Not Available'}"
+            )
 
         # Workflow Analysis Status
         if "workflow_analysis_status" in status:
@@ -60,7 +70,9 @@ def show_system_status():
                 print(f"Analysis Capabilities: {', '.join(capabilities)}")
 
         # System Health Summary
-        print(f"\nSystem Health: {'✅ Healthy' if overall_status == 'healthy' else '❌ Unhealthy'}")
+        print(
+            f"\nSystem Health: {'✅ Healthy' if overall_status == 'healthy' else '❌ Unhealthy'}"
+        )
 
     except Exception as e:
         print(f"❌ Failed to get system status: {e}")
@@ -148,7 +160,9 @@ def compare_files(file1: str, file2: str) -> Dict[str, Any]:
             comparison["equivalence"] = "LIKELY_DIFFERENT"
             comparison["confidence"] = "30%"
 
-        print(f"✅ Comparison Complete: {comparison['equivalence']} ({comparison['confidence']} confidence)")
+        print(
+            f"✅ Comparison Complete: {comparison['equivalence']} ({comparison['confidence']} confidence)"
+        )
         return comparison
 
     except Exception as e:
@@ -192,20 +206,30 @@ Documentation:
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # Status command
-    status_parser = subparsers.add_parser("status", help="Show system status and capabilities")
+    status_parser = subparsers.add_parser(
+        "status", help="Show system status and capabilities"
+    )
 
     # Reverse engineering command
-    reverse_parser = subparsers.add_parser("reverse", help="Reverse engineer a Python file")
+    reverse_parser = subparsers.add_parser(
+        "reverse", help="Reverse engineer a Python file"
+    )
     reverse_parser.add_argument("source_file", help="Source Python file to analyze")
     reverse_parser.add_argument("--output", "-o", help="Output JSON file for the model")
 
     # Forward engineering command
-    forward_parser = subparsers.add_parser("forward", help="Forward engineer from a source file")
-    forward_parser.add_argument("source_file", help="Source Python file to analyze and regenerate")
+    forward_parser = subparsers.add_parser(
+        "forward", help="Forward engineer from a source file"
+    )
+    forward_parser.add_argument(
+        "source_file", help="Source Python file to analyze and regenerate"
+    )
     forward_parser.add_argument("output_file", help="Output Python file")
 
     # Round-trip command
-    round_trip_parser = subparsers.add_parser("round-trip", help="Complete round-trip workflow")
+    round_trip_parser = subparsers.add_parser(
+        "round-trip", help="Complete round-trip workflow"
+    )
     round_trip_parser.add_argument("source_file", help="Source Python file")
     round_trip_parser.add_argument("output_file", help="Output Python file")
 

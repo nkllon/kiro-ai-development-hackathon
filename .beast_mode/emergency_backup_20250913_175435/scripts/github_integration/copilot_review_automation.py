@@ -77,8 +77,12 @@ class CopilotReviewAutomation:
                 return {
                     "success": True,
                     "review_found": copilot_review is not None,
-                    "review_state": (copilot_review.get("state") if copilot_review else None),
-                    "review_body": (copilot_review.get("body") if copilot_review else None),
+                    "review_state": (
+                        copilot_review.get("state") if copilot_review else None
+                    ),
+                    "review_body": (
+                        copilot_review.get("body") if copilot_review else None
+                    ),
                 }
             return {"success": False, "error": result["error"]}
 

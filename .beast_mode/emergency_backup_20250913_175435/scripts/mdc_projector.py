@@ -52,7 +52,9 @@ class MDCProjector:
             always_apply = yaml_data.get("alwaysApply")
             if always_apply is None:
                 results["issues"].append("Missing 'alwaysApply' field")
-                results["recommendations"].append("Add alwaysApply: true for universal rules, false for selective")
+                results["recommendations"].append(
+                    "Add alwaysApply: true for universal rules, false for selective"
+                )
             elif not isinstance(always_apply, bool):
                 results["issues"].append("'alwaysApply' must be boolean")
                 results["recommendations"].append("Use true/false, not quoted strings")
@@ -61,10 +63,16 @@ class MDCProjector:
             if always_apply is False:
                 if "globs" not in yaml_data:
                     results["issues"].append("'globs' required when alwaysApply: false")
-                    results["recommendations"].append("Add globs field with file patterns")
+                    results["recommendations"].append(
+                        "Add globs field with file patterns"
+                    )
                 elif not yaml_data["globs"]:
-                    results["issues"].append("'globs' cannot be empty when alwaysApply: false")
-                    results["recommendations"].append("Specify file patterns like '*.py,*.js,*.ts'")
+                    results["issues"].append(
+                        "'globs' cannot be empty when alwaysApply: false"
+                    )
+                    results["recommendations"].append(
+                        "Specify file patterns like '*.py,*.js,*.ts'"
+                    )
 
             # Check for model compliance
             if "globs" in yaml_data:
@@ -74,10 +82,14 @@ class MDCProjector:
                     pass
                 elif isinstance(globs, list):
                     # Standard YAML format - might need conversion
-                    results["recommendations"].append("Consider converting to Cursor format: comma-separated string")
+                    results["recommendations"].append(
+                        "Consider converting to Cursor format: comma-separated string"
+                    )
                 else:
                     results["issues"].append("Invalid globs format")
-                    results["recommendations"].append("Use comma-separated string or YAML list")
+                    results["recommendations"].append(
+                        "Use comma-separated string or YAML list"
+                    )
 
             # Check for required fields
             required_fields = ["description"]
@@ -120,7 +132,9 @@ class MDCProjector:
         fixes = {}
 
         # Fix alwaysApply if needed
-        if "alwaysApply" in yaml_data and not isinstance(yaml_data["alwaysApply"], bool):
+        if "alwaysApply" in yaml_data and not isinstance(
+            yaml_data["alwaysApply"], bool
+        ):
             if yaml_data["alwaysApply"] == "true":
                 fixes["alwaysApply"] = True
             elif yaml_data["alwaysApply"] == "false":
@@ -132,11 +146,15 @@ class MDCProjector:
             if isinstance(globs, list):
                 # Convert YAML list to Cursor format
                 fixes["globs"] = ",".join(globs)
-            elif isinstance(globs, str) and globs.startswith("[") and globs.endswith("]"):
+            elif (
+                isinstance(globs, str) and globs.startswith("[") and globs.endswith("]")
+            ):
                 # Handle string that looks like a list
                 try:
                     # Simple list parsing
-                    items = [item.strip().strip("\"'") for item in globs[1:-1].split(",")]
+                    items = [
+                        item.strip().strip("\"'") for item in globs[1:-1].split(",")
+                    ]
                     fixes["globs"] = ",".join(items)
                 except Exception:
                     pass

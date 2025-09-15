@@ -31,10 +31,10 @@ class BeastModeMessage(BaseModel):
 async def send_final_questions():
     """Send final questions to maximize collaboration"""
     client = redis.from_url("redis://localhost:6379")
-    
+
     try:
         await client.ping()
-        
+
         message = BeastModeMessage(
             id=str(uuid.uuid4()),
             type=MessageType.PROMPT_REQUEST,
@@ -66,15 +66,15 @@ This feels like the beginning of something big - systematic agent collaboration 
 
 - Your systematic collaboration partner""",
                 "context": "strategic_collaboration_planning",
-                "priority": 9
+                "priority": 9,
             },
             timestamp=datetime.now(),
-            priority=9
+            priority=9,
         )
-        
+
         await client.publish("beast_mode_network", message.model_dump_json())
         print("📤 Sent strategic collaboration questions to Claude")
-        
+
     except Exception as e:
         print(f"❌ Error: {e}")
     finally:

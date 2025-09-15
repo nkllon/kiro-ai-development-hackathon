@@ -12,7 +12,12 @@ Purpose: Provide core CLI generation functionality
 
 from typing import Dict, Any, List
 from datetime import datetime
-from .reflective_module import ReflectiveModule, ModuleHealth, ModuleStatus, ModuleCapability
+from .reflective_module import (
+    ReflectiveModule,
+    ModuleHealth,
+    ModuleStatus,
+    ModuleCapability,
+)
 
 
 class CLIGeneratorCore(ReflectiveModule):
@@ -27,11 +32,11 @@ class CLIGeneratorCore(ReflectiveModule):
     def get_module_info(self) -> Dict[str, Any]:
         """Get module information."""
         return {
-            'module_id': self.module_id,
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': self.dependencies,
-            'capabilities': [cap.value for cap in self.capabilities]
+            "module_id": self.module_id,
+            "interface_type": self.__class__.__name__,
+            "version": "1.0.0",
+            "dependencies": self.dependencies,
+            "capabilities": [cap.value for cap in self.capabilities],
         }
 
     def get_capabilities(self) -> List[ModuleCapability]:
@@ -45,13 +50,13 @@ class CLIGeneratorCore(ReflectiveModule):
             status=ModuleStatus.HEALTHY,
             health_score=100.0,
             issues=[],
-            last_check=datetime.now()
+            last_check=datetime.now(),
         )
 
     def graceful_degradation(self):
         """Perform graceful degradation."""
         return {
-            'success': True,
-            'degraded_capabilities': [],
-            'remaining_capabilities': [cap.value for cap in self.capabilities]
+            "success": True,
+            "degraded_capabilities": [],
+            "remaining_capabilities": [cap.value for cap in self.capabilities],
         }

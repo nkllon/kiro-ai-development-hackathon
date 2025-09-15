@@ -685,7 +685,7 @@ async def command_center():
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     connected_clients.append(websocket)
-    
+
     try:
         while True:
             await websocket.receive_text()
@@ -700,7 +700,7 @@ async def main():
     print("🚨 Monitoring: Kiro Hackathon, Normas Costs, DevPost Submissions")
     print("👸 Mama Alert Threshold: $1000")
     print("🔥 Press Ctrl+C to stop")
-    
+
     config = uvicorn.Config(app, host="0.0.0.0", port=8080, log_level="info")
     server = uvicorn.Server(config)
     await server.serve()

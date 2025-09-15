@@ -73,7 +73,9 @@ class VocabularyMapper:
             "code_generation_vocab": code_generation_keys,
             "ambiguous_vocab": ambiguous_keys,
             "total_keys": len(all_keys),
-            "vocabulary_coverage": (len(reverse_engineering_keys) / len(all_keys) if all_keys else 0),
+            "vocabulary_coverage": (
+                len(reverse_engineering_keys) / len(all_keys) if all_keys else 0
+            ),
         }
 
     def _extract_all_keys(self, data: Any, prefix: str = "") -> List[str]:
@@ -131,7 +133,9 @@ class VocabularyMapper:
 
         return data
 
-    def _list_to_dict_by_name(self, components_list: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _list_to_dict_by_name(
+        self, components_list: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """Transform list of components to dict keyed by name"""
         components_dict = {}
         for component in components_list:
@@ -180,11 +184,17 @@ class VocabularyMapper:
         avg_coverage = total_coverage / model_count if model_count > 0 else 0
 
         if avg_coverage < 0.5:
-            recommendations.append("⚠️  Low vocabulary coverage - consider expanding vocabulary mapping")
+            recommendations.append(
+                "⚠️  Low vocabulary coverage - consider expanding vocabulary mapping"
+            )
         elif avg_coverage < 0.8:
-            recommendations.append("🔶 Medium vocabulary coverage - some terms may be ambiguous")
+            recommendations.append(
+                "🔶 Medium vocabulary coverage - some terms may be ambiguous"
+            )
         else:
-            recommendations.append("✅ High vocabulary coverage - systems should communicate well")
+            recommendations.append(
+                "✅ High vocabulary coverage - systems should communicate well"
+            )
 
         # Check for ambiguous terms
         all_ambiguous = set()
@@ -192,11 +202,15 @@ class VocabularyMapper:
             all_ambiguous.update(analysis["ambiguous_vocab"])
 
         if all_ambiguous:
-            recommendations.append(f"🔍 Found {len(all_ambiguous)} ambiguous terms that need qualification")
+            recommendations.append(
+                f"🔍 Found {len(all_ambiguous)} ambiguous terms that need qualification"
+            )
             recommendations.append("   Consider adding these to the vocabulary mapping")
 
         # Check data structure consistency
-        recommendations.append("🔄 Ensure reverse engineering outputs match code generation expectations")
+        recommendations.append(
+            "🔄 Ensure reverse engineering outputs match code generation expectations"
+        )
         recommendations.append("   Use vocabulary mapping to transform between formats")
 
         return recommendations
@@ -204,7 +218,9 @@ class VocabularyMapper:
 
 def main():
     """Main entry point"""
-    print("🔧 Fixing Vocabulary Alignment Between Reverse Engineering and Code Generation")
+    print(
+        "🔧 Fixing Vocabulary Alignment Between Reverse Engineering and Code Generation"
+    )
     print("=" * 80)
 
     # Initialize vocabulary mapper
@@ -222,7 +238,9 @@ def main():
         print(f"\n📁 {model_file}:")
         print(f"  Total keys: {analysis['total_keys']}")
         print(f"  Vocabulary coverage: {analysis['vocabulary_coverage']:.1%}")
-        print(f"  Reverse engineering terms: {len(analysis['reverse_engineering_vocab'])}")
+        print(
+            f"  Reverse engineering terms: {len(analysis['reverse_engineering_vocab'])}"
+        )
         print(f"  Code generation terms: {len(analysis['code_generation_vocab'])}")
         print(f"  Ambiguous terms: {len(analysis['ambiguous_vocab'])}")
 
@@ -234,7 +252,9 @@ def main():
     # Step 2: Transform a model for testing
     print(f"\n🔄 STEP 2: Testing vocabulary transformation...")
     if os.path.exists("enhanced_code_quality_model.json"):
-        transformed_model = mapper.transform_model_for_code_generation("enhanced_code_quality_model.json")
+        transformed_model = mapper.transform_model_for_code_generation(
+            "enhanced_code_quality_model.json"
+        )
 
         # Save transformed model
         output_file = "enhanced_code_quality_model_transformed.json"
@@ -246,7 +266,9 @@ def main():
         # Verify the transformation worked
         if "target_components" in transformed_model:
             print(f"  ✅ 'components' → 'target_components' transformation successful")
-            print(f"  ✅ Components now in dict format: {len(transformed_model['target_components'])}")
+            print(
+                f"  ✅ Components now in dict format: {len(transformed_model['target_components'])}"
+            )
         else:
             print(f"  ❌ Vocabulary transformation failed")
 
@@ -274,7 +296,9 @@ def main():
     print(f"\n🎉 VOCABULARY ALIGNMENT COMPLETE!")
     print(f"📋 Summary:")
     print(f"  - Analyzed {len(model_files)} model files")
-    print(f"  - Created vocabulary mapping for {len(report['vocabulary_mapping'])} terms")
+    print(
+        f"  - Created vocabulary mapping for {len(report['vocabulary_mapping'])} terms"
+    )
     print(f"  - Applied structure transformations")
     print(f"  - Generated vocabulary documentation")
 

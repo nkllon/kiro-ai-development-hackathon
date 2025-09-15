@@ -83,7 +83,9 @@ class SemanticDiffEngine:
             },
         }
 
-    def diff_spores(self, old_spore: GlacierSpore, new_spore: GlacierSpore) -> list[SemanticDiff]:
+    def diff_spores(
+        self, old_spore: GlacierSpore, new_spore: GlacierSpore
+    ) -> list[SemanticDiff]:
         """
         Create semantic diffs between two spores
 
@@ -97,15 +99,21 @@ class SemanticDiffEngine:
             raise ValueError(msg)
 
         # Content semantic diffs
-        content_diffs = self._diff_content_semantically(old_spore.content, new_spore.content)
+        content_diffs = self._diff_content_semantically(
+            old_spore.content, new_spore.content
+        )
         diffs.extend(content_diffs)
 
         # Schema semantic diffs
-        schema_diffs = self._diff_schemas_semantically(old_spore.embedded_schema, new_spore.embedded_schema)
+        schema_diffs = self._diff_schemas_semantically(
+            old_spore.embedded_schema, new_spore.embedded_schema
+        )
         diffs.extend(schema_diffs)
 
         # Dimension semantic diffs
-        dimension_diffs = self._diff_dimensions_semantically(old_spore.dimensions, new_spore.dimensions)
+        dimension_diffs = self._diff_dimensions_semantically(
+            old_spore.dimensions, new_spore.dimensions
+        )
         diffs.extend(dimension_diffs)
 
         # Relationship semantic diffs
@@ -118,11 +126,15 @@ class SemanticDiffEngine:
 
         # Add semantic context to all diffs
         for diff in diffs:
-            diff.semantic_context = self._build_semantic_context(old_spore, new_spore, diff)
+            diff.semantic_context = self._build_semantic_context(
+                old_spore, new_spore, diff
+            )
 
         return diffs
 
-    def _are_compatible_spores(self, spore1: GlacierSpore, spore2: GlacierSpore) -> bool:
+    def _are_compatible_spores(
+        self, spore1: GlacierSpore, spore2: GlacierSpore
+    ) -> bool:
         """Check if spores are semantically compatible for comparison"""
         # Same type is required
         if spore1.spore_type != spore2.spore_type:
@@ -134,7 +146,9 @@ class SemanticDiffEngine:
 
         return True
 
-    def _diff_content_semantically(self, old_content: dict[str, Any], new_content: dict[str, Any]) -> list[SemanticDiff]:
+    def _diff_content_semantically(
+        self, old_content: dict[str, Any], new_content: dict[str, Any]
+    ) -> list[SemanticDiff]:
         """Detect semantic changes in content"""
         diffs = []
 
@@ -145,7 +159,9 @@ class SemanticDiffEngine:
                     field_path=f"content.{key}",
                     change_type="field_addition",
                     new_semantic_value=new_content[key],
-                    impact_score=self._assess_field_impact(key, new_content[key], "addition"),
+                    impact_score=self._assess_field_impact(
+                        key, new_content[key], "addition"
+                    ),
                     semantic_context={
                         "change_reason": "new_field",
                         "field_category": self._categorize_field(key),
@@ -160,7 +176,9 @@ class SemanticDiffEngine:
                     field_path=f"content.{key}",
                     change_type="field_removal",
                     old_semantic_value=old_content[key],
-                    impact_score=self._assess_field_impact(key, old_content[key], "removal"),
+                    impact_score=self._assess_field_impact(
+                        key, old_content[key], "removal"
+                    ),
                     semantic_context={
                         "change_reason": "removed_field",
                         "field_category": self._categorize_field(key),
@@ -176,18 +194,24 @@ class SemanticDiffEngine:
                     change_type="field_modification",
                     old_semantic_value=old_content[key],
                     new_semantic_value=new_content[key],
-                    impact_score=self._assess_field_impact(key, new_content[key], "modification"),
+                    impact_score=self._assess_field_impact(
+                        key, new_content[key], "modification"
+                    ),
                     semantic_context={
                         "change_reason": "value_change",
                         "field_category": self._categorize_field(key),
-                        "change_magnitude": self._assess_change_magnitude(old_content[key], new_content[key]),
+                        "change_magnitude": self._assess_change_magnitude(
+                            old_content[key], new_content[key]
+                        ),
                     },
                 )
                 diffs.append(diff)
 
         return diffs
 
-    def _diff_schemas_semantically(self, old_schema: dict[str, Any], new_schema: dict[str, Any]) -> list[SemanticDiff]:
+    def _diff_schemas_semantically(
+        self, old_schema: dict[str, Any], new_schema: dict[str, Any]
+    ) -> list[SemanticDiff]:
         """Detect semantic changes in schemas"""
         diffs = []
 
@@ -217,7 +241,9 @@ class SemanticDiffEngine:
 
         return diffs
 
-    def _diff_dimensions_semantically(self, old_dims: dict[str, Any], new_dims: dict[str, Any]) -> list[SemanticDiff]:
+    def _diff_dimensions_semantically(
+        self, old_dims: dict[str, Any], new_dims: dict[str, Any]
+    ) -> list[SemanticDiff]:
         """Detect semantic changes in dimensions"""
         diffs = []
 
@@ -269,7 +295,9 @@ class SemanticDiffEngine:
 
         return diffs
 
-    def _diff_relationships_semantically(self, old_spore: GlacierSpore, new_spore: GlacierSpore) -> list[SemanticDiff]:
+    def _diff_relationships_semantically(
+        self, old_spore: GlacierSpore, new_spore: GlacierSpore
+    ) -> list[SemanticDiff]:
         """Detect semantic changes in relationships"""
         diffs = []
 
@@ -311,7 +339,9 @@ class SemanticDiffEngine:
 
         return diffs
 
-    def _diff_processing_semantically(self, old_spore: GlacierSpore, new_spore: GlacierSpore) -> list[SemanticDiff]:
+    def _diff_processing_semantically(
+        self, old_spore: GlacierSpore, new_spore: GlacierSpore
+    ) -> list[SemanticDiff]:
         """Detect semantic changes in processing instructions"""
         diffs = []
 
@@ -341,7 +371,9 @@ class SemanticDiffEngine:
 
         return diffs
 
-    def _assess_field_impact(self, field_name: str, value: Any, change_type: str) -> float:
+    def _assess_field_impact(
+        self, field_name: str, value: Any, change_type: str
+    ) -> float:
         """Assess the semantic impact of a field change"""
         base_impact = self.semantic_patterns.get(change_type, {}).get("impact", 0.5)
 
@@ -382,7 +414,9 @@ class SemanticDiffEngine:
             return "moderate"
         return "none"
 
-    def _is_breaking_schema_change(self, old_schema: dict[str, Any], new_schema: dict[str, Any]) -> bool:
+    def _is_breaking_schema_change(
+        self, old_schema: dict[str, Any], new_schema: dict[str, Any]
+    ) -> bool:
         """Check if a schema change is breaking"""
         # Check for required field removal
         old_required = old_schema.get("required", [])
@@ -410,7 +444,9 @@ class SemanticDiffEngine:
 
         return False
 
-    def _build_semantic_context(self, old_spore: GlacierSpore, new_spore: GlacierSpore, diff: SemanticDiff) -> dict[str, Any]:
+    def _build_semantic_context(
+        self, old_spore: GlacierSpore, new_spore: GlacierSpore, diff: SemanticDiff
+    ) -> dict[str, Any]:
         """Build semantic context for a diff"""
         context = {
             "spore_type": old_spore.spore_type.value,
@@ -418,7 +454,11 @@ class SemanticDiffEngine:
             "old_spore_id": old_spore.spore_id,
             "new_spore_id": new_spore.spore_id,
             "field_category": self._categorize_field(diff.field_path.split(".")[-1]),
-            "semantic_impact": ("high" if diff.impact_score > 0.7 else "medium" if diff.impact_score > 0.4 else "low"),
+            "semantic_impact": (
+                "high"
+                if diff.impact_score > 0.7
+                else "medium" if diff.impact_score > 0.4 else "low"
+            ),
         }
 
         # Add existing context if present
@@ -458,7 +498,9 @@ class SemanticDiffEngine:
         if breaking_changes > 0:
             recommendations.append("Review breaking changes before deployment")
         if high_impact > 0:
-            recommendations.append("High impact changes detected - consider staged rollout")
+            recommendations.append(
+                "High impact changes detected - consider staged rollout"
+            )
         if total_impact > 2.0:
             recommendations.append("High cumulative impact - consider feature flagging")
 

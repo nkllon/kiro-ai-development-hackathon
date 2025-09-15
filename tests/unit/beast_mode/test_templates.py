@@ -6,11 +6,6 @@ Requirements Traceability:
 Enhanced: 2025-09-14T06:30:15.461391
 """
 
-
-
-
-
-
 import pytest
 from unittest.mock import Mock, patch, MagicMock
 from datetime import datetime, timedelta
@@ -22,7 +17,7 @@ from pathlib import Path
 
 class BeastModeTestTemplate:
     """Base template for Beast Mode tests."""
-    
+
     @staticmethod
     def get_core_module_template():
         """Template for testing core modules."""
@@ -377,68 +372,76 @@ class Test{module_class}:
 
 class TestTemplateGenerator:
     """Generator for creating test files from templates."""
-    
+
     def __init__(self):
         self.templates = BeastModeTestTemplate()
-    
-    def generate_core_module_test(self, module_name: str, module_class: str, module_file: str) -> str:
+
+    def generate_core_module_test(
+        self, module_name: str, module_class: str, module_file: str
+    ) -> str:
         """Generate test file for core module."""
         template = self.templates.get_core_module_template()
         return template.format(
-            module_name=module_name,
-            module_class=module_class,
-            module_file=module_file
+            module_name=module_name, module_class=module_class, module_file=module_file
         )
-    
-    def generate_service_module_test(self, module_name: str, module_class: str, module_file: str, domain: str) -> str:
+
+    def generate_service_module_test(
+        self, module_name: str, module_class: str, module_file: str, domain: str
+    ) -> str:
         """Generate test file for service module."""
         template = self.templates.get_service_module_template()
         return template.format(
             module_name=module_name,
             module_class=module_class,
             module_file=module_file,
-            domain=domain
+            domain=domain,
         )
-    
-    def generate_validation_module_test(self, module_name: str, module_class: str, module_file: str, domain: str) -> str:
+
+    def generate_validation_module_test(
+        self, module_name: str, module_class: str, module_file: str, domain: str
+    ) -> str:
         """Generate test file for validation module."""
         template = self.templates.get_validation_module_template()
         return template.format(
             module_name=module_name,
             module_class=module_class,
             module_file=module_file,
-            domain=domain
+            domain=domain,
         )
-    
-    def generate_integration_module_test(self, module_name: str, module_class: str, module_file: str, domain: str) -> str:
+
+    def generate_integration_module_test(
+        self, module_name: str, module_class: str, module_file: str, domain: str
+    ) -> str:
         """Generate test file for integration module."""
         template = self.templates.get_integration_module_template()
         return template.format(
             module_name=module_name,
             module_class=module_class,
             module_file=module_file,
-            domain=domain
+            domain=domain,
         )
-    
-    def generate_orchestration_module_test(self, module_name: str, module_class: str, module_file: str, domain: str) -> str:
+
+    def generate_orchestration_module_test(
+        self, module_name: str, module_class: str, module_file: str, domain: str
+    ) -> str:
         """Generate test file for orchestration module."""
         template = self.templates.get_orchestration_module_template()
         return template.format(
             module_name=module_name,
             module_class=module_class,
             module_file=module_file,
-            domain=domain
+            domain=domain,
         )
 
 
 if __name__ == "__main__":
     # Example usage
     generator = TestTemplateGenerator()
-    
+
     # Generate core module test
     core_test = generator.generate_core_module_test(
         "reflective_module", "ReflectiveModule", "reflective_module"
     )
-    
+
     print("Generated core module test template:")
     print(core_test[:500] + "...")

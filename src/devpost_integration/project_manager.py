@@ -14,4 +14,4 @@ from src.rm_ddd.core.health import ModuleHealth
 logger = logging.getLogger(__name__)
 
 # Export the main classes
-__all__ = ['ProjectStatus', 'DevpostProjectManager']
+__all__ = ["ProjectStatus", "DevpostProjectManager"]

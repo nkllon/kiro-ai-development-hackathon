@@ -54,7 +54,9 @@ class MDCLinter:
 
             # Pre-process Cursor-specific MDC format to make it valid YAML
             # Convert "globs: *.py,*.js,*.ts,*.yaml" to "globs: '*.py,*.js,*.ts,*.yaml'"
-            processed_text = re.sub(r"globs:\s*([^,\n]+(?:,[^,\n]+)*)", r"globs: '\1'", frontmatter_text)
+            processed_text = re.sub(
+                r"globs:\s*([^,\n]+(?:,[^,\n]+)*)", r"globs: '\1'", frontmatter_text
+            )
 
             # Parse YAML frontmatter
             frontmatter: Any = yaml.safe_load(processed_text)
@@ -78,12 +80,16 @@ class MDCLinter:
             always_apply = frontmatter["alwaysApply"]
             if not always_apply:
                 if "globs" not in frontmatter:
-                    self.log_violation(file_path, "globs field is required when alwaysApply: false")
+                    self.log_violation(
+                        file_path, "globs field is required when alwaysApply: false"
+                    )
                     return False
 
                 globs = frontmatter["globs"]
                 if not globs:
-                    self.log_violation(file_path, "globs field cannot be empty when alwaysApply: false")
+                    self.log_violation(
+                        file_path, "globs field cannot be empty when alwaysApply: false"
+                    )
                     return False
 
                 # Support both Cursor format (comma-separated string) and standard
@@ -94,7 +100,9 @@ class MDCLinter:
                 # Validate each glob pattern
                 for glob in glob_patterns:
                     if not isinstance(glob, str) or not glob:
-                        self.log_violation(file_path, "globs must contain valid glob patterns")
+                        self.log_violation(
+                            file_path, "globs must contain valid glob patterns"
+                        )
                         return False
             elif isinstance(globs, list):
                 # Standard format: ["*.py", "*.js", "*.ts", "*.yaml"]
@@ -130,7 +138,9 @@ class MDCLinter:
                 return False
 
             # Check for proper markdown structure
-            has_headers: Any = any(line.startswith("#") for line in content_after_frontmatter)
+            has_headers: Any = any(
+                line.startswith("#") for line in content_after_frontmatter
+            )
             if not has_headers:
                 self.log_warning(file_path, "No markdown headers found in content")
 

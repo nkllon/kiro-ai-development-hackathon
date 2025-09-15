@@ -71,7 +71,9 @@ class TypeAssertionEnforcer:
         for pattern_name, pattern_info in self.patterns.items():
             if self._has_pattern(func, pattern_name):
                 if not self._has_proper_assertion(func, pattern_info):
-                    violations.append(f"Function '{func.name}' uses {pattern_name} but missing proper type assertion")
+                    violations.append(
+                        f"Function '{func.name}' uses {pattern_name} but missing proper type assertion"
+                    )
 
         return violations
 

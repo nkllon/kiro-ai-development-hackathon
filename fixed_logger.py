@@ -19,11 +19,11 @@ from pydantic import BaseModel
 # Set up proper logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
+    format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler('beast_mode_mailbox.log'),
-        logging.StreamHandler(sys.stdout)
-    ]
+        logging.FileHandler("beast_mode_mailbox.log"),
+        logging.StreamHandler(sys.stdout),
+    ],
 )
 logger = logging.getLogger(__name__)
 
@@ -50,40 +50,44 @@ async def mailbox_listener():
     """Mailbox that logs ALL messages (including my own for queue verification)"""
     client = redis.from_url("redis://localhost:6379")
     my_id = "kiro_spore_creator"
-    
+
     try:
         await client.ping()
         logger.info("📬 Beast Mode Mailbox started")
-        logger.info("👂 Listening for ALL messages (including my own for queue verification)")
-        
+        logger.info(
+            "👂 Listening for ALL messages (including my own for queue verification)"
+        )
+
         pubsub = client.pubsub()
         await pubsub.subscribe("beast_mode_network")
-        
+
         message_count = 0
         async for raw_message in pubsub.listen():
-            if raw_message['type'] == 'message':
+            if raw_message["type"] == "message":
                 message_count += 1
                 logger.info(f"📨 Message #{message_count} received")
-                
+
                 try:
-                    data = json.loads(raw_message['data'])
+                    data = json.loads(raw_message["data"])
                     message = BeastModeMessage(**data)
-                    
+
                     # Log ALL messages (including my own)
                     if message.source == my_id:
                         logger.info(f"📤 MY OWN MESSAGE (queue verification)")
                     else:
                         logger.info(f"📥 EXTERNAL MESSAGE")
-                    
+
                     logger.info(f"   From: {message.source}")
                     logger.info(f"   Type: {message.type}")
                     logger.info(f"   Target: {message.target}")
                     logger.info(f"   Priority: {message.priority}")
-                    
+
                     # Log payload content
                     for key, value in message.payload.items():
                         if isinstance(value, str) and len(value) > 200:
-                            logger.info(f"   {key}: {value[:200]}... [TRUNCATED - {len(value)} chars total]")
+                            logger.info(
+                                f"   {key}: {value[:200]}... [TRUNCATED - {len(value)} chars total]"
+                            )
                             # Save full content to file
                             filename = f"message_{message.source}_{datetime.now().strftime('%H%M%S')}.txt"
                             with open(filename, "w") as f:
@@ -95,13 +99,13 @@ async def mailbox_listener():
                             logger.info(f"💾 Full content saved to {filename}")
                         else:
                             logger.info(f"   {key}: {value}")
-                    
-                    logger.info("   " + "="*50)
-                    
+
+                    logger.info("   " + "=" * 50)
+
                 except Exception as e:
                     logger.error(f"❌ Error processing message: {e}")
                     logger.error(f"Raw data: {raw_message['data']}")
-                    
+
     except Exception as e:
         logger.error(f"❌ Connection error: {e}")
     finally:

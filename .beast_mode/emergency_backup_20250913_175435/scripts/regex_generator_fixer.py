@@ -10,7 +10,9 @@ import re
 from typing import List, Tuple
 
 
-def generate_regex_from_examples(before_examples: list[str], after_examples: list[str]) -> str:
+def generate_regex_from_examples(
+    before_examples: list[str], after_examples: list[str]
+) -> str:
     """
     Generate a regex pattern by analyzing before/after examples
 

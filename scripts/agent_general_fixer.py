@@ -20,77 +20,78 @@ from typing import Dict, List, Set
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
+
 class GeneralModuleFixer:
     """Specialized fixer for general modules and edge cases."""
-    
+
     def __init__(self):
         self.project_root = project_root
         self.fixed_modules = []
         self.failed_fixes = []
-    
+
     def fix_general_modules(self) -> Dict[str, int]:
         """Fix general missing modules and edge cases."""
         print("🔍 Agent: Fixing general modules...")
-        
+
         # General module patterns - catch-all for remaining modules
         general_modules = [
-            'src/beast_mode/core/core_core_validation.py',
-            'src/beast_mode/core/core_validation.py',
-            'src/beast_mode/core/validation.py',
-            'src/beast_mode/integration/integration_manager_services_part_1.py',
-            'src/beast_mode/integration/integration_manager_services_part_2.py',
-            'src/beast_mode/integration/integration_manager_services_part_3.py',
-            'src/beast_mode/integration/integration_manager_services_part_4.py',
-            'src/beast_mode/integration/integration_manager_services_part_5.py',
-            'src/beast_mode/integration/integration_manager_services_part_6.py',
-            'src/beast_mode/integration/integration_manager_services_part_7.py',
-            'src/beast_mode/integration/integration_manager_services_part_8.py',
-            'src/beast_mode/integration/integration_manager_services_part_9.py',
-            'src/beast_mode/integration/integration_manager_services_part_10.py',
-            'src/beast_mode/integration/integration_manager_services_part_11.py',
-            'src/beast_mode/integration/integration_manager_services_part_12.py',
-            'src/beast_mode/integration/integration_manager_services_part_13.py',
-            'src/beast_mode/integration/integration_manager_services_part_14.py',
-            'src/beast_mode/integration/integration_manager_services_part_15.py',
-            'src/beast_mode/integration/integration_manager_services_part_16.py',
-            'src/beast_mode/integration/integration_manager_services_part_17.py',
-            'src/beast_mode/integration/integration_manager_services_part_18.py',
-            'src/beast_mode/integration/integration_manager_services_part_19.py',
-            'src/beast_mode/integration/integration_manager_services_part_20.py',
-            'src/beast_mode/integration/integration_manager_services_part_21.py',
-            'src/beast_mode/integration/integration_manager_services_part_22.py',
-            'src/beast_mode/integration/integration_manager_services_part_23.py',
-            'src/beast_mode/integration/integration_manager_services_part_24.py',
-            'src/beast_mode/integration/integration_manager_services_part_25.py',
-            'src/beast_mode/integration/integration_manager_services_part_26.py',
-            'src/beast_mode/integration/integration_manager_services_part_27.py',
-            'src/beast_mode/integration/integration_manager_services_part_28.py',
-            'src/beast_mode/integration/integration_manager_services_part_29.py',
-            'src/beast_mode/integration/integration_manager_services_part_30.py',
-            'src/beast_mode/integration/integration_manager_services_part_31.py',
-            'src/beast_mode/integration/integration_manager_services_part_32.py',
-            'src/beast_mode/integration/integration_manager_services_part_33.py',
-            'src/beast_mode/integration/integration_manager_services_part_34.py',
-            'src/beast_mode/integration/integration_manager_services_part_35.py',
-            'src/beast_mode/integration/integration_manager_services_part_36.py',
-            'src/beast_mode/integration/integration_manager_services_part_37.py',
-            'src/beast_mode/integration/integration_manager_services_part_38.py',
-            'src/beast_mode/integration/integration_manager_services_part_39.py',
-            'src/beast_mode/integration/integration_manager_services_part_40.py',
-            'src/beast_mode/integration/integration_manager_services_part_41.py',
-            'src/beast_mode/integration/integration_manager_services_part_42.py',
-            'src/beast_mode/integration/integration_manager_services_part_43.py',
-            'src/beast_mode/integration/integration_manager_services_part_44.py',
-            'src/beast_mode/integration/integration_manager_services_part_45.py',
-            'src/beast_mode/integration/integration_manager_services_part_46.py',
-            'src/beast_mode/integration/integration_manager_services_part_47.py',
-            'src/beast_mode/integration/integration_manager_services_part_48.py',
-            'src/beast_mode/integration/integration_manager_services_part_49.py',
-            'src/beast_mode/integration/integration_manager_services_part_50.py'
+            "src/beast_mode/core/core_core_validation.py",
+            "src/beast_mode/core/core_validation.py",
+            "src/beast_mode/core/validation.py",
+            "src/beast_mode/integration/integration_manager_services_part_1.py",
+            "src/beast_mode/integration/integration_manager_services_part_2.py",
+            "src/beast_mode/integration/integration_manager_services_part_3.py",
+            "src/beast_mode/integration/integration_manager_services_part_4.py",
+            "src/beast_mode/integration/integration_manager_services_part_5.py",
+            "src/beast_mode/integration/integration_manager_services_part_6.py",
+            "src/beast_mode/integration/integration_manager_services_part_7.py",
+            "src/beast_mode/integration/integration_manager_services_part_8.py",
+            "src/beast_mode/integration/integration_manager_services_part_9.py",
+            "src/beast_mode/integration/integration_manager_services_part_10.py",
+            "src/beast_mode/integration/integration_manager_services_part_11.py",
+            "src/beast_mode/integration/integration_manager_services_part_12.py",
+            "src/beast_mode/integration/integration_manager_services_part_13.py",
+            "src/beast_mode/integration/integration_manager_services_part_14.py",
+            "src/beast_mode/integration/integration_manager_services_part_15.py",
+            "src/beast_mode/integration/integration_manager_services_part_16.py",
+            "src/beast_mode/integration/integration_manager_services_part_17.py",
+            "src/beast_mode/integration/integration_manager_services_part_18.py",
+            "src/beast_mode/integration/integration_manager_services_part_19.py",
+            "src/beast_mode/integration/integration_manager_services_part_20.py",
+            "src/beast_mode/integration/integration_manager_services_part_21.py",
+            "src/beast_mode/integration/integration_manager_services_part_22.py",
+            "src/beast_mode/integration/integration_manager_services_part_23.py",
+            "src/beast_mode/integration/integration_manager_services_part_24.py",
+            "src/beast_mode/integration/integration_manager_services_part_25.py",
+            "src/beast_mode/integration/integration_manager_services_part_26.py",
+            "src/beast_mode/integration/integration_manager_services_part_27.py",
+            "src/beast_mode/integration/integration_manager_services_part_28.py",
+            "src/beast_mode/integration/integration_manager_services_part_29.py",
+            "src/beast_mode/integration/integration_manager_services_part_30.py",
+            "src/beast_mode/integration/integration_manager_services_part_31.py",
+            "src/beast_mode/integration/integration_manager_services_part_32.py",
+            "src/beast_mode/integration/integration_manager_services_part_33.py",
+            "src/beast_mode/integration/integration_manager_services_part_34.py",
+            "src/beast_mode/integration/integration_manager_services_part_35.py",
+            "src/beast_mode/integration/integration_manager_services_part_36.py",
+            "src/beast_mode/integration/integration_manager_services_part_37.py",
+            "src/beast_mode/integration/integration_manager_services_part_38.py",
+            "src/beast_mode/integration/integration_manager_services_part_39.py",
+            "src/beast_mode/integration/integration_manager_services_part_40.py",
+            "src/beast_mode/integration/integration_manager_services_part_41.py",
+            "src/beast_mode/integration/integration_manager_services_part_42.py",
+            "src/beast_mode/integration/integration_manager_services_part_43.py",
+            "src/beast_mode/integration/integration_manager_services_part_44.py",
+            "src/beast_mode/integration/integration_manager_services_part_45.py",
+            "src/beast_mode/integration/integration_manager_services_part_46.py",
+            "src/beast_mode/integration/integration_manager_services_part_47.py",
+            "src/beast_mode/integration/integration_manager_services_part_48.py",
+            "src/beast_mode/integration/integration_manager_services_part_49.py",
+            "src/beast_mode/integration/integration_manager_services_part_50.py",
         ]
-        
+
         stats = {"successful": 0, "failed": 0}
-        
+
         for module_path in general_modules:
             if self._fix_general_module(module_path):
                 stats["successful"] += 1
@@ -98,21 +99,21 @@ class GeneralModuleFixer:
             else:
                 stats["failed"] += 1
                 print(f"❌ Failed {module_path}")
-        
+
         return stats
-    
+
     def _fix_general_module(self, module_path: str) -> bool:
         """Fix a specific general module."""
         try:
             full_path = self.project_root / module_path
-            
+
             if not full_path.exists():
                 # Create the module
                 full_path.parent.mkdir(parents=True, exist_ok=True)
-                
-                module_name = module_path.split('/')[-1].replace('.py', '')
+
+                module_name = module_path.split("/")[-1].replace(".py", "")
                 class_name = self._generate_class_name(module_name)
-                
+
                 content = f'''#!/usr/bin/env python3
 """
 {{module_name}} - General module
@@ -194,60 +195,62 @@ class {class_name}(ReflectiveModule):
             'capabilities': []
         }}
 '''
-                
-                with open(full_path, 'w') as f:
+
+                with open(full_path, "w") as f:
                     f.write(content)
-                
+
                 return True
-            
+
             else:
                 # Fix existing module if needed
                 return self._fix_existing_general_module(full_path)
-                
+
         except Exception as e:
             print(f"Error fixing {module_path}: {e}")
             return False
-    
+
     def _generate_class_name(self, module_name: str) -> str:
         """Generate class name from module name."""
         # Convert snake_case to PascalCase
-        parts = module_name.split('_')
-        return ''.join(word.capitalize() for word in parts)
-    
+        parts = module_name.split("_")
+        return "".join(word.capitalize() for word in parts)
+
     def _fix_existing_general_module(self, file_path: Path) -> bool:
         """Fix existing general module."""
         try:
             content = file_path.read_text()
-            
+
             # Check if it needs proper class structure
-            if 'def ' in content and 'class ' not in content:
+            if "def " in content and "class " not in content:
                 # Module exists but may need fixes
                 return True
-            
+
             return True
-            
+
         except Exception as e:
             print(f"Error fixing existing module {file_path}: {e}")
             return False
 
+
 def main():
     """Main function for general agent."""
     fixer = GeneralModuleFixer()
-    
+
     print("🚀 Starting General Module Fixer Agent...")
-    
+
     stats = fixer.fix_general_modules()
-    
+
     result = {
         "agent_id": "general_fixer",
         "category": "general",
         "modules_fixed": stats["successful"],
         "errors_fixed": stats["failed"],
-        "success": stats["successful"] > 0
+        "success": stats["successful"] > 0,
     }
-    
+
     print(json.dumps(result))
     return 0 if result["success"] else 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

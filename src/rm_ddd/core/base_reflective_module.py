@@ -10,8 +10,10 @@ from typing import Dict, List, Any, Optional
 from enum import Enum
 from dataclasses import dataclass
 
+
 class ModuleStatus(Enum):
     """Module operational status - RDI Compliant"""
+
     HEALTHY = "healthy"
     WARNING = "warning"
     ERROR = "error"
@@ -19,8 +21,10 @@ class ModuleStatus(Enum):
     DEGRADED = "degraded"
     MAINTENANCE = "maintenance"
 
+
 class ModuleCapability(Enum):
     """Module capability types - RDI Compliant"""
+
     # Core capabilities
     CORE_FUNCTIONALITY = "core_functionality"
     DATA_PROCESSING = "data_processing"
@@ -36,9 +40,11 @@ class ModuleCapability(Enum):
     EFFICIENCY_ANALYSIS = "efficiency_analysis"
     BEAST_MODE = "beast_mode"
 
+
 @dataclass
 class ModuleHealth:
     """Module health information - RDI Compliant"""
+
     module_id: str
     status: ModuleStatus
     health_score: float  # 0.0 to 1.0
@@ -51,6 +57,7 @@ class ModuleHealth:
     error_count: int = 0
     warning_count: int = 0
 
+
 class ReflectiveModule(ABC):
     """
     Base ReflectiveModule class - RDI Compliant
@@ -58,6 +65,7 @@ class ReflectiveModule(ABC):
     This is the SINGLE, CANONICAL base class for all ReflectiveModule implementations.
     Provides systematic compliance, health monitoring, and registry integration.
     """
+
 
 def __init__(self, module_name: str, version: str = "1.0.0"):
     """Initialize the reflective module - RDI Compliant"""
@@ -92,18 +100,18 @@ def __init__(self, module_name: str, version: str = "1.0.0"):
     def get_configuration(self) -> Dict[str, Any]:
         """Get module configuration - RDI Compliant"""
         return {
-            'module_name': self.module_name,
-            'version': self.version,
-            'module_id': self.module_id
+            "module_name": self.module_name,
+            "version": self.version,
+            "module_id": self.module_id,
         }
 
     def get_metrics(self) -> Dict[str, Any]:
         """Get module metrics - RDI Compliant"""
         return {
-            'uptime_seconds': self.get_uptime_seconds(),
-            'error_count': self._error_count,
-            'warning_count': self._warning_count,
-            'last_activity': self._last_activity.isoformat()
+            "uptime_seconds": self.get_uptime_seconds(),
+            "error_count": self._error_count,
+            "warning_count": self._warning_count,
+            "last_activity": self._last_activity.isoformat(),
         }
 
     def is_healthy(self) -> bool:
@@ -125,7 +133,7 @@ def __init__(self, module_name: str, version: str = "1.0.0"):
             "issues": health.issues,
             "uptime_seconds": health.uptime_seconds,
             "error_count": health.error_count,
-            "warning_count": health.warning_count
+            "warning_count": health.warning_count,
         }
 
     def update_activity(self) -> None:
@@ -154,27 +162,27 @@ def __init__(self, module_name: str, version: str = "1.0.0"):
     def get_interface_metadata(self) -> Dict[str, Any]:
         """Get interface metadata for registry - RDI Compliant"""
         return {
-            'module_id': self.module_id,
-            'interface_type': self.__class__.__name__,
-            'version': self.version,
-            'dependencies': self.get_dependencies(),
-            'capabilities': [cap.value for cap in self.get_capabilities()]
+            "module_id": self.module_id,
+            "interface_type": self.__class__.__name__,
+            "version": self.version,
+            "dependencies": self.get_dependencies(),
+            "capabilities": [cap.value for cap in self.get_capabilities()],
         }
 
     def register_module(self, registry) -> None:
         """Register module with registry - RDI Compliant"""
-        if hasattr(registry, 'register'):
+        if hasattr(registry, "register"):
             registry.register(self.get_interface_metadata())
 
     def health_check(self) -> Dict[str, Any]:
         """Perform health check - RDI Compliant"""
         health = self.check_health()
         return {
-            'status': health.status.value,
-            'timestamp': datetime.now().isoformat(),
-            'module_id': self.module_id,
-            'health_score': health.health_score,
-            'issues': health.issues
+            "status": health.status.value,
+            "timestamp": datetime.now().isoformat(),
+            "module_id": self.module_id,
+            "health_score": health.health_score,
+            "issues": health.issues,
         }
 
     def get_health_status(self) -> Dict[str, Any]:

@@ -123,7 +123,9 @@ class ActualBillingAnalyzer:
                                 usage_data[service]["resources"] = {
                                     "type": "cloud_run",
                                     "count": len(services),
-                                    "services": [s["metadata"]["name"] for s in services],
+                                    "services": [
+                                        s["metadata"]["name"] for s in services
+                                    ],
                                 }
 
                         elif "firestore" in service:
@@ -153,7 +155,11 @@ class ActualBillingAnalyzer:
                                 text=True,
                             )
                             if st_result.returncode == 0:
-                                buckets = st_result.stdout.strip().split("\n") if st_result.stdout.strip() else []
+                                buckets = (
+                                    st_result.stdout.strip().split("\n")
+                                    if st_result.stdout.strip()
+                                    else []
+                                )
                                 usage_data[service]["resources"] = {
                                     "type": "storage",
                                     "count": len(buckets),
@@ -198,7 +204,8 @@ class ActualBillingAnalyzer:
             costs = {
                 "cloud_functions": {
                     "count": cf_count,
-                    "estimated_monthly": cf_count * 0.40,  # $0.40 per function per month
+                    "estimated_monthly": cf_count
+                    * 0.40,  # $0.40 per function per month
                     "free_tier": "2M invocations/month",
                     "status": "active" if cf_count > 0 else "inactive",
                 },
@@ -210,13 +217,15 @@ class ActualBillingAnalyzer:
                 },
                 "firestore": {
                     "count": fs_count,
-                    "estimated_monthly": fs_count * 1.20,  # $1.20 per database per month
+                    "estimated_monthly": fs_count
+                    * 1.20,  # $1.20 per database per month
                     "free_tier": "1GB storage, 50K reads/day",
                     "status": "active" if fs_count > 0 else "inactive",
                 },
                 "storage": {
                     "count": storage_count,
-                    "estimated_monthly": storage_count * 0.20,  # $0.20 per bucket per month
+                    "estimated_monthly": storage_count
+                    * 0.20,  # $0.20 per bucket per month
                     "free_tier": "5GB storage",
                     "status": "active" if storage_count > 0 else "inactive",
                 },
@@ -263,7 +272,9 @@ class ActualBillingAnalyzer:
             }
 
             # Calculate total
-            total_estimated = sum(cost.get("estimated_monthly", 0) for cost in costs.values())
+            total_estimated = sum(
+                cost.get("estimated_monthly", 0) for cost in costs.values()
+            )
             costs["total_estimated_monthly"] = total_estimated
 
             return costs
@@ -338,7 +349,9 @@ class ActualBillingAnalyzer:
             "estimated_monthly": estimated_total,
             "actual_charge": actual_charge,
             "discrepancy": discrepancy,
-            "discrepancy_percentage": ((discrepancy / actual_charge * 100) if actual_charge > 0 else 0),
+            "discrepancy_percentage": (
+                (discrepancy / actual_charge * 100) if actual_charge > 0 else 0
+            ),
             "possible_causes": [],
         }
 
@@ -417,7 +430,10 @@ class ActualBillingAnalyzer:
         costs = analysis.get("cost_estimates", {})
         report.append("## 📊 Cost Breakdown")
         for service, cost_data in costs.items():
-            if service != "total_estimated_monthly" and cost_data.get("estimated_monthly", 0) > 0:
+            if (
+                service != "total_estimated_monthly"
+                and cost_data.get("estimated_monthly", 0) > 0
+            ):
                 count = cost_data.get("count", 0)
                 monthly = cost_data.get("estimated_monthly", 0)
                 report.append(

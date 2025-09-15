@@ -12,6 +12,7 @@ from enum import Enum
 
 class Priority(Enum):
     """Recommendation priority levels"""
+
     CRITICAL = "critical"
     HIGH = "high"
     MEDIUM = "medium"
@@ -20,6 +21,7 @@ class Priority(Enum):
 
 class RecommendationCategory(Enum):
     """Categories of recommendations"""
+
     IMMEDIATE_FIX = "immediate_fix"
     SHORT_TERM_IMPROVEMENT = "short_term_improvement"
     LONG_TERM_STRATEGY = "long_term_strategy"
@@ -28,6 +30,7 @@ class RecommendationCategory(Enum):
 
 class AnalysisStatus(Enum):
     """Analysis execution status"""
+
     NOT_STARTED = "not_started"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
@@ -40,6 +43,7 @@ class AnalysisStatus(Enum):
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class EffortEstimate:
     """Effort estimation for recommendations"""
+
     development_hours: int
     testing_hours: int
     documentation_hours: int
@@ -50,6 +54,7 @@ class EffortEstimate:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class ImpactAssessment:
     """Impact assessment for recommendations"""
+
     performance_impact: float
     maintainability_impact: float
     security_impact: float
@@ -60,6 +65,7 @@ class ImpactAssessment:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class Recommendation:
     """Individual recommendation with safety metadata"""
+
     recommendation_id: str
     title: str
     description: str
@@ -76,6 +82,7 @@ class Recommendation:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class ArchitectureAnalysis:
     """Architecture analysis results - READ-ONLY"""
+
     analysis_id: str
     timestamp: datetime
     rm_architecture_score: float
@@ -91,6 +98,7 @@ class ArchitectureAnalysis:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class QualityIssue:
     """Individual quality issue"""
+
     issue_id: str
     severity: str
     description: str
@@ -102,6 +110,7 @@ class QualityIssue:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class QualityReport:
     """Code quality analysis results - READ-ONLY"""
+
     analysis_id: str
     timestamp: datetime
     maintainability_score: float
@@ -117,6 +126,7 @@ class QualityReport:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class ComplianceViolation:
     """Individual compliance violation"""
+
     violation_id: str
     type: str
     severity: str
@@ -128,6 +138,7 @@ class ComplianceViolation:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class ComplianceReport:
     """Compliance analysis results - READ-ONLY"""
+
     analysis_id: str
     timestamp: datetime
     rm_compliance_score: float
@@ -142,6 +153,7 @@ class ComplianceReport:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class SizeViolation:
     """File size violation details"""
+
     file_path: str
     current_lines: int
     limit_lines: int
@@ -152,6 +164,7 @@ class SizeViolation:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class RefactoringOpportunity:
     """Refactoring opportunity details"""
+
     opportunity_id: str
     type: str
     description: str
@@ -163,6 +176,7 @@ class RefactoringOpportunity:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class PerformanceDebt:
     """Performance debt item"""
+
     debt_id: str
     description: str
     performance_impact: float
@@ -173,6 +187,7 @@ class PerformanceDebt:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class DocumentationDebt:
     """Documentation debt item"""
+
     debt_id: str
     missing_documentation: str
     affected_components: List[str]
@@ -182,6 +197,7 @@ class DocumentationDebt:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class TechnicalDebtReport:
     """Technical debt analysis results - READ-ONLY"""
+
     analysis_id: str
     timestamp: datetime
     total_debt_score: float
@@ -196,6 +212,7 @@ class TechnicalDebtReport:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class PerformanceMetric:
     """Individual performance metric"""
+
     metric_name: str
     value: float
     unit: str
@@ -206,6 +223,7 @@ class PerformanceMetric:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class PerformanceReport:
     """Performance analysis results - READ-ONLY"""
+
     analysis_id: str
     timestamp: datetime
     overall_performance_score: float
@@ -219,6 +237,7 @@ class PerformanceReport:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class MetricsTrend:
     """Metrics trend data"""
+
     metric_name: str
     trend_direction: str  # "up", "down", "stable"
     change_percentage: float
@@ -228,6 +247,7 @@ class MetricsTrend:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class MetricsReport:
     """Metrics analysis results - READ-ONLY"""
+
     analysis_id: str
     timestamp: datetime
     performance_metrics: Dict[str, float]
@@ -241,19 +261,24 @@ class MetricsReport:
 @dataclass
 class AnalysisConfiguration:
     """Configuration for analysis operations"""
+
     timeout_seconds: int = 300
     max_parallel_analyses: int = 4
-    resource_limits: Dict[str, Any] = field(default_factory=lambda: {
-        "max_memory_mb": 1024,
-        "max_cpu_percent": 50,
-        "max_disk_io_mb": 100
-    })
-    analysis_thresholds: Dict[str, Any] = field(default_factory=lambda: {
-        "max_file_size_lines": 200,
-        "complexity_threshold": 10.0,
-        "coverage_minimum": 0.8,
-        "performance_threshold_ms": 1000
-    })
+    resource_limits: Dict[str, Any] = field(
+        default_factory=lambda: {
+            "max_memory_mb": 1024,
+            "max_cpu_percent": 50,
+            "max_disk_io_mb": 100,
+        }
+    )
+    analysis_thresholds: Dict[str, Any] = field(
+        default_factory=lambda: {
+            "max_file_size_lines": 200,
+            "complexity_threshold": 10.0,
+            "coverage_minimum": 0.8,
+            "performance_threshold_ms": 1000,
+        }
+    )
     safety_enabled: bool = True
     emergency_shutdown_enabled: bool = True
 
@@ -261,6 +286,7 @@ class AnalysisConfiguration:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class SafetyMetrics:
     """Safety and resource usage metrics"""
+
     cpu_usage_percent: float
     memory_usage_mb: float
     disk_io_operations: int
@@ -273,11 +299,12 @@ class SafetyMetrics:
 @dataclass(frozen=True)  # IMMUTABLE for safety
 class AnalysisResult:
     """Comprehensive analysis result - IMMUTABLE and SAFE"""
+
     analysis_id: str
     timestamp: datetime
     analysis_types: List[str]
     status: AnalysisStatus
-    
+
     # Analysis Results (Optional - only populated if analysis was run)
     architecture_analysis: Optional[ArchitectureAnalysis] = None
     quality_analysis: Optional[QualityReport] = None
@@ -285,34 +312,38 @@ class AnalysisResult:
     technical_debt_analysis: Optional[TechnicalDebtReport] = None
     performance_analysis: Optional[PerformanceReport] = None
     metrics_analysis: Optional[MetricsReport] = None
-    
+
     # Recommendations and Safety
     recommendations: List[Recommendation] = field(default_factory=list)
     overall_health_score: float = 0.0
     safety_metrics: Optional[SafetyMetrics] = None
-    
+
     # Additional attributes for workflow coordination
     findings: List[str] = field(default_factory=list)
     metrics: Dict[str, Any] = field(default_factory=dict)
     priority: int = 1  # Default priority
     confidence: float = 1.0  # Default confidence
-    
+
     # Operator Safety Information
     operator_notes: List[str] = field(default_factory=list)
     safety_validated: bool = True
     can_be_safely_ignored: bool = True  # Analysis can always be ignored
     emergency_shutdown_available: bool = True
-    
+
     def __post_init__(self):
         """Validate safety constraints"""
         # Ensure all safety guarantees are met
         if not self.safety_validated:
             raise ValueError("Analysis result failed safety validation")
-        
+
         # Add operator safety note
         if not self.operator_notes:
-            object.__setattr__(self, 'operator_notes', [
-                "This analysis is READ-ONLY and cannot impact existing systems",
-                "Use 'make analysis-kill' for emergency shutdown",
-                "Analysis can be safely ignored or disabled at any time"
-            ])
+            object.__setattr__(
+                self,
+                "operator_notes",
+                [
+                    "This analysis is READ-ONLY and cannot impact existing systems",
+                    "Use 'make analysis-kill' for emergency shutdown",
+                    "Analysis can be safely ignored or disabled at any time",
+                ],
+            )

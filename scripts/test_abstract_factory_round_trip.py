@@ -40,7 +40,9 @@ def test_ghostbusters_round_trip():
         print("✅ Model extracted successfully!")
         print(f"   📦 Components: {len(model.get('components', {}))}")
         print(f"   ⚙️  Module Functions: {len(model.get('module_functions', []))}")
-        print(f"   📏 Total Lines: {model.get('file_structure', {}).get('total_lines', 0)}")
+        print(
+            f"   📏 Total Lines: {model.get('file_structure', {}).get('total_lines', 0)}"
+        )
 
         # Save the model
         model_file = "ghostbusters_code_quality_expert_model.json"

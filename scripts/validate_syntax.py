@@ -6,10 +6,11 @@ import ast
 import sys
 from pathlib import Path
 
+
 def validate_python_syntax(file_path):
     """Validate Python syntax of a file"""
     try:
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             content = f.read()
         ast.parse(content)
         return True, None
@@ -18,21 +19,20 @@ def validate_python_syntax(file_path):
     except Exception as e:
         return False, str(e)
 
+
 def validate_all_python_files(directory="src"):
     """Validate all Python files in directory"""
     errors = []
     total_files = 0
-    
+
     for py_file in Path(directory).rglob("*.py"):
         total_files += 1
         is_valid, error = validate_python_syntax(py_file)
         if not is_valid:
-            errors.append({
-                'file': str(py_file),
-                'error': error
-            })
-    
+            errors.append({"file": str(py_file), "error": error})
+
     return errors, total_files
+
 
 if __name__ == "__main__":
     errors, total = validate_all_python_files()

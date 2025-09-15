@@ -62,7 +62,9 @@ class GraphMLIntegration:
 
         return credentials
 
-    def execute_cypher_query(self, query: str, credentials: dict[str, str]) -> list[dict[str, Any]]:
+    def execute_cypher_query(
+        self, query: str, credentials: dict[str, str]
+    ) -> list[dict[str, Any]]:
         """Execute Cypher query with secure credentials"""
         username = credentials.get("neo4j_username", "neo4j")
         password = credentials.get("neo4j_password", "")
@@ -117,7 +119,9 @@ class GraphMLIntegration:
 
         return features
 
-    def calculate_package_potential_ml(self, graph_features: dict[str, Any]) -> list[dict[str, Any]]:
+    def calculate_package_potential_ml(
+        self, graph_features: dict[str, Any]
+    ) -> list[dict[str, Any]]:
         """Calculate package potential using ML algorithms"""
         print("🤖 Calculating package potential using ML...")
 
@@ -132,7 +136,12 @@ class GraphMLIntegration:
 
             # ML-based scoring algorithm
             base_score = min(rule_count * 2, 10)
-            domain_bonus = 3 if domain_name in ["ghostbusters", "cursor_rules", "code_quality_system"] else 0
+            domain_bonus = (
+                3
+                if domain_name
+                in ["ghostbusters", "cursor_rules", "code_quality_system"]
+                else 0
+            )
             total_score = min(base_score + domain_bonus, 10)
             confidence = min(0.5 + (rule_count * 0.1), 0.95)
 
@@ -160,7 +169,9 @@ class GraphMLIntegration:
 
 """
 
-        for pred in sorted(predictions, key=lambda x: x["predicted_value"], reverse=True):
+        for pred in sorted(
+            predictions, key=lambda x: x["predicted_value"], reverse=True
+        ):
             predictions_summary += f"""### {pred["target"].replace("package_potential_", "")}
 - **Predicted Score**: {pred["predicted_value"]:.1f}/10
 - **Confidence**: {pred["confidence"]:.2f}

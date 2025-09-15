@@ -34,7 +34,9 @@ def run_command_safely(
             print(f"🚀 {description}...")
             print(f"Command: {' '.join(cmd_args)}")
 
-        result = subprocess.run(cmd_args, capture_output=capture_output, text=True, check=check)
+        result = subprocess.run(
+            cmd_args, capture_output=capture_output, text=True, check=check
+        )
 
         if description:
             print("✅ Command completed successfully!")
@@ -66,7 +68,9 @@ def run_command_safely(
         return False, None, str(e)
 
 
-def create_github_pr(title: str, body: str, base: str = "develop", head: Optional[str] = None) -> bool:
+def create_github_pr(
+    title: str, body: str, base: str = "develop", head: Optional[str] = None
+) -> bool:
     """
     Create GitHub PR without dquote issues
 
@@ -106,7 +110,9 @@ def git_commit_safely(message: str) -> bool:
     """
     cmd = ["git", "commit", "-m", message]
 
-    success, stdout, stderr = run_command_safely(cmd, f"Committing changes: {message[:50]}{'...' if len(message) > 50 else ''}")
+    success, stdout, stderr = run_command_safely(
+        cmd, f"Committing changes: {message[:50]}{'...' if len(message) > 50 else ''}"
+    )
 
     return success
 
@@ -127,7 +133,9 @@ def git_push_safely(remote: str = "origin", branch: Optional[str] = None) -> boo
     if branch:
         cmd.append(branch)
 
-    success, stdout, stderr = run_command_safely(cmd, f"Pushing to {remote}{f'/{branch}' if branch else ''}")
+    success, stdout, stderr = run_command_safely(
+        cmd, f"Pushing to {remote}{f'/{branch}' if branch else ''}"
+    )
 
     return success
 
@@ -147,7 +155,9 @@ def git_add_safely(files: Union[str, list[str]]) -> bool:
 
     cmd = ["git", "add"] + files
 
-    success, stdout, stderr = run_command_safely(cmd, f"Adding files: {', '.join(files)}")
+    success, stdout, stderr = run_command_safely(
+        cmd, f"Adding files: {', '.join(files)}"
+    )
 
     return success
 
@@ -196,7 +206,9 @@ def docker_run_safely(
     if command:
         cmd.extend(command)
 
-    success, stdout, stderr = run_command_safely(cmd, f"Running Docker container: {image}")
+    success, stdout, stderr = run_command_safely(
+        cmd, f"Running Docker container: {image}"
+    )
 
     return success
 
@@ -214,7 +226,9 @@ def quick_recovery_script():
     print("3. Never try to fix dquote in shell")
     print()
     print("Example usage:")
-    print("  python scripts/safe_shell_runner.py create-pr 'My PR Title' 'PR description'")
+    print(
+        "  python scripts/safe_shell_runner.py create-pr 'My PR Title' 'PR description'"
+    )
     print("  python scripts/safe_shell_runner.py commit 'Commit message'")
     print("  python scripts/safe_shell_runner.py push")
 

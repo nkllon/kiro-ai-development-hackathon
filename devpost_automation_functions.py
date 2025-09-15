@@ -7,15 +7,18 @@ Like debugging Oracle stored procedures - one word at a time
 import subprocess
 import time
 
+
 def execute_applescript(script):
     """Execute AppleScript and return result"""
     try:
-        result = subprocess.run(['osascript', '-e', script], 
-                              capture_output=True, text=True, check=True)
+        result = subprocess.run(
+            ["osascript", "-e", script], capture_output=True, text=True, check=True
+        )
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
         print(f"AppleScript error: {e.stderr}")
         return None
+
 
 def check_chrome_focus():
     """Check if Chrome is the focused application"""
@@ -24,12 +27,14 @@ def check_chrome_focus():
     print(f"Current focus: {result}")
     return result == "Google Chrome"
 
+
 def focus_chrome():
     """Focus Chrome application"""
     script = 'tell application "Google Chrome" to activate'
     result = execute_applescript(script)
     time.sleep(1)  # Give it time to focus
     return check_chrome_focus()
+
 
 def get_current_url():
     """Get current URL from Chrome"""
@@ -38,12 +43,14 @@ def get_current_url():
     print(f"Current URL: {result}")
     return result
 
+
 def get_page_title():
     """Get current page title"""
     script = 'tell application "Google Chrome" to tell active tab of front window to execute javascript "document.title"'
     result = execute_applescript(script)
     print(f"Page title: {result}")
     return result
+
 
 def navigate_to_url(url):
     """Navigate to specific URL"""
@@ -52,12 +59,14 @@ def navigate_to_url(url):
     time.sleep(2)  # Wait for page to load
     return result
 
+
 def find_text_on_page(text):
     """Search for text on current page"""
     script = f'tell application "Google Chrome" to tell active tab of front window to execute javascript "window.find(\\"{text}\\", false, false, true, false, true, false);"'
     result = execute_applescript(script)
     print(f"Found '{text}': {result}")
     return result == "true"
+
 
 def click_selected_text():
     """Click on currently selected text"""
@@ -74,6 +83,7 @@ def click_selected_text():
     result = execute_applescript(script)
     return result
 
+
 def get_focused_element_info():
     """Get information about currently focused element"""
     script = '''tell application "Google Chrome" to tell active tab of front window to execute javascript "
@@ -86,6 +96,7 @@ def get_focused_element_info():
     print(f"Focused element: {result}")
     return result
 
+
 def hit_tab():
     """Hit Tab key"""
     script = 'tell application "System Events" to key code 48'
@@ -93,11 +104,13 @@ def hit_tab():
     time.sleep(0.5)  # Small delay
     return result
 
+
 def type_text(text):
     """Type text into focused field"""
     script = f'tell application "System Events" to keystroke "{text}"'
     result = execute_applescript(script)
     return result
+
 
 def test_step_1():
     """Test: Check Chrome focus"""
@@ -109,6 +122,7 @@ def test_step_1():
             return False
     print("✅ Chrome is focused")
     return True
+
 
 def test_step_2():
     """Test: Get current page info"""
@@ -122,6 +136,7 @@ def test_step_2():
         print("❌ Failed to get page info")
         return False
 
+
 def test_step_3():
     """Test: Navigate to hackathon page"""
     print("=== Test Step 3: Navigate to Hackathon ===")
@@ -133,6 +148,7 @@ def test_step_3():
         print("❌ Failed to navigate")
         return False
 
+
 def test_step_4():
     """Test: Find 'My projects' text"""
     print("=== Test Step 4: Find My Projects ===")
@@ -142,6 +158,7 @@ def test_step_4():
     else:
         print("❌ 'My projects' not found")
         return False
+
 
 def test_step_5():
     """Test: Click on My projects"""
@@ -154,6 +171,7 @@ def test_step_5():
         print("❌ Failed to click My projects")
         return False
 
+
 def test_step_6():
     """Test: Find 'Edit project' text"""
     print("=== Test Step 6: Find Edit Project ===")
@@ -163,6 +181,7 @@ def test_step_6():
     else:
         print("❌ 'Edit project' not found")
         return False
+
 
 def test_step_7():
     """Test: Click Edit project"""
@@ -175,6 +194,7 @@ def test_step_7():
         print("❌ Failed to click Edit project")
         return False
 
+
 def test_step_8():
     """Test: Check if on submission form"""
     print("=== Test Step 8: Check Form ===")
@@ -185,11 +205,12 @@ def test_step_8():
         print("❌ Not on submission form")
         return False
 
+
 def main():
     """Run all test steps systematically"""
     print("🔧 DevPost Automation - Step by Step Testing")
     print("=" * 50)
-    
+
     steps = [
         test_step_1,
         test_step_2,
@@ -198,17 +219,18 @@ def main():
         test_step_5,
         test_step_6,
         test_step_7,
-        test_step_8
+        test_step_8,
     ]
-    
+
     for i, step in enumerate(steps, 1):
         print(f"\n--- Running Step {i} ---")
         if not step():
             print(f"❌ Step {i} failed. Stopping.")
             break
         print(f"✅ Step {i} completed")
-    
+
     print("\n🎯 Testing complete!")
+
 
 if __name__ == "__main__":
     main()

@@ -207,7 +207,9 @@ class OneLinerLinter:
             return "json"
         return "generic"
 
-    def _analyze_python_file(self, file_path: Path, content: str, lines: list[str]) -> list[LintingIssue]:
+    def _analyze_python_file(
+        self, file_path: Path, content: str, lines: list[str]
+    ) -> list[LintingIssue]:
         """Analyze Python file for linting issues"""
         issues = []
 
@@ -224,7 +226,9 @@ class OneLinerLinter:
                     description=f"Syntax error: {e.msg}",
                     suggestion="Fix the syntax error in the code",
                     auto_fixable=False,
-                    context=(lines[e.lineno - 1] if e.lineno <= len(lines) else "Unknown"),
+                    context=(
+                        lines[e.lineno - 1] if e.lineno <= len(lines) else "Unknown"
+                    ),
                 )
             )
 
@@ -282,7 +286,9 @@ class OneLinerLinter:
 
         return issues
 
-    def _analyze_shell_file(self, file_path: Path, content: str, lines: list[str]) -> list[LintingIssue]:
+    def _analyze_shell_file(
+        self, file_path: Path, content: str, lines: list[str]
+    ) -> list[LintingIssue]:
         """Analyze shell file for linting issues"""
         issues = []
 
@@ -339,7 +345,9 @@ class OneLinerLinter:
 
         return issues
 
-    def _analyze_yaml_file(self, file_path: Path, content: str, lines: list[str]) -> list[LintingIssue]:
+    def _analyze_yaml_file(
+        self, file_path: Path, content: str, lines: list[str]
+    ) -> list[LintingIssue]:
         """Analyze YAML file for linting issues"""
         issues = []
 
@@ -390,7 +398,9 @@ class OneLinerLinter:
 
         return issues
 
-    def _analyze_markdown_file(self, file_path: Path, content: str, lines: list[str]) -> list[LintingIssue]:
+    def _analyze_markdown_file(
+        self, file_path: Path, content: str, lines: list[str]
+    ) -> list[LintingIssue]:
         """Analyze Markdown file for linting issues"""
         issues = []
 
@@ -431,7 +441,9 @@ class OneLinerLinter:
 
         return issues
 
-    def _analyze_generic_file(self, file_path: Path, content: str, lines: list[str]) -> list[LintingIssue]:
+    def _analyze_generic_file(
+        self, file_path: Path, content: str, lines: list[str]
+    ) -> list[LintingIssue]:
         """Analyze generic file for basic linting issues"""
         issues = []
 
@@ -499,8 +511,12 @@ class OneLinerLinter:
             issues_by_type[issue.issue_type] += 1
 
         # Calculate average one-liner score
-        total_score = sum(analysis.one_liner_score for analysis in self.file_analyses.values())
-        avg_one_liner_score = total_score / len(self.file_analyses) if self.file_analyses else 0.0
+        total_score = sum(
+            analysis.one_liner_score for analysis in self.file_analyses.values()
+        )
+        avg_one_liner_score = (
+            total_score / len(self.file_analyses) if self.file_analyses else 0.0
+        )
 
         return {
             "total_files": len(self.file_analyses),
@@ -510,7 +526,9 @@ class OneLinerLinter:
             "suggestion_count": suggestion_count,
             "issues_by_type": issues_by_type,
             "avg_one_liner_score": avg_one_liner_score,
-            "files_with_issues": len([f for f in self.file_analyses.values() if f.total_issues > 0]),
+            "files_with_issues": len(
+                [f for f in self.file_analyses.values() if f.total_issues > 0]
+            ),
         }
 
     def generate_report(self, output_file: str = None) -> str:
@@ -784,7 +802,9 @@ class OneLinerLinter:
             if len(parts) > 1:
                 new_lines = [from_part + " import " + parts[0].strip()]
                 for part in parts[1:]:
-                    new_lines.append("from " + from_part.split(" ")[1] + " import " + part.strip())
+                    new_lines.append(
+                        "from " + from_part.split(" ")[1] + " import " + part.strip()
+                    )
 
                 lines[line_idx] = new_lines[0]
                 for i, new_line in enumerate(new_lines[1:], 1):
@@ -825,8 +845,12 @@ Examples:
         """,
     )
 
-    parser.add_argument("--scan", metavar="PATH", help="Scan codebase for linting issues")
-    parser.add_argument("--fix", metavar="PATH", help="Automatically fix linting issues")
+    parser.add_argument(
+        "--scan", metavar="PATH", help="Scan codebase for linting issues"
+    )
+    parser.add_argument(
+        "--fix", metavar="PATH", help="Automatically fix linting issues"
+    )
     parser.add_argument("--report", metavar="PATH", help="Generate detailed report")
     parser.add_argument("--check-file", metavar="FILE", help="Check specific file")
     parser.add_argument("--output", metavar="FILE", help="Output file for report")

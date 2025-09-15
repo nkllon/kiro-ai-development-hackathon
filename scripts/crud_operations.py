@@ -42,7 +42,9 @@ class CrudOperations:
         except Exception as e:
             return False, f"❌ Error adding item: {e}"
 
-    def update_section(self, model_name: str, section: str, updates: str) -> tuple[bool, str]:
+    def update_section(
+        self, model_name: str, section: str, updates: str
+    ) -> tuple[bool, str]:
         """Update a section in a model."""
         try:
             manager = self.registry.get_model(model_name)
@@ -53,7 +55,9 @@ class CrudOperations:
         except Exception as e:
             return False, f"❌ Error updating section: {e}"
 
-    def remove_item(self, model_name: str, item_id: str, collection: str = None) -> tuple[bool, str]:
+    def remove_item(
+        self, model_name: str, item_id: str, collection: str = None
+    ) -> tuple[bool, str]:
         """Remove an item from a model."""
         try:
             manager = self.registry.get_model(model_name)
@@ -63,7 +67,9 @@ class CrudOperations:
         except Exception as e:
             return False, f"❌ Error removing item: {e}"
 
-    def add_section(self, model_name: str, section: str, section_config: str) -> tuple[bool, str]:
+    def add_section(
+        self, model_name: str, section: str, section_config: str
+    ) -> tuple[bool, str]:
         """Add a section to a model."""
         try:
             manager = self.registry.get_model(model_name)

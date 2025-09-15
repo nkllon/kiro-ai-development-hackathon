@@ -11,9 +11,10 @@ import re
 import json
 from pathlib import Path
 
+
 class HealthMonitoringImplementation:
     """System for implementing health monitoring in modules."""
-    
+
     def __init__(self):
         self.modules_needing_health = []
         self.health_implementation_template = '''
@@ -120,109 +121,118 @@ Last Activity: {self._last_activity}
         self._errors += 1
         self._last_activity = datetime.now()
 '''
-    
+
     def scan_modules_needing_health(self, directory="src"):
         """Scan for modules that need health monitoring implementation."""
         print("🔍 Scanning for modules needing health monitoring...")
-        
+
         for root, dirs, files in os.walk(directory):
             for file in files:
-                if file.endswith('.py'):
+                if file.endswith(".py"):
                     file_path = os.path.join(root, file)
                     if self._needs_health_monitoring(file_path):
                         self.modules_needing_health.append(file_path)
-        
-        print(f"Found {len(self.modules_needing_health)} modules needing health monitoring")
-    
+
+        print(
+            f"Found {len(self.modules_needing_health)} modules needing health monitoring"
+        )
+
     def _needs_health_monitoring(self, file_path):
         """Check if a module needs health monitoring implementation."""
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path, "r") as f:
                 content = f.read()
-            
+
             # Check if it's a ReflectiveModule
-            if 'ReflectiveModule' not in content:
+            if "ReflectiveModule" not in content:
                 return False
-            
+
             # Check if it already has health monitoring
-            if 'check_health' in content and 'get_health_indicators' in content:
+            if "check_health" in content and "get_health_indicators" in content:
                 return False
-            
+
             return True
-        
+
         except Exception as e:
             print(f"Error checking {file_path}: {e}")
             return False
-    
+
     def implement_health_monitoring(self):
         """Implement health monitoring in all modules that need it."""
         print("🏥 Implementing health monitoring...")
-        
+
         for file_path in self.modules_needing_health:
             self._implement_health_in_file(file_path)
-    
+
     def _implement_health_in_file(self, file_path):
         """Implement health monitoring in a specific file."""
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path, "r") as f:
                 content = f.read()
-            
+
             # Check if it's already implemented
-            if 'check_health' in content:
+            if "check_health" in content:
                 return
-            
+
             # Find the class definition
-            class_pattern = r'^class (\w+)\(ReflectiveModule\):'
+            class_pattern = r"^class (\w+)\(ReflectiveModule\):"
             match = re.search(class_pattern, content, re.MULTILINE)
-            
+
             if not match:
                 return
-            
+
             class_name = match.group(1)
-            
+
             # Find the __init__ method
-            init_pattern = rf'def __init__\(self[^)]*\):'
+            init_pattern = rf"def __init__\(self[^)]*\):"
             init_match = re.search(init_pattern, content, re.MULTILINE)
-            
+
             if not init_match:
                 return
-            
+
             # Add health monitoring initialization to __init__
             init_end = init_match.end()
-            init_content = content[init_match.start():init_end]
-            
+            init_content = content[init_match.start() : init_end]
+
             # Add health monitoring initialization
-            if 'self._initialize_health_monitoring()' not in init_content:
-                new_init = init_content.rstrip() + '\n        self._initialize_health_monitoring()\n'
+            if "self._initialize_health_monitoring()" not in init_content:
+                new_init = (
+                    init_content.rstrip()
+                    + "\n        self._initialize_health_monitoring()\n"
+                )
                 content = content.replace(init_content, new_init)
-            
+
             # Add health monitoring methods
             # Find the end of the class (next class or end of file)
-            next_class_pattern = r'^class \w+\(ReflectiveModule\):'
-            next_class_match = re.search(next_class_pattern, content[init_end:], re.MULTILINE)
-            
+            next_class_pattern = r"^class \w+\(ReflectiveModule\):"
+            next_class_match = re.search(
+                next_class_pattern, content[init_end:], re.MULTILINE
+            )
+
             if next_class_match:
                 insert_pos = init_end + next_class_match.start()
             else:
                 insert_pos = len(content)
-            
+
             # Insert health monitoring methods
-            health_methods = self.health_implementation_template.format(class_name=class_name)
+            health_methods = self.health_implementation_template.format(
+                class_name=class_name
+            )
             content = content[:insert_pos] + health_methods + content[insert_pos:]
-            
+
             # Write the updated content
-            with open(file_path, 'w') as f:
+            with open(file_path, "w") as f:
                 f.write(content)
-            
+
             print(f"  ✅ Implemented health monitoring in {file_path}")
-        
+
         except Exception as e:
             print(f"  ❌ Error implementing health monitoring in {file_path}: {e}")
-    
+
     def create_health_dashboard(self):
         """Create a health monitoring dashboard."""
         print("📊 Creating health monitoring dashboard...")
-        
+
         dashboard_content = '''"""
 Health Monitoring Dashboard
 
@@ -328,30 +338,34 @@ def main():
 if __name__ == "__main__":
     main()
 '''
-        
-        with open('src/health_dashboard.py', 'w') as f:
+
+        with open("src/health_dashboard.py", "w") as f:
             f.write(dashboard_content)
-        
+
         print("  Created health monitoring dashboard: src/health_dashboard.py")
+
 
 def main():
     """Main health monitoring implementation."""
     print("🚀 Starting Health Monitoring Implementation...")
     print("Implementing health monitoring for 27 modules...")
-    
+
     system = HealthMonitoringImplementation()
-    
+
     # Step 1: Scan for modules needing health monitoring
     system.scan_modules_needing_health()
-    
+
     # Step 2: Implement health monitoring
     system.implement_health_monitoring()
-    
+
     # Step 3: Create health dashboard
     system.create_health_dashboard()
-    
+
     print(f"\n✅ Health monitoring implementation complete!")
-    print(f"Implemented health monitoring in {len(system.modules_needing_health)} modules")
+    print(
+        f"Implemented health monitoring in {len(system.modules_needing_health)} modules"
+    )
+
 
 if __name__ == "__main__":
     main()

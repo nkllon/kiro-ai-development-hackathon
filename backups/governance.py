@@ -18,6 +18,7 @@ from .models import ReflectiveModule
 
 class GovernanceRoleType(Enum):
     """Roles in the governance framework"""
+
     SPEC_ARCHITECT = "spec_architect"
     CONSISTENCY_REVIEWER = "consistency_reviewer"
     DOMAIN_EXPERT = "domain_expert"
@@ -27,6 +28,7 @@ class GovernanceRoleType(Enum):
 
 class TrainingStatus(Enum):
     """Training completion status"""
+
     NOT_STARTED = "not_started"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
@@ -35,6 +37,7 @@ class TrainingStatus(Enum):
 
 class MaintenanceType(Enum):
     """Types of maintenance activities"""
+
     CONSISTENCY_VALIDATION = "consistency_validation"
     TERMINOLOGY_REVIEW = "terminology_review"
     GOVERNANCE_AUDIT = "governance_audit"
@@ -45,6 +48,7 @@ class MaintenanceType(Enum):
 @dataclass
 class GovernanceRole:
     """Defines a governance role with responsibilities"""
+
     name: str
     responsibilities: List[str]
     required_skills: List[str]
@@ -55,6 +59,7 @@ class GovernanceRole:
 @dataclass
 class TrainingProgram:
     """Defines a training program for consistency standards"""
+
     program_id: str
     title: str
     description: str
@@ -69,6 +74,7 @@ class TrainingProgram:
 @dataclass
 class MaintenanceSchedule:
     """Defines scheduled maintenance activities"""
+
     activity_id: str
     activity_type: MaintenanceType
     description: str
@@ -81,6 +87,7 @@ class MaintenanceSchedule:
 @dataclass
 class ContinuousImprovementProcess:
     """Defines continuous improvement procedures"""
+
     process_id: str
     trigger_conditions: List[str]
     analysis_procedures: List[str]
@@ -92,87 +99,101 @@ class ContinuousImprovementProcess:
 class GovernanceController(ReflectiveModule):
     """
     Governance Controller for spec validation and oversight.
-    
+
     This class provides governance controls for spec creation and modification,
     ensuring consistency and preventing fragmentation.
     """
-    
+
     def __init__(self):
         super().__init__()
         self.governance_framework = GovernanceFramework()
-    
+
     def validate_new_spec(self, spec_proposal) -> str:
         """
         Validate a new spec proposal.
-        
+
         Args:
             spec_proposal: The spec proposal to validate
-            
+
         Returns:
             Validation result as string
         """
         # Basic validation logic
-        if not hasattr(spec_proposal, 'name') or not spec_proposal.name:
+        if not hasattr(spec_proposal, "name") or not spec_proposal.name:
             return "rejected"
-        
+
         return "approved"
-    
+
     def check_overlap_conflicts(self, spec_proposal):
         """
         Check for overlap conflicts in spec proposal.
-        
+
         Args:
             spec_proposal: The spec proposal to check
-            
+
         Returns:
             Mock overlap report
         """
+
         # Mock implementation for testing
         class MockOverlapReport:
             def __init__(self):
-                self.severity = type('Severity', (), {'value': 'low'})()
+                self.severity = type("Severity", (), {"value": "low"})()
                 self.spec_pairs = []
                 self.consolidation_recommendation = "No conflicts detected"
-        
+
         return MockOverlapReport()
-    
+
     def get_module_status(self) -> Dict[str, Any]:
         """Get governance controller status"""
         status = super().get_module_status()
-        status.update({
-            "specs_monitored": 0,
-            "terminology_terms": 0,
-            "governance_framework_active": True
-        })
+        status.update(
+            {
+                "specs_monitored": 0,
+                "terminology_terms": 0,
+                "governance_framework_active": True,
+            }
+        )
         return status
 
 
 class GovernanceFramework(ReflectiveModule):
     """
     Implements ongoing governance and maintenance procedures for spec consistency.
-    
+
     This class provides the framework for maintaining architectural integrity
     through systematic governance, training, and continuous improvement.
     """
-    
+
     def __init__(self, config_path: Optional[Path] = None):
         super().__init__()
         self.config_path = config_path or Path("governance_config.json")
         self.logger = logging.getLogger(__name__)
         self._load_configuration()
-    
+
     def _load_configuration(self):
         """Load governance configuration"""
         if self.config_path.exists():
-            with open(self.config_path, 'r') as f:
+            with open(self.config_path, "r") as f:
                 config = json.load(f)
-                self.roles = [GovernanceRole(**role) for role in config.get('roles', [])]
-                self.training_programs = [TrainingProgram(**prog) for prog in config.get('training_programs', [])]
-                self.maintenance_schedules = [MaintenanceSchedule(**sched) for sched in config.get('maintenance_schedules', [])]
-                self.improvement_processes = [ContinuousImprovementProcess(**proc) for proc in config.get('improvement_processes', [])]
+                self.roles = [
+                    GovernanceRole(**role) for role in config.get("roles", [])
+                ]
+                self.training_programs = [
+                    TrainingProgram(**prog)
+                    for prog in config.get("training_programs", [])
+                ]
+                self.maintenance_schedules = [
+                    MaintenanceSchedule(**sched)
+                    for sched in config.get("maintenance_schedules", [])
+                ]
+                self.improvement_processes = [
+                    ContinuousImprovementProcess(**proc)
+                    for proc in config.get("improvement_processes", [])
+                ]
         else:
             self._initialize_default_configuration()
-    
+
     def _initialize_default_configuration(self):
         """Initialize default governance configuration"""
         self.roles = self._create_default_roles()
@@ -180,7 +201,7 @@ class GovernanceFramework(ReflectiveModule):
         self.maintenance_schedules = self._create_default_maintenance_schedules()
         self.improvement_processes = self._create_default_improvement_processes()
         self._save_configuration()
-    
+
     def _create_default_roles(self) -> List[GovernanceRole]:
         """Create default governance roles"""
         return [
@@ -190,21 +211,21 @@ class GovernanceFramework(ReflectiveModule):
                     "Overall architectural consistency",
                     "Spec consolidation decisions",
                     "Component boundary definitions",
-                    "Technical debt resolution"
+                    "Technical debt resolution",
                 ],
                 required_skills=[
                     "System architecture",
                     "Requirements analysis",
                     "Technical leadership",
-                    "Conflict resolution"
+                    "Conflict resolution",
                 ],
                 approval_authority=[
                     "New spec creation",
                     "Major architectural changes",
                     "Consolidation plans",
-                    "Governance policy updates"
+                    "Governance policy updates",
                 ],
-                escalation_contacts=["technical_director", "engineering_manager"]
+                escalation_contacts=["technical_director", "engineering_manager"],
             ),
             GovernanceRole(
                 name="Consistency Reviewer",
@@ -212,20 +233,20 @@ class GovernanceFramework(ReflectiveModule):
                     "Terminology validation",
                     "Interface compliance checking",
                     "Pattern consistency review",
-                    "Quality gate enforcement"
+                    "Quality gate enforcement",
                 ],
                 required_skills=[
                     "Technical writing",
                     "Pattern recognition",
                     "Quality assurance",
-                    "Detail orientation"
+                    "Detail orientation",
                 ],
                 approval_authority=[
                     "Terminology changes",
                     "Interface definitions",
-                    "Consistency exceptions"
+                    "Consistency exceptions",
                 ],
-                escalation_contacts=["spec_architect"]
+                escalation_contacts=["spec_architect"],
             ),
             GovernanceRole(
                 name="Domain Expert",
@@ -233,23 +254,23 @@ class GovernanceFramework(ReflectiveModule):
                     "Domain-specific validation",
                     "Business requirement alignment",
                     "Stakeholder representation",
-                    "Use case validation"
+                    "Use case validation",
                 ],
                 required_skills=[
                     "Domain knowledge",
                     "Business analysis",
                     "Stakeholder management",
-                    "Requirements validation"
+                    "Requirements validation",
                 ],
                 approval_authority=[
                     "Domain-specific requirements",
                     "Business rule definitions",
-                    "Use case specifications"
+                    "Use case specifications",
                 ],
-                escalation_contacts=["product_owner", "spec_architect"]
-            )
+                escalation_contacts=["product_owner", "spec_architect"],
+            ),
         ]
-    
+
     def _create_default_training_programs(self) -> List[TrainingProgram]:
         """Create default training programs"""
         return [
@@ -257,12 +278,15 @@ class GovernanceFramework(ReflectiveModule):
                 program_id="consistency_standards_101",
                 title="Spec Consistency Standards and Procedures",
                 description="Comprehensive training on maintaining spec consistency and preventing fragmentation",
-                target_roles=[GovernanceRoleType.SPEC_ARCHITECT, GovernanceRoleType.CONSISTENCY_REVIEWER],
+                target_roles=[
+                    GovernanceRoleType.SPEC_ARCHITECT,
+                    GovernanceRoleType.CONSISTENCY_REVIEWER,
+                ],
                 learning_objectives=[
                     "Understand spec fragmentation causes and prevention",
                     "Master consistency validation procedures",
                     "Apply governance controls effectively",
-                    "Implement continuous monitoring practices"
+                    "Implement continuous monitoring practices",
                 ],
                 modules=[
                     "Introduction to Spec Consistency",
@@ -270,7 +294,7 @@ class GovernanceFramework(ReflectiveModule):
                     "Terminology Management",
                     "Interface Standardization",
                     "Continuous Monitoring",
-                    "Conflict Resolution Procedures"
+                    "Conflict Resolution Procedures",
                 ],
                 duration_hours=16,
                 refresh_interval_months=12,
@@ -278,37 +302,40 @@ class GovernanceFramework(ReflectiveModule):
                     "Pass written assessment (80% minimum)",
                     "Complete practical exercises",
                     "Demonstrate governance tool usage",
-                    "Present case study analysis"
-                ]
+                    "Present case study analysis",
+                ],
             ),
             TrainingProgram(
                 program_id="governance_tools_training",
                 title="Governance Tools and Automation",
                 description="Hands-on training for governance automation tools and workflows",
-                target_roles=[GovernanceRoleType.CONSISTENCY_REVIEWER, GovernanceRoleType.IMPLEMENTATION_LEAD],
+                target_roles=[
+                    GovernanceRoleType.CONSISTENCY_REVIEWER,
+                    GovernanceRoleType.IMPLEMENTATION_LEAD,
+                ],
                 learning_objectives=[
                     "Master governance automation tools",
                     "Configure validation pipelines",
                     "Implement monitoring workflows",
-                    "Troubleshoot governance issues"
+                    "Troubleshoot governance issues",
                 ],
                 modules=[
                     "Tool Installation and Setup",
                     "Validation Pipeline Configuration",
                     "Monitoring Dashboard Usage",
                     "Automated Correction Workflows",
-                    "Troubleshooting and Maintenance"
+                    "Troubleshooting and Maintenance",
                 ],
                 duration_hours=8,
                 refresh_interval_months=6,
                 assessment_criteria=[
                     "Successfully configure validation pipeline",
                     "Demonstrate monitoring setup",
-                    "Complete troubleshooting scenarios"
-                ]
-            )
+                    "Complete troubleshooting scenarios",
+                ],
+            ),
         ]
-    
+
     def _create_default_maintenance_schedules(self) -> List[MaintenanceSchedule]:
         """Create default maintenance schedules"""
         return [
@@ -322,13 +349,13 @@ class GovernanceFramework(ReflectiveModule):
                     "Terminology consistency >95%",
                     "Interface compliance 100%",
                     "No unresolved conflicts",
-                    "All governance controls active"
+                    "All governance controls active",
                 ],
                 escalation_thresholds={
                     "consistency_score": 0.90,
                     "unresolved_conflicts": 5,
-                    "failed_validations": 3
-                }
+                    "failed_validations": 3,
+                },
             ),
             MaintenanceSchedule(
                 activity_id="monthly_governance_audit",
@@ -340,35 +367,40 @@ class GovernanceFramework(ReflectiveModule):
                     "All governance controls functioning",
                     "Training compliance >90%",
                     "Process adherence metrics reviewed",
-                    "Improvement opportunities identified"
+                    "Improvement opportunities identified",
                 ],
                 escalation_thresholds={
                     "training_compliance": 0.85,
                     "process_violations": 10,
-                    "system_downtime_hours": 4
-                }
+                    "system_downtime_hours": 4,
+                },
             ),
             MaintenanceSchedule(
                 activity_id="quarterly_system_update",
                 activity_type=MaintenanceType.SYSTEM_UPDATE,
                 description="Quarterly update of governance systems and tools",
                 frequency_days=90,
-                responsible_roles=[GovernanceRoleType.SPEC_ARCHITECT, GovernanceRoleType.QUALITY_ASSURANCE],
+                responsible_roles=[
+                    GovernanceRoleType.SPEC_ARCHITECT,
+                    GovernanceRoleType.QUALITY_ASSURANCE,
+                ],
                 validation_criteria=[
                     "All systems updated successfully",
                     "Backward compatibility maintained",
                     "Performance benchmarks met",
-                    "Security vulnerabilities addressed"
+                    "Security vulnerabilities addressed",
                 ],
                 escalation_thresholds={
                     "update_failures": 1,
                     "performance_degradation": 0.10,
-                    "security_issues": 1
-                }
-            )
+                    "security_issues": 1,
+                },
+            ),
         ]
-    
-    def _create_default_improvement_processes(self) -> List[ContinuousImprovementProcess]:
+
+    def _create_default_improvement_processes(
+        self,
+    ) -> List[ContinuousImprovementProcess]:
         """Create default continuous improvement processes"""
         return [
             ContinuousImprovementProcess(
@@ -377,73 +409,77 @@ class GovernanceFramework(ReflectiveModule):
                     "Monthly governance audit completion",
                     "Significant governance violations detected",
                     "Stakeholder feedback received",
-                    "System performance degradation"
+                    "System performance degradation",
                 ],
                 analysis_procedures=[
                     "Review governance metrics and trends",
                     "Analyze violation patterns and root causes",
                     "Collect stakeholder feedback",
                     "Benchmark against industry standards",
-                    "Identify improvement opportunities"
+                    "Identify improvement opportunities",
                 ],
                 improvement_actions=[
                     "Update governance policies and procedures",
                     "Enhance training programs",
                     "Improve automation and tooling",
                     "Refine validation criteria",
-                    "Optimize workflow processes"
+                    "Optimize workflow processes",
                 ],
                 success_metrics=[
                     "Reduced governance violations",
                     "Improved consistency scores",
                     "Higher stakeholder satisfaction",
                     "Increased process efficiency",
-                    "Better training effectiveness"
+                    "Better training effectiveness",
                 ],
-                review_cycle_months=3
+                review_cycle_months=3,
             )
         ]
-    
+
     def _save_configuration(self):
         """Save governance configuration to file"""
         config = {
-            'roles': [asdict(role) for role in self.roles],
-            'training_programs': [asdict(prog) for prog in self.training_programs],
-            'maintenance_schedules': [asdict(sched) for sched in self.maintenance_schedules],
-            'improvement_processes': [asdict(proc) for proc in self.improvement_processes]
+            "roles": [asdict(role) for role in self.roles],
+            "training_programs": [asdict(prog) for prog in self.training_programs],
+            "maintenance_schedules": [
+                asdict(sched) for sched in self.maintenance_schedules
+            ],
+            "improvement_processes": [
+                asdict(proc) for proc in self.improvement_processes
+            ],
         }
-        
-        with open(self.config_path, 'w') as f:
+
+        with open(self.config_path, "w") as f:
             json.dump(config, f, indent=2, default=str)
-    
+
     def create_governance_documentation(self, output_path: Path) -> Dict[str, Any]:
         """
         Create comprehensive governance process documentation.
-        
+
         Args:
             output_path: Path where documentation should be created
-            
+
         Returns:
             Dictionary containing documentation metadata
         """
         docs_dir = output_path / "governance"
         docs_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Create main governance document
         self._create_governance_overview(docs_dir)
-        
+
         # Create role definitions document
         self._create_roles_documentation(docs_dir)
-        
+
         # Create procedures documentation
         self._create_procedures_documentation(docs_dir)
-        
+
         # Create training documentation
         self._create_training_documentation(docs_dir)
-        
+
         # Create maintenance documentation
         self._create_maintenance_documentation(docs_dir)
-        
+
         return {
             "documentation_created": True,
             "output_path": str(docs_dir),
@@ -452,11 +488,11 @@ class GovernanceFramework(ReflectiveModule):
                 "roles_and_responsibilities.md",
                 "governance_procedures.md",
                 "training_programs.md",
-                "maintenance_schedules.md"
+                "maintenance_schedules.md",
             ],
-            "created_at": datetime.now().isoformat()
+            "created_at": datetime.now().isoformat(),
         }
-    
+
     def _create_governance_overview(self, docs_dir: Path):
         """Create governance overview documentation"""
         content = """# Spec Consistency Governance Framework
@@ -555,10 +591,10 @@ This governance framework consists of the following documents:
 
 For questions or support, contact the Spec Architect or refer to the escalation procedures in the Governance Procedures document.
 """
-        
-        with open(docs_dir / "governance_overview.md", 'w') as f:
+
+        with open(docs_dir / "governance_overview.md", "w") as f:
             f.write(content)
-    
+
     def _create_roles_documentation(self, docs_dir: Path):
         """Create roles and responsibilities documentation"""
         content = """# Roles and Responsibilities
@@ -566,7 +602,7 @@ For questions or support, contact the Spec Architect or refer to the escalation 
 ## Role Definitions
 
 """
-        
+
         for role in self.roles:
             content += f"""### {role.name}
 
@@ -574,27 +610,27 @@ For questions or support, contact the Spec Architect or refer to the escalation 
 """
             for resp in role.responsibilities:
                 content += f"- {resp}\n"
-            
+
             content += f"""
 **Required Skills:**
 """
             for skill in role.required_skills:
                 content += f"- {skill}\n"
-            
+
             content += f"""
 **Approval Authority:**
 """
             for authority in role.approval_authority:
                 content += f"- {authority}\n"
-            
+
             content += f"""
 **Escalation Contacts:**
 """
             for contact in role.escalation_contacts:
                 content += f"- {contact}\n"
-            
+
             content += "\n---\n\n"
-        
+
         content += """## Accountability Matrix
 
 | Activity | Spec Architect | Consistency Reviewer | Domain Expert | Implementation Lead | Quality Assurance |
@@ -659,10 +695,10 @@ Each role has specific performance expectations and success metrics:
 - **Documentation**: Comprehensive procedures and reference materials
 - **Support Channels**: Dedicated support channels for role-specific questions
 """
-        
-        with open(docs_dir / "roles_and_responsibilities.md", 'w') as f:
+
+        with open(docs_dir / "roles_and_responsibilities.md", "w") as f:
             f.write(content)
-    
+
     def _create_procedures_documentation(self, docs_dir: Path):
         """Create governance procedures documentation"""
         content = """# Governance Procedures
@@ -930,10 +966,10 @@ Each role has specific performance expectations and success metrics:
    - Update prevention controls
    - Improve response procedures
 """
-        
-        with open(docs_dir / "governance_procedures.md", 'w') as f:
+
+        with open(docs_dir / "governance_procedures.md", "w") as f:
             f.write(content)
-    
+
     def _create_training_documentation(self, docs_dir: Path):
         """Create training programs documentation"""
         content = """# Training Programs
@@ -945,7 +981,7 @@ The governance training framework ensures all team members have the knowledge an
 ## Training Programs
 
 """
-        
+
         for program in self.training_programs:
             content += f"""### {program.title}
 
@@ -956,9 +992,9 @@ The governance training framework ensures all team members have the knowledge an
 **Target Roles:**
 """
             for role in program.target_roles:
-                role_name = role.value if hasattr(role, 'value') else str(role)
+                role_name = role.value if hasattr(role, "value") else str(role)
                 content += f"- {role_name}\n"
-            
+
             content += f"""
 **Duration:** {program.duration_hours} hours
 
@@ -968,21 +1004,21 @@ The governance training framework ensures all team members have the knowledge an
 """
             for objective in program.learning_objectives:
                 content += f"- {objective}\n"
-            
+
             content += f"""
 **Training Modules:**
 """
             for i, module in enumerate(program.modules, 1):
                 content += f"{i}. {module}\n"
-            
+
             content += f"""
 **Assessment Criteria:**
 """
             for criterion in program.assessment_criteria:
                 content += f"- {criterion}\n"
-            
+
             content += "\n---\n\n"
-        
+
         content += """## Training Delivery Methods
 
 ### 1. Instructor-Led Training
@@ -1210,10 +1246,10 @@ Each team member receives a personalized training plan based on:
   - Make-up session availability
   - Recorded session access
 """
-        
-        with open(docs_dir / "training_programs.md", 'w') as f:
+
+        with open(docs_dir / "training_programs.md", "w") as f:
             f.write(content)
-    
+
     def _create_maintenance_documentation(self, docs_dir: Path):
         """Create maintenance schedules documentation"""
         content = """# Maintenance Schedules and Procedures
@@ -1225,7 +1261,7 @@ Regular maintenance ensures the governance system remains effective, up-to-date,
 ## Scheduled Maintenance Activities
 
 """
-        
+
         for schedule in self.maintenance_schedules:
             content += f"""### {schedule.description}
 
@@ -1236,23 +1272,23 @@ Regular maintenance ensures the governance system remains effective, up-to-date,
 **Responsible Roles:**
 """
             for role in schedule.responsible_roles:
-                role_name = role.value if hasattr(role, 'value') else str(role)
+                role_name = role.value if hasattr(role, "value") else str(role)
                 content += f"- {role_name}\n"
-            
+
             content += f"""
 **Validation Criteria:**
 """
             for criterion in schedule.validation_criteria:
                 content += f"- {criterion}\n"
-            
+
             content += f"""
 **Escalation Thresholds:**
 """
             for threshold, value in schedule.escalation_thresholds.items():
                 content += f"- {threshold}: {value}\n"
-            
+
             content += "\n---\n\n"
-        
+
         content += """## Maintenance Calendar
 
 ### Daily Activities
@@ -1567,14 +1603,14 @@ Regular maintenance ensures the governance system remains effective, up-to-date,
    - Collect stakeholder feedback
    - Document lessons learned
 """
-        
-        with open(docs_dir / "maintenance_schedules.md", 'w') as f:
+
+        with open(docs_dir / "maintenance_schedules.md", "w") as f:
             f.write(content)
-    
+
     def implement_training_programs(self) -> Dict[str, Any]:
         """
         Implement training programs for team members on consistency standards.
-        
+
         Returns:
             Dictionary containing training implementation results
         """
@@ -1582,9 +1618,9 @@ Regular maintenance ensures the governance system remains effective, up-to-date,
             "programs_implemented": [],
             "training_materials_created": [],
             "assessment_frameworks": [],
-            "implementation_status": "completed"
+            "implementation_status": "completed",
         }
-        
+
         for program in self.training_programs:
             # Create training program structure
             program_result = {
@@ -1592,21 +1628,24 @@ Regular maintenance ensures the governance system remains effective, up-to-date,
                 "title": program.title,
                 "modules_created": len(program.modules),
                 "assessment_criteria": len(program.assessment_criteria),
-                "target_roles": [role.value if hasattr(role, 'value') else str(role) for role in program.target_roles]
+                "target_roles": [
+                    role.value if hasattr(role, "value") else str(role)
+                    for role in program.target_roles
+                ],
             }
-            
+
             training_results["programs_implemented"].append(program_result)
-            
+
             # Create training materials for each module
             for module in program.modules:
                 material = {
                     "module_name": module,
                     "program_id": program.program_id,
                     "material_type": "interactive_tutorial",
-                    "estimated_duration": program.duration_hours / len(program.modules)
+                    "estimated_duration": program.duration_hours / len(program.modules),
                 }
                 training_results["training_materials_created"].append(material)
-            
+
             # Create assessment framework
             assessment = {
                 "program_id": program.program_id,
@@ -1614,17 +1653,17 @@ Regular maintenance ensures the governance system remains effective, up-to-date,
                 "criteria_count": len(program.assessment_criteria),
                 "passing_score": 80,
                 "refresh_required": True,
-                "refresh_interval_months": program.refresh_interval_months
+                "refresh_interval_months": program.refresh_interval_months,
             }
             training_results["assessment_frameworks"].append(assessment)
-        
+
         self.logger.info(f"Implemented {len(self.training_programs)} training programs")
         return training_results
-    
+
     def build_maintenance_schedules(self) -> Dict[str, Any]:
         """
         Build maintenance schedules for regular consistency validation and system updates.
-        
+
         Returns:
             Dictionary containing maintenance schedule implementation results
         """
@@ -1632,47 +1671,56 @@ Regular maintenance ensures the governance system remains effective, up-to-date,
             "schedules_created": [],
             "automation_configured": [],
             "monitoring_setup": [],
-            "implementation_status": "completed"
+            "implementation_status": "completed",
         }
-        
+
         for schedule in self.maintenance_schedules:
             # Create maintenance schedule
             schedule_result = {
                 "activity_id": schedule.activity_id,
-                "activity_type": schedule.activity_type.value if hasattr(schedule.activity_type, 'value') else str(schedule.activity_type),
+                "activity_type": (
+                    schedule.activity_type.value
+                    if hasattr(schedule.activity_type, "value")
+                    else str(schedule.activity_type)
+                ),
                 "frequency_days": schedule.frequency_days,
-                "responsible_roles": [role.value if hasattr(role, 'value') else str(role) for role in schedule.responsible_roles],
+                "responsible_roles": [
+                    role.value if hasattr(role, "value") else str(role)
+                    for role in schedule.responsible_roles
+                ],
                 "validation_criteria_count": len(schedule.validation_criteria),
-                "escalation_thresholds": schedule.escalation_thresholds
+                "escalation_thresholds": schedule.escalation_thresholds,
             }
             schedule_results["schedules_created"].append(schedule_result)
-            
+
             # Configure automation for the schedule
             automation = {
                 "activity_id": schedule.activity_id,
                 "automation_type": "cron_job",
                 "schedule_expression": f"0 0 */{schedule.frequency_days} * *",
                 "automated_checks": schedule.validation_criteria,
-                "alert_thresholds": schedule.escalation_thresholds
+                "alert_thresholds": schedule.escalation_thresholds,
             }
             schedule_results["automation_configured"].append(automation)
-            
+
             # Set up monitoring
             monitoring = {
                 "activity_id": schedule.activity_id,
                 "metrics_tracked": list(schedule.escalation_thresholds.keys()),
                 "alert_channels": ["email", "dashboard", "slack"],
-                "escalation_enabled": True
+                "escalation_enabled": True,
             }
             schedule_results["monitoring_setup"].append(monitoring)
-        
-        self.logger.info(f"Built {len(self.maintenance_schedules)} maintenance schedules")
+
+        self.logger.info(
+            f"Built {len(self.maintenance_schedules)} maintenance schedules"
+        )
         return schedule_results
-    
+
     def create_continuous_improvement_process(self) -> Dict[str, Any]:
         """
         Create continuous improvement process incorporating lessons learned and system evolution.
-        
+
         Returns:
             Dictionary containing continuous improvement process implementation results
         """
@@ -1680,9 +1728,9 @@ Regular maintenance ensures the governance system remains effective, up-to-date,
             "processes_created": [],
             "feedback_mechanisms": [],
             "metrics_frameworks": [],
-            "implementation_status": "completed"
+            "implementation_status": "completed",
         }
-        
+
         for process in self.improvement_processes:
             # Create improvement process
             process_result = {
@@ -1691,20 +1739,29 @@ Regular maintenance ensures the governance system remains effective, up-to-date,
                 "analysis_procedures": process.analysis_procedures,
                 "improvement_actions": process.improvement_actions,
                 "success_metrics": process.success_metrics,
-                "review_cycle_months": process.review_cycle_months
+                "review_cycle_months": process.review_cycle_months,
             }
             improvement_results["processes_created"].append(process_result)
-            
+
             # Create feedback mechanisms
             feedback = {
                 "process_id": process.process_id,
-                "feedback_channels": ["surveys", "interviews", "metrics", "observations"],
+                "feedback_channels": [
+                    "surveys",
+                    "interviews",
+                    "metrics",
+                    "observations",
+                ],
                 "collection_frequency": "continuous",
                 "analysis_frequency": f"every_{process.review_cycle_months}_months",
-                "stakeholder_groups": ["governance_team", "implementation_teams", "business_stakeholders"]
+                "stakeholder_groups": [
+                    "governance_team",
+                    "implementation_teams",
+                    "business_stakeholders",
+                ],
             }
             improvement_results["feedback_mechanisms"].append(feedback)
-            
+
             # Create metrics framework
             metrics = {
                 "process_id": process.process_id,
@@ -1712,17 +1769,19 @@ Regular maintenance ensures the governance system remains effective, up-to-date,
                 "measurement_frequency": "monthly",
                 "reporting_frequency": f"every_{process.review_cycle_months}_months",
                 "baseline_establishment": "required",
-                "target_setting": "data_driven"
+                "target_setting": "data_driven",
             }
             improvement_results["metrics_frameworks"].append(metrics)
-        
-        self.logger.info(f"Created {len(self.improvement_processes)} continuous improvement processes")
+
+        self.logger.info(
+            f"Created {len(self.improvement_processes)} continuous improvement processes"
+        )
         return improvement_results
-    
+
     def generate_governance_report(self) -> Dict[str, Any]:
         """
         Generate comprehensive governance implementation report.
-        
+
         Returns:
             Dictionary containing complete governance implementation status
         """
@@ -1731,34 +1790,34 @@ Regular maintenance ensures the governance system remains effective, up-to-date,
                 "roles_defined": len(self.roles),
                 "training_programs": len(self.training_programs),
                 "maintenance_schedules": len(self.maintenance_schedules),
-                "improvement_processes": len(self.improvement_processes)
+                "improvement_processes": len(self.improvement_processes),
             },
             "documentation_status": {
                 "governance_overview": "completed",
                 "roles_and_responsibilities": "completed",
                 "governance_procedures": "completed",
                 "training_programs": "completed",
-                "maintenance_schedules": "completed"
+                "maintenance_schedules": "completed",
             },
             "implementation_readiness": {
                 "governance_controls": "ready",
                 "training_materials": "ready",
                 "maintenance_automation": "ready",
                 "improvement_processes": "ready",
-                "monitoring_systems": "ready"
+                "monitoring_systems": "ready",
             },
             "next_steps": [
                 "Deploy governance documentation",
                 "Begin team training programs",
                 "Activate maintenance schedules",
                 "Start continuous improvement processes",
-                "Monitor governance effectiveness"
+                "Monitor governance effectiveness",
             ],
             "success_criteria": {
                 "governance_compliance": ">95%",
                 "training_completion": ">90%",
                 "maintenance_execution": "100%",
                 "improvement_implementation": ">80%",
-                "stakeholder_satisfaction": ">4.0/5.0"
-            }
+                "stakeholder_satisfaction": ">4.0/5.0",
+            },
         }

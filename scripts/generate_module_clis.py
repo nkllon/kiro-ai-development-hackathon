@@ -22,40 +22,42 @@ from devpost_integration.reflective_module import ReflectiveModuleRegistry
 def discover_reflective_modules() -> List[Any]:
     """Discover all ReflectiveModule instances in the codebase"""
     modules = []
-    
+
     # Get all Python files in src/devpost_integration
     integration_path = src_path / "devpost_integration"
-    
+
     for py_file in integration_path.glob("*.py"):
         if py_file.name.startswith("__"):
             continue
-            
+
         try:
             # Import the module
             module_name = py_file.stem
             module_path = f"devpost_integration.{module_name}"
-            
+
             # Import the module
             module = __import__(module_path, fromlist=[module_name])
-            
+
             # Look for ReflectiveModule classes
             for attr_name in dir(module):
                 attr = getattr(module, attr_name)
-                if (isinstance(attr, type) and 
-                    hasattr(attr, '__bases__') and 
-                    any('ReflectiveModule' in str(base) for base in attr.__bases__)):
-                    
+                if (
+                    isinstance(attr, type)
+                    and hasattr(attr, "__bases__")
+                    and any("ReflectiveModule" in str(base) for base in attr.__bases__)
+                ):
+
                     # Try to instantiate the class
                     try:
                         instance = attr()
-                        if hasattr(instance, 'module_id'):
+                        if hasattr(instance, "module_id"):
                             modules.append(instance)
                     except Exception as e:
                         print(f"Warning: Could not instantiate {attr_name}: {e}")
-                        
+
         except Exception as e:
             print(f"Warning: Could not process {py_file}: {e}")
-    
+
     return modules
 
 
@@ -63,42 +65,42 @@ def generate_cli_for_module(module, output_dir: Path) -> bool:
     """Generate CLI for a single module"""
     try:
         generator = CLIGeneratorEngine()
-        
+
         # Analyze module
         analysis = generator.analyze_module(module)
-        
+
         # Generate CLI code
         cli_code = generator.generate_cli_code(analysis)
-        
+
         # Generate entry point
         entry_point = generator.generate_cli_entry_point(module)
-        
+
         # Create output files
         module_name = module.__class__.__name__.lower()
         cli_file = output_dir / f"{module_name}_cli.py"
         entry_file = output_dir / f"{module_name}_cli_entry.py"
-        
+
         # Write CLI code
-        with open(cli_file, 'w') as f:
+        with open(cli_file, "w") as f:
             f.write(cli_code)
-        
+
         # Write entry point
-        with open(entry_file, 'w') as f:
+        with open(entry_file, "w") as f:
             f.write(entry_point)
-        
+
         # Make entry point executable
         entry_file.chmod(0o755)
-        
+
         # Register CLI
         registry = CLIRegistry.get_instance()
         registry.register_cli(module, cli_code)
-        
+
         print(f"✅ Generated CLI for {module.__class__.__name__}")
         print(f"   CLI file: {cli_file}")
         print(f"   Entry point: {entry_file}")
-        
+
         return True
-        
+
     except Exception as e:
         print(f"❌ Failed to generate CLI for {module.__class__.__name__}: {e}")
         return False
@@ -107,35 +109,35 @@ def generate_cli_for_module(module, output_dir: Path) -> bool:
 def generate_all_clis() -> Dict[str, Any]:
     """Generate CLIs for all discovered modules"""
     print("🔍 Discovering ReflectiveModule instances...")
-    
+
     modules = discover_reflective_modules()
     print(f"Found {len(modules)} ReflectiveModule instances")
-    
+
     # Create output directory
     output_dir = Path("generated_clis")
     output_dir.mkdir(exist_ok=True)
-    
+
     print(f"📁 Output directory: {output_dir}")
-    
+
     # Generate CLIs
     results = {
-        'total_modules': len(modules),
-        'successful': 0,
-        'failed': 0,
-        'generated_files': [],
-        'errors': []
+        "total_modules": len(modules),
+        "successful": 0,
+        "failed": 0,
+        "generated_files": [],
+        "errors": [],
     }
-    
+
     for module in modules:
         success = generate_cli_for_module(module, output_dir)
         if success:
-            results['successful'] += 1
+            results["successful"] += 1
         else:
-            results['failed'] += 1
-    
+            results["failed"] += 1
+
     # Generate master CLI script
     generate_master_cli_script(output_dir, modules)
-    
+
     return results
 
 
@@ -156,11 +158,11 @@ from typing import List, Dict, Any
 # Available module CLIs
 AVAILABLE_CLIS = {{
 '''
-    
+
     for module in modules:
         module_name = module.__class__.__name__.lower()
         master_cli += f'    "{module_name}": "{module_name}_cli_entry.py",\n'
-    
+
     master_cli += '''}
 
 def list_available_clis():
@@ -208,11 +210,11 @@ def main():
 if __name__ == '__main__':
     sys.exit(main())
 '''
-    
+
     master_file = output_dir / "master_cli.py"
-    with open(master_file, 'w') as f:
+    with open(master_file, "w") as f:
         f.write(master_cli)
-    
+
     master_file.chmod(0o755)
     print(f"📄 Generated master CLI: {master_file}")
 
@@ -221,17 +223,17 @@ def main():
     """Main entry point"""
     print("🚀 RM-DDD CLI Generation System")
     print("=" * 50)
-    
+
     # Generate all CLIs
     results = generate_all_clis()
-    
+
     # Print summary
     print("\n📊 Generation Summary:")
     print(f"  Total modules: {results['total_modules']}")
     print(f"  Successful: {results['successful']}")
     print(f"  Failed: {results['failed']}")
-    
-    if results['failed'] > 0:
+
+    if results["failed"] > 0:
         print("\n❌ Some CLIs failed to generate. Check the errors above.")
         return 1
     else:
@@ -243,15 +245,5 @@ def main():
         return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())
-
-
-
-
-
-
-
-
-
-

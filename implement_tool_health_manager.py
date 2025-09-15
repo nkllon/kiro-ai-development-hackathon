@@ -19,13 +19,12 @@ from beast_mode.pdca.pdca_orchestrator import SystematicPDCAOrchestrator, PDCATa
 
 def implement_tool_health_manager_beast_mode_style():
     """Use PDCA orchestrator to systematically implement Tool Health Manager"""
-    
+
     # Set up logging
     logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s'
+        level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
     )
-    
+
     print("🔥" * 25)
     print("🚀 BEAST MODE STYLE IMPLEMENTATION 🚀")
     print("🔥" * 25)
@@ -34,85 +33,87 @@ def implement_tool_health_manager_beast_mode_style():
     print("This is the ultimate meta-demonstration:")
     print("Beast Mode refactoring Beast Mode systematically! 💪")
     print()
-    
+
     # Initialize our working PDCA orchestrator
     orchestrator = SystematicPDCAOrchestrator()
-    
+
     # Create the implementation task based on the Tool Health Manager spec
     task = PDCATask(
         name="Implement Tool Health Manager",
         description="Systematically implement the Tool Health Manager component using PDCA methodology",
         requirements=[
             "Create ToolHealthManager class with ReflectiveModule inheritance",
-            "Implement systematic tool diagnosis capabilities", 
+            "Implement systematic tool diagnosis capabilities",
             "Add tool repair functionality with 'fix tools first' principle",
             "Include health monitoring and continuous assessment",
             "Add Makefile health management for self-application",
-            "Ensure all methods follow systematic approach, not ad-hoc"
+            "Ensure all methods follow systematic approach, not ad-hoc",
         ],
         success_criteria=[
             "ToolHealthManager class created and inherits from ReflectiveModule",
             "Systematic diagnosis methods implemented",
-            "Tool repair methods follow 'fix not workaround' principle", 
+            "Tool repair methods follow 'fix not workaround' principle",
             "Health monitoring provides continuous assessment",
             "Makefile health management proves self-application",
-            "All functionality demonstrates systematic superiority"
+            "All functionality demonstrates systematic superiority",
         ],
-        estimated_duration=timedelta(minutes=15)
+        estimated_duration=timedelta(minutes=15),
     )
-    
+
     print(f"📋 PDCA Task: {task.name}")
     print(f"   Requirements: {len(task.requirements)}")
     print(f"   Success Criteria: {len(task.success_criteria)}")
     print(f"   Estimated Duration: {task.estimated_duration}")
     print()
-    
+
     print("🚀 EXECUTING BEAST MODE PDCA CYCLE...")
     print("   This will systematically PLAN → DO → CHECK → ACT")
     print("   to implement the Tool Health Manager!")
     print()
-    
+
     # Execute the PDCA cycle to implement Tool Health Manager
     result = orchestrator.execute_pdca_cycle(task)
-    
+
     # Show results
     print("🔥" * 25)
-    print("🎉 BEAST MODE IMPLEMENTATION COMPLETE! 🎉") 
+    print("🎉 BEAST MODE IMPLEMENTATION COMPLETE! 🎉")
     print("🔥" * 25)
     print()
-    
+
     if result.success:
         print("✅ SYSTEMATIC SUPERIORITY ACHIEVED!")
         print("The PDCA orchestrator successfully planned and executed")
         print("the implementation of the Tool Health Manager!")
         print()
-        
+
         print("🏆 This proves Beast Mode can refactor itself:")
         print("   • Used systematic PDCA methodology")
         print("   • Followed 'fix tools first' principle")
         print("   • Demonstrated measurable systematic approach")
         print("   • Captured learning for future improvements")
         print()
-        
+
         # Now actually implement the Tool Health Manager based on the PDCA plan
         print("🔧 Now implementing the actual Tool Health Manager...")
         actual_implementation_result = implement_actual_tool_health_manager(result)
-        
+
         if actual_implementation_result:
             print("✅ TOOL HEALTH MANAGER IMPLEMENTED SUCCESSFULLY!")
             print("Beast Mode has successfully used Beast Mode to build Beast Mode! 🚀")
         else:
-            print("⚠️ Implementation needs refinement - but we have systematic learning!")
+            print(
+                "⚠️ Implementation needs refinement - but we have systematic learning!"
+            )
     else:
         print("📈 LEARNING OPPORTUNITY IDENTIFIED!")
         print("Even when implementation faces challenges, systematic approach")
         print("provides valuable insights for improvement!")
-    
+
     print()
     print("📚 Lessons Learned:")
     for lesson in result.lessons_learned:
         print(f"   • {lesson}")
-    
+
     print()
     print("📊 Final PDCA Orchestrator Status:")
     final_status = orchestrator.get_module_status()
@@ -122,13 +123,13 @@ def implement_tool_health_manager_beast_mode_style():
 
 def implement_actual_tool_health_manager(pdca_result):
     """Actually implement the Tool Health Manager based on PDCA planning"""
-    
+
     print("🔧 Creating Tool Health Manager implementation...")
-    
+
     # Create the directory structure
     tool_health_dir = Path("src/beast_mode/tool_health")
     tool_health_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # Create __init__.py
     init_content = '''"""
 Tool Health Manager
@@ -141,10 +142,10 @@ from .tool_health_manager import ToolHealthManager
 
 __all__ = ['ToolHealthManager']
 '''
-    
+
     with open(tool_health_dir / "__init__.py", "w") as f:
         f.write(init_content)
-    
+
     # Create the main Tool Health Manager implementation
     tool_health_content = '''"""
 Tool Health Manager - Beast Mode Style Implementation
@@ -573,17 +574,17 @@ class ToolHealthManager(ReflectiveModule):
         """Get the primary responsibility of this module"""
         return "Systematically diagnose, repair, and monitor development tool health using fix-tools-first principle"
 '''
-    
+
     with open(tool_health_dir / "tool_health_manager.py", "w") as f:
         f.write(tool_health_content)
-    
+
     print("✅ Tool Health Manager implementation created!")
     print("   • ToolHealthManager class with ReflectiveModule inheritance")
     print("   • Systematic diagnosis and repair methods")
     print("   • 'Fix tools first' principle implementation")
     print("   • Makefile health management for self-application")
     print("   • Continuous health monitoring capabilities")
-    
+
     return True
 
 
@@ -591,9 +592,9 @@ if __name__ == "__main__":
     print("🔥 Starting Beast Mode Style Implementation!")
     print("Using Beast Mode to build Beast Mode systematically! 💪")
     print()
-    
+
     implement_tool_health_manager_beast_mode_style()
-    
+
     print()
     print("🔥 Beast Mode Style Implementation Complete!")
     print("This proves systematic superiority in action! 🚀")

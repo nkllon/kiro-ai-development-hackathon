@@ -109,7 +109,9 @@ class ModuleDetector:
                 # Find files with similar names (potential module grouping)
                 for other_file in self.python_files:
                     if other_file != file_path:
-                        similarity = self._calculate_name_similarity(file_name, other_file.stem)
+                        similarity = self._calculate_name_similarity(
+                            file_name, other_file.stem
+                        )
                         if similarity > 0.7:  # High similarity threshold
                             relationships[file_name].add(other_file.stem)
 
@@ -188,7 +190,9 @@ class ModuleDetector:
         print(f"✅ Detected {len(self.modules)} logical modules")
         return self.modules
 
-    def _group_files_into_modules(self, relationships: dict[str, set[str]]) -> dict[str, list[Path]]:
+    def _group_files_into_modules(
+        self, relationships: dict[str, set[str]]
+    ) -> dict[str, list[Path]]:
         """Group files into logical modules based on relationships"""
         module_groups = defaultdict(list)
         processed_files = set()
@@ -215,7 +219,9 @@ class ModuleDetector:
 
                 # Add related files
                 for related_name in related_files:
-                    related_file = next((f for f in self.python_files if f.stem == related_name), None)
+                    related_file = next(
+                        (f for f in self.python_files if f.stem == related_name), None
+                    )
                     if related_file and related_file.stem not in processed_files:
                         module_files.append(related_file)
                         processed_files.add(related_file.stem)
@@ -259,7 +265,9 @@ class ModuleDetector:
                 total_lines += len(lines)
                 total_classes += len(re.findall(r"^class\s+\w+", content, re.MULTILINE))
                 total_functions += len(re.findall(r"^def\s+\w+", content, re.MULTILINE))
-                total_imports += len(re.findall(r"^(?:from|import)\s+\w+", content, re.MULTILINE))
+                total_imports += len(
+                    re.findall(r"^(?:from|import)\s+\w+", content, re.MULTILINE)
+                )
 
                 # Extract dependencies
                 file_deps = self._extract_imports(content)
@@ -302,7 +310,9 @@ class ModuleDetector:
             "statistics": {
                 "total_lines": sum(m.total_lines for m in self.modules.values()),
                 "total_classes": sum(m.total_classes for m in self.modules.values()),
-                "total_functions": sum(m.total_functions for m in self.modules.values()),
+                "total_functions": sum(
+                    m.total_functions for m in self.modules.values()
+                ),
                 "total_imports": sum(m.total_imports for m in self.modules.values()),
             },
         }
@@ -324,7 +334,9 @@ class ModuleDetector:
 
         return summary
 
-    def save_module_summary(self, output_path: str = "module_detection_summary.json") -> str:
+    def save_module_summary(
+        self, output_path: str = "module_detection_summary.json"
+    ) -> str:
         """Save module detection summary to JSON file"""
         summary = self.generate_module_summary()
 

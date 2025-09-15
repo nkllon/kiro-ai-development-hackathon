@@ -20,35 +20,35 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse
 
 # Add the project root to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 # Set macOS restricted mode
-os.environ['BEAST_MODE_RESTRICTED_MODE'] = 'true'
+os.environ["BEAST_MODE_RESTRICTED_MODE"] = "true"
 
 from beast_mode.monitoring.prometheus_config import get_prometheus_config
 
 
 class MetricsHandler(BaseHTTPRequestHandler):
     """HTTP handler for metrics endpoint."""
-    
+
     def do_GET(self):
         """Handle GET requests."""
         parsed_path = urlparse(self.path)
-        
-        if parsed_path.path == '/metrics':
+
+        if parsed_path.path == "/metrics":
             self.handle_metrics()
-        elif parsed_path.path == '/health':
+        elif parsed_path.path == "/health":
             self.handle_health()
         else:
             self.send_error(404, "Not Found")
-    
+
     def handle_metrics(self):
         """Handle /metrics endpoint."""
         try:
             # Generate macOS-compatible metrics
             current_time = int(time.time())
             uptime = current_time - self.server.start_time
-            
+
             response = f"""# HELP beast_mode_info Beast Mode framework information
 # TYPE beast_mode_info gauge
 beast_mode_info{{version="1.0.0",framework="beast-mode",platform="macos"}} 1
@@ -73,15 +73,15 @@ beast_mode_restricted_mode{{enabled="true",reason="macos-walled-garden"}} 1
 # TYPE beast_mode_metrics_available gauge
 beast_mode_metrics_available{{type="basic",status="operational"}} 1
 """
-            
+
             self.send_response(200)
-            self.send_header('Content-Type', 'text/plain; charset=utf-8')
+            self.send_header("Content-Type", "text/plain; charset=utf-8")
             self.end_headers()
-            self.wfile.write(response.encode('utf-8'))
-            
+            self.wfile.write(response.encode("utf-8"))
+
         except Exception as e:
             self.send_error(500, f"Internal server error: {str(e)}")
-    
+
     def handle_health(self):
         """Handle /health endpoint."""
         try:
@@ -91,18 +91,19 @@ beast_mode_metrics_available{{type="basic",status="operational"}} 1
                 "service": "beast-mode-metrics-macos",
                 "platform": platform.system().lower(),
                 "restricted_mode": True,
-                "uptime_seconds": int(time.time()) - self.server.start_time
+                "uptime_seconds": int(time.time()) - self.server.start_time,
             }
-            
+
             self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
+            self.send_header("Content-Type", "application/json")
             self.end_headers()
-            
+
             import json
-            self.wfile.write(json.dumps(health_data).encode('utf-8'))
+
+            self.wfile.write(json.dumps(health_data).encode("utf-8"))
         except Exception as e:
             self.send_error(500, f"Health check failed: {str(e)}")
-    
+
     def log_message(self, format, *args):
         """Override to reduce logging noise."""
         pass
@@ -110,7 +111,7 @@ beast_mode_metrics_available{{type="basic",status="operational"}} 1
 
 class MacOSMetricsServer(HTTPServer):
     """Custom HTTP server with start time tracking."""
-    
+
     def __init__(self, *args, **kwargs):
         self.start_time = int(time.time())
         super().__init__(*args, **kwargs)
@@ -119,36 +120,36 @@ class MacOSMetricsServer(HTTPServer):
 def main():
     """Main function to start the macOS-compatible metrics server."""
     print("Starting Beast Mode Metrics Server (macOS Compatible)...")
-    
+
     # Setup logging
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
-    logger = logging.getLogger('beast_mode_metrics_server_macos')
-    
+    logger = logging.getLogger("beast_mode_metrics_server_macos")
+
     try:
         # Get configuration
         config = get_prometheus_config()
         logger.info(f"Configuration loaded: {config.mode.value} mode")
         logger.info(f"Platform: {platform.system()} {platform.release()}")
         logger.info("Running in macOS restricted mode")
-        
+
         # Start HTTP server
-        port = int(os.getenv('BEAST_MODE_METRICS_PORT', '8001'))
-        host = os.getenv('BEAST_MODE_METRICS_HOST', '0.0.0.0')
-        
+        port = int(os.getenv("BEAST_MODE_METRICS_PORT", "8001"))
+        host = os.getenv("BEAST_MODE_METRICS_HOST", "0.0.0.0")
+
         httpd = MacOSMetricsServer((host, port), MetricsHandler)
-        
+
         logger.info(f"Metrics server starting on {host}:{port}")
         logger.info("Available endpoints:")
         logger.info(f"  http://{host}:{port}/metrics - Prometheus metrics")
         logger.info(f"  http://{host}:{port}/health - Health check")
         logger.info("macOS walled garden restrictions applied")
-        
+
         # Start server
         httpd.serve_forever()
-        
+
     except KeyboardInterrupt:
         logger.info("Shutting down metrics server...")
     except Exception as e:

@@ -49,7 +49,9 @@ class DomainOperations:
                 category_domains = category_info.get("domains", [])
                 if category_domains:
                     output.append(f"\n🏗️  {category.replace('_', ' ').title()}:")
-                    output.append(f"   Purpose: {category_info.get('description', 'N/A')}")
+                    output.append(
+                        f"   Purpose: {category_info.get('description', 'N/A')}"
+                    )
                     output.append("   Domains:")
 
                     for domain_name in category_domains:
@@ -96,7 +98,9 @@ class DomainOperations:
             project_model = self.load_project_model()
             domains = project_model.get("domains", {})
             domain_architecture = project_model.get("domain_architecture", {})
-            requirements_traceability = project_model.get("requirements_traceability", [])
+            requirements_traceability = project_model.get(
+                "requirements_traceability", []
+            )
 
             if not domains and not requirements_traceability:
                 return "📋 No domains or requirements found in project model registry"
@@ -114,7 +118,9 @@ class DomainOperations:
                 if category not in domain_architecture:
                     return f"❌ Category '{category}' not found"
                 category_domains = domain_architecture[category].get("domains", [])
-                domains_to_show = {k: v for k, v in domains_to_show.items() if k in category_domains}
+                domains_to_show = {
+                    k: v for k, v in domains_to_show.items() if k in category_domains
+                }
 
                 # Filter by search term if specified
                 if search:
@@ -127,7 +133,9 @@ class DomainOperations:
                         if domain_info and isinstance(domain_info, dict):
                             reqs = domain_info.get("requirements", [])
                             # Check if search term appears in domain name or requirements
-                            if search_term in domain_name.lower() or any(search_term in req.lower() for req in reqs):
+                            if search_term in domain_name.lower() or any(
+                                search_term in req.lower() for req in reqs
+                            ):
                                 filtered_domains[domain_name] = domain_info
 
                     # Search in requirements_traceability
@@ -142,11 +150,17 @@ class DomainOperations:
 
             # Output format handling
             if format == "json":
-                return self._format_json_with_traceability(domains_to_show, requirements_traceability)
+                return self._format_json_with_traceability(
+                    domains_to_show, requirements_traceability
+                )
             elif format == "csv":
-                return self._format_csv_with_traceability(domains_to_show, requirements_traceability)
+                return self._format_csv_with_traceability(
+                    domains_to_show, requirements_traceability
+                )
             else:  # text format
-                return self._format_text_with_traceability(domains_to_show, requirements_traceability)
+                return self._format_text_with_traceability(
+                    domains_to_show, requirements_traceability
+                )
 
         except Exception as e:
             import traceback
@@ -232,7 +246,9 @@ class DomainOperations:
 
                     # Traceability requirements
             if requirements_traceability:
-                output.append(f"\n📋 Requirements Traceability ({len(requirements_traceability)} items):")
+                output.append(
+                    f"\n📋 Requirements Traceability ({len(requirements_traceability)} items):"
+                )
                 output.append("=" * 60)
 
                 for i, req in enumerate(requirements_traceability, 1):
@@ -256,7 +272,11 @@ class DomainOperations:
         # Summary
         output.append(f"\n📊 Summary:")
         domain_count = len(domains_to_show)
-        domain_req_count = sum(len(domain_info.get("requirements", [])) for domain_info in domains_to_show.values() if domain_info and isinstance(domain_info, dict))
+        domain_req_count = sum(
+            len(domain_info.get("requirements", []))
+            for domain_info in domains_to_show.values()
+            if domain_info and isinstance(domain_info, dict)
+        )
         traceability_count = len(requirements_traceability)
 
         output.append(f"   Domains: {domain_count}")

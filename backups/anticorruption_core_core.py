@@ -23,9 +23,11 @@ from ..core.health import ModuleHealth
 from ..models import ModuleStatus
 from ..models import ModuleCapability
 
+
 @dataclass
 class TranslationRule:
     """Defines a translation rule between external and domain models."""
+
     source_field: str
     target_field: str
     transformation: Optional[str] = None
@@ -33,20 +35,23 @@ class TranslationRule:
     default_value: Any = None
     required: bool = True
 
+
 @dataclass
 class ContextMapping:
     """Defines mapping between bounded contexts."""
+
     source_context: str
     target_context: str
     relationship_type: str
     translation_rules: List[TranslationRule] = field(default_factory=list)
-    integration_pattern: str = 'anticorruption_layer'
-    data_flow_direction: str = 'bidirectional'
+    integration_pattern: str = "anticorruption_layer"
+    data_flow_direction: str = "bidirectional"
+
 
 class ContextTranslator(ABC, Generic[ExternalType, DomainType]):
     """
     Abstract base class for translating between external and domain models.
-    
+
     Provides systematic translation capabilities while protecting domain
     models from external system contamination.
     """
@@ -60,13 +65,13 @@ class ContextTranslator(ABC, Generic[ExternalType, DomainType]):
     def translate_to_domain(self, external_model: ExternalType) -> DomainType:
         """
         Translate external model to domain model.
-        
+
         Args:
             external_model: External system model
-            
+
         Returns:
             DomainType: Translated domain model
-            
+
         Raises:
             DomainException: If translation fails
         """
@@ -76,26 +81,28 @@ class ContextTranslator(ABC, Generic[ExternalType, DomainType]):
     def translate_from_domain(self, domain_model: DomainType) -> ExternalType:
         """
         Translate domain model to external model.
-        
+
         Args:
             domain_model: Domain model
-            
+
         Returns:
             ExternalType: Translated external model
-            
+
         Raises:
             DomainException: If translation fails
         """
         pass
 
-    def validate_translation(self, external_model: ExternalType, domain_model: DomainType) -> ValidationResult:
+    def validate_translation(
+        self, external_model: ExternalType, domain_model: DomainType
+    ) -> ValidationResult:
         """
         Validate that translation maintains data integrity.
-        
+
         Args:
             external_model: Original external model
             domain_model: Translated domain model
-            
+
         Returns:
             ValidationResult: Validation results
         """
@@ -108,9 +115,11 @@ class ContextTranslator(ABC, Generic[ExternalType, DomainType]):
                 if rule.required:
                     domain_value = getattr(domain_model, rule.target_field, None)
                     if domain_value is None:
-                        result.add_error(f'Required field {rule.target_field} is missing')
+                        result.add_error(
+                            f"Required field {rule.target_field} is missing"
+                        )
         except Exception as e:
-            result.add_error(f'Translation validation failed: {str(e)}')
+            result.add_error(f"Translation validation failed: {str(e)}")
         return result
 
     def get_translation_errors(self) -> List[str]:
@@ -121,10 +130,11 @@ class ContextTranslator(ABC, Generic[ExternalType, DomainType]):
         """Clear translation errors."""
         self._translation_errors.clear()
 
+
 class DictionaryTranslator(ContextTranslator[Dict[str, Any], Any]):
     """
     Translator for dictionary-based external data.
-    
+
     Provides systematic translation between dictionary data structures
     and domain models using configurable translation rules.
     """
@@ -137,15 +147,22 @@ class DictionaryTranslator(ContextTranslator[Dict[str, Any], Any]):
                 external_value = external_model.get(rule.source_field)
                 if external_value is None:
                     if rule.required and rule.default_value is None:
-                        raise ValueError(f'Required field {rule.source_field} is missing')
+                        raise ValueError(
+                            f"Required field {rule.source_field} is missing"
+                        )
                     external_value = rule.default_value
                 if rule.transformation and external_value is not None:
-                    external_value = self._apply_transformation(external_value, rule.transformation)
+                    external_value = self._apply_transformation(
+                        external_value, rule.transformation
+                    )
                 domain_data[rule.target_field] = external_value
             return domain_data
         except Exception as e:
             self._translation_errors.append(str(e))
-            raise DomainException(f'Translation to domain failed: {str(e)}', error_code='TRANSLATION_TO_DOMAIN_FAILED')
+            raise DomainException(
+                f"Translation to domain failed: {str(e)}",
+                error_code="TRANSLATION_TO_DOMAIN_FAILED",
+            )
 
     def translate_from_domain(self, domain_model: Any) -> Dict[str, Any]:
         """Translate domain model to dictionary."""
@@ -159,12 +176,17 @@ class DictionaryTranslator(ContextTranslator[Dict[str, Any], Any]):
                 domain_value = domain_data.get(rule.target_field)
                 if domain_value is not None:
                     if rule.transformation:
-                        domain_value = self._apply_reverse_transformation(domain_value, rule.transformation)
+                        domain_value = self._apply_reverse_transformation(
+                            domain_value, rule.transformation
+                        )
                     external_data[rule.source_field] = domain_value
             return external_data
         except Exception as e:
             self._translation_errors.append(str(e))
-            raise DomainException(f'Translation from domain failed: {str(e)}', error_code='TRANSLATION_FROM_DOMAIN_FAILED')
+            raise DomainException(
+                f"Translation from domain failed: {str(e)}",
+                error_code="TRANSLATION_FROM_DOMAIN_FAILED",
+            )
 
     def _apply_transformation(self, value: Any, transformation: str) -> Any:
         """Apply transformation to a value."""
@@ -176,15 +198,16 @@ class DictionaryTranslator(ContextTranslator[Dict[str, Any], Any]):
 
     def _extract_domain_data(self, domain_model: Any) -> Dict[str, Any]:
         """Extract data from domain model."""
-        if hasattr(domain_model, '__dict__'):
+        if hasattr(domain_model, "__dict__"):
             return domain_model.__dict__
         else:
-            return dict(domain_model) if hasattr(domain_model, 'keys') else {}
+            return dict(domain_model) if hasattr(domain_model, "keys") else {}
+
 
 class AntiCorruptionLayer(DomainReflectiveModule):
     """
     Anti-corruption layer for protecting domain models from external contamination.
-    
+
     Coordinates multiple adapters and translators to provide a unified
     interface for external system integration while maintaining domain purity.
     """
@@ -194,82 +217,94 @@ class AntiCorruptionLayer(DomainReflectiveModule):
         self.protected_contexts = protected_contexts
         self._adapters: Dict[str, DomainAdapter] = {}
         self._context_mappings: Dict[str, ContextMapping] = {}
-        self._integration_metrics = {'successful_integrations': 0, 'failed_integrations': 0, 'protected_contexts': len(protected_contexts)}
+        self._integration_metrics = {
+            "successful_integrations": 0,
+            "failed_integrations": 0,
+            "protected_contexts": len(protected_contexts),
+        }
 
     def register_adapter(self, external_system: str, adapter: DomainAdapter):
         """
         Register an adapter for an external system.
-        
+
         Args:
             external_system: Name of the external system
             adapter: Domain adapter for the system
         """
         self._adapters[external_system] = adapter
-        logger.info(f'Registered adapter for external system: {external_system}')
+        logger.info(f"Registered adapter for external system: {external_system}")
 
     def register_context_mapping(self, external_system: str, mapping: ContextMapping):
         """
         Register context mapping for an external system.
-        
+
         Args:
             external_system: Name of the external system
             mapping: Context mapping configuration
         """
         self._context_mappings[external_system] = mapping
-        logger.info(f'Registered context mapping for: {external_system}')
+        logger.info(f"Registered context mapping for: {external_system}")
 
-    async def integrate_external_data(self, external_system: str, external_data: Any) -> Any:
+    async def integrate_external_data(
+        self, external_system: str, external_data: Any
+    ) -> Any:
         """
         Integrate external data through anti-corruption layer.
-        
+
         Args:
             external_system: Name of the external system
             external_data: Data from external system
-            
+
         Returns:
             Any: Integrated domain model
-            
+
         Raises:
             DomainException: If integration fails
         """
         if external_system not in self._adapters:
-            raise DomainException(f'No adapter registered for external system: {external_system}', error_code='NO_ADAPTER_REGISTERED')
+            raise DomainException(
+                f"No adapter registered for external system: {external_system}",
+                error_code="NO_ADAPTER_REGISTERED",
+            )
         try:
             adapter = self._adapters[external_system]
             domain_model = await adapter.adapt_from_external(external_data)
-            self._integration_metrics['successful_integrations'] += 1
-            logger.info(f'Successfully integrated data from {external_system}')
+            self._integration_metrics["successful_integrations"] += 1
+            logger.info(f"Successfully integrated data from {external_system}")
             return domain_model
         except Exception as e:
-            self._integration_metrics['failed_integrations'] += 1
-            logger.error(f'Failed to integrate data from {external_system}: {e}')
+            self._integration_metrics["failed_integrations"] += 1
+            logger.error(f"Failed to integrate data from {external_system}: {e}")
             raise
 
     async def export_domain_data(self, external_system: str, domain_model: Any) -> Any:
         """
         Export domain data through anti-corruption layer.
-        
+
         Args:
             external_system: Name of the external system
             domain_model: Domain model to export
-            
+
         Returns:
             Any: Exported external format
-            
+
         Raises:
             DomainException: If export fails
         """
         if external_system not in self._adapters:
-            raise DomainException(f'No adapter registered for external system: {external_system}', error_code='NO_ADAPTER_REGISTERED')
+            raise DomainException(
+                f"No adapter registered for external system: {external_system}",
+                error_code="NO_ADAPTER_REGISTERED",
+            )
         try:
             adapter = self._adapters[external_system]
             external_data = await adapter.adapt_to_external(domain_model)
-            self._integration_metrics['successful_integrations'] += 1
-            logger.info(f'Successfully exported data to {external_system}')
+            self._integration_metrics["successful_integrations"] += 1
+            logger.info(f"Successfully exported data to {external_system}")
             return external_data
         except Exception as e:
-            self._integration_metrics['failed_integrations'] += 1
-            logger.error(f'Failed to export data to {external_system}: {e}')
+            self._integration_metrics["failed_integrations"] += 1
+            logger.error(f"Failed to export data to {external_system}: {e}")
             raise
 
     def get_registered_systems(self) -> List[str]:
@@ -284,6 +319,7 @@ class AntiCorruptionLayer(DomainReflectiveModule):
         """Get module status."""
         from ..core.health import ModuleHealth
         from ..models import ModuleStatus
+
         healthy_adapters = 0
         for adapter in self._adapters.values():
             if await adapter.is_healthy():
@@ -291,12 +327,30 @@ class AntiCorruptionLayer(DomainReflectiveModule):
         total_adapters = len(self._adapters)
         health_ratio = healthy_adapters / max(total_adapters, 1)
         status = ModuleStatus.AVAILABLE if health_ratio > 0.8 else ModuleStatus.DEGRADED
-        return ModuleHealth(status=status, message=f'Anti-corruption layer protecting {len(self.protected_contexts)} contexts', capabilities=await self.get_module_capabilities(), health_indicators={'healthy_adapters': healthy_adapters, 'total_adapters': total_adapters, 'health_ratio': health_ratio, 'integration_metrics': self._integration_metrics})
+        return ModuleHealth(
+            status=status,
+            message=f"Anti-corruption layer protecting {len(self.protected_contexts)} contexts",
+            capabilities=await self.get_module_capabilities(),
+            health_indicators={
+                "healthy_adapters": healthy_adapters,
+                "total_adapters": total_adapters,
+                "health_ratio": health_ratio,
+                "integration_metrics": self._integration_metrics,
+            },
+        )
 
     async def get_module_capabilities(self):
         """Get module capabilities."""
         from ..models import ModuleCapability
-        return [ModuleCapability(name='anti_corruption_layer', description='Protects domain models from external contamination', available=True, version='1.0.0')]
+
+        return [
+            ModuleCapability(
+                name="anti_corruption_layer",
+                description="Protects domain models from external contamination",
+                available=True,
+                version="1.0.0",
+            )
+        ]
 
     async def is_healthy(self) -> bool:
         """Check if anti-corruption layer is healthy."""
@@ -313,87 +367,143 @@ class AntiCorruptionLayer(DomainReflectiveModule):
         adapter_health = {}
         for system, adapter in self._adapters.items():
             adapter_health[system] = await adapter.is_healthy()
-        return {'protected_contexts': self.protected_contexts, 'registered_systems': list(self._adapters.keys()), 'adapter_health': adapter_health, 'integration_metrics': self._integration_metrics}
+        return {
+            "protected_contexts": self.protected_contexts,
+            "registered_systems": list(self._adapters.keys()),
+            "adapter_health": adapter_health,
+            "integration_metrics": self._integration_metrics,
+        }
 
     def get_domain_boundaries(self):
         """Get domain boundaries."""
-        return DomainBoundaries(context=self.domain_context, invariants=['External systems cannot directly access protected contexts', 'All external data must pass through registered adapters', 'Domain models must remain pure and uncontaminated'], external_dependencies=list(self._adapters.keys()), integration_patterns=['anti_corruption_layer', 'adapter_pattern'])
+        return DomainBoundaries(
+            context=self.domain_context,
+            invariants=[
+                "External systems cannot directly access protected contexts",
+                "All external data must pass through registered adapters",
+                "Domain models must remain pure and uncontaminated",
+            ],
+            external_dependencies=list(self._adapters.keys()),
+            integration_patterns=["anti_corruption_layer", "adapter_pattern"],
+        )
 
     def validate_domain_invariants(self):
         """Validate domain invariants."""
         result = ValidationResult(is_valid=True)
         for context in self.protected_contexts:
-            if context not in [mapping.target_context for mapping in self._context_mappings.values()]:
-                result.add_warning(f'Protected context {context} has no explicit mapping')
-        total_integrations = self._integration_metrics['successful_integrations'] + self._integration_metrics['failed_integrations']
+            if context not in [
+                mapping.target_context for mapping in self._context_mappings.values()
+            ]:
+                result.add_warning(
+                    f"Protected context {context} has no explicit mapping"
+                )
+        total_integrations = (
+            self._integration_metrics["successful_integrations"]
+            + self._integration_metrics["failed_integrations"]
+        )
         if total_integrations > 0:
-            success_rate = self._integration_metrics['successful_integrations'] / total_integrations
+            success_rate = (
+                self._integration_metrics["successful_integrations"]
+                / total_integrations
+            )
             if success_rate < 0.9:
-                result.add_warning(f'Low integration success rate: {success_rate:.2%}')
+                result.add_warning(f"Low integration success rate: {success_rate:.2%}")
         return result
+
 
 def __init__(self, context_mapping: ContextMapping):
     self.context_mapping = context_mapping
     self._translation_cache: Dict[str, Any] = {}
     self._translation_errors: List[str] = []
 
+
 @abstractmethod
 def translate_to_domain(self, external_model: ExternalType) -> DomainType:
     """
-        Translate external model to domain model.
-        
-        Args:
-            external_model: External system model
-            
-        Returns:
-            DomainType: Translated domain model
-            
-        Raises:
-            DomainException: If translation fails
-        """
+    Translate external model to domain model.
+
+    Args:
+        external_model: External system model
+
+    Returns:
+        DomainType: Translated domain model
+
+    Raises:
+        DomainException: If translation fails
+    """
     pass
+
 
 @abstractmethod
 def translate_from_domain(self, domain_model: DomainType) -> ExternalType:
     """
-        Translate domain model to external model.
-        
-        Args:
-            domain_model: Domain model
-            
-        Returns:
-            ExternalType: Translated external model
-            
-        Raises:
-            DomainException: If translation fails
-        """
+    Translate domain model to external model.
+
+    Args:
+        domain_model: Domain model
+
+    Returns:
+        ExternalType: Translated external model
+
+    Raises:
+        DomainException: If translation fails
+    """
     pass
+
 
 def get_translation_errors(self) -> List[str]:
     """Get translation errors."""
     return self._translation_errors.copy()
 
+
 def clear_translation_errors(self):
     """Clear translation errors."""
     self._translation_errors.clear()
 
-def __init__(self, domain_context: str, external_system_name: str, translator: ContextTranslator[ExternalType, DomainType]):
+
+def __init__(
+    self,
+    domain_context: str,
+    external_system_name: str,
+    translator: ContextTranslator[ExternalType, DomainType],
+):
     super().__init__(domain_context)
     self.external_system_name = external_system_name
     self.translator = translator
-    self._adaptation_metrics = {'successful_adaptations': 0, 'failed_adaptations': 0, 'last_adaptation': None}
+    self._adaptation_metrics = {
+        "successful_adaptations": 0,
+        "failed_adaptations": 0,
+        "last_adaptation": None,
+    }
+
 
 def get_adaptation_metrics(self) -> Dict[str, Any]:
     """Get adaptation metrics."""
     return self._adaptation_metrics.copy()
 
+
 def get_domain_boundaries(self):
     """Get domain boundaries."""
-    return DomainBoundaries(context=self.domain_context, invariants=['External data must be validated before domain integration', 'Domain models must not leak external system details', 'Translation must preserve domain integrity'], external_dependencies=[self.external_system_name])
+    return DomainBoundaries(
+        context=self.domain_context,
+        invariants=[
+            "External data must be validated before domain integration",
+            "Domain models must not leak external system details",
+            "Translation must preserve domain integrity",
+        ],
+        external_dependencies=[self.external_system_name],
+    )
 
-def __init__(self, domain_context: str, external_system_name: str, context_mapping: ContextMapping):
+
+def __init__(
+    self,
+    domain_context: str,
+    external_system_name: str,
+    context_mapping: ContextMapping,
+):
     translator = DictionaryTranslator(context_mapping)
     super().__init__(domain_context, external_system_name, translator)
+
 
 def translate_to_domain(self, external_model: Dict[str, Any]) -> Any:
     """Translate dictionary to domain model."""
@@ -403,15 +513,21 @@ def translate_to_domain(self, external_model: Dict[str, Any]) -> Any:
             external_value = external_model.get(rule.source_field)
             if external_value is None:
                 if rule.required and rule.default_value is None:
-                    raise ValueError(f'Required field {rule.source_field} is missing')
+                    raise ValueError(f"Required field {rule.source_field} is missing")
                 external_value = rule.default_value
             if rule.transformation and external_value is not None:
-                external_value = self._apply_transformation(external_value, rule.transformation)
+                external_value = self._apply_transformation(
+                    external_value, rule.transformation
+                )
             domain_data[rule.target_field] = external_value
         return domain_data
     except Exception as e:
         self._translation_errors.append(str(e))
-        raise DomainException(f'Translation to domain failed: {str(e)}', error_code='TRANSLATION_TO_DOMAIN_FAILED')
+        raise DomainException(
+            f"Translation to domain failed: {str(e)}",
+            error_code="TRANSLATION_TO_DOMAIN_FAILED",
+        )
+
 
 def translate_from_domain(self, domain_model: Any) -> Dict[str, Any]:
     """Translate domain model to dictionary."""
@@ -425,105 +541,136 @@ def translate_from_domain(self, domain_model: Any) -> Dict[str, Any]:
             domain_value = domain_data.get(rule.target_field)
             if domain_value is not None:
                 if rule.transformation:
-                    domain_value = self._apply_reverse_transformation(domain_value, rule.transformation)
+                    domain_value = self._apply_reverse_transformation(
+                        domain_value, rule.transformation
+                    )
                 external_data[rule.source_field] = domain_value
         return external_data
     except Exception as e:
         self._translation_errors.append(str(e))
-        raise DomainException(f'Translation from domain failed: {str(e)}', error_code='TRANSLATION_FROM_DOMAIN_FAILED')
+        raise DomainException(
+            f"Translation from domain failed: {str(e)}",
+            error_code="TRANSLATION_FROM_DOMAIN_FAILED",
+        )
+
 
 def _extract_domain_data(self, domain_model: Any) -> Dict[str, Any]:
     """Extract data from domain model."""
-    if hasattr(domain_model, '__dict__'):
+    if hasattr(domain_model, "__dict__"):
         return domain_model.__dict__
     else:
-        return dict(domain_model) if hasattr(domain_model, 'keys') else {}
+        return dict(domain_model) if hasattr(domain_model, "keys") else {}
+
 
 def __init__(self, domain_context: str, protected_contexts: List[str]):
     super().__init__(domain_context)
     self.protected_contexts = protected_contexts
     self._adapters: Dict[str, DomainAdapter] = {}
     self._context_mappings: Dict[str, ContextMapping] = {}
-    self._integration_metrics = {'successful_integrations': 0, 'failed_integrations': 0, 'protected_contexts': len(protected_contexts)}
+    self._integration_metrics = {
+        "successful_integrations": 0,
+        "failed_integrations": 0,
+        "protected_contexts": len(protected_contexts),
+    }
+
 
 def register_adapter(self, external_system: str, adapter: DomainAdapter):
     """
-        Register an adapter for an external system.
-        
-        Args:
-            external_system: Name of the external system
-            adapter: Domain adapter for the system
-        """
+    Register an adapter for an external system.
+
+    Args:
+        external_system: Name of the external system
+        adapter: Domain adapter for the system
+    """
     self._adapters[external_system] = adapter
-    logger.info(f'Registered adapter for external system: {external_system}')
+    logger.info(f"Registered adapter for external system: {external_system}")
+
 
 def register_context_mapping(self, external_system: str, mapping: ContextMapping):
     """
-        Register context mapping for an external system.
-        
-        Args:
-            external_system: Name of the external system
-            mapping: Context mapping configuration
-        """
+    Register context mapping for an external system.
+
+    Args:
+        external_system: Name of the external system
+        mapping: Context mapping configuration
+    """
     self._context_mappings[external_system] = mapping
-    logger.info(f'Registered context mapping for: {external_system}')
+    logger.info(f"Registered context mapping for: {external_system}")
+
 
 def get_registered_systems(self) -> List[str]:
     """Get list of registered external systems."""
     return list(self._adapters.keys())
 
+
 def get_integration_metrics(self) -> Dict[str, Any]:
     """Get integration metrics."""
     return self._integration_metrics.copy()
 
+
 def get_domain_boundaries(self):
     """Get domain boundaries."""
-    return DomainBoundaries(context=self.domain_context, invariants=['External systems cannot directly access protected contexts', 'All external data must pass through registered adapters', 'Domain models must remain pure and uncontaminated'], external_dependencies=list(self._adapters.keys()), integration_patterns=['anti_corruption_layer', 'adapter_pattern'])
+    return DomainBoundaries(
+        context=self.domain_context,
+        invariants=[
+            "External systems cannot directly access protected contexts",
+            "All external data must pass through registered adapters",
+            "Domain models must remain pure and uncontaminated",
+        ],
+        external_dependencies=list(self._adapters.keys()),
+        integration_patterns=["anti_corruption_layer", "adapter_pattern"],
+    )
+
 
 def __init__(self, context_mapping: ContextMapping):
     self.context_mapping = context_mapping
     self._translation_cache: Dict[str, Any] = {}
     self._translation_errors: List[str] = []
 
+
 @abstractmethod
 def translate_to_domain(self, external_model: ExternalType) -> DomainType:
     """
-        Translate external model to domain model.
-        
-        Args:
-            external_model: External system model
-            
-        Returns:
-            DomainType: Translated domain model
-            
-        Raises:
-            DomainException: If translation fails
-        """
+    Translate external model to domain model.
+
+    Args:
+        external_model: External system model
+
+    Returns:
+        DomainType: Translated domain model
+
+    Raises:
+        DomainException: If translation fails
+    """
     pass
+
 
 @abstractmethod
 def translate_from_domain(self, domain_model: DomainType) -> ExternalType:
     """
-        Translate domain model to external model.
-        
-        Args:
-            domain_model: Domain model
-            
-        Returns:
-            ExternalType: Translated external model
-            
-        Raises:
-            DomainException: If translation fails
-        """
+    Translate domain model to external model.
+
+    Args:
+        domain_model: Domain model
+
+    Returns:
+        ExternalType: Translated external model
+
+    Raises:
+        DomainException: If translation fails
+    """
     pass
+
 
 def get_translation_errors(self) -> List[str]:
     """Get translation errors."""
     return self._translation_errors.copy()
 
+
 def clear_translation_errors(self):
     """Clear translation errors."""
     self._translation_errors.clear()
+
 
 def translate_to_domain(self, external_model: Dict[str, Any]) -> Any:
     """Translate dictionary to domain model."""
@@ -533,15 +680,21 @@ def translate_to_domain(self, external_model: Dict[str, Any]) -> Any:
             external_value = external_model.get(rule.source_field)
             if external_value is None:
                 if rule.required and rule.default_value is None:
-                    raise ValueError(f'Required field {rule.source_field} is missing')
+                    raise ValueError(f"Required field {rule.source_field} is missing")
                 external_value = rule.default_value
             if rule.transformation and external_value is not None:
-                external_value = self._apply_transformation(external_value, rule.transformation)
+                external_value = self._apply_transformation(
+                    external_value, rule.transformation
+                )
             domain_data[rule.target_field] = external_value
         return domain_data
     except Exception as e:
         self._translation_errors.append(str(e))
-        raise DomainException(f'Translation to domain failed: {str(e)}', error_code='TRANSLATION_TO_DOMAIN_FAILED')
+        raise DomainException(
+            f"Translation to domain failed: {str(e)}",
+            error_code="TRANSLATION_TO_DOMAIN_FAILED",
+        )
+
 
 def translate_from_domain(self, domain_model: Any) -> Dict[str, Any]:
     """Translate domain model to dictionary."""
@@ -555,57 +708,82 @@ def translate_from_domain(self, domain_model: Any) -> Dict[str, Any]:
             domain_value = domain_data.get(rule.target_field)
             if domain_value is not None:
                 if rule.transformation:
-                    domain_value = self._apply_reverse_transformation(domain_value, rule.transformation)
+                    domain_value = self._apply_reverse_transformation(
+                        domain_value, rule.transformation
+                    )
                 external_data[rule.source_field] = domain_value
         return external_data
     except Exception as e:
         self._translation_errors.append(str(e))
-        raise DomainException(f'Translation from domain failed: {str(e)}', error_code='TRANSLATION_FROM_DOMAIN_FAILED')
+        raise DomainException(
+            f"Translation from domain failed: {str(e)}",
+            error_code="TRANSLATION_FROM_DOMAIN_FAILED",
+        )
+
 
 def _extract_domain_data(self, domain_model: Any) -> Dict[str, Any]:
     """Extract data from domain model."""
-    if hasattr(domain_model, '__dict__'):
+    if hasattr(domain_model, "__dict__"):
         return domain_model.__dict__
     else:
-        return dict(domain_model) if hasattr(domain_model, 'keys') else {}
+        return dict(domain_model) if hasattr(domain_model, "keys") else {}
+
 
 def __init__(self, domain_context: str, protected_contexts: List[str]):
     super().__init__(domain_context)
     self.protected_contexts = protected_contexts
     self._adapters: Dict[str, DomainAdapter] = {}
     self._context_mappings: Dict[str, ContextMapping] = {}
-    self._integration_metrics = {'successful_integrations': 0, 'failed_integrations': 0, 'protected_contexts': len(protected_contexts)}
+    self._integration_metrics = {
+        "successful_integrations": 0,
+        "failed_integrations": 0,
+        "protected_contexts": len(protected_contexts),
+    }
+
 
 def register_adapter(self, external_system: str, adapter: DomainAdapter):
     """
-        Register an adapter for an external system.
-        
-        Args:
-            external_system: Name of the external system
-            adapter: Domain adapter for the system
-        """
+    Register an adapter for an external system.
+
+    Args:
+        external_system: Name of the external system
+        adapter: Domain adapter for the system
+    """
     self._adapters[external_system] = adapter
-    logger.info(f'Registered adapter for external system: {external_system}')
+    logger.info(f"Registered adapter for external system: {external_system}")
+
 
 def register_context_mapping(self, external_system: str, mapping: ContextMapping):
     """
-        Register context mapping for an external system.
-        
-        Args:
-            external_system: Name of the external system
-            mapping: Context mapping configuration
-        """
+    Register context mapping for an external system.
+
+    Args:
+        external_system: Name of the external system
+        mapping: Context mapping configuration
+    """
     self._context_mappings[external_system] = mapping
-    logger.info(f'Registered context mapping for: {external_system}')
+    logger.info(f"Registered context mapping for: {external_system}")
+
 
 def get_registered_systems(self) -> List[str]:
     """Get list of registered external systems."""
     return list(self._adapters.keys())
 
+
 def get_integration_metrics(self) -> Dict[str, Any]:
     """Get integration metrics."""
     return self._integration_metrics.copy()
 
+
 def get_domain_boundaries(self):
     """Get domain boundaries."""
-    return DomainBoundaries(context=self.domain_context, invariants=['External systems cannot directly access protected contexts', 'All external data must pass through registered adapters', 'Domain models must remain pure and uncontaminated'], external_dependencies=list(self._adapters.keys()), integration_patterns=['anti_corruption_layer', 'adapter_pattern'])
+    return DomainBoundaries(
+        context=self.domain_context,
+        invariants=[
+            "External systems cannot directly access protected contexts",
+            "All external data must pass through registered adapters",
+            "Domain models must remain pure and uncontaminated",
+        ],
+        external_dependencies=list(self._adapters.keys()),
+        integration_patterns=["anti_corruption_layer", "adapter_pattern"],
+    )

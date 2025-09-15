@@ -301,13 +301,27 @@ class GlacierSporeDatabase:
             )
 
             # Create indexes
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_spores_type ON spores (spore_type)")
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_spores_processed ON spores (processed)")
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_spores_created ON spores (created_at)")
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_dimensions_type ON dimensions (dimension_type)")
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_dimensions_name ON dimensions (name)")
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_dimension_usage_dim ON dimension_usage (dimension_id)")
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_dimension_usage_spore ON dimension_usage (spore_id)")
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_spores_type ON spores (spore_type)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_spores_processed ON spores (processed)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_spores_created ON spores (created_at)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_dimensions_type ON dimensions (dimension_type)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_dimensions_name ON dimensions (name)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_dimension_usage_dim ON dimension_usage (dimension_id)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_dimension_usage_spore ON dimension_usage (spore_id)"
+            )
 
             conn.commit()
 
@@ -353,7 +367,11 @@ class GlacierSporeDatabase:
                             dimension.parent_dimension_id,
                             json.dumps(dimension.child_dimension_ids),
                             dimension.usage_count,
-                            (dimension.last_used.isoformat() if dimension.last_used else None),
+                            (
+                                dimension.last_used.isoformat()
+                                if dimension.last_used
+                                else None
+                            ),
                         ),
                     )
 
@@ -399,7 +417,11 @@ class GlacierSporeDatabase:
                             json.dumps(spore.related_spore_ids),
                             spore.created_at.isoformat(),
                             spore.expires_at.isoformat() if spore.expires_at else None,
-                            (spore.last_processed.isoformat() if spore.last_processed else None),
+                            (
+                                spore.last_processed.isoformat()
+                                if spore.last_processed
+                                else None
+                            ),
                             spore.processed,
                             json.dumps(spore.processing_errors),
                             json.dumps(spore.processing_history),
@@ -424,7 +446,9 @@ class GlacierSporeDatabase:
 
         for dimension_name, dimension_value in spore.dimensions.items():
             # Find dimension ID by name
-            cursor.execute("SELECT dimension_id FROM dimensions WHERE name = ?", (dimension_name,))
+            cursor.execute(
+                "SELECT dimension_id FROM dimensions WHERE name = ?", (dimension_name,)
+            )
             row = cursor.fetchone()
 
             if row:
@@ -466,7 +490,9 @@ class GlacierSporeDatabase:
         try:
             with self._get_connection() as conn:
                 cursor = conn.cursor()
-                cursor.execute("SELECT * FROM dimensions WHERE dimension_id = ?", (dimension_id,))
+                cursor.execute(
+                    "SELECT * FROM dimensions WHERE dimension_id = ?", (dimension_id,)
+                )
                 row = cursor.fetchone()
 
                 if row:
@@ -510,7 +536,9 @@ class GlacierSporeDatabase:
             parent_dimension_id=row["parent_dimension_id"],
             child_dimension_ids=json.loads(row["child_dimension_ids"]),
             usage_count=row["usage_count"],
-            last_used=(datetime.fromisoformat(row["last_used"]) if row["last_used"] else None),
+            last_used=(
+                datetime.fromisoformat(row["last_used"]) if row["last_used"] else None
+            ),
         )
 
     def _row_to_spore(self, row) -> GlacierSpore:
@@ -531,8 +559,14 @@ class GlacierSporeDatabase:
             child_spore_ids=json.loads(row["child_spore_ids"]),
             related_spore_ids=json.loads(row["related_spore_ids"]),
             created_at=datetime.fromisoformat(row["created_at"]),
-            expires_at=(datetime.fromisoformat(row["expires_at"]) if row["expires_at"] else None),
-            last_processed=(datetime.fromisoformat(row["last_processed"]) if row["last_processed"] else None),
+            expires_at=(
+                datetime.fromisoformat(row["expires_at"]) if row["expires_at"] else None
+            ),
+            last_processed=(
+                datetime.fromisoformat(row["last_processed"])
+                if row["last_processed"]
+                else None
+            ),
             processed=bool(row["processed"]),
             processing_errors=json.loads(row["processing_errors"]),
             processing_history=json.loads(row["processing_history"]),
@@ -644,7 +678,9 @@ class DimensionAnalyzer:
                     GROUP BY dimension_type
                 """
                 )
-                dimensions_by_type = {row["dimension_type"]: row["count"] for row in cursor.fetchall()}
+                dimensions_by_type = {
+                    row["dimension_type"]: row["count"] for row in cursor.fetchall()
+                }
 
                 # Usage statistics
                 cursor.execute(
@@ -727,7 +763,10 @@ class DimensionAnalyzer:
                     GROUP BY parent_dimension_id
                 """
                 )
-                parent_child_stats = {row["parent_dimension_id"]: row["child_count"] for row in cursor.fetchall()}
+                parent_child_stats = {
+                    row["parent_dimension_id"]: row["child_count"]
+                    for row in cursor.fetchall()
+                }
 
                 # Orphaned dimensions (no parent)
                 cursor.execute(
@@ -760,7 +799,9 @@ class DimensionAnalyzer:
             logging.error(f"Failed to analyze dimension relationships: {e}")
             return {}
 
-    def get_dimension_usage_timeline(self, dimension_id: str, days: int = 30) -> list[dict[str, Any]]:
+    def get_dimension_usage_timeline(
+        self, dimension_id: str, days: int = 30
+    ) -> list[dict[str, Any]]:
         """Get usage timeline for a specific dimension"""
         try:
             with self.database._get_connection() as conn:
@@ -786,7 +827,9 @@ class DimensionAnalyzer:
                     {
                         "date": row["date"],
                         "usage_count": row["usage_count"],
-                        "usage_types": (row["usage_types"].split(",") if row["usage_types"] else []),
+                        "usage_types": (
+                            row["usage_types"].split(",") if row["usage_types"] else []
+                        ),
                     }
                     for row in rows
                 ]
@@ -854,7 +897,9 @@ class GlacierSporeSystem:
         for dimension in default_dimensions:
             self.database.store_dimension(dimension)
 
-    def create_discovery_spore(self, repo_url: str, analysis_data: dict[str, Any]) -> GlacierSpore:
+    def create_discovery_spore(
+        self, repo_url: str, analysis_data: dict[str, Any]
+    ) -> GlacierSpore:
         """Create a discovery spore from repository analysis"""
 
         # Generate content hash
@@ -922,7 +967,9 @@ class GlacierSporeSystem:
         """Get comprehensive dimension analysis"""
         return {
             "dimension_count": self.dimension_analyzer.count_dimensions(),
-            "orphaned_dimensions": len(self.dimension_analyzer.find_orphaned_dimensions()),
+            "orphaned_dimensions": len(
+                self.dimension_analyzer.find_orphaned_dimensions()
+            ),
             "relationships": self.dimension_analyzer.analyze_dimension_relationships(),
         }
 
@@ -930,7 +977,9 @@ class GlacierSporeSystem:
         """Find orphaned dimensions"""
         return self.dimension_analyzer.find_orphaned_dimensions(min_age_days)
 
-    def get_dimension_usage_timeline(self, dimension_id: str, days: int = 30) -> list[dict[str, Any]]:
+    def get_dimension_usage_timeline(
+        self, dimension_id: str, days: int = 30
+    ) -> list[dict[str, Any]]:
         """Get usage timeline for a dimension"""
         return self.dimension_analyzer.get_dimension_usage_timeline(dimension_id, days)
 
@@ -960,7 +1009,9 @@ async def main():
         "recommendations": ["Add GitHub Actions workflow"],
     }
 
-    spore = system.create_discovery_spore("https://github.com/test/repo", sample_analysis)
+    spore = system.create_discovery_spore(
+        "https://github.com/test/repo", sample_analysis
+    )
     print(f"Created discovery spore: {spore.spore_id}")
 
     # Analyze dimensions
