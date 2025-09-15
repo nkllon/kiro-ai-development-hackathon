@@ -53,6 +53,11 @@ dependencies = [
     "requests>=2.32.5",
     "tomlkit>=0.13.3",
     "playwright>=1.55.0",
+    "websocket-client>=1.8.0",
+    "langgraph>=0.2.0",
+    "langchain>=0.3.0",
+    "langchain-core>=0.3.0",
+    "langchain-community>=0.3.0",
 ]
 
 
