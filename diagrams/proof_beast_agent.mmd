@@ -1,0 +1,35 @@
+classDiagram
+    class BeastModeAgent {
+        +__init__()
+        +get_specializations()
+        +get_max_concurrent_tasks()
+        +_can_handle_request()
+        +_update_average_response_time()
+    }
+    class CodeQualityMentorAgent {
+        +__init__()
+        +get_specializations()
+        +get_max_concurrent_tasks()
+    }
+    class ReflectiveModule {
+        +__init__()
+        +_discover_capabilities()
+        +get_interface_metadata()
+        +register_module()
+        +health_check()
+    }
+    class DeploymentSpecialistAgent {
+        +__init__()
+        +get_specializations()
+        +get_max_concurrent_tasks()
+    }
+    class CostOptimizationAgent {
+        +__init__()
+        +get_specializations()
+        +get_max_concurrent_tasks()
+    }
+    BeastModeAgent --|> ReflectiveModule
+    BeastModeAgent --|> ABC
+    CostOptimizationAgent --|> BeastModeAgent
+    DeploymentSpecialistAgent --|> BeastModeAgent
+    CodeQualityMentorAgent --|> BeastModeAgent

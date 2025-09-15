@@ -1,0 +1,15 @@
+@startuml
+!theme plain
+
+participant ImportDependencyRegistry as ImportDependencyRegistry
+ImportDependencyRegistry -> ImportDependencyRegistry: __init__()
+ImportDependencyRegistry --> ImportDependencyRegistry: return
+ImportDependencyRegistry -> ImportDependencyRegistry: _init_database()
+ImportDependencyRegistry --> ImportDependencyRegistry: return
+ImportDependencyRegistry -> ImportDependencyRegistry: scan_module_imports()
+ImportDependencyRegistry --> ImportDependencyRegistry: return
+ImportDependencyRegistry -> ImportDependencyRegistry: register_module_imports()
+ImportDependencyRegistry --> ImportDependencyRegistry: return
+ImportDependencyRegistry -> ImportDependencyRegistry: _would_create_circular_import()
+ImportDependencyRegistry --> ImportDependencyRegistry: return
+@enduml

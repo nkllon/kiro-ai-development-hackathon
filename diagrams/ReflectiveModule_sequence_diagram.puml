@@ -1,0 +1,20 @@
+@startuml
+!theme plain
+
+participant ReflectiveModule as ReflectiveModule
+participant RCAEngine as RCAEngine
+participant CoreInfrastructureValidator as CoreInfrastructureValidator
+participant ProjectMetadata as ProjectMetadata
+participant SystematicMetricsEngine as SystematicMetricsEngine
+participant SCABeastModeRandomAttack as SCABeastModeRandomAttack
+ReflectiveModule -> ReflectiveModule: __init__()
+ReflectiveModule --> ReflectiveModule: return
+ReflectiveModule -> ReflectiveModule: _discover_capabilities()
+ReflectiveModule --> ReflectiveModule: return
+ReflectiveModule -> ReflectiveModule: get_interface_metadata()
+ReflectiveModule --> ReflectiveModule: return
+ReflectiveModule -> ReflectiveModule: register_module()
+ReflectiveModule --> ReflectiveModule: return
+ReflectiveModule -> ReflectiveModule: health_check()
+ReflectiveModule --> ReflectiveModule: return
+@enduml
