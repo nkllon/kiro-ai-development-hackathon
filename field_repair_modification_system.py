@@ -736,7 +736,7 @@ def create_field_modification_system(repo_path: str = ".", memory_manager=None) 
     git_synchronizer = GitHubSynchronizer(repo_path)
     
     # Create memory enhancer
-    memory_enhancer = ShortTermMemoryEnhancer(memory_manager, short_term_memory_impact=True)
+    memory_enhancer = ShortTermMemoryEnhancer(short_term_memory_impact=True)
     
     # Create field modification engine
     field_engine = FieldModificationEngine(git_synchronizer, memory_enhancer)

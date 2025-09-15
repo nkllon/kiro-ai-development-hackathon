@@ -249,3 +249,4 @@ The emergency protocols are now fully integrated into discovery sessions as an o
 
 *Emergency protocols integrated successfully. Discovery sessions now have optional emergency capabilities for enhanced data gathering and user-controlled recovery.*
 
+
