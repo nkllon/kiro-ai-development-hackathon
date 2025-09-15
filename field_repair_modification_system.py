@@ -63,6 +63,18 @@ class FieldModificationResult:
 
 
 @dataclass
+class FieldModificationFallbackResult:
+    """Result when field modification falls back to human interaction"""
+    fallback_reason: str
+    system_status: str
+    registry_details: Dict[str, Any]
+    human_options: List[str]
+    recommended_action: str
+    can_retry: bool = True
+    requires_human_intervention: bool = True
+
+
+@dataclass
 class EmergencyProtocolState:
     """Emergency protocol state tracking for break-the-glass modifications"""
     protocol_id: str
@@ -327,18 +339,29 @@ class FieldModificationEngine:
         if not perform_pre_use_registry_validation(self.git_synchronizer.repo_path, self.memory_enhancer.memory_manager):
             print("🚨 CRITICAL: Pre-use registry validation failed!")
             print("   I can't fix myself. I'm dead in the water here.")
-            return FieldModificationResult(
-                modification_id=request.modification_id,
-                success=False,
-                git_sync_success=False,
-                code_applied=False,
-                tests_passed=False,
-                safety_validated=False,
-                memory_enhanced=False,
-                permanent_tools_created=[],
-                error_message="Registry availability check failed - cannot perform field modifications",
-                applied_at=datetime.now(),
-                git_commit_hash=None
+            
+            # Fallback to human interaction
+            print("\n" + "="*60)
+            print("🆘 FALLBACK TO HUMAN INTERACTION REQUIRED")
+            print("="*60)
+            print("The system cannot perform field modifications due to registry issues.")
+            print("\nHuman, please choose one of the following options:")
+            print("1. Fix the registry issue and retry")
+            print("2. Provide manual override (if you trust the system)")
+            print("3. Abandon this field modification")
+            print("4. Investigate the specific registry problems")
+            
+            return FieldModificationFallbackResult(
+                fallback_reason="Pre-use registry validation failed",
+                system_status="registry_unavailable",
+                registry_details={},
+                human_options=[
+                    "Fix registry issue and retry",
+                    "Provide manual override", 
+                    "Abandon this field modification",
+                    "Investigate registry problems"
+                ],
+                recommended_action="Fix registry issue and retry"
             )
         
         # Initialize result
@@ -676,16 +699,44 @@ def create_field_modification_system(repo_path: str = ".", memory_manager=None) 
     
     # Check if field modifications are safe
     if not registry_check_results['can_perform_field_modifications']:
-        print("🚨 CRITICAL: Cannot initialize field modification system!")
-        print(f"   System Status: {registry_check_results['system_status']}")
-        print("   I can't fix myself. I'm dead in the water here.")
-        raise RuntimeError(f"Registry availability check failed: {registry_check_results['system_status']}")
+            print("🚨 CRITICAL: Cannot initialize field modification system!")
+            print(f"   System Status: {registry_check_results['system_status']}")
+            print("   I can't fix myself. I'm dead in the water here.")
+            
+            # Fallback to human interaction
+            print("\n" + "="*60)
+            print("🆘 FALLBACK TO HUMAN INTERACTION REQUIRED")
+            print("="*60)
+            print("The system cannot perform field modifications due to registry issues.")
+            print("\nHuman, please choose one of the following options:")
+            print("1. Fix the registry issue and retry")
+            print("2. Provide manual override (if you trust the system)")
+            print("3. Abandon field modification and continue without it")
+            print("4. Investigate the specific registry problems")
+            print("\nRegistry Status Details:")
+            for registry, status in registry_check_results.get('registry_status', {}).items():
+                print(f"   {registry}: {'✅' if status.get('available', False) else '❌'} "
+                      f"({status.get('health_score', 0):.1%})")
+            
+            # Don't raise an exception - instead return a special fallback result
+            return FieldModificationFallbackResult(
+                fallback_reason="Registry availability check failed",
+                system_status=registry_check_results['system_status'],
+                registry_details=registry_check_results.get('registry_status', {}),
+                human_options=[
+                    "Fix registry issue and retry",
+                    "Provide manual override", 
+                    "Abandon field modification",
+                    "Investigate registry problems"
+                ],
+                recommended_action="Fix registry issue and retry"
+            )
     
     # Create Git synchronizer
     git_synchronizer = GitHubSynchronizer(repo_path)
     
     # Create memory enhancer
-    memory_enhancer = ShortTermMemoryEnhancer(memory_manager)
+    memory_enhancer = ShortTermMemoryEnhancer(memory_manager, short_term_memory_impact=True)
     
     # Create field modification engine
     field_engine = FieldModificationEngine(git_synchronizer, memory_enhancer)
