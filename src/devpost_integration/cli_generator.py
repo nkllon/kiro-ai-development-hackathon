@@ -73,7 +73,7 @@ class CLIGeneratorEngine(ReflectiveModule):
 import argparse
 import sys
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description='Auto-generated CLI')
     parser.add_argument('--version', action='version', version='1.0.0')
     args = parser.parse_args()
@@ -94,7 +94,7 @@ from pathlib import Path
 src_path = Path(__file__).parent.parent
 sys.path.insert(0, str(src_path))
 
-def main():
+def main() -> None:
     print("CLI entry point generated successfully")
 
 if __name__ == '__main__':

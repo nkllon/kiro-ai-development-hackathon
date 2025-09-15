@@ -13,6 +13,15 @@ Purpose: Minimal valid module
 from typing import Dict, Any
 from datetime import datetime
 
+# BREAK CIRCULAR DEPENDENCY - Import from unified interface directly
+from src.rm_ddd.core.unified_reflective_module import (
+    ReflectiveModule,
+    ModuleHealth,
+    ModuleStatus,
+    ModuleCapability,
+    GracefulDegradationResult,
+)
+
 
 class ReflectiveModuleMethods:
     """Minimal valid class."""

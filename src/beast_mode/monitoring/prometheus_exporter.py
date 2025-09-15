@@ -779,7 +779,7 @@ class PrometheusExporter:
         self.stop_metrics_export()
 
 
-def main():
+def main() -> None:
     """Main function for testing Prometheus exporter."""
     print("Testing Prometheus Metrics Exporter...")
 

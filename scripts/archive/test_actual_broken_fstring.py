@@ -19,8 +19,10 @@ def test_actual_broken_fstring():
 
     print(f"Broken f-string: {repr(broken_fstring)}")
     print(f"Length: {len(broken_fstring)}")
-    print(f"Contains backslash: {'\\' in broken_fstring}")
-    print(f"Contains newline: {'\\n' in broken_fstring}")
+    backslash_check = '\\' in broken_fstring
+    newline_check = '\\n' in broken_fstring
+    print(f"Contains backslash: {backslash_check}")
+    print(f"Contains newline: {newline_check}")
 
     # Let's see what happens when we try to parse it
     print("\n🧪 Testing AST Parsing:")
