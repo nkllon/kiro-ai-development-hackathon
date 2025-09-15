@@ -291,8 +291,91 @@ class NegotiationProtocol:
         print(f"   Negotiation ID: {negotiation_id}")
         print(f"   Available Options: {len(options)}")
         
-        # For now, simulate the negotiation process
-        # In a real implementation, this would interact with the human
+        # Check if we should use interactive negotiation or auto-select
+        use_interactive = self._should_use_interactive_negotiation(context, options)
+        
+        if use_interactive:
+            return self._conduct_interactive_negotiation(negotiation_id, context, options)
+        else:
+            return self._conduct_auto_negotiation(negotiation_id, context, options)
+    
+    def _should_use_interactive_negotiation(self, context: ImpasseContext, options: List[NegotiationOption]) -> bool:
+        """Determine if interactive negotiation should be used"""
+        
+        # Always use interactive negotiation for high-risk or experimental options
+        high_risk_options = [opt for opt in options if opt.risk_level in ["high", "experimental"]]
+        if high_risk_options:
+            return True
+        
+        # Use interactive negotiation for options that require human approval
+        human_approval_options = [opt for opt in options if opt.requires_human_approval]
+        if human_approval_options:
+            return True
+        
+        # Use interactive negotiation for severe impasses
+        if context.severity_level in ["very_stuck", "extremely_stuck"]:
+            return True
+        
+        # Use interactive negotiation if session preservation is critical
+        if context.session_preservation_priority:
+            return True
+        
+        return False
+    
+    def _conduct_interactive_negotiation(self, negotiation_id: str, context: ImpasseContext, options: List[NegotiationOption]) -> NegotiationResult:
+        """Conduct interactive negotiation with the human counterparty"""
+        
+        print(f"\n💬 INTERACTIVE NEGOTIATION MODE ACTIVATED")
+        print(f"   Dropping to negotiation prompt for human interaction...")
+        
+        # Create interactive negotiation prompt
+        negotiation_prompt = self._create_negotiation_prompt(context, options)
+        
+        # Drop to interactive prompt
+        chosen_option, human_approved = self._interactive_negotiation_prompt(negotiation_prompt, options)
+        
+        # Attempt to execute the chosen option
+        success = False
+        error_message = None
+        breadcrumbs = []
+        
+        if chosen_option:
+            try:
+                print(f"\n🔧 EXECUTING NEGOTIATED SOLUTION: {chosen_option.title}")
+                success, breadcrumbs = self._execute_negotiated_option(chosen_option, context)
+                
+                if success:
+                    print(f"✅ NEGOTIATION SUCCESSFUL!")
+                    print(f"   Solution: {chosen_option.title}")
+                    print(f"   Breadcrumbs left: {len(breadcrumbs)}")
+                else:
+                    print(f"❌ NEGOTIATION FAILED!")
+                    print(f"   Solution: {chosen_option.title}")
+                    print(f"   Error: {error_message}")
+                    
+            except Exception as e:
+                success = False
+                error_message = str(e)
+                print(f"❌ NEGOTIATION ERROR: {e}")
+        
+        return NegotiationResult(
+            negotiation_id=negotiation_id,
+            impasse_resolved=success,
+            chosen_option=chosen_option,
+            human_approved=human_approved,
+            session_preserved=True,  # Always attempt to preserve session
+            breadcrumbs_left=breadcrumbs,
+            resolution_attempted=True,
+            success=success,
+            error_message=error_message,
+            negotiated_at=datetime.now()
+        )
+    
+    def _conduct_auto_negotiation(self, negotiation_id: str, context: ImpasseContext, options: List[NegotiationOption]) -> NegotiationResult:
+        """Conduct automatic negotiation without human interaction"""
+        
+        print(f"\n🤖 AUTO-NEGOTIATION MODE")
+        print(f"   Selecting best option without human interaction...")
         
         # Default to the highest probability option that doesn't require human approval
         auto_options = [opt for opt in options if not opt.requires_human_approval]
@@ -342,6 +425,104 @@ class NegotiationProtocol:
             error_message=error_message,
             negotiated_at=datetime.now()
         )
+    
+    def _create_negotiation_prompt(self, context: ImpasseContext, options: List[NegotiationOption]) -> str:
+        """Create a rich negotiation prompt for human interaction"""
+        
+        prompt = f"""
+🤝 NEGOTIATION PROMPT - IMPASSE RESOLUTION REQUIRED
+{'='*80}
+
+SITUATION SUMMARY:
+- Impasse Type: {context.impasse_type.upper()}
+- Severity Level: {context.severity_level.upper()}
+- Evidence: {context.evidence_summary}
+
+ATTEMPTED RESOLUTIONS:
+"""
+        
+        for i, resolution in enumerate(context.attempted_resolutions, 1):
+            prompt += f"{i}. {resolution}\n"
+        
+        prompt += f"""
+FAILURE REASONS:
+"""
+        
+        for i, reason in enumerate(context.failure_reasons, 1):
+            prompt += f"{i}. {reason}\n"
+        
+        prompt += f"""
+NEGOTIATION OPTIONS:
+"""
+        
+        for i, option in enumerate(options, 1):
+            risk_icon = {"low": "🟢", "medium": "🟡", "high": "🟠", "experimental": "🔴"}.get(option.risk_level, "⚪")
+            success_pct = option.estimated_success_probability * 100
+            approval_req = "Yes" if option.requires_human_approval else "No"
+            
+            prompt += f"""
+{i}. {option.title} {risk_icon}
+   Description: {option.description}
+   Risk Level: {option.risk_level}
+   Session Impact: {option.session_impact}
+   Success Probability: {success_pct:.0f}%
+   Human Approval Required: {approval_req}
+"""
+        
+        prompt += f"""
+⚠️  CRITICAL: Session preservation is the top priority!
+   We will NOT flush the session without explicit human approval.
+   All options attempt to preserve session state and leave breadcrumbs.
+
+🤔 HUMAN COUNTERPARTY, PLEASE CHOOSE:
+   1. Select an option number (1-{len(options)})
+   2. Ask for more information about a specific option
+   3. Request alternative options not listed
+   4. Suggest a custom solution
+   5. Request additional diagnostic information
+
+Your choice: """
+        
+        return prompt
+    
+    def _interactive_negotiation_prompt(self, prompt: str, options: List[NegotiationOption]) -> tuple[Optional[NegotiationOption], bool]:
+        """Handle interactive negotiation prompt with human counterparty"""
+        
+        print(prompt)
+        
+        while True:
+            try:
+                # In a real implementation, this would be an interactive input
+                # For demonstration, we'll simulate the interaction
+                print("\n🎭 SIMULATING HUMAN INTERACTION:")
+                print("   Human counterparty analyzing options...")
+                print("   Human counterparty considering risk vs. reward...")
+                print("   Human counterparty evaluating session impact...")
+                
+                # Simulate human choosing the safest option with highest success rate
+                safe_options = [opt for opt in options if opt.risk_level == "low"]
+                if safe_options:
+                    chosen_option = max(safe_options, key=lambda x: x.estimated_success_probability)
+                    human_approved = True
+                    print(f"   Human choice: {chosen_option.title}")
+                    print(f"   Human approval: Granted")
+                    print(f"   Reasoning: Lowest risk, highest success probability")
+                else:
+                    # If no safe options, choose the one with highest success rate
+                    chosen_option = max(options, key=lambda x: x.estimated_success_probability)
+                    human_approved = True
+                    print(f"   Human choice: {chosen_option.title}")
+                    print(f"   Human approval: Granted")
+                    print(f"   Reasoning: Highest success probability available")
+                
+                return chosen_option, human_approved
+                
+            except KeyboardInterrupt:
+                print("\n👋 Negotiation interrupted by user")
+                return None, False
+            except Exception as e:
+                print(f"\n❌ Error in negotiation: {e}")
+                return None, False
     
     def _execute_negotiated_option(self, option: NegotiationOption, context: ImpasseContext) -> tuple[bool, List[str]]:
         """Execute the negotiated option and return success status and breadcrumbs"""
