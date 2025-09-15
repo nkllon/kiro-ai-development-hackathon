@@ -28,7 +28,7 @@ hackathon-demo:
 	@echo "🏆 KIRO AI DEVELOPMENT HACKATHON - LIVE DEMO"
 	@echo "🎯 Demonstrating systematic superiority..."
 	@echo ""
-	@python demo_hackathon_showcase.py
+	@python3 demo_hackathon_showcase.py
 	@echo ""
 	@echo "✅ Demo complete! Results saved to hackathon_demo_results.json"
 	@echo "🎯 Ready for hackathon judges review!"
@@ -37,28 +37,28 @@ hackathon-demo:
 deploy-demo:
 	@echo "🚀 Deploying hackathon demo environment..."
 	@echo "📋 Running comprehensive tests first..."
-	@python run_beast_mode_tests.py
+	@python3 run_beast_mode_tests.py
 	@echo "🌐 Demo environment ready!"
 	@echo "🎯 Access at: http://localhost:8000"
 
 # Development environment setup
 setup: install
 	@echo "🚀 Setting up Beast Mode development environment..."
-	@python -m pip install --upgrade pip
-	@pip install -e .
+	@python3 -m pip install --upgrade pip
+	@python3 -m pip install -e .
 	@echo "✅ Setup complete!"
 
 # Install dependencies
 install:
 	@echo "📦 Installing dependencies..."
-	@pip install -r requirements.txt
+	@python3 -m pip install -r requirements.txt
 	@echo "✅ Dependencies installed!"
 
 # Run comprehensive tests - 100% pass rate demonstrated
 test:
 	@echo "🧪 Running Beast Mode comprehensive test suite..."
 	@echo "🎯 Demonstrating systematic superiority..."
-	@python run_beast_mode_tests.py
+	@python3 run_beast_mode_tests.py
 	@echo "✅ All tests completed with 100% pass rate!"
 
 # Clean up generated files
@@ -78,8 +78,8 @@ dev-setup: clean install setup
 # Show systematic project status
 status:
 	@echo "📊 Beast Mode Systematic Project Status:"
-	@echo "  🐍 Python version: $(shell python --version)"
-	@echo "  📦 Dependencies: $(shell pip list | wc -l) packages installed"
+	@echo "  🐍 Python version: $(shell python3 --version)"
+	@echo "  📦 Dependencies: $(shell python3 -m pip list | wc -l) packages installed"
 	@echo "  🧪 Tests: $(shell find tests -name "*.py" | wc -l) test files"
 	@echo "  📄 Source files: $(shell find src -name "*.py" | wc -l) Python files"
 	@echo "  📋 Specifications: $(shell find .kiro/specs -name "*.md" | wc -l) spec files"
@@ -95,7 +95,7 @@ status:
 # Build all components
 build: test
 	@echo "🏗️ Building Beast Mode components..."
-	@python setup.py build
+	@python3 setup.py build
 	@echo "✅ Build complete!"
 
 # 🎯 Quick validation for hackathon submission

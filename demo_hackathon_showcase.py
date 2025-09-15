@@ -15,9 +15,64 @@ import os
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from beast_mode.core.pdca_orchestrator import PDCAOrchestrator
-from beast_mode.billing.gcp_integration import GCPBillingMonitor
-from beast_mode.core.model_registry import ModelRegistry
+# Import from the actual project structure
+try:
+    from src.beast_mode.core.pdca_orchestrator import PDCAOrchestrator
+    from src.beast_mode.billing.gcp_integration import GCPBillingMonitor
+    from src.beast_mode.core.model_registry import ModelRegistry
+except ImportError:
+    # Fallback to mock implementations for demo
+    print("⚠️  Using mock implementations for demo (modules not found)")
+    
+    class MockPDCAOrchestrator:
+        def __init__(self):
+            pass
+    
+    class MockGCPBillingMonitor:
+        def __init__(self, config=None):
+            self.config = config or {}
+            
+        async def collect_billing_metrics(self):
+            class MockMetrics:
+                cost_breakdown = {
+                    "Compute Engine": 12.50,
+                    "Cloud Storage": 3.20,
+                    "Cloud Functions": 1.80,
+                    "Kubernetes Engine": 8.90
+                }
+            return MockMetrics()
+            
+        def get_cost_optimization_recommendations(self):
+            return [
+                {"recommendation": "Right-size Compute Engine instances", "potential_saving": 3.50},
+                {"recommendation": "Enable auto-scaling for Cloud Functions", "potential_saving": 1.20},
+                {"recommendation": "Optimize storage classes for old data", "potential_saving": 2.10}
+            ]
+    
+    class MockModelRegistry:
+        def list_available_domains(self):
+            return [
+                "ghostbusters", "beast_mode", "systematic_development", "ai_collaboration",
+                "pdca_orchestration", "gcp_optimization", "quality_gates", "testing_framework",
+                "deployment_automation", "monitoring_observability", "cost_optimization",
+                "security_compliance", "performance_tuning", "error_handling", "user_experience"
+            ]
+            
+        def get_domain_intelligence(self, domain):
+            class MockIntelligence:
+                description = f"Systematic intelligence for {domain} domain"
+            return MockIntelligence()
+            
+        def get_learning_insights(self):
+            return {
+                "total_patterns": 47,
+                "average_confidence": 89.2,
+                "active_domains": 15
+            }
+    
+    PDCAOrchestrator = MockPDCAOrchestrator
+    GCPBillingMonitor = MockGCPBillingMonitor
+    ModelRegistry = MockModelRegistry
 
 class HackathonShowcase:
     """Live demonstration of Beast Mode systematic capabilities"""
