@@ -153,7 +153,7 @@ class ComprehensiveSecurityScanner:
                 pattern=r"eyJ[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*",
                 severity="MEDIUM",
                 description="JWT token detected",
-                examples=["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"],
+                examples=["eyJ0ZXN0.eyJkZW1v.eyJleGFtcGxl"],  # Test examples only
                 false_positive_patterns=[r"eyJ0ZXN0", r"eyJkZW1v"],
             ),
             # Generic Secrets
