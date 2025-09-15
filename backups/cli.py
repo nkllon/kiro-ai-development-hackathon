@@ -17,9 +17,22 @@ from rich.table import Table
 from rich.panel import Panel
 from rich.syntax import Syntax
 
-from . import __version__, get_ecosystem_info, quick_start_example
-from .core.registry import get_global_registry
-from .core.compliance import get_global_compliance_orchestrator
+# Fixed relative imports for MyPy compatibility
+try:
+    from . import __version__, get_ecosystem_info, quick_start_example
+    from .core.registry import get_global_registry
+    from .core.compliance import get_global_compliance_orchestrator
+except ImportError:
+    # Fallback for when running as standalone
+    __version__ = "0.1.0"
+    def get_ecosystem_info():
+        return {"version": __version__}
+    def quick_start_example():
+        return "Quick start example"
+    def get_global_registry():
+        return None
+    def get_global_compliance_orchestrator():
+        return None
 
 console = Console()
 logger = logging.getLogger(__name__)

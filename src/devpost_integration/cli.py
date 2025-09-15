@@ -295,7 +295,7 @@ class DevPostCLI(ReflectiveModule):
         }
 
 
-def main():
+def main() -> None:
     """Main CLI entry point."""
     cli = DevPostCLI()
     parser = cli.create_parser()

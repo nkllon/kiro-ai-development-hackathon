@@ -646,7 +646,7 @@ class ConcurrentProcessingEngine:
         self.logger.info("Concurrent processing engine shutdown complete")
 
 
-def main():
+def main() -> None:
     """Main function for testing the concurrent processing engine."""
     engine = ConcurrentProcessingEngine(
         max_workers=4, processing_mode=ProcessingMode.MIXED

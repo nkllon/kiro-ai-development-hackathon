@@ -637,7 +637,7 @@ class AdvancedPerformanceOptimizer:
         self.process_pool.shutdown(wait=False)
 
 
-def main():
+def main() -> None:
     """Main function for testing the performance optimizer."""
     optimizer = AdvancedPerformanceOptimizer(PerformanceLevel.AGGRESSIVE)
 

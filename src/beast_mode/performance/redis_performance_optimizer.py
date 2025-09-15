@@ -311,7 +311,7 @@ class RedisPerformanceOptimizer:
             await self.redis_client.close()
 
 
-def main():
+def main() -> None:
     """Main function demonstrating Redis-based optimization."""
     import asyncio
 

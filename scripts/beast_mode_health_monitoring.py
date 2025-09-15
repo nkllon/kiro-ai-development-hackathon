@@ -377,7 +377,7 @@ class BeastModeHealthMonitoring:
     
     def _enhance_check_health_method(self, content: str) -> str:
         """Enhance the check_health method with comprehensive health checks"""
-        return '''    def check_health(self) -> ModuleHealth:
+        return ''''''    def check_health(self) -> ModuleHealth:
         """Perform comprehensive health check with enhanced monitoring."""
         issues = []
         health_score = 1.0
@@ -446,7 +446,7 @@ class BeastModeHealthMonitoring:
     
     def _enhance_get_metrics_method(self, content: str) -> str:
         """Enhance the get_metrics method with comprehensive metrics"""
-        return '''    def get_metrics(self) -> Dict[str, Any]:
+        return ''''''    def get_metrics(self) -> Dict[str, Any]:
         """Get comprehensive operational metrics."""
         uptime = (datetime.now() - self._start_time).total_seconds()
         

@@ -757,7 +757,7 @@ class FailureRecoveryOrchestrator:
         return "\n".join(report)
 
 
-def main():
+def main() -> None:
     """Main function for testing the failure recovery orchestrator."""
     orchestrator = FailureRecoveryOrchestrator()
 

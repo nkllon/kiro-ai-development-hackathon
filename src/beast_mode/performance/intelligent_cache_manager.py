@@ -667,7 +667,7 @@ class IntelligentCacheManager:
         self.stop_cleanup_thread()
 
 
-def main():
+def main() -> None:
     """Main function for testing the intelligent cache manager."""
     cache = IntelligentCacheManager(
         max_size_mb=50, strategy=CacheStrategy.ADAPTIVE, enable_disk_cache=True

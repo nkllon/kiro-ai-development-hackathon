@@ -884,7 +884,7 @@ class PerformanceMonitoringSystem:
         self.stop_monitoring()
 
 
-def main():
+def main() -> None:
     """Main function for testing the performance monitoring system."""
     monitor = PerformanceMonitoringSystem(monitoring_interval=2.0, enable_alerts=True)
 

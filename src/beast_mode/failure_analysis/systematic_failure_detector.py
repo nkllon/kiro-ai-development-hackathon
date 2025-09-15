@@ -601,7 +601,7 @@ class SystematicFailureDetector:
         return "\n".join(report)
 
 
-def main():
+def main() -> None:
     """Main function for testing the failure detector."""
     detector = SystematicFailureDetector()
 

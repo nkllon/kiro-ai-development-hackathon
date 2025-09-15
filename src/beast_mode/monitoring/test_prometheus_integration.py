@@ -260,7 +260,7 @@ def test_configuration_export():
     print()
 
 
-def main():
+def main() -> None:
     """Run all tests."""
     print("Prometheus Integration Test Suite")
     print("=" * 50)
