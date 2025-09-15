@@ -1,3 +1,4 @@
+The edit button is highlighted. The edit and edit project is highlighted.
 #!/usr/bin/env python3
 """
 Manage Team Page Diagnostic
