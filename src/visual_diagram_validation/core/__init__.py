@@ -1,1 +1,0 @@
-"""Core components for the Visual Diagram Quality Validation Pipeline."""

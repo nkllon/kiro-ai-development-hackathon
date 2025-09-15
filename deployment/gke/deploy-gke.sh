@@ -1,80 +1,20 @@
 #!/bin/bash
-# Beast Mode GKE Deployment Script
-# Systematic GKE cluster deployment with enterprise-grade configuration
+# Systematic PDCA Orchestrator - GKE Deployment Script
 
-set -euo pipefail
+set -e
 
 # Configuration
-PROJECT_ID="${PROJECT_ID:-}"
-CLUSTER_NAME="${CLUSTER_NAME:-beast-mode-cluster}"
-REGION="${REGION:-us-central1}"
-ENVIRONMENT="${ENVIRONMENT:-dev}"
+PROJECT_ID=${1:-"your-project-id"}
+CLUSTER_NAME=${2:-"systematic-pdca-cluster"}
+REGION=${3:-"us-central1"}
+DOMAIN=${4:-"YOUR_DOMAIN.com"}
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
-# Logging functions
-log_info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
-}
-
-log_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
-}
-
-log_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
-}
-
-log_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
-
-# Show usage information
-show_usage() {
-    echo "Beast Mode GKE Deployment Script"
-    echo ""
-    echo "Usage:"
-    echo "  PROJECT_ID=your-project ./deploy-gke.sh [command]"
-    echo ""
-    echo "Commands:"
-    echo "  (none)    - Deploy using Terraform infrastructure"
-    echo "  legacy    - Deploy using legacy gcloud commands"
-    echo "  destroy   - Destroy the infrastructure"
-    echo ""
-    echo "Environment Variables:"
-    echo "  PROJECT_ID     - GCP project ID (required)"
-    echo "  CLUSTER_NAME   - Name of the cluster (default: beast-mode-cluster)"
-    echo "  REGION         - GCP region (default: us-central1)"
-    echo "  ENVIRONMENT    - Environment name (default: dev)"
-}
-
-# Check if this is a legacy deployment request
-if [[ "${1:-}" == "legacy" ]]; then
-    log_info "🚀 Deploying Beast Mode using legacy gcloud commands..."
-    log_info "📋 Configuration:"
-    log_info "   Project: $PROJECT_ID"
-    log_info "   Cluster: $CLUSTER_NAME"
-    log_info "   Region: $REGION"
-    log_info "   Environment: $ENVIRONMENT"
-    echo ""
-else
-    log_info "🚀 Beast Mode GKE deployment now uses Terraform!"
-    log_info "📋 Please use the Terraform-based deployment:"
-    log_info "   cd terraform"
-    log_info "   terraform init"
-    log_info "   terraform plan -var=\"project_id=$PROJECT_ID\""
-    log_info "   terraform apply -var=\"project_id=$PROJECT_ID\""
-    echo ""
-    log_info "🔧 Or use the automated deployment script:"
-    log_info "   PROJECT_ID=$PROJECT_ID ./deploy-gke.sh terraform"
-    echo ""
-    exit 0
-fi
+echo "🚀 Deploying Systematic PDCA Orchestrator to GKE"
+echo "Project: $PROJECT_ID"
+echo "Cluster: $CLUSTER_NAME"
+echo "Region: $REGION"
+echo "Domain: $DOMAIN"
+echo "================================================"
 
 # Check if gcloud is installed and authenticated
 if ! command -v gcloud &> /dev/null; then

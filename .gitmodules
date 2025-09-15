@@ -1,3 +1,0 @@
-[submodule "hackathons/gke-ai-microservices"]
-	path = hackathons/gke-ai-microservices
-	url = https://github.com/louspringer/gke-ai-microservices-hackathon.git

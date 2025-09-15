@@ -1,1 +1,0 @@
-"""Quality analyzers for systematic diagram validation."""

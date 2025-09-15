@@ -1,118 +1,68 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
-name = "beast-mode-framework"
-version = "1.0.0"
-description = "Systematic AI-Powered Development Framework with Domain-Driven Design"
-readme = "README.md"
-license = {text = "MIT"}
+name = "multi-instance-kiro-orchestration"
+version = "0.1.0"
+description = "Multi-Instance Kiro Orchestration System with text-based communication"
 authors = [
-    {name = "Beast Mode Development Team", email = "team@beastmode.dev"}
+    {name = "Beast Mode Framework", email = "beast@mode.dev"},
 ]
-maintainers = [
-    {name = "Beast Mode Development Team", email = "team@beastmode.dev"}
-]
-keywords = [
-    "ai", "development", "framework", "systematic", "collaboration", "agents",
-    "domain-driven-design", "ddd", "reflective-module", "architecture", "patterns",
-    "enterprise", "microservices", "bounded-context"
-]
+readme = "README.md"
+license = {file = "LICENSE"}
 requires-python = ">=3.9"
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Software Development :: Code Generators",
-    "Topic :: Software Development :: Quality Assurance",
-    "Topic :: System :: Monitoring",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
+
 dependencies = [
-    "click>=8.1.0",
-    "redis>=4.5.0",
     "pydantic>=2.0.0",
-    "typing-extensions>=4.5.0",
-    "dataclasses-json>=0.6.0",
+    "click>=8.0.0",
     "jinja2>=3.1.0",
-    "pyyaml>=6.0",
-    "asyncio-mqtt>=0.13.0",
-    "aiofiles>=23.0.0",
-    "rich>=13.0.0",
-    "typer>=0.9.0",
+    "pyyaml>=6.0.0",
+    "langgraph>=0.6.6",
+    "aiohttp>=3.8.0",
+    "keyring>=24.0.0",
+    "watchdog>=3.0.0",
+    "rich>=14.1.0",
+    "fastapi>=0.116.1",
+    "uvicorn>=0.35.0",
+    "websockets>=15.0.1",
+    "psutil>=7.0.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0.0",
     "pytest-asyncio>=0.21.0",
+    "pytest-mock>=3.10.0",
+    "pytest-timeout>=2.1.0",
     "pytest-cov>=4.0.0",
     "black>=23.0.0",
-    "isort>=5.12.0",
+    "ruff>=0.1.0",
     "mypy>=1.0.0",
-    "flake8>=6.0.0",
-    "pre-commit>=3.0.0",
-]
-docs = [
-    "sphinx>=6.0.0",
-    "sphinx-rtd-theme>=1.2.0",
-    "myst-parser>=1.0.0",
-    "sphinx-autodoc-typehints>=1.23.0",
-]
-examples = [
-    "fastapi>=0.100.0",
-    "sqlalchemy>=2.0.0",
-    "uvicorn>=0.23.0",
-    "httpx>=0.24.0",
-]
-testing = [
-    "pytest>=7.0.0",
-    "pytest-asyncio>=0.21.0",
-    "pytest-cov>=4.0.0",
-    "pytest-mock>=3.11.0",
-    "factory-boy>=3.3.0",
-]
-all = [
-    "beast-mode-framework[dev,docs,examples,testing]"
+    "pre-commit>=3.4.0",
 ]
 
 [project.urls]
-Homepage = "https://beast-mode.dev"
-Documentation = "https://beast-mode.readthedocs.io/"
-Repository = "https://github.com/beast-mode/framework"
-"Bug Tracker" = "https://github.com/beast-mode/framework/issues"
-Ecosystem = "https://beast-mode.dev/ecosystem"
+Homepage = "https://github.com/beast-mode/multi-instance-kiro-orchestration"
+Repository = "https://github.com/beast-mode/multi-instance-kiro-orchestration"
+Issues = "https://github.com/beast-mode/multi-instance-kiro-orchestration/issues"
 
-[project.scripts]
-beast-mode = "beast_mode.messaging.cli:cli"
-bm = "beast_mode.messaging.cli:cli"
-beast = "beast_mode.messaging.cli:cli"
-rm-ddd = "rm_ddd.cli:main"
-
-[tool.setuptools]
-package-dir = {"" = "src"}
-
-[tool.setuptools.packages.find]
-where = ["src"]
-
-[tool.setuptools.package-data]
-rm_ddd = [
-    "templates/**/*.j2",
-    "stubs/**/*",
-    "examples/**/*.py",
-    "docs/**/*.md",
-]
+[tool.hatch.build.targets.wheel]
+packages = ["src/multi_instance_orchestration"]
 
 [tool.black]
 line-length = 88
-target-version = ['py39']
+target-version = ['py39', 'py310', 'py311', 'py312']
 include = '\.pyi?$'
 extend-exclude = '''
 /(
@@ -128,11 +78,27 @@ extend-exclude = '''
 )/
 '''
 
-[tool.isort]
-profile = "black"
-multi_line_output = 3
-line_length = 88
-known_first_party = ["beast_mode", "ghostbusters", "rm_ddd"]
+[tool.ruff]
+target-version = "py39"
+line-length = 88
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/**/*" = ["B011"]
 
 [tool.mypy]
 python_version = "3.9"
@@ -151,27 +117,20 @@ strict_equality = true
 
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "-ra -q --strict-markers --strict-config --disable-warnings --tb=short --timeout=30 --timeout-method=thread"
+addopts = "-ra -q --strict-markers --strict-config"
 testpaths = ["tests"]
-python_files = ["test_*.py", "*_test.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-asyncio_mode = "auto"
 timeout = 30
+timeout_method = "thread"
+asyncio_mode = "auto"
 markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "integration: marks tests as integration tests",
     "unit: marks tests as unit tests",
-    "performance: marks tests as performance tests",
 ]
 
 [tool.coverage.run]
 source = ["src"]
-omit = [
-    "*/tests/*",
-    "*/test_*",
-    "*/__pycache__/*",
-    "setup.py",
-]
+branch = true
 
 [tool.coverage.report]
 exclude_lines = [
@@ -185,4 +144,15 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     "class .*\\bProtocol\\):",
     "@(abc\\.)?abstractmethod",
+]
+fail_under = 90
+
+[dependency-groups]
+dev = [
+    "google-cloud-billing>=1.16.3",
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.1.0",
+    "pytest-cov>=6.2.1",
+    "pytest-mock>=3.14.1",
+    "pytest-timeout>=2.4.0",
 ]

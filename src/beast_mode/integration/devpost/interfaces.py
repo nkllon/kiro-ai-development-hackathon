@@ -58,48 +58,6 @@ class DevpostAPIClientInterface(ABC):
     async def create_project(self, hackathon_id: str, project_data: Dict[str, Any]) -> DevpostProject:
         """Create a new project submission."""
         pass
-    
-    # Deadline and Submission Requirement Methods (Task 4.4)
-    
-    @abstractmethod
-    async def get_hackathon_deadlines(self, hackathon_id: str, include_past: bool = False) -> List[Dict[str, Any]]:
-        """Retrieve hackathon deadlines and important dates."""
-        pass
-    
-    @abstractmethod
-    async def get_submission_requirements(self, hackathon_id: str, project_id: Optional[str] = None) -> List[Dict[str, Any]]:
-        """Retrieve submission requirements for a hackathon."""
-        pass
-    
-    @abstractmethod
-    async def update_submission_status(self, project_id: str, status: str, completion_notes: Optional[str] = None) -> Dict[str, Any]:
-        """Update the submission status of a project."""
-        pass
-    
-    @abstractmethod
-    async def validate_project_requirements(self, project_id: str, hackathon_id: str) -> Dict[str, Any]:
-        """Validate a project against hackathon submission requirements."""
-        pass
-    
-    @abstractmethod
-    async def get_project_submission_history(self, project_id: str, limit: Optional[int] = None) -> List[Dict[str, Any]]:
-        """Get submission history and status changes for a project."""
-        pass
-    
-    @abstractmethod
-    async def schedule_deadline_notification(self, project_id: str, deadline_type: str, advance_time_hours: int, notification_type: str = "email", custom_message: Optional[str] = None) -> Dict[str, Any]:
-        """Schedule a deadline notification for a project."""
-        pass
-    
-    @abstractmethod
-    async def get_deadline_notifications(self, project_id: str, active_only: bool = True) -> List[Dict[str, Any]]:
-        """Get scheduled deadline notifications for a project."""
-        pass
-    
-    @abstractmethod
-    async def cancel_deadline_notification(self, project_id: str, notification_id: str) -> Dict[str, Any]:
-        """Cancel a scheduled deadline notification."""
-        pass
 
 
 class AuthenticationServiceInterface(ABC):

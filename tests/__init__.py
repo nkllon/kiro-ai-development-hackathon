@@ -1,1 +1,1 @@
-"""Test suite for Visual Diagram Quality Validation Pipeline."""
+"""Test suite for Multi-Instance Kiro Orchestration System."""
