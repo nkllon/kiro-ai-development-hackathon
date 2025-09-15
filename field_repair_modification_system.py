@@ -63,8 +63,8 @@ class FieldModificationResult:
 
 
 @dataclass
-class BreakTheGlassProtocol:
-    """Break-the-glass emergency modification protocol"""
+class EmergencyProtocolState:
+    """Emergency protocol state tracking for break-the-glass modifications"""
     protocol_id: str
     emergency_level: str  # critical, high, medium, low
     git_sync_status: str  # synchronized, failed, pending
@@ -578,7 +578,7 @@ class BreakTheGlassProtocolManager:
         print(f"   Emergency Level: {emergency_level}")
         print(f"   Modification: {modification_request.modification_id}")
         
-        protocol = BreakTheGlassProtocol(
+        protocol = EmergencyProtocolState(
             protocol_id=f"emergency_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
             emergency_level=emergency_level,
             git_sync_status="checking",
