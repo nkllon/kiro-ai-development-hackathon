@@ -46,13 +46,19 @@ class Neo4jRoundTripTester:
                 session.run("MATCH (n) DELETE n")
 
                 # Verify database is empty
-                node_count = session.run("MATCH (n) RETURN count(n) as count").single()["count"]
-                rel_count = session.run("MATCH ()-[r]-() RETURN count(r) as count").single()["count"]
+                node_count = session.run("MATCH (n) RETURN count(n) as count").single()[
+                    "count"
+                ]
+                rel_count = session.run(
+                    "MATCH ()-[r]-() RETURN count(r) as count"
+                ).single()["count"]
 
                 if node_count == 0 and rel_count == 0:
                     print("    ✅ Database cleared successfully")
                 else:
-                    print(f"    ⚠️  Database not fully cleared: {node_count} nodes, {rel_count} relationships remain")
+                    print(
+                        f"    ⚠️  Database not fully cleared: {node_count} nodes, {rel_count} relationships remain"
+                    )
 
         except Exception as e:
             print(f"    ❌ Failed to clear database: {e}")
@@ -125,18 +131,32 @@ class Neo4jRoundTripTester:
             # Verify data was created
             with self.driver.session() as session:
                 # Count nodes
-                domain_count = session.run("MATCH (d:Domain) RETURN count(d) as count").single()["count"]
-                rule_count = session.run("MATCH (r:Rule) RETURN count(r) as count").single()["count"]
-                relationship_count = session.run("MATCH ()-[r:CONTAINS]->() RETURN count(r) as count").single()["count"]
+                domain_count = session.run(
+                    "MATCH (d:Domain) RETURN count(d) as count"
+                ).single()["count"]
+                rule_count = session.run(
+                    "MATCH (r:Rule) RETURN count(r) as count"
+                ).single()["count"]
+                relationship_count = session.run(
+                    "MATCH ()-[r:CONTAINS]->() RETURN count(r) as count"
+                ).single()["count"]
 
-                print(f"    📊 Created {domain_count} domains, {rule_count} rules, {relationship_count} relationships")
+                print(
+                    f"    📊 Created {domain_count} domains, {rule_count} rules, {relationship_count} relationships"
+                )
 
                 # Validate against model
-                expected_rules = len(model["domain_architecture"]["cursor_rules"]["emoji_prefixes"])
+                expected_rules = len(
+                    model["domain_architecture"]["cursor_rules"]["emoji_prefixes"]
+                )
                 if rule_count == expected_rules:
-                    print(f"    ✅ Rule count matches model: {rule_count} == {expected_rules}")
+                    print(
+                        f"    ✅ Rule count matches model: {rule_count} == {expected_rules}"
+                    )
                 else:
-                    print(f"    ❌ Rule count mismatch: {rule_count} != {expected_rules}")
+                    print(
+                        f"    ❌ Rule count mismatch: {rule_count} != {expected_rules}"
+                    )
 
             self.test_results.append(
                 {
@@ -148,7 +168,9 @@ class Neo4jRoundTripTester:
 
         except Exception as e:
             print(f"    ❌ Model to database test failed: {e}")
-            self.test_results.append({"test": "model_to_database", "status": "failed", "error": str(e)})
+            self.test_results.append(
+                {"test": "model_to_database", "status": "failed", "error": str(e)}
+            )
 
     def test_database_queries(self) -> None:
         """Test 2: Validate database queries return expected results"""
@@ -193,12 +215,17 @@ class Neo4jRoundTripTester:
                         # Convert Record to dict for comparison
                         result_dict = dict(result)
                         # Check if all expected values match
-                        matches = all(result_dict.get(key) == value for key, value in test["expected"].items())
+                        matches = all(
+                            result_dict.get(key) == value
+                            for key, value in test["expected"].items()
+                        )
                         if matches:
                             print(f"    ✅ {test['name']}: {result_dict}")
                             passed += 1
                         else:
-                            print(f"    ❌ {test['name']}: Expected {test['expected']}, got {result_dict}")
+                            print(
+                                f"    ❌ {test['name']}: Expected {test['expected']}, got {result_dict}"
+                            )
                     else:
                         print(f"    ❌ {test['name']}: No results returned")
 
@@ -227,20 +254,28 @@ class Neo4jRoundTripTester:
             manager = registry.get_model("project")
             model = manager.load_model()
 
-            expected_rules = model["domain_architecture"]["cursor_rules"]["emoji_prefixes"]
+            expected_rules = model["domain_architecture"]["cursor_rules"][
+                "emoji_prefixes"
+            ]
 
             # Query database for all rules
             with self.driver.session() as session:
-                result = session.run("MATCH (r:Rule) RETURN r.name, r.emoji ORDER BY r.name")
+                result = session.run(
+                    "MATCH (r:Rule) RETURN r.name, r.emoji ORDER BY r.name"
+                )
                 db_rules = {row["r.name"]: row["r.emoji"] for row in result}
 
             # Validate against model
             validation_errors = []
             for rule_name, expected_emoji in expected_rules.items():
                 if rule_name not in db_rules:
-                    validation_errors.append(f"Rule '{rule_name}' missing from database")
+                    validation_errors.append(
+                        f"Rule '{rule_name}' missing from database"
+                    )
                 elif db_rules[rule_name] != expected_emoji:
-                    validation_errors.append(f"Rule '{rule_name}' emoji mismatch: expected {expected_emoji}, got {db_rules[rule_name]}")
+                    validation_errors.append(
+                        f"Rule '{rule_name}' emoji mismatch: expected {expected_emoji}, got {db_rules[rule_name]}"
+                    )
 
             if not validation_errors:
                 print(f"    ✅ All {len(expected_rules)} rules validated against model")
@@ -268,7 +303,9 @@ class Neo4jRoundTripTester:
 
         except Exception as e:
             print(f"    ❌ Results to model validation failed: {e}")
-            self.test_results.append({"test": "results_to_model", "status": "failed", "error": str(e)})
+            self.test_results.append(
+                {"test": "results_to_model", "status": "failed", "error": str(e)}
+            )
 
     def test_edge_cases(self) -> None:
         """Test 4: Edge cases and error handling"""
@@ -310,9 +347,13 @@ class Neo4jRoundTripTester:
                         try:
                             result = session.run(test["query"])
                             list(result)  # Consume result
-                            print(f"    ❌ {test['name']}: Expected to fail but succeeded")
+                            print(
+                                f"    ❌ {test['name']}: Expected to fail but succeeded"
+                            )
                         except Exception:
-                            print(f"    ✅ {test['name']}: Correctly failed as expected")
+                            print(
+                                f"    ✅ {test['name']}: Correctly failed as expected"
+                            )
                             passed += 1
                     else:
                         # Expect this to succeed
@@ -321,12 +362,18 @@ class Neo4jRoundTripTester:
 
                         if "expected_count" in test:
                             if len(results) == test["expected_count"]:
-                                print(f"    ✅ {test['name']}: Correct count {len(results)}")
+                                print(
+                                    f"    ✅ {test['name']}: Correct count {len(results)}"
+                                )
                                 passed += 1
                             else:
-                                print(f"    ❌ {test['name']}: Expected {test['expected_count']}, got {len(results)}")
+                                print(
+                                    f"    ❌ {test['name']}: Expected {test['expected_count']}, got {len(results)}"
+                                )
                         else:
-                            print(f"    ✅ {test['name']}: Executed successfully, returned {len(results)} results")
+                            print(
+                                f"    ✅ {test['name']}: Executed successfully, returned {len(results)} results"
+                            )
                             passed += 1
 
                 except Exception as e:
@@ -354,7 +401,9 @@ class Neo4jRoundTripTester:
             with self.driver.session() as session:
                 # Test query execution time
                 start_time = time.time()
-                result = session.run("MATCH (d:Domain)-[:CONTAINS]->(r:Rule) RETURN d.name, r.name, r.emoji ORDER BY r.name")
+                result = session.run(
+                    "MATCH (d:Domain)-[:CONTAINS]->(r:Rule) RETURN d.name, r.name, r.emoji ORDER BY r.name"
+                )
                 results = list(result)
                 execution_time = time.time() - start_time
 
@@ -373,7 +422,9 @@ class Neo4jRoundTripTester:
                     performance_status = "slow"
 
                 # Test memory usage (approximate)
-                memory_estimate = len(results) * 100  # Rough estimate: 100 bytes per result
+                memory_estimate = (
+                    len(results) * 100
+                )  # Rough estimate: 100 bytes per result
                 print(f"    💾 Memory usage estimate: ~{memory_estimate} bytes")
 
                 self.test_results.append(
@@ -386,7 +437,9 @@ class Neo4jRoundTripTester:
 
         except Exception as e:
             print(f"    ❌ Performance test failed: {e}")
-            self.test_results.append({"test": "performance", "status": "failed", "error": str(e)})
+            self.test_results.append(
+                {"test": "performance", "status": "failed", "error": str(e)}
+            )
 
     def generate_test_report(self) -> dict[str, Any]:
         """Generate comprehensive test report"""
@@ -395,7 +448,9 @@ class Neo4jRoundTripTester:
         print("=" * 60)
 
         total_tests = len(self.test_results)
-        passed_tests = sum(1 for result in self.test_results if result["status"] == "passed")
+        passed_tests = sum(
+            1 for result in self.test_results if result["status"] == "passed"
+        )
         failed_tests = total_tests - passed_tests
 
         print(f"🎯 Total Tests: {total_tests}")
@@ -458,7 +513,9 @@ def main():
             print("\n🚀 Round-trip tests completed successfully!")
             exit(0)
         else:
-            print(f"\n⚠️  Round-trip tests completed with issues: {report['overall_status']}")
+            print(
+                f"\n⚠️  Round-trip tests completed with issues: {report['overall_status']}"
+            )
             exit(1)
 
     except Exception as e:

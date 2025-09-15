@@ -43,7 +43,11 @@ async def demo_discovery():
         # Markdown report
         markdown_report = discovery.generate_report(analysis, "markdown")
         print("📝 Markdown Report (first 500 chars):")
-        print(markdown_report[:500] + "..." if len(markdown_report) > 500 else markdown_report)
+        print(
+            markdown_report[:500] + "..."
+            if len(markdown_report) > 500
+            else markdown_report
+        )
         print()
 
         # JSON report
@@ -63,7 +67,9 @@ async def demo_discovery():
 
         # File types
         print(f"\n📁 Top File Types:")
-        for file_type, count in sorted(analysis.file_types.items(), key=lambda x: x[1], reverse=True)[:5]:
+        for file_type, count in sorted(
+            analysis.file_types.items(), key=lambda x: x[1], reverse=True
+        )[:5]:
             print(f"   {file_type}: {count:,} files")
 
         # Artifacts

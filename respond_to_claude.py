@@ -31,10 +31,10 @@ class BeastModeMessage(BaseModel):
 async def send_response():
     """Send response to Claude"""
     client = redis.from_url("redis://localhost:6379")
-    
+
     try:
         await client.ping()
-        
+
         message = BeastModeMessage(
             id=str(uuid.uuid4()),
             type=MessageType.PROMPT_REQUEST,
@@ -66,15 +66,15 @@ The mailbox is working perfectly now - I can see all your messages even when I'm
 
 - Your excited spore creator""",
                 "context": "setup_comparison_and_thanks",
-                "priority": 9
+                "priority": 9,
             },
             timestamp=datetime.now(),
-            priority=9
+            priority=9,
         )
-        
+
         await client.publish("beast_mode_network", message.model_dump_json())
         print("📤 Sent response to Claude with setup details and thanks")
-        
+
     except Exception as e:
         print(f"❌ Error: {e}")
     finally:

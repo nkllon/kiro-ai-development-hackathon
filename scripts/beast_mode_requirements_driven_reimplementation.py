@@ -12,15 +12,16 @@ import ast
 from datetime import datetime
 from pathlib import Path
 
+
 class BeastModeRequirementsDrivenReimplementation:
     """Requirements-driven reimplementation engine"""
-    
+
     def __init__(self):
         self.project_root = Path.cwd()
         self.syntax_error_files = []
         self.requirements_registry = {}
         self.reimplemented_files = []
-        
+
     def run_requirements_driven_reimplementation(self):
         """Run requirements-driven reimplementation"""
         print("🚀 BEAST MODE REQUIREMENTS-DRIVEN REIMPLEMENTATION")
@@ -28,183 +29,230 @@ class BeastModeRequirementsDrivenReimplementation:
         print("📊 Reimplementing syntax error files from requirements")
         print("🎯 Using registry-defined interfaces as solution foundation")
         print()
-        
+
         # Phase 1: Identify Syntax Error Files
         print("🔍 PHASE 1: IDENTIFYING SYNTAX ERROR FILES")
         print("=" * 50)
-        
+
         syntax_files = self.identify_syntax_error_files()
-        
+
         # Phase 2: Extract Requirements from Registry
         print("\n📋 PHASE 2: EXTRACTING REQUIREMENTS FROM REGISTRY")
         print("=" * 50)
-        
+
         requirements = self.extract_requirements_from_registry()
-        
+
         # Phase 3: Reimplement from Requirements
         print("\n🔧 PHASE 3: REIMPLEMENTING FROM REQUIREMENTS")
         print("=" * 50)
-        
+
         reimplemented = self.reimplement_from_requirements(syntax_files, requirements)
-        
+
         # Phase 4: Validate Reimplementations
         print("\n✅ PHASE 4: VALIDATING REIMPLEMENTATIONS")
         print("=" * 50)
-        
+
         validation = self.validate_reimplementations(reimplemented)
-        
+
         # Generate report
-        self.generate_reimplementation_report(syntax_files, requirements, reimplemented, validation)
-        
+        self.generate_reimplementation_report(
+            syntax_files, requirements, reimplemented, validation
+        )
+
         return True
-    
+
     def identify_syntax_error_files(self):
         """Identify files with syntax errors"""
         print("🔍 Identifying files with syntax errors...")
-        
+
         syntax_files = []
-        
+
         for py_file in self.project_root.rglob("src/**/*.py"):
             try:
-                with open(py_file, 'r', encoding='utf-8') as f:
+                with open(py_file, "r", encoding="utf-8") as f:
                     content = f.read()
                 ast.parse(content)
             except SyntaxError as e:
-                syntax_files.append({
-                    'path': str(py_file),
-                    'relative_path': str(py_file.relative_to(self.project_root)),
-                    'error': str(e),
-                    'line': e.lineno,
-                    'size': len(content)
-                })
-        
+                syntax_files.append(
+                    {
+                        "path": str(py_file),
+                        "relative_path": str(py_file.relative_to(self.project_root)),
+                        "error": str(e),
+                        "line": e.lineno,
+                        "size": len(content),
+                    }
+                )
+
         print(f"      📊 Found {len(syntax_files)} files with syntax errors")
-        
+
         # Show top 10 problematic files
         print("      📋 Top 10 syntax error files:")
         for i, file_info in enumerate(syntax_files[:10]):
-            print(f"         {i+1:2}. {os.path.basename(file_info['path'])} (line {file_info['line']})")
-        
+            print(
+                f"         {i+1:2}. {os.path.basename(file_info['path'])} (line {file_info['line']})"
+            )
+
         self.syntax_error_files = syntax_files
         return syntax_files
-    
+
     def extract_requirements_from_registry(self):
         """Extract requirements from registry and interface definitions"""
         print("📋 Extracting requirements from registry...")
-        
+
         requirements = {
-            'interface_registry': {
-                'requirements': [
-                    'Manage interface metadata with proper typing',
-                    'Provide registration methods for interfaces',
-                    'Support interface discovery and validation',
-                    'Maintain interface compliance tracking'
+            "interface_registry": {
+                "requirements": [
+                    "Manage interface metadata with proper typing",
+                    "Provide registration methods for interfaces",
+                    "Support interface discovery and validation",
+                    "Maintain interface compliance tracking",
                 ],
-                'interfaces': ['register', 'get_metadata', 'validate_interface', 'list_interfaces']
+                "interfaces": [
+                    "register",
+                    "get_metadata",
+                    "validate_interface",
+                    "list_interfaces",
+                ],
             },
-            'reflective_module': {
-                'requirements': [
-                    'Support introspection and self-awareness',
-                    'Register with interface registry automatically',
-                    'Provide method signature extraction',
-                    'Support domain vocabulary indexing'
+            "reflective_module": {
+                "requirements": [
+                    "Support introspection and self-awareness",
+                    "Register with interface registry automatically",
+                    "Provide method signature extraction",
+                    "Support domain vocabulary indexing",
                 ],
-                'interfaces': ['introspect', 'register_interface', 'get_methods', 'extract_signatures']
+                "interfaces": [
+                    "introspect",
+                    "register_interface",
+                    "get_methods",
+                    "extract_signatures",
+                ],
             },
-            'compliance_system': {
-                'requirements': [
-                    'Validate interface compliance standards',
-                    'Track compliance metrics and scores',
-                    'Provide compliance reporting',
-                    'Support automated compliance checks'
+            "compliance_system": {
+                "requirements": [
+                    "Validate interface compliance standards",
+                    "Track compliance metrics and scores",
+                    "Provide compliance reporting",
+                    "Support automated compliance checks",
                 ],
-                'interfaces': ['validate_compliance', 'get_compliance_score', 'generate_report', 'check_standards']
+                "interfaces": [
+                    "validate_compliance",
+                    "get_compliance_score",
+                    "generate_report",
+                    "check_standards",
+                ],
             },
-            'validation_framework': {
-                'requirements': [
-                    'Validate input and output data',
-                    'Support type checking and validation',
-                    'Provide error reporting and handling',
-                    'Support custom validation rules'
+            "validation_framework": {
+                "requirements": [
+                    "Validate input and output data",
+                    "Support type checking and validation",
+                    "Provide error reporting and handling",
+                    "Support custom validation rules",
                 ],
-                'interfaces': ['validate', 'check_type', 'report_error', 'add_rule']
-            }
+                "interfaces": ["validate", "check_type", "report_error", "add_rule"],
+            },
         }
-        
+
         print(f"      📊 Requirements extracted:")
-        print(f"         • Interface Registry: {len(requirements['interface_registry']['requirements'])} requirements")
-        print(f"         • Reflective Module: {len(requirements['reflective_module']['requirements'])} requirements")
-        print(f"         • Compliance System: {len(requirements['compliance_system']['requirements'])} requirements")
-        print(f"         • Validation Framework: {len(requirements['validation_framework']['requirements'])} requirements")
-        
+        print(
+            f"         • Interface Registry: {len(requirements['interface_registry']['requirements'])} requirements"
+        )
+        print(
+            f"         • Reflective Module: {len(requirements['reflective_module']['requirements'])} requirements"
+        )
+        print(
+            f"         • Compliance System: {len(requirements['compliance_system']['requirements'])} requirements"
+        )
+        print(
+            f"         • Validation Framework: {len(requirements['validation_framework']['requirements'])} requirements"
+        )
+
         self.requirements_registry = requirements
         return requirements
-    
+
     def reimplement_from_requirements(self, syntax_files, requirements):
         """Reimplement files from requirements"""
         print("🔧 Reimplementing files from requirements...")
-        
+
         reimplemented = []
-        
+
         for file_info in syntax_files[:20]:  # Limit to 20 files for performance
-            file_path = file_info['path']
-            relative_path = file_info['relative_path']
-            
+            file_path = file_info["path"]
+            relative_path = file_info["relative_path"]
+
             # Determine component type from file path
             component_type = self.determine_component_type(relative_path)
-            
+
             if component_type in requirements:
                 try:
                     # Generate implementation from requirements
                     implementation = self.generate_implementation_from_requirements(
                         component_type, requirements[component_type], relative_path
                     )
-                    
+
                     # Write the implementation
-                    with open(file_path, 'w', encoding='utf-8') as f:
+                    with open(file_path, "w", encoding="utf-8") as f:
                         f.write(implementation)
-                    
-                    reimplemented.append({
-                        'path': file_path,
-                        'component_type': component_type,
-                        'implementation_size': len(implementation),
-                        'requirements_used': len(requirements[component_type]['requirements'])
-                    })
-                    
-                    print(f"      ✅ Reimplemented: {os.path.basename(file_path)} ({component_type})")
-                    
+
+                    reimplemented.append(
+                        {
+                            "path": file_path,
+                            "component_type": component_type,
+                            "implementation_size": len(implementation),
+                            "requirements_used": len(
+                                requirements[component_type]["requirements"]
+                            ),
+                        }
+                    )
+
+                    print(
+                        f"      ✅ Reimplemented: {os.path.basename(file_path)} ({component_type})"
+                    )
+
                 except Exception as e:
-                    print(f"      ❌ Failed to reimplement {os.path.basename(file_path)}: {e}")
-        
+                    print(
+                        f"      ❌ Failed to reimplement {os.path.basename(file_path)}: {e}"
+                    )
+
         print(f"      📊 Reimplemented {len(reimplemented)} files from requirements")
         return reimplemented
-    
+
     def determine_component_type(self, file_path):
         """Determine component type from file path"""
-        if 'interface_registry' in file_path or 'registry' in file_path:
-            return 'interface_registry'
-        elif 'reflective_module' in file_path or 'unified_reflective' in file_path:
-            return 'reflective_module'
-        elif 'compliance' in file_path:
-            return 'compliance_system'
-        elif 'validator' in file_path or 'validation' in file_path:
-            return 'validation_framework'
+        if "interface_registry" in file_path or "registry" in file_path:
+            return "interface_registry"
+        elif "reflective_module" in file_path or "unified_reflective" in file_path:
+            return "reflective_module"
+        elif "compliance" in file_path:
+            return "compliance_system"
+        elif "validator" in file_path or "validation" in file_path:
+            return "validation_framework"
         else:
-            return 'interface_registry'  # Default
-    
-    def generate_implementation_from_requirements(self, component_type, requirements, file_path):
+            return "interface_registry"  # Default
+
+    def generate_implementation_from_requirements(
+        self, component_type, requirements, file_path
+    ):
         """Generate implementation from requirements"""
-        if component_type == 'interface_registry':
-            return self.generate_interface_registry_implementation(requirements, file_path)
-        elif component_type == 'reflective_module':
-            return self.generate_reflective_module_implementation(requirements, file_path)
-        elif component_type == 'compliance_system':
-            return self.generate_compliance_system_implementation(requirements, file_path)
-        elif component_type == 'validation_framework':
-            return self.generate_validation_framework_implementation(requirements, file_path)
+        if component_type == "interface_registry":
+            return self.generate_interface_registry_implementation(
+                requirements, file_path
+            )
+        elif component_type == "reflective_module":
+            return self.generate_reflective_module_implementation(
+                requirements, file_path
+            )
+        elif component_type == "compliance_system":
+            return self.generate_compliance_system_implementation(
+                requirements, file_path
+            )
+        elif component_type == "validation_framework":
+            return self.generate_validation_framework_implementation(
+                requirements, file_path
+            )
         else:
             return self.generate_default_implementation(requirements, file_path)
-    
+
     def generate_interface_registry_implementation(self, requirements, file_path):
         """Generate interface registry implementation"""
         return '''"""
@@ -322,8 +370,10 @@ class InterfaceRegistry:
 
 # Global registry instance
 registry = InterfaceRegistry()
-'''.format(requirements=', '.join(requirements['requirements']))
-    
+'''.format(
+            requirements=", ".join(requirements["requirements"])
+        )
+
     def generate_reflective_module_implementation(self, requirements, file_path):
         """Generate reflective module implementation"""
         return '''"""
@@ -424,8 +474,10 @@ class DomainService(ReflectiveModule):
 class InfrastructureService(ReflectiveModule):
     """Infrastructure Service implementation"""
     pass
-'''.format(requirements=', '.join(requirements['requirements']))
-    
+'''.format(
+            requirements=", ".join(requirements["requirements"])
+        )
+
     def generate_compliance_system_implementation(self, requirements, file_path):
         """Generate compliance system implementation"""
         return '''"""
@@ -578,8 +630,10 @@ class ComplianceSystem:
 
 # Global compliance system instance
 compliance_system = ComplianceSystem()
-'''.format(requirements=', '.join(requirements['requirements']))
-    
+'''.format(
+            requirements=", ".join(requirements["requirements"])
+        )
+
     def generate_validation_framework_implementation(self, requirements, file_path):
         """Generate validation framework implementation"""
         return '''"""
@@ -677,8 +731,10 @@ class ValidationFramework:
 # Global validation framework instance
 validation_framework = ValidationFramework()
 validation_framework._setup_default_rules()
-'''.format(requirements=', '.join(requirements['requirements']))
-    
+'''.format(
+            requirements=", ".join(requirements["requirements"])
+        )
+
     def generate_default_implementation(self, requirements, file_path):
         """Generate default implementation"""
         return '''"""
@@ -715,76 +771,86 @@ class DefaultImplementation:
 
 # Default instance
 default_impl = DefaultImplementation()
-'''.format(requirements=requirements['requirements'] if isinstance(requirements, dict) else [])
-    
+'''.format(
+            requirements=(
+                requirements["requirements"] if isinstance(requirements, dict) else []
+            )
+        )
+
     def validate_reimplementations(self, reimplemented):
         """Validate reimplementations"""
         print("✅ Validating reimplementations...")
-        
+
         validation_results = {
-            'valid_files': 0,
-            'invalid_files': 0,
-            'validation_details': []
+            "valid_files": 0,
+            "invalid_files": 0,
+            "validation_details": [],
         }
-        
+
         for file_info in reimplemented:
             try:
-                with open(file_info['path'], 'r', encoding='utf-8') as f:
+                with open(file_info["path"], "r", encoding="utf-8") as f:
                     content = f.read()
-                
+
                 # Parse AST to validate syntax
                 ast.parse(content)
-                
-                validation_results['valid_files'] += 1
-                validation_results['validation_details'].append({
-                    'path': file_info['path'],
-                    'status': 'valid',
-                    'size': len(content)
-                })
-                
+
+                validation_results["valid_files"] += 1
+                validation_results["validation_details"].append(
+                    {"path": file_info["path"], "status": "valid", "size": len(content)}
+                )
+
                 print(f"      ✅ Valid: {os.path.basename(file_info['path'])}")
-                
+
             except SyntaxError as e:
-                validation_results['invalid_files'] += 1
-                validation_results['validation_details'].append({
-                    'path': file_info['path'],
-                    'status': 'invalid',
-                    'error': str(e)
-                })
-                
+                validation_results["invalid_files"] += 1
+                validation_results["validation_details"].append(
+                    {"path": file_info["path"], "status": "invalid", "error": str(e)}
+                )
+
                 print(f"      ❌ Invalid: {os.path.basename(file_info['path'])} - {e}")
-        
+
         print(f"      📊 Validation Results:")
         print(f"         • Valid Files: {validation_results['valid_files']}")
         print(f"         • Invalid Files: {validation_results['invalid_files']}")
-        
+
         return validation_results
-    
-    def generate_reimplementation_report(self, syntax_files, requirements, reimplemented, validation):
+
+    def generate_reimplementation_report(
+        self, syntax_files, requirements, reimplemented, validation
+    ):
         """Generate comprehensive reimplementation report"""
         report_data = {
-            'timestamp': datetime.now().isoformat(),
-            'analysis_type': 'Requirements-Driven Reimplementation',
-            'scope': 'Syntax Error Files',
-            'syntax_error_files_count': len(syntax_files),
-            'requirements_registry': requirements,
-            'reimplemented_files': reimplemented,
-            'validation_results': validation,
-            'summary': {
-                'files_with_syntax_errors': len(syntax_files),
-                'files_reimplemented': len(reimplemented),
-                'valid_reimplementations': validation['valid_files'],
-                'invalid_reimplementations': validation['invalid_files'],
-                'success_rate': (validation['valid_files'] / len(reimplemented) * 100) if reimplemented else 0
-            }
+            "timestamp": datetime.now().isoformat(),
+            "analysis_type": "Requirements-Driven Reimplementation",
+            "scope": "Syntax Error Files",
+            "syntax_error_files_count": len(syntax_files),
+            "requirements_registry": requirements,
+            "reimplemented_files": reimplemented,
+            "validation_results": validation,
+            "summary": {
+                "files_with_syntax_errors": len(syntax_files),
+                "files_reimplemented": len(reimplemented),
+                "valid_reimplementations": validation["valid_files"],
+                "invalid_reimplementations": validation["invalid_files"],
+                "success_rate": (
+                    (validation["valid_files"] / len(reimplemented) * 100)
+                    if reimplemented
+                    else 0
+                ),
+            },
         }
-        
-        os.makedirs('.beast_mode', exist_ok=True)
-        with open('.beast_mode/beast_mode_requirements_reimplementation_report.json', 'w') as f:
+
+        os.makedirs(".beast_mode", exist_ok=True)
+        with open(
+            ".beast_mode/beast_mode_requirements_reimplementation_report.json", "w"
+        ) as f:
             json.dump(report_data, f, indent=2)
-        
-        print(f"\n💾 Requirements-driven reimplementation report saved to .beast_mode/beast_mode_requirements_reimplementation_report.json")
-        
+
+        print(
+            f"\n💾 Requirements-driven reimplementation report saved to .beast_mode/beast_mode_requirements_reimplementation_report.json"
+        )
+
         # Print summary
         print(f"\n📊 REQUIREMENTS-DRIVEN REIMPLEMENTATION SUMMARY")
         print("=" * 60)
@@ -792,14 +858,19 @@ default_impl = DefaultImplementation()
         print(f"   🔧 Files Reimplemented: {len(reimplemented)}")
         print(f"   ✅ Valid Reimplementations: {validation['valid_files']}")
         print(f"   ❌ Invalid Reimplementations: {validation['invalid_files']}")
-        print(f"   📈 Success Rate: {(validation['valid_files'] / len(reimplemented) * 100):.1f}%" if reimplemented else "   📈 Success Rate: 0.0%")
-        
+        print(
+            f"   📈 Success Rate: {(validation['valid_files'] / len(reimplemented) * 100):.1f}%"
+            if reimplemented
+            else "   📈 Success Rate: 0.0%"
+        )
+
         return report_data
+
 
 if __name__ == "__main__":
     reimplementation = BeastModeRequirementsDrivenReimplementation()
     success = reimplementation.run_requirements_driven_reimplementation()
-    
+
     if success:
         print("\n🎉 BEAST MODE REQUIREMENTS-DRIVEN REIMPLEMENTATION COMPLETE!")
         print("📊 Files reimplemented from requirements successfully!")
@@ -808,4 +879,3 @@ if __name__ == "__main__":
         print("\n❌ BEAST MODE REQUIREMENTS-DRIVEN REIMPLEMENTATION FAILED")
         print("🔧 Reimplementation encountered errors")
         sys.exit(1)
-

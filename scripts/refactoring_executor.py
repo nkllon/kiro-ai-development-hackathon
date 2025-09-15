@@ -23,12 +23,16 @@ from dataclasses import dataclass
 import logging
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
+
 
 @dataclass
 class RefactoringResult:
     """Result of a refactoring operation"""
+
     source_file: str
     target_modules: List[str]
     success: bool
@@ -38,29 +42,32 @@ class RefactoringResult:
     classes_moved: int
     functions_moved: int
 
+
 class RefactoringExecutor:
     """Executes refactoring operations safely"""
-    
+
     def __init__(self, src_dir: str = "src", backup_dir: str = "backups"):
         self.src_dir = Path(src_dir)
         self.backup_dir = Path(backup_dir)
         self.backup_dir.mkdir(exist_ok=True)
         self.results: List[RefactoringResult] = []
-        
+
     def load_refactoring_plans(self, plans_file: str) -> List[Dict[str, Any]]:
         """Load refactoring plans from JSON file"""
-        with open(plans_file, 'r') as f:
+        with open(plans_file, "r") as f:
             return json.load(f)
-    
-    def execute_refactoring_plan(self, plan: Dict[str, Any], dry_run: bool = False) -> RefactoringResult:
+
+    def execute_refactoring_plan(
+        self, plan: Dict[str, Any], dry_run: bool = False
+    ) -> RefactoringResult:
         """Execute a single refactoring plan"""
         source_file = plan["source_file"]
         target_modules = plan["target_modules"]
         class_assignments = plan["class_assignments"]
         function_assignments = plan["function_assignments"]
-        
+
         logger.info(f"🔄 Refactoring {source_file} -> {len(target_modules)} modules")
-        
+
         result = RefactoringResult(
             source_file=source_file,
             target_modules=target_modules,
@@ -69,182 +76,200 @@ class RefactoringExecutor:
             warnings=[],
             lines_moved=0,
             classes_moved=0,
-            functions_moved=0
+            functions_moved=0,
         )
-        
+
         try:
             if dry_run:
                 logger.info(f"🔍 DRY RUN: Would refactor {source_file}")
                 result.success = True
                 return result
-            
+
             # Create backup
             self._create_backup(source_file)
-            
+
             # Parse source file
             source_content = self._read_file(source_file)
             source_tree = ast.parse(source_content)
-            
+
             # Extract components
-            components = self._extract_components(source_tree, class_assignments, function_assignments)
-            
+            components = self._extract_components(
+                source_tree, class_assignments, function_assignments
+            )
+
             # Create target modules
             for module_name in target_modules:
-                self._create_target_module(source_file, module_name, components[module_name])
-                result.lines_moved += len(components[module_name].get('lines', []))
-                result.classes_moved += len(components[module_name].get('classes', []))
-                result.functions_moved += len(components[module_name].get('functions', []))
-            
+                self._create_target_module(
+                    source_file, module_name, components[module_name]
+                )
+                result.lines_moved += len(components[module_name].get("lines", []))
+                result.classes_moved += len(components[module_name].get("classes", []))
+                result.functions_moved += len(
+                    components[module_name].get("functions", [])
+                )
+
             # Update source file (remove moved components)
             self._update_source_file(source_file, components)
-            
+
             # Update imports in affected files
             self._update_imports(source_file, target_modules)
-            
+
             result.success = True
             logger.info(f"✅ Successfully refactored {source_file}")
-            
+
         except Exception as e:
             error_msg = f"Error refactoring {source_file}: {str(e)}"
             logger.error(error_msg)
             result.errors.append(error_msg)
-            
+
             # Rollback on error
             self._rollback_refactoring(source_file)
-        
+
         self.results.append(result)
         return result
-    
+
     def _create_backup(self, file_path: str):
         """Create backup of original file"""
         backup_path = self.backup_dir / Path(file_path).name
         shutil.copy2(file_path, backup_path)
         logger.debug(f"📁 Created backup: {backup_path}")
-    
+
     def _read_file(self, file_path: str) -> str:
         """Read file content"""
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             return f.read()
-    
+
     def _write_file(self, file_path: str, content: str):
         """Write content to file"""
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        with open(file_path, 'w', encoding='utf-8') as f:
+        with open(file_path, "w", encoding="utf-8") as f:
             f.write(content)
-    
-    def _extract_components(self, tree: ast.AST, class_assignments: Dict[str, str], 
-                          function_assignments: Dict[str, str]) -> Dict[str, Dict[str, Any]]:
+
+    def _extract_components(
+        self,
+        tree: ast.AST,
+        class_assignments: Dict[str, str],
+        function_assignments: Dict[str, str],
+    ) -> Dict[str, Dict[str, Any]]:
         """Extract components from AST based on assignments"""
         components = {}
-        
+
         # Initialize component containers
-        for module in set(class_assignments.values()) | set(function_assignments.values()):
+        for module in set(class_assignments.values()) | set(
+            function_assignments.values()
+        ):
             components[module] = {
-                'imports': [],
-                'classes': [],
-                'functions': [],
-                'lines': []
+                "imports": [],
+                "classes": [],
+                "functions": [],
+                "lines": [],
             }
-        
+
         # Extract imports
         for node in ast.walk(tree):
             if isinstance(node, (ast.Import, ast.ImportFrom)):
                 for module in components.values():
-                    module['imports'].append(node)
-        
+                    module["imports"].append(node)
+
         # Extract classes
         for node in ast.walk(tree):
             if isinstance(node, ast.ClassDef):
                 if node.name in class_assignments:
                     target_module = class_assignments[node.name]
-                    components[target_module]['classes'].append(node)
-        
+                    components[target_module]["classes"].append(node)
+
         # Extract functions
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef):
                 if node.name in function_assignments:
                     target_module = function_assignments[node.name]
-                    components[target_module]['functions'].append(node)
-        
+                    components[target_module]["functions"].append(node)
+
         return components
-    
-    def _create_target_module(self, source_file: str, module_name: str, components: Dict[str, Any]):
+
+    def _create_target_module(
+        self, source_file: str, module_name: str, components: Dict[str, Any]
+    ):
         """Create a target module with extracted components"""
         source_dir = Path(source_file).parent
         target_path = source_dir / module_name
-        
+
         # Build module content
         content_lines = []
-        
+
         # Add file header
         content_lines.append(f'"""')
-        content_lines.append(f'{module_name.replace(".py", "").replace("_", " ").title()}')
-        content_lines.append(f'')
-        content_lines.append(f'This module was extracted from {Path(source_file).name}')
-        content_lines.append(f'as part of RM-DDD compliance refactoring.')
+        content_lines.append(
+            f'{module_name.replace(".py", "").replace("_", " ").title()}'
+        )
+        content_lines.append(f"")
+        content_lines.append(f"This module was extracted from {Path(source_file).name}")
+        content_lines.append(f"as part of RM-DDD compliance refactoring.")
         content_lines.append(f'"""')
-        content_lines.append('')
-        
+        content_lines.append("")
+
         # Add imports
-        for import_node in components['imports']:
+        for import_node in components["imports"]:
             content_lines.append(ast.unparse(import_node))
-        content_lines.append('')
-        
+        content_lines.append("")
+
         # Add classes
-        for class_node in components['classes']:
+        for class_node in components["classes"]:
             content_lines.append(ast.unparse(class_node))
-            content_lines.append('')
-        
+            content_lines.append("")
+
         # Add functions
-        for func_node in components['functions']:
+        for func_node in components["functions"]:
             content_lines.append(ast.unparse(func_node))
-            content_lines.append('')
-        
+            content_lines.append("")
+
         # Write module
-        self._write_file(str(target_path), '\n'.join(content_lines))
+        self._write_file(str(target_path), "\n".join(content_lines))
         logger.debug(f"📝 Created module: {target_path}")
-    
-    def _update_source_file(self, source_file: str, components: Dict[str, Dict[str, Any]]):
+
+    def _update_source_file(
+        self, source_file: str, components: Dict[str, Dict[str, Any]]
+    ):
         """Update source file by removing moved components and adding imports"""
         source_content = self._read_file(source_file)
         source_tree = ast.parse(source_content)
-        
+
         # Create new content
         new_lines = []
-        
+
         # Keep original imports
         for node in ast.walk(source_tree):
             if isinstance(node, (ast.Import, ast.ImportFrom)):
                 new_lines.append(ast.unparse(node))
-        
+
         # Add imports for new modules
         for module_name in components.keys():
-            module_stem = module_name.replace('.py', '')
-            new_lines.append(f'from .{module_stem} import *')
-        
-        new_lines.append('')
-        
+            module_stem = module_name.replace(".py", "")
+            new_lines.append(f"from .{module_stem} import *")
+
+        new_lines.append("")
+
         # Keep only unmoved classes and functions
         moved_classes = set()
         moved_functions = set()
-        
+
         for module_components in components.values():
-            moved_classes.update(cls.name for cls in module_components['classes'])
-            moved_functions.update(func.name for func in module_components['functions'])
-        
+            moved_classes.update(cls.name for cls in module_components["classes"])
+            moved_functions.update(func.name for func in module_components["functions"])
+
         # Add remaining classes and functions
         for node in ast.walk(source_tree):
             if isinstance(node, ast.ClassDef) and node.name not in moved_classes:
                 new_lines.append(ast.unparse(node))
-                new_lines.append('')
+                new_lines.append("")
             elif isinstance(node, ast.FunctionDef) and node.name not in moved_functions:
                 new_lines.append(ast.unparse(node))
-                new_lines.append('')
-        
+                new_lines.append("")
+
         # Write updated source file
-        self._write_file(source_file, '\n'.join(new_lines))
+        self._write_file(source_file, "\n".join(new_lines))
         logger.debug(f"📝 Updated source file: {source_file}")
-    
+
     def _update_imports(self, source_file: str, target_modules: List[str]):
         """Update import statements in files that import from the refactored file"""
         # This is a simplified version - in practice, you'd need to:
@@ -253,109 +278,111 @@ class RefactoringExecutor:
         # 3. Handle relative vs absolute imports
         logger.debug(f"🔄 Updating imports for {source_file}")
         # Implementation would go here
-    
+
     def _rollback_refactoring(self, source_file: str):
         """Rollback a failed refactoring"""
         backup_path = self.backup_dir / Path(source_file).name
         if backup_path.exists():
             shutil.copy2(backup_path, source_file)
             logger.info(f"🔄 Rolled back {source_file}")
-    
-    def execute_all_plans(self, plans_file: str, dry_run: bool = False, 
-                         max_files: Optional[int] = None) -> List[RefactoringResult]:
+
+    def execute_all_plans(
+        self, plans_file: str, dry_run: bool = False, max_files: Optional[int] = None
+    ) -> List[RefactoringResult]:
         """Execute all refactoring plans"""
         plans = self.load_refactoring_plans(plans_file)
-        
+
         if max_files:
             plans = plans[:max_files]
-        
+
         logger.info(f"🚀 Executing {len(plans)} refactoring plans (dry_run={dry_run})")
-        
+
         for i, plan in enumerate(plans, 1):
             logger.info(f"📋 Plan {i}/{len(plans)}: {plan['source_file']}")
             result = self.execute_refactoring_plan(plan, dry_run)
-            
+
             if result.success:
                 logger.info(f"✅ Plan {i} completed successfully")
             else:
                 logger.error(f"❌ Plan {i} failed: {result.errors}")
-        
+
         return self.results
-    
-    def generate_execution_report(self, output_file: str = "refactoring_execution_report.json"):
+
+    def generate_execution_report(
+        self, output_file: str = "refactoring_execution_report.json"
+    ):
         """Generate execution report"""
         report_data = []
         for result in self.results:
-            report_data.append({
-                "source_file": result.source_file,
-                "target_modules": result.target_modules,
-                "success": result.success,
-                "errors": result.errors,
-                "warnings": result.warnings,
-                "lines_moved": result.lines_moved,
-                "classes_moved": result.classes_moved,
-                "functions_moved": result.functions_moved
-            })
-        
-        with open(output_file, 'w') as f:
+            report_data.append(
+                {
+                    "source_file": result.source_file,
+                    "target_modules": result.target_modules,
+                    "success": result.success,
+                    "errors": result.errors,
+                    "warnings": result.warnings,
+                    "lines_moved": result.lines_moved,
+                    "classes_moved": result.classes_moved,
+                    "functions_moved": result.functions_moved,
+                }
+            )
+
+        with open(output_file, "w") as f:
             json.dump(report_data, f, indent=2)
-        
+
         logger.info(f"📊 Execution report exported to {output_file}")
+
 
 def main():
     """Main execution function"""
     import argparse
-    
+
     parser = argparse.ArgumentParser(description="Execute refactoring plans")
-    parser.add_argument("--plans", default="refactoring_plans.json", 
-                       help="Path to refactoring plans JSON file")
-    parser.add_argument("--dry-run", action="store_true", 
-                       help="Perform dry run without making changes")
-    parser.add_argument("--max-files", type=int, 
-                       help="Maximum number of files to refactor")
-    
+    parser.add_argument(
+        "--plans",
+        default="refactoring_plans.json",
+        help="Path to refactoring plans JSON file",
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Perform dry run without making changes"
+    )
+    parser.add_argument(
+        "--max-files", type=int, help="Maximum number of files to refactor"
+    )
+
     args = parser.parse_args()
-    
+
     print("🚀 Refactoring Executor")
     print("=" * 30)
-    
+
     # Initialize executor
     executor = RefactoringExecutor()
-    
+
     # Execute plans
     results = executor.execute_all_plans(
-        args.plans, 
-        dry_run=args.dry_run,
-        max_files=args.max_files
+        args.plans, dry_run=args.dry_run, max_files=args.max_files
     )
-    
+
     # Generate report
     executor.generate_execution_report()
-    
+
     # Print summary
     successful = sum(1 for r in results if r.success)
     total = len(results)
-    
+
     print(f"\n📊 Execution Summary:")
     print(f"   Total plans: {total}")
     print(f"   Successful: {successful}")
     print(f"   Failed: {total - successful}")
     print(f"   Success rate: {(successful/total)*100:.1f}%")
-    
+
     if args.dry_run:
         print("\n🔍 This was a dry run - no files were actually modified")
     else:
-        print(f"\n✅ Refactoring complete! Check refactoring_execution_report.json for details")
+        print(
+            f"\n✅ Refactoring complete! Check refactoring_execution_report.json for details"
+        )
+
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-

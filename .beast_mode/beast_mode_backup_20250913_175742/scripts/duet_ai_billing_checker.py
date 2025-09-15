@@ -160,7 +160,11 @@ class DuetAIBillingChecker:
                     text=True,
                 )
                 if result.returncode == 0:
-                    buckets = result.stdout.strip().split("\n") if result.stdout.strip() else []
+                    buckets = (
+                        result.stdout.strip().split("\n")
+                        if result.stdout.strip()
+                        else []
+                    )
                     return {
                         "type": "storage",
                         "count": len(buckets),
@@ -260,7 +264,9 @@ class DuetAIBillingChecker:
         }
 
         # Analyze Duet AI usage
-        enabled_services = [k for k, v in analysis["duet_ai_services"].items() if v.get("enabled")]
+        enabled_services = [
+            k for k, v in analysis["duet_ai_services"].items() if v.get("enabled")
+        ]
 
         analysis["analysis"] = {
             "total_duet_ai_services": len(enabled_services),

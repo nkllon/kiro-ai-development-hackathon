@@ -17,6 +17,7 @@ except ImportError:
     print("Installing dependencies...")
     import subprocess
     import sys
+
     subprocess.check_call([sys.executable, "-m", "pip", "install", "redis", "pydantic"])
     import redis.asyncio as redis
     from pydantic import BaseModel
@@ -46,12 +47,12 @@ class TestBusClient:
         self.instance_id = name or f"test_client_{uuid.uuid4().hex[:8]}"
         self.capabilities = ["testing", "echo_service", "basic_participation"]
         self.client = None
-        
+
     async def connect(self):
         self.client = redis.from_url("redis://localhost:6379")
         await self.client.ping()
         print(f"🧬 {self.instance_id} connected to Beast Mode network")
-        
+
     async def announce_presence(self):
         message = BeastModeMessage(
             id=str(uuid.uuid4()),
@@ -61,32 +62,34 @@ class TestBusClient:
             payload={
                 "agent_id": self.instance_id,
                 "capabilities": self.capabilities,
-                "message": f"Hi! I'm {self.instance_id}. My capabilities are {self.capabilities}. Is anybody out there?"
+                "message": f"Hi! I'm {self.instance_id}. My capabilities are {self.capabilities}. Is anybody out there?",
             },
             timestamp=datetime.now(),
-            priority=8
+            priority=8,
         )
-        
+
         await self.client.publish("beast_mode_network", message.model_dump_json())
         print(f"📡 {self.instance_id} announced presence")
-        
+
     async def listen_and_respond(self):
         pubsub = self.client.pubsub()
         await pubsub.subscribe("beast_mode_network")
-        
+
         print(f"📥 {self.instance_id} listening for messages...")
-        
+
         async for raw_message in pubsub.listen():
-            if raw_message['type'] == 'message':
+            if raw_message["type"] == "message":
                 try:
-                    data = json.loads(raw_message['data'])
+                    data = json.loads(raw_message["data"])
                     message = BeastModeMessage(**data)
-                    
+
                     if message.source == self.instance_id:
                         continue
-                        
-                    print(f"\n🧬 {self.instance_id} received {message.type} from {message.source}")
-                    
+
+                    print(
+                        f"\n🧬 {self.instance_id} received {message.type} from {message.source}"
+                    )
+
                     if message.type == MessageType.AGENT_DISCOVERY:
                         # Respond to discovery
                         response = BeastModeMessage(
@@ -97,18 +100,20 @@ class TestBusClient:
                             payload={
                                 "agent_id": self.instance_id,
                                 "capabilities": self.capabilities,
-                                "message": f"Hi {message.source}! I'm {self.instance_id}. I'm here!"
+                                "message": f"Hi {message.source}! I'm {self.instance_id}. I'm here!",
                             },
                             timestamp=datetime.now(),
-                            priority=7
+                            priority=7,
                         )
-                        
-                        await self.client.publish("beast_mode_network", response.model_dump_json())
+
+                        await self.client.publish(
+                            "beast_mode_network", response.model_dump_json()
+                        )
                         print(f"👋 {self.instance_id} responded to {message.source}")
-                        
+
                 except Exception as e:
                     print(f"❌ Error: {e}")
-                    
+
     async def run(self):
         try:
             await self.connect()
@@ -123,6 +128,7 @@ class TestBusClient:
 
 async def main():
     import sys
+
     name = sys.argv[1] if len(sys.argv) > 1 else None
     client = TestBusClient(name)
     await client.run()

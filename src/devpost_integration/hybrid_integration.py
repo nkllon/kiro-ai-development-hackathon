@@ -16,8 +16,17 @@ from datetime import datetime
 from typing import Dict, Any, List, Optional, Union
 from dataclasses import dataclass
 
-from .reflective_module import ReflectiveModule, ModuleHealth, ModuleStatus, ModuleCapability
-from .browser_automation import DevPostBrowserAutomation, DevPostHackathonData, DevPostProjectData
+from .reflective_module import (
+    ReflectiveModule,
+    ModuleHealth,
+    ModuleStatus,
+    ModuleCapability,
+)
+from .browser_automation import (
+    DevPostBrowserAutomation,
+    DevPostHackathonData,
+    DevPostProjectData,
+)
 from .web_scraping import DevPostWebScraping
 
 logger = logging.getLogger(__name__)
@@ -26,6 +35,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class ExtractionResult:
     """Result of data extraction attempt."""
+
     success: bool
     data: Optional[Union[DevPostHackathonData, DevPostProjectData]]
     method_used: str
@@ -40,27 +50,30 @@ class ExtractionResult:
 class DevPostHybridIntegration(ReflectiveModule):
     """Hybrid integration combining browser automation and web scraping."""
 
-    def __init__(self, headless: bool = True, browser_type: str = "chromium", 
-                 rate_limit_delay: float = 1.0, max_retries: int = 3):
+    def __init__(
+        self,
+        headless: bool = True,
+        browser_type: str = "chromium",
+        rate_limit_delay: float = 1.0,
+        max_retries: int = 3,
+    ):
         super().__init__()
         self.module_id = "devpost_hybrid_integration"
         self.capabilities = [
             ModuleCapability.API_INTEGRATION,
             ModuleCapability.DATA_PROCESSING,
-            ModuleCapability.MONITORING
+            ModuleCapability.MONITORING,
         ]
         self.dependencies = []
-        
+
         # Initialize components
         self.browser_automation = DevPostBrowserAutomation(
-            headless=headless, 
-            browser_type=browser_type
+            headless=headless, browser_type=browser_type
         )
         self.web_scraping = DevPostWebScraping(
-            rate_limit_delay=rate_limit_delay,
-            max_retries=max_retries
+            rate_limit_delay=rate_limit_delay, max_retries=max_retries
         )
-        
+
         # Configuration
         self.headless = headless
         self.browser_type = browser_type
@@ -70,15 +83,15 @@ class DevPostHybridIntegration(ReflectiveModule):
     def get_module_info(self) -> Dict[str, Any]:
         """Get module information."""
         return {
-            'module_id': self.module_id,
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': self.dependencies,
-            'capabilities': [cap.value for cap in self.capabilities],
-            'browser_type': self.browser_type,
-            'headless': self.headless,
-            'rate_limit_delay': self.rate_limit_delay,
-            'max_retries': self.max_retries
+            "module_id": self.module_id,
+            "interface_type": self.__class__.__name__,
+            "version": "1.0.0",
+            "dependencies": self.dependencies,
+            "capabilities": [cap.value for cap in self.capabilities],
+            "browser_type": self.browser_type,
+            "headless": self.headless,
+            "rate_limit_delay": self.rate_limit_delay,
+            "max_retries": self.max_retries,
         }
 
     def get_capabilities(self) -> List[ModuleCapability]:
@@ -89,167 +102,143 @@ class DevPostHybridIntegration(ReflectiveModule):
         """Get module health status."""
         browser_health = self.browser_automation.get_health_status()
         scraping_health = self.web_scraping.get_health_status()
-        
+
         # Overall health is the minimum of component healths
-        overall_health_score = min(browser_health.health_score, scraping_health.health_score)
-        overall_status = ModuleStatus.HEALTHY if overall_health_score >= 90 else ModuleStatus.DEGRADED
-        
+        overall_health_score = min(
+            browser_health.health_score, scraping_health.health_score
+        )
+        overall_status = (
+            ModuleStatus.HEALTHY
+            if overall_health_score >= 90
+            else ModuleStatus.DEGRADED
+        )
+
         # Combine issues
         all_issues = browser_health.issues + scraping_health.issues
-        
+
         return ModuleHealth(
             module_id=self.module_id,
             status=overall_status,
             health_score=overall_health_score,
             issues=all_issues,
-            last_check=datetime.now()
+            last_check=datetime.now(),
         )
 
     def graceful_degradation(self):
         """Perform graceful degradation."""
         return {
-            'success': True,
-            'degraded_capabilities': [],
-            'remaining_capabilities': [cap.value for cap in self.capabilities]
+            "success": True,
+            "degraded_capabilities": [],
+            "remaining_capabilities": [cap.value for cap in self.capabilities],
         }
 
-    async def extract_hackathon_data_async(self, hackathon_url: str) -> ExtractionResult:
+    async def extract_hackathon_data_async(
+        self, hackathon_url: str
+    ) -> ExtractionResult:
         """Extract hackathon data using hybrid approach (async)."""
         logger.info(f"Starting hybrid hackathon data extraction from: {hackathon_url}")
-        
+
         # Try browser automation first
         try:
             logger.info("Attempting browser automation extraction...")
-            data = await self.browser_automation.extract_hackathon_data_async(hackathon_url)
+            data = await self.browser_automation.extract_hackathon_data_async(
+                hackathon_url
+            )
             return ExtractionResult(
-                success=True,
-                data=data,
-                method_used="browser_automation_async"
+                success=True, data=data, method_used="browser_automation_async"
             )
         except Exception as e:
             logger.warning(f"Browser automation failed: {e}")
-        
+
         # Fallback to web scraping
         try:
             logger.info("Attempting web scraping extraction...")
             data = self.web_scraping.extract_hackathon_data(hackathon_url)
-            return ExtractionResult(
-                success=True,
-                data=data,
-                method_used="web_scraping"
-            )
+            return ExtractionResult(success=True, data=data, method_used="web_scraping")
         except Exception as e:
             logger.error(f"Web scraping also failed: {e}")
             return ExtractionResult(
-                success=False,
-                data=None,
-                method_used="none",
-                error=str(e)
+                success=False, data=None, method_used="none", error=str(e)
             )
 
     def extract_hackathon_data_sync(self, hackathon_url: str) -> ExtractionResult:
         """Extract hackathon data using hybrid approach (sync)."""
         logger.info(f"Starting hybrid hackathon data extraction from: {hackathon_url}")
-        
+
         # Try browser automation first
         try:
             logger.info("Attempting browser automation extraction...")
             data = self.browser_automation.extract_hackathon_data_sync(hackathon_url)
             return ExtractionResult(
-                success=True,
-                data=data,
-                method_used="browser_automation_sync"
+                success=True, data=data, method_used="browser_automation_sync"
             )
         except Exception as e:
             logger.warning(f"Browser automation failed: {e}")
-        
+
         # Fallback to web scraping
         try:
             logger.info("Attempting web scraping extraction...")
             data = self.web_scraping.extract_hackathon_data(hackathon_url)
-            return ExtractionResult(
-                success=True,
-                data=data,
-                method_used="web_scraping"
-            )
+            return ExtractionResult(success=True, data=data, method_used="web_scraping")
         except Exception as e:
             logger.error(f"Web scraping also failed: {e}")
             return ExtractionResult(
-                success=False,
-                data=None,
-                method_used="none",
-                error=str(e)
+                success=False, data=None, method_used="none", error=str(e)
             )
 
     async def extract_project_data_async(self, project_url: str) -> ExtractionResult:
         """Extract project data using hybrid approach (async)."""
         logger.info(f"Starting hybrid project data extraction from: {project_url}")
-        
+
         # Try browser automation first
         try:
             logger.info("Attempting browser automation extraction...")
             data = await self.browser_automation.extract_project_data_async(project_url)
             return ExtractionResult(
-                success=True,
-                data=data,
-                method_used="browser_automation_async"
+                success=True, data=data, method_used="browser_automation_async"
             )
         except Exception as e:
             logger.warning(f"Browser automation failed: {e}")
-        
+
         # Fallback to web scraping
         try:
             logger.info("Attempting web scraping extraction...")
             data = self.web_scraping.extract_project_data(project_url)
-            return ExtractionResult(
-                success=True,
-                data=data,
-                method_used="web_scraping"
-            )
+            return ExtractionResult(success=True, data=data, method_used="web_scraping")
         except Exception as e:
             logger.error(f"Web scraping also failed: {e}")
             return ExtractionResult(
-                success=False,
-                data=None,
-                method_used="none",
-                error=str(e)
+                success=False, data=None, method_used="none", error=str(e)
             )
 
     def extract_project_data_sync(self, project_url: str) -> ExtractionResult:
         """Extract project data using hybrid approach (sync)."""
         logger.info(f"Starting hybrid project data extraction from: {project_url}")
-        
+
         # Try browser automation first
         try:
             logger.info("Attempting browser automation extraction...")
             data = self.browser_automation.extract_project_data_sync(project_url)
             return ExtractionResult(
-                success=True,
-                data=data,
-                method_used="browser_automation_sync"
+                success=True, data=data, method_used="browser_automation_sync"
             )
         except Exception as e:
             logger.warning(f"Browser automation failed: {e}")
-        
+
         # Fallback to web scraping
         try:
             logger.info("Attempting web scraping extraction...")
             data = self.web_scraping.extract_project_data(project_url)
-            return ExtractionResult(
-                success=True,
-                data=data,
-                method_used="web_scraping"
-            )
+            return ExtractionResult(success=True, data=data, method_used="web_scraping")
         except Exception as e:
             logger.error(f"Web scraping also failed: {e}")
             return ExtractionResult(
-                success=False,
-                data=None,
-                method_used="none",
-                error=str(e)
+                success=False, data=None, method_used="none", error=str(e)
             )
 
-    def search_hackathons(self, query: str = "", limit: int = 10) -> List[Dict[str, Any]]:
+    def search_hackathons(
+        self, query: str = "", limit: int = 10
+    ) -> List[Dict[str, Any]]:
         """Search for hackathons using web scraping (browser automation doesn't support search)."""
         try:
             logger.info(f"Searching for hackathons with query: {query}")

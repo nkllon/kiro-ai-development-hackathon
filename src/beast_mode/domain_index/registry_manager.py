@@ -16,14 +16,11 @@ from datetime import datetime
 
 class RegistryManager:
     """Minimal valid class."""
-    
+
     def __init__(self):
         self.module_id = "registry_manager"
         self.timestamp = datetime.now()
-    
+
     def get_info(self) -> Dict[str, Any]:
         """Get module info."""
-        return {
-            'module_id': self.module_id,
-            'timestamp': self.timestamp.isoformat()
-        }
+        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

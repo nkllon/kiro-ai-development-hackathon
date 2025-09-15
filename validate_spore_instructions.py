@@ -4,9 +4,9 @@ Validate that the Beast Mode Bus Client Installation Spore works correctly
 """
 
 import asyncio
+import os
 import sys
 import tempfile
-import os
 
 # Extract the client code from the spore and test it
 SPORE_CLIENT_CODE = '''#!/usr/bin/env python3
@@ -158,31 +158,34 @@ if __name__ == "__main__":
     sys.exit(0 if success else 1)
 '''
 
+
 async def main():
     # Write the client code to a temp file and test it
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
         f.write(SPORE_CLIENT_CODE)
         temp_file = f.name
-    
+
     try:
         # Run the validation
         import subprocess
-        result = subprocess.run([sys.executable, temp_file], 
-                              capture_output=True, text=True, timeout=10)
-        
+
+        result = subprocess.run(
+            [sys.executable, temp_file], capture_output=True, text=True, timeout=10
+        )
+
         print("SPORE VALIDATION OUTPUT:")
         print("=" * 30)
         print(result.stdout)
-        
+
         if result.stderr:
             print("STDERR:")
             print(result.stderr)
-            
+
         if result.returncode == 0:
             print("✅ SPORE INSTRUCTIONS VALIDATED SUCCESSFULLY!")
         else:
             print("❌ SPORE VALIDATION FAILED")
-            
+
     except subprocess.TimeoutExpired:
         print("✅ SPORE STARTED SUCCESSFULLY (timed out as expected)")
     except Exception as e:
@@ -190,6 +193,7 @@ async def main():
     finally:
         # Clean up
         os.unlink(temp_file)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

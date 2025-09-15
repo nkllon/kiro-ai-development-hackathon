@@ -59,12 +59,16 @@ def update_package_scores():
             if f'"{domain_name}"' in context:
                 # Replace the score
                 old_score = match.group(1)
-                new_content = content[: match.start(1)] + str(new_score) + content[match.end(1) :]
+                new_content = (
+                    content[: match.start(1)] + str(new_score) + content[match.end(1) :]
+                )
 
                 if new_content != content:
                     content = new_content
                     updates_applied += 1
-                    print(f"  ✅ Updated {domain_name}: score {old_score} → {new_score}")
+                    print(
+                        f"  ✅ Updated {domain_name}: score {old_score} → {new_score}"
+                    )
                     break  # Only update the first match for this domain
         else:
             print(f"  ❌ Domain {domain_name} not found or no package_potential")

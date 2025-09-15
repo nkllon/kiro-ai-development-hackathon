@@ -17,14 +17,16 @@ from ..domain.entities import Entity, AggregateRoot
 from ..domain.services import DomainService
 from ..domain.value_objects import ValueObject
 
+
 @dataclass
 class ValidationRule:
     """Represents a validation rule with metadata."""
+
     name: str
     description: str
     validator_func: Callable[[Any], ValidationResult]
-    severity: str = 'error'
-    category: str = 'general'
+    severity: str = "error"
+    category: str = "general"
 
     def validate(self, target: Any) -> ValidationResult:
         """Execute the validation rule."""
@@ -35,25 +37,68 @@ class ValidationRule:
             result.add_error(f"Validation rule '{self.name}' failed: {str(e)}")
             return result
 
+
 class DomainValidator:
     """
     Comprehensive validator for domain models and patterns.
-    
+
     Provides systematic validation of entities, aggregates, services,
     and value objects with detailed reporting and rule management.
     """
 
     def __init__(self):
-        self._rules: Dict[str, List[ValidationRule]] = {'entity': [], 'aggregate': [], 'service': [], 'value_object': [], 'general': []}
+        self._rules: Dict[str, List[ValidationRule]] = {
+            "entity": [],
+            "aggregate": [],
+            "service": [],
+            "value_object": [],
+            "general": [],
+        }
         self._initialize_default_rules()
 
     def _initialize_default_rules(self):
         """Initialize default validation rules."""
-        self.add_rule('entity', ValidationRule(name='entity_has_id', description='Entity must have a valid ID', validator_func=self._validate_entity_id))
-        self.add_rule('entity', ValidationRule(name='entity_domain_context', description='Entity must have a domain context', validator_func=self._validate_entity_context))
-        self.add_rule('aggregate', ValidationRule(name='aggregate_size_limit', description='Aggregate should not exceed size limits', validator_func=self._validate_aggregate_size, severity='warning'))
-        self.add_rule('service', ValidationRule(name='service_statelessness', description='Domain service should be stateless', validator_func=self._validate_service_statelessness))
-        self.add_rule('value_object', ValidationRule(name='value_object_immutability', description='Value object should be immutable', validator_func=self._validate_value_object_immutability))
+        self.add_rule(
+            "entity",
+            ValidationRule(
+                name="entity_has_id",
+                description="Entity must have a valid ID",
+                validator_func=self._validate_entity_id,
+            ),
+        )
+        self.add_rule(
+            "entity",
+            ValidationRule(
+                name="entity_domain_context",
+                description="Entity must have a domain context",
+                validator_func=self._validate_entity_context,
+            ),
+        )
+        self.add_rule(
+            "aggregate",
+            ValidationRule(
+                name="aggregate_size_limit",
+                description="Aggregate should not exceed size limits",
+                validator_func=self._validate_aggregate_size,
+                severity="warning",
+            ),
+        )
+        self.add_rule(
+            "service",
+            ValidationRule(
+                name="service_statelessness",
+                description="Domain service should be stateless",
+                validator_func=self._validate_service_statelessness,
+            ),
+        )
+        self.add_rule(
+            "value_object",
+            ValidationRule(
+                name="value_object_immutability",
+                description="Value object should be immutable",
+                validator_func=self._validate_value_object_immutability,
+            ),
+        )
 
     def add_rule(self, category: str, rule: ValidationRule):
         """Add a validation rule to a category."""
@@ -65,10 +110,10 @@ class DomainValidator:
     def validate_entity(self, entity: Entity) -> ValidationResult:
         """Validate a domain entity."""
         result = ValidationResult(is_valid=True)
-        for rule in self._rules['entity']:
+        for rule in self._rules["entity"]:
             rule_result = rule.validate(entity)
             result.merge(rule_result)
-        for rule in self._rules['general']:
+        for rule in self._rules["general"]:
             rule_result = rule.validate(entity)
             result.merge(rule_result)
         return result
@@ -78,7 +123,7 @@ class DomainValidator:
         result = ValidationResult(is_valid=True)
         entity_result = self.validate_entity(aggregate)
         result.merge(entity_result)
-        for rule in self._rules['aggregate']:
+        for rule in self._rules["aggregate"]:
             rule_result = rule.validate(aggregate)
             result.merge(rule_result)
         return result
@@ -86,10 +131,10 @@ class DomainValidator:
     def validate_service(self, service: DomainService) -> ValidationResult:
         """Validate a domain service."""
         result = ValidationResult(is_valid=True)
-        for rule in self._rules['service']:
+        for rule in self._rules["service"]:
             rule_result = rule.validate(service)
             result.merge(rule_result)
-        for rule in self._rules['general']:
+        for rule in self._rules["general"]:
             rule_result = rule.validate(service)
             result.merge(rule_result)
         return result
@@ -97,10 +142,10 @@ class DomainValidator:
     def validate_value_object(self, value_object: ValueObject) -> ValidationResult:
         """Validate a value object."""
         result = ValidationResult(is_valid=True)
-        for rule in self._rules['value_object']:
+        for rule in self._rules["value_object"]:
             rule_result = rule.validate(value_object)
             result.merge(rule_result)
-        for rule in self._rules['general']:
+        for rule in self._rules["general"]:
             rule_result = rule.validate(value_object)
             result.merge(rule_result)
         return result
@@ -117,67 +162,86 @@ class DomainValidator:
             return self.validate_value_object(model)
         else:
             result = ValidationResult(is_valid=True)
-            result.add_warning(f'Unknown domain model type: {type(model)}')
+            result.add_warning(f"Unknown domain model type: {type(model)}")
             return result
 
     def _validate_entity_id(self, entity: Entity) -> ValidationResult:
         """Validate entity has a valid ID."""
         result = ValidationResult(is_valid=True)
-        if not hasattr(entity, 'id') or entity.id is None:
-            result.add_error('Entity must have a non-null ID')
-        elif entity.id == '':
-            result.add_error('Entity ID cannot be empty string')
+        if not hasattr(entity, "id") or entity.id is None:
+            result.add_error("Entity must have a non-null ID")
+        elif entity.id == "":
+            result.add_error("Entity ID cannot be empty string")
         return result
 
     def _validate_entity_context(self, entity: Entity) -> ValidationResult:
         """Validate entity has a domain context."""
         result = ValidationResult(is_valid=True)
-        if not hasattr(entity, 'domain_context') or not entity.domain_context:
-            result.add_error('Entity must have a domain context')
+        if not hasattr(entity, "domain_context") or not entity.domain_context:
+            result.add_error("Entity must have a domain context")
         return result
 
     def _validate_aggregate_size(self, aggregate: AggregateRoot) -> ValidationResult:
         """Validate aggregate size limits."""
         result = ValidationResult(is_valid=True)
-        max_size = getattr(aggregate.__class__, '_max_aggregate_size', 100)
+        max_size = getattr(aggregate.__class__, "_max_aggregate_size", 100)
         current_size = self._count_aggregate_members(aggregate)
         if current_size > max_size:
-            result.add_warning(f'Aggregate size ({current_size}) exceeds recommended limit ({max_size})')
+            result.add_warning(
+                f"Aggregate size ({current_size}) exceeds recommended limit ({max_size})"
+            )
         return result
 
-    def _validate_service_statelessness(self, service: DomainService) -> ValidationResult:
+    def _validate_service_statelessness(
+        self, service: DomainService
+    ) -> ValidationResult:
         """Validate service statelessness."""
         result = ValidationResult(is_valid=True)
-        instance_vars = [attr for attr in dir(service) if not attr.startswith('_') and (not callable(getattr(service, attr)))]
+        instance_vars = [
+            attr
+            for attr in dir(service)
+            if not attr.startswith("_") and (not callable(getattr(service, attr)))
+        ]
         if instance_vars:
-            result.add_warning(f'Domain service has instance variables that may indicate state: {instance_vars}')
+            result.add_warning(
+                f"Domain service has instance variables that may indicate state: {instance_vars}"
+            )
         return result
 
-    def _validate_value_object_immutability(self, value_object: ValueObject) -> ValidationResult:
+    def _validate_value_object_immutability(
+        self, value_object: ValueObject
+    ) -> ValidationResult:
         """Validate value object immutability."""
         result = ValidationResult(is_valid=True)
-        is_immutable = getattr(value_object.__class__, '_is_immutable', None)
+        is_immutable = getattr(value_object.__class__, "_is_immutable", None)
         if is_immutable is False:
-            result.add_warning('Value object is not marked as immutable')
-        setter_methods = [method for method in dir(value_object) if method.startswith('set_') and callable(getattr(value_object, method))]
+            result.add_warning("Value object is not marked as immutable")
+        setter_methods = [
+            method
+            for method in dir(value_object)
+            if method.startswith("set_") and callable(getattr(value_object, method))
+        ]
         if setter_methods:
-            result.add_warning(f'Value object has setter methods that may violate immutability: {setter_methods}')
+            result.add_warning(
+                f"Value object has setter methods that may violate immutability: {setter_methods}"
+            )
         return result
 
     def _count_aggregate_members(self, aggregate: AggregateRoot) -> int:
         """Count members of an aggregate (simplified implementation)."""
         member_count = 0
         for attr_name in dir(aggregate):
-            if not attr_name.startswith('_'):
+            if not attr_name.startswith("_"):
                 attr_value = getattr(aggregate, attr_name)
                 if isinstance(attr_value, (list, set, tuple)):
                     member_count += len(attr_value)
         return member_count
 
+
 class BusinessRuleValidator:
     """
     Validator for business rules and domain invariants.
-    
+
     Provides systematic validation of business rules with
     support for complex rule definitions and dependencies.
     """
@@ -187,10 +251,16 @@ class BusinessRuleValidator:
         self._rule_descriptions: Dict[str, str] = {}
         self._rule_dependencies: Dict[str, List[str]] = {}
 
-    def add_rule(self, name: str, rule_func: Callable[[Any], bool], description: str='', dependencies: Optional[List[str]]=None):
+    def add_rule(
+        self,
+        name: str,
+        rule_func: Callable[[Any], bool],
+        description: str = "",
+        dependencies: Optional[List[str]] = None,
+    ):
         """
         Add a business rule.
-        
+
         Args:
             name: Name of the rule
             rule_func: Function that returns True if rule is satisfied
@@ -200,16 +270,18 @@ class BusinessRuleValidator:
         self._rules[name] = rule_func
         self._rule_descriptions[name] = description
         self._rule_dependencies[name] = dependencies or []
-        logger.debug(f'Added business rule: {name}')
+        logger.debug(f"Added business rule: {name}")
 
-    def validate_rules(self, target: Any, rule_names: Optional[List[str]]=None) -> ValidationResult:
+    def validate_rules(
+        self, target: Any, rule_names: Optional[List[str]] = None
+    ) -> ValidationResult:
         """
         Validate business rules against a target object.
-        
+
         Args:
             target: Object to validate
             rule_names: Specific rules to validate (None for all)
-            
+
         Returns:
             ValidationResult: Validation results
         """
@@ -221,8 +293,12 @@ class BusinessRuleValidator:
                 rule_func = self._rules[rule_name]
                 is_satisfied = rule_func(target)
                 if not is_satisfied:
-                    description = self._rule_descriptions.get(rule_name, 'No description')
-                    result.add_error(f"Business rule '{rule_name}' violated: {description}")
+                    description = self._rule_descriptions.get(
+                        rule_name, "No description"
+                    )
+                    result.add_error(
+                        f"Business rule '{rule_name}' violated: {description}"
+                    )
             except Exception as e:
                 result.add_error(f"Error validating rule '{rule_name}': {str(e)}")
         return result
@@ -244,6 +320,7 @@ class BusinessRuleValidator:
             remaining_rules -= set(ready_rules)
         return sorted_rules
 
+
 class InvariantValidator:
     """
     Validator for domain invariants with support for
@@ -253,27 +330,39 @@ class InvariantValidator:
     def __init__(self):
         self._invariants: Dict[str, Dict[str, Any]] = {}
 
-    def add_invariant(self, name: str, expression: str, description: str='', context: Optional[Dict[str, Any]]=None):
+    def add_invariant(
+        self,
+        name: str,
+        expression: str,
+        description: str = "",
+        context: Optional[Dict[str, Any]] = None,
+    ):
         """
         Add a domain invariant.
-        
+
         Args:
             name: Name of the invariant
             expression: Boolean expression to evaluate
             description: Description of the invariant
             context: Additional context for evaluation
         """
-        self._invariants[name] = {'expression': expression, 'description': description, 'context': context or {}}
-        logger.debug(f'Added domain invariant: {name}')
+        self._invariants[name] = {
+            "expression": expression,
+            "description": description,
+            "context": context or {},
+        }
+        logger.debug(f"Added domain invariant: {name}")
 
-    def validate_invariants(self, target: Any, invariant_names: Optional[List[str]]=None) -> ValidationResult:
+    def validate_invariants(
+        self, target: Any, invariant_names: Optional[List[str]] = None
+    ) -> ValidationResult:
         """
         Validate domain invariants against a target object.
-        
+
         Args:
             target: Object to validate
             invariant_names: Specific invariants to validate (None for all)
-            
+
         Returns:
             ValidationResult: Validation results
         """
@@ -282,48 +371,101 @@ class InvariantValidator:
         for invariant_name in invariants_to_validate:
             try:
                 invariant_info = self._invariants[invariant_name]
-                expression = invariant_info['expression']
-                description = invariant_info['description']
-                is_satisfied = self._evaluate_invariant(target, expression, invariant_info['context'])
+                expression = invariant_info["expression"]
+                description = invariant_info["description"]
+                is_satisfied = self._evaluate_invariant(
+                    target, expression, invariant_info["context"]
+                )
                 if not is_satisfied:
-                    result.add_error(f"Domain invariant '{invariant_name}' violated: {description}")
+                    result.add_error(
+                        f"Domain invariant '{invariant_name}' violated: {description}"
+                    )
             except Exception as e:
-                result.add_error(f"Error validating invariant '{invariant_name}': {str(e)}")
+                result.add_error(
+                    f"Error validating invariant '{invariant_name}': {str(e)}"
+                )
         return result
 
-    def _evaluate_invariant(self, target: Any, expression: str, context: Dict[str, Any]) -> bool:
+    def _evaluate_invariant(
+        self, target: Any, expression: str, context: Dict[str, Any]
+    ) -> bool:
         """
         Evaluate an invariant expression.
-        
+
         Args:
             target: Object to validate
             expression: Boolean expression to evaluate
             context: Additional context for evaluation
-            
+
         Returns:
             bool: True if invariant is satisfied
         """
-        eval_context = {'target': target, 'self': target, **context}
+        eval_context = {"target": target, "self": target, **context}
         for attr_name in dir(target):
-            if not attr_name.startswith('_'):
+            if not attr_name.startswith("_"):
                 eval_context[attr_name] = getattr(target, attr_name)
         try:
-            return bool(eval(expression, {'__builtins__': {}}, eval_context))
+            return bool(eval(expression, {"__builtins__": {}}, eval_context))
         except Exception as e:
             logger.error(f"Error evaluating invariant expression '{expression}': {e}")
             return False
 
+
 def __init__(self):
-    self._rules: Dict[str, List[ValidationRule]] = {'entity': [], 'aggregate': [], 'service': [], 'value_object': [], 'general': []}
+    self._rules: Dict[str, List[ValidationRule]] = {
+        "entity": [],
+        "aggregate": [],
+        "service": [],
+        "value_object": [],
+        "general": [],
+    }
     self._initialize_default_rules()
+
 
 def _initialize_default_rules(self):
     """Initialize default validation rules."""
-    self.add_rule('entity', ValidationRule(name='entity_has_id', description='Entity must have a valid ID', validator_func=self._validate_entity_id))
-    self.add_rule('entity', ValidationRule(name='entity_domain_context', description='Entity must have a domain context', validator_func=self._validate_entity_context))
-    self.add_rule('aggregate', ValidationRule(name='aggregate_size_limit', description='Aggregate should not exceed size limits', validator_func=self._validate_aggregate_size, severity='warning'))
-    self.add_rule('service', ValidationRule(name='service_statelessness', description='Domain service should be stateless', validator_func=self._validate_service_statelessness))
-    self.add_rule('value_object', ValidationRule(name='value_object_immutability', description='Value object should be immutable', validator_func=self._validate_value_object_immutability))
+    self.add_rule(
+        "entity",
+        ValidationRule(
+            name="entity_has_id",
+            description="Entity must have a valid ID",
+            validator_func=self._validate_entity_id,
+        ),
+    )
+    self.add_rule(
+        "entity",
+        ValidationRule(
+            name="entity_domain_context",
+            description="Entity must have a domain context",
+            validator_func=self._validate_entity_context,
+        ),
+    )
+    self.add_rule(
+        "aggregate",
+        ValidationRule(
+            name="aggregate_size_limit",
+            description="Aggregate should not exceed size limits",
+            validator_func=self._validate_aggregate_size,
+            severity="warning",
+        ),
+    )
+    self.add_rule(
+        "service",
+        ValidationRule(
+            name="service_statelessness",
+            description="Domain service should be stateless",
+            validator_func=self._validate_service_statelessness,
+        ),
+    )
+    self.add_rule(
+        "value_object",
+        ValidationRule(
+            name="value_object_immutability",
+            description="Value object should be immutable",
+            validator_func=self._validate_value_object_immutability,
+        ),
+    )
+
 
 def add_rule(self, category: str, rule: ValidationRule):
     """Add a validation rule to a category."""
@@ -332,35 +474,45 @@ def add_rule(self, category: str, rule: ValidationRule):
     self._rules[category].append(rule)
     logger.debug(f"Added validation rule '{rule.name}' to category '{category}'")
 
+
 def _count_aggregate_members(self, aggregate: AggregateRoot) -> int:
     """Count members of an aggregate (simplified implementation)."""
     member_count = 0
     for attr_name in dir(aggregate):
-        if not attr_name.startswith('_'):
+        if not attr_name.startswith("_"):
             attr_value = getattr(aggregate, attr_name)
             if isinstance(attr_value, (list, set, tuple)):
                 member_count += len(attr_value)
     return member_count
+
 
 def __init__(self):
     self._rules: Dict[str, Callable[[Any], bool]] = {}
     self._rule_descriptions: Dict[str, str] = {}
     self._rule_dependencies: Dict[str, List[str]] = {}
 
-def add_rule(self, name: str, rule_func: Callable[[Any], bool], description: str='', dependencies: Optional[List[str]]=None):
+
+def add_rule(
+    self,
+    name: str,
+    rule_func: Callable[[Any], bool],
+    description: str = "",
+    dependencies: Optional[List[str]] = None,
+):
     """
-        Add a business rule.
-        
-        Args:
-            name: Name of the rule
-            rule_func: Function that returns True if rule is satisfied
-            description: Description of the rule
-            dependencies: List of rule names this rule depends on
-        """
+    Add a business rule.
+
+    Args:
+        name: Name of the rule
+        rule_func: Function that returns True if rule is satisfied
+        description: Description of the rule
+        dependencies: List of rule names this rule depends on
+    """
     self._rules[name] = rule_func
     self._rule_descriptions[name] = description
     self._rule_dependencies[name] = dependencies or []
-    logger.debug(f'Added business rule: {name}')
+    logger.debug(f"Added business rule: {name}")
+
 
 def _sort_rules_by_dependencies(self, rule_names: List[str]) -> List[str]:
     """Sort rules by their dependencies (topological sort)."""
@@ -379,40 +531,55 @@ def _sort_rules_by_dependencies(self, rule_names: List[str]) -> List[str]:
         remaining_rules -= set(ready_rules)
     return sorted_rules
 
+
 def __init__(self):
     self._invariants: Dict[str, Dict[str, Any]] = {}
 
-def add_invariant(self, name: str, expression: str, description: str='', context: Optional[Dict[str, Any]]=None):
-    """
-        Add a domain invariant.
-        
-        Args:
-            name: Name of the invariant
-            expression: Boolean expression to evaluate
-            description: Description of the invariant
-            context: Additional context for evaluation
-        """
-    self._invariants[name] = {'expression': expression, 'description': description, 'context': context or {}}
-    logger.debug(f'Added domain invariant: {name}')
 
-def _evaluate_invariant(self, target: Any, expression: str, context: Dict[str, Any]) -> bool:
+def add_invariant(
+    self,
+    name: str,
+    expression: str,
+    description: str = "",
+    context: Optional[Dict[str, Any]] = None,
+):
     """
-        Evaluate an invariant expression.
-        
-        Args:
-            target: Object to validate
-            expression: Boolean expression to evaluate
-            context: Additional context for evaluation
-            
-        Returns:
-            bool: True if invariant is satisfied
-        """
-    eval_context = {'target': target, 'self': target, **context}
+    Add a domain invariant.
+
+    Args:
+        name: Name of the invariant
+        expression: Boolean expression to evaluate
+        description: Description of the invariant
+        context: Additional context for evaluation
+    """
+    self._invariants[name] = {
+        "expression": expression,
+        "description": description,
+        "context": context or {},
+    }
+    logger.debug(f"Added domain invariant: {name}")
+
+
+def _evaluate_invariant(
+    self, target: Any, expression: str, context: Dict[str, Any]
+) -> bool:
+    """
+    Evaluate an invariant expression.
+
+    Args:
+        target: Object to validate
+        expression: Boolean expression to evaluate
+        context: Additional context for evaluation
+
+    Returns:
+        bool: True if invariant is satisfied
+    """
+    eval_context = {"target": target, "self": target, **context}
     for attr_name in dir(target):
-        if not attr_name.startswith('_'):
+        if not attr_name.startswith("_"):
             eval_context[attr_name] = getattr(target, attr_name)
     try:
-        return bool(eval(expression, {'__builtins__': {}}, eval_context))
+        return bool(eval(expression, {"__builtins__": {}}, eval_context))
     except Exception as e:
         logger.error(f"Error evaluating invariant expression '{expression}': {e}")
         return False

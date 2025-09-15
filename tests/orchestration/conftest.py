@@ -11,12 +11,8 @@ from datetime import datetime, timedelta
 @pytest.fixture
 def mock_subprocess():
     """Mock subprocess.run for tool execution testing"""
-    with patch('subprocess.run') as mock_run:
-        mock_run.return_value = Mock(
-            stdout="test output",
-            stderr="",
-            returncode=0
-        )
+    with patch("subprocess.run") as mock_run:
+        mock_run.return_value = Mock(stdout="test output", stderr="", returncode=0)
         yield mock_run
 
 
@@ -34,6 +30,7 @@ def failing_tool_definition(sample_tool_definition):
 def fast_tool_definition():
     """Fast tool definition for performance testing"""
     from tests.conftest import ToolDefinition, ToolType
+
     return ToolDefinition(
         tool_id="fast_tool",
         name="Fast Tool",
@@ -41,9 +38,9 @@ def fast_tool_definition():
         command_template="echo fast",
         systematic_constraints={
             "no_ad_hoc_commands": True,
-            "systematic_error_handling": True
+            "systematic_error_handling": True,
         },
-        performance_profile={"typical_execution_time_ms": 500}
+        performance_profile={"typical_execution_time_ms": 500},
     )
 
 
@@ -51,6 +48,7 @@ def fast_tool_definition():
 def slow_tool_definition():
     """Slow tool definition for performance testing"""
     from tests.conftest import ToolDefinition, ToolType
+
     return ToolDefinition(
         tool_id="slow_tool",
         name="Slow Tool",
@@ -58,25 +56,34 @@ def slow_tool_definition():
         command_template="sleep 1 && echo slow",
         systematic_constraints={
             "no_ad_hoc_commands": True,
-            "systematic_error_handling": True
+            "systematic_error_handling": True,
         },
-        performance_profile={"typical_execution_time_ms": 5000}
+        performance_profile={"typical_execution_time_ms": 5000},
     )
 
 
 @pytest.fixture
-def orchestrator_with_tools(orchestrator, sample_tool_definition, fast_tool_definition, slow_tool_definition):
+def orchestrator_with_tools(
+    orchestrator, sample_tool_definition, fast_tool_definition, slow_tool_definition
+):
     """Orchestrator pre-loaded with test tools"""
     orchestrator.register_tool(sample_tool_definition)
     orchestrator.register_tool(fast_tool_definition)
     orchestrator.register_tool(slow_tool_definition)
-    
+
     # Initialize tool metrics
     from tests.conftest import ToolHealthMetrics
-    orchestrator.tool_metrics[sample_tool_definition.tool_id] = ToolHealthMetrics(sample_tool_definition.tool_id)
-    orchestrator.tool_metrics[fast_tool_definition.tool_id] = ToolHealthMetrics(fast_tool_definition.tool_id)
-    orchestrator.tool_metrics[slow_tool_definition.tool_id] = ToolHealthMetrics(slow_tool_definition.tool_id)
-    
+
+    orchestrator.tool_metrics[sample_tool_definition.tool_id] = ToolHealthMetrics(
+        sample_tool_definition.tool_id
+    )
+    orchestrator.tool_metrics[fast_tool_definition.tool_id] = ToolHealthMetrics(
+        fast_tool_definition.tool_id
+    )
+    orchestrator.tool_metrics[slow_tool_definition.tool_id] = ToolHealthMetrics(
+        slow_tool_definition.tool_id
+    )
+
     return orchestrator
 
 
@@ -84,6 +91,7 @@ def orchestrator_with_tools(orchestrator, sample_tool_definition, fast_tool_defi
 def mock_tool_health_metrics():
     """Mock tool health metrics for testing"""
     from tests.conftest import ToolHealthMetrics
+
     metrics = ToolHealthMetrics("test_tool")
     metrics.success_rate = 0.9
     metrics.systematic_compliance_rate = 0.95
@@ -96,17 +104,17 @@ def mock_tool_health_metrics():
     def register_module(self, registry):
         """Register module with registry."""
         metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
+        if hasattr(registry, "register"):
             registry.register(metadata)
-            
+
     def get_interface_metadata(self):
         """Get interface metadata for registry."""
         return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
+            "module_id": getattr(self, "module_id", self.__class__.__name__),
+            "interface_type": self.__class__.__name__,
+            "version": "1.0.0",
+            "dependencies": [],
+            "capabilities": [],
         }
 
     return metrics

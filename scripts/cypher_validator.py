@@ -127,7 +127,9 @@ class CypherValidator:
 
         return [q for q in queries if q.strip()]
 
-    def fix_cypher_file(self, input_file: str, output_file: str = None) -> dict[str, Any]:
+    def fix_cypher_file(
+        self, input_file: str, output_file: str = None
+    ) -> dict[str, Any]:
         """Fix common Cypher syntax issues in a file"""
         if output_file is None:
             output_file = input_file
@@ -170,7 +172,9 @@ class CypherValidator:
 
             # Fix: Ensure statements end with semicolon
             stripped = line.strip()
-            if stripped.startswith(("CREATE", "MATCH", "RETURN", "WITH", "MERGE", "DELETE", "SET")):
+            if stripped.startswith(
+                ("CREATE", "MATCH", "RETURN", "WITH", "MERGE", "DELETE", "SET")
+            ):
                 if not stripped.endswith(";"):
                     line = line.rstrip() + ";"
 
@@ -187,7 +191,9 @@ class CypherValidator:
             original_semicolons = original.count(";")
             fixed_semicolons = fixed.count(";")
             if fixed_semicolons > original_semicolons:
-                fixes.append(f"Added {fixed_semicolons - original_semicolons} semicolons")
+                fixes.append(
+                    f"Added {fixed_semicolons - original_semicolons} semicolons"
+                )
 
         return fixes
 
@@ -216,7 +222,9 @@ def main():
                 print(f"  Total queries: {validation_result['total_queries']}")
                 print(f"  Valid queries: {validation_result['valid_queries']}")
                 print(f"  Invalid queries: {validation_result['invalid_queries']}")
-                print(f"  Overall valid: {'✅' if validation_result['overall_valid'] else '❌'}")
+                print(
+                    f"  Overall valid: {'✅' if validation_result['overall_valid'] else '❌'}"
+                )
 
                 if not validation_result["overall_valid"]:
                     print("\n❌ Invalid queries found:")

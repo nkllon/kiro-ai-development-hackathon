@@ -159,7 +159,9 @@ class BanditSecurityScanner:
                 error_message=str(e),
             )
 
-    def scan_directory(self, directory_path: str, file_patterns: Optional[list[str]] = None) -> SecurityScanResult:
+    def scan_directory(
+        self, directory_path: str, file_patterns: Optional[list[str]] = None
+    ) -> SecurityScanResult:
         """Scan a directory for security issues
 
         Args:
@@ -248,8 +250,16 @@ class BanditSecurityScanner:
 
             for issue in issue_list:
                 security_issue = SecurityIssue(
-                    severity=(issue.severity.name if hasattr(issue.severity, "name") else str(issue.severity)),
-                    confidence=(issue.confidence.name if hasattr(issue.confidence, "name") else str(issue.confidence)),
+                    severity=(
+                        issue.severity.name
+                        if hasattr(issue.severity, "name")
+                        else str(issue.severity)
+                    ),
+                    confidence=(
+                        issue.confidence.name
+                        if hasattr(issue.confidence, "name")
+                        else str(issue.confidence)
+                    ),
                     issue_type=issue.test_id,
                     message=issue.text,
                     filename=issue.fname,
@@ -273,7 +283,9 @@ class BanditSecurityScanner:
             if hasattr(self.bandit_manager, "metrics"):
                 # Extract relevant metrics
                 metrics = {
-                    "total_lines": getattr(self.bandit_manager.metrics, "total_lines", 0),
+                    "total_lines": getattr(
+                        self.bandit_manager.metrics, "total_lines", 0
+                    ),
                     "skipped_files": len(self.bandit_manager.skipped),
                     "scanned_files": len(self.bandit_manager.files_list),
                 }
@@ -323,7 +335,9 @@ class ModelDrivenSecurityScanner:
             logger.error(f"Failed to load project model: {e}")
             return {}
 
-    def scan_project(self, target_paths: Optional[list[str]] = None) -> SecurityScanResult:
+    def scan_project(
+        self, target_paths: Optional[list[str]] = None
+    ) -> SecurityScanResult:
         """Scan the project based on model-driven configuration
 
         Args:
@@ -416,10 +430,14 @@ class ModelDrivenSecurityScanner:
             for severity in ["HIGH", "MEDIUM", "LOW"]:
                 if severity in severity_groups:
                     issues = severity_groups[severity]
-                    report_lines.append(f"\n{severity} Severity ({len(issues)} issues):")
+                    report_lines.append(
+                        f"\n{severity} Severity ({len(issues)} issues):"
+                    )
                     for issue in issues[:5]:  # Show first 5 of each severity
                         report_lines.append(f"  • {issue.issue_type}: {issue.message}")
-                        report_lines.append(f"    File: {issue.filename}:{issue.line_number}")
+                        report_lines.append(
+                            f"    File: {issue.filename}:{issue.line_number}"
+                        )
                     if len(issues) > 5:
                         report_lines.append(f"    ... and {len(issues) - 5} more")
         else:
@@ -451,11 +469,17 @@ def main():
     """Main function for command-line usage"""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Model-driven security scanning with Bandit")
+    parser = argparse.ArgumentParser(
+        description="Model-driven security scanning with Bandit"
+    )
     parser.add_argument("--path", "-p", help="Path to scan (file or directory)")
-    parser.add_argument("--project", action="store_true", help="Scan entire project based on model")
+    parser.add_argument(
+        "--project", action="store_true", help="Scan entire project based on model"
+    )
     parser.add_argument("--output", "-o", help="Output JSON file for results")
-    parser.add_argument("--report", "-r", action="store_true", help="Generate human-readable report")
+    parser.add_argument(
+        "--report", "-r", action="store_true", help="Generate human-readable report"
+    )
 
     args = parser.parse_args()
 

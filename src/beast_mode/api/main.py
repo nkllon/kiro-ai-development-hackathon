@@ -18,7 +18,7 @@ app = FastAPI(
     description="Systematic PDCA Orchestrator API",
     version="1.0.0",
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
 )
 
 # Add CORS middleware
@@ -30,6 +30,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Health check endpoint
 @app.get("/health")
 async def health_check():
@@ -38,8 +39,9 @@ async def health_check():
         "status": "healthy",
         "timestamp": datetime.utcnow().isoformat(),
         "service": "systematic-pdca-orchestrator",
-        "version": "1.0.0"
+        "version": "1.0.0",
     }
+
 
 # Root endpoint
 @app.get("/", response_class=HTMLResponse)
@@ -83,6 +85,7 @@ async def root():
     """
     return HTMLResponse(content=html_content)
 
+
 # API status endpoint
 @app.get("/api/status")
 async def api_status():
@@ -93,8 +96,9 @@ async def api_status():
         "uptime": "running",
         "environment": os.getenv("ENVIRONMENT", "development"),
         "python_path": os.getenv("PYTHONPATH", "/app"),
-        "port": os.getenv("PORT", "8080")
+        "port": os.getenv("PORT", "8080"),
     }
+
 
 # Metrics endpoint
 @app.get("/api/metrics")
@@ -106,9 +110,10 @@ async def get_metrics():
             "requests_processed": 0,  # This would be tracked in a real implementation
             "uptime_seconds": time.time(),
             "memory_usage": "N/A",  # Would need psutil for real metrics
-            "cpu_usage": "N/A"
-        }
+            "cpu_usage": "N/A",
+        },
     }
+
 
 # Test endpoint for nginx routing
 @app.get("/api/test")
@@ -117,34 +122,34 @@ async def test_endpoint():
     return {
         "message": "Nginx routing is working correctly",
         "timestamp": datetime.utcnow().isoformat(),
-        "headers": {
-            "x-forwarded-for": "N/A",
-            "x-real-ip": "N/A"
-        }
+        "headers": {"x-forwarded-for": "N/A", "x-real-ip": "N/A"},
     }
+
 
 # Error handling
 @app.exception_handler(404)
 async def not_found_handler(request, exc):
     return JSONResponse(
         status_code=404,
-        content={"error": "Not found", "message": "The requested resource was not found"}
+        content={
+            "error": "Not found",
+            "message": "The requested resource was not found",
+        },
     )
+
 
 @app.exception_handler(500)
 async def internal_error_handler(request, exc):
     return JSONResponse(
         status_code=500,
-        content={"error": "Internal server error", "message": "An unexpected error occurred"}
+        content={
+            "error": "Internal server error",
+            "message": "An unexpected error occurred",
+        },
     )
+
 
 if __name__ == "__main__":
     # This allows running the app directly with python
     port = int(os.getenv("PORT", 8080))
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=port,
-        reload=False,
-        log_level="info"
-    )
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False, log_level="info")

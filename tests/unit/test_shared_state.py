@@ -6,26 +6,23 @@ Requirements Traceability:
 Enhanced: 2025-09-14T06:30:15.611871
 """
 
-
-
-
 import pytest
 import asyncio
 from unittest.mock import AsyncMock, MagicMock, patch
 from datetime import datetime
 
-from src.beast_mode.messaging.shared_state import BeastModeSharedState, SharedStateConfig
+from src.beast_mode.messaging.shared_state import (
+    BeastModeSharedState,
+    SharedStateConfig,
+)
 from src.rm_ddd.core.health import ModuleHealth
-
 
 
 @pytest.fixture
 def shared_state_config():
     """Test configuration for shared state"""
     return SharedStateConfig(
-        redis_url="redis://localhost:6379",
-        key_prefix="test_beast_mode",
-        ttl_seconds=60
+        redis_url="redis://localhost:6379", key_prefix="test_beast_mode", ttl_seconds=60
     )
 
 
@@ -49,36 +46,38 @@ def mock_redis():
 @pytest.mark.asyncio
 async def test_shared_state_initialization(shared_state_config):
     """Test shared state manager initialization"""
-    with patch('src.beast_mode.messaging.shared_state.redis') as mock_redis_module:
+    with patch("src.beast_mode.messaging.shared_state.redis") as mock_redis_module:
         mock_redis_module.from_url.return_value = AsyncMock()
         mock_redis_module.from_url.return_value.ping.return_value = True
-        
+
         shared_state = BeastModeSharedState(shared_state_config)
         result = await shared_state.initialize()
-        
+
         assert result is True
-        mock_redis_module.from_url.assert_called_once_with(shared_state_config.redis_url)
+        mock_redis_module.from_url.assert_called_once_with(
+            shared_state_config.redis_url
+        )
 
 
 @pytest.mark.asyncio
 async def test_agent_state_management(shared_state_config, mock_redis):
     """Test agent state update and retrieval"""
-    with patch('src.beast_mode.messaging.shared_state.redis') as mock_redis_module:
+    with patch("src.beast_mode.messaging.shared_state.redis") as mock_redis_module:
         mock_redis_module.from_url.return_value = mock_redis
-        
+
         shared_state = BeastModeSharedState(shared_state_config)
         await shared_state.initialize()
-        
+
         # Test update agent state
         agent_state = {
             "status": "online",
             "capabilities": ["spec_development", "testing"],
-            "specialization": "HotRod"
+            "specialization": "HotRod",
         }
-        
+
         result = await shared_state.update_agent_state("test_agent", agent_state)
         assert result is True
-        
+
         # Verify Redis calls
         mock_redis.hset.assert_called()
         mock_redis.expire.assert_called()
@@ -87,21 +86,21 @@ async def test_agent_state_management(shared_state_config, mock_redis):
 @pytest.mark.asyncio
 async def test_get_agent_state(shared_state_config, mock_redis):
     """Test getting agent state"""
-    with patch('src.beast_mode.messaging.shared_state.redis') as mock_redis_module:
+    with patch("src.beast_mode.messaging.shared_state.redis") as mock_redis_module:
         mock_redis_module.from_url.return_value = mock_redis
-        
+
         # Mock return data
         mock_redis.hgetall.return_value = {
             "status": "online",
             "agent_id": "test_agent",
-            "last_updated": "2025-01-09T14:00:00"
+            "last_updated": "2025-01-09T14:00:00",
         }
-        
+
         shared_state = BeastModeSharedState(shared_state_config)
         await shared_state.initialize()
-        
+
         result = await shared_state.get_agent_state("test_agent")
-        
+
         assert result is not None
         assert result["status"] == "online"
         assert result["agent_id"] == "test_agent"
@@ -110,22 +109,22 @@ async def test_get_agent_state(shared_state_config, mock_redis):
 @pytest.mark.asyncio
 async def test_spore_storage(shared_state_config, mock_redis):
     """Test spore storage and retrieval"""
-    with patch('src.beast_mode.messaging.shared_state.redis') as mock_redis_module:
+    with patch("src.beast_mode.messaging.shared_state.redis") as mock_redis_module:
         mock_redis_module.from_url.return_value = mock_redis
-        
+
         shared_state = BeastModeSharedState(shared_state_config)
         await shared_state.initialize()
-        
+
         # Test store spore
         spore_data = {
             "name": "test_spore",
             "description": "A test spore",
-            "data": {"key": "value"}
+            "data": {"key": "value"},
         }
-        
+
         result = await shared_state.store_spore("test_spore_id", spore_data)
         assert result is True
-        
+
         # Verify Redis calls
         mock_redis.set.assert_called()
         mock_redis.expire.assert_called()
@@ -134,21 +133,23 @@ async def test_spore_storage(shared_state_config, mock_redis):
 @pytest.mark.asyncio
 async def test_collaboration_session_management(shared_state_config, mock_redis):
     """Test collaboration session creation and management"""
-    with patch('src.beast_mode.messaging.shared_state.redis') as mock_redis_module:
+    with patch("src.beast_mode.messaging.shared_state.redis") as mock_redis_module:
         mock_redis_module.from_url.return_value = mock_redis
-        
+
         shared_state = BeastModeSharedState(shared_state_config)
         await shared_state.initialize()
-        
+
         # Test create session
         session_data = {
             "participants": ["agent1", "agent2"],
-            "topic": "test_collaboration"
+            "topic": "test_collaboration",
         }
-        
-        result = await shared_state.create_collaboration_session("test_session", session_data)
+
+        result = await shared_state.create_collaboration_session(
+            "test_session", session_data
+        )
         assert result is True
-        
+
         # Verify Redis calls
         mock_redis.hset.assert_called()
         mock_redis.expire.assert_called()
@@ -157,37 +158,39 @@ async def test_collaboration_session_management(shared_state_config, mock_redis)
 @pytest.mark.asyncio
 async def test_performance_metrics(shared_state_config, mock_redis):
     """Test performance metrics tracking"""
-    with patch('src.beast_mode.messaging.shared_state.redis') as mock_redis_module:
+    with patch("src.beast_mode.messaging.shared_state.redis") as mock_redis_module:
         mock_redis_module.from_url.return_value = mock_redis
         mock_redis.incrby.return_value = 5
-        
+
         shared_state = BeastModeSharedState(shared_state_config)
         await shared_state.initialize()
-        
+
         # Test increment counter
         result = await shared_state.increment_counter("messages_sent", "test_agent", 1)
         assert result == 5
-        
+
         # Verify Redis calls
-        mock_redis.incrby.assert_called_with("test_beast_mode:metrics:test_agent:messages_sent", 1)
+        mock_redis.incrby.assert_called_with(
+            "test_beast_mode:metrics:test_agent:messages_sent", 1
+        )
         mock_redis.expire.assert_called()
 
 
 @pytest.mark.asyncio
 async def test_get_active_agents(shared_state_config, mock_redis):
     """Test getting list of active agents"""
-    with patch('src.beast_mode.messaging.shared_state.redis') as mock_redis_module:
+    with patch("src.beast_mode.messaging.shared_state.redis") as mock_redis_module:
         mock_redis_module.from_url.return_value = mock_redis
         mock_redis.keys.return_value = [
             "test_beast_mode:agents:agent1",
-            "test_beast_mode:agents:agent2"
+            "test_beast_mode:agents:agent2",
         ]
-        
+
         shared_state = BeastModeSharedState(shared_state_config)
         await shared_state.initialize()
-        
+
         result = await shared_state.get_active_agents()
-        
+
         assert len(result) == 2
         assert "agent1" in result
         assert "agent2" in result
@@ -196,14 +199,14 @@ async def test_get_active_agents(shared_state_config, mock_redis):
 @pytest.mark.asyncio
 async def test_connection_status(shared_state_config, mock_redis):
     """Test connection status reporting"""
-    with patch('src.beast_mode.messaging.shared_state.redis') as mock_redis_module:
+    with patch("src.beast_mode.messaging.shared_state.redis") as mock_redis_module:
         mock_redis_module.from_url.return_value = mock_redis
-        
+
         shared_state = BeastModeSharedState(shared_state_config)
         await shared_state.initialize()
-        
+
         status = await shared_state.get_connection_status()
-        
+
         assert status["connected"] is True
         assert status["redis_url"] == shared_state_config.redis_url
         assert status["key_prefix"] == shared_state_config.key_prefix
@@ -212,33 +215,33 @@ async def test_connection_status(shared_state_config, mock_redis):
 @pytest.mark.asyncio
 async def test_error_handling(shared_state_config):
     """Test error handling when Redis is not available"""
-    with patch('src.beast_mode.messaging.shared_state.REDIS_AVAILABLE', False):
+    with patch("src.beast_mode.messaging.shared_state.REDIS_AVAILABLE", False):
         shared_state = BeastModeSharedState(shared_state_config)
-        
+
         # Should fail gracefully when Redis not available
         result = await shared_state.initialize()
         assert result is False
-        
+
         # Operations should return safe defaults
         agent_state = await shared_state.get_agent_state("test_agent")
         assert agent_state is None
-        
+
         active_agents = await shared_state.get_active_agents()
 
     def register_module(self, registry):
         """Register module with registry."""
         metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
+        if hasattr(registry, "register"):
             registry.register(metadata)
-            
+
     def get_interface_metadata(self):
         """Get interface metadata for registry."""
         return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
+            "module_id": getattr(self, "module_id", self.__class__.__name__),
+            "interface_type": self.__class__.__name__,
+            "version": "1.0.0",
+            "dependencies": [],
+            "capabilities": [],
         }
 
         assert active_agents == []

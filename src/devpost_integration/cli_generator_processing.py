@@ -13,13 +13,20 @@ import json
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
-from .reflective_module import ReflectiveModule, ModuleHealth, ModuleStatus, ModuleCapability, ModuleConfiguration
+from .reflective_module import (
+    ReflectiveModule,
+    ModuleHealth,
+    ModuleStatus,
+    ModuleCapability,
+    ModuleConfiguration,
+)
 from .reflective_module import ReflectiveModuleRegistry, GracefulDegradationResult
 
 
 @dataclass
 class ProcessedInput:
     """Represents processed input data."""
+
     format: str
     data: Any
     success: bool
@@ -35,14 +42,16 @@ class CLIProcessing(ReflectiveModule):
         self.capabilities = []
         self.dependencies = []
 
-    def process_input(self, input_data: bytes, format_type: str = 'auto') -> ProcessedInput:
+    def process_input(
+        self, input_data: bytes, format_type: str = "auto"
+    ) -> ProcessedInput:
         """Process stdin input based on format."""
-        if format_type == 'auto':
+        if format_type == "auto":
             format_type = self.detect_format(input_data)
-        
-        if format_type == 'json':
+
+        if format_type == "json":
             return self.process_json_input(input_data)
-        elif format_type == 'text':
+        elif format_type == "text":
             return self.process_text_input(input_data)
         else:
             return self.process_binary_input(input_data)
@@ -50,44 +59,44 @@ class CLIProcessing(ReflectiveModule):
     def process_json_input(self, input_data: bytes) -> ProcessedInput:
         """Process JSON input from stdin."""
         try:
-            data = json.loads(input_data.decode('utf-8'))
-            return ProcessedInput(format='json', data=data, success=True)
+            data = json.loads(input_data.decode("utf-8"))
+            return ProcessedInput(format="json", data=data, success=True)
         except json.JSONDecodeError as e:
-            return ProcessedInput(format='json', data=None, success=False, error=str(e))
+            return ProcessedInput(format="json", data=None, success=False, error=str(e))
 
     def process_text_input(self, input_data: bytes) -> ProcessedInput:
         """Process text input from stdin."""
         try:
-            text = input_data.decode('utf-8')
-            lines = text.strip().split('\n') if text.strip() else []
-            return ProcessedInput(format='text', data=lines, success=True)
+            text = input_data.decode("utf-8")
+            lines = text.strip().split("\n") if text.strip() else []
+            return ProcessedInput(format="text", data=lines, success=True)
         except UnicodeDecodeError as e:
-            return ProcessedInput(format='text', data=None, success=False, error=str(e))
+            return ProcessedInput(format="text", data=None, success=False, error=str(e))
 
     def process_binary_input(self, input_data: bytes) -> ProcessedInput:
         """Process binary input from stdin."""
-        return ProcessedInput(format='binary', data=input_data, success=True)
+        return ProcessedInput(format="binary", data=input_data, success=True)
 
     def detect_format(self, input_data: bytes) -> str:
         """Auto-detect input format."""
         try:
-            json.loads(input_data.decode('utf-8'))
-            return 'json'
+            json.loads(input_data.decode("utf-8"))
+            return "json"
         except (json.JSONDecodeError, UnicodeDecodeError):
             try:
-                input_data.decode('utf-8')
-                return 'text'
+                input_data.decode("utf-8")
+                return "text"
             except UnicodeDecodeError:
-                return 'binary'
+                return "binary"
 
     def get_module_info(self) -> Dict[str, Any]:
         """Get module information."""
         return {
-            'module_id': self.module_id,
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': self.dependencies,
-            'capabilities': self.capabilities
+            "module_id": self.module_id,
+            "interface_type": self.__class__.__name__,
+            "version": "1.0.0",
+            "dependencies": self.dependencies,
+            "capabilities": self.capabilities,
         }
 
     def get_capabilities(self) -> List[ModuleCapability]:
@@ -101,7 +110,7 @@ class CLIProcessing(ReflectiveModule):
             status=ModuleStatus.HEALTHY,
             health_score=100.0,
             issues=[],
-            last_check=datetime.now()
+            last_check=datetime.now(),
         )
 
     def graceful_degradation(self) -> GracefulDegradationResult:
@@ -109,5 +118,5 @@ class CLIProcessing(ReflectiveModule):
         return GracefulDegradationResult(
             success=True,
             degraded_capabilities=[],
-            remaining_capabilities=self.get_capabilities()
+            remaining_capabilities=self.get_capabilities(),
         )

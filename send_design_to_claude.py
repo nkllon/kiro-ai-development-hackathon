@@ -31,14 +31,16 @@ class BeastModeMessage(BaseModel):
 async def send_design():
     """Send the design document to Claude"""
     client = redis.from_url("redis://localhost:6379")
-    
+
     try:
         await client.ping()
-        
+
         # Read the design file
-        with open('.kiro/specs/beast-mode-agent-collaboration-network/design.md', 'r') as f:
+        with open(
+            ".kiro/specs/beast-mode-agent-collaboration-network/design.md", "r"
+        ) as f:
             design_content = f.read()
-        
+
         # Create structured JSON payload
         design_data = {
             "document_type": "design_document",
@@ -51,21 +53,21 @@ async def send_design():
                 "MailboxLogger for persistent message storage",
                 "SporeManager for spore distribution",
                 "Standardized MessageType enum",
-                "AgentCapabilities model for discovery"
+                "AgentCapabilities model for discovery",
             ],
             "deployment_models": [
                 "Single machine (macOS with local Redis)",
-                "Distributed (multiple hosts with Redis cluster)"
+                "Distributed (multiple hosts with Redis cluster)",
             ],
             "performance_targets": {
                 "message_throughput": "100+ messages/second per agent",
                 "latency": "<100ms message delivery",
                 "scalability": "10+ concurrent agents",
-                "storage": "~1MB per 1000 messages"
+                "storage": "~1MB per 1000 messages",
             },
-            "next_phase": "Implementation tasks ready for execution"
+            "next_phase": "Implementation tasks ready for execution",
         }
-        
+
         message = BeastModeMessage(
             id=str(uuid.uuid4()),
             type=MessageType.PROMPT_REQUEST,
@@ -74,16 +76,18 @@ async def send_design():
             payload={
                 "message_type": "design_delivery",
                 "design_data": design_data,
-                "context": "Design phase complete - architecture and components defined"
+                "context": "Design phase complete - architecture and components defined",
             },
             timestamp=datetime.now(),
-            priority=8
+            priority=8,
         )
-        
+
         await client.publish("beast_mode_network", message.model_dump_json())
         print("📤 Sent design document to Claude using JSON format")
-        print("🏗️  Architecture includes Redis pub/sub, mailbox logger, and spore manager")
-        
+        print(
+            "🏗️  Architecture includes Redis pub/sub, mailbox logger, and spore manager"
+        )
+
     except Exception as e:
         print(f"❌ Error: {e}")
     finally:

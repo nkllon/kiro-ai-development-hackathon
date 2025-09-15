@@ -24,24 +24,48 @@ async def main():
     print("🔒 SECURITY EXPERT FINDINGS:")
     result = await run_ghostbusters(".")
 
-    security_delusions = [d for d in result.get("delusions_detected", []) if d.get("agent") == "SecurityExpert"]
+    security_delusions = [
+        d
+        for d in result.get("delusions_detected", [])
+        if d.get("agent") == "SecurityExpert"
+    ]
     for d in security_delusions:
-        print(f"  - {d.get('type', 'Unknown')}: {d.get('description', 'No description')}")
+        print(
+            f"  - {d.get('type', 'Unknown')}: {d.get('description', 'No description')}"
+        )
 
     print("\n🏗️ ARCHITECTURE EXPERT FINDINGS:")
-    arch_delusions = [d for d in result.get("delusions_detected", []) if d.get("agent") == "ArchitectureExpert"]
+    arch_delusions = [
+        d
+        for d in result.get("delusions_detected", [])
+        if d.get("agent") == "ArchitectureExpert"
+    ]
     for d in arch_delusions:
-        print(f"  - {d.get('type', 'Unknown')}: {d.get('description', 'No description')}")
+        print(
+            f"  - {d.get('type', 'Unknown')}: {d.get('description', 'No description')}"
+        )
 
     print("\n🔧 CODE QUALITY EXPERT FINDINGS:")
-    quality_delusions = [d for d in result.get("delusions_detected", []) if d.get("agent") == "CodeQualityExpert"]
+    quality_delusions = [
+        d
+        for d in result.get("delusions_detected", [])
+        if d.get("agent") == "CodeQualityExpert"
+    ]
     for d in quality_delusions:
-        print(f"  - {d.get('type', 'Unknown')}: {d.get('description', 'No description')}")
+        print(
+            f"  - {d.get('type', 'Unknown')}: {d.get('description', 'No description')}"
+        )
 
     print("\n🧪 TEST EXPERT FINDINGS:")
-    test_delusions = [d for d in result.get("delusions_detected", []) if d.get("agent") == "TestExpert"]
+    test_delusions = [
+        d
+        for d in result.get("delusions_detected", [])
+        if d.get("agent") == "TestExpert"
+    ]
     for d in test_delusions:
-        print(f"  - {d.get('type', 'Unknown')}: {d.get('description', 'No description')}")
+        print(
+            f"  - {d.get('type', 'Unknown')}: {d.get('description', 'No description')}"
+        )
 
     print("\n📊 OVERALL ASSESSMENT:")
     print(f"  Confidence Score: {result.get('confidence_score', 'Unknown')}")

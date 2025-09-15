@@ -122,11 +122,21 @@ class HeuristicFileTypeProcessor:
         """Initialize heuristic patterns for file type detection"""
         return [
             # Python patterns
-            HeuristicPattern(r"^#!/usr/bin/env python", 0.95, "python", "Python shebang"),
-            HeuristicPattern(r"^import\s+\w+", 0.90, "python", "Python import statement"),
-            HeuristicPattern(r"^from\s+\w+\s+import", 0.90, "python", "Python from import"),
-            HeuristicPattern(r"^def\s+\w+\s*\(", 0.85, "python", "Python function definition"),
-            HeuristicPattern(r"^class\s+\w+", 0.85, "python", "Python class definition"),
+            HeuristicPattern(
+                r"^#!/usr/bin/env python", 0.95, "python", "Python shebang"
+            ),
+            HeuristicPattern(
+                r"^import\s+\w+", 0.90, "python", "Python import statement"
+            ),
+            HeuristicPattern(
+                r"^from\s+\w+\s+import", 0.90, "python", "Python from import"
+            ),
+            HeuristicPattern(
+                r"^def\s+\w+\s*\(", 0.85, "python", "Python function definition"
+            ),
+            HeuristicPattern(
+                r"^class\s+\w+", 0.85, "python", "Python class definition"
+            ),
             # JSON patterns
             HeuristicPattern(r"^\s*\{", 0.80, "json", "JSON object start"),
             HeuristicPattern(r"^\s*\[", 0.80, "json", "JSON array start"),
@@ -137,7 +147,9 @@ class HeuristicFileTypeProcessor:
             HeuristicPattern(r"^\s*#", 0.60, "yaml", "YAML comment"),
             # TOML patterns
             HeuristicPattern(r"^\s*\[[\w.]+\]", 0.90, "toml", "TOML section header"),
-            HeuristicPattern(r'^\s*[\w-]+\s*=\s*["\']?[^"\']*["\']?', 0.85, "toml", "TOML key-value"),
+            HeuristicPattern(
+                r'^\s*[\w-]+\s*=\s*["\']?[^"\']*["\']?', 0.85, "toml", "TOML key-value"
+            ),
             HeuristicPattern(r"^\s*#.*$", 0.70, "toml", "TOML comment"),
             # INI patterns
             HeuristicPattern(r"^\s*\[[\w\s]+\]", 0.85, "ini", "INI section header"),
@@ -156,13 +168,19 @@ class HeuristicFileTypeProcessor:
             HeuristicPattern(r"^\w+\(\)\s*\{", 0.85, "shell", "Shell function"),
             HeuristicPattern(r"^\w+=\$\(", 0.80, "shell", "Shell command substitution"),
             # Dockerfile patterns
-            HeuristicPattern(r"^FROM\s+", 0.95, "dockerfile", "Docker FROM instruction"),
+            HeuristicPattern(
+                r"^FROM\s+", 0.95, "dockerfile", "Docker FROM instruction"
+            ),
             HeuristicPattern(r"^RUN\s+", 0.90, "dockerfile", "Docker RUN instruction"),
-            HeuristicPattern(r"^COPY\s+", 0.90, "dockerfile", "Docker COPY instruction"),
+            HeuristicPattern(
+                r"^COPY\s+", 0.90, "dockerfile", "Docker COPY instruction"
+            ),
             # Makefile patterns
             HeuristicPattern(r"^\w+:", 0.80, "makefile", "Makefile target"),
             HeuristicPattern(r"^\t", 0.75, "makefile", "Makefile tab indentation"),
-            HeuristicPattern(r"^\s*\.PHONY:", 0.90, "makefile", "Makefile .PHONY declaration"),
+            HeuristicPattern(
+                r"^\s*\.PHONY:", 0.90, "makefile", "Makefile .PHONY declaration"
+            ),
         ]
 
     def _initialize_exception_mappings(self) -> list[ExceptionMapping]:
@@ -250,7 +268,11 @@ class HeuristicFileTypeProcessor:
         return FileTypeDiscovery(
             file_path=file_path,
             detected_type=file_type,
-            confidence=(FileTypeConfidence.CERTAIN if parsing_success else FileTypeConfidence.HIGH),
+            confidence=(
+                FileTypeConfidence.CERTAIN
+                if parsing_success
+                else FileTypeConfidence.HIGH
+            ),
             confidence_score=1.0 if parsing_success else 0.8,
             discovery_strategy=DiscoveryStrategy.EXTENSION_BASED,
             parsing_success=parsing_success,
@@ -279,7 +301,9 @@ class HeuristicFileTypeProcessor:
             return self._create_unknown_discovery(file_path)
 
         # Find the best match
-        best_type = max(pattern_scores.keys(), key=lambda t: max(s[1] for s in pattern_scores[t]))
+        best_type = max(
+            pattern_scores.keys(), key=lambda t: max(s[1] for s in pattern_scores[t])
+        )
         best_score = max(s[1] for s in pattern_scores[best_type])
 
         # Attempt parsing with discovered type
@@ -336,7 +360,9 @@ class HeuristicFileTypeProcessor:
         # Attempt parsing
         parsing_success, errors = self._attempt_parsing(file_path, best_type)
 
-        confidence = FileTypeConfidence.MEDIUM if best_score >= 0.6 else FileTypeConfidence.LOW
+        confidence = (
+            FileTypeConfidence.MEDIUM if best_score >= 0.6 else FileTypeConfidence.LOW
+        )
 
         return FileTypeDiscovery(
             file_path=file_path,
@@ -392,7 +418,9 @@ class HeuristicFileTypeProcessor:
             parsing_errors=["File type could not be determined"],
         )
 
-    def _attempt_parsing(self, file_path: Path, file_type: str) -> tuple[bool, list[str]]:
+    def _attempt_parsing(
+        self, file_path: Path, file_type: str
+    ) -> tuple[bool, list[str]]:
         """Attempt to parse a file with the given type"""
         try:
             if file_type == "python":
@@ -428,16 +456,23 @@ class HeuristicFileTypeProcessor:
 
         except Exception as e:
             # Map exception to recovery strategy
-            recovery_strategy = self._map_exception_to_recovery(str(type(e)), str(e), file_type)
+            recovery_strategy = self._map_exception_to_recovery(
+                str(type(e)), str(e), file_type
+            )
             return False, [
                 f"Parse error: {e}",
                 f"Recovery strategy: {recovery_strategy}",
             ]
 
-    def _map_exception_to_recovery(self, exception_type: str, exception_message: str, file_type: str) -> str:
+    def _map_exception_to_recovery(
+        self, exception_type: str, exception_message: str, file_type: str
+    ) -> str:
         """Map parsing exceptions to recovery strategies"""
         for mapping in self.exception_mappings:
-            if mapping.exception_type in exception_type and mapping.file_type == file_type:
+            if (
+                mapping.exception_type in exception_type
+                and mapping.file_type == file_type
+            ):
                 # Update usage count and success rate
                 mapping.usage_count += 1
                 return mapping.recovery_strategy
@@ -546,13 +581,17 @@ class HeuristicFileTypeProcessor:
         for strategy in strategy_performance:
             total_strategy = strategy_performance[strategy]["total"]
             successful_strategy = strategy_performance[strategy]["successful"]
-            strategy_performance[strategy]["success_rate"] = successful_strategy / total_strategy
+            strategy_performance[strategy]["success_rate"] = (
+                successful_strategy / total_strategy
+            )
 
         return {
             "total_discoveries": total,
             "success_rate": success_rate,
             "strategy_performance": strategy_performance,
-            "pattern_confidence": {p.file_type: p.confidence for p in self.heuristic_patterns},
+            "pattern_confidence": {
+                p.file_type: p.confidence for p in self.heuristic_patterns
+            },
         }
 
 
@@ -577,7 +616,9 @@ def main():
             discovery = processor.discover_file_type(Path(test_file))
             print(f"\n📁 {test_file}")
             print(f"   Type: {discovery.detected_type}")
-            print(f"   Confidence: {discovery.confidence.value} ({discovery.confidence_score:.2f})")
+            print(
+                f"   Confidence: {discovery.confidence.value} ({discovery.confidence_score:.2f})"
+            )
             print(f"   Strategy: {discovery.discovery_strategy.value}")
             print(f"   Parsing: {'✅' if discovery.parsing_success else '❌'}")
 

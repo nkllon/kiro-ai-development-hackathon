@@ -10,33 +10,79 @@ from typing import List, Dict, Any, Optional
 from pathlib import Path
 import logging
 from ..core.interfaces import GhostbustersExpertAgent
-from ..core.models import AnalysisResult, AnalysisContext, Finding, Recommendation, FindingType, Severity, CodeLocation
+from ..core.models import (
+    AnalysisResult,
+    AnalysisContext,
+    Finding,
+    Recommendation,
+    FindingType,
+    Severity,
+    CodeLocation,
+)
+
 
 class BuildExpert(GhostbustersExpertAgent):
     """
     Expert agent for build system analysis.
-    
+
     Analyzes build configurations, dependency management, and build
     best practices with systematic confidence scoring.
     """
 
-    def __init__(self, name: str='BuildExpert', version: str='1.0.0'):
+    def __init__(self, name: str = "BuildExpert", version: str = "1.0.0"):
         super().__init__(name, version)
-        self._capabilities = ['dependency_analysis', 'build_config_analysis', 'package_manager_analysis', 'ci_cd_analysis', 'dockerfile_analysis', 'makefile_analysis', 'version_analysis', 'security_dependency_analysis']
-        self.build_files = {'python': ['requirements.txt', 'setup.py', 'pyproject.toml', 'Pipfile', 'poetry.lock'], 'javascript': ['package.json', 'package-lock.json', 'yarn.lock', 'bower.json'], 'java': ['pom.xml', 'build.gradle', 'gradle.properties', 'build.xml'], 'dotnet': ['*.csproj', '*.sln', 'packages.config', 'project.json'], 'ruby': ['Gemfile', 'Gemfile.lock', '*.gemspec'], 'go': ['go.mod', 'go.sum', 'Gopkg.toml', 'Gopkg.lock'], 'rust': ['Cargo.toml', 'Cargo.lock'], 'php': ['composer.json', 'composer.lock'], 'docker': ['Dockerfile', 'docker-compose.yml', 'docker-compose.yaml'], 'ci': ['.github/workflows/*.yml', '.gitlab-ci.yml', 'Jenkinsfile', '.travis.yml'], 'make': ['Makefile', 'makefile', '*.mk']}
-        logger.info(f'BuildExpert {version} initialized')
+        self._capabilities = [
+            "dependency_analysis",
+            "build_config_analysis",
+            "package_manager_analysis",
+            "ci_cd_analysis",
+            "dockerfile_analysis",
+            "makefile_analysis",
+            "version_analysis",
+            "security_dependency_analysis",
+        ]
+        self.build_files = {
+            "python": [
+                "requirements.txt",
+                "setup.py",
+                "pyproject.toml",
+                "Pipfile",
+                "poetry.lock",
+            ],
+            "javascript": [
+                "package.json",
+                "package-lock.json",
+                "yarn.lock",
+                "bower.json",
+            ],
+            "java": ["pom.xml", "build.gradle", "gradle.properties", "build.xml"],
+            "dotnet": ["*.csproj", "*.sln", "packages.config", "project.json"],
+            "ruby": ["Gemfile", "Gemfile.lock", "*.gemspec"],
+            "go": ["go.mod", "go.sum", "Gopkg.toml", "Gopkg.lock"],
+            "rust": ["Cargo.toml", "Cargo.lock"],
+            "php": ["composer.json", "composer.lock"],
+            "docker": ["Dockerfile", "docker-compose.yml", "docker-compose.yaml"],
+            "ci": [
+                ".github/workflows/*.yml",
+                ".gitlab-ci.yml",
+                "Jenkinsfile",
+                ".travis.yml",
+            ],
+            "make": ["Makefile", "makefile", "*.mk"],
+        }
+        logger.info(f"BuildExpert {version} initialized")
 
     async def analyze(self, context: AnalysisContext) -> AnalysisResult:
         """
         Perform comprehensive build system analysis.
-        
+
         Args:
             context: Analysis context with target path and configuration
-            
+
         Returns:
             AnalysisResult with build findings and recommendations
         """
-        start_time = __import__('time').time()
+        start_time = __import__("time").time()
         findings = []
         recommendations = []
         try:
@@ -46,17 +92,53 @@ class BuildExpert(GhostbustersExpertAgent):
             elif target_path.is_file():
                 findings.extend(await self._analyze_build_file(target_path))
             else:
-                raise FileNotFoundError(f'Target not found: {target_path}')
+                raise FileNotFoundError(f"Target not found: {target_path}")
             recommendations = await self._generate_build_recommendations(findings)
             confidence = self._calculate_build_confidence(findings, target_path)
-            analysis_duration = __import__('time').time() - start_time
-            result = AnalysisResult(agent_name=self.name, confidence=confidence, findings=findings, recommendations=recommendations, analysis_duration=analysis_duration, context=context, metadata={'build_systems_detected': self._get_detected_build_systems(target_path), 'dependency_managers': self._get_dependency_managers(target_path), 'build_files_analyzed': self._get_analyzed_files(target_path)})
-            logger.info(f'Build analysis completed for {target_path} with {len(findings)} findings')
+            analysis_duration = __import__("time").time() - start_time
+            result = AnalysisResult(
+                agent_name=self.name,
+                confidence=confidence,
+                findings=findings,
+                recommendations=recommendations,
+                analysis_duration=analysis_duration,
+                context=context,
+                metadata={
+                    "build_systems_detected": self._get_detected_build_systems(
+                        target_path
+                    ),
+                    "dependency_managers": self._get_dependency_managers(target_path),
+                    "build_files_analyzed": self._get_analyzed_files(target_path),
+                },
+            )
+            logger.info(
+                f"Build analysis completed for {target_path} with {len(findings)} findings"
+            )
             return result
         except Exception as e:
-            logger.error(f'Build analysis failed for {context.target_path}: {str(e)}')
-            analysis_duration = __import__('time').time() - start_time
-            return AnalysisResult(agent_name=self.name, confidence=0.0, findings=[Finding(type=FindingType.BUILD_FAILURE, severity=Severity.CRITICAL, description=f'Build analysis failed: {str(e)}', confidence=1.0)], recommendations=[Recommendation(title='Fix Analysis Error', description=f'Resolve build analysis issue: {str(e)}', priority=Severity.CRITICAL)], analysis_duration=analysis_duration, context=context)
+            logger.error(f"Build analysis failed for {context.target_path}: {str(e)}")
+            analysis_duration = __import__("time").time() - start_time
+            return AnalysisResult(
+                agent_name=self.name,
+                confidence=0.0,
+                findings=[
+                    Finding(
+                        type=FindingType.BUILD_FAILURE,
+                        severity=Severity.CRITICAL,
+                        description=f"Build analysis failed: {str(e)}",
+                        confidence=1.0,
+                    )
+                ],
+                recommendations=[
+                    Recommendation(
+                        title="Fix Analysis Error",
+                        description=f"Resolve build analysis issue: {str(e)}",
+                        priority=Severity.CRITICAL,
+                    )
+                ],
+                analysis_duration=analysis_duration,
+                context=context,
+            )
 
     def get_capabilities(self) -> List[str]:
         """Return list of build analysis capabilities"""
@@ -67,7 +149,7 @@ class BuildExpert(GhostbustersExpertAgent):
         if not 0.0 <= result.confidence <= 1.0:
             return False
         if result.confidence > 0.8:
-            return 'build_systems_detected' in result.metadata
+            return "build_systems_detected" in result.metadata
         return True
 
     async def _analyze_project_directory(self, directory: Path) -> List[Finding]:
@@ -75,7 +157,7 @@ class BuildExpert(GhostbustersExpertAgent):
         findings = []
         for build_type, file_patterns in self.build_files.items():
             for pattern in file_patterns:
-                if '*' in pattern:
+                if "*" in pattern:
                     for file_path in directory.rglob(pattern):
                         if file_path.is_file():
                             findings.extend(await self._analyze_build_file(file_path))
@@ -92,263 +174,637 @@ class BuildExpert(GhostbustersExpertAgent):
         findings = []
         file_name = file_path.name.lower()
         try:
-            if file_name in ['package.json']:
+            if file_name in ["package.json"]:
                 findings.extend(await self._analyze_package_json(file_path))
-            elif file_name in ['requirements.txt']:
+            elif file_name in ["requirements.txt"]:
                 findings.extend(await self._analyze_requirements_txt(file_path))
-            elif file_name in ['pyproject.toml']:
+            elif file_name in ["pyproject.toml"]:
                 findings.extend(await self._analyze_pyproject_toml(file_path))
-            elif file_name in ['dockerfile']:
+            elif file_name in ["dockerfile"]:
                 findings.extend(await self._analyze_dockerfile(file_path))
-            elif file_name in ['makefile', 'makefile']:
+            elif file_name in ["makefile", "makefile"]:
                 findings.extend(await self._analyze_makefile(file_path))
-            elif file_name.endswith('.yml') or file_name.endswith('.yaml'):
+            elif file_name.endswith(".yml") or file_name.endswith(".yaml"):
                 findings.extend(await self._analyze_yaml_config(file_path))
-            elif file_name in ['pom.xml']:
+            elif file_name in ["pom.xml"]:
                 findings.extend(await self._analyze_pom_xml(file_path))
             else:
                 findings.extend(await self._analyze_generic_build_file(file_path))
         except Exception as e:
-            findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), 1), description=f'Failed to analyze build file: {str(e)}', confidence=0.8))
+            findings.append(
+                Finding(
+                    type=FindingType.BUILD_FAILURE,
+                    severity=Severity.MEDIUM,
+                    location=CodeLocation(str(file_path), 1),
+                    description=f"Failed to analyze build file: {str(e)}",
+                    confidence=0.8,
+                )
+            )
         return findings
 
     async def _analyze_package_json(self, file_path: Path) -> List[Finding]:
         """Analyze package.json for Node.js projects"""
         findings = []
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path, "r") as f:
                 package_data = json.load(f)
-            essential_fields = ['name', 'version', 'description']
+            essential_fields = ["name", "version", "description"]
             for field in essential_fields:
                 if field not in package_data:
-                    findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), 1), description=f'Missing essential field: {field}', confidence=0.9, evidence={'missing_field': field}))
-            if 'dependencies' in package_data:
-                findings.extend(self._check_dependency_versions(package_data['dependencies'], file_path, 'dependencies'))
-            if 'devDependencies' in package_data:
-                findings.extend(self._check_dependency_versions(package_data['devDependencies'], file_path, 'devDependencies'))
-            findings.extend(self._check_known_vulnerable_packages(package_data.get('dependencies', {}), file_path))
-            if 'scripts' in package_data:
-                findings.extend(self._analyze_npm_scripts(package_data['scripts'], file_path))
+                    findings.append(
+                        Finding(
+                            type=FindingType.BUILD_FAILURE,
+                            severity=Severity.MEDIUM,
+                            location=CodeLocation(str(file_path), 1),
+                            description=f"Missing essential field: {field}",
+                            confidence=0.9,
+                            evidence={"missing_field": field},
+                        )
+                    )
+            if "dependencies" in package_data:
+                findings.extend(
+                    self._check_dependency_versions(
+                        package_data["dependencies"], file_path, "dependencies"
+                    )
+                )
+            if "devDependencies" in package_data:
+                findings.extend(
+                    self._check_dependency_versions(
+                        package_data["devDependencies"], file_path, "devDependencies"
+                    )
+                )
+            findings.extend(
+                self._check_known_vulnerable_packages(
+                    package_data.get("dependencies", {}), file_path
+                )
+            )
+            if "scripts" in package_data:
+                findings.extend(
+                    self._analyze_npm_scripts(package_data["scripts"], file_path)
+                )
         except json.JSONDecodeError as e:
-            findings.append(Finding(type=FindingType.SYNTAX_ERROR, severity=Severity.HIGH, location=CodeLocation(str(file_path), 1), description=f'Invalid JSON in package.json: {str(e)}', confidence=0.95))
+            findings.append(
+                Finding(
+                    type=FindingType.SYNTAX_ERROR,
+                    severity=Severity.HIGH,
+                    location=CodeLocation(str(file_path), 1),
+                    description=f"Invalid JSON in package.json: {str(e)}",
+                    confidence=0.95,
+                )
+            )
         return findings
 
     async def _analyze_requirements_txt(self, file_path: Path) -> List[Finding]:
         """Analyze requirements.txt for Python projects"""
         findings = []
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path, "r") as f:
                 lines = f.readlines()
             for line_num, line in enumerate(lines, 1):
                 line = line.strip()
-                if not line or line.startswith('#'):
+                if not line or line.startswith("#"):
                     continue
-                if '==' not in line and '>=' not in line and ('~=' not in line):
-                    findings.append(Finding(type=FindingType.DEPENDENCY_ISSUE, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), line_num), description=f'Unpinned dependency version: {line}', confidence=0.8, evidence={'dependency': line, 'issue': 'unpinned_version'}))
-                package_name = line.split('==')[0].split('>=')[0].split('~=')[0]
-                if package_name.lower() in ['pillow', 'requests', 'urllib3']:
-                    findings.append(Finding(type=FindingType.SECURITY_VULNERABILITY, severity=Severity.HIGH, location=CodeLocation(str(file_path), line_num), description=f'Potentially vulnerable package: {package_name}', confidence=0.6, evidence={'package': package_name, 'issue': 'potential_vulnerability'}))
+                if "==" not in line and ">=" not in line and ("~=" not in line):
+                    findings.append(
+                        Finding(
+                            type=FindingType.DEPENDENCY_ISSUE,
+                            severity=Severity.MEDIUM,
+                            location=CodeLocation(str(file_path), line_num),
+                            description=f"Unpinned dependency version: {line}",
+                            confidence=0.8,
+                            evidence={"dependency": line, "issue": "unpinned_version"},
+                        )
+                    )
+                package_name = line.split("==")[0].split(">=")[0].split("~=")[0]
+                if package_name.lower() in ["pillow", "requests", "urllib3"]:
+                    findings.append(
+                        Finding(
+                            type=FindingType.SECURITY_VULNERABILITY,
+                            severity=Severity.HIGH,
+                            location=CodeLocation(str(file_path), line_num),
+                            description=f"Potentially vulnerable package: {package_name}",
+                            confidence=0.6,
+                            evidence={
+                                "package": package_name,
+                                "issue": "potential_vulnerability",
+                            },
+                        )
+                    )
         except Exception as e:
-            findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), 1), description=f'Failed to analyze requirements.txt: {str(e)}', confidence=0.8))
+            findings.append(
+                Finding(
+                    type=FindingType.BUILD_FAILURE,
+                    severity=Severity.MEDIUM,
+                    location=CodeLocation(str(file_path), 1),
+                    description=f"Failed to analyze requirements.txt: {str(e)}",
+                    confidence=0.8,
+                )
+            )
         return findings
 
     async def _analyze_dockerfile(self, file_path: Path) -> List[Finding]:
         """Analyze Dockerfile for build issues"""
         findings = []
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path, "r") as f:
                 lines = f.readlines()
             has_from = False
             runs_as_root = True
             for line_num, line in enumerate(lines, 1):
                 line = line.strip()
-                if not line or line.startswith('#'):
+                if not line or line.startswith("#"):
                     continue
-                if line.upper().startswith('FROM'):
+                if line.upper().startswith("FROM"):
                     has_from = True
-                    if ':latest' in line or ':' not in line.split()[-1]:
-                        findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), line_num), description="Using 'latest' tag or no tag in FROM instruction", confidence=0.8, evidence={'issue': 'latest_tag', 'line': line}))
-                if line.upper().startswith('USER'):
+                    if ":latest" in line or ":" not in line.split()[-1]:
+                        findings.append(
+                            Finding(
+                                type=FindingType.BUILD_FAILURE,
+                                severity=Severity.MEDIUM,
+                                location=CodeLocation(str(file_path), line_num),
+                                description="Using 'latest' tag or no tag in FROM instruction",
+                                confidence=0.8,
+                                evidence={"issue": "latest_tag", "line": line},
+                            )
+                        )
+                if line.upper().startswith("USER"):
                     runs_as_root = False
-                if line.upper().startswith('ADD '):
-                    findings.append(Finding(type=FindingType.QUALITY_ISSUE, severity=Severity.LOW, location=CodeLocation(str(file_path), line_num), description='Consider using COPY instead of ADD', confidence=0.7, evidence={'issue': 'add_vs_copy', 'line': line}))
+                if line.upper().startswith("ADD "):
+                    findings.append(
+                        Finding(
+                            type=FindingType.QUALITY_ISSUE,
+                            severity=Severity.LOW,
+                            location=CodeLocation(str(file_path), line_num),
+                            description="Consider using COPY instead of ADD",
+                            confidence=0.7,
+                            evidence={"issue": "add_vs_copy", "line": line},
+                        )
+                    )
             if not has_from:
-                findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.HIGH, location=CodeLocation(str(file_path), 1), description='Dockerfile missing FROM instruction', confidence=0.95))
+                findings.append(
+                    Finding(
+                        type=FindingType.BUILD_FAILURE,
+                        severity=Severity.HIGH,
+                        location=CodeLocation(str(file_path), 1),
+                        description="Dockerfile missing FROM instruction",
+                        confidence=0.95,
+                    )
+                )
             if runs_as_root:
-                findings.append(Finding(type=FindingType.SECURITY_VULNERABILITY, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), 1), description='Container runs as root user (security risk)', confidence=0.8, evidence={'issue': 'runs_as_root'}))
+                findings.append(
+                    Finding(
+                        type=FindingType.SECURITY_VULNERABILITY,
+                        severity=Severity.MEDIUM,
+                        location=CodeLocation(str(file_path), 1),
+                        description="Container runs as root user (security risk)",
+                        confidence=0.8,
+                        evidence={"issue": "runs_as_root"},
+                    )
+                )
         except Exception as e:
-            findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), 1), description=f'Failed to analyze Dockerfile: {str(e)}', confidence=0.8))
+            findings.append(
+                Finding(
+                    type=FindingType.BUILD_FAILURE,
+                    severity=Severity.MEDIUM,
+                    location=CodeLocation(str(file_path), 1),
+                    description=f"Failed to analyze Dockerfile: {str(e)}",
+                    confidence=0.8,
+                )
+            )
         return findings
 
     async def _analyze_makefile(self, file_path: Path) -> List[Finding]:
         """Analyze Makefile for build issues"""
         findings = []
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path, "r") as f:
                 lines = f.readlines()
             has_phony = False
             targets = set()
             for line_num, line in enumerate(lines, 1):
                 stripped = line.strip()
-                if stripped.startswith('.PHONY:'):
+                if stripped.startswith(".PHONY:"):
                     has_phony = True
-                if ':' in line and (not line.startswith('\t')) and (not line.startswith(' ')):
-                    target = line.split(':')[0].strip()
-                    if target and (not target.startswith('.')):
+                if (
+                    ":" in line
+                    and (not line.startswith("\t"))
+                    and (not line.startswith(" "))
+                ):
+                    target = line.split(":")[0].strip()
+                    if target and (not target.startswith(".")):
                         targets.add(target)
-                if '/usr/local' in line or '/opt/' in line:
-                    findings.append(Finding(type=FindingType.QUALITY_ISSUE, severity=Severity.LOW, location=CodeLocation(str(file_path), line_num), description='Hard-coded path detected (reduces portability)', confidence=0.7, evidence={'issue': 'hardcoded_path', 'line': stripped}))
-            common_targets = {'all', 'clean', 'install', 'test'}
+                if "/usr/local" in line or "/opt/" in line:
+                    findings.append(
+                        Finding(
+                            type=FindingType.QUALITY_ISSUE,
+                            severity=Severity.LOW,
+                            location=CodeLocation(str(file_path), line_num),
+                            description="Hard-coded path detected (reduces portability)",
+                            confidence=0.7,
+                            evidence={"issue": "hardcoded_path", "line": stripped},
+                        )
+                    )
+            common_targets = {"all", "clean", "install", "test"}
             missing_targets = common_targets - targets
             if missing_targets:
-                findings.append(Finding(type=FindingType.QUALITY_ISSUE, severity=Severity.LOW, location=CodeLocation(str(file_path), 1), description=f"Missing common targets: {', '.join(missing_targets)}", confidence=0.6, evidence={'missing_targets': list(missing_targets)}))
+                findings.append(
+                    Finding(
+                        type=FindingType.QUALITY_ISSUE,
+                        severity=Severity.LOW,
+                        location=CodeLocation(str(file_path), 1),
+                        description=f"Missing common targets: {', '.join(missing_targets)}",
+                        confidence=0.6,
+                        evidence={"missing_targets": list(missing_targets)},
+                    )
+                )
             if not has_phony and targets:
-                findings.append(Finding(type=FindingType.QUALITY_ISSUE, severity=Severity.LOW, location=CodeLocation(str(file_path), 1), description='Missing .PHONY declaration for non-file targets', confidence=0.7, evidence={'issue': 'missing_phony'}))
+                findings.append(
+                    Finding(
+                        type=FindingType.QUALITY_ISSUE,
+                        severity=Severity.LOW,
+                        location=CodeLocation(str(file_path), 1),
+                        description="Missing .PHONY declaration for non-file targets",
+                        confidence=0.7,
+                        evidence={"issue": "missing_phony"},
+                    )
+                )
         except Exception as e:
-            findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), 1), description=f'Failed to analyze Makefile: {str(e)}', confidence=0.8))
+            findings.append(
+                Finding(
+                    type=FindingType.BUILD_FAILURE,
+                    severity=Severity.MEDIUM,
+                    location=CodeLocation(str(file_path), 1),
+                    description=f"Failed to analyze Makefile: {str(e)}",
+                    confidence=0.8,
+                )
+            )
         return findings
 
     async def _analyze_pyproject_toml(self, file_path: Path) -> List[Finding]:
         """Analyze pyproject.toml for Python projects"""
         findings = []
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path, "r") as f:
                 content = f.read()
             data = {}
             try:
                 current_section = None
                 for line in content.splitlines():
                     line = line.strip()
-                    if line.startswith('[') and line.endswith(']'):
+                    if line.startswith("[") and line.endswith("]"):
                         current_section = line[1:-1]
                         if current_section not in data:
                             data[current_section] = {}
-                    elif '=' in line and current_section:
-                        key, value = line.split('=', 1)
+                    elif "=" in line and current_section:
+                        key, value = line.split("=", 1)
                         data[current_section][key.strip()] = value.strip()
             except Exception:
-                findings.append(Finding(type=FindingType.SYNTAX_ERROR, severity=Severity.HIGH, location=CodeLocation(str(file_path), 1), description='Could not parse pyproject.toml', confidence=0.7))
+                findings.append(
+                    Finding(
+                        type=FindingType.SYNTAX_ERROR,
+                        severity=Severity.HIGH,
+                        location=CodeLocation(str(file_path), 1),
+                        description="Could not parse pyproject.toml",
+                        confidence=0.7,
+                    )
+                )
                 return findings
-            if 'build-system' not in data:
-                findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), 1), description='Missing [build-system] section', confidence=0.8))
-            if 'project' in data:
-                project = data['project']
-                required_fields = ['name', 'version']
+            if "build-system" not in data:
+                findings.append(
+                    Finding(
+                        type=FindingType.BUILD_FAILURE,
+                        severity=Severity.MEDIUM,
+                        location=CodeLocation(str(file_path), 1),
+                        description="Missing [build-system] section",
+                        confidence=0.8,
+                    )
+                )
+            if "project" in data:
+                project = data["project"]
+                required_fields = ["name", "version"]
                 for field in required_fields:
                     if field not in project:
-                        findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), 1), description=f'Missing required project field: {field}', confidence=0.9))
+                        findings.append(
+                            Finding(
+                                type=FindingType.BUILD_FAILURE,
+                                severity=Severity.MEDIUM,
+                                location=CodeLocation(str(file_path), 1),
+                                description=f"Missing required project field: {field}",
+                                confidence=0.9,
+                            )
+                        )
         except Exception as e:
-            findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), 1), description=f'Failed to analyze pyproject.toml: {str(e)}', confidence=0.8))
+            findings.append(
+                Finding(
+                    type=FindingType.BUILD_FAILURE,
+                    severity=Severity.MEDIUM,
+                    location=CodeLocation(str(file_path), 1),
+                    description=f"Failed to analyze pyproject.toml: {str(e)}",
+                    confidence=0.8,
+                )
+            )
         return findings
 
     async def _analyze_yaml_config(self, file_path: Path) -> List[Finding]:
         """Analyze YAML configuration files"""
         findings = []
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path, "r") as f:
                 content = f.read()
             lines = content.splitlines()
             for line_num, line in enumerate(lines, 1):
                 stripped = line.strip()
-                if stripped and (not stripped.startswith('#')):
-                    if ':' not in stripped and (not stripped.startswith('-')):
-                        if stripped and (not any((c in stripped for c in ['[', ']', '{', '}']))):
-                            findings.append(Finding(type=FindingType.SYNTAX_ERROR, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), line_num), description='Possible YAML syntax issue', confidence=0.6))
+                if stripped and (not stripped.startswith("#")):
+                    if ":" not in stripped and (not stripped.startswith("-")):
+                        if stripped and (
+                            not any((c in stripped for c in ["[", "]", "{", "}"]))
+                        ):
+                            findings.append(
+                                Finding(
+                                    type=FindingType.SYNTAX_ERROR,
+                                    severity=Severity.MEDIUM,
+                                    location=CodeLocation(str(file_path), line_num),
+                                    description="Possible YAML syntax issue",
+                                    confidence=0.6,
+                                )
+                            )
         except Exception as e:
-            findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), 1), description=f'Failed to analyze YAML file: {str(e)}', confidence=0.8))
+            findings.append(
+                Finding(
+                    type=FindingType.BUILD_FAILURE,
+                    severity=Severity.MEDIUM,
+                    location=CodeLocation(str(file_path), 1),
+                    description=f"Failed to analyze YAML file: {str(e)}",
+                    confidence=0.8,
+                )
+            )
         return findings
 
     async def _analyze_pom_xml(self, file_path: Path) -> List[Finding]:
         """Analyze Maven pom.xml"""
         findings = []
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path, "r") as f:
                 content = f.read()
-            if '<groupId>' not in content:
-                findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.HIGH, location=CodeLocation(str(file_path), 1), description='Missing groupId in pom.xml', confidence=0.9))
-            if '<artifactId>' not in content:
-                findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.HIGH, location=CodeLocation(str(file_path), 1), description='Missing artifactId in pom.xml', confidence=0.9))
-            if '<version>' not in content:
-                findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), 1), description='Missing version in pom.xml', confidence=0.8))
+            if "<groupId>" not in content:
+                findings.append(
+                    Finding(
+                        type=FindingType.BUILD_FAILURE,
+                        severity=Severity.HIGH,
+                        location=CodeLocation(str(file_path), 1),
+                        description="Missing groupId in pom.xml",
+                        confidence=0.9,
+                    )
+                )
+            if "<artifactId>" not in content:
+                findings.append(
+                    Finding(
+                        type=FindingType.BUILD_FAILURE,
+                        severity=Severity.HIGH,
+                        location=CodeLocation(str(file_path), 1),
+                        description="Missing artifactId in pom.xml",
+                        confidence=0.9,
+                    )
+                )
+            if "<version>" not in content:
+                findings.append(
+                    Finding(
+                        type=FindingType.BUILD_FAILURE,
+                        severity=Severity.MEDIUM,
+                        location=CodeLocation(str(file_path), 1),
+                        description="Missing version in pom.xml",
+                        confidence=0.8,
+                    )
+                )
         except Exception as e:
-            findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), 1), description=f'Failed to analyze pom.xml: {str(e)}', confidence=0.8))
+            findings.append(
+                Finding(
+                    type=FindingType.BUILD_FAILURE,
+                    severity=Severity.MEDIUM,
+                    location=CodeLocation(str(file_path), 1),
+                    description=f"Failed to analyze pom.xml: {str(e)}",
+                    confidence=0.8,
+                )
+            )
         return findings
 
     async def _analyze_generic_build_file(self, file_path: Path) -> List[Finding]:
         """Generic analysis for unknown build files"""
         findings = []
         try:
-            with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
                 content = f.read()
             if len(content.strip()) == 0:
-                findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.MEDIUM, location=CodeLocation(str(file_path), 1), description='Build file is empty', confidence=0.9))
+                findings.append(
+                    Finding(
+                        type=FindingType.BUILD_FAILURE,
+                        severity=Severity.MEDIUM,
+                        location=CodeLocation(str(file_path), 1),
+                        description="Build file is empty",
+                        confidence=0.9,
+                    )
+                )
         except Exception as e:
-            findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.LOW, location=CodeLocation(str(file_path), 1), description=f'Could not analyze build file: {str(e)}', confidence=0.6))
+            findings.append(
+                Finding(
+                    type=FindingType.BUILD_FAILURE,
+                    severity=Severity.LOW,
+                    location=CodeLocation(str(file_path), 1),
+                    description=f"Could not analyze build file: {str(e)}",
+                    confidence=0.6,
+                )
+            )
         return findings
 
     def _check_missing_build_files(self, directory: Path) -> List[Finding]:
         """Check for missing essential build files"""
         findings = []
-        python_files = list(directory.rglob('*.py'))
-        if python_files and (not any(((directory / f).exists() for f in ['requirements.txt', 'pyproject.toml', 'setup.py']))):
-            findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.MEDIUM, location=CodeLocation(str(directory), 1), description='Python project missing dependency file (requirements.txt, pyproject.toml, or setup.py)', confidence=0.8, evidence={'project_type': 'python', 'missing_files': ['requirements.txt', 'pyproject.toml', 'setup.py']}))
-        js_files = list(directory.rglob('*.js')) + list(directory.rglob('*.ts'))
-        if js_files and (not (directory / 'package.json').exists()):
-            findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.MEDIUM, location=CodeLocation(str(directory), 1), description='JavaScript/TypeScript project missing package.json', confidence=0.8, evidence={'project_type': 'javascript', 'missing_files': ['package.json']}))
+        python_files = list(directory.rglob("*.py"))
+        if python_files and (
+            not any(
+                (
+                    (directory / f).exists()
+                    for f in ["requirements.txt", "pyproject.toml", "setup.py"]
+                )
+            )
+        ):
+            findings.append(
+                Finding(
+                    type=FindingType.BUILD_FAILURE,
+                    severity=Severity.MEDIUM,
+                    location=CodeLocation(str(directory), 1),
+                    description="Python project missing dependency file (requirements.txt, pyproject.toml, or setup.py)",
+                    confidence=0.8,
+                    evidence={
+                        "project_type": "python",
+                        "missing_files": [
+                            "requirements.txt",
+                            "pyproject.toml",
+                            "setup.py",
+                        ],
+                    },
+                )
+            )
+        js_files = list(directory.rglob("*.js")) + list(directory.rglob("*.ts"))
+        if js_files and (not (directory / "package.json").exists()):
+            findings.append(
+                Finding(
+                    type=FindingType.BUILD_FAILURE,
+                    severity=Severity.MEDIUM,
+                    location=CodeLocation(str(directory), 1),
+                    description="JavaScript/TypeScript project missing package.json",
+                    confidence=0.8,
+                    evidence={
+                        "project_type": "javascript",
+                        "missing_files": ["package.json"],
+                    },
+                )
+            )
         return findings
 
     def _check_build_conflicts(self, directory: Path) -> List[Finding]:
         """Check for conflicting build systems"""
         findings = []
         python_files = []
-        for f in ['requirements.txt', 'pyproject.toml', 'setup.py', 'Pipfile']:
+        for f in ["requirements.txt", "pyproject.toml", "setup.py", "Pipfile"]:
             if (directory / f).exists():
                 python_files.append(f)
         if len(python_files) > 2:
-            findings.append(Finding(type=FindingType.BUILD_FAILURE, severity=Severity.LOW, location=CodeLocation(str(directory), 1), description=f"Multiple Python dependency files detected: {', '.join(python_files)}", confidence=0.7, evidence={'conflict_type': 'python_dependencies', 'files': python_files}))
+            findings.append(
+                Finding(
+                    type=FindingType.BUILD_FAILURE,
+                    severity=Severity.LOW,
+                    location=CodeLocation(str(directory), 1),
+                    description=f"Multiple Python dependency files detected: {', '.join(python_files)}",
+                    confidence=0.7,
+                    evidence={
+                        "conflict_type": "python_dependencies",
+                        "files": python_files,
+                    },
+                )
+            )
         return findings
 
-    def _check_dependency_versions(self, dependencies: Dict[str, str], file_path: Path, section: str) -> List[Finding]:
+    def _check_dependency_versions(
+        self, dependencies: Dict[str, str], file_path: Path, section: str
+    ) -> List[Finding]:
         """Check dependency versions for issues"""
         findings = []
         for dep_name, version in dependencies.items():
-            if version in ['*', 'latest'] or version.startswith('^') or version.startswith('~'):
-                findings.append(Finding(type=FindingType.DEPENDENCY_ISSUE, severity=Severity.LOW, location=CodeLocation(str(file_path), 1), description=f'Loose version constraint for {dep_name}: {version}', confidence=0.7, evidence={'dependency': dep_name, 'version': version, 'section': section}))
+            if (
+                version in ["*", "latest"]
+                or version.startswith("^")
+                or version.startswith("~")
+            ):
+                findings.append(
+                    Finding(
+                        type=FindingType.DEPENDENCY_ISSUE,
+                        severity=Severity.LOW,
+                        location=CodeLocation(str(file_path), 1),
+                        description=f"Loose version constraint for {dep_name}: {version}",
+                        confidence=0.7,
+                        evidence={
+                            "dependency": dep_name,
+                            "version": version,
+                            "section": section,
+                        },
+                    )
+                )
         return findings
 
-    def _check_known_vulnerable_packages(self, dependencies: Dict[str, str], file_path: Path) -> List[Finding]:
+    def _check_known_vulnerable_packages(
+        self, dependencies: Dict[str, str], file_path: Path
+    ) -> List[Finding]:
         """Check for known vulnerable packages (simplified)"""
         findings = []
-        known_vulnerable = {'lodash': ['4.17.15', '4.17.16'], 'moment': ['2.24.0']}
+        known_vulnerable = {"lodash": ["4.17.15", "4.17.16"], "moment": ["2.24.0"]}
         for dep_name, version in dependencies.items():
             if dep_name in known_vulnerable:
-                findings.append(Finding(type=FindingType.SECURITY_VULNERABILITY, severity=Severity.HIGH, location=CodeLocation(str(file_path), 1), description=f'Known vulnerable package: {dep_name}@{version}', confidence=0.6, evidence={'package': dep_name, 'version': version, 'vulnerability': 'known_vulnerable'}))
+                findings.append(
+                    Finding(
+                        type=FindingType.SECURITY_VULNERABILITY,
+                        severity=Severity.HIGH,
+                        location=CodeLocation(str(file_path), 1),
+                        description=f"Known vulnerable package: {dep_name}@{version}",
+                        confidence=0.6,
+                        evidence={
+                            "package": dep_name,
+                            "version": version,
+                            "vulnerability": "known_vulnerable",
+                        },
+                    )
+                )
         return findings
 
-    def _analyze_npm_scripts(self, scripts: Dict[str, str], file_path: Path) -> List[Finding]:
+    def _analyze_npm_scripts(
+        self, scripts: Dict[str, str], file_path: Path
+    ) -> List[Finding]:
         """Analyze npm scripts for issues"""
         findings = []
-        common_scripts = {'test', 'build', 'start'}
+        common_scripts = {"test", "build", "start"}
         missing_scripts = common_scripts - set(scripts.keys())
         if missing_scripts:
-            findings.append(Finding(type=FindingType.QUALITY_ISSUE, severity=Severity.LOW, location=CodeLocation(str(file_path), 1), description=f"Missing common npm scripts: {', '.join(missing_scripts)}", confidence=0.6, evidence={'missing_scripts': list(missing_scripts)}))
+            findings.append(
+                Finding(
+                    type=FindingType.QUALITY_ISSUE,
+                    severity=Severity.LOW,
+                    location=CodeLocation(str(file_path), 1),
+                    description=f"Missing common npm scripts: {', '.join(missing_scripts)}",
+                    confidence=0.6,
+                    evidence={"missing_scripts": list(missing_scripts)},
+                )
+            )
         return findings
 
-    async def _generate_build_recommendations(self, findings: List[Finding]) -> List[Recommendation]:
+    async def _generate_build_recommendations(
+        self, findings: List[Finding]
+    ) -> List[Recommendation]:
         """Generate build-specific recommendations"""
         recommendations = []
         build_failures = [f for f in findings if f.type == FindingType.BUILD_FAILURE]
-        dependency_issues = [f for f in findings if f.type == FindingType.DEPENDENCY_ISSUE]
-        security_issues = [f for f in findings if f.type == FindingType.SECURITY_VULNERABILITY]
+        dependency_issues = [
+            f for f in findings if f.type == FindingType.DEPENDENCY_ISSUE
+        ]
+        security_issues = [
+            f for f in findings if f.type == FindingType.SECURITY_VULNERABILITY
+        ]
         if build_failures:
-            recommendations.append(Recommendation(title='Fix Build Configuration Issues', description=f'Resolve {len(build_failures)} build configuration issue(s)', priority=Severity.HIGH, effort_estimate='30-60 minutes', automated_fix_available=False))
+            recommendations.append(
+                Recommendation(
+                    title="Fix Build Configuration Issues",
+                    description=f"Resolve {len(build_failures)} build configuration issue(s)",
+                    priority=Severity.HIGH,
+                    effort_estimate="30-60 minutes",
+                    automated_fix_available=False,
+                )
+            )
         if dependency_issues:
-            recommendations.append(Recommendation(title='Update Dependency Management', description=f'Fix {len(dependency_issues)} dependency issue(s) - pin versions and update outdated packages', priority=Severity.MEDIUM, effort_estimate='15-30 minutes', automated_fix_available=True, fix_command='update_dependencies'))
+            recommendations.append(
+                Recommendation(
+                    title="Update Dependency Management",
+                    description=f"Fix {len(dependency_issues)} dependency issue(s) - pin versions and update outdated packages",
+                    priority=Severity.MEDIUM,
+                    effort_estimate="15-30 minutes",
+                    automated_fix_available=True,
+                    fix_command="update_dependencies",
+                )
+            )
         if security_issues:
-            recommendations.append(Recommendation(title='Address Security Vulnerabilities', description=f'Update {len(security_issues)} vulnerable package(s)', priority=Severity.HIGH, effort_estimate='20-45 minutes', automated_fix_available=True, fix_command='audit_fix'))
+            recommendations.append(
+                Recommendation(
+                    title="Address Security Vulnerabilities",
+                    description=f"Update {len(security_issues)} vulnerable package(s)",
+                    priority=Severity.HIGH,
+                    effort_estimate="20-45 minutes",
+                    automated_fix_available=True,
+                    fix_command="audit_fix",
+                )
+            )
         return recommendations
 
-    def _calculate_build_confidence(self, findings: List[Finding], target_path: Path) -> float:
+    def _calculate_build_confidence(
+        self, findings: List[Finding], target_path: Path
+    ) -> float:
         """Calculate confidence score for build analysis"""
         base_confidence = 0.7
         detected_systems = self._get_detected_build_systems(target_path)
@@ -365,7 +821,7 @@ class BuildExpert(GhostbustersExpertAgent):
         if target_path.is_dir():
             for build_type, file_patterns in self.build_files.items():
                 for pattern in file_patterns:
-                    if '*' in pattern:
+                    if "*" in pattern:
                         if list(target_path.rglob(pattern)):
                             systems.append(build_type)
                             break
@@ -377,7 +833,15 @@ class BuildExpert(GhostbustersExpertAgent):
     def _get_dependency_managers(self, target_path: Path) -> List[str]:
         """Get list of detected dependency managers"""
         managers = []
-        dependency_files = {'npm': 'package.json', 'pip': 'requirements.txt', 'poetry': 'pyproject.toml', 'maven': 'pom.xml', 'gradle': 'build.gradle', 'composer': 'composer.json', 'bundler': 'Gemfile'}
+        dependency_files = {
+            "npm": "package.json",
+            "pip": "requirements.txt",
+            "poetry": "pyproject.toml",
+            "maven": "pom.xml",
+            "gradle": "build.gradle",
+            "composer": "composer.json",
+            "bundler": "Gemfile",
+        }
         if target_path.is_dir():
             for manager, file_name in dependency_files.items():
                 if (target_path / file_name).exists():
@@ -390,7 +854,7 @@ class BuildExpert(GhostbustersExpertAgent):
         if target_path.is_dir():
             for build_type, file_patterns in self.build_files.items():
                 for pattern in file_patterns:
-                    if '*' in pattern:
+                    if "*" in pattern:
                         for file_path in target_path.rglob(pattern):
                             if file_path.is_file():
                                 analyzed.append(str(file_path.relative_to(target_path)))
@@ -402,26 +866,75 @@ class BuildExpert(GhostbustersExpertAgent):
             analyzed.append(target_path.name)
         return analyzed
 
-def __init__(self, name: str='BuildExpert', version: str='1.0.0'):
+
+def __init__(self, name: str = "BuildExpert", version: str = "1.0.0"):
     super().__init__(name, version)
-    self._capabilities = ['dependency_analysis', 'build_config_analysis', 'package_manager_analysis', 'ci_cd_analysis', 'dockerfile_analysis', 'makefile_analysis', 'version_analysis', 'security_dependency_analysis']
-    self.build_files = {'python': ['requirements.txt', 'setup.py', 'pyproject.toml', 'Pipfile', 'poetry.lock'], 'javascript': ['package.json', 'package-lock.json', 'yarn.lock', 'bower.json'], 'java': ['pom.xml', 'build.gradle', 'gradle.properties', 'build.xml'], 'dotnet': ['*.csproj', '*.sln', 'packages.config', 'project.json'], 'ruby': ['Gemfile', 'Gemfile.lock', '*.gemspec'], 'go': ['go.mod', 'go.sum', 'Gopkg.toml', 'Gopkg.lock'], 'rust': ['Cargo.toml', 'Cargo.lock'], 'php': ['composer.json', 'composer.lock'], 'docker': ['Dockerfile', 'docker-compose.yml', 'docker-compose.yaml'], 'ci': ['.github/workflows/*.yml', '.gitlab-ci.yml', 'Jenkinsfile', '.travis.yml'], 'make': ['Makefile', 'makefile', '*.mk']}
-    logger.info(f'BuildExpert {version} initialized')
+    self._capabilities = [
+        "dependency_analysis",
+        "build_config_analysis",
+        "package_manager_analysis",
+        "ci_cd_analysis",
+        "dockerfile_analysis",
+        "makefile_analysis",
+        "version_analysis",
+        "security_dependency_analysis",
+    ]
+    self.build_files = {
+        "python": [
+            "requirements.txt",
+            "setup.py",
+            "pyproject.toml",
+            "Pipfile",
+            "poetry.lock",
+        ],
+        "javascript": ["package.json", "package-lock.json", "yarn.lock", "bower.json"],
+        "java": ["pom.xml", "build.gradle", "gradle.properties", "build.xml"],
+        "dotnet": ["*.csproj", "*.sln", "packages.config", "project.json"],
+        "ruby": ["Gemfile", "Gemfile.lock", "*.gemspec"],
+        "go": ["go.mod", "go.sum", "Gopkg.toml", "Gopkg.lock"],
+        "rust": ["Cargo.toml", "Cargo.lock"],
+        "php": ["composer.json", "composer.lock"],
+        "docker": ["Dockerfile", "docker-compose.yml", "docker-compose.yaml"],
+        "ci": [
+            ".github/workflows/*.yml",
+            ".gitlab-ci.yml",
+            "Jenkinsfile",
+            ".travis.yml",
+        ],
+        "make": ["Makefile", "makefile", "*.mk"],
+    }
+    logger.info(f"BuildExpert {version} initialized")
+
 
 def get_capabilities(self) -> List[str]:
     """Return list of build analysis capabilities"""
     return self._capabilities.copy()
 
-def _analyze_npm_scripts(self, scripts: Dict[str, str], file_path: Path) -> List[Finding]:
+
+def _analyze_npm_scripts(
+    self, scripts: Dict[str, str], file_path: Path
+) -> List[Finding]:
     """Analyze npm scripts for issues"""
     findings = []
-    common_scripts = {'test', 'build', 'start'}
+    common_scripts = {"test", "build", "start"}
     missing_scripts = common_scripts - set(scripts.keys())
     if missing_scripts:
-        findings.append(Finding(type=FindingType.QUALITY_ISSUE, severity=Severity.LOW, location=CodeLocation(str(file_path), 1), description=f"Missing common npm scripts: {', '.join(missing_scripts)}", confidence=0.6, evidence={'missing_scripts': list(missing_scripts)}))
+        findings.append(
+            Finding(
+                type=FindingType.QUALITY_ISSUE,
+                severity=Severity.LOW,
+                location=CodeLocation(str(file_path), 1),
+                description=f"Missing common npm scripts: {', '.join(missing_scripts)}",
+                confidence=0.6,
+                evidence={"missing_scripts": list(missing_scripts)},
+            )
+        )
     return findings
 
-def _calculate_build_confidence(self, findings: List[Finding], target_path: Path) -> float:
+
+def _calculate_build_confidence(
+    self, findings: List[Finding], target_path: Path
+) -> float:
     """Calculate confidence score for build analysis"""
     base_confidence = 0.7
     detected_systems = self._get_detected_build_systems(target_path)
@@ -432,13 +945,14 @@ def _calculate_build_confidence(self, findings: List[Finding], target_path: Path
         base_confidence = (base_confidence + avg_confidence) / 2
     return min(1.0, max(0.0, base_confidence))
 
+
 def _get_detected_build_systems(self, target_path: Path) -> List[str]:
     """Get list of detected build systems"""
     systems = []
     if target_path.is_dir():
         for build_type, file_patterns in self.build_files.items():
             for pattern in file_patterns:
-                if '*' in pattern:
+                if "*" in pattern:
                     if list(target_path.rglob(pattern)):
                         systems.append(build_type)
                         break
@@ -447,15 +961,25 @@ def _get_detected_build_systems(self, target_path: Path) -> List[str]:
                     break
     return systems
 
+
 def _get_dependency_managers(self, target_path: Path) -> List[str]:
     """Get list of detected dependency managers"""
     managers = []
-    dependency_files = {'npm': 'package.json', 'pip': 'requirements.txt', 'poetry': 'pyproject.toml', 'maven': 'pom.xml', 'gradle': 'build.gradle', 'composer': 'composer.json', 'bundler': 'Gemfile'}
+    dependency_files = {
+        "npm": "package.json",
+        "pip": "requirements.txt",
+        "poetry": "pyproject.toml",
+        "maven": "pom.xml",
+        "gradle": "build.gradle",
+        "composer": "composer.json",
+        "bundler": "Gemfile",
+    }
     if target_path.is_dir():
         for manager, file_name in dependency_files.items():
             if (target_path / file_name).exists():
                 managers.append(manager)
     return managers
+
 
 def _get_analyzed_files(self, target_path: Path) -> List[str]:
     """Get list of build files that were analyzed"""
@@ -463,7 +987,7 @@ def _get_analyzed_files(self, target_path: Path) -> List[str]:
     if target_path.is_dir():
         for build_type, file_patterns in self.build_files.items():
             for pattern in file_patterns:
-                if '*' in pattern:
+                if "*" in pattern:
                     for file_path in target_path.rglob(pattern):
                         if file_path.is_file():
                             analyzed.append(str(file_path.relative_to(target_path)))
@@ -475,26 +999,75 @@ def _get_analyzed_files(self, target_path: Path) -> List[str]:
         analyzed.append(target_path.name)
     return analyzed
 
-def __init__(self, name: str='BuildExpert', version: str='1.0.0'):
+
+def __init__(self, name: str = "BuildExpert", version: str = "1.0.0"):
     super().__init__(name, version)
-    self._capabilities = ['dependency_analysis', 'build_config_analysis', 'package_manager_analysis', 'ci_cd_analysis', 'dockerfile_analysis', 'makefile_analysis', 'version_analysis', 'security_dependency_analysis']
-    self.build_files = {'python': ['requirements.txt', 'setup.py', 'pyproject.toml', 'Pipfile', 'poetry.lock'], 'javascript': ['package.json', 'package-lock.json', 'yarn.lock', 'bower.json'], 'java': ['pom.xml', 'build.gradle', 'gradle.properties', 'build.xml'], 'dotnet': ['*.csproj', '*.sln', 'packages.config', 'project.json'], 'ruby': ['Gemfile', 'Gemfile.lock', '*.gemspec'], 'go': ['go.mod', 'go.sum', 'Gopkg.toml', 'Gopkg.lock'], 'rust': ['Cargo.toml', 'Cargo.lock'], 'php': ['composer.json', 'composer.lock'], 'docker': ['Dockerfile', 'docker-compose.yml', 'docker-compose.yaml'], 'ci': ['.github/workflows/*.yml', '.gitlab-ci.yml', 'Jenkinsfile', '.travis.yml'], 'make': ['Makefile', 'makefile', '*.mk']}
-    logger.info(f'BuildExpert {version} initialized')
+    self._capabilities = [
+        "dependency_analysis",
+        "build_config_analysis",
+        "package_manager_analysis",
+        "ci_cd_analysis",
+        "dockerfile_analysis",
+        "makefile_analysis",
+        "version_analysis",
+        "security_dependency_analysis",
+    ]
+    self.build_files = {
+        "python": [
+            "requirements.txt",
+            "setup.py",
+            "pyproject.toml",
+            "Pipfile",
+            "poetry.lock",
+        ],
+        "javascript": ["package.json", "package-lock.json", "yarn.lock", "bower.json"],
+        "java": ["pom.xml", "build.gradle", "gradle.properties", "build.xml"],
+        "dotnet": ["*.csproj", "*.sln", "packages.config", "project.json"],
+        "ruby": ["Gemfile", "Gemfile.lock", "*.gemspec"],
+        "go": ["go.mod", "go.sum", "Gopkg.toml", "Gopkg.lock"],
+        "rust": ["Cargo.toml", "Cargo.lock"],
+        "php": ["composer.json", "composer.lock"],
+        "docker": ["Dockerfile", "docker-compose.yml", "docker-compose.yaml"],
+        "ci": [
+            ".github/workflows/*.yml",
+            ".gitlab-ci.yml",
+            "Jenkinsfile",
+            ".travis.yml",
+        ],
+        "make": ["Makefile", "makefile", "*.mk"],
+    }
+    logger.info(f"BuildExpert {version} initialized")
+
 
 def get_capabilities(self) -> List[str]:
     """Return list of build analysis capabilities"""
     return self._capabilities.copy()
 
-def _analyze_npm_scripts(self, scripts: Dict[str, str], file_path: Path) -> List[Finding]:
+
+def _analyze_npm_scripts(
+    self, scripts: Dict[str, str], file_path: Path
+) -> List[Finding]:
     """Analyze npm scripts for issues"""
     findings = []
-    common_scripts = {'test', 'build', 'start'}
+    common_scripts = {"test", "build", "start"}
     missing_scripts = common_scripts - set(scripts.keys())
     if missing_scripts:
-        findings.append(Finding(type=FindingType.QUALITY_ISSUE, severity=Severity.LOW, location=CodeLocation(str(file_path), 1), description=f"Missing common npm scripts: {', '.join(missing_scripts)}", confidence=0.6, evidence={'missing_scripts': list(missing_scripts)}))
+        findings.append(
+            Finding(
+                type=FindingType.QUALITY_ISSUE,
+                severity=Severity.LOW,
+                location=CodeLocation(str(file_path), 1),
+                description=f"Missing common npm scripts: {', '.join(missing_scripts)}",
+                confidence=0.6,
+                evidence={"missing_scripts": list(missing_scripts)},
+            )
+        )
     return findings
 
-def _calculate_build_confidence(self, findings: List[Finding], target_path: Path) -> float:
+
+def _calculate_build_confidence(
+    self, findings: List[Finding], target_path: Path
+) -> float:
     """Calculate confidence score for build analysis"""
     base_confidence = 0.7
     detected_systems = self._get_detected_build_systems(target_path)
@@ -505,13 +1078,14 @@ def _calculate_build_confidence(self, findings: List[Finding], target_path: Path
         base_confidence = (base_confidence + avg_confidence) / 2
     return min(1.0, max(0.0, base_confidence))
 
+
 def _get_detected_build_systems(self, target_path: Path) -> List[str]:
     """Get list of detected build systems"""
     systems = []
     if target_path.is_dir():
         for build_type, file_patterns in self.build_files.items():
             for pattern in file_patterns:
-                if '*' in pattern:
+                if "*" in pattern:
                     if list(target_path.rglob(pattern)):
                         systems.append(build_type)
                         break
@@ -520,15 +1094,25 @@ def _get_detected_build_systems(self, target_path: Path) -> List[str]:
                     break
     return systems
 
+
 def _get_dependency_managers(self, target_path: Path) -> List[str]:
     """Get list of detected dependency managers"""
     managers = []
-    dependency_files = {'npm': 'package.json', 'pip': 'requirements.txt', 'poetry': 'pyproject.toml', 'maven': 'pom.xml', 'gradle': 'build.gradle', 'composer': 'composer.json', 'bundler': 'Gemfile'}
+    dependency_files = {
+        "npm": "package.json",
+        "pip": "requirements.txt",
+        "poetry": "pyproject.toml",
+        "maven": "pom.xml",
+        "gradle": "build.gradle",
+        "composer": "composer.json",
+        "bundler": "Gemfile",
+    }
     if target_path.is_dir():
         for manager, file_name in dependency_files.items():
             if (target_path / file_name).exists():
                 managers.append(manager)
     return managers
+
 
 def _get_analyzed_files(self, target_path: Path) -> List[str]:
     """Get list of build files that were analyzed"""
@@ -536,7 +1120,7 @@ def _get_analyzed_files(self, target_path: Path) -> List[str]:
     if target_path.is_dir():
         for build_type, file_patterns in self.build_files.items():
             for pattern in file_patterns:
-                if '*' in pattern:
+                if "*" in pattern:
                     for file_path in target_path.rglob(pattern):
                         if file_path.is_file():
                             analyzed.append(str(file_path.relative_to(target_path)))

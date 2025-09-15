@@ -64,7 +64,9 @@ class DistributedSecurityScanner:
         if self.config_path.exists():
             with open(self.config_path) as f:
                 config_data = json.load(f)
-                self.scanners = [ScannerConfig(**scanner) for scanner in config_data["scanners"]]
+                self.scanners = [
+                    ScannerConfig(**scanner) for scanner in config_data["scanners"]
+                ]
         else:
             # Default configuration
             self.scanners = [
@@ -113,7 +115,9 @@ class DistributedSecurityScanner:
         with open(self.config_path, "w") as f:
             json.dump(config_data, f, indent=2)
 
-    async def run_scanner_local(self, scanner: ScannerConfig, work_dir: str) -> ScanResult:
+    async def run_scanner_local(
+        self, scanner: ScannerConfig, work_dir: str
+    ) -> ScanResult:
         """Run scanner locally"""
         start_time = time.time()
 
@@ -163,7 +167,9 @@ class DistributedSecurityScanner:
                 error=str(e),
             )
 
-    async def run_scanner_docker(self, scanner: ScannerConfig, work_dir: str) -> ScanResult:
+    async def run_scanner_docker(
+        self, scanner: ScannerConfig, work_dir: str
+    ) -> ScanResult:
         """Run scanner in Docker container"""
         if not self.docker_client:
             return ScanResult(
@@ -203,7 +209,11 @@ class DistributedSecurityScanner:
                 success=result["StatusCode"] == 0,
                 output=logs,
                 duration=duration,
-                error=(None if result["StatusCode"] == 0 else f"Exit code: {result['StatusCode']}"),
+                error=(
+                    None
+                    if result["StatusCode"] == 0
+                    else f"Exit code: {result['StatusCode']}"
+                ),
             )
 
         except Exception as e:
@@ -217,7 +227,9 @@ class DistributedSecurityScanner:
                 error=str(e),
             )
 
-    async def run_scanner_remote(self, scanner: ScannerConfig, work_dir: str, remote_config: Dict) -> ScanResult:
+    async def run_scanner_remote(
+        self, scanner: ScannerConfig, work_dir: str, remote_config: Dict
+    ) -> ScanResult:
         """Run scanner on remote machine via SSH"""
         start_time = time.time()
 
@@ -265,7 +277,9 @@ class DistributedSecurityScanner:
                 error=str(e),
             )
 
-    async def run_all_scanners(self, work_dir: str, remote_configs: Optional[Dict] = None) -> List[ScanResult]:
+    async def run_all_scanners(
+        self, work_dir: str, remote_configs: Optional[Dict] = None
+    ) -> List[ScanResult]:
         """Run all scanners in parallel"""
         tasks = []
 
@@ -277,7 +291,9 @@ class DistributedSecurityScanner:
             elif scanner.machine.startswith("remote-") and remote_configs:
                 remote_name = scanner.machine.replace("remote-", "")
                 if remote_name in remote_configs:
-                    task = self.run_scanner_remote(scanner, work_dir, remote_configs[remote_name])
+                    task = self.run_scanner_remote(
+                        scanner, work_dir, remote_configs[remote_name]
+                    )
                 else:
                     print(f"⚠️ Remote config not found for {remote_name}")
                     continue
@@ -327,7 +343,9 @@ class DistributedSecurityScanner:
                 "successful_scans": successful_scans,
                 "failed_scans": total_scanners - successful_scans,
                 "total_duration": total_duration,
-                "average_duration": (total_duration / total_scanners if total_scanners > 0 else 0),
+                "average_duration": (
+                    total_duration / total_scanners if total_scanners > 0 else 0
+                ),
             },
             "results_by_machine": results_by_machine,
             "detailed_results": [

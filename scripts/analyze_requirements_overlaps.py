@@ -79,7 +79,9 @@ def analyze_requirements_overlaps():
     print(f"\n📈 DOMAINS WITH MOST REQUIREMENTS:")
     print("=" * 60)
 
-    sorted_domains = sorted(requirements_by_domain.items(), key=lambda x: len(x[1]), reverse=True)
+    sorted_domains = sorted(
+        requirements_by_domain.items(), key=lambda x: len(x[1]), reverse=True
+    )
 
     for domain, reqs in sorted_domains[:10]:  # Top 10
         print(f"\n🏗️  {domain} ({len(reqs)} requirements):")
@@ -107,14 +109,18 @@ def analyze_requirements_overlaps():
 
                 common_terms = req1_terms.intersection(req2_terms)
                 if len(common_terms) >= 3:  # At least 3 common terms
-                    similarity_score = len(common_terms) / max(len(req1_terms), len(req2_terms))
+                    similarity_score = len(common_terms) / max(
+                        len(req1_terms), len(req2_terms)
+                    )
                     if similarity_score > 0.3:  # 30% similarity threshold
                         domain_similarities[domain1].append((domain2, similarity_score))
 
     for domain, similarities in domain_similarities.items():
         if similarities:
             print(f"\n🔗 {domain} has high similarity with:")
-            for similar_domain, score in sorted(similarities, key=lambda x: x[1], reverse=True):
+            for similar_domain, score in sorted(
+                similarities, key=lambda x: x[1], reverse=True
+            ):
                 print(f"    • {similar_domain} ({score:.1%} similarity)")
 
 

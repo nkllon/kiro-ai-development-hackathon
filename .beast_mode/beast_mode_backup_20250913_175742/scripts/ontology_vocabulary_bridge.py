@@ -13,7 +13,9 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 
 # Add the ontology framework to the path
-ontology_framework_path = Path(__file__).parent.parent / "subprojects" / "ontology-framework" / "src"
+ontology_framework_path = (
+    Path(__file__).parent.parent / "subprojects" / "ontology-framework" / "src"
+)
 sys.path.insert(0, str(ontology_framework_path))
 
 try:
@@ -40,7 +42,12 @@ class OntologyVocabularyBridge:
         """Initialize the ontology vocabulary bridge."""
         try:
             # Initialize the ontology integration
-            ontology_path = Path(__file__).parent.parent / "subprojects" / "ontology-framework" / "models"
+            ontology_path = (
+                Path(__file__).parent.parent
+                / "subprojects"
+                / "ontology-framework"
+                / "models"
+            )
             self.integration = OpenFlowIntegration(str(ontology_path))
             logger.info("✅ Ontology vocabulary bridge initialized successfully")
 
@@ -52,7 +59,9 @@ class OntologyVocabularyBridge:
             logger.error(f"❌ Failed to initialize ontology bridge: {e}")
             raise
 
-    def analyze_vocabulary_mismatch(self, reverse_engineering_data: Any, code_generation_data: Any) -> Dict[str, Any]:
+    def analyze_vocabulary_mismatch(
+        self, reverse_engineering_data: Any, code_generation_data: Any
+    ) -> Dict[str, Any]:
         """
         Analyze vocabulary mismatch using ontological validation.
 
@@ -67,9 +76,13 @@ class OntologyVocabularyBridge:
             logger.info("🔍 Analyzing vocabulary mismatch using ontology framework...")
 
             # Use the ontology framework for validation
-            validation_result = self.integration.validate_vocabulary_alignment(reverse_engineering_data, code_generation_data)
+            validation_result = self.integration.validate_vocabulary_alignment(
+                reverse_engineering_data, code_generation_data
+            )
 
-            logger.info(f"📋 Vocabulary analysis completed. Valid: {validation_result['valid']}")
+            logger.info(
+                f"📋 Vocabulary analysis completed. Valid: {validation_result['valid']}"
+            )
 
             return validation_result
 
@@ -77,7 +90,9 @@ class OntologyVocabularyBridge:
             logger.error(f"❌ Vocabulary analysis failed: {e}")
             return {"valid": False, "error": str(e), "analysis_timestamp": "failed"}
 
-    def resolve_vocabulary_mismatch(self, reverse_engineering_data: Any, target_format: str = "dict") -> Any:
+    def resolve_vocabulary_mismatch(
+        self, reverse_engineering_data: Any, target_format: str = "dict"
+    ) -> Any:
         """
         Resolve vocabulary mismatch by transforming data to target format.
 
@@ -89,7 +104,9 @@ class OntologyVocabularyBridge:
             Transformed data in target format
         """
         try:
-            logger.info(f"🔄 Resolving vocabulary mismatch to {target_format} format...")
+            logger.info(
+                f"🔄 Resolving vocabulary mismatch to {target_format} format..."
+            )
 
             # Determine transformation type
             if target_format == "dict" and isinstance(reverse_engineering_data, list):
@@ -97,13 +114,19 @@ class OntologyVocabularyBridge:
             elif target_format == "list" and isinstance(reverse_engineering_data, dict):
                 transformation_type = "dict_to_list"
             else:
-                logger.warning(f"⚠️ No transformation needed for {type(reverse_engineering_data)} to {target_format}")
+                logger.warning(
+                    f"⚠️ No transformation needed for {type(reverse_engineering_data)} to {target_format}"
+                )
                 return reverse_engineering_data
 
             # Apply transformation using ontology framework
-            transformed_data = self.integration.apply_transformation(reverse_engineering_data, transformation_type)
+            transformed_data = self.integration.apply_transformation(
+                reverse_engineering_data, transformation_type
+            )
 
-            logger.info(f"✅ Transformation successful: {type(reverse_engineering_data)} -> {type(transformed_data)}")
+            logger.info(
+                f"✅ Transformation successful: {type(reverse_engineering_data)} -> {type(transformed_data)}"
+            )
 
             return transformed_data
 
@@ -111,7 +134,9 @@ class OntologyVocabularyBridge:
             logger.error(f"❌ Vocabulary mismatch resolution failed: {e}")
             raise
 
-    def validate_transformation(self, original_data: Any, transformed_data: Any, target_format: str) -> Dict[str, Any]:
+    def validate_transformation(
+        self, original_data: Any, transformed_data: Any, target_format: str
+    ) -> Dict[str, Any]:
         """
         Validate that transformation was successful and maintains data integrity.
 
@@ -142,17 +167,23 @@ class OntologyVocabularyBridge:
                 validation_result["format_correct"] = True
             else:
                 validation_result["format_correct"] = False
-                validation_result["issues"].append(f"Expected {target_format}, got {type(transformed_data).__name__}")
+                validation_result["issues"].append(
+                    f"Expected {target_format}, got {type(transformed_data).__name__}"
+                )
 
             # Check data integrity
             if isinstance(original_data, list) and isinstance(transformed_data, dict):
                 # List to dict transformation
                 original_count = len(original_data)
                 transformed_count = len(transformed_data)
-                validation_result["component_count_preserved"] = original_count == transformed_count
+                validation_result["component_count_preserved"] = (
+                    original_count == transformed_count
+                )
 
                 if not validation_result["component_count_preserved"]:
-                    validation_result["issues"].append(f"Component count mismatch: {original_count} -> {transformed_count}")
+                    validation_result["issues"].append(
+                        f"Component count mismatch: {original_count} -> {transformed_count}"
+                    )
 
                 # Check that all components have names
                 missing_names = []
@@ -161,24 +192,36 @@ class OntologyVocabularyBridge:
                         missing_names.append(f"Item {i}")
 
                 if missing_names:
-                    validation_result["issues"].append(f"Missing names: {missing_names}")
+                    validation_result["issues"].append(
+                        f"Missing names: {missing_names}"
+                    )
 
             elif isinstance(original_data, dict) and isinstance(transformed_data, list):
                 # Dict to list transformation
                 original_count = len(original_data)
                 transformed_count = len(transformed_data)
-                validation_result["component_count_preserved"] = original_count == transformed_count
+                validation_result["component_count_preserved"] = (
+                    original_count == transformed_count
+                )
 
                 if not validation_result["component_count_preserved"]:
-                    validation_result["issues"].append(f"Component count mismatch: {original_count} -> {transformed_count}")
+                    validation_result["issues"].append(
+                        f"Component count mismatch: {original_count} -> {transformed_count}"
+                    )
 
             # Overall validation
-            validation_result["valid"] = validation_result["format_correct"] and validation_result["component_count_preserved"] and len(validation_result["issues"]) == 0
+            validation_result["valid"] = (
+                validation_result["format_correct"]
+                and validation_result["component_count_preserved"]
+                and len(validation_result["issues"]) == 0
+            )
 
             if validation_result["valid"]:
                 logger.info("✅ Transformation validation passed")
             else:
-                logger.warning(f"⚠️ Transformation validation failed: {validation_result['issues']}")
+                logger.warning(
+                    f"⚠️ Transformation validation failed: {validation_result['issues']}"
+                )
 
             return validation_result
 
@@ -243,7 +286,9 @@ def main():
         # Get ontology insights
         print("\n🔍 Getting ontology insights...")
         insights = bridge.get_ontology_insights()
-        print(f"📊 Ontology Summary: {json.dumps(insights['ontology_summary'], indent=2)}")
+        print(
+            f"📊 Ontology Summary: {json.dumps(insights['ontology_summary'], indent=2)}"
+        )
 
         print("\n📋 Vocabulary Alignment Rules:")
         for rule in insights["vocabulary_alignment_rules"]:
@@ -262,7 +307,9 @@ def main():
                 "name": "TestComponent",
                 "type": "class",
                 "description": "A test component",
-                "methods": [{"name": "test_method", "type": "method", "return_type": "str"}],
+                "methods": [
+                    {"name": "test_method", "type": "method", "return_type": "str"}
+                ],
             }
         ]
 

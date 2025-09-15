@@ -6,9 +6,10 @@ Workflow Diagrams
 Mermaid diagrams for visualizing the DevPost automation workflow architecture.
 """
 
+
 def create_langgraph_workflow_diagram():
     """Create Mermaid diagram for the LangGraph workflow"""
-    
+
     diagram = """
 ```mermaid
 graph TD
@@ -58,7 +59,7 @@ graph TD
 
 def create_investigation_modules_diagram():
     """Create Mermaid diagram for the investigation modules"""
-    
+
     diagram = """
 ```mermaid
 graph TD
@@ -125,7 +126,7 @@ graph TD
 
 def create_confidence_routing_diagram():
     """Create Mermaid diagram for confidence-based routing"""
-    
+
     diagram = """
 ```mermaid
 graph TD
@@ -185,7 +186,7 @@ graph TD
 
 def create_memory_management_diagram():
     """Create Mermaid diagram for tiered memory management"""
-    
+
     diagram = """
 ```mermaid
 graph TD
@@ -239,7 +240,7 @@ graph TD
 
 def create_prompt_mode_flow_diagram():
     """Create Mermaid diagram for Prompt Mode flow"""
-    
+
     diagram = """
 ```mermaid
 graph TD
@@ -305,7 +306,7 @@ graph TD
 
 def create_rmddd_architecture_diagram():
     """Create Mermaid diagram showing RMDDD architecture"""
-    
+
     diagram = """
 ```mermaid
 graph TD
@@ -363,22 +364,22 @@ graph TD
 
 def generate_all_diagrams():
     """Generate all Mermaid diagrams"""
-    
+
     diagrams = {
         "langgraph_workflow": create_langgraph_workflow_diagram(),
         "investigation_modules": create_investigation_modules_diagram(),
         "confidence_routing": create_confidence_routing_diagram(),
         "memory_management": create_memory_management_diagram(),
         "prompt_mode_flow": create_prompt_mode_flow_diagram(),
-        "rmddd_architecture": create_rmddd_architecture_diagram()
+        "rmddd_architecture": create_rmddd_architecture_diagram(),
     }
-    
+
     return diagrams
 
 
 if __name__ == "__main__":
     diagrams = generate_all_diagrams()
-    
+
     for name, diagram in diagrams.items():
         print(f"\n{'='*60}")
         print(f"DIAGRAM: {name.upper().replace('_', ' ')}")

@@ -27,7 +27,9 @@ def main() -> None:
 
     # Step 1: Remove the unified domain
     print("\n🗑️  Step 1: Removing unified domain")
-    success = manager.remove_model_entry("project_model_registry", ["domains", "artifact_forge_unified"])
+    success = manager.remove_model_entry(
+        "project_model_registry", ["domains", "artifact_forge_unified"]
+    )
 
     if success:
         print("✅ Unified domain removed successfully")
@@ -70,7 +72,9 @@ def main() -> None:
         }
     }
 
-    success = manager.add_model_entry("project_model_registry", ["domains"], artifact_forge_domain)
+    success = manager.add_model_entry(
+        "project_model_registry", ["domains"], artifact_forge_domain
+    )
 
     if success:
         print("✅ ArtifactForge domain added successfully")

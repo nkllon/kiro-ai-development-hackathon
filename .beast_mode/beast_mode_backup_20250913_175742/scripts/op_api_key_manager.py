@@ -83,7 +83,11 @@ class OnePasswordAPIKeyManager:
 
         # Check if any API indicators are present
         for indicator in api_indicators:
-            if indicator in title or indicator in notes or any(indicator in tag for tag in tags):
+            if (
+                indicator in title
+                or indicator in notes
+                or any(indicator in tag for tag in tags)
+            ):
                 return True
 
         # Check if it's a login item (often contains API keys)
@@ -97,7 +101,9 @@ class OnePasswordAPIKeyManager:
         match = re.search(r"\b\d{12}\b", notes)
         return match.group(0) if match else None
 
-    def _organize_credentials(self, raw_keys: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    def _organize_credentials(
+        self, raw_keys: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
         """Organize and pair related credentials"""
         organized = []
         processed_guids = set()
@@ -110,11 +116,17 @@ class OnePasswordAPIKeyManager:
             provider = key_info.get("provider", "unknown")
 
             # Handle AWS credentials (access key + secret key pairs)
-            if provider == "aws" and "access_key_id" in key_info.get("title", "").lower():
+            if (
+                provider == "aws"
+                and "access_key_id" in key_info.get("title", "").lower()
+            ):
                 # Look for matching secret key
                 secret_key_info = None
                 for other_key in raw_keys:
-                    if other_key.get("guid") != guid and "secret_access_key" in other_key.get("title", "").lower():
+                    if (
+                        other_key.get("guid") != guid
+                        and "secret_access_key" in other_key.get("title", "").lower()
+                    ):
                         secret_key_info = other_key
                         break
 
@@ -126,7 +138,9 @@ class OnePasswordAPIKeyManager:
                         "title": f"AWS Credentials - {key_info.get('title', 'Unknown')}",
                         "api_key": key_info.get("api_key"),
                         "secret_key": secret_key_info.get("api_key"),
-                        "account_id": self._extract_aws_account_id(key_info.get("notes", "")),
+                        "account_id": self._extract_aws_account_id(
+                            key_info.get("notes", "")
+                        ),
                         "discovered_at": datetime.now().isoformat(),
                         "fields": {
                             "access_key_id": key_info.get("api_key"),
@@ -144,7 +158,10 @@ class OnePasswordAPIKeyManager:
                 # Look for related Google keys
                 related_keys = []
                 for other_key in raw_keys:
-                    if other_key.get("guid") != guid and other_key.get("provider") == "google":
+                    if (
+                        other_key.get("guid") != guid
+                        and other_key.get("provider") == "google"
+                    ):
                         related_keys.append(other_key)
 
                 if related_keys:
@@ -212,8 +229,13 @@ class OnePasswordAPIKeyManager:
                         field_id = field.get("id", "").lower()
                         field_value = field.get("value", "")
 
-                        if any(keyword in field_id for keyword in ["api_key", "token", "secret", "key"]):
-                            if field_value and len(field_value) > 10:  # Reasonable length for API key
+                        if any(
+                            keyword in field_id
+                            for keyword in ["api_key", "token", "secret", "key"]
+                        ):
+                            if (
+                                field_value and len(field_value) > 10
+                            ):  # Reasonable length for API key
                                 api_key = field_value
                                 break
 
@@ -222,17 +244,41 @@ class OnePasswordAPIKeyManager:
                     notes = item_detail.get("notes", "").lower()
                     tags = [tag.lower() for tag in item_detail.get("tags", [])]
 
-                    if "openai" in title or "openai" in notes or any("openai" in tag for tag in tags):
+                    if (
+                        "openai" in title
+                        or "openai" in notes
+                        or any("openai" in tag for tag in tags)
+                    ):
                         provider = "openai"
-                    elif "anthropic" in title or "anthropic" in notes or any("anthropic" in tag for tag in tags):
+                    elif (
+                        "anthropic" in title
+                        or "anthropic" in notes
+                        or any("anthropic" in tag for tag in tags)
+                    ):
                         provider = "anthropic"
-                    elif "huggingface" in title or "huggingface" in notes or any("huggingface" in tag for tag in tags):
+                    elif (
+                        "huggingface" in title
+                        or "huggingface" in notes
+                        or any("huggingface" in tag for tag in tags)
+                    ):
                         provider = "huggingfacehub_api_token"
-                    elif "google" in title or "google" in notes or any("google" in tag for tag in tags):
+                    elif (
+                        "google" in title
+                        or "google" in notes
+                        or any("google" in tag for tag in tags)
+                    ):
                         provider = "google"
-                    elif "aws" in title or "aws" in notes or any("aws" in tag for tag in tags):
+                    elif (
+                        "aws" in title
+                        or "aws" in notes
+                        or any("aws" in tag for tag in tags)
+                    ):
                         provider = "aws"
-                    elif "azure" in title or "azure" in notes or any("azure" in tag for tag in tags):
+                    elif (
+                        "azure" in title
+                        or "azure" in notes
+                        or any("azure" in tag for tag in tags)
+                    ):
                         provider = "azure"
 
                     if api_key:
@@ -245,7 +291,10 @@ class OnePasswordAPIKeyManager:
                             "notes": item_detail.get("notes", ""),
                             "tags": item_detail.get("tags", []),
                             "discovered_at": datetime.now().isoformat(),
-                            "fields": {field.get("id", ""): field.get("value", "") for field in item_detail.get("fields", [])},
+                            "fields": {
+                                field.get("id", ""): field.get("value", "")
+                                for field in item_detail.get("fields", [])
+                            },
                         }
                         raw_keys.append(key_info)
 
@@ -310,7 +359,9 @@ class OnePasswordAPIKeyManager:
 
     def get_working_apis(self) -> list[dict[str, Any]]:
         """Get list of working APIs for multi-agent systems"""
-        return [key_info for key_info in self.discovered_keys if key_info.get("api_key")]
+        return [
+            key_info for key_info in self.discovered_keys if key_info.get("api_key")
+        ]
 
     def set_environment_variables(self) -> None:
         """Set environment variables for multi-agent systems"""
@@ -367,7 +418,9 @@ class OnePasswordAPIKeyManager:
             for provider, count in sorted(providers.items()):
                 print(f"  🔑 {provider.title()}: {count} keys")
 
-        print(f"\n📊 Cache Stats: {self.cache_stats['hits']} hits, {self.cache_stats['misses']} misses")
+        print(
+            f"\n📊 Cache Stats: {self.cache_stats['hits']} hits, {self.cache_stats['misses']} misses"
+        )
 
 
 def display_discovery_summary(manager: OnePasswordAPIKeyManager):
@@ -402,7 +455,9 @@ def display_cache_status(manager: OnePasswordAPIKeyManager):
         cache_time = datetime.fromisoformat(cache_data["timestamp"])
         age_hours = (datetime.now() - cache_time).total_seconds() / 3600
         print_status(f"Cache age: {age_hours:.1f} hours", "info")
-        print_status(f"Cached keys: {len(cache_data.get('discovered_keys', []))}", "info")
+        print_status(
+            f"Cached keys: {len(cache_data.get('discovered_keys', []))}", "info"
+        )
     else:
         print_status("No discovery cache found", "warning")
 
@@ -438,7 +493,9 @@ def display_provider_details(manager: OnePasswordAPIKeyManager):
 def main():
     """Main CLI entry point"""
     if len(sys.argv) < 2:
-        print("Usage: python op_api_key_manager.py [discover|summary|cache|providers|refresh]")
+        print(
+            "Usage: python op_api_key_manager.py [discover|summary|cache|providers|refresh]"
+        )
         print("  discover  - Discover API keys from 1Password")
         print("  summary   - Show discovery summary")
         print("  cache     - Show cache status")

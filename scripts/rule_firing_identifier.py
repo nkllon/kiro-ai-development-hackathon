@@ -33,7 +33,9 @@ class RuleFiringIdentifier:
     def _extract_cursor_rules(self) -> dict[str, Any]:
         """Extract cursor rules configuration from project model"""
         if "domain_architecture" in self.project_model:
-            for section_name, section in self.project_model["domain_architecture"].items():
+            for section_name, section in self.project_model[
+                "domain_architecture"
+            ].items():
                 if section_name == "cursor_rules":
                     return section
         return {}
@@ -44,21 +46,27 @@ class RuleFiringIdentifier:
             return self.cursor_rules["emoji_prefixes"].get(rule_name, "📋")
         return "📋"
 
-    def identify_firing_rules(self, file_path: str, operation: str = None) -> list[dict[str, Any]]:
+    def identify_firing_rules(
+        self, file_path: str, operation: str = None
+    ) -> list[dict[str, Any]]:
         """Identify which rules should be firing for a given file and operation"""
         firing_rules = []
 
         # Check each rule domain
         for rule_name in self.cursor_rules.get("domains", []):
             rule_config = self._get_rule_config(rule_name)
-            if rule_config and self._should_rule_fire(rule_name, rule_config, file_path, operation):
+            if rule_config and self._should_rule_fire(
+                rule_name, rule_config, file_path, operation
+            ):
                 emoji = self.get_rule_emoji(rule_name)
                 firing_rules.append(
                     {
                         "rule_name": rule_name,
                         "emoji": emoji,
                         "description": rule_config.get("description", ""),
-                        "reason": self._get_firing_reason(rule_name, file_path, operation),
+                        "reason": self._get_firing_reason(
+                            rule_name, file_path, operation
+                        ),
                     }
                 )
 
@@ -145,7 +153,9 @@ class RuleFiringIdentifier:
 
         return False
 
-    def _get_firing_reason(self, rule_name: str, file_path: str, operation: str = None) -> str:
+    def _get_firing_reason(
+        self, rule_name: str, file_path: str, operation: str = None
+    ) -> str:
         """Get the reason why a rule is firing"""
         if operation:
             return f"Operation '{operation}' matches rule purpose"
@@ -159,7 +169,10 @@ class RuleFiringIdentifier:
             print("🤷 No rules firing for this context")
             return
 
-        print(f"🎯 Rules firing for {file_path}" + (f" during {operation}" if operation else ""))
+        print(
+            f"🎯 Rules firing for {file_path}"
+            + (f" during {operation}" if operation else "")
+        )
         print("=" * 60)
 
         for rule in firing_rules:
@@ -172,7 +185,10 @@ class RuleFiringIdentifier:
         """Get summary of all available rules"""
         return {
             "total_rules": len(self.cursor_rules.get("domains", [])),
-            "rules": [{"name": rule_name, "emoji": self.get_rule_emoji(rule_name)} for rule_name in self.cursor_rules.get("domains", [])],
+            "rules": [
+                {"name": rule_name, "emoji": self.get_rule_emoji(rule_name)}
+                for rule_name in self.cursor_rules.get("domains", [])
+            ],
         }
 
 
@@ -180,10 +196,14 @@ def main():
     """Main function for command-line usage"""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Identify which Cursor rules are firing")
+    parser = argparse.ArgumentParser(
+        description="Identify which Cursor rules are firing"
+    )
     parser.add_argument("--file", "-f", help="File path to check")
     parser.add_argument("--operation", "-o", help="Operation being performed")
-    parser.add_argument("--summary", "-s", action="store_true", help="Show rule summary")
+    parser.add_argument(
+        "--summary", "-s", action="store_true", help="Show rule summary"
+    )
 
     args = parser.parse_args()
 

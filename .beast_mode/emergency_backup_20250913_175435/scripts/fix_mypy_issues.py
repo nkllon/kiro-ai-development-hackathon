@@ -121,15 +121,27 @@ def infer_parameter_type(param_name: str) -> str:
     """Infer parameter type based on name"""
     param_lower: Any = param_name.lower()
 
-    if any(word in param_lower for word in ["file", "path", "name", "text", "content", "url", "string"]):
+    if any(
+        word in param_lower
+        for word in ["file", "path", "name", "text", "content", "url", "string"]
+    ):
         return "str"
-    if any(word in param_lower for word in ["count", "index", "size", "length", "number", "id"]):
+    if any(
+        word in param_lower
+        for word in ["count", "index", "size", "length", "number", "id"]
+    ):
         return "int"
-    if any(word in param_lower for word in ["data", "items", "list", "array", "collection"]):
+    if any(
+        word in param_lower for word in ["data", "items", "list", "array", "collection"]
+    ):
         return "List[Any]"
-    if any(word in param_lower for word in ["config", "settings", "dict", "map", "params"]):
+    if any(
+        word in param_lower for word in ["config", "settings", "dict", "map", "params"]
+    ):
         return "Dict[str, Any]"
-    if any(word in param_lower for word in ["flag", "enabled", "active", "is_", "has_"]):
+    if any(
+        word in param_lower for word in ["flag", "enabled", "active", "is_", "has_"]
+    ):
         return "bool"
     if any(word in param_lower for word in ["func", "callback", "handler"]):
         return "Callable"
@@ -142,7 +154,9 @@ def infer_variable_type(value: str) -> str:
     value: Any = value.strip()
 
     # String literals
-    if (value.startswith('"') and value.endswith('"')) or (value.startswith("'") and value.endswith("'")):
+    if (value.startswith('"') and value.endswith('"')) or (
+        value.startswith("'") and value.endswith("'")
+    ):
         return "str"
 
     # Numeric literals

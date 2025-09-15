@@ -26,11 +26,11 @@ class CLIGeneratorEngine(ReflectiveModule):
     def get_module_info(self) -> Dict[str, Any]:
         """Get module information."""
         return {
-            'module_id': self.module_id,
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': self.dependencies,
-            'capabilities': self.capabilities
+            "module_id": self.module_id,
+            "interface_type": self.__class__.__name__,
+            "version": "1.0.0",
+            "dependencies": self.dependencies,
+            "capabilities": self.capabilities,
         }
 
     def get_capabilities(self):
@@ -44,26 +44,26 @@ class CLIGeneratorEngine(ReflectiveModule):
             status=ModuleStatus.HEALTHY,
             health_score=100.0,
             issues=[],
-            last_check=datetime.now()
+            last_check=datetime.now(),
         )
 
     def graceful_degradation(self):
         """Perform graceful degradation."""
         return {
-            'success': True,
-            'degraded_capabilities': [],
-            'remaining_capabilities': []
+            "success": True,
+            "degraded_capabilities": [],
+            "remaining_capabilities": [],
         }
 
     def analyze_module(self, module):
         """Analyze a module for CLI generation."""
         return {
-            'module': module,
-            'capabilities': [],
-            'methods': [],
-            'configuration': {},
-            'health': self.get_health_status(),
-            'metrics': {}
+            "module": module,
+            "capabilities": [],
+            "methods": [],
+            "configuration": {},
+            "health": self.get_health_status(),
+            "metrics": {},
         }
 
     def generate_cli_code(self, analysis):
@@ -102,29 +102,21 @@ if __name__ == '__main__':
 '''
 
 
-
-
-
-
-
-
-
 class RegistermoduleClass:
     """Auto-generated class for functions."""
 
     def register_module(self, registry):
         """Register module with registry."""
         metadata = self.get_interface_metadata()
-        if hasattr(registry, 'register'):
+        if hasattr(registry, "register"):
             registry.register(metadata)
 
     def get_interface_metadata(self):
         """Get interface metadata for registry."""
         return {
-            'module_id': getattr(self, 'module_id', self.__class__.__name__),
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': [],
-            'capabilities': []
+            "module_id": getattr(self, "module_id", self.__class__.__name__),
+            "interface_type": self.__class__.__name__,
+            "version": "1.0.0",
+            "dependencies": [],
+            "capabilities": [],
         }
-

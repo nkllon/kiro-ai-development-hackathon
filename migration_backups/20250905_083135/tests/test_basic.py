@@ -17,6 +17,7 @@ def test_core_dependencies_available():
         import jinja2
         import yaml
         import click
+
         # Test that we can access the modules
         assert pydantic.__version__ is not None
         assert jinja2.__version__ is not None
@@ -32,6 +33,7 @@ def test_ai_development_tools():
     try:
         import openai
         import anthropic
+
         # Test that we can access the modules
         assert openai.__version__ is not None
         assert anthropic.__version__ is not None

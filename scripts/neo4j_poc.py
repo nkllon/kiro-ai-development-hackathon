@@ -25,7 +25,9 @@ class Neo4jPOC:
         self.detector = ArtifactDetector()
         self.model = None
 
-    def load_project_model(self, model_path: str = "project_model_registry.json") -> None:
+    def load_project_model(
+        self, model_path: str = "project_model_registry.json"
+    ) -> None:
         """Load the project model registry"""
         try:
             with open(model_path) as f:
@@ -48,7 +50,9 @@ class Neo4jPOC:
             validation_count = 0
             for artifact in artifacts[:5]:  # Test first 5
                 try:
-                    result = self.parser.parse_artifact(artifact.path, artifact.artifact_type)
+                    result = self.parser.parse_artifact(
+                        artifact.path, artifact.artifact_type
+                    )
                     if result:
                         validation_count += 1
                 except Exception as e:
@@ -155,7 +159,9 @@ class Neo4jPOC:
         print("    ✅ Generated 3 example analysis queries")
         return queries
 
-    def save_cypher_queries(self, queries: list[str], output_file: str = "neo4j_setup.cypher") -> None:
+    def save_cypher_queries(
+        self, queries: list[str], output_file: str = "neo4j_setup.cypher"
+    ) -> None:
         """Save Cypher queries to file"""
         try:
             with open(output_file, "w") as f:

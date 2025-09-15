@@ -86,7 +86,9 @@ class ASTEnhancedLinter:
         # TODO: Implement _analyze_imports_with_ast
         return []
 
-    def _analyze_functions_and_classes_with_ast(self, tree: Any, lines: list[Any]) -> list[Any]:
+    def _analyze_functions_and_classes_with_ast(
+        self, tree: Any, lines: list[Any]
+    ) -> list[Any]:
         """
         Analyze functions and classes using AST
         """

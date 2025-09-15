@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 
 class TaskPriority(Enum):
     """Task priority levels."""
+
     CRITICAL = 1
     HIGH = 2
     MEDIUM = 3
@@ -33,6 +34,7 @@ class TaskPriority(Enum):
 
 class TaskStatus(Enum):
     """Task status levels."""
+
     NOT_STARTED = "not_started"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
@@ -43,6 +45,7 @@ class TaskStatus(Enum):
 @dataclass
 class HackathonTask:
     """Individual hackathon task."""
+
     task_id: str
     title: str
     description: str
@@ -64,6 +67,7 @@ class HackathonTask:
 @dataclass
 class CriticalPath:
     """Critical path analysis result."""
+
     path_tasks: List[str]
     total_duration_hours: float
     slack_time_hours: float
@@ -74,6 +78,7 @@ class CriticalPath:
 @dataclass
 class DeadlineStatus:
     """Current deadline status."""
+
     days_remaining: int
     hours_remaining: float
     completion_percentage: float
@@ -86,23 +91,27 @@ class DeadlineStatus:
 class HackathonDeadlineManager:
     """
     Hackathon deadline management system.
-    
+
     Provides critical path analysis, emergency acceleration protocols,
     and scope optimization for September 15 deadline.
     """
-    
+
     def __init__(self, hackathon_deadline: datetime = None):
         """Initialize deadline manager."""
-        self.hackathon_deadline = hackathon_deadline or datetime(2025, 9, 15, 23, 59, 59)
+        self.hackathon_deadline = hackathon_deadline or datetime(
+            2025, 9, 15, 23, 59, 59
+        )
         self.tasks: List[HackathonTask] = []
         self.critical_path: Optional[CriticalPath] = None
         self.emergency_protocols_active = False
-        
+
         # Load default hackathon tasks
         self._load_default_tasks()
-        
-        logger.info(f"Hackathon deadline manager initialized for {self.hackathon_deadline}")
-    
+
+        logger.info(
+            f"Hackathon deadline manager initialized for {self.hackathon_deadline}"
+        )
+
     def add_task(self, task: HackathonTask) -> bool:
         """Add a task to the hackathon plan."""
         try:
@@ -110,15 +119,15 @@ class HackathonDeadlineManager:
             if any(t.task_id == task.task_id for t in self.tasks):
                 logger.warning(f"Task {task.task_id} already exists")
                 return False
-            
+
             self.tasks.append(task)
             logger.info(f"Task added: {task.task_id} - {task.title}")
             return True
-            
+
         except Exception as e:
             logger.error(f"Failed to add task {task.task_id}: {e}")
             return False
-    
+
     def update_task_status(self, task_id: str, status: TaskStatus, **kwargs) -> bool:
         """Update task status and progress."""
         try:
@@ -126,110 +135,134 @@ class HackathonDeadlineManager:
             if not task:
                 logger.error(f"Task {task_id} not found")
                 return False
-            
+
             old_status = task.status
             task.status = status
-            
+
             # Update timestamps
             if status == TaskStatus.IN_PROGRESS and not task.started_at:
                 task.started_at = datetime.now()
             elif status == TaskStatus.COMPLETED and not task.completed_at:
                 task.completed_at = datetime.now()
-            
+
             # Update other fields
             for key, value in kwargs.items():
                 if hasattr(task, key):
                     setattr(task, key, value)
-            
-            logger.info(f"Task {task_id} status updated: {old_status.value} -> {status.value}")
+
+            logger.info(
+                f"Task {task_id} status updated: {old_status.value} -> {status.value}"
+            )
             return True
-            
+
         except Exception as e:
             logger.error(f"Failed to update task {task_id}: {e}")
             return False
-    
+
     def calculate_critical_path(self) -> CriticalPath:
         """Calculate critical path for remaining tasks."""
         logger.info("Calculating critical path")
-        
+
         try:
             # Get incomplete tasks
-            incomplete_tasks = [t for t in self.tasks if t.status != TaskStatus.COMPLETED]
-            
+            incomplete_tasks = [
+                t for t in self.tasks if t.status != TaskStatus.COMPLETED
+            ]
+
             if not incomplete_tasks:
                 return CriticalPath([], 0.0, 0.0, [], [])
-            
+
             # Build dependency graph
             dependency_graph = self._build_dependency_graph(incomplete_tasks)
-            
+
             # Find critical path using topological sort
-            critical_path_tasks = self._find_critical_path(dependency_graph, incomplete_tasks)
-            
+            critical_path_tasks = self._find_critical_path(
+                dependency_graph, incomplete_tasks
+            )
+
             # Calculate durations
             total_duration = sum(task.estimated_hours for task in critical_path_tasks)
-            
+
             # Calculate slack time
-            time_remaining = (self.hackathon_deadline - datetime.now()).total_seconds() / 3600
+            time_remaining = (
+                self.hackathon_deadline - datetime.now()
+            ).total_seconds() / 3600
             slack_time = max(0, time_remaining - total_duration)
-            
+
             # Identify risk factors
-            risk_factors = self._identify_risk_factors(critical_path_tasks, time_remaining)
-            
+            risk_factors = self._identify_risk_factors(
+                critical_path_tasks, time_remaining
+            )
+
             # Find acceleration opportunities
-            acceleration_opportunities = self._find_acceleration_opportunities(critical_path_tasks)
-            
+            acceleration_opportunities = self._find_acceleration_opportunities(
+                critical_path_tasks
+            )
+
             self.critical_path = CriticalPath(
                 path_tasks=[task.task_id for task in critical_path_tasks],
                 total_duration_hours=total_duration,
                 slack_time_hours=slack_time,
                 risk_factors=risk_factors,
-                acceleration_opportunities=acceleration_opportunities
+                acceleration_opportunities=acceleration_opportunities,
             )
-            
-            logger.info(f"Critical path calculated: {len(critical_path_tasks)} tasks, {total_duration:.1f} hours")
+
+            logger.info(
+                f"Critical path calculated: {len(critical_path_tasks)} tasks, {total_duration:.1f} hours"
+            )
             return self.critical_path
-            
+
         except Exception as e:
             logger.error(f"Failed to calculate critical path: {e}")
             return CriticalPath([], 0.0, 0.0, [str(e)], [])
-    
+
     def get_deadline_status(self) -> DeadlineStatus:
         """Get current deadline status and recommendations."""
         logger.info("Calculating deadline status")
-        
+
         try:
             # Calculate time remaining
             time_remaining = self.hackathon_deadline - datetime.now()
             days_remaining = time_remaining.days
             hours_remaining = time_remaining.total_seconds() / 3600
-            
+
             # Calculate completion percentage
             total_tasks = len(self.tasks)
-            completed_tasks = len([t for t in self.tasks if t.status == TaskStatus.COMPLETED])
-            completion_percentage = (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
-            
+            completed_tasks = len(
+                [t for t in self.tasks if t.status == TaskStatus.COMPLETED]
+            )
+            completion_percentage = (
+                (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
+            )
+
             # Get critical path
             if not self.critical_path:
                 self.critical_path = self.calculate_critical_path()
-            
+
             critical_path_remaining = self.critical_path.total_duration_hours
-            
+
             # Determine risk level
             if hours_remaining < critical_path_remaining * 1.2:  # Less than 20% buffer
                 risk_level = "critical"
-            elif hours_remaining < critical_path_remaining * 1.5:  # Less than 50% buffer
+            elif (
+                hours_remaining < critical_path_remaining * 1.5
+            ):  # Less than 50% buffer
                 risk_level = "high"
-            elif hours_remaining < critical_path_remaining * 2.0:  # Less than 100% buffer
+            elif (
+                hours_remaining < critical_path_remaining * 2.0
+            ):  # Less than 100% buffer
                 risk_level = "medium"
             else:
                 risk_level = "low"
-            
+
             # Determine if acceleration is required
             acceleration_required = risk_level in ["critical", "high"]
-            
+
             # Determine if scope optimization is needed
-            scope_optimization_needed = risk_level == "critical" or completion_percentage < 50
-            
+            scope_optimization_needed = (
+                risk_level == "critical" or completion_percentage < 50
+            )
+
             return DeadlineStatus(
                 days_remaining=days_remaining,
                 hours_remaining=hours_remaining,
@@ -237,124 +270,147 @@ class HackathonDeadlineManager:
                 critical_path_remaining=critical_path_remaining,
                 risk_level=risk_level,
                 acceleration_required=acceleration_required,
-                scope_optimization_needed=scope_optimization_needed
+                scope_optimization_needed=scope_optimization_needed,
             )
-            
+
         except Exception as e:
             logger.error(f"Failed to calculate deadline status: {e}")
             return DeadlineStatus(0, 0.0, 0.0, 0.0, "critical", True, True)
-    
+
     def trigger_emergency_acceleration(self) -> Dict[str, Any]:
         """Trigger emergency acceleration protocols."""
         logger.warning("Triggering emergency acceleration protocols")
-        
+
         try:
             self.emergency_protocols_active = True
-            
+
             # Get current status
             status = self.get_deadline_status()
-            
+
             # Identify acceleration strategies
             acceleration_strategies = []
-            
+
             if status.risk_level == "critical":
-                acceleration_strategies.extend([
-                    "Activate 24/7 development mode",
-                    "Reassign all resources to critical path",
-                    "Eliminate non-essential features",
-                    "Implement parallel development streams",
-                    "Reduce quality gates temporarily"
-                ])
+                acceleration_strategies.extend(
+                    [
+                        "Activate 24/7 development mode",
+                        "Reassign all resources to critical path",
+                        "Eliminate non-essential features",
+                        "Implement parallel development streams",
+                        "Reduce quality gates temporarily",
+                    ]
+                )
             elif status.risk_level == "high":
-                acceleration_strategies.extend([
-                    "Increase daily work hours",
-                    "Add additional team members",
-                    "Prioritize critical path tasks only",
-                    "Implement aggressive parallelization"
-                ])
+                acceleration_strategies.extend(
+                    [
+                        "Increase daily work hours",
+                        "Add additional team members",
+                        "Prioritize critical path tasks only",
+                        "Implement aggressive parallelization",
+                    ]
+                )
             else:
-                acceleration_strategies.extend([
-                    "Optimize task sequencing",
-                    "Remove low-priority features",
-                    "Increase task parallelization"
-                ])
-            
+                acceleration_strategies.extend(
+                    [
+                        "Optimize task sequencing",
+                        "Remove low-priority features",
+                        "Increase task parallelization",
+                    ]
+                )
+
             # Update task priorities
             self._update_priorities_for_acceleration()
-            
+
             # Generate acceleration plan
             acceleration_plan = {
                 "emergency_protocols_active": True,
                 "risk_level": status.risk_level,
                 "acceleration_strategies": acceleration_strategies,
-                "critical_path_tasks": self.critical_path.path_tasks if self.critical_path else [],
-                "estimated_time_saved": self._estimate_time_savings(acceleration_strategies),
-                "activated_at": datetime.now().isoformat()
+                "critical_path_tasks": (
+                    self.critical_path.path_tasks if self.critical_path else []
+                ),
+                "estimated_time_saved": self._estimate_time_savings(
+                    acceleration_strategies
+                ),
+                "activated_at": datetime.now().isoformat(),
             }
-            
-            logger.warning(f"Emergency acceleration activated: {len(acceleration_strategies)} strategies")
+
+            logger.warning(
+                f"Emergency acceleration activated: {len(acceleration_strategies)} strategies"
+            )
             return acceleration_plan
-            
+
         except Exception as e:
             logger.error(f"Failed to trigger emergency acceleration: {e}")
             return {"emergency_protocols_active": False, "error": str(e)}
-    
+
     def optimize_scope_for_deadline(self) -> Dict[str, Any]:
         """Optimize project scope to meet deadline."""
         logger.info("Optimizing scope for deadline")
-        
+
         try:
             status = self.get_deadline_status()
-            
+
             if not status.scope_optimization_needed:
-                return {"optimization_needed": False, "message": "Current scope is manageable"}
-            
+                return {
+                    "optimization_needed": False,
+                    "message": "Current scope is manageable",
+                }
+
             # Identify tasks to remove or defer
             tasks_to_remove = []
             tasks_to_defer = []
             tasks_to_simplify = []
-            
+
             for task in self.tasks:
                 if task.status == TaskStatus.COMPLETED:
                     continue
-                
+
                 # Remove low-priority, low-impact tasks
-                if (task.priority in [TaskPriority.LOW, TaskPriority.OPTIONAL] and 
-                    task.competitive_impact < 0.3):
+                if (
+                    task.priority in [TaskPriority.LOW, TaskPriority.OPTIONAL]
+                    and task.competitive_impact < 0.3
+                ):
                     tasks_to_remove.append(task.task_id)
-                
+
                 # Defer medium-priority tasks with high technical debt risk
-                elif (task.priority == TaskPriority.MEDIUM and 
-                      task.technical_debt_risk > 0.7):
+                elif (
+                    task.priority == TaskPriority.MEDIUM
+                    and task.technical_debt_risk > 0.7
+                ):
                     tasks_to_defer.append(task.task_id)
-                
+
                 # Simplify high-priority tasks with high effort
-                elif (task.priority in [TaskPriority.CRITICAL, TaskPriority.HIGH] and 
-                      task.estimated_hours > 20):
+                elif (
+                    task.priority in [TaskPriority.CRITICAL, TaskPriority.HIGH]
+                    and task.estimated_hours > 20
+                ):
                     tasks_to_simplify.append(task.task_id)
-            
+
             # Apply scope optimizations
             optimization_actions = []
-            
+
             for task_id in tasks_to_remove:
                 self.update_task_status(task_id, TaskStatus.CANCELLED)
                 optimization_actions.append(f"Removed task: {task_id}")
-            
+
             for task_id in tasks_to_defer:
                 task = self._find_task(task_id)
                 if task:
-                    task.deadline = self.hackathon_deadline + timedelta(days=7)  # Defer by 1 week
+                    task.deadline = self.hackathon_deadline + timedelta(
+                        days=7
+                    )  # Defer by 1 week
                     optimization_actions.append(f"Deferred task: {task_id}")
-            
+
             for task_id in tasks_to_simplify:
                 task = self._find_task(task_id)
                 if task:
                     task.estimated_hours *= 0.7  # Reduce by 30%
                     optimization_actions.append(f"Simplified task: {task_id}")
-            
+
             # Recalculate critical path
             self.critical_path = self.calculate_critical_path()
-            
+
             optimization_result = {
                 "optimization_completed": True,
                 "tasks_removed": len(tasks_to_remove),
@@ -362,39 +418,43 @@ class HackathonDeadlineManager:
                 "tasks_simplified": len(tasks_to_simplify),
                 "actions_taken": optimization_actions,
                 "new_critical_path_hours": self.critical_path.total_duration_hours,
-                "optimized_at": datetime.now().isoformat()
+                "optimized_at": datetime.now().isoformat(),
             }
-            
-            logger.info(f"Scope optimization completed: {len(optimization_actions)} actions taken")
+
+            logger.info(
+                f"Scope optimization completed: {len(optimization_actions)} actions taken"
+            )
             return optimization_result
-            
+
         except Exception as e:
             logger.error(f"Failed to optimize scope: {e}")
             return {"optimization_completed": False, "error": str(e)}
-    
+
     def get_progress_report(self) -> Dict[str, Any]:
         """Get comprehensive progress report."""
         try:
             status = self.get_deadline_status()
             critical_path = self.calculate_critical_path()
-            
+
             # Task breakdown by status
             task_breakdown = {}
             for task_status in TaskStatus:
                 count = len([t for t in self.tasks if t.status == task_status])
                 task_breakdown[task_status.value] = count
-            
+
             # Priority breakdown
             priority_breakdown = {}
             for priority in TaskPriority:
                 count = len([t for t in self.tasks if t.priority == priority])
                 priority_breakdown[priority.value] = count
-            
+
             # Competitive impact analysis
             high_impact_tasks = [t for t in self.tasks if t.competitive_impact > 0.7]
-            medium_impact_tasks = [t for t in self.tasks if 0.3 <= t.competitive_impact <= 0.7]
+            medium_impact_tasks = [
+                t for t in self.tasks if 0.3 <= t.competitive_impact <= 0.7
+            ]
             low_impact_tasks = [t for t in self.tasks if t.competitive_impact < 0.3]
-            
+
             return {
                 "deadline_status": {
                     "days_remaining": status.days_remaining,
@@ -402,114 +462,134 @@ class HackathonDeadlineManager:
                     "completion_percentage": status.completion_percentage,
                     "risk_level": status.risk_level,
                     "acceleration_required": status.acceleration_required,
-                    "scope_optimization_needed": status.scope_optimization_needed
+                    "scope_optimization_needed": status.scope_optimization_needed,
                 },
                 "critical_path": {
                     "total_tasks": len(critical_path.path_tasks),
                     "total_duration_hours": critical_path.total_duration_hours,
                     "slack_time_hours": critical_path.slack_time_hours,
                     "risk_factors": critical_path.risk_factors,
-                    "acceleration_opportunities": critical_path.acceleration_opportunities
+                    "acceleration_opportunities": critical_path.acceleration_opportunities,
                 },
                 "task_breakdown": task_breakdown,
                 "priority_breakdown": priority_breakdown,
                 "competitive_impact": {
                     "high_impact_tasks": len(high_impact_tasks),
                     "medium_impact_tasks": len(medium_impact_tasks),
-                    "low_impact_tasks": len(low_impact_tasks)
+                    "low_impact_tasks": len(low_impact_tasks),
                 },
                 "emergency_protocols": {
                     "active": self.emergency_protocols_active,
-                    "hackathon_deadline": self.hackathon_deadline.isoformat()
-                }
+                    "hackathon_deadline": self.hackathon_deadline.isoformat(),
+                },
             }
-            
+
         except Exception as e:
             logger.error(f"Failed to generate progress report: {e}")
             return {"error": str(e)}
-    
+
     def _find_task(self, task_id: str) -> Optional[HackathonTask]:
         """Find task by ID."""
         return next((t for t in self.tasks if t.task_id == task_id), None)
-    
-    def _build_dependency_graph(self, tasks: List[HackathonTask]) -> Dict[str, List[str]]:
+
+    def _build_dependency_graph(
+        self, tasks: List[HackathonTask]
+    ) -> Dict[str, List[str]]:
         """Build dependency graph from tasks."""
         graph = {}
         for task in tasks:
             graph[task.task_id] = task.dependencies
         return graph
-    
-    def _find_critical_path(self, dependency_graph: Dict[str, List[str]], tasks: List[HackathonTask]) -> List[HackathonTask]:
+
+    def _find_critical_path(
+        self, dependency_graph: Dict[str, List[str]], tasks: List[HackathonTask]
+    ) -> List[HackathonTask]:
         """Find critical path using topological sort."""
         # Simplified critical path algorithm
         # In a real implementation, this would use proper critical path method (CPM)
-        
+
         # Sort tasks by priority and estimated hours
-        sorted_tasks = sorted(tasks, key=lambda t: (t.priority.value, -t.estimated_hours))
-        
+        sorted_tasks = sorted(
+            tasks, key=lambda t: (t.priority.value, -t.estimated_hours)
+        )
+
         # For demo purposes, return top priority tasks
-        return sorted_tasks[:min(5, len(sorted_tasks))]
-    
-    def _identify_risk_factors(self, critical_tasks: List[HackathonTask], time_remaining: float) -> List[str]:
+        return sorted_tasks[: min(5, len(sorted_tasks))]
+
+    def _identify_risk_factors(
+        self, critical_tasks: List[HackathonTask], time_remaining: float
+    ) -> List[str]:
         """Identify risk factors for critical path."""
         risks = []
-        
+
         if time_remaining < 48:  # Less than 2 days
             risks.append("Critical time shortage")
-        
+
         high_debt_tasks = [t for t in critical_tasks if t.technical_debt_risk > 0.7]
         if high_debt_tasks:
-            risks.append(f"High technical debt risk in {len(high_debt_tasks)} critical tasks")
-        
+            risks.append(
+                f"High technical debt risk in {len(high_debt_tasks)} critical tasks"
+            )
+
         blocked_tasks = [t for t in critical_tasks if t.status == TaskStatus.BLOCKED]
         if blocked_tasks:
             risks.append(f"{len(blocked_tasks)} critical tasks are blocked")
-        
+
         long_tasks = [t for t in critical_tasks if t.estimated_hours > 16]
         if long_tasks:
             risks.append(f"{len(long_tasks)} critical tasks exceed 16 hours")
-        
+
         return risks
-    
-    def _find_acceleration_opportunities(self, critical_tasks: List[HackathonTask]) -> List[str]:
+
+    def _find_acceleration_opportunities(
+        self, critical_tasks: List[HackathonTask]
+    ) -> List[str]:
         """Find opportunities to accelerate critical path."""
         opportunities = []
-        
+
         # Parallel execution opportunities
         independent_tasks = [t for t in critical_tasks if not t.dependencies]
         if len(independent_tasks) > 1:
-            opportunities.append(f"Parallel execution of {len(independent_tasks)} independent tasks")
-        
+            opportunities.append(
+                f"Parallel execution of {len(independent_tasks)} independent tasks"
+            )
+
         # Resource allocation opportunities
-        high_priority_tasks = [t for t in critical_tasks if t.priority == TaskPriority.CRITICAL]
+        high_priority_tasks = [
+            t for t in critical_tasks if t.priority == TaskPriority.CRITICAL
+        ]
         if high_priority_tasks:
-            opportunities.append(f"Focus all resources on {len(high_priority_tasks)} critical tasks")
-        
+            opportunities.append(
+                f"Focus all resources on {len(high_priority_tasks)} critical tasks"
+            )
+
         # Scope reduction opportunities
         low_impact_tasks = [t for t in critical_tasks if t.competitive_impact < 0.5]
         if low_impact_tasks:
-            opportunities.append(f"Reduce scope of {len(low_impact_tasks)} low-impact tasks")
-        
+            opportunities.append(
+                f"Reduce scope of {len(low_impact_tasks)} low-impact tasks"
+            )
+
         return opportunities
-    
+
     def _update_priorities_for_acceleration(self):
         """Update task priorities for emergency acceleration."""
         for task in self.tasks:
             if task.status == TaskStatus.COMPLETED:
                 continue
-            
+
             # Promote high-impact tasks to critical
             if task.competitive_impact > 0.8:
                 task.priority = TaskPriority.CRITICAL
-            
+
             # Demote low-impact tasks
             elif task.competitive_impact < 0.3:
                 task.priority = TaskPriority.LOW
-    
+
     def _estimate_time_savings(self, strategies: List[str]) -> float:
         """Estimate time savings from acceleration strategies."""
         time_savings = 0.0
-        
+
         for strategy in strategies:
             if "24/7" in strategy:
                 time_savings += 8.0  # 8 hours per day
@@ -519,9 +599,9 @@ class HackathonDeadlineManager:
                 time_savings += 2.0  # 2 hours from elimination
             elif "simplify" in strategy.lower():
                 time_savings += 1.0  # 1 hour from simplification
-        
+
         return min(time_savings, 24.0)  # Cap at 24 hours
-    
+
     def _load_default_tasks(self):
         """Load default hackathon tasks."""
         default_tasks = [
@@ -535,7 +615,7 @@ class HackathonDeadlineManager:
                 actual_hours=16.0,
                 competitive_impact=0.9,
                 technical_debt_risk=0.0,
-                completed_at=datetime.now()
+                completed_at=datetime.now(),
             ),
             HackathonTask(
                 task_id="competitive_intelligence",
@@ -545,7 +625,7 @@ class HackathonDeadlineManager:
                 status=TaskStatus.IN_PROGRESS,
                 estimated_hours=12.0,
                 competitive_impact=0.8,
-                technical_debt_risk=0.2
+                technical_debt_risk=0.2,
             ),
             HackathonTask(
                 task_id="deadline_management",
@@ -555,7 +635,7 @@ class HackathonDeadlineManager:
                 status=TaskStatus.IN_PROGRESS,
                 estimated_hours=8.0,
                 competitive_impact=0.7,
-                technical_debt_risk=0.1
+                technical_debt_risk=0.1,
             ),
             HackathonTask(
                 task_id="demo_preparation",
@@ -565,7 +645,7 @@ class HackathonDeadlineManager:
                 status=TaskStatus.NOT_STARTED,
                 estimated_hours=6.0,
                 competitive_impact=0.6,
-                technical_debt_risk=0.0
+                technical_debt_risk=0.0,
             ),
             HackathonTask(
                 task_id="documentation",
@@ -575,10 +655,10 @@ class HackathonDeadlineManager:
                 status=TaskStatus.NOT_STARTED,
                 estimated_hours=4.0,
                 competitive_impact=0.4,
-                technical_debt_risk=0.0
-            )
+                technical_debt_risk=0.0,
+            ),
         ]
-        
+
         for task in default_tasks:
             self.tasks.append(task)
 
@@ -587,14 +667,14 @@ class HackathonDeadlineManager:
 if __name__ == "__main__":
     # Configure logging
     logging.basicConfig(level=logging.INFO)
-    
+
     # Create deadline manager
     deadline = datetime(2025, 9, 15, 23, 59, 59)  # September 15, 2025
     manager = HackathonDeadlineManager(deadline)
-    
+
     print("🚀 Hackathon Deadline Management System Demo")
     print("=" * 50)
-    
+
     # Show current status
     status = manager.get_deadline_status()
     print(f"Days remaining: {status.days_remaining}")
@@ -602,26 +682,28 @@ if __name__ == "__main__":
     print(f"Completion: {status.completion_percentage:.1f}%")
     print(f"Risk level: {status.risk_level}")
     print(f"Acceleration required: {status.acceleration_required}")
-    
+
     # Show critical path
     critical_path = manager.calculate_critical_path()
     print(f"\nCritical path: {len(critical_path.path_tasks)} tasks")
     print(f"Total duration: {critical_path.total_duration_hours:.1f} hours")
     print(f"Slack time: {critical_path.slack_time_hours:.1f} hours")
-    
+
     # Show progress report
     report = manager.get_progress_report()
     print(f"\nProgress Report:")
     print(f"Tasks completed: {report['task_breakdown']['completed']}")
     print(f"Tasks in progress: {report['task_breakdown']['in_progress']}")
     print(f"High impact tasks: {report['competitive_impact']['high_impact_tasks']}")
-    
+
     # Test emergency acceleration if needed
     if status.acceleration_required:
         print("\n🚨 Triggering emergency acceleration...")
         acceleration = manager.trigger_emergency_acceleration()
-        print(f"Acceleration strategies: {len(acceleration['acceleration_strategies'])}")
-    
+        print(
+            f"Acceleration strategies: {len(acceleration['acceleration_strategies'])}"
+        )
+
     # Test scope optimization if needed
     if status.scope_optimization_needed:
         print("\n🔧 Optimizing scope...")

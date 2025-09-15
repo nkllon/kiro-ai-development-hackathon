@@ -95,7 +95,11 @@ class CodeQualityEnforcer:
 
     def check_import_quality(self, tree: ast.AST):
         """Check import quality and organization"""
-        import_nodes = [node for node in ast.walk(tree) if isinstance(node, (ast.Import, ast.ImportFrom))]
+        import_nodes = [
+            node
+            for node in ast.walk(tree)
+            if isinstance(node, (ast.Import, ast.ImportFrom))
+        ]
 
         if not import_nodes:
             self.violations.append("No imports found - file may be incomplete")
@@ -123,7 +127,11 @@ class CodeQualityEnforcer:
     def check_code_structure(self, tree: ast.AST):
         """Check code structure and organization"""
         classes = [node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)]
-        functions = [node for node in ast.walk(tree) if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))]
+        functions = [
+            node
+            for node in ast.walk(tree)
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+        ]
 
         # Check for proper spacing between definitions
         if len(classes) > 1 or len(functions) > 1:
@@ -134,10 +142,26 @@ class CodeQualityEnforcer:
     def check_documentation(self, tree: ast.AST):
         """Check documentation quality"""
         classes = [node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)]
-        functions = [node for node in ast.walk(tree) if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))]
+        functions = [
+            node
+            for node in ast.walk(tree)
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+        ]
 
-        documented_classes = sum(1 for cls in classes if cls.body and isinstance(cls.body[0], ast.Expr) and isinstance(cls.body[0].value, ast.Constant))
-        documented_functions = sum(1 for func in functions if func.body and isinstance(func.body[0], ast.Expr) and isinstance(func.body[0].value, ast.Constant))
+        documented_classes = sum(
+            1
+            for cls in classes
+            if cls.body
+            and isinstance(cls.body[0], ast.Expr)
+            and isinstance(cls.body[0].value, ast.Constant)
+        )
+        documented_functions = sum(
+            1
+            for func in functions
+            if func.body
+            and isinstance(func.body[0], ast.Expr)
+            and isinstance(func.body[0].value, ast.Constant)
+        )
 
         total_definitions = len(classes) + len(functions)
         if total_definitions == 0:
@@ -176,7 +200,9 @@ class CodeQualityEnforcer:
                 found_patterns.append(pattern)
 
         if found_patterns:
-            self.violations.append(f"Suspicious patterns found (may indicate direct editing): {found_patterns}")
+            self.violations.append(
+                f"Suspicious patterns found (may indicate direct editing): {found_patterns}"
+            )
         else:
             print("    ✅ Round-trip compliance: PASSED")
 
@@ -187,7 +213,9 @@ class CodeQualityEnforcer:
         else:
             # Deduct points for each violation
             deduction_per_violation = 0.15
-            self.quality_score = max(0.0, 1.0 - (len(self.violations) * deduction_per_violation))
+            self.quality_score = max(
+                0.0, 1.0 - (len(self.violations) * deduction_per_violation)
+            )
 
 
 def main():
@@ -204,7 +232,9 @@ def main():
                 text=True,
                 check=True,
             )
-            python_files = [f for f in result.stdout.strip().split("\n") if f.endswith(".py") and f]
+            python_files = [
+                f for f in result.stdout.strip().split("\n") if f.endswith(".py") and f
+            ]
 
             if not python_files:
                 print("✅ No Python files to check")
@@ -261,7 +291,9 @@ def main():
             for i, violation in enumerate(result["violations"], 1):
                 print(f"      {i}. {violation}")
 
-            print(f"\n   📊 {result['passed_checks']}/{result['total_checks']} checks passed")
+            print(
+                f"\n   📊 {result['passed_checks']}/{result['total_checks']} checks passed"
+            )
 
             # Exit with failure
             sys.exit(1)

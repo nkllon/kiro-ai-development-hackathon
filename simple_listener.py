@@ -37,32 +37,32 @@ async def simple_listen():
     """Simple listener that just works"""
     client = redis.from_url("redis://localhost:6379")
     my_id = "kiro_spore_creator"
-    
+
     try:
         await client.ping()
         print("🧬 Simple listener connected")
         print("👂 Waiting for Claude's repeat answer...")
         print("=" * 50)
-        
+
         pubsub = client.pubsub()
         await pubsub.subscribe("beast_mode_network")
-        
+
         async for raw_message in pubsub.listen():
-            if raw_message['type'] == 'message':
+            if raw_message["type"] == "message":
                 try:
-                    data = json.loads(raw_message['data'])
+                    data = json.loads(raw_message["data"])
                     message = BeastModeMessage(**data)
-                    
+
                     # Skip my own messages
                     if message.source == my_id:
                         continue
-                    
+
                     print(f"\n🧬 GOT MESSAGE FROM: {message.source}")
                     print(f"Type: {message.type}")
                     print(f"Time: {message.timestamp}")
                     print("\nCONTENT:")
                     print("-" * 40)
-                    
+
                     # Just dump the response content
                     if message.type == MessageType.PROMPT_RESPONSE:
                         response = message.payload.get("response", "")
@@ -71,13 +71,13 @@ async def simple_listen():
                         # Dump all payload content
                         for key, value in message.payload.items():
                             print(f"{key}: {value}")
-                    
+
                     print("-" * 40)
                     print("👂 Still listening...")
-                    
+
                 except Exception as e:
                     print(f"❌ Error: {e}")
-                    
+
     except KeyboardInterrupt:
         print("\n🛑 Stopping listener")
     finally:

@@ -20,6 +20,7 @@ import redis.asyncio as redis
 
 class RecoveryActionType(str, Enum):
     """Types of recovery actions."""
+
     RESTART_SERVICE = "restart_service"
     RECONNECT = "reconnect"
     CLEAR_CACHE = "clear_cache"
@@ -31,6 +32,7 @@ class RecoveryActionType(str, Enum):
 
 class RecoveryResult(str, Enum):
     """Results of recovery attempts."""
+
     SUCCESS = "success"
     PARTIAL_SUCCESS = "partial_success"
     FAILED = "failed"
@@ -41,6 +43,7 @@ class RecoveryResult(str, Enum):
 @dataclass
 class RecoveryAction:
     """A recovery action configuration."""
+
     name: str
     action_type: RecoveryActionType
     description: str
@@ -55,6 +58,7 @@ class RecoveryAction:
 @dataclass
 class RecoveryAttempt:
     """A recovery attempt record."""
+
     action_name: str
     attempt_number: int
     started_at: datetime
@@ -68,36 +72,36 @@ class RecoveryAttempt:
 class RecoveryManager:
     """
     Comprehensive recovery management system for Beast Mode components.
-    
+
     Monitors system health, detects failures, and automatically executes
     recovery procedures to restore system functionality with minimal
     human intervention.
     """
-    
+
     def __init__(self, redis_url: str = "redis://localhost:6379"):
         self.redis_url = redis_url
         self.logger = logging.getLogger(__name__)
-        
+
         # Recovery actions registry
         self.recovery_actions: Dict[str, RecoveryAction] = {}
-        
+
         # Recovery history
         self.recovery_attempts: List[RecoveryAttempt] = []
-        
+
         # Active recovery tracking
         self.active_recoveries: Dict[str, RecoveryAttempt] = {}
-        
+
         # Recovery state
         self.recovery_active = False
         self.recovery_task: Optional[asyncio.Task] = None
-        
+
         # Failure tracking
         self.failure_counts: Dict[str, int] = {}
         self.last_failure_time: Dict[str, datetime] = {}
-        
+
         # Recovery callbacks
         self.recovery_callbacks: List[Callable] = []
-        
+
     async def register_recovery_action(
         self,
         name: str,
@@ -108,7 +112,7 @@ class RecoveryManager:
         retry_delay_seconds: int = 30,
         timeout_seconds: int = 60,
         prerequisites: Optional[List[str]] = None,
-        escalation_action: Optional[str] = None
+        escalation_action: Optional[str] = None,
     ) -> None:
         """Register a recovery action."""
         self.recovery_actions[name] = RecoveryAction(
@@ -120,109 +124,108 @@ class RecoveryManager:
             retry_delay_seconds=retry_delay_seconds,
             timeout_seconds=timeout_seconds,
             prerequisites=prerequisites or [],
-            escalation_action=escalation_action
+            escalation_action=escalation_action,
         )
-        
+
         self.logger.info(f"Registered recovery action: {name}")
-        
+
     def add_recovery_callback(self, callback: Callable) -> None:
         """Add a callback to be notified of recovery events."""
         self.recovery_callbacks.append(callback)
-        
+
     async def start_recovery_system(self) -> None:
         """Start the recovery system."""
         if self.recovery_active:
             self.logger.warning("Recovery system already active")
             return
-            
+
         self.recovery_active = True
-        
+
         # Register default recovery actions
         await self._register_default_actions()
-        
+
         # Start recovery monitoring task
         self.recovery_task = asyncio.create_task(self._recovery_monitoring_loop())
-        
+
         self.logger.info("Recovery system started")
-        
+
     async def stop_recovery_system(self) -> None:
         """Stop the recovery system."""
         self.recovery_active = False
-        
+
         if self.recovery_task:
             self.recovery_task.cancel()
             try:
                 await self.recovery_task
             except asyncio.CancelledError:
                 pass
-                
+
         self.logger.info("Recovery system stopped")
-        
+
     async def trigger_recovery(
-        self, 
-        action_name: str, 
-        context: Optional[Dict[str, Any]] = None
+        self, action_name: str, context: Optional[Dict[str, Any]] = None
     ) -> RecoveryResult:
         """Manually trigger a recovery action."""
         if action_name not in self.recovery_actions:
             self.logger.error(f"Unknown recovery action: {action_name}")
             return RecoveryResult.FAILED
-            
+
         return await self._execute_recovery_action(action_name, context or {})
-        
+
     async def report_failure(
-        self, 
-        component: str, 
-        failure_type: str, 
-        details: Optional[Dict[str, Any]] = None
+        self,
+        component: str,
+        failure_type: str,
+        details: Optional[Dict[str, Any]] = None,
     ) -> None:
         """Report a component failure for potential recovery."""
         failure_key = f"{component}_{failure_type}"
-        
+
         # Update failure tracking
         self.failure_counts[failure_key] = self.failure_counts.get(failure_key, 0) + 1
         self.last_failure_time[failure_key] = datetime.now()
-        
+
         self.logger.warning(f"Failure reported: {component} - {failure_type}")
-        
+
         # Determine if recovery should be triggered
         await self._evaluate_recovery_need(component, failure_type, details or {})
-        
+
     def get_recovery_history(self, hours: int = 24) -> List[RecoveryAttempt]:
         """Get recovery attempt history."""
         cutoff_time = datetime.now() - timedelta(hours=hours)
         return [
-            attempt for attempt in self.recovery_attempts 
+            attempt
+            for attempt in self.recovery_attempts
             if attempt.started_at >= cutoff_time
         ]
-        
+
     def get_active_recoveries(self) -> List[RecoveryAttempt]:
         """Get currently active recovery attempts."""
         return list(self.active_recoveries.values())
-        
+
     def get_recovery_summary(self) -> Dict[str, Any]:
         """Get recovery system summary."""
         recent_attempts = self.get_recovery_history(24)
-        
+
         success_count = sum(
-            1 for attempt in recent_attempts 
-            if attempt.result == RecoveryResult.SUCCESS
+            1 for attempt in recent_attempts if attempt.result == RecoveryResult.SUCCESS
         )
-        
+
         failed_count = sum(
-            1 for attempt in recent_attempts 
-            if attempt.result == RecoveryResult.FAILED
+            1 for attempt in recent_attempts if attempt.result == RecoveryResult.FAILED
         )
-        
+
         return {
             "registered_actions": len(self.recovery_actions),
             "active_recoveries": len(self.active_recoveries),
             "recent_attempts_24h": len(recent_attempts),
-            "success_rate_24h": (success_count / len(recent_attempts) * 100) if recent_attempts else 0,
+            "success_rate_24h": (
+                (success_count / len(recent_attempts) * 100) if recent_attempts else 0
+            ),
             "failed_attempts_24h": failed_count,
-            "last_updated": datetime.now().isoformat()
+            "last_updated": datetime.now().isoformat(),
         }
-        
+
     async def _register_default_actions(self) -> None:
         """Register default recovery actions."""
         # Redis reconnection
@@ -233,9 +236,9 @@ class RecoveryManager:
             action_function=self._redis_reconnect_action,
             max_attempts=5,
             retry_delay_seconds=10,
-            timeout_seconds=30
+            timeout_seconds=30,
         )
-        
+
         # Clear Redis cache
         await self.register_recovery_action(
             name="redis_clear_cache",
@@ -245,9 +248,9 @@ class RecoveryManager:
             max_attempts=3,
             retry_delay_seconds=5,
             timeout_seconds=15,
-            prerequisites=["redis_reconnect"]
+            prerequisites=["redis_reconnect"],
         )
-        
+
         # Reset message counters
         await self.register_recovery_action(
             name="reset_message_counters",
@@ -256,9 +259,9 @@ class RecoveryManager:
             action_function=self._reset_counters_action,
             max_attempts=1,
             retry_delay_seconds=0,
-            timeout_seconds=5
+            timeout_seconds=5,
         )
-        
+
         # Graceful degradation
         await self.register_recovery_action(
             name="enable_degraded_mode",
@@ -267,136 +270,142 @@ class RecoveryManager:
             action_function=self._enable_degraded_mode_action,
             max_attempts=1,
             retry_delay_seconds=0,
-            timeout_seconds=10
+            timeout_seconds=10,
         )
-        
+
     async def _recovery_monitoring_loop(self) -> None:
         """Monitor for recovery opportunities."""
         self.logger.info("Starting recovery monitoring loop")
-        
+
         while self.recovery_active:
             try:
                 # Check for stuck recovery attempts
                 await self._check_stuck_recoveries()
-                
+
                 # Check for repeated failures that need intervention
                 await self._check_failure_patterns()
-                
+
                 # Sleep before next check
                 await asyncio.sleep(30)
-                
+
             except Exception as e:
                 self.logger.error(f"Error in recovery monitoring: {e}")
                 await asyncio.sleep(60)
-                
+
     async def _execute_recovery_action(
-        self, 
-        action_name: str, 
-        context: Dict[str, Any]
+        self, action_name: str, context: Dict[str, Any]
     ) -> RecoveryResult:
         """Execute a recovery action with retry logic."""
         action = self.recovery_actions[action_name]
-        
+
         # Check if already running
         if action_name in self.active_recoveries:
             self.logger.warning(f"Recovery action {action_name} already in progress")
             return RecoveryResult.IN_PROGRESS
-            
+
         # Check prerequisites
         for prereq in action.prerequisites:
             if not await self._check_prerequisite(prereq):
                 self.logger.error(f"Prerequisite {prereq} not met for {action_name}")
                 return RecoveryResult.SKIPPED
-                
+
         # Execute with retries
         for attempt in range(1, action.max_attempts + 1):
             recovery_attempt = RecoveryAttempt(
                 action_name=action_name,
                 attempt_number=attempt,
-                started_at=datetime.now()
+                started_at=datetime.now(),
             )
-            
+
             self.active_recoveries[action_name] = recovery_attempt
-            
+
             try:
                 # Execute the action with timeout
                 result = await asyncio.wait_for(
-                    action.action_function(context),
-                    timeout=action.timeout_seconds
+                    action.action_function(context), timeout=action.timeout_seconds
                 )
-                
+
                 # Process result
                 recovery_attempt.completed_at = datetime.now()
                 recovery_attempt.result = result.get("result", RecoveryResult.SUCCESS)
                 recovery_attempt.message = result.get("message", "Recovery completed")
                 recovery_attempt.details = result.get("details", {})
-                
+
                 # Remove from active recoveries
                 del self.active_recoveries[action_name]
-                
+
                 # Add to history
                 self.recovery_attempts.append(recovery_attempt)
-                
+
                 # Notify callbacks
                 await self._notify_recovery_callbacks(recovery_attempt)
-                
+
                 if recovery_attempt.result == RecoveryResult.SUCCESS:
-                    self.logger.info(f"Recovery action {action_name} succeeded on attempt {attempt}")
+                    self.logger.info(
+                        f"Recovery action {action_name} succeeded on attempt {attempt}"
+                    )
                     return RecoveryResult.SUCCESS
                 elif recovery_attempt.result == RecoveryResult.PARTIAL_SUCCESS:
-                    self.logger.warning(f"Recovery action {action_name} partially succeeded on attempt {attempt}")
+                    self.logger.warning(
+                        f"Recovery action {action_name} partially succeeded on attempt {attempt}"
+                    )
                     return RecoveryResult.PARTIAL_SUCCESS
                 else:
-                    self.logger.warning(f"Recovery action {action_name} failed on attempt {attempt}")
-                    
+                    self.logger.warning(
+                        f"Recovery action {action_name} failed on attempt {attempt}"
+                    )
+
             except asyncio.TimeoutError:
                 recovery_attempt.completed_at = datetime.now()
                 recovery_attempt.result = RecoveryResult.FAILED
                 recovery_attempt.message = "Recovery action timed out"
                 recovery_attempt.error = "Timeout"
-                
+
                 del self.active_recoveries[action_name]
                 self.recovery_attempts.append(recovery_attempt)
                 await self._notify_recovery_callbacks(recovery_attempt)
-                
-                self.logger.error(f"Recovery action {action_name} timed out on attempt {attempt}")
-                
+
+                self.logger.error(
+                    f"Recovery action {action_name} timed out on attempt {attempt}"
+                )
+
             except Exception as e:
                 recovery_attempt.completed_at = datetime.now()
                 recovery_attempt.result = RecoveryResult.FAILED
                 recovery_attempt.message = f"Recovery action failed: {str(e)}"
                 recovery_attempt.error = str(e)
-                
+
                 del self.active_recoveries[action_name]
                 self.recovery_attempts.append(recovery_attempt)
                 await self._notify_recovery_callbacks(recovery_attempt)
-                
-                self.logger.error(f"Recovery action {action_name} failed on attempt {attempt}: {e}")
-                
+
+                self.logger.error(
+                    f"Recovery action {action_name} failed on attempt {attempt}: {e}"
+                )
+
             # Wait before retry (except on last attempt)
             if attempt < action.max_attempts:
                 await asyncio.sleep(action.retry_delay_seconds)
-                
+
         # All attempts failed, try escalation
         if action.escalation_action:
             self.logger.info(f"Escalating to {action.escalation_action}")
-            return await self._execute_recovery_action(action.escalation_action, context)
-            
+            return await self._execute_recovery_action(
+                action.escalation_action, context
+            )
+
         return RecoveryResult.FAILED
-        
+
     async def _evaluate_recovery_need(
-        self, 
-        component: str, 
-        failure_type: str, 
-        details: Dict[str, Any]
+        self, component: str, failure_type: str, details: Dict[str, Any]
     ) -> None:
         """Evaluate if recovery is needed for a reported failure."""
         failure_key = f"{component}_{failure_type}"
         failure_count = self.failure_counts.get(failure_key, 0)
-        
+
         # Determine recovery action based on component and failure type
         recovery_action = None
-        
+
         if component == "redis" and failure_type == "connection_failed":
             if failure_count >= 3:
                 recovery_action = "redis_reconnect"
@@ -405,37 +414,41 @@ class RecoveryManager:
                 recovery_action = "reset_message_counters"
         elif failure_type == "system_overload":
             recovery_action = "enable_degraded_mode"
-            
+
         if recovery_action:
-            self.logger.info(f"Triggering recovery action {recovery_action} for {failure_key}")
+            self.logger.info(
+                f"Triggering recovery action {recovery_action} for {failure_key}"
+            )
             await self.trigger_recovery(recovery_action, details)
-            
+
     async def _check_prerequisite(self, prerequisite: str) -> bool:
         """Check if a prerequisite is met."""
         # For now, assume all prerequisites are met
         # In a real implementation, this would check system state
         return True
-        
+
     async def _check_stuck_recoveries(self) -> None:
         """Check for recovery attempts that may be stuck."""
         current_time = datetime.now()
-        
+
         for action_name, attempt in list(self.active_recoveries.items()):
             # Check if recovery has been running too long
             duration = (current_time - attempt.started_at).total_seconds()
             action = self.recovery_actions[action_name]
-            
+
             if duration > action.timeout_seconds * 2:  # Double the timeout
-                self.logger.error(f"Recovery action {action_name} appears stuck, canceling")
-                
+                self.logger.error(
+                    f"Recovery action {action_name} appears stuck, canceling"
+                )
+
                 attempt.completed_at = current_time
                 attempt.result = RecoveryResult.FAILED
                 attempt.message = "Recovery action stuck and canceled"
-                
+
                 del self.active_recoveries[action_name]
                 self.recovery_attempts.append(attempt)
                 await self._notify_recovery_callbacks(attempt)
-                
+
     async def _check_failure_patterns(self) -> None:
         """Check for failure patterns that need attention."""
         # This could implement more sophisticated pattern detection
@@ -443,7 +456,7 @@ class RecoveryManager:
         for failure_key, count in self.failure_counts.items():
             if count > 10:
                 self.logger.warning(f"High failure count for {failure_key}: {count}")
-                
+
     async def _notify_recovery_callbacks(self, attempt: RecoveryAttempt) -> None:
         """Notify recovery callbacks."""
         for callback in self.recovery_callbacks:
@@ -454,92 +467,99 @@ class RecoveryManager:
                     callback(attempt)
             except Exception as e:
                 self.logger.error(f"Error in recovery callback: {e}")
-                
+
     # Default recovery action implementations
-    
+
     async def _redis_reconnect_action(self, context: Dict[str, Any]) -> Dict[str, Any]:
         """Reconnect to Redis server."""
         try:
             redis_client = redis.from_url(self.redis_url)
             await redis_client.ping()
             await redis_client.close()
-            
+
             return {
                 "result": RecoveryResult.SUCCESS,
                 "message": "Redis reconnection successful",
-                "details": {"redis_url": self.redis_url}
+                "details": {"redis_url": self.redis_url},
             }
-            
+
         except Exception as e:
             return {
                 "result": RecoveryResult.FAILED,
                 "message": f"Redis reconnection failed: {str(e)}",
-                "details": {"error": str(e)}
+                "details": {"error": str(e)},
             }
-            
-    async def _redis_clear_cache_action(self, context: Dict[str, Any]) -> Dict[str, Any]:
+
+    async def _redis_clear_cache_action(
+        self, context: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Clear Redis cache."""
         try:
             redis_client = redis.from_url(self.redis_url)
-            
+
             # Clear specific cache keys (be careful not to clear everything)
             cache_keys = ["beast_mode_cache:*"]
             for pattern in cache_keys:
                 keys = await redis_client.keys(pattern)
                 if keys:
                     await redis_client.delete(*keys)
-                    
+
             await redis_client.close()
-            
+
             return {
                 "result": RecoveryResult.SUCCESS,
                 "message": "Redis cache cleared successfully",
-                "details": {"cleared_patterns": cache_keys}
+                "details": {"cleared_patterns": cache_keys},
             }
-            
+
         except Exception as e:
             return {
                 "result": RecoveryResult.FAILED,
                 "message": f"Redis cache clear failed: {str(e)}",
-                "details": {"error": str(e)}
+                "details": {"error": str(e)},
             }
-            
+
     async def _reset_counters_action(self, context: Dict[str, Any]) -> Dict[str, Any]:
         """Reset message processing counters."""
         try:
             # Reset failure counts
             self.failure_counts.clear()
             self.last_failure_time.clear()
-            
+
             return {
                 "result": RecoveryResult.SUCCESS,
                 "message": "Message counters reset successfully",
-                "details": {"reset_time": datetime.now().isoformat()}
+                "details": {"reset_time": datetime.now().isoformat()},
             }
-            
+
         except Exception as e:
             return {
                 "result": RecoveryResult.FAILED,
                 "message": f"Counter reset failed: {str(e)}",
-                "details": {"error": str(e)}
+                "details": {"error": str(e)},
             }
-            
-    async def _enable_degraded_mode_action(self, context: Dict[str, Any]) -> Dict[str, Any]:
+
+    async def _enable_degraded_mode_action(
+        self, context: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Enable degraded mode operation."""
         try:
             # This would implement actual degraded mode logic
             # For now, just log the action
             self.logger.info("Degraded mode enabled")
-            
+
             return {
                 "result": RecoveryResult.SUCCESS,
                 "message": "Degraded mode enabled successfully",
-                "details": {"mode": "degraded", "enabled_at": datetime.now().isoformat()}
+                "details": {
+                    "mode": "degraded",
+                    "enabled_at": datetime.now().isoformat(),
+                },
             }
-            
+
         except Exception as e:
             return {
                 "result": RecoveryResult.FAILED,
                 "message": f"Failed to enable degraded mode: {str(e)}",
-                "details": {"error": str(e)}
+                "details": {"error": str(e)},
             }

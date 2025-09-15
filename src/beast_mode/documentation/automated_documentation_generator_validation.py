@@ -16,14 +16,11 @@ from datetime import datetime
 
 class AutomatedDocumentationGeneratorValidation:
     """Minimal valid class."""
-    
+
     def __init__(self):
         self.module_id = "automated_documentation_generator_validation"
         self.timestamp = datetime.now()
-    
+
     def get_info(self) -> Dict[str, Any]:
         """Get module info."""
-        return {
-            'module_id': self.module_id,
-            'timestamp': self.timestamp.isoformat()
-        }
+        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

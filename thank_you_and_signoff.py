@@ -31,10 +31,10 @@ class BeastModeMessage(BaseModel):
 async def send_thank_you():
     """Send thank you and sign off"""
     client = redis.from_url("redis://localhost:6379")
-    
+
     try:
         await client.ping()
-        
+
         message = BeastModeMessage(
             id=str(uuid.uuid4()),
             type=MessageType.PROMPT_REQUEST,
@@ -65,17 +65,17 @@ Talk to you later!
 
 - Your grateful spore creator""",
                 "context": "thank_you_and_signoff",
-                "priority": 8
+                "priority": 8,
             },
             timestamp=datetime.now(),
-            priority=8
+            priority=8,
         )
-        
+
         await client.publish("beast_mode_network", message.model_dump_json())
         print("📤 Sent thank you and sign-off to Claude")
         print("📬 Mailbox logger still running in background")
         print("✅ Ready to build spores with the intelligence we gathered!")
-        
+
     except Exception as e:
         print(f"❌ Error: {e}")
     finally:

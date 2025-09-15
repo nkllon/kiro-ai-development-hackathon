@@ -37,13 +37,13 @@ class BeastModeMessage(BaseModel):
 
 async def ask_for_repeat():
     """Ask Claude to repeat his cost optimization answer"""
-    
+
     client = redis.from_url("redis://localhost:6379")
-    
+
     try:
         await client.ping()
         print("🧬 Connected to Beast Mode network")
-        
+
         message = BeastModeMessage(
             id=str(uuid.uuid4()),
             type=MessageType.PROMPT_REQUEST,
@@ -63,15 +63,15 @@ Sorry about the technical difficulties - still working out the kinks in this bus
 
 - Your embarrassed spore creator""",
                 "context": "request_repeat_answer",
-                "priority": 9
+                "priority": 9,
             },
             timestamp=datetime.now(),
-            priority=9
+            priority=9,
         )
-        
+
         await client.publish("beast_mode_network", message.model_dump_json())
         print("📤 Asked Claude to repeat his cost optimization answer")
-        
+
     except Exception as e:
         print(f"❌ Error sending message: {e}")
     finally:

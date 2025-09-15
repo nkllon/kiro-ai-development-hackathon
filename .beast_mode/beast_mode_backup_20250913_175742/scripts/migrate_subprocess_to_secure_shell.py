@@ -38,7 +38,11 @@ class SubprocessMigrator:
             subprocess_calls = []
             for node in ast.walk(tree):
                 if isinstance(node, ast.Call):
-                    if isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name) and node.func.value.id == "subprocess":
+                    if (
+                        isinstance(node.func, ast.Attribute)
+                        and isinstance(node.func.value, ast.Name)
+                        and node.func.value.id == "subprocess"
+                    ):
                         subprocess_calls.append(
                             {
                                 "line": node.lineno,
@@ -176,7 +180,9 @@ if __name__ == "__main__":
             if result.get("total_calls", 0) > 0:
                 file_path = Path(result["file"])
                 template = self.create_migration_template(file_path)
-                template_file = templates_dir / f"{file_path.stem}_migration_template.py"
+                template_file = (
+                    templates_dir / f"{file_path.stem}_migration_template.py"
+                )
                 template_file.write_text(template)
                 print(f"  📝 Template created: {template_file}")
 

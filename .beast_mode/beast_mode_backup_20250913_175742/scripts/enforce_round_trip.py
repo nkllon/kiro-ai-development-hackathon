@@ -49,7 +49,9 @@ class RoundTripEnforcer:
     def setup_tools(self) -> None:
         """Setup reverse engineering and code generation tools"""
         if self.tool_factory:
-            self.reverse_engineer = self.tool_factory.get_reverse_engineering_tool("python")
+            self.reverse_engineer = self.tool_factory.get_reverse_engineering_tool(
+                "python"
+            )
             # We need a model to get the code generator, but we don't have one yet
             # We'll get it when we have a model
             self.code_generator = None
@@ -135,7 +137,9 @@ class RoundTripEnforcer:
                 Path(temp_file).unlink()
             raise e
 
-    def test_functional_equivalence(self, original_file: str, generated_file: str) -> dict[str, Any]:
+    def test_functional_equivalence(
+        self, original_file: str, generated_file: str
+    ) -> dict[str, Any]:
         """Test functional equivalence between original and generated files"""
         try:
             # Test 1: AST parsing
@@ -217,7 +221,11 @@ class RoundTripEnforcer:
 
             for node in ast.walk(tree):
                 if isinstance(node, ast.ClassDef):
-                    structure["classes"][node.name] = [n.name for n in node.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
+                    structure["classes"][node.name] = [
+                        n.name
+                        for n in node.body
+                        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
+                    ]
                 elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                     structure["functions"].append(node.name)
 
@@ -240,7 +248,11 @@ def main() -> None:
                 text=True,
                 check=True,
             )
-            python_files = [f for f in git_result.stdout.strip().split("\n") if f.endswith(".py") and f]
+            python_files = [
+                f
+                for f in git_result.stdout.strip().split("\n")
+                if f.endswith(".py") and f
+            ]
 
             if not python_files:
                 print("✅ No Python files to check")

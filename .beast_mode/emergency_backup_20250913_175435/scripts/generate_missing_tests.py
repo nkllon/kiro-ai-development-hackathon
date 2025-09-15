@@ -168,7 +168,9 @@ def main():
 
         print(f"  📝 Generating {test_file_path.name}...")
 
-        content = generate_test_file_content(req["test"], req["requirement"], req["domain"])
+        content = generate_test_file_content(
+            req["test"], req["requirement"], req["domain"]
+        )
 
         with open(test_file_path, "w") as f:
             f.write(content)
@@ -178,7 +180,9 @@ def main():
     print(f"  - Total requirements: {len(requirements)}")
     print(f"  - Existing tests: {len(existing_tests)}")
     print(f"  - Generated tests: {len(missing_tests)}")
-    print(f"  - Coverage: {((len(existing_tests) + len(missing_tests)) / len(requirements) * 100):.1f}%")
+    print(
+        f"  - Coverage: {((len(existing_tests) + len(missing_tests)) / len(requirements) * 100):.1f}%"
+    )
 
 
 if __name__ == "__main__":

@@ -39,14 +39,20 @@ def main():
     # Run quality checks
     checks = [
         # Python formatting
-        (["uv", "run", "black", "--check", "src/", "tests/"], "Python formatting (Black)"),
+        (
+            ["uv", "run", "black", "--check", "src/", "tests/"],
+            "Python formatting (Black)",
+        ),
         (["uv", "run", "ruff", "check", "src/", "tests/"], "Python linting (Ruff)"),
         # Documentation formatting
         (["uv", "run", "mdformat", "--check", "docs/", "*.md"], "Markdown formatting"),
         # YAML formatting
         (["uv", "run", "yamlfix", "--check", "*.yaml", "*.yml"], "YAML formatting"),
         # Go formatting (if Go files exist)
-        (["find", ".", "-name", "*.go", "-exec", "gofmt", "-l", "{}", ";"], "Go formatting check"),
+        (
+            ["find", ".", "-name", "*.go", "-exec", "gofmt", "-l", "{}", ";"],
+            "Go formatting check",
+        ),
     ]
 
     all_passed = True

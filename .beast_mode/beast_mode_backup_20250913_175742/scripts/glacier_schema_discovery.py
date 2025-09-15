@@ -226,11 +226,21 @@ class GlacierSchemaDatabase:
             )
 
             # Create indexes
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_schemas_type ON schemas (schema_type)")
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_schemas_processed ON schemas (processed)")
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_schemas_timestamp ON schemas (discovery_timestamp)")
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_triggers_type ON triggers (trigger_type)")
-            cursor.execute("CREATE INDEX IF NOT EXISTS idx_queue_status ON processing_queue (status)")
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_schemas_type ON schemas (schema_type)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_schemas_processed ON schemas (processed)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_schemas_timestamp ON schemas (discovery_timestamp)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_triggers_type ON triggers (trigger_type)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_queue_status ON processing_queue (status)"
+            )
 
             conn.commit()
 
@@ -279,7 +289,11 @@ class GlacierSchemaDatabase:
                                 json.dumps(schema.content),
                                 json.dumps(schema.metadata),
                                 schema.processed,
-                                (schema.processing_timestamp.isoformat() if schema.processing_timestamp else None),
+                                (
+                                    schema.processing_timestamp.isoformat()
+                                    if schema.processing_timestamp
+                                    else None
+                                ),
                                 json.dumps(schema.processing_errors),
                                 json.dumps(schema.child_schema_ids),
                                 schema.version,
@@ -309,7 +323,11 @@ class GlacierSchemaDatabase:
                                 json.dumps(schema.content),
                                 json.dumps(schema.metadata),
                                 schema.processed,
-                                (schema.processing_timestamp.isoformat() if schema.processing_timestamp else None),
+                                (
+                                    schema.processing_timestamp.isoformat()
+                                    if schema.processing_timestamp
+                                    else None
+                                ),
                                 json.dumps(schema.processing_errors),
                                 schema.parent_schema_id,
                                 json.dumps(schema.child_schema_ids),
@@ -332,7 +350,9 @@ class GlacierSchemaDatabase:
         try:
             with self._get_connection() as conn:
                 cursor = conn.cursor()
-                cursor.execute("SELECT * FROM schemas WHERE schema_id = ?", (schema_id,))
+                cursor.execute(
+                    "SELECT * FROM schemas WHERE schema_id = ?", (schema_id,)
+                )
                 row = cursor.fetchone()
 
                 if row:
@@ -354,7 +374,11 @@ class GlacierSchemaDatabase:
             content=json.loads(row["content"]),
             metadata=json.loads(row["metadata"]),
             processed=bool(row["processed"]),
-            processing_timestamp=(datetime.fromisoformat(row["processing_timestamp"]) if row["processing_timestamp"] else None),
+            processing_timestamp=(
+                datetime.fromisoformat(row["processing_timestamp"])
+                if row["processing_timestamp"]
+                else None
+            ),
             processing_errors=json.loads(row["processing_errors"]),
             parent_schema_id=row["parent_schema_id"],
             child_schema_ids=json.loads(row["child_schema_ids"]),
@@ -436,7 +460,11 @@ class GlacierSchemaDatabase:
                             trigger.batch_size,
                             trigger.delay_seconds,
                             trigger.active,
-                            (trigger.last_triggered.isoformat() if trigger.last_triggered else None),
+                            (
+                                trigger.last_triggered.isoformat()
+                                if trigger.last_triggered
+                                else None
+                            ),
                             trigger.trigger_count,
                         ),
                     )
@@ -448,7 +476,9 @@ class GlacierSchemaDatabase:
             logging.error(f"Failed to store trigger {trigger.trigger_id}: {e}")
             return False
 
-    def get_triggers(self, schema_type: Optional[SchemaType] = None, active_only: bool = True) -> list[ProcessingTrigger]:
+    def get_triggers(
+        self, schema_type: Optional[SchemaType] = None, active_only: bool = True
+    ) -> list[ProcessingTrigger]:
         """Get processing triggers"""
         try:
             with self._get_connection() as conn:
@@ -480,7 +510,11 @@ class GlacierSchemaDatabase:
                         batch_size=row["batch_size"],
                         delay_seconds=row["delay_seconds"],
                         active=bool(row["active"]),
-                        last_triggered=(datetime.fromisoformat(row["last_triggered"]) if row["last_triggered"] else None),
+                        last_triggered=(
+                            datetime.fromisoformat(row["last_triggered"])
+                            if row["last_triggered"]
+                            else None
+                        ),
                         trigger_count=row["trigger_count"],
                     )
                     triggers.append(trigger)
@@ -507,11 +541,19 @@ class GlacierSchemaProcessor:
 
     def _register_default_processors(self):
         """Register default processing functions"""
-        self.register_processor("analyze_code_complexity", self._analyze_code_complexity)
-        self.register_processor("detect_security_patterns", self._detect_security_patterns)
+        self.register_processor(
+            "analyze_code_complexity", self._analyze_code_complexity
+        )
+        self.register_processor(
+            "detect_security_patterns", self._detect_security_patterns
+        )
         self.register_processor("analyze_dependencies", self._analyze_dependencies)
-        self.register_processor("generate_quality_report", self._generate_quality_report)
-        self.register_processor("extract_architecture_patterns", self._extract_architecture_patterns)
+        self.register_processor(
+            "generate_quality_report", self._generate_quality_report
+        )
+        self.register_processor(
+            "extract_architecture_patterns", self._extract_architecture_patterns
+        )
 
     def register_processor(self, name: str, processor_func: Callable):
         """Register a processing function"""
@@ -532,7 +574,9 @@ class GlacierSchemaProcessor:
             self.worker_threads.append(worker)
 
         # Start trigger monitor
-        trigger_monitor = threading.Thread(target=self._trigger_monitor_loop, daemon=True)
+        trigger_monitor = threading.Thread(
+            target=self._trigger_monitor_loop, daemon=True
+        )
         trigger_monitor.start()
 
         logging.info(f"Started glacier schema processor with {num_workers} workers")
@@ -602,7 +646,9 @@ class GlacierSchemaProcessor:
         for trigger in triggers:
             if trigger.trigger_type == TriggerType.IMMEDIATE:
                 # Find unprocessed schemas for this trigger
-                schemas = self.database.query_schemas(schema_type=trigger.schema_type, processed=False)
+                schemas = self.database.query_schemas(
+                    schema_type=trigger.schema_type, processed=False
+                )
 
                 for schema in schemas:
                     self._queue_processing(schema.schema_id, trigger.trigger_id)
@@ -619,7 +665,9 @@ class GlacierSchemaProcessor:
             if trigger.trigger_type == TriggerType.CONDITIONAL:
                 if self._evaluate_conditions(trigger.conditions):
                     # Find schemas that match conditions
-                    schemas = self.database.query_schemas(schema_type=trigger.schema_type, processed=False)
+                    schemas = self.database.query_schemas(
+                        schema_type=trigger.schema_type, processed=False
+                    )
 
                     for schema in schemas:
                         if self._schema_matches_conditions(schema, trigger.conditions):
@@ -630,7 +678,9 @@ class GlacierSchemaProcessor:
         # Simple condition evaluation - could be enhanced
         return True  # Placeholder
 
-    def _schema_matches_conditions(self, schema: DiscoverySchema, conditions: dict[str, Any]) -> bool:
+    def _schema_matches_conditions(
+        self, schema: DiscoverySchema, conditions: dict[str, Any]
+    ) -> bool:
         """Check if schema matches trigger conditions"""
         # Simple condition matching - could be enhanced
         return True  # Placeholder
@@ -638,7 +688,9 @@ class GlacierSchemaProcessor:
     def _queue_processing(self, schema_id: str, trigger_id: str):
         """Queue a schema for processing"""
         self.processing_queue.put((schema_id, trigger_id))
-        logging.info(f"Queued schema {schema_id} for processing with trigger {trigger_id}")
+        logging.info(
+            f"Queued schema {schema_id} for processing with trigger {trigger_id}"
+        )
 
     def _process_schema(self, schema_id: str, trigger_id: str):
         """Process a schema with a specific trigger"""
@@ -678,13 +730,17 @@ class GlacierSchemaProcessor:
             self.database.store_schema(schema)
 
             # Log processing result
-            logging.info(f"Processed schema {schema_id} with {trigger.processor_function} in {end_time - start_time:.2f}s")
+            logging.info(
+                f"Processed schema {schema_id} with {trigger.processor_function} in {end_time - start_time:.2f}s"
+            )
 
         except Exception as e:
             logging.error(f"Failed to process schema {schema_id}: {e}")
 
     # Default processor implementations
-    def _analyze_code_complexity(self, schema: DiscoverySchema, config: dict[str, Any]) -> dict[str, Any]:
+    def _analyze_code_complexity(
+        self, schema: DiscoverySchema, config: dict[str, Any]
+    ) -> dict[str, Any]:
         """Analyze code complexity from schema"""
         try:
             # Extract code-related information
@@ -718,7 +774,9 @@ class GlacierSchemaProcessor:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _detect_security_patterns(self, schema: DiscoverySchema, config: dict[str, Any]) -> dict[str, Any]:
+    def _detect_security_patterns(
+        self, schema: DiscoverySchema, config: dict[str, Any]
+    ) -> dict[str, Any]:
         """Detect security patterns from schema"""
         try:
             content = schema.content
@@ -734,7 +792,9 @@ class GlacierSchemaProcessor:
             if "functions" in content:
                 dangerous_functions = ["eval", "exec", "os.system", "subprocess.call"]
                 for func in content["functions"]:
-                    if any(dangerous in func.lower() for dangerous in dangerous_functions):
+                    if any(
+                        dangerous in func.lower() for dangerous in dangerous_functions
+                    ):
                         security_issues.append(f"Dangerous function: {func}")
 
             return {
@@ -746,7 +806,9 @@ class GlacierSchemaProcessor:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _analyze_dependencies(self, schema: DiscoverySchema, config: dict[str, Any]) -> dict[str, Any]:
+    def _analyze_dependencies(
+        self, schema: DiscoverySchema, config: dict[str, Any]
+    ) -> dict[str, Any]:
         """Analyze dependencies from schema"""
         try:
             content = schema.content
@@ -764,7 +826,9 @@ class GlacierSchemaProcessor:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _generate_quality_report(self, schema: DiscoverySchema, config: dict[str, Any]) -> dict[str, Any]:
+    def _generate_quality_report(
+        self, schema: DiscoverySchema, config: dict[str, Any]
+    ) -> dict[str, Any]:
         """Generate quality report from schema"""
         try:
             content = schema.content
@@ -792,7 +856,9 @@ class GlacierSchemaProcessor:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _extract_architecture_patterns(self, schema: DiscoverySchema, config: dict[str, Any]) -> dict[str, Any]:
+    def _extract_architecture_patterns(
+        self, schema: DiscoverySchema, config: dict[str, Any]
+    ) -> dict[str, Any]:
         """Extract architecture patterns from schema"""
         try:
             content = schema.content
@@ -828,7 +894,9 @@ class GlacierSchemaDiscovery:
         # Start processing
         self.processor.start_processing()
 
-    def create_repository_schema(self, repo_url: str, analysis_data: dict[str, Any]) -> DiscoverySchema:
+    def create_repository_schema(
+        self, repo_url: str, analysis_data: dict[str, Any]
+    ) -> DiscoverySchema:
         """Create a glacier schema for repository discovery"""
 
         # Generate schema ID
@@ -860,7 +928,9 @@ class GlacierSchemaDiscovery:
 
         return schema
 
-    def _create_child_schemas(self, parent_schema: DiscoverySchema, analysis_data: dict[str, Any]):
+    def _create_child_schemas(
+        self, parent_schema: DiscoverySchema, analysis_data: dict[str, Any]
+    ):
         """Create child schemas for different aspects of the analysis"""
 
         # Code structure schema
@@ -870,7 +940,11 @@ class GlacierSchemaDiscovery:
                 schema_type=SchemaType.CODE_STRUCTURE,
                 source_url=parent_schema.source_url,
                 discovery_timestamp=datetime.now(timezone.utc),
-                content_hash=hashlib.sha256(json.dumps(analysis_data["artifact_summary"], sort_keys=True).encode()).hexdigest(),
+                content_hash=hashlib.sha256(
+                    json.dumps(
+                        analysis_data["artifact_summary"], sort_keys=True
+                    ).encode()
+                ).hexdigest(),
                 content=analysis_data["artifact_summary"],
                 metadata={"parent_schema": parent_schema.schema_id},
                 parent_schema_id=parent_schema.schema_id,
@@ -887,7 +961,11 @@ class GlacierSchemaDiscovery:
                 schema_type=SchemaType.DEPENDENCIES,
                 source_url=parent_schema.source_url,
                 discovery_timestamp=datetime.now(timezone.utc),
-                content_hash=hashlib.sha256(json.dumps(analysis_data["detected_schemas"], sort_keys=True).encode()).hexdigest(),
+                content_hash=hashlib.sha256(
+                    json.dumps(
+                        analysis_data["detected_schemas"], sort_keys=True
+                    ).encode()
+                ).hexdigest(),
                 content=analysis_data["detected_schemas"],
                 metadata={"parent_schema": parent_schema.schema_id},
                 parent_schema_id=parent_schema.schema_id,
@@ -994,7 +1072,9 @@ async def main():
         "recommendations": ["Add GitHub Actions workflow"],
     }
 
-    schema = discovery.create_repository_schema("https://github.com/test/repo", sample_analysis)
+    schema = discovery.create_repository_schema(
+        "https://github.com/test/repo", sample_analysis
+    )
     print(f"Created schema: {schema.schema_id}")
 
     # Wait for processing

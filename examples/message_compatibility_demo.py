@@ -19,9 +19,13 @@ from src.beast_mode.messaging.compatibility import (
     CompatibilityMode,
     convert_message,
     detect_message_version,
-    is_compatible_message
+    is_compatible_message,
 )
-from src.beast_mode.messaging.models import BeastModeMessage, MessageType, AgentCapabilities
+from src.beast_mode.messaging.models import (
+    BeastModeMessage,
+    MessageType,
+    AgentCapabilities,
+)
 
 
 # Configure logging
@@ -46,20 +50,30 @@ def print_subsection(title: str):
 def demo_message_type_translation():
     """Demonstrate message type translation between versions"""
     print_section("Message Type Translation Demo")
-    
+
     translator = MessageTypeTranslator()
-    
+
     # Test legacy to current translation
     print_subsection("Legacy to Current Translation")
     legacy_types = [
-        "message", "request", "response", "discovery", "help", "spore",
-        "msg", "text", "prompt", "query", "answer", "ping"
+        "message",
+        "request",
+        "response",
+        "discovery",
+        "help",
+        "spore",
+        "msg",
+        "text",
+        "prompt",
+        "query",
+        "answer",
+        "ping",
     ]
-    
+
     for legacy_type in legacy_types:
         current_type = translator.translate_to_current(legacy_type)
         print(f"  {legacy_type:12} -> {current_type.value}")
-    
+
     # Test current to legacy translation
     print_subsection("Current to Legacy Translation")
     current_types = [
@@ -70,9 +84,9 @@ def demo_message_type_translation():
         MessageType.HELP_WANTED,
         MessageType.SPORE_DELIVERY,
         MessageType.COLLABORATION_REQUEST,
-        MessageType.SYSTEM_HEALTH
+        MessageType.SYSTEM_HEALTH,
     ]
-    
+
     for current_type in current_types:
         legacy_type = translator.translate_to_legacy(current_type)
         print(f"  {current_type.value:25} -> {legacy_type}")
@@ -81,9 +95,9 @@ def demo_message_type_translation():
 def demo_version_detection():
     """Demonstrate message version detection"""
     print_section("Message Version Detection Demo")
-    
+
     detector = MessageVersionDetector()
-    
+
     # Test messages from different versions
     test_messages = [
         # V1.0 format
@@ -93,10 +107,9 @@ def demo_version_detection():
                 "type": "message",
                 "from": "agent1",
                 "to": "agent2",
-                "content": "Hello from V1.0"
-            }
+                "content": "Hello from V1.0",
+            },
         },
-        
         # V1.1 format
         {
             "name": "V1.1 Message",
@@ -106,10 +119,9 @@ def demo_version_detection():
                 "target": "agent2",
                 "payload": {"prompt": "What is AI?"},
                 "correlation_id": "req_123",
-                "priority": 3
-            }
+                "priority": 3,
+            },
         },
-        
         # V1.2 format
         {
             "name": "V1.2 Message",
@@ -119,10 +131,9 @@ def demo_version_detection():
                 "target": "agent2",
                 "payload": {"session_type": "code_review"},
                 "correlation_id": "collab_456",
-                "priority": 2
-            }
+                "priority": 2,
+            },
         },
-        
         # V2.0 format
         {
             "name": "V2.0 Message",
@@ -133,24 +144,20 @@ def demo_version_detection():
                 "target": "agent2",
                 "payload": {"content": "Hello from V2.0"},
                 "timestamp": "2023-01-01T12:00:00",
-                "priority": 5
-            }
+                "priority": 5,
+            },
         },
-        
         # Unknown format
         {
             "name": "Unknown Message",
-            "data": {
-                "msg": "hello",
-                "sender": "unknown_agent"
-            }
-        }
+            "data": {"msg": "hello", "sender": "unknown_agent"},
+        },
     ]
-    
+
     for test_msg in test_messages:
         version = detector.detect_version(test_msg["data"])
         print(f"  {test_msg['name']:20} -> {version.value}")
-        
+
         # Check compatibility
         is_compatible = detector.is_compatible_version(version, MessageVersion.V2_0)
         compat_status = "✓ Compatible" if is_compatible else "✗ Incompatible"
@@ -160,9 +167,9 @@ def demo_version_detection():
 def demo_message_conversion():
     """Demonstrate message conversion between versions"""
     print_section("Message Conversion Demo")
-    
+
     converter = MessageConverter()
-    
+
     # Test conversion scenarios
     conversion_scenarios = [
         {
@@ -171,10 +178,9 @@ def demo_message_conversion():
                 "type": "message",
                 "from": "legacy_agent",
                 "to": "modern_agent",
-                "content": "Hello from the past!"
-            }
+                "content": "Hello from the past!",
+            },
         },
-        
         {
             "name": "V1.1 Help Request",
             "data": {
@@ -182,28 +188,27 @@ def demo_message_conversion():
                 "source": "helper_agent",
                 "payload": {
                     "description": "Need help with Python",
-                    "required_capabilities": ["python", "debugging"]
+                    "required_capabilities": ["python", "debugging"],
                 },
                 "request_id": "help_789",
-                "priority": 2
-            }
+                "priority": 2,
+            },
         },
-        
         {
             "name": "Malformed Message",
             "data": {
                 "msg_type": "text",  # Wrong field name
                 "sender": "broken_agent",  # Wrong field name
-                "data": "This message has wrong field names"
-            }
-        }
+                "data": "This message has wrong field names",
+            },
+        },
     ]
-    
+
     for scenario in conversion_scenarios:
         print_subsection(f"Converting: {scenario['name']}")
-        
+
         result = converter.convert_to_current(scenario["data"])
-        
+
         if result.success:
             print(f"  ✓ Conversion successful")
             print(f"    Original version: {result.original_version.value}")
@@ -211,7 +216,7 @@ def demo_message_conversion():
             print(f"    Message type: {result.message.type.value}")
             print(f"    Source: {result.message.source}")
             print(f"    Target: {result.message.target}")
-            
+
             if result.warnings:
                 print(f"    Warnings: {len(result.warnings)}")
                 for warning in result.warnings:
@@ -225,34 +230,33 @@ def demo_message_conversion():
 def demo_compatibility_layer():
     """Demonstrate the main compatibility layer functionality"""
     print_section("Compatibility Layer Demo")
-    
+
     # Test different compatibility modes
     modes = [
         (CompatibilityMode.STRICT, "Strict Mode"),
         (CompatibilityMode.CONVERT, "Convert Mode"),
-        (CompatibilityMode.PASSTHROUGH, "Passthrough Mode")
+        (CompatibilityMode.PASSTHROUGH, "Passthrough Mode"),
     ]
-    
+
     test_message = {
         "type": "unknown_custom_type",
         "source": "custom_agent",
-        "payload": {"custom_data": "test"}
+        "payload": {"custom_data": "test"},
     }
-    
+
     for mode, mode_name in modes:
         print_subsection(mode_name)
-        
+
         compatibility_layer = MessageCompatibilityLayer(mode)
-        
+
         # Register custom handler for unknown type
         if mode != CompatibilityMode.STRICT:
             compatibility_layer.register_unknown_type_handler(
-                "unknown_custom_type", 
-                MessageType.TECHNICAL_EXCHANGE
+                "unknown_custom_type", MessageType.TECHNICAL_EXCHANGE
             )
-        
+
         result = compatibility_layer.process_message(test_message)
-        
+
         if result.success:
             print(f"  ✓ Processing successful")
             print(f"    Mapped type: {result.message.type.value}")
@@ -265,12 +269,12 @@ def demo_compatibility_layer():
 def demo_real_world_scenarios():
     """Demonstrate real-world compatibility scenarios"""
     print_section("Real-World Compatibility Scenarios")
-    
+
     compatibility_layer = MessageCompatibilityLayer(CompatibilityMode.CONVERT)
-    
+
     # Scenario 1: Mixed agent network
     print_subsection("Mixed Agent Network Simulation")
-    
+
     network_messages = [
         # Legacy agent announcing presence
         {
@@ -278,10 +282,9 @@ def demo_real_world_scenarios():
             "from": "legacy_file_processor",
             "agent_info": {
                 "capabilities": ["file_processing", "data_analysis"],
-                "version": "1.0"
-            }
+                "version": "1.0",
+            },
         },
-        
         # Modern agent requesting help
         {
             "id": "550e8400-e29b-41d4-a716-446655440001",
@@ -290,35 +293,38 @@ def demo_real_world_scenarios():
             "payload": {
                 "description": "Need help processing large CSV files",
                 "required_capabilities": ["file_processing", "data_analysis"],
-                "urgency": "normal"
+                "urgency": "normal",
             },
-            "priority": 3
+            "priority": 3,
         },
-        
         # Legacy agent responding
         {
             "type": "help",
             "from": "legacy_file_processor",
             "to": "modern_ml_agent",
             "response": "I can help with CSV processing",
-            "capabilities_match": ["file_processing", "data_analysis"]
-        }
+            "capabilities_match": ["file_processing", "data_analysis"],
+        },
     ]
-    
+
     processed_count = 0
     for i, msg in enumerate(network_messages):
         result = compatibility_layer.process_message(msg)
         if result.success:
             processed_count += 1
-            print(f"  Message {i+1}: ✓ {result.message.type.value} from {result.message.source}")
+            print(
+                f"  Message {i+1}: ✓ {result.message.type.value} from {result.message.source}"
+            )
         else:
             print(f"  Message {i+1}: ✗ Failed to process")
-    
-    print(f"  Successfully processed: {processed_count}/{len(network_messages)} messages")
-    
+
+    print(
+        f"  Successfully processed: {processed_count}/{len(network_messages)} messages"
+    )
+
     # Scenario 2: Spore sharing across versions
     print_subsection("Cross-Version Spore Sharing")
-    
+
     # Modern agent sharing spore
     modern_spore = BeastModeMessage(
         type=MessageType.SPORE_DELIVERY,
@@ -330,23 +336,22 @@ def demo_real_world_scenarios():
             "metadata": {
                 "version": "2.1",
                 "author": "optimization_expert",
-                "description": "Performance optimization spore"
-            }
-        }
+                "description": "Performance optimization spore",
+            },
+        },
     )
-    
+
     # Convert to legacy format for legacy agent
     legacy_format = compatibility_layer.converter.convert_to_legacy(
-        modern_spore, 
-        MessageVersion.V1_0
+        modern_spore, MessageVersion.V1_0
     )
-    
+
     print(f"  Modern spore converted to legacy format:")
     print(f"    Type: {legacy_format['type']}")
     print(f"    From: {legacy_format['from']}")
     print(f"    To: {legacy_format['to']}")
     print(f"    Has payload: {'payload' in legacy_format}")
-    
+
     # Convert back to modern format
     result = compatibility_layer.process_message(legacy_format)
     if result.success:
@@ -357,93 +362,95 @@ def demo_real_world_scenarios():
 def demo_performance_and_statistics():
     """Demonstrate performance monitoring and statistics"""
     print_section("Performance and Statistics Demo")
-    
+
     compatibility_layer = MessageCompatibilityLayer(CompatibilityMode.CONVERT)
-    
+
     # Process a variety of messages
     test_messages = []
-    
+
     # Generate V1.0 messages
     for i in range(20):
-        test_messages.append({
-            "type": "message",
-            "from": f"agent_{i}",
-            "content": f"Message {i}"
-        })
-    
+        test_messages.append(
+            {"type": "message", "from": f"agent_{i}", "content": f"Message {i}"}
+        )
+
     # Generate V1.1 messages
     for i in range(15):
-        test_messages.append({
-            "type": "request",
-            "source": f"requester_{i}",
-            "payload": {"prompt": f"Request {i}"},
-            "priority": (i % 5) + 1
-        })
-    
+        test_messages.append(
+            {
+                "type": "request",
+                "source": f"requester_{i}",
+                "payload": {"prompt": f"Request {i}"},
+                "priority": (i % 5) + 1,
+            }
+        )
+
     # Generate V2.0 messages
     for i in range(10):
-        test_messages.append(BeastModeMessage(
-            type=MessageType.SYSTEM_HEALTH,
-            source=f"health_monitor_{i}",
-            payload={"status": "healthy", "uptime": i * 100}
-        ))
-    
+        test_messages.append(
+            BeastModeMessage(
+                type=MessageType.SYSTEM_HEALTH,
+                source=f"health_monitor_{i}",
+                payload={"status": "healthy", "uptime": i * 100},
+            )
+        )
+
     # Process all messages
     print_subsection("Processing Messages")
     successful = 0
     failed = 0
-    
+
     for msg in test_messages:
         result = compatibility_layer.process_message(msg)
         if result.success:
             successful += 1
         else:
             failed += 1
-    
+
     print(f"  Total messages: {len(test_messages)}")
     print(f"  Successful: {successful}")
     print(f"  Failed: {failed}")
     print(f"  Success rate: {(successful/len(test_messages)*100):.1f}%")
-    
+
     # Show statistics
     print_subsection("Compatibility Statistics")
     stats = compatibility_layer.get_compatibility_stats()
-    
+
     print(f"  Mode: {stats['mode']}")
     print(f"  Messages processed: {stats['stats']['messages_processed']}")
     print(f"  Conversions successful: {stats['stats']['conversions_successful']}")
     print(f"  Conversions failed: {stats['stats']['conversions_failed']}")
-    
-    if stats['stats']['version_distribution']:
+
+    if stats["stats"]["version_distribution"]:
         print(f"  Version distribution:")
-        for version, count in stats['stats']['version_distribution'].items():
+        for version, count in stats["stats"]["version_distribution"].items():
             print(f"    {version}: {count} messages")
-    
+
     # Generate compatibility report
     print_subsection("Compatibility Report")
     report = compatibility_layer.create_compatibility_report()
-    
+
     print(f"  Summary:")
-    for key, value in report['summary'].items():
+    for key, value in report["summary"].items():
         print(f"    {key}: {value}")
 
 
 def demo_convenience_functions():
     """Demonstrate convenience functions"""
     print_section("Convenience Functions Demo")
-    
+
     # Test convert_message function
     print_subsection("convert_message() Function")
-    
+
     legacy_message = {
         "type": "help",
         "from": "helper",
         "payload": {
             "description": "Need assistance",
-            "required_capabilities": ["python"]
-        }
+            "required_capabilities": ["python"],
+        },
     }
-    
+
     converted = convert_message(legacy_message)
     if converted:
         print(f"  ✓ Conversion successful")
@@ -451,29 +458,33 @@ def demo_convenience_functions():
         print(f"    Source: {converted.source}")
     else:
         print(f"  ✗ Conversion failed")
-    
+
     # Test detect_message_version function
     print_subsection("detect_message_version() Function")
-    
+
     test_messages = [
         {"type": "message", "from": "agent1"},
         {"type": "request", "source": "agent2", "correlation_id": "123"},
-        {"id": "550e8400-e29b-41d4-a716-446655440000", "type": "simple_message", "source": "agent3"}
+        {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "type": "simple_message",
+            "source": "agent3",
+        },
     ]
-    
+
     for i, msg in enumerate(test_messages):
         version = detect_message_version(msg)
         print(f"  Message {i+1}: {version.value}")
-    
+
     # Test is_compatible_message function
     print_subsection("is_compatible_message() Function")
-    
+
     compatibility_tests = [
         {"type": "simple_message", "source": "agent1"},  # Compatible
         {"invalid": "structure"},  # Incompatible
-        {"type": "message", "from": "legacy_agent"}  # Compatible (legacy)
+        {"type": "message", "from": "legacy_agent"},  # Compatible (legacy)
     ]
-    
+
     for i, msg in enumerate(compatibility_tests):
         is_compat = is_compatible_message(msg)
         status = "✓ Compatible" if is_compat else "✗ Incompatible"
@@ -484,7 +495,7 @@ async def main():
     """Run all compatibility demos"""
     print("Beast Mode Message Compatibility Layer Demo")
     print("=" * 60)
-    
+
     try:
         # Run all demo functions
         demo_message_type_translation()
@@ -494,10 +505,10 @@ async def main():
         demo_real_world_scenarios()
         demo_performance_and_statistics()
         demo_convenience_functions()
-        
+
         print_section("Demo Complete")
         print("All compatibility layer features demonstrated successfully!")
-        
+
     except Exception as e:
         logger.error(f"Demo failed with error: {e}")
         raise

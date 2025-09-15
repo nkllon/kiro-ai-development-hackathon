@@ -13,20 +13,21 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Dict, Tuple
 
+
 class ReflectiveModuleDeploymentSystem:
     """System for deploying ReflectiveModule implementation across all modules."""
-    
+
     def __init__(self, base_path="src"):
         self.base_path = base_path
         self.deployment_log = []
         self.stats = {
-            'total_modules': 0,
-            'modules_processed': 0,
-            'modules_updated': 0,
-            'modules_skipped': 0,
-            'errors': 0
+            "total_modules": 0,
+            "modules_processed": 0,
+            "modules_updated": 0,
+            "modules_skipped": 0,
+            "errors": 0,
         }
-        
+
         # ReflectiveModule base class definition
         self.reflective_module_code = '''
 class ReflectiveModule:
@@ -104,7 +105,7 @@ class ReflectiveModule:
         self.health_status = status
         self.last_updated = datetime.now().isoformat()
 '''
-    
+
     def deploy_to_all_modules(self):
         """Deploy ReflectiveModule implementation to all modules."""
         print("🚀 REFLECTIVE MODULE DEPLOYMENT SYSTEM")
@@ -112,163 +113,177 @@ class ReflectiveModule:
         print(f"Deployment started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print(f"Target directory: {self.base_path}")
         print()
-        
+
         # Find all Python modules
         python_modules = self.find_all_python_modules()
-        self.stats['total_modules'] = len(python_modules)
-        
+        self.stats["total_modules"] = len(python_modules)
+
         print(f"Found {len(python_modules)} Python modules to process")
         print()
-        
+
         # Process each module
         for i, module_path in enumerate(python_modules, 1):
             print(f"Processing {i}/{len(python_modules)}: {module_path}")
             try:
                 self.process_module(module_path)
-                self.stats['modules_processed'] += 1
+                self.stats["modules_processed"] += 1
             except Exception as e:
                 print(f"  ❌ Error processing {module_path}: {e}")
-                self.stats['errors'] += 1
-                self.deployment_log.append({
-                    'module': module_path,
-                    'status': 'error',
-                    'error': str(e),
-                    'timestamp': datetime.now().isoformat()
-                })
-        
+                self.stats["errors"] += 1
+                self.deployment_log.append(
+                    {
+                        "module": module_path,
+                        "status": "error",
+                        "error": str(e),
+                        "timestamp": datetime.now().isoformat(),
+                    }
+                )
+
         # Generate deployment report
         self.generate_deployment_report()
-    
+
     def find_all_python_modules(self) -> List[str]:
         """Find all Python modules in the codebase."""
         modules = []
         for root, dirs, files in os.walk(self.base_path):
             for file in files:
-                if file.endswith('.py') and not file.startswith('__'):
+                if file.endswith(".py") and not file.startswith("__"):
                     modules.append(os.path.join(root, file))
         return sorted(modules)
-    
+
     def process_module(self, module_path: str):
         """Process a single module for ReflectiveModule deployment."""
         try:
-            with open(module_path, 'r', encoding='utf-8') as f:
+            with open(module_path, "r", encoding="utf-8") as f:
                 content = f.read()
-            
+
             # Check if module already has ReflectiveModule
             if self.has_reflective_module(content):
                 print(f"  ✅ Already has ReflectiveModule")
-                self.stats['modules_skipped'] += 1
-                self.deployment_log.append({
-                    'module': module_path,
-                    'status': 'skipped',
-                    'reason': 'already_has_reflective_module',
-                    'timestamp': datetime.now().isoformat()
-                })
+                self.stats["modules_skipped"] += 1
+                self.deployment_log.append(
+                    {
+                        "module": module_path,
+                        "status": "skipped",
+                        "reason": "already_has_reflective_module",
+                        "timestamp": datetime.now().isoformat(),
+                    }
+                )
                 return
-            
+
             # Check if module has classes that need ReflectiveModule
             if not self.has_classes(content):
                 print(f"  ⏭️  No classes found, skipping")
-                self.stats['modules_skipped'] += 1
-                self.deployment_log.append({
-                    'module': module_path,
-                    'status': 'skipped',
-                    'reason': 'no_classes',
-                    'timestamp': datetime.now().isoformat()
-                })
+                self.stats["modules_skipped"] += 1
+                self.deployment_log.append(
+                    {
+                        "module": module_path,
+                        "status": "skipped",
+                        "reason": "no_classes",
+                        "timestamp": datetime.now().isoformat(),
+                    }
+                )
                 return
-            
+
             # Deploy ReflectiveModule to this module
             updated_content = self.deploy_reflective_module(content, module_path)
-            
+
             # Write updated content back to file
-            with open(module_path, 'w', encoding='utf-8') as f:
+            with open(module_path, "w", encoding="utf-8") as f:
                 f.write(updated_content)
-            
+
             print(f"  ✅ ReflectiveModule deployed successfully")
-            self.stats['modules_updated'] += 1
-            self.deployment_log.append({
-                'module': module_path,
-                'status': 'updated',
-                'changes': 'reflective_module_added',
-                'timestamp': datetime.now().isoformat()
-            })
-            
+            self.stats["modules_updated"] += 1
+            self.deployment_log.append(
+                {
+                    "module": module_path,
+                    "status": "updated",
+                    "changes": "reflective_module_added",
+                    "timestamp": datetime.now().isoformat(),
+                }
+            )
+
         except Exception as e:
             raise Exception(f"Failed to process module: {e}")
-    
+
     def has_reflective_module(self, content: str) -> bool:
         """Check if module already has ReflectiveModule."""
         return (
-            'ReflectiveModule' in content and 
-            'class ' in content and 
-            'ReflectiveModule' in content
+            "ReflectiveModule" in content
+            and "class " in content
+            and "ReflectiveModule" in content
         )
-    
+
     def has_classes(self, content: str) -> bool:
         """Check if module has class definitions."""
-        return bool(re.search(r'^class\s+\w+', content, re.MULTILINE))
-    
+        return bool(re.search(r"^class\s+\w+", content, re.MULTILINE))
+
     def deploy_reflective_module(self, content: str, module_path: str) -> str:
         """Deploy ReflectiveModule implementation to module content."""
-        lines = content.split('\n')
+        lines = content.split("\n")
         updated_lines = []
-        
+
         # Add imports at the top
         imports_added = False
         for i, line in enumerate(lines):
-            if line.strip().startswith('import ') or line.strip().startswith('from '):
+            if line.strip().startswith("import ") or line.strip().startswith("from "):
                 updated_lines.append(line)
             elif line.strip() and not imports_added:
                 # Add ReflectiveModule imports
-                updated_lines.append('from datetime import datetime')
-                updated_lines.append('from typing import Dict, List, Any')
-                updated_lines.append('')
+                updated_lines.append("from datetime import datetime")
+                updated_lines.append("from typing import Dict, List, Any")
+                updated_lines.append("")
                 updated_lines.append(self.reflective_module_code.strip())
-                updated_lines.append('')
+                updated_lines.append("")
                 updated_lines.append(line)
                 imports_added = True
             else:
                 updated_lines.append(line)
-        
+
         # Update class definitions to inherit from ReflectiveModule
-        updated_content = '\n'.join(updated_lines)
+        updated_content = "\n".join(updated_lines)
         updated_content = self.update_class_inheritance(updated_content)
-        
+
         return updated_content
-    
+
     def update_class_inheritance(self, content: str) -> str:
         """Update class definitions to inherit from ReflectiveModule."""
         # Pattern to match class definitions
-        class_pattern = r'^class\s+(\w+)(\([^)]*\))?:'
-        
+        class_pattern = r"^class\s+(\w+)(\([^)]*\))?:"
+
         def replace_class(match):
             class_name = match.group(1)
-            existing_inheritance = match.group(2) or '()'
-            
+            existing_inheritance = match.group(2) or "()"
+
             # Skip if already inherits from ReflectiveModule
-            if 'ReflectiveModule' in existing_inheritance:
+            if "ReflectiveModule" in existing_inheritance:
                 return match.group(0)
-            
+
             # Add ReflectiveModule to inheritance
-            if existing_inheritance == '()':
-                return f'class {class_name}(ReflectiveModule):'
+            if existing_inheritance == "()":
+                return f"class {class_name}(ReflectiveModule):"
             else:
                 # Remove parentheses and add ReflectiveModule
                 inheritance = existing_inheritance[1:-1]  # Remove outer parentheses
-                return f'class {class_name}({inheritance}, ReflectiveModule):'
-        
+                return f"class {class_name}({inheritance}, ReflectiveModule):"
+
         return re.sub(class_pattern, replace_class, content, flags=re.MULTILINE)
-    
+
     def generate_deployment_report(self):
         """Generate comprehensive deployment report."""
         print("\n" + "=" * 60)
         print("📋 REFLECTIVE MODULE DEPLOYMENT REPORT")
         print("=" * 60)
-        
-        success_rate = (self.stats['modules_updated'] / self.stats['total_modules'] * 100) if self.stats['total_modules'] > 0 else 0
-        
-        print(f"Deployment completed at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
+        success_rate = (
+            (self.stats["modules_updated"] / self.stats["total_modules"] * 100)
+            if self.stats["total_modules"] > 0
+            else 0
+        )
+
+        print(
+            f"Deployment completed at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        )
         print(f"Total modules found: {self.stats['total_modules']}")
         print(f"Modules processed: {self.stats['modules_processed']}")
         print(f"Modules updated: {self.stats['modules_updated']}")
@@ -276,7 +291,7 @@ class ReflectiveModule:
         print(f"Errors encountered: {self.stats['errors']}")
         print(f"Success rate: {success_rate:.1f}%")
         print()
-        
+
         if success_rate >= 90:
             print("🎉 DEPLOYMENT SUCCESSFUL!")
             print("✅ ReflectiveModule implementation deployed to most modules")
@@ -288,27 +303,30 @@ class ReflectiveModule:
         else:
             print("❌ DEPLOYMENT NEEDS ATTENTION")
             print("🚫 Low success rate - manual intervention may be required")
-        
+
         # Save detailed report
         report_data = {
-            'timestamp': datetime.now().isoformat(),
-            'deployment_stats': self.stats,
-            'success_rate': success_rate,
-            'deployment_log': self.deployment_log
+            "timestamp": datetime.now().isoformat(),
+            "deployment_stats": self.stats,
+            "success_rate": success_rate,
+            "deployment_log": self.deployment_log,
         }
-        
-        with open('reflective_module_deployment_report.json', 'w') as f:
+
+        with open("reflective_module_deployment_report.json", "w") as f:
             json.dump(report_data, f, indent=2)
-        
-        print(f"\n📄 Detailed report saved to: reflective_module_deployment_report.json")
-        
+
+        print(
+            f"\n📄 Detailed report saved to: reflective_module_deployment_report.json"
+        )
+
         return success_rate >= 90
+
 
 def main():
     """Main deployment function."""
     deployment_system = ReflectiveModuleDeploymentSystem()
     success = deployment_system.deploy_to_all_modules()
-    
+
     if success:
         print("\n🚀 ReflectiveModule deployment completed successfully!")
         print("✅ All modules now have ReflectiveModule implementation")
@@ -317,6 +335,7 @@ def main():
         print("\n⚠️  ReflectiveModule deployment completed with issues")
         print("🔄 Some modules may need manual attention")
         print("📄 Check the deployment report for details")
+
 
 if __name__ == "__main__":
     main()

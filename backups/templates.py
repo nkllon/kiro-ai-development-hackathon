@@ -17,239 +17,300 @@ logger = logging.getLogger(__name__)
 def get_default_project_templates() -> Dict[str, ProjectTemplate]:
     """
     Get all default project templates.
-    
+
     Returns:
         Dict[str, ProjectTemplate]: Available default templates
     """
     templates = {}
-    
+
     # Microservice template
     microservice_template = create_microservice_template()
     templates[microservice_template.name] = microservice_template
-    
+
     # Web API template
     web_api_template = create_web_api_template()
     templates[web_api_template.name] = web_api_template
-    
+
     # CLI tool template
     cli_template = create_cli_tool_template()
     templates[cli_template.name] = cli_template
-    
+
     # Library template
     library_template = create_library_template()
     templates[library_template.name] = library_template
-    
+
     # Event-driven template
     event_driven_template = create_event_driven_template()
     templates[event_driven_template.name] = event_driven_template
-    
+
     return templates
 
 
 def create_microservice_template() -> ProjectTemplate:
     """Create microservice project template."""
     template = ProjectTemplate(
-        "microservice",
-        TemplateType.STANDARD,
-        [ProjectType.MICROSERVICE]
+        "microservice", TemplateType.STANDARD, [ProjectType.MICROSERVICE]
     )
-    
+
     # Microservice-specific directory structure
     directories = [
-        "src", "tests", "docs", "deployment", "config",
-        "src/domain", "src/application", "src/infrastructure", "src/presentation",
-        "src/presentation/api", "src/presentation/health",
-        "tests/unit", "tests/integration", "tests/contract",
-        "deployment/docker", "deployment/k8s"
+        "src",
+        "tests",
+        "docs",
+        "deployment",
+        "config",
+        "src/domain",
+        "src/application",
+        "src/infrastructure",
+        "src/presentation",
+        "src/presentation/api",
+        "src/presentation/health",
+        "tests/unit",
+        "tests/integration",
+        "tests/contract",
+        "deployment/docker",
+        "deployment/k8s",
     ]
-    
+
     for directory in directories:
         template.add_directory(directory)
-    
+
     # Microservice-specific files
-    template.add_file_template("src/presentation/api/main.py", _get_fastapi_main_template())
-    template.add_file_template("src/presentation/health/endpoints.py", _get_health_endpoints_template())
-    template.add_file_template("deployment/docker/Dockerfile", _get_microservice_dockerfile_template())
-    template.add_file_template("deployment/k8s/deployment.yaml", _get_k8s_deployment_template())
-    template.add_file_template("deployment/k8s/service.yaml", _get_k8s_service_template())
-    
+    template.add_file_template(
+        "src/presentation/api/main.py", _get_fastapi_main_template()
+    )
+    template.add_file_template(
+        "src/presentation/health/endpoints.py", _get_health_endpoints_template()
+    )
+    template.add_file_template(
+        "deployment/docker/Dockerfile", _get_microservice_dockerfile_template()
+    )
+    template.add_file_template(
+        "deployment/k8s/deployment.yaml", _get_k8s_deployment_template()
+    )
+    template.add_file_template(
+        "deployment/k8s/service.yaml", _get_k8s_service_template()
+    )
+
     # Microservice dependencies
     template.add_dependency("fastapi", ">=0.95.0")
     template.add_dependency("uvicorn", ">=0.21.0")
     template.add_dependency("pydantic", ">=1.10.0")
     template.add_dependency("prometheus-client", ">=0.16.0")
-    
+
     return template
 
 
 def create_web_api_template() -> ProjectTemplate:
     """Create web API project template."""
-    template = ProjectTemplate(
-        "web_api",
-        TemplateType.STANDARD,
-        [ProjectType.WEB_API]
-    )
-    
+    template = ProjectTemplate("web_api", TemplateType.STANDARD, [ProjectType.WEB_API])
+
     # Web API specific structure
     directories = [
-        "src", "tests", "docs", "config",
-        "src/domain", "src/application", "src/infrastructure", "src/presentation",
-        "src/presentation/api", "src/presentation/middleware",
-        "tests/unit", "tests/integration", "tests/api"
+        "src",
+        "tests",
+        "docs",
+        "config",
+        "src/domain",
+        "src/application",
+        "src/infrastructure",
+        "src/presentation",
+        "src/presentation/api",
+        "src/presentation/middleware",
+        "tests/unit",
+        "tests/integration",
+        "tests/api",
     ]
-    
+
     for directory in directories:
         template.add_directory(directory)
-    
+
     # Web API files
-    template.add_file_template("src/presentation/api/routes.py", _get_api_routes_template())
-    template.add_file_template("src/presentation/middleware/auth.py", _get_auth_middleware_template())
-    template.add_file_template("src/presentation/middleware/cors.py", _get_cors_middleware_template())
-    
+    template.add_file_template(
+        "src/presentation/api/routes.py", _get_api_routes_template()
+    )
+    template.add_file_template(
+        "src/presentation/middleware/auth.py", _get_auth_middleware_template()
+    )
+    template.add_file_template(
+        "src/presentation/middleware/cors.py", _get_cors_middleware_template()
+    )
+
     # Web API dependencies
     template.add_dependency("fastapi", ">=0.95.0")
     template.add_dependency("uvicorn", ">=0.21.0")
     template.add_dependency("python-jose", ">=3.3.0")
     template.add_dependency("passlib", ">=1.7.4")
-    
+
     return template
 
 
 def create_cli_tool_template() -> ProjectTemplate:
     """Create CLI tool project template."""
     template = ProjectTemplate(
-        "cli_tool",
-        TemplateType.STANDARD,
-        [ProjectType.CLI_TOOL]
+        "cli_tool", TemplateType.STANDARD, [ProjectType.CLI_TOOL]
     )
-    
+
     # CLI tool structure
     directories = [
-        "src", "tests", "docs",
-        "src/domain", "src/application", "src/infrastructure", "src/cli",
-        "tests/unit", "tests/integration", "tests/cli"
+        "src",
+        "tests",
+        "docs",
+        "src/domain",
+        "src/application",
+        "src/infrastructure",
+        "src/cli",
+        "tests/unit",
+        "tests/integration",
+        "tests/cli",
     ]
-    
+
     for directory in directories:
         template.add_directory(directory)
-    
+
     # CLI tool files
     template.add_file_template("src/cli/main.py", _get_cli_main_template())
     template.add_file_template("src/cli/commands.py", _get_cli_commands_template())
     template.add_file_template("src/cli/config.py", _get_cli_config_template())
-    
+
     # CLI dependencies
     template.add_dependency("click", ">=8.0.0")
     template.add_dependency("rich", ">=13.0.0")
     template.add_dependency("typer", ">=0.7.0")
-    
+
     return template
 
 
 def create_library_template() -> ProjectTemplate:
     """Create library project template."""
-    template = ProjectTemplate(
-        "library",
-        TemplateType.STANDARD,
-        [ProjectType.LIBRARY]
-    )
-    
+    template = ProjectTemplate("library", TemplateType.STANDARD, [ProjectType.LIBRARY])
+
     # Library structure
     directories = [
-        "src", "tests", "docs", "examples",
-        "src/domain", "src/utilities",
-        "tests/unit", "tests/integration",
-        "examples/basic", "examples/advanced"
+        "src",
+        "tests",
+        "docs",
+        "examples",
+        "src/domain",
+        "src/utilities",
+        "tests/unit",
+        "tests/integration",
+        "examples/basic",
+        "examples/advanced",
     ]
-    
+
     for directory in directories:
         template.add_directory(directory)
-    
+
     # Library files
-    template.add_file_template("src/utilities/helpers.py", _get_library_helpers_template())
-    template.add_file_template("examples/basic/usage.py", _get_basic_usage_example_template())
-    template.add_file_template("examples/advanced/patterns.py", _get_advanced_patterns_template())
-    
+    template.add_file_template(
+        "src/utilities/helpers.py", _get_library_helpers_template()
+    )
+    template.add_file_template(
+        "examples/basic/usage.py", _get_basic_usage_example_template()
+    )
+    template.add_file_template(
+        "examples/advanced/patterns.py", _get_advanced_patterns_template()
+    )
+
     # Library dependencies (minimal)
     template.add_dependency("typing-extensions", ">=4.0.0")
-    
+
     return template
 
 
 def create_event_driven_template() -> ProjectTemplate:
     """Create event-driven project template."""
     template = ProjectTemplate(
-        "event_driven",
-        TemplateType.ENTERPRISE,
-        [ProjectType.EVENT_DRIVEN]
+        "event_driven", TemplateType.ENTERPRISE, [ProjectType.EVENT_DRIVEN]
     )
-    
+
     # Event-driven structure
     directories = [
-        "src", "tests", "docs", "config",
-        "src/domain", "src/application", "src/infrastructure", "src/presentation",
-        "src/domain/events", "src/domain/handlers", "src/domain/sagas",
-        "src/infrastructure/messaging", "src/infrastructure/event_store",
-        "tests/unit", "tests/integration", "tests/events"
+        "src",
+        "tests",
+        "docs",
+        "config",
+        "src/domain",
+        "src/application",
+        "src/infrastructure",
+        "src/presentation",
+        "src/domain/events",
+        "src/domain/handlers",
+        "src/domain/sagas",
+        "src/infrastructure/messaging",
+        "src/infrastructure/event_store",
+        "tests/unit",
+        "tests/integration",
+        "tests/events",
     ]
-    
+
     for directory in directories:
         template.add_directory(directory)
-    
+
     # Event-driven files
     template.add_file_template("src/domain/events/base.py", _get_event_base_template())
-    template.add_file_template("src/domain/handlers/event_handlers.py", _get_event_handlers_template())
-    template.add_file_template("src/domain/sagas/process_manager.py", _get_saga_template())
-    template.add_file_template("src/infrastructure/messaging/publisher.py", _get_message_publisher_template())
-    
+    template.add_file_template(
+        "src/domain/handlers/event_handlers.py", _get_event_handlers_template()
+    )
+    template.add_file_template(
+        "src/domain/sagas/process_manager.py", _get_saga_template()
+    )
+    template.add_file_template(
+        "src/infrastructure/messaging/publisher.py", _get_message_publisher_template()
+    )
+
     # Event-driven dependencies
     template.add_dependency("celery", ">=5.2.0")
     template.add_dependency("redis", ">=4.5.0")
     template.add_dependency("pika", ">=1.3.0")
-    
+
     return template
 
 
-def create_custom_project_template(name: str,
-                                 template_type: TemplateType,
-                                 supported_types: List[ProjectType],
-                                 custom_structure: Optional[Dict[str, any]] = None) -> ProjectTemplate:
+def create_custom_project_template(
+    name: str,
+    template_type: TemplateType,
+    supported_types: List[ProjectType],
+    custom_structure: Optional[Dict[str, any]] = None,
+) -> ProjectTemplate:
     """
     Create a custom project template.
-    
+
     Args:
         name: Template name
         template_type: Template type
         supported_types: Supported project types
         custom_structure: Custom structure definition
-        
+
     Returns:
         ProjectTemplate: Custom template
     """
     template = ProjectTemplate(name, template_type, supported_types)
-    
+
     if custom_structure:
         # Add custom directories
-        for directory in custom_structure.get('directories', []):
+        for directory in custom_structure.get("directories", []):
             template.add_directory(directory)
-        
+
         # Add custom files
-        for file_path, content in custom_structure.get('files', {}).items():
+        for file_path, content in custom_structure.get("files", {}).items():
             template.add_file_template(file_path, content)
-        
+
         # Add custom dependencies
-        for package, version in custom_structure.get('dependencies', {}).items():
+        for package, version in custom_structure.get("dependencies", {}).items():
             template.add_dependency(package, version)
-        
+
         # Add custom dev dependencies
-        for package, version in custom_structure.get('dev_dependencies', {}).items():
+        for package, version in custom_structure.get("dev_dependencies", {}).items():
             template.add_dev_dependency(package, version)
-    
+
     logger.info(f"Created custom template: {name}")
     return template
 
 
 # Template content functions
+
 
 def _get_fastapi_main_template() -> str:
     """FastAPI main application template."""
@@ -334,7 +395,7 @@ async def metrics():
 
 def _get_microservice_dockerfile_template() -> str:
     """Microservice Dockerfile template."""
-    return '''FROM python:{{python_version}}-slim
+    return """FROM python:{{python_version}}-slim
 
 WORKDIR /app
 
@@ -361,12 +422,12 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \\
 EXPOSE 8000
 
 CMD ["python", "-m", "src.presentation.api.main"]
-'''
+"""
 
 
 def _get_k8s_deployment_template() -> str:
     """Kubernetes deployment template."""
-    return '''apiVersion: apps/v1
+    return """apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{project_name}}
@@ -409,12 +470,12 @@ spec:
           limits:
             memory: "512Mi"
             cpu: "500m"
-'''
+"""
 
 
 def _get_k8s_service_template() -> str:
     """Kubernetes service template."""
-    return '''apiVersion: v1
+    return """apiVersion: v1
 kind: Service
 metadata:
   name: {{project_name}}-service
@@ -426,11 +487,12 @@ spec:
       port: 80
       targetPort: 8000
   type: ClusterIP
-'''
+"""
 
 
 # Additional template functions would be implemented here...
 # For brevity, showing key templates only
+
 
 def _get_api_routes_template() -> str:
     return '''"""API routes for {{project_name}}."""

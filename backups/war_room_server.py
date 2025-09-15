@@ -25,6 +25,7 @@ from .events import Event, EventSeverity
 @dataclass
 class ConnectedUser:
     """Represents a connected user in the War Room"""
+
     user_id: str
     websocket: WebSocket
     username: str
@@ -35,6 +36,7 @@ class ConnectedUser:
 @dataclass
 class DashboardMetrics:
     """Real-time metrics for the dashboard"""
+
     total_events: int = 0
     critical_alerts: int = 0
     active_users: int = 0
@@ -47,7 +49,7 @@ class DashboardMetrics:
 class WarRoomServer(ReflectiveModule):
     """
     High-performance FastAPI server for War Room dashboard
-    
+
     Features:
     - Real-time WebSocket communication
     - Multi-user collaboration
@@ -55,7 +57,7 @@ class WarRoomServer(ReflectiveModule):
     - Interactive data visualization
     - Incident coordination tools
     """
-    
+
     def __init__(self, host: str = "0.0.0.0", port: int = 8080):
         super().__init__()
         self.host = host
@@ -64,15 +66,15 @@ class WarRoomServer(ReflectiveModule):
         self.connected_users: Dict[str, ConnectedUser] = {}
         self.event_history: List[Event] = []
         self.metrics = DashboardMetrics(last_updated=datetime.now())
-        
+
         # Real-time state
         self.active_incidents: List[Dict[str, Any]] = []
         self.shared_annotations: List[Dict[str, Any]] = []
         self.system_alerts: List[Dict[str, Any]] = []
-        
+
         self._setup_routes()
         self._setup_middleware()
-    
+
     def _setup_middleware(self):
         """Configure CORS and other middleware"""
         self.app.add_middleware(
@@ -82,15 +84,15 @@ class WarRoomServer(ReflectiveModule):
             allow_methods=["*"],
             allow_headers=["*"],
         )
-    
+
     def _setup_routes(self):
         """Setup all API routes and WebSocket endpoints"""
-        
+
         @self.app.get("/", response_class=HTMLResponse)
         async def dashboard_home():
             """Serve the main dashboard HTML"""
             return self._get_dashboard_html()
-        
+
         @self.app.get("/api/health")
         async def health_check():
             """Health check endpoint"""
@@ -98,42 +100,44 @@ class WarRoomServer(ReflectiveModule):
                 "status": "healthy",
                 "timestamp": datetime.now().isoformat(),
                 "active_connections": len(self.connected_users),
-                "metrics": asdict(self.metrics)
+                "metrics": asdict(self.metrics),
             }
-        
+
         @self.app.get("/api/metrics")
         async def get_metrics():
             """Get current dashboard metrics"""
             self.metrics.active_users = len(self.connected_users)
             self.metrics.last_updated = datetime.now()
             return asdict(self.metrics)
-        
+
         @self.app.get("/api/events")
         async def get_events(limit: int = 100, severity: Optional[str] = None):
             """Get recent events with optional filtering"""
             events = self.event_history[-limit:]
-            
+
             if severity:
                 try:
                     severity_filter = EventSeverity(severity.lower())
                     events = [e for e in events if e.severity == severity_filter]
                 except ValueError:
-                    raise HTTPException(status_code=400, detail=f"Invalid severity: {severity}")
-            
+                    raise HTTPException(
+                        status_code=400, detail=f"Invalid severity: {severity}"
+                    )
+
             return {
                 "events": [asdict(event) for event in events],
                 "total": len(events),
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         @self.app.get("/api/incidents")
         async def get_incidents():
             """Get active incidents"""
             return {
                 "incidents": self.active_incidents,
-                "count": len(self.active_incidents)
+                "count": len(self.active_incidents),
             }
-        
+
         @self.app.post("/api/incidents")
         async def create_incident(incident_data: Dict[str, Any]):
             """Create a new incident"""
@@ -145,81 +149,82 @@ class WarRoomServer(ReflectiveModule):
                 "created_at": datetime.now().isoformat(),
                 "created_by": incident_data.get("created_by", "system"),
                 "description": incident_data.get("description", ""),
-                "tags": incident_data.get("tags", [])
+                "tags": incident_data.get("tags", []),
             }
-            
+
             self.active_incidents.append(incident)
-            
+
             # Broadcast to all connected users
-            await self._broadcast_to_all({
-                "type": "incident_created",
-                "data": incident
-            })
-            
+            await self._broadcast_to_all({"type": "incident_created", "data": incident})
+
             return incident
-        
+
         @self.app.websocket("/ws/{user_id}")
         async def websocket_endpoint(websocket: WebSocket, user_id: str):
             """WebSocket endpoint for real-time communication"""
             await self._handle_websocket_connection(websocket, user_id)
-    
+
     async def _handle_websocket_connection(self, websocket: WebSocket, user_id: str):
         """Handle WebSocket connection lifecycle"""
         await websocket.accept()
-        
+
         # Create user session
         user = ConnectedUser(
             user_id=user_id,
             websocket=websocket,
             username=f"User-{user_id[:8]}",
             connected_at=datetime.now(),
-            last_activity=datetime.now()
+            last_activity=datetime.now(),
         )
-        
+
         self.connected_users[user_id] = user
-        
+
         # Send welcome message with current state
-        await websocket.send_json({
-            "type": "welcome",
-            "data": {
-                "user_id": user_id,
-                "metrics": asdict(self.metrics),
-                "active_users": len(self.connected_users),
-                "recent_events": [asdict(e) for e in self.event_history[-10:]]
+        await websocket.send_json(
+            {
+                "type": "welcome",
+                "data": {
+                    "user_id": user_id,
+                    "metrics": asdict(self.metrics),
+                    "active_users": len(self.connected_users),
+                    "recent_events": [asdict(e) for e in self.event_history[-10:]],
+                },
             }
-        })
-        
+        )
+
         # Notify other users
-        await self._broadcast_to_others(user_id, {
-            "type": "user_joined",
-            "data": {"user_id": user_id, "username": user.username}
-        })
-        
+        await self._broadcast_to_others(
+            user_id,
+            {
+                "type": "user_joined",
+                "data": {"user_id": user_id, "username": user.username},
+            },
+        )
+
         try:
             while True:
                 # Receive messages from client
                 message = await websocket.receive_json()
                 await self._handle_websocket_message(user_id, message)
-                
+
         except WebSocketDisconnect:
             # Clean up on disconnect
             del self.connected_users[user_id]
-            
+
             # Notify other users
-            await self._broadcast_to_others(user_id, {
-                "type": "user_left",
-                "data": {"user_id": user_id}
-            })
-    
+            await self._broadcast_to_others(
+                user_id, {"type": "user_left", "data": {"user_id": user_id}}
+            )
+
     async def _handle_websocket_message(self, user_id: str, message: Dict[str, Any]):
         """Handle incoming WebSocket messages"""
         message_type = message.get("type")
         data = message.get("data", {})
-        
+
         # Update user activity
         if user_id in self.connected_users:
             self.connected_users[user_id].last_activity = datetime.now()
-        
+
         if message_type == "annotation":
             # Handle shared annotations
             annotation = {
@@ -228,65 +233,66 @@ class WarRoomServer(ReflectiveModule):
                 "content": data.get("content", ""),
                 "x": data.get("x", 0),
                 "y": data.get("y", 0),
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-            
+
             self.shared_annotations.append(annotation)
-            
+
             # Broadcast to all users
-            await self._broadcast_to_all({
-                "type": "annotation_added",
-                "data": annotation
-            })
-        
+            await self._broadcast_to_all(
+                {"type": "annotation_added", "data": annotation}
+            )
+
         elif message_type == "cursor_move":
             # Handle collaborative cursors
-            await self._broadcast_to_others(user_id, {
-                "type": "cursor_update",
-                "data": {
-                    "user_id": user_id,
-                    "x": data.get("x", 0),
-                    "y": data.get("y", 0)
-                }
-            })
-        
+            await self._broadcast_to_others(
+                user_id,
+                {
+                    "type": "cursor_update",
+                    "data": {
+                        "user_id": user_id,
+                        "x": data.get("x", 0),
+                        "y": data.get("y", 0),
+                    },
+                },
+            )
+
         elif message_type == "incident_update":
             # Handle incident updates
             incident_id = data.get("incident_id")
             updates = data.get("updates", {})
-            
+
             # Find and update incident
             for incident in self.active_incidents:
                 if incident["id"] == incident_id:
                     incident.update(updates)
                     incident["updated_at"] = datetime.now().isoformat()
                     incident["updated_by"] = user_id
-                    
+
                     # Broadcast update
-                    await self._broadcast_to_all({
-                        "type": "incident_updated",
-                        "data": incident
-                    })
+                    await self._broadcast_to_all(
+                        {"type": "incident_updated", "data": incident}
+                    )
                     break
-    
+
     async def _broadcast_to_all(self, message: Dict[str, Any]):
         """Broadcast message to all connected users"""
         if not self.connected_users:
             return
-        
+
         disconnected_users = []
-        
+
         for user_id, user in self.connected_users.items():
             try:
                 await user.websocket.send_json(message)
             except Exception:
                 # Mark for removal
                 disconnected_users.append(user_id)
-        
+
         # Clean up disconnected users
         for user_id in disconnected_users:
             del self.connected_users[user_id]
-    
+
     async def _broadcast_to_others(self, sender_id: str, message: Dict[str, Any]):
         """Broadcast message to all users except sender"""
         for user_id, user in self.connected_users.items():
@@ -295,7 +301,7 @@ class WarRoomServer(ReflectiveModule):
                     await user.websocket.send_json(message)
                 except Exception:
                     pass  # Handle disconnections gracefully
-    
+
     def _get_dashboard_html(self) -> str:
         """Generate the main dashboard HTML"""
         return """
@@ -787,53 +793,46 @@ class WarRoomServer(ReflectiveModule):
 </body>
 </html>
         """
-    
+
     async def publish_event(self, event: Event):
         """Publish an event to all connected clients"""
         self.event_history.append(event)
-        
+
         # Keep only last 1000 events
         if len(self.event_history) > 1000:
             self.event_history = self.event_history[-1000:]
-        
+
         # Update metrics
         self.metrics.total_events = len(self.event_history)
-        
+
         if event.severity in [EventSeverity.ERROR, EventSeverity.CRITICAL]:
             self.metrics.critical_alerts += 1
-        
+
         # Broadcast to all connected users
-        await self._broadcast_to_all({
-            "type": "event",
-            "data": asdict(event)
-        })
-    
+        await self._broadcast_to_all({"type": "event", "data": asdict(event)})
+
     async def update_metrics(self, metrics_update: Dict[str, Any]):
         """Update dashboard metrics"""
         for key, value in metrics_update.items():
             if hasattr(self.metrics, key):
                 setattr(self.metrics, key, value)
-        
+
         self.metrics.last_updated = datetime.now()
-        
+
         # Broadcast metrics update
-        await self._broadcast_to_all({
-            "type": "metrics_update",
-            "data": asdict(self.metrics)
-        })
-    
+        await self._broadcast_to_all(
+            {"type": "metrics_update", "data": asdict(self.metrics)}
+        )
+
     async def start_server(self):
         """Start the War Room server"""
         self.status = "running"
         config = uvicorn.Config(
-            self.app,
-            host=self.host,
-            port=self.port,
-            log_level="info"
+            self.app, host=self.host, port=self.port, log_level="info"
         )
         server = uvicorn.Server(config)
         await server.serve()
-    
+
     # ReflectiveModule interface
     def get_health_status(self) -> Dict[str, Any]:
         """Get health status of the War Room server"""
@@ -843,14 +842,14 @@ class WarRoomServer(ReflectiveModule):
             "total_events": len(self.event_history),
             "active_incidents": len(self.active_incidents),
             "server_host": self.host,
-            "server_port": self.port
+            "server_port": self.port,
         }
-    
+
     def get_metrics(self) -> Dict[str, Any]:
         """Get performance metrics"""
         return {
             "websocket_connections": len(self.connected_users),
             "events_processed": len(self.event_history),
             "memory_usage": "moderate",
-            "cpu_usage": "low"
+            "cpu_usage": "low",
         }

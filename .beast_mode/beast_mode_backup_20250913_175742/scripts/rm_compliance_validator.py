@@ -181,7 +181,11 @@ class RMComplianceValidator:
         classes = [node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)]
 
         for class_node in classes:
-            class_methods = [node.name for node in class_node.body if isinstance(node, ast.FunctionDef)]
+            class_methods = [
+                node.name
+                for node in class_node.body
+                if isinstance(node, ast.FunctionDef)
+            ]
 
             # Check if this class implements RM interfaces
             if all(method in class_methods for method in required_methods):
@@ -196,8 +200,12 @@ class RMComplianceValidator:
     def _assess_single_responsibility(self, tree: ast.AST, content: str) -> bool:
         """Assess single responsibility principle"""
         # Count different types of operations
-        class_count = len([node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)])
-        function_count = len([node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)])
+        class_count = len(
+            [node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)]
+        )
+        function_count = len(
+            [node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)]
+        )
 
         # Simple heuristic: if there are many different types of operations,
         # it might violate single responsibility
@@ -228,7 +236,11 @@ class RMComplianceValidator:
         classes = [node for node in ast.walk(tree) if isinstance(node, ast.ClassDef)]
 
         for class_node in classes:
-            public_methods = [node.name for node in class_node.body if isinstance(node, ast.FunctionDef) and not node.name.startswith("_")]
+            public_methods = [
+                node.name
+                for node in class_node.body
+                if isinstance(node, ast.FunctionDef) and not node.name.startswith("_")
+            ]
 
             if len(public_methods) > 0:
                 return True
@@ -287,17 +299,23 @@ class RMComplianceValidator:
         # Interface issues
         if not interface_compliance:
             issues.append("Missing Reflective Module interface methods")
-            recommendations.append("Implement get_module_status, get_module_capabilities, is_healthy, get_health_indicators")
+            recommendations.append(
+                "Implement get_module_status, get_module_capabilities, is_healthy, get_health_indicators"
+            )
 
         # Single responsibility issues
         if not single_responsibility:
             issues.append("Module may have multiple responsibilities")
-            recommendations.append("Review module purpose, consider splitting into focused modules")
+            recommendations.append(
+                "Review module purpose, consider splitting into focused modules"
+            )
 
         # Boundary issues
         if not boundary_compliance:
             issues.append("Potential architectural boundary violations")
-            recommendations.append("Review module dependencies, ensure clean interfaces")
+            recommendations.append(
+                "Review module dependencies, ensure clean interfaces"
+            )
 
         # Testability issues
         if not testability_compliance:
@@ -323,26 +341,52 @@ class RMComplianceValidator:
 
         # Summary statistics
         total_modules = len(self.compliance_results)
-        compliant_modules = sum(1 for r in self.compliance_results if r.overall_compliance != ComplianceLevel.VIOLATION)
-        excellent_modules = sum(1 for r in self.compliance_results if r.overall_compliance == ComplianceLevel.EXCELLENT)
+        compliant_modules = sum(
+            1
+            for r in self.compliance_results
+            if r.overall_compliance != ComplianceLevel.VIOLATION
+        )
+        excellent_modules = sum(
+            1
+            for r in self.compliance_results
+            if r.overall_compliance == ComplianceLevel.EXCELLENT
+        )
 
         report.append(f"📊 SUMMARY")
         report.append(f"  Total Modules: {total_modules}")
-        report.append(f"  Compliant: {compliant_modules}/{total_modules} ({compliant_modules/total_modules*100:.1f}%)")
-        report.append(f"  Excellent: {excellent_modules}/{total_modules} ({excellent_modules/total_modules*100:.1f}%)")
+        report.append(
+            f"  Compliant: {compliant_modules}/{total_modules} ({compliant_modules/total_modules*100:.1f}%)"
+        )
+        report.append(
+            f"  Excellent: {excellent_modules}/{total_modules} ({excellent_modules/total_modules*100:.1f}%)"
+        )
         report.append("")
 
         # Detailed results
         for result in self.compliance_results:
-            status_emoji = "✅" if result.overall_compliance != ComplianceLevel.VIOLATION else "❌"
+            status_emoji = (
+                "✅" if result.overall_compliance != ComplianceLevel.VIOLATION else "❌"
+            )
             report.append(f"{status_emoji} {result.module_name}")
             report.append(f"   📁 {result.file_path}")
-            report.append(f"   📏 Lines: {result.line_count} ({result.size_compliance.value})")
-            report.append(f"   🔌 Interfaces: {'✅' if result.interface_compliance else '❌'}")
-            report.append(f"   🎯 Single Responsibility: {'✅' if result.single_responsibility else '❌'}")
-            report.append(f"   🏗️ Boundaries: {'✅' if result.boundary_compliance else '❌'}")
-            report.append(f"   🧪 Testability: {'✅' if result.testability_compliance else '❌'}")
-            report.append(f"   👁️ Visibility: {'✅' if result.operational_visibility else '❌'}")
+            report.append(
+                f"   📏 Lines: {result.line_count} ({result.size_compliance.value})"
+            )
+            report.append(
+                f"   🔌 Interfaces: {'✅' if result.interface_compliance else '❌'}"
+            )
+            report.append(
+                f"   🎯 Single Responsibility: {'✅' if result.single_responsibility else '❌'}"
+            )
+            report.append(
+                f"   🏗️ Boundaries: {'✅' if result.boundary_compliance else '❌'}"
+            )
+            report.append(
+                f"   🧪 Testability: {'✅' if result.testability_compliance else '❌'}"
+            )
+            report.append(
+                f"   👁️ Visibility: {'✅' if result.operational_visibility else '❌'}"
+            )
             report.append(f"   📊 Overall: {result.overall_compliance.value.upper()}")
 
             if result.issues:
@@ -364,10 +408,14 @@ def main():
     """Main entry point"""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Validate Reflective Module compliance")
+    parser = argparse.ArgumentParser(
+        description="Validate Reflective Module compliance"
+    )
     parser.add_argument("--module", help="Validate specific module")
     parser.add_argument("--all", action="store_true", help="Validate all modules")
-    parser.add_argument("--report", action="store_true", help="Generate detailed report")
+    parser.add_argument(
+        "--report", action="store_true", help="Generate detailed report"
+    )
 
     args = parser.parse_args()
 
@@ -392,7 +440,11 @@ def main():
             print(validator.generate_report())
         else:
             # Quick summary
-            compliant = sum(1 for r in validator.compliance_results if r.overall_compliance != ComplianceLevel.VIOLATION)
+            compliant = sum(
+                1
+                for r in validator.compliance_results
+                if r.overall_compliance != ComplianceLevel.VIOLATION
+            )
             total = len(validator.compliance_results)
             print(f"✅ RM Compliance: {compliant}/{total} modules compliant")
 

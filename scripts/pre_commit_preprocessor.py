@@ -23,7 +23,9 @@ class PreCommitPreprocessor:
     def __init__(self) -> None:
         self.project_root = Path(__file__).parent.parent
         self.python_files = list(self.project_root.rglob("*.py"))
-        self.yaml_files = list(self.project_root.rglob("*.yaml")) + list(self.project_root.rglob("*.yml"))
+        self.yaml_files = list(self.project_root.rglob("*.yaml")) + list(
+            self.project_root.rglob("*.yml")
+        )
         self.json_files = list(self.project_root.rglob("*.json"))
         self.md_files = list(self.project_root.rglob("*.md"))
 

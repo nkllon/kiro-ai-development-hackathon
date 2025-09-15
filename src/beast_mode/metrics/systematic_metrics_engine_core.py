@@ -16,12 +16,18 @@ from typing import Dict, Any, List, Optional, Union
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from ..core.reflective_module import ReflectiveModule, ModuleHealth, ModuleStatus, ModuleCapability
+from ..core.reflective_module import (
+    ReflectiveModule,
+    ModuleHealth,
+    ModuleStatus,
+    ModuleCapability,
+)
 
 
 @dataclass
 class MetricsData:
     """Metrics data structure."""
+
     timestamp: datetime
     metric_name: str
     value: float
@@ -36,7 +42,10 @@ class SystematicMetricsEngine(ReflectiveModule):
     def __init__(self):
         super().__init__()
         self.module_id = "systematic_metrics_engine"
-        self.capabilities = [ModuleCapability.MONITORING, ModuleCapability.DATA_PROCESSING]
+        self.capabilities = [
+            ModuleCapability.MONITORING,
+            ModuleCapability.DATA_PROCESSING,
+        ]
         self.dependencies = []
         self.metrics_history = []
         self.comparison_data = {}
@@ -44,11 +53,11 @@ class SystematicMetricsEngine(ReflectiveModule):
     def get_module_info(self) -> Dict[str, Any]:
         """Get module information."""
         return {
-            'module_id': self.module_id,
-            'interface_type': self.__class__.__name__,
-            'version': '1.0.0',
-            'dependencies': self.dependencies,
-            'capabilities': [cap.value for cap in self.capabilities]
+            "module_id": self.module_id,
+            "interface_type": self.__class__.__name__,
+            "version": "1.0.0",
+            "dependencies": self.dependencies,
+            "capabilities": [cap.value for cap in self.capabilities],
         }
 
     def get_capabilities(self) -> List[ModuleCapability]:
@@ -62,19 +71,25 @@ class SystematicMetricsEngine(ReflectiveModule):
             status=ModuleStatus.HEALTHY,
             health_score=100.0,
             issues=[],
-            last_check=datetime.now()
+            last_check=datetime.now(),
         )
 
     def graceful_degradation(self):
         """Perform graceful degradation."""
         return {
-            'success': True,
-            'degraded_capabilities': [],
-            'remaining_capabilities': [cap.value for cap in self.capabilities]
+            "success": True,
+            "degraded_capabilities": [],
+            "remaining_capabilities": [cap.value for cap in self.capabilities],
         }
 
-    def collect_metric(self, metric_name: str, value: float, unit: str, 
-                      context: Dict[str, Any], approach: str = 'systematic') -> MetricsData:
+    def collect_metric(
+        self,
+        metric_name: str,
+        value: float,
+        unit: str,
+        context: Dict[str, Any],
+        approach: str = "systematic",
+    ) -> MetricsData:
         """Collect a metric."""
         metric = MetricsData(
             timestamp=datetime.now(),
@@ -82,32 +97,40 @@ class SystematicMetricsEngine(ReflectiveModule):
             value=value,
             unit=unit,
             context=context,
-            approach=approach
+            approach=approach,
         )
         self.metrics_history.append(metric)
         return metric
 
-    def compare_approaches(self, systematic_metrics: List[MetricsData], 
-                          adhoc_metrics: List[MetricsData]) -> Dict[str, Any]:
+    def compare_approaches(
+        self, systematic_metrics: List[MetricsData], adhoc_metrics: List[MetricsData]
+    ) -> Dict[str, Any]:
         """Compare systematic vs ad-hoc approaches."""
         comparison = {
-            'systematic_count': len(systematic_metrics),
-            'adhoc_count': len(adhoc_metrics),
-            'systematic_avg': 0.0,
-            'adhoc_avg': 0.0,
-            'improvement_percentage': 0.0,
-            'timestamp': datetime.now()
+            "systematic_count": len(systematic_metrics),
+            "adhoc_count": len(adhoc_metrics),
+            "systematic_avg": 0.0,
+            "adhoc_avg": 0.0,
+            "improvement_percentage": 0.0,
+            "timestamp": datetime.now(),
         }
 
         if systematic_metrics:
-            comparison['systematic_avg'] = sum(m.value for m in systematic_metrics) / len(systematic_metrics)
-        
+            comparison["systematic_avg"] = sum(
+                m.value for m in systematic_metrics
+            ) / len(systematic_metrics)
+
         if adhoc_metrics:
-            comparison['adhoc_avg'] = sum(m.value for m in adhoc_metrics) / len(adhoc_metrics)
-        
-        if comparison['adhoc_avg'] > 0:
-            improvement = ((comparison['systematic_avg'] - comparison['adhoc_avg']) / comparison['adhoc_avg']) * 100
-            comparison['improvement_percentage'] = improvement
+            comparison["adhoc_avg"] = sum(m.value for m in adhoc_metrics) / len(
+                adhoc_metrics
+            )
+
+        if comparison["adhoc_avg"] > 0:
+            improvement = (
+                (comparison["systematic_avg"] - comparison["adhoc_avg"])
+                / comparison["adhoc_avg"]
+            ) * 100
+            comparison["improvement_percentage"] = improvement
 
         self.comparison_data = comparison
         return comparison
@@ -115,9 +138,13 @@ class SystematicMetricsEngine(ReflectiveModule):
     def generate_report(self) -> Dict[str, Any]:
         """Generate metrics report."""
         return {
-            'total_metrics': len(self.metrics_history),
-            'systematic_metrics': len([m for m in self.metrics_history if m.approach == 'systematic']),
-            'adhoc_metrics': len([m for m in self.metrics_history if m.approach == 'ad-hoc']),
-            'latest_comparison': self.comparison_data,
-            'timestamp': datetime.now()
+            "total_metrics": len(self.metrics_history),
+            "systematic_metrics": len(
+                [m for m in self.metrics_history if m.approach == "systematic"]
+            ),
+            "adhoc_metrics": len(
+                [m for m in self.metrics_history if m.approach == "ad-hoc"]
+            ),
+            "latest_comparison": self.comparison_data,
+            "timestamp": datetime.now(),
         }

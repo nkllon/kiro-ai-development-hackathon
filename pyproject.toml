@@ -203,6 +203,8 @@ exclude_lines = [
 
 [dependency-groups]
 dev = [
+    "autoflake>=2.3.1",
+    "bandit>=1.8.6",
     "black>=25.1.0",
     "flake8>=7.3.0",
     "isort>=6.0.1",

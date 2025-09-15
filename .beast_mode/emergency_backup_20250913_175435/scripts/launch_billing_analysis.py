@@ -33,7 +33,9 @@ def launch_jupyter_analysis():
 
         if missing_files:
             print(f"❌ Missing required files: {missing_files}")
-            print("Please run the billing reporter first: python scripts/gcp_billing_daily_reporter.py")
+            print(
+                "Please run the billing reporter first: python scripts/gcp_billing_daily_reporter.py"
+            )
             return False
 
         print("🚀 Launching Jupyter Notebook with billing analysis...")

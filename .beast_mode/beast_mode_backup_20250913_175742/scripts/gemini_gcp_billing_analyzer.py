@@ -94,7 +94,9 @@ class GeminiGCPBillingAnalyzer:
                 text=True,
                 check=True,
             )
-            self.billing_account = result.stdout.strip().split("\n")[0] if result.stdout.strip() else None
+            self.billing_account = (
+                result.stdout.strip().split("\n")[0] if result.stdout.strip() else None
+            )
 
             return {
                 "project_id": self.project_id,

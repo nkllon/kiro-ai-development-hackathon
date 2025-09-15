@@ -14,7 +14,13 @@ RM-DDD Compliance:
 
 import logging
 from datetime import datetime
-from .reflective_module import ReflectiveModule, register_module, ModuleHealth, ModuleStatus, ModuleCapability
+from .reflective_module import (
+    ReflectiveModule,
+    register_module,
+    ModuleHealth,
+    ModuleStatus,
+    ModuleCapability,
+)
 from typing import Dict, List, Any, Optional
 from enum import Enum
 
@@ -24,11 +30,11 @@ logger = logging.getLogger(__name__)
 class SyncOperation(ReflectiveModule):
     """
     Represents a synchronization operation with DevPost.
-    
+
     This class manages the lifecycle of sync operations including
     progress tracking, error handling, and completion status.
     """
-    
+
     def __init__(self, operation_id: str = None, operation_type: str = "sync"):
         """Initialize sync operation with optional ID and type."""
         super().__init__()
@@ -45,11 +51,11 @@ class SyncOperation(ReflectiveModule):
         self._operation_count = 0
         self._errors = 0
         register_module(self)
-    
+
     def _generate_operation_id(self) -> str:
         """Generate unique operation ID."""
         return f"sync_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{id(self)}"
-    
+
     def get_module_info(self) -> Dict[str, Any]:
         """Get module information."""
         return {
@@ -58,37 +64,37 @@ class SyncOperation(ReflectiveModule):
             "operation_id": self.operation_id,
             "operation_type": self.operation_type,
             "status": self.status,
-            "progress": self.progress
+            "progress": self.progress,
         }
-    
+
     def get_capabilities(self) -> List[ModuleCapability]:
         """Get module capabilities."""
         return [
             ModuleCapability.SYNC_OPERATIONS,
             ModuleCapability.PROGRESS_TRACKING,
             ModuleCapability.ERROR_HANDLING,
-            ModuleCapability.STATUS_MONITORING
+            ModuleCapability.STATUS_MONITORING,
         ]
-    
+
     def get_dependencies(self) -> List[str]:
         """Get module dependencies."""
         return ["reflective_module", "datetime", "logging"]
-    
+
     def check_health(self) -> ModuleHealth:
         """Check module health with comprehensive monitoring."""
         issues = []
         health_score = self._calculate_health_score()
-        
+
         # Check for common issues
         if self._errors > 0:
             issues.append(f"{self._errors} errors occurred")
-        
+
         if self.status == "failed" and not self.error_message:
             issues.append("Failed operation without error message")
-        
+
         if self.progress < 0 or self.progress > 1:
             issues.append("Invalid progress value")
-        
+
         # Determine status
         if health_score >= 0.9:
             status = ModuleStatus.HEALTHY
@@ -96,7 +102,7 @@ class SyncOperation(ReflectiveModule):
             status = ModuleStatus.WARNING
         else:
             status = ModuleStatus.ERROR
-        
+
         return ModuleHealth(
             module_id=self.module_id,
             status=status,
@@ -105,51 +111,51 @@ class SyncOperation(ReflectiveModule):
             capabilities=self.get_capabilities(),
             dependencies=self.get_dependencies(),
             metrics=self.get_metrics(),
-            last_check=datetime.now()
+            last_check=datetime.now(),
         )
-    
+
     def _calculate_health_score(self) -> float:
         """Calculate health score based on various factors."""
         score = 1.0
-        
+
         # Penalize errors
         if self._errors > 0:
             score -= min(0.5, self._errors * 0.1)
-        
+
         # Penalize failed operations
         if self.status == "failed":
             score -= 0.3
-        
+
         # Penalize invalid progress
         if self.progress < 0 or self.progress > 1:
             score -= 0.2
-        
+
         return max(0.0, score)
-    
+
     def _identify_health_issues(self) -> List[str]:
         """Identify specific health issues."""
         issues = []
-        
+
         if self._errors > 0:
             issues.append(f"Operation errors: {self._errors}")
-        
+
         if self.status == "failed":
             issues.append("Operation failed")
-        
+
         if self.progress < 0 or self.progress > 1:
             issues.append(f"Invalid progress: {self.progress}")
-        
+
         return issues
-    
+
     def get_configuration(self) -> Dict[str, Any]:
         """Get module configuration."""
         return {
             "operation_id": self.operation_id,
             "operation_type": self.operation_type,
             "max_retries": 3,
-            "timeout_seconds": 300
+            "timeout_seconds": 300,
         }
-    
+
     def update_configuration(self, config: Dict[str, Any]) -> bool:
         """Update module configuration."""
         try:
@@ -159,7 +165,7 @@ class SyncOperation(ReflectiveModule):
         except Exception as e:
             logger.error(f"Failed to update configuration: {e}")
             return False
-    
+
     def get_metrics(self) -> Dict[str, Any]:
         """Get module metrics."""
         return {
@@ -167,9 +173,13 @@ class SyncOperation(ReflectiveModule):
             "error_count": self._errors,
             "current_progress": self.progress,
             "status": self.status,
-            "uptime_seconds": (datetime.now() - self.start_time).total_seconds() if self.start_time else 0
+            "uptime_seconds": (
+                (datetime.now() - self.start_time).total_seconds()
+                if self.start_time
+                else 0
+            ),
         }
-    
+
     def reset_metrics(self) -> None:
         """Reset module metrics."""
         self._operation_count = 0
@@ -177,7 +187,7 @@ class SyncOperation(ReflectiveModule):
         self.progress = 0.0
         self.start_time = None
         self.end_time = None
-    
+
     def start_sync(self, sync_data: Dict[str, Any]) -> bool:
         """Start synchronization operation."""
         try:
@@ -193,7 +203,7 @@ class SyncOperation(ReflectiveModule):
             logger.error(f"Failed to start sync: {e}")
             self._errors += 1
             return False
-    
+
     def update_progress(self, progress: float) -> bool:
         """Update operation progress."""
         try:
@@ -208,7 +218,7 @@ class SyncOperation(ReflectiveModule):
             logger.error(f"Failed to update progress: {e}")
             self._errors += 1
             return False
-    
+
     def complete_sync(self, success: bool = True) -> bool:
         """Complete synchronization operation."""
         try:
@@ -221,7 +231,7 @@ class SyncOperation(ReflectiveModule):
             logger.error(f"Failed to complete sync: {e}")
             self._errors += 1
             return False
-    
+
     def cancel_sync(self) -> bool:
         """Cancel synchronization operation."""
         try:
@@ -233,7 +243,7 @@ class SyncOperation(ReflectiveModule):
             logger.error(f"Failed to cancel sync: {e}")
             self._errors += 1
             return False
-    
+
     def get_sync_status(self) -> Dict[str, Any]:
         """Get current sync status."""
         return {
@@ -244,9 +254,9 @@ class SyncOperation(ReflectiveModule):
             "end_time": self.end_time.isoformat() if self.end_time else None,
             "error_message": self.error_message,
             "operation_count": self._operation_count,
-            "error_count": self._errors
+            "error_count": self._errors,
         }
-    
+
     def sync_with_devpost(self, data: Dict[str, Any]) -> bool:
         """Perform actual synchronization with DevPost."""
         try:
@@ -258,7 +268,7 @@ class SyncOperation(ReflectiveModule):
             logger.error(f"Sync with DevPost failed: {e}")
             self._errors += 1
             return False
-    
+
     def _update_metrics(self, operation: str) -> None:
         """Update internal metrics."""
         self._operation_count += 1
@@ -268,11 +278,11 @@ class SyncOperation(ReflectiveModule):
 class ProjectMetadata(ReflectiveModule):
     """
     Manages project metadata and configuration.
-    
+
     This class handles project-specific information including
     titles, descriptions, tags, and other metadata fields.
     """
-    
+
     def __init__(self, metadata: Dict[str, Any] = None):
         """Initialize project metadata."""
         super().__init__()
@@ -282,41 +292,41 @@ class ProjectMetadata(ReflectiveModule):
         self._operation_count = 0
         self._errors = 0
         register_module(self)
-    
+
     def get_module_info(self) -> Dict[str, Any]:
         """Get module information."""
         return {
             "module_id": self.module_id,
             "version": self.version,
             "metadata_count": len(self.metadata),
-            "operation_count": self._operation_count
+            "operation_count": self._operation_count,
         }
-    
+
     def get_capabilities(self) -> List[ModuleCapability]:
         """Get module capabilities."""
         return [
             ModuleCapability.METADATA_MANAGEMENT,
             ModuleCapability.VALIDATION,
-            ModuleCapability.EXPORT_IMPORT
+            ModuleCapability.EXPORT_IMPORT,
         ]
-    
+
     def get_dependencies(self) -> List[str]:
         """Get module dependencies."""
         return ["reflective_module", "typing"]
-    
+
     def check_health(self) -> ModuleHealth:
         """Check module health."""
         issues = []
         health_score = self._calculate_health_score()
-        
+
         if self._errors > 0:
             issues.append(f"{self._errors} errors occurred")
-        
+
         if not self.metadata:
             issues.append("No metadata available")
-        
+
         status = ModuleStatus.HEALTHY if health_score >= 0.9 else ModuleStatus.WARNING
-        
+
         return ModuleHealth(
             module_id=self.module_id,
             status=status,
@@ -325,31 +335,31 @@ class ProjectMetadata(ReflectiveModule):
             capabilities=self.get_capabilities(),
             dependencies=self.get_dependencies(),
             metrics=self.get_metrics(),
-            last_check=datetime.now()
+            last_check=datetime.now(),
         )
-    
+
     def _calculate_health_score(self) -> float:
         """Calculate health score."""
         score = 1.0
         if self._errors > 0:
             score -= min(0.5, self._errors * 0.1)
         return max(0.0, score)
-    
+
     def _identify_health_issues(self) -> List[str]:
         """Identify health issues."""
         issues = []
         if self._errors > 0:
             issues.append(f"Metadata errors: {self._errors}")
         return issues
-    
+
     def get_configuration(self) -> Dict[str, Any]:
         """Get module configuration."""
         return {
             "max_metadata_size": 1000,
             "required_fields": ["title", "description"],
-            "optional_fields": ["tags", "category", "difficulty"]
+            "optional_fields": ["tags", "category", "difficulty"],
         }
-    
+
     def update_configuration(self, config: Dict[str, Any]) -> bool:
         """Update module configuration."""
         try:
@@ -358,21 +368,21 @@ class ProjectMetadata(ReflectiveModule):
         except Exception as e:
             logger.error(f"Failed to update configuration: {e}")
             return False
-    
+
     def get_metrics(self) -> Dict[str, Any]:
         """Get module metrics."""
         return {
             "operation_count": self._operation_count,
             "error_count": self._errors,
             "metadata_count": len(self.metadata),
-            "uptime_seconds": 0  # Would track actual uptime
+            "uptime_seconds": 0,  # Would track actual uptime
         }
-    
+
     def reset_metrics(self) -> None:
         """Reset module metrics."""
         self._operation_count = 0
         self._errors = 0
-    
+
     def set_metadata(self, key: str, value: Any) -> bool:
         """Set metadata value."""
         try:
@@ -383,7 +393,7 @@ class ProjectMetadata(ReflectiveModule):
             logger.error(f"Failed to set metadata: {e}")
             self._errors += 1
             return False
-    
+
     def get_metadata(self, key: str = None) -> Any:
         """Get metadata value or all metadata."""
         try:
@@ -394,7 +404,7 @@ class ProjectMetadata(ReflectiveModule):
             logger.error(f"Failed to get metadata: {e}")
             self._errors += 1
             return None
-    
+
     def update_metadata(self, updates: Dict[str, Any]) -> bool:
         """Update multiple metadata fields."""
         try:
@@ -405,7 +415,7 @@ class ProjectMetadata(ReflectiveModule):
             logger.error(f"Failed to update metadata: {e}")
             self._errors += 1
             return False
-    
+
     def validate_metadata(self) -> bool:
         """Validate metadata fields."""
         try:
@@ -418,7 +428,7 @@ class ProjectMetadata(ReflectiveModule):
             logger.error(f"Metadata validation failed: {e}")
             self._errors += 1
             return False
-    
+
     def clear_metadata(self) -> bool:
         """Clear all metadata."""
         try:
@@ -429,7 +439,7 @@ class ProjectMetadata(ReflectiveModule):
             logger.error(f"Failed to clear metadata: {e}")
             self._errors += 1
             return False
-    
+
     def _update_metrics(self, operation: str) -> None:
         """Update internal metrics."""
         self._operation_count += 1
@@ -439,11 +449,11 @@ class ProjectMetadata(ReflectiveModule):
 class ProjectConnection(ReflectiveModule):
     """
     Manages connection to DevPost project.
-    
+
     This class handles the connection state and provides
     methods for establishing and maintaining project connections.
     """
-    
+
     def __init__(self):
         """Initialize project connection."""
         super().__init__()
@@ -454,42 +464,39 @@ class ProjectConnection(ReflectiveModule):
         self._operation_count = 0
         self._errors = 0
         register_module(self)
-    
+
     def get_module_info(self) -> Dict[str, Any]:
         """Get module information."""
         return {
             "module_id": self.module_id,
             "version": self.version,
             "connected": self.connected,
-            "connection_time": self.connection_time
+            "connection_time": self.connection_time,
         }
-    
+
     def get_capabilities(self) -> List[ModuleCapability]:
         """Get module capabilities."""
-        return [
-            ModuleCapability.CONFIG_MANAGEMENT,
-            ModuleCapability.STATUS_MONITORING
-        ]
-    
+        return [ModuleCapability.CONFIG_MANAGEMENT, ModuleCapability.STATUS_MONITORING]
+
     def get_dependencies(self) -> List[str]:
         """Get module dependencies."""
         return ["reflective_module"]
-    
+
     def check_health(self) -> ModuleHealth:
         """Check module health."""
         issues = []
         health_score = 1.0
-        
+
         if self._errors > 0:
             issues.append(f"{self._errors} errors occurred")
             health_score -= 0.2
-        
+
         if not self.connected:
             issues.append("Not connected to project")
             health_score -= 0.3
-        
+
         status = ModuleStatus.HEALTHY if health_score >= 0.9 else ModuleStatus.WARNING
-        
+
         return ModuleHealth(
             module_id=self.module_id,
             status=status,
@@ -498,17 +505,13 @@ class ProjectConnection(ReflectiveModule):
             capabilities=self.get_capabilities(),
             dependencies=self.get_dependencies(),
             metrics=self.get_metrics(),
-            last_check=datetime.now()
+            last_check=datetime.now(),
         )
-    
+
     def get_configuration(self) -> Dict[str, Any]:
         """Get module configuration."""
-        return {
-            "connection_timeout": 30,
-            "retry_attempts": 3,
-            "auto_reconnect": True
-        }
-    
+        return {"connection_timeout": 30, "retry_attempts": 3, "auto_reconnect": True}
+
     def update_configuration(self, config: Dict[str, Any]) -> bool:
         """Update module configuration."""
         try:
@@ -517,16 +520,20 @@ class ProjectConnection(ReflectiveModule):
         except Exception as e:
             logger.error(f"Failed to update configuration: {e}")
             return False
-    
+
     def get_metrics(self) -> Dict[str, Any]:
         """Get module metrics."""
         return {
             "operation_count": self._operation_count,
             "error_count": self._errors,
             "connected": self.connected,
-            "connection_duration": (datetime.now() - self.connection_time).total_seconds() if self.connection_time else 0
+            "connection_duration": (
+                (datetime.now() - self.connection_time).total_seconds()
+                if self.connection_time
+                else 0
+            ),
         }
-    
+
     def reset_metrics(self) -> None:
         """Reset module metrics."""
         self._operation_count = 0

@@ -144,7 +144,9 @@ class ComprehensiveGitHubDiscovery:
             await self._infer_schemas(analysis, clone_path)
 
             # Phase 6: Quality analysis
-            self.logger.info("⭐ Phase 6: Analyzing quality and generating recommendations")
+            self.logger.info(
+                "⭐ Phase 6: Analyzing quality and generating recommendations"
+            )
             await self._analyze_quality(analysis)
 
         except Exception as e:
@@ -197,7 +199,9 @@ class ComprehensiveGitHubDiscovery:
             self.logger.info(f"📁 Created temporary directory: {self.temp_dir}")
 
             # Clone repository
-            result = await self._execute_command(f"git clone {clone_url} {self.temp_dir}", cwd=self.temp_dir.parent)
+            result = await self._execute_command(
+                f"git clone {clone_url} {self.temp_dir}", cwd=self.temp_dir.parent
+            )
 
             if not result["success"]:
                 msg = f"Failed to clone repository: {result['error']}"
@@ -215,12 +219,16 @@ class ComprehensiveGitHubDiscovery:
             self.logger.error(f"Failed to clone repository: {e}")
             raise
 
-    async def _analyze_metadata(self, analysis: RepositoryAnalysis, repo_info: dict[str, str]):
+    async def _analyze_metadata(
+        self, analysis: RepositoryAnalysis, repo_info: dict[str, str]
+    ):
         """Analyze basic repository metadata"""
         try:
             # Try to get metadata from GitHub API or MCP
             # For now, we'll use basic information from the URL
-            analysis.description = f"Repository: {repo_info['repo_name']} by {repo_info['owner']}"
+            analysis.description = (
+                f"Repository: {repo_info['repo_name']} by {repo_info['owner']}"
+            )
             analysis.language = "Unknown"  # Will be determined by file analysis
 
         except Exception as e:
@@ -249,7 +257,9 @@ class ComprehensiveGitHubDiscovery:
                     if suffix:
                         file_types[suffix] = file_types.get(suffix, 0) + 1
                     else:
-                        file_types["no_extension"] = file_types.get("no_extension", 0) + 1
+                        file_types["no_extension"] = (
+                            file_types.get("no_extension", 0) + 1
+                        )
 
             analysis.total_files = file_count
             analysis.total_size = total_size
@@ -374,7 +384,9 @@ class ComprehensiveGitHubDiscovery:
                         "Cargo.toml",
                     ]:
                         analysis.dependency_files.append(config_file)
-                        await self._analyze_dependency_file(analysis, config_path, config_file)
+                        await self._analyze_dependency_file(
+                            analysis, config_path, config_file
+                        )
 
             # Infer schemas from file patterns
             await self._infer_file_schemas(analysis, repo_path)
@@ -383,7 +395,9 @@ class ComprehensiveGitHubDiscovery:
             analysis.errors.append(f"Schema inference failed: {str(e)}")
             self.logger.warning(f"Schema inference failed: {e}")
 
-    async def _analyze_dependency_file(self, analysis: RepositoryAnalysis, file_path: Path, file_type: str):
+    async def _analyze_dependency_file(
+        self, analysis: RepositoryAnalysis, file_path: Path, file_type: str
+    ):
         """Analyze dependency files for insights"""
         try:
             content = file_path.read_text(encoding="utf-8")
@@ -393,7 +407,10 @@ class ComprehensiveGitHubDiscovery:
                 dependencies = re.findall(r'(\w+)\s*=\s*["\']([^"\']+)["\']', content)
                 analysis.detected_schemas["python_dependencies"] = {
                     "type": "python",
-                    "dependencies": [{"name": name, "version": version} for name, version in dependencies],
+                    "dependencies": [
+                        {"name": name, "version": version}
+                        for name, version in dependencies
+                    ],
                 }
 
             elif file_type == "package.json":
@@ -451,7 +468,9 @@ class ComprehensiveGitHubDiscovery:
                             # File pattern
                             for file_path in repo_path.rglob(pattern[1:]):
                                 if file_path.is_file():
-                                    matching_files.append(str(file_path.relative_to(repo_path)))
+                                    matching_files.append(
+                                        str(file_path.relative_to(repo_path))
+                                    )
                         else:
                             # Directory pattern
                             dir_pattern = pattern.split("/*")[0]
@@ -459,7 +478,9 @@ class ComprehensiveGitHubDiscovery:
                             if dir_path.exists():
                                 for file_path in dir_path.rglob("*"):
                                     if file_path.is_file():
-                                        matching_files.append(str(file_path.relative_to(repo_path)))
+                                        matching_files.append(
+                                            str(file_path.relative_to(repo_path))
+                                        )
                     else:
                         # Exact file
                         file_path = repo_path / pattern
@@ -485,11 +506,17 @@ class ComprehensiveGitHubDiscovery:
 
             # Check for essential files
             essential_files = ["README.md", "LICENSE", ".gitignore"]
-            missing_essential = [f for f in essential_files if f not in analysis.configuration_files]
+            missing_essential = [
+                f for f in essential_files if f not in analysis.configuration_files
+            ]
 
             if missing_essential:
-                quality_issues.append(f"Missing essential files: {', '.join(missing_essential)}")
-                recommendations.append(f"Add missing essential files: {', '.join(missing_essential)}")
+                quality_issues.append(
+                    f"Missing essential files: {', '.join(missing_essential)}"
+                )
+                recommendations.append(
+                    f"Add missing essential files: {', '.join(missing_essential)}"
+                )
             else:
                 quality_score += 20.0
 
@@ -522,14 +549,18 @@ class ComprehensiveGitHubDiscovery:
                 quality_score += 15.0
             else:
                 quality_issues.append("No CI/CD configuration detected")
-                recommendations.append("Add CI/CD configuration (.github/workflows/, .gitlab-ci.yml)")
+                recommendations.append(
+                    "Add CI/CD configuration (.github/workflows/, .gitlab-ci.yml)"
+                )
 
             # Check for deployment configuration
             if "deployment" in analysis.detected_schemas:
                 quality_score += 15.0
             else:
                 quality_issues.append("No deployment configuration detected")
-                recommendations.append("Add deployment configuration (Docker, Kubernetes, Terraform)")
+                recommendations.append(
+                    "Add deployment configuration (Docker, Kubernetes, Terraform)"
+                )
 
             # Check repository size and structure
             if analysis.total_files >= 100:
@@ -548,7 +579,9 @@ class ComprehensiveGitHubDiscovery:
             analysis.errors.append(f"Quality analysis failed: {str(e)}")
             self.logger.warning(f"Quality analysis failed: {e}")
 
-    async def _execute_command(self, command: str, cwd: Optional[Path] = None) -> dict[str, Any]:
+    async def _execute_command(
+        self, command: str, cwd: Optional[Path] = None
+    ) -> dict[str, Any]:
         """Execute a shell command and return results"""
         try:
             process = await asyncio.create_subprocess_exec(
@@ -570,7 +603,9 @@ class ComprehensiveGitHubDiscovery:
         except Exception as e:
             return {"success": False, "output": "", "error": str(e), "return_code": -1}
 
-    def generate_report(self, analysis: RepositoryAnalysis, output_format: str = "markdown") -> str:
+    def generate_report(
+        self, analysis: RepositoryAnalysis, output_format: str = "markdown"
+    ) -> str:
         """Generate a comprehensive report from analysis results"""
         if output_format == "markdown":
             return self._generate_markdown_report(analysis)
@@ -610,7 +645,9 @@ class ComprehensiveGitHubDiscovery:
         # File types
         report_lines.append("## 📁 File Types")
         report_lines.append("")
-        for file_type, count in sorted(analysis.file_types.items(), key=lambda x: x[1], reverse=True)[:10]:
+        for file_type, count in sorted(
+            analysis.file_types.items(), key=lambda x: x[1], reverse=True
+        )[:10]:
             report_lines.append(f"- **{file_type}:** {count:,} files")
         report_lines.append("")
 
@@ -621,7 +658,9 @@ class ComprehensiveGitHubDiscovery:
             for artifact_type, info in analysis.artifact_summary.items():
                 report_lines.append(f"### {artifact_type.title()}")
                 report_lines.append(f"- **Count:** {info['count']}")
-                report_lines.append(f"- **Total Size:** {info['total_size'] / 1024:.2f} KB")
+                report_lines.append(
+                    f"- **Total Size:** {info['total_size'] / 1024:.2f} KB"
+                )
                 report_lines.append("")
 
         # Schemas
@@ -634,9 +673,13 @@ class ComprehensiveGitHubDiscovery:
                 if "count" in schema_info:
                     report_lines.append(f"- **Count:** {schema_info['count']}")
                 if "files" in schema_info:
-                    report_lines.append(f"- **Files:** {', '.join(schema_info['files'][:5])}")
+                    report_lines.append(
+                        f"- **Files:** {', '.join(schema_info['files'][:5])}"
+                    )
                     if len(schema_info["files"]) > 5:
-                        report_lines.append(f"  - *... and {len(schema_info['files']) - 5} more*")
+                        report_lines.append(
+                            f"  - *... and {len(schema_info['files']) - 5} more*"
+                        )
                 report_lines.append("")
 
         # Quality analysis
@@ -713,7 +756,9 @@ class ComprehensiveGitHubDiscovery:
 
         # File types
         report_lines.append("File Types:")
-        for file_type, count in sorted(analysis.file_types.items(), key=lambda x: x[1], reverse=True)[:10]:
+        for file_type, count in sorted(
+            analysis.file_types.items(), key=lambda x: x[1], reverse=True
+        )[:10]:
             report_lines.append(f"  {file_type}: {count:,}")
 
         report_lines.append("")
@@ -738,7 +783,9 @@ async def main():
     """Main entry point for the comprehensive GitHub discovery tool"""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Comprehensive GitHub Repository Discovery and Analysis")
+    parser = argparse.ArgumentParser(
+        description="Comprehensive GitHub Repository Discovery and Analysis"
+    )
     parser.add_argument("repo_url", help="GitHub repository URL to analyze")
     parser.add_argument(
         "--output",

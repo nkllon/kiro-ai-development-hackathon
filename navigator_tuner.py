@@ -23,16 +23,17 @@ import re
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
+
 class NavigatorTuner:
     """Interactive tuning system for navigation behavior."""
-    
+
     def __init__(self, cdp_url: str = "http://localhost:9222"):
         self.cdp_url = cdp_url
         self.playwright = None
         self.browser = None
         self.context = None
         self.page = None
-        
+
         # Tuning parameters
         self.tuning_params = {
             "confidence_threshold": 0.7,
@@ -42,9 +43,9 @@ class NavigatorTuner:
             "max_navigations": 10,
             "wait_timeout": 30000,
             "discovery_enabled": True,
-            "learning_rate": 0.1
+            "learning_rate": 0.1,
         }
-        
+
         # Pattern registry
         self.patterns = {}
         self.session_stats = {
@@ -52,15 +53,15 @@ class NavigatorTuner:
             "successes": 0,
             "failures": 0,
             "patterns_discovered": 0,
-            "patterns_updated": 0
+            "patterns_updated": 0,
         }
-        
+
         # Command history
         self.command_history = []
-        
+
         # Load saved tuning
         self._load_tuning_config()
-    
+
     def _load_tuning_config(self):
         """Load tuning configuration from file."""
         try:
@@ -71,79 +72,78 @@ class NavigatorTuner:
             print("📊 Loaded tuning configuration")
         except FileNotFoundError:
             print("📊 Starting with default tuning")
-    
+
     def _save_tuning_config(self):
         """Save tuning configuration to file."""
         try:
             config = {
                 "params": self.tuning_params,
                 "patterns": self.patterns,
-                "last_updated": time.time()
+                "last_updated": time.time(),
             }
             with open("navigator_tuning.json", "w") as f:
                 json.dump(config, f, indent=2)
             print("💾 Saved tuning configuration")
         except Exception as e:
             print(f"❌ Failed to save tuning: {e}")
-    
+
     def connect_to_browser(self):
         """Connect to the existing browser session."""
         try:
             self.playwright = sync_playwright().start()
-            
+
             # Get page info
             response = requests.get(f"{self.cdp_url}/json")
             pages_info = response.json()
-            
+
             devpost_page_info = None
             for p_info in pages_info:
-                if "devpost.com" in p_info.get("url", "") and "submission" in p_info.get("url", ""):
+                if "devpost.com" in p_info.get(
+                    "url", ""
+                ) and "submission" in p_info.get("url", ""):
                     devpost_page_info = p_info
                     break
-            
+
             if not devpost_page_info:
                 print("❌ No DevPost submission page found")
                 return False
-            
+
             print(f"📄 Target page: {devpost_page_info['title']}")
             print(f"🔗 URL: {devpost_page_info['url']}")
-            
+
             # Connect to browser
             self.browser = self.playwright.chromium.connect_over_cdp(self.cdp_url)
             self.context = self.browser.contexts[0]
             pages = self.context.pages
-            
+
             # Find DevPost page
             self.page = None
             for page in pages:
                 if "devpost.com" in page.url and "submission" in page.url:
                     self.page = page
                     break
-            
+
             if not self.page:
                 self.page = pages[0]
-            
+
             print(f"✅ Connected to: {self.page.url}")
             return True
-            
+
         except Exception as e:
             print(f"❌ Connection failed: {e}")
             return False
-    
+
     def execute_command(self, command: str) -> str:
         """Execute a tuning command."""
-        self.command_history.append({
-            "command": command,
-            "timestamp": time.time()
-        })
-        
+        self.command_history.append({"command": command, "timestamp": time.time()})
+
         # Parse command (RPN-style or natural language)
         parts = command.strip().split()
         if not parts:
             return "❌ Empty command"
-        
+
         cmd = parts[0].lower()
-        
+
         try:
             if cmd == "help":
                 return self._help_command()
@@ -179,10 +179,10 @@ class NavigatorTuner:
                 return self._auto_command(parts[1:])
             else:
                 return f"❌ Unknown command: {cmd}. Type 'help' for available commands."
-        
+
         except Exception as e:
             return f"❌ Command error: {e}"
-    
+
     def _help_command(self) -> str:
         """Show help information."""
         return """
@@ -223,12 +223,12 @@ Examples:
   auto 5
   patterns clear
         """
-    
+
     def _status_command(self) -> str:
         """Show current status."""
         if not self.page:
             return "❌ Not connected to browser"
-        
+
         return f"""
 📊 Navigator Status
 ==================
@@ -239,7 +239,7 @@ DevPost Priority: {self.tuning_params['devpost_priority']}
 Patterns: {len(self.patterns)}
 Session Stats: {self.session_stats['navigations']} navs, {self.session_stats['successes']} successes
         """
-    
+
     def _params_command(self, args: List[str]) -> str:
         """Show or modify parameters."""
         if not args:
@@ -254,58 +254,60 @@ Session Stats: {self.session_stats['navigations']} navs, {self.session_stats['su
                 return f"{param}: {self.tuning_params[param]}"
             else:
                 return f"❌ Unknown parameter: {param}"
-    
+
     def _set_command(self, args: List[str]) -> str:
         """Set parameter value."""
         if len(args) < 2:
             return "❌ Usage: set <param> <value>"
-        
+
         param = args[0]
         value_str = args[1]
-        
+
         if param not in self.tuning_params:
             return f"❌ Unknown parameter: {param}"
-        
+
         try:
             # Try to convert to appropriate type
             old_value = self.tuning_params[param]
             if isinstance(old_value, bool):
-                value = value_str.lower() in ['true', '1', 'yes', 'on']
+                value = value_str.lower() in ["true", "1", "yes", "on"]
             elif isinstance(old_value, int):
                 value = int(value_str)
             elif isinstance(old_value, float):
                 value = float(value_str)
             else:
                 value = value_str
-            
+
             self.tuning_params[param] = value
             return f"✅ Set {param}: {old_value} → {value}"
-        
+
         except ValueError:
             return f"❌ Invalid value for {param}: {value_str}"
-    
+
     def _get_command(self, args: List[str]) -> str:
         """Get parameter value."""
         if not args:
             return "❌ Usage: get <param>"
-        
+
         param = args[0]
         if param in self.tuning_params:
             return f"{param}: {self.tuning_params[param]}"
         else:
             return f"❌ Unknown parameter: {param}"
-    
+
     def _analyze_command(self) -> str:
         """Analyze current page."""
         if not self.page:
             return "❌ Not connected to browser"
-        
+
         try:
             # Get navigation elements
             steps_navigation = self.page.query_selector_all("#steps-navigation a.step")
-            buttons = self.page.query_selector_all("button, input[type='button'], input[type='submit']")
+            buttons = self.page.query_selector_all(
+                "button, input[type='button'], input[type='submit']"
+            )
             links = self.page.query_selector_all("a:not(.step)")
-            
+
             result = f"""
 🔍 Page Analysis
 ================
@@ -319,25 +321,25 @@ Navigation Elements:
 
 Step Navigation Details:
 """
-            
+
             for i, step in enumerate(steps_navigation[:5], 1):
                 text = step.text_content().strip()
                 classes = step.get_attribute("class") or ""
                 href = step.get_attribute("href") or ""
                 result += f"  {i}. {text} [{classes}] -> {href}\n"
-            
+
             return result
-        
+
         except Exception as e:
             return f"❌ Analysis failed: {e}"
-    
+
     def _navigate_command(self, args: List[str]) -> str:
         """Navigate in specified direction."""
         if not self.page:
             return "❌ Not connected to browser"
-        
+
         direction = args[0] if args else "auto"
-        
+
         try:
             if direction == "forward":
                 return self._navigate_forward()
@@ -347,10 +349,10 @@ Step Navigation Details:
                 return self._navigate_auto()
             else:
                 return f"❌ Unknown direction: {direction}"
-        
+
         except Exception as e:
             return f"❌ Navigation failed: {e}"
-    
+
     def _navigate_forward(self) -> str:
         """Navigate forward."""
         try:
@@ -362,24 +364,28 @@ Step Navigation Details:
                 self.session_stats["navigations"] += 1
                 self.session_stats["successes"] += 1
                 return f"✅ Navigated forward to: {self.page.title()}"
-            
+
             # Look for high confidence forward elements
-            buttons = self.page.query_selector_all("button, input[type='button'], input[type='submit']")
+            buttons = self.page.query_selector_all(
+                "button, input[type='button'], input[type='submit']"
+            )
             for button in buttons:
                 text = button.text_content().strip().lower()
-                if any(word in text for word in ["next", "continue", "proceed", "forward"]):
+                if any(
+                    word in text for word in ["next", "continue", "proceed", "forward"]
+                ):
                     button.click()
                     self.page.wait_for_load_state("networkidle")
                     self.session_stats["navigations"] += 1
                     self.session_stats["successes"] += 1
                     return f"✅ Navigated forward to: {self.page.title()}"
-            
+
             return "❌ No forward navigation found"
-        
+
         except Exception as e:
             self.session_stats["failures"] += 1
             return f"❌ Forward navigation failed: {e}"
-    
+
     def _navigate_back(self) -> str:
         """Navigate backward."""
         try:
@@ -391,74 +397,80 @@ Step Navigation Details:
                 self.session_stats["navigations"] += 1
                 self.session_stats["successes"] += 1
                 return f"✅ Navigated back to: {self.page.title()}"
-            
+
             return "❌ No backward navigation found"
-        
+
         except Exception as e:
             self.session_stats["failures"] += 1
             return f"❌ Backward navigation failed: {e}"
-    
+
     def _navigate_auto(self) -> str:
         """Automatic navigation using learned patterns."""
         try:
             # Get all navigation elements
             all_elements = []
-            
+
             # DevPost steps
             steps = self.page.query_selector_all("#steps-navigation a.step")
             for step in steps:
                 text = step.text_content().strip()
                 classes = step.get_attribute("class") or ""
-                all_elements.append({
-                    "element": step,
-                    "text": text,
-                    "classes": classes,
-                    "type": "step",
-                    "confidence": self._calculate_confidence(step, "step")
-                })
-            
+                all_elements.append(
+                    {
+                        "element": step,
+                        "text": text,
+                        "classes": classes,
+                        "type": "step",
+                        "confidence": self._calculate_confidence(step, "step"),
+                    }
+                )
+
             # Buttons
-            buttons = self.page.query_selector_all("button, input[type='button'], input[type='submit']")
+            buttons = self.page.query_selector_all(
+                "button, input[type='button'], input[type='submit']"
+            )
             for button in buttons:
                 text = button.text_content().strip()
-                all_elements.append({
-                    "element": button,
-                    "text": text,
-                    "type": "button",
-                    "confidence": self._calculate_confidence(button, "button")
-                })
-            
+                all_elements.append(
+                    {
+                        "element": button,
+                        "text": text,
+                        "type": "button",
+                        "confidence": self._calculate_confidence(button, "button"),
+                    }
+                )
+
             # Find best element
             if not all_elements:
                 return "❌ No navigation elements found"
-            
+
             # Sort by confidence
             all_elements.sort(key=lambda x: x["confidence"], reverse=True)
             best = all_elements[0]
-            
+
             if best["confidence"] < self.tuning_params["confidence_threshold"]:
                 return f"❌ No high confidence navigation found (best: {best['confidence']:.2f})"
-            
+
             # Execute navigation
             best["element"].click()
             self.page.wait_for_load_state("networkidle")
             self.session_stats["navigations"] += 1
             self.session_stats["successes"] += 1
-            
+
             return f"✅ Auto-navigated: {best['text']} (confidence: {best['confidence']:.2f}) → {self.page.title()}"
-        
+
         except Exception as e:
             self.session_stats["failures"] += 1
             return f"❌ Auto navigation failed: {e}"
-    
+
     def _calculate_confidence(self, element, element_type: str) -> float:
         """Calculate confidence score for element."""
         confidence = 0.0
-        
+
         try:
             text = element.text_content().strip().lower()
             classes = element.get_attribute("class") or ""
-            
+
             # DevPost-specific patterns
             if element_type == "step":
                 if "next" in classes or "next" in text:
@@ -471,9 +483,11 @@ Step Navigation Details:
                     confidence = 0.3
                 else:
                     confidence = 0.7
-            
+
             # General patterns
-            elif any(word in text for word in ["next", "continue", "proceed", "forward"]):
+            elif any(
+                word in text for word in ["next", "continue", "proceed", "forward"]
+            ):
                 confidence = 0.8
             elif any(word in text for word in ["back", "previous", "return"]):
                 confidence = 0.8
@@ -481,25 +495,25 @@ Step Navigation Details:
                 confidence = 0.7
             else:
                 confidence = 0.3
-            
+
             # Apply DevPost priority
             if "devpost.com" in self.page.url:
                 confidence *= self.tuning_params["devpost_priority"]
-            
+
         except Exception as e:
             confidence = 0.0
-        
+
         return min(1.0, confidence)
-    
+
     def _discover_command(self) -> str:
         """Discover new patterns."""
         if not self.page:
             return "❌ Not connected to browser"
-        
+
         try:
             # Discover DevPost patterns
             patterns_found = 0
-            
+
             # Step navigation patterns
             steps = self.page.query_selector_all("#steps-navigation a.step")
             if steps:
@@ -509,10 +523,10 @@ Step Navigation Details:
                         "selector": "#steps-navigation a.step",
                         "confidence": 0.9,
                         "success_count": 0,
-                        "last_seen": time.time()
+                        "last_seen": time.time(),
                     }
                     patterns_found += 1
-            
+
             # Next/Previous patterns
             next_links = self.page.query_selector_all("a.step.next")
             if next_links:
@@ -522,79 +536,79 @@ Step Navigation Details:
                         "selector": "a.step.next",
                         "confidence": 0.95,
                         "success_count": 0,
-                        "last_seen": time.time()
+                        "last_seen": time.time(),
                     }
                     patterns_found += 1
-            
+
             self.session_stats["patterns_discovered"] += patterns_found
             return f"✅ Discovered {patterns_found} new patterns. Total: {len(self.patterns)}"
-        
+
         except Exception as e:
             return f"❌ Discovery failed: {e}"
-    
+
     def _patterns_command(self, args: List[str]) -> str:
         """Manage patterns."""
         if not args:
             # Show patterns
             if not self.patterns:
                 return "📚 No patterns learned yet"
-            
+
             result = "📚 Learned Patterns:\n"
             for key, pattern in self.patterns.items():
                 result += f"  {key}: {pattern['selector']} (confidence: {pattern['confidence']:.2f})\n"
             return result
-        
+
         elif args[0] == "clear":
             self.patterns.clear()
             return "✅ Cleared all patterns"
-        
+
         elif args[0] == "save":
             self._save_tuning_config()
             return "✅ Patterns saved"
-        
+
         elif args[0] == "load":
             self._load_tuning_config()
             return "✅ Patterns loaded"
-        
+
         else:
             return "❌ Unknown pattern command"
-    
+
     def _tune_command(self, args: List[str]) -> str:
         """Tune parameter by delta."""
         if len(args) < 2:
             return "❌ Usage: tune <param> <delta>"
-        
+
         param = args[0]
         delta_str = args[1]
-        
+
         if param not in self.tuning_params:
             return f"❌ Unknown parameter: {param}"
-        
+
         try:
             delta = float(delta_str)
             old_value = self.tuning_params[param]
             new_value = old_value + delta
             self.tuning_params[param] = new_value
             return f"✅ Tuned {param}: {old_value} → {new_value} (Δ{delta:+.2f})"
-        
+
         except ValueError:
             return f"❌ Invalid delta: {delta_str}"
-    
+
     def _auto_command(self, args: List[str]) -> str:
         """Run automatic navigation for specified steps."""
         steps = int(args[0]) if args else 5
-        
+
         result = f"🤖 Running auto navigation for {steps} steps:\n"
-        
+
         for i in range(steps):
             nav_result = self._navigate_auto()
             result += f"  Step {i+1}: {nav_result}\n"
-            
+
             if "❌" in nav_result:
                 break
-        
+
         return result
-    
+
     def _reset_command(self, args: List[str]) -> str:
         """Reset configuration."""
         self.tuning_params = {
@@ -605,7 +619,7 @@ Step Navigation Details:
             "max_navigations": 10,
             "wait_timeout": 30000,
             "discovery_enabled": True,
-            "learning_rate": 0.1
+            "learning_rate": 0.1,
         }
         self.patterns.clear()
         self.session_stats = {
@@ -613,30 +627,30 @@ Step Navigation Details:
             "successes": 0,
             "failures": 0,
             "patterns_discovered": 0,
-            "patterns_updated": 0
+            "patterns_updated": 0,
         }
         return "✅ Reset to defaults"
-    
+
     def _save_command(self) -> str:
         """Save configuration."""
         self._save_tuning_config()
         return "✅ Configuration saved"
-    
+
     def _load_command(self) -> str:
         """Load configuration."""
         self._load_tuning_config()
         return "✅ Configuration loaded"
-    
+
     def _history_command(self) -> str:
         """Show command history."""
         if not self.command_history:
             return "📜 No commands in history"
-        
+
         result = "📜 Command History:\n"
         for i, cmd in enumerate(self.command_history[-10:], 1):
             result += f"  {i}. {cmd['command']}\n"
         return result
-    
+
     def _stats_command(self) -> str:
         """Show session statistics."""
         return f"""
@@ -650,49 +664,44 @@ Patterns Discovered: {self.session_stats['patterns_discovered']}
 Patterns Updated: {self.session_stats['patterns_updated']}
 Total Patterns: {len(self.patterns)}
         """
-    
+
     def interactive_mode(self):
         """Run interactive tuning mode."""
         print("🧠 Navigator Tuner - Interactive Mode")
         print("Type 'help' for commands, 'quit' to exit")
         print("=" * 50)
-        
+
         if not self.connect_to_browser():
             print("❌ Failed to connect to browser")
             return
-        
+
         while True:
             try:
                 command = input("\n🎛️  tuner> ").strip()
-                
-                if command.lower() in ['quit', 'exit', 'q']:
+
+                if command.lower() in ["quit", "exit", "q"]:
                     print("👋 Goodbye!")
                     break
-                
+
                 if command:
                     result = self.execute_command(command)
                     print(result)
-            
+
             except KeyboardInterrupt:
                 print("\n👋 Goodbye!")
                 break
             except Exception as e:
                 print(f"❌ Error: {e}")
-        
+
         if self.playwright:
             self.playwright.stop()
+
 
 def main():
     """Main function."""
     tuner = NavigatorTuner()
     tuner.interactive_mode()
 
+
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-

@@ -11,12 +11,18 @@ from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
 
-from beast_mode.core.reflective_module import ReflectiveModule, ModuleHealth, ModuleStatus, ModuleCapability
+from beast_mode.core.reflective_module import (
+    ReflectiveModule,
+    ModuleHealth,
+    ModuleStatus,
+    ModuleCapability,
+)
 from beast_mode.core.model_registry import ModelRegistry
 
 
 class DeploymentStatus(Enum):
     """Status of infrastructure deployment"""
+
     PENDING = "pending"
     DEPLOYING = "deploying"
     HEALTHY = "healthy"
@@ -26,6 +32,7 @@ class DeploymentStatus(Enum):
 
 class SecurityLevel(Enum):
     """Security validation level"""
+
     BASIC = "basic"
     STANDARD = "standard"
     HIGH = "high"
@@ -34,6 +41,7 @@ class SecurityLevel(Enum):
 
 class CostOptimizationLevel(Enum):
     """Cost optimization level"""
+
     NONE = "none"
     BASIC = "basic"
     AGGRESSIVE = "aggressive"
@@ -43,6 +51,7 @@ class CostOptimizationLevel(Enum):
 @dataclass
 class GKEConfig:
     """Configuration for GKE cluster deployment"""
+
     cluster_name: str
     node_count: int
     machine_type: str
@@ -56,6 +65,7 @@ class GKEConfig:
 @dataclass
 class DeploymentResult:
     """Result of infrastructure deployment"""
+
     deployment_id: str
     config: GKEConfig
     status: DeploymentStatus
@@ -70,6 +80,7 @@ class DeploymentResult:
 @dataclass
 class CostOptimizationResult:
     """Result of cost optimization analysis"""
+
     optimization_id: str
     current_cost: float
     optimized_cost: float
@@ -82,6 +93,7 @@ class CostOptimizationResult:
 @dataclass
 class SecurityValidationResult:
     """Result of security validation"""
+
     validation_id: str
     security_level: SecurityLevel
     vulnerabilities_found: int
@@ -94,26 +106,26 @@ class SecurityValidationResult:
 class ProductionInfrastructureModel(ReflectiveModule):
     """
     Model for production-ready infrastructure demonstration.
-    
+
     RDI Compliance: Traces to hackathon demo requirements
     RM-DDD Compliance: Extends ReflectiveModule with domain boundaries
     Beast Mode Intent: Demonstrates enterprise-grade capabilities
     """
-    
+
     def __init__(self):
         super().__init__("ProductionInfrastructureModel", "1.0.0")
         self.model_registry = ModelRegistry()
         self.deployment_history: List[DeploymentResult] = []
         self.cost_optimization_history: List[CostOptimizationResult] = []
         self.security_validation_history: List[SecurityValidationResult] = []
-        
+
         # RDI Compliance: Requirements traceability
         self.requirements_traceability = self._initialize_requirements_traceability()
-        
+
         # Beast Mode Intent: Infrastructure excellence tracking
         self.performance_metrics: List[Dict[str, Any]] = []
         self.optimization_savings: List[float] = []
-    
+
     def _initialize_requirements_traceability(self) -> List[Dict[str, Any]]:
         """RDI Compliance: Initialize requirements traceability"""
         return [
@@ -122,49 +134,49 @@ class ProductionInfrastructureModel(ReflectiveModule):
                 "requirement_text": "Demonstrate GKE auto-scaling with real-time metrics",
                 "implementation_method": "deploy_gke_cluster()",
                 "validation_criteria": "auto_scaling_demonstrated",
-                "traceability_score": 1.0
+                "traceability_score": 1.0,
             },
             {
                 "requirement_id": "REQ-4.2",
                 "requirement_text": "Show live GCP billing optimization with percentage savings",
                 "implementation_method": "monitor_costs()",
                 "validation_criteria": "cost_optimization_demonstrated",
-                "traceability_score": 1.0
+                "traceability_score": 1.0,
             },
             {
                 "requirement_id": "REQ-4.3",
                 "requirement_text": "Display comprehensive security scanning and compliance checking",
                 "implementation_method": "validate_security()",
                 "validation_criteria": "security_validation_demonstrated",
-                "traceability_score": 1.0
+                "traceability_score": 1.0,
             },
             {
                 "requirement_id": "REQ-4.4",
                 "requirement_text": "Demonstrate load testing with systematic optimization recommendations",
                 "implementation_method": "test_performance()",
                 "validation_criteria": "performance_testing_demonstrated",
-                "traceability_score": 1.0
-            }
+                "traceability_score": 1.0,
+            },
         ]
-    
+
     def get_requirements_traceability(self) -> List[Dict[str, Any]]:
         """RDI Compliance: Get requirements traceability"""
         return self.requirements_traceability
-    
+
     def validate_against_requirements(self) -> Dict[str, Any]:
         """RDI Compliance: Validate against requirements"""
         validation_results = {}
-        
+
         for req in self.requirements_traceability:
             validation_results[req["requirement_id"]] = {
                 "requirement": req["requirement_text"],
                 "implementation": req["implementation_method"],
                 "compliance": True,
-                "traceability_score": req["traceability_score"]
+                "traceability_score": req["traceability_score"],
             }
-        
+
         return validation_results
-    
+
     def get_domain_boundaries(self) -> Dict[str, Any]:
         """RM-DDD Compliance: Get domain boundaries"""
         return {
@@ -173,52 +185,52 @@ class ProductionInfrastructureModel(ReflectiveModule):
             "invariants": [
                 "deployment must be production-ready",
                 "security validation must be comprehensive",
-                "cost optimization must be measurable"
+                "cost optimization must be measurable",
             ],
             "business_rules": [
                 "All deployments must include monitoring and alerting",
                 "Security scanning must be automated and continuous",
-                "Cost optimization must be systematic and measurable"
-            ]
+                "Cost optimization must be systematic and measurable",
+            ],
         }
-    
+
     def validate_domain_invariants(self) -> Dict[str, Any]:
         """RM-DDD Compliance: Validate domain invariants"""
         invariants = self.get_domain_boundaries()["invariants"]
         validation_results = {}
-        
+
         for invariant in invariants:
             validation_results[invariant] = {
                 "valid": True,
                 "message": f"Invariant '{invariant}' is satisfied",
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-        
+
         return validation_results
-    
+
     def deploy_gke_cluster(self, config: GKEConfig) -> DeploymentResult:
         """Deploy GKE cluster with auto-scaling and monitoring"""
         deployment_id = f"DEPLOY-{datetime.now().strftime('%Y%m%d%H%M%S')}"
         start_time = datetime.now()
-        
+
         # Simulate deployment process
         deployment_time = self._simulate_deployment_time(config)
-        
+
         # Generate health metrics
         health_metrics = self._generate_health_metrics(config)
-        
+
         # Generate cost metrics
         cost_metrics = self._generate_cost_metrics(config)
-        
+
         # Generate security metrics
         security_metrics = self._generate_security_metrics(config)
-        
+
         # Generate performance metrics
         performance_metrics = self._generate_performance_metrics(config)
-        
+
         # Determine deployment status
         status = self._determine_deployment_status(health_metrics, security_metrics)
-        
+
         # Create deployment result
         result = DeploymentResult(
             deployment_id=deployment_id,
@@ -229,30 +241,30 @@ class ProductionInfrastructureModel(ReflectiveModule):
             cost_metrics=cost_metrics,
             security_metrics=security_metrics,
             performance_metrics=performance_metrics,
-            created_at=start_time
+            created_at=start_time,
         )
-        
+
         # Store in history
         self.deployment_history.append(result)
-        
+
         return result
-    
+
     def _simulate_deployment_time(self, config: GKEConfig) -> float:
         """Simulate GKE deployment time based on configuration"""
         base_time = 120.0  # 2 minutes base time
-        
+
         # Adjust based on node count
         node_factor = config.node_count * 0.5
-        
+
         # Adjust based on machine type
         machine_factor = 1.0 if "e2-medium" in config.machine_type else 1.5
-        
+
         # Adjust based on auto-scaling
         scaling_factor = 1.2 if config.auto_scaling else 1.0
-        
+
         total_time = base_time + node_factor + machine_factor + scaling_factor
         return min(total_time, 300.0)  # Cap at 5 minutes
-    
+
     def _generate_health_metrics(self, config: GKEConfig) -> Dict[str, Any]:
         """Generate health metrics for deployed cluster"""
         return {
@@ -261,54 +273,54 @@ class ProductionInfrastructureModel(ReflectiveModule):
                 "total_nodes": config.node_count,
                 "healthy_nodes": config.node_count,
                 "unhealthy_nodes": 0,
-                "health_percentage": 100.0
+                "health_percentage": 100.0,
             },
             "auto_scaling": {
                 "enabled": config.auto_scaling,
                 "current_cpu_usage": 45.2,
                 "target_cpu_usage": 70.0,
-                "scaling_events": 3
+                "scaling_events": 3,
             },
             "monitoring": {
                 "uptime": "99.9%",
                 "response_time": "120ms",
                 "throughput": "1000 req/s",
-                "error_rate": "0.1%"
+                "error_rate": "0.1%",
             },
-            "systematic_score": 0.92
+            "systematic_score": 0.92,
         }
-    
+
     def _generate_cost_metrics(self, config: GKEConfig) -> Dict[str, Any]:
         """Generate cost metrics for deployed cluster"""
         base_cost = 500.0  # Base monthly cost
-        
+
         # Calculate costs based on configuration
         node_cost = config.node_count * 50.0
         machine_cost = 100.0 if "e2-medium" in config.machine_type else 150.0
         scaling_cost = 50.0 if config.auto_scaling else 0.0
-        
+
         total_cost = base_cost + node_cost + machine_cost + scaling_cost
-        
+
         return {
             "monthly_cost": total_cost,
             "cost_breakdown": {
                 "base_cost": base_cost,
                 "node_cost": node_cost,
                 "machine_cost": machine_cost,
-                "scaling_cost": scaling_cost
+                "scaling_cost": scaling_cost,
             },
             "optimization_potential": {
                 "savings_percentage": 25.0,
                 "potential_savings": total_cost * 0.25,
-                "optimization_level": config.cost_optimization.value
+                "optimization_level": config.cost_optimization.value,
             },
             "cost_per_request": total_cost / 1000000,  # Assuming 1M requests/month
             "roi_metrics": {
                 "break_even_months": 3,
-                "annual_savings": total_cost * 0.25 * 12
-            }
+                "annual_savings": total_cost * 0.25 * 12,
+            },
         }
-    
+
     def _generate_security_metrics(self, config: GKEConfig) -> Dict[str, Any]:
         """Generate security metrics for deployed cluster"""
         return {
@@ -318,29 +330,29 @@ class ProductionInfrastructureModel(ReflectiveModule):
                 "critical_vulnerabilities": 0,
                 "high_vulnerabilities": 1,
                 "medium_vulnerabilities": 1,
-                "low_vulnerabilities": 0
+                "low_vulnerabilities": 0,
             },
             "compliance": {
                 "cis_benchmark": 95.0,
                 "pci_dss": 90.0,
                 "sox_compliance": 100.0,
-                "overall_score": 95.0
+                "overall_score": 95.0,
             },
             "security_policies": {
                 "network_policies": len(config.security_policies),
                 "rbac_enabled": True,
                 "pod_security_policies": True,
                 "encryption_at_rest": True,
-                "encryption_in_transit": True
+                "encryption_in_transit": True,
             },
             "threat_detection": {
                 "anomaly_detection": True,
                 "intrusion_detection": True,
                 "malware_scanning": True,
-                "threat_intelligence": True
-            }
+                "threat_intelligence": True,
+            },
         }
-    
+
     def _generate_performance_metrics(self, config: GKEConfig) -> Dict[str, Any]:
         """Generate performance metrics for deployed cluster"""
         return {
@@ -349,79 +361,80 @@ class ProductionInfrastructureModel(ReflectiveModule):
                 "response_time_p95": "150ms",
                 "response_time_p99": "300ms",
                 "throughput": "5000 req/s",
-                "error_rate": "0.05%"
+                "error_rate": "0.05%",
             },
             "scalability": {
                 "horizontal_scaling": "excellent",
                 "vertical_scaling": "good",
                 "auto_scaling_efficiency": 0.92,
-                "resource_utilization": 0.75
+                "resource_utilization": 0.75,
             },
             "optimization_recommendations": [
                 "Enable connection pooling for database connections",
                 "Implement caching layer for frequently accessed data",
                 "Optimize container resource requests and limits",
-                "Consider using CDN for static content delivery"
+                "Consider using CDN for static content delivery",
             ],
             "systematic_optimization": {
                 "optimization_score": 0.88,
                 "improvement_potential": 0.15,
-                "next_optimization_cycle": "7 days"
-            }
+                "next_optimization_cycle": "7 days",
+            },
         }
-    
-    def _determine_deployment_status(self, health_metrics: Dict[str, Any], 
-                                   security_metrics: Dict[str, Any]) -> DeploymentStatus:
+
+    def _determine_deployment_status(
+        self, health_metrics: Dict[str, Any], security_metrics: Dict[str, Any]
+    ) -> DeploymentStatus:
         """Determine deployment status based on metrics"""
         health_percentage = health_metrics["node_health"]["health_percentage"]
         security_score = security_metrics["compliance"]["overall_score"]
-        
+
         if health_percentage >= 95 and security_score >= 90:
             return DeploymentStatus.HEALTHY
         elif health_percentage >= 80 and security_score >= 80:
             return DeploymentStatus.DEGRADED
         else:
             return DeploymentStatus.FAILED
-    
+
     def monitor_costs(self) -> CostOptimizationResult:
         """Monitor and optimize GCP costs with real-time analysis"""
         optimization_id = f"COST-OPT-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-        
+
         # Simulate current cost analysis
         current_cost = 2500.0  # Current monthly cost
-        
+
         # Simulate optimization analysis
         optimized_cost = current_cost * 0.75  # 25% savings
         savings_percentage = 25.0
-        
+
         # Generate optimization recommendations
         recommendations = [
             "Right-size compute instances based on actual usage patterns",
             "Implement auto-scaling policies to reduce idle resources",
             "Use preemptible instances for non-critical workloads",
             "Optimize storage classes based on access patterns",
-            "Implement cost alerts and budget controls"
+            "Implement cost alerts and budget controls",
         ]
-        
+
         # Create implementation plan
         implementation_plan = {
             "phase_1": {
                 "duration": "1 week",
                 "actions": ["Implement auto-scaling", "Set up cost monitoring"],
-                "expected_savings": 10.0
+                "expected_savings": 10.0,
             },
             "phase_2": {
-                "duration": "2 weeks", 
+                "duration": "2 weeks",
                 "actions": ["Right-size instances", "Optimize storage"],
-                "expected_savings": 15.0
+                "expected_savings": 15.0,
             },
             "phase_3": {
                 "duration": "1 month",
                 "actions": ["Implement preemptible instances", "Advanced optimization"],
-                "expected_savings": 25.0
-            }
+                "expected_savings": 25.0,
+            },
         }
-        
+
         # Create cost optimization result
         result = CostOptimizationResult(
             optimization_id=optimization_id,
@@ -430,33 +443,33 @@ class ProductionInfrastructureModel(ReflectiveModule):
             savings_percentage=savings_percentage,
             optimization_recommendations=recommendations,
             implementation_plan=implementation_plan,
-            created_at=datetime.now()
+            created_at=datetime.now(),
         )
-        
+
         # Store in history
         self.cost_optimization_history.append(result)
         self.optimization_savings.append(savings_percentage)
-        
+
         return result
-    
+
     def validate_security(self) -> SecurityValidationResult:
         """Validate security with comprehensive scanning and compliance checking"""
         validation_id = f"SEC-VAL-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-        
+
         # Simulate security validation
         vulnerabilities_found = 3
         vulnerabilities_critical = 0
         compliance_score = 92.5
-        
+
         # Generate remediation plan
         remediation_plan = [
             "Update base images to latest security patches",
             "Implement network segmentation policies",
             "Enable runtime security monitoring",
             "Configure automated vulnerability scanning",
-            "Implement secrets management best practices"
+            "Implement secrets management best practices",
         ]
-        
+
         # Create security validation result
         result = SecurityValidationResult(
             validation_id=validation_id,
@@ -465,17 +478,17 @@ class ProductionInfrastructureModel(ReflectiveModule):
             vulnerabilities_critical=vulnerabilities_critical,
             compliance_score=compliance_score,
             remediation_plan=remediation_plan,
-            created_at=datetime.now()
+            created_at=datetime.now(),
         )
-        
+
         # Store in history
         self.security_validation_history.append(result)
-        
+
         return result
-    
+
     def test_performance(self) -> Dict[str, Any]:
         """Test performance with load testing and optimization recommendations"""
-        
+
         # Simulate load testing results
         load_test_results = {
             "test_duration": "30 minutes",
@@ -487,9 +500,9 @@ class ProductionInfrastructureModel(ReflectiveModule):
             "p95_response_time": "350ms",
             "p99_response_time": "500ms",
             "throughput": "83.3 req/s",
-            "error_rate": "0.5%"
+            "error_rate": "0.5%",
         }
-        
+
         # Generate optimization recommendations
         optimization_recommendations = [
             "Implement horizontal pod autoscaling based on CPU and memory metrics",
@@ -498,78 +511,78 @@ class ProductionInfrastructureModel(ReflectiveModule):
             "Implement connection pooling for database connections",
             "Use CDN for static content delivery",
             "Enable compression for API responses",
-            "Implement circuit breakers for external service calls"
+            "Implement circuit breakers for external service calls",
         ]
-        
+
         # Calculate systematic optimization score
         systematic_optimization = {
             "current_performance_score": 0.85,
             "optimization_potential": 0.20,
             "systematic_improvement_factor": 1.25,
             "next_optimization_cycle": "14 days",
-            "optimization_priority": "high"
+            "optimization_priority": "high",
         }
-        
+
         # Store performance metrics
         performance_data = {
             "load_test_results": load_test_results,
             "optimization_recommendations": optimization_recommendations,
             "systematic_optimization": systematic_optimization,
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
-        
+
         self.performance_metrics.append(performance_data)
-        
+
         return performance_data
-    
+
     def get_module_info(self) -> Dict[str, Any]:
         """Get comprehensive module information"""
         return {
-            'module_id': self.module_id,
-            'version': self.version,
-            'name': 'Production Infrastructure Model',
-            'description': 'RDI/RM-DDD compliant model for enterprise-grade infrastructure demonstration',
-            'author': 'Beast Mode Development Team',
-            'created_at': self._start_time.isoformat(),
-            'interface_version': self.get_interface_version(),
-            'requirements_traceability': len(self.requirements_traceability),
-            'deployments_completed': len(self.deployment_history),
-            'cost_optimizations': len(self.cost_optimization_history),
-            'security_validations': len(self.security_validation_history)
+            "module_id": self.module_id,
+            "version": self.version,
+            "name": "Production Infrastructure Model",
+            "description": "RDI/RM-DDD compliant model for enterprise-grade infrastructure demonstration",
+            "author": "Beast Mode Development Team",
+            "created_at": self._start_time.isoformat(),
+            "interface_version": self.get_interface_version(),
+            "requirements_traceability": len(self.requirements_traceability),
+            "deployments_completed": len(self.deployment_history),
+            "cost_optimizations": len(self.cost_optimization_history),
+            "security_validations": len(self.security_validation_history),
         }
-    
+
     def get_capabilities(self) -> List[ModuleCapability]:
         """Get module capabilities"""
         return [
             ModuleCapability.CORE_FUNCTIONALITY,
             ModuleCapability.INFRASTRUCTURE,
             ModuleCapability.MONITORING,
-            ModuleCapability.OPTIMIZATION
+            ModuleCapability.OPTIMIZATION,
         ]
-    
+
     def get_dependencies(self) -> List[str]:
         """Get module dependencies"""
-        return ['model_registry', 'reflective_module']
-    
+        return ["model_registry", "reflective_module"]
+
     def check_health(self) -> ModuleHealth:
         """Check module health with comprehensive monitoring"""
         try:
             # Check deployment history
             deployments_available = len(self.deployment_history) > 0
-            
+
             # Check requirements traceability
             rdi_compliance = len(self.requirements_traceability) > 0
-            
+
             # Check optimization history
             optimization_active = len(self.cost_optimization_history) > 0
-            
+
             # Calculate health score
             health_score = (
-                (1.0 if deployments_available else 0.0) +
-                (1.0 if rdi_compliance else 0.0) +
-                (1.0 if optimization_active else 0.0)
+                (1.0 if deployments_available else 0.0)
+                + (1.0 if rdi_compliance else 0.0)
+                + (1.0 if optimization_active else 0.0)
             ) / 3
-            
+
             issues = []
             if not deployments_available:
                 issues.append("No deployment history")
@@ -577,21 +590,25 @@ class ProductionInfrastructureModel(ReflectiveModule):
                 issues.append("RDI compliance issues")
             if not optimization_active:
                 issues.append("No optimization history")
-            
+
             return ModuleHealth(
                 module_id=self.module_id,
-                status=ModuleStatus.HEALTHY if health_score >= 0.8 else ModuleStatus.DEGRADED,
+                status=(
+                    ModuleStatus.HEALTHY
+                    if health_score >= 0.8
+                    else ModuleStatus.DEGRADED
+                ),
                 health_score=health_score,
                 issues=issues,
                 capabilities=self.get_capabilities(),
                 dependencies=self.get_dependencies(),
                 metrics={
-                    'deployments_completed': len(self.deployment_history),
-                    'rdi_compliance': rdi_compliance,
-                    'cost_optimizations': len(self.cost_optimization_history),
-                    'security_validations': len(self.security_validation_history)
+                    "deployments_completed": len(self.deployment_history),
+                    "rdi_compliance": rdi_compliance,
+                    "cost_optimizations": len(self.cost_optimization_history),
+                    "security_validations": len(self.security_validation_history),
                 },
-                last_check=datetime.now()
+                last_check=datetime.now(),
             )
         except Exception as e:
             return ModuleHealth(
@@ -602,5 +619,5 @@ class ProductionInfrastructureModel(ReflectiveModule):
                 capabilities=self.get_capabilities(),
                 dependencies=self.get_dependencies(),
                 metrics={},
-                last_check=datetime.now()
+                last_check=datetime.now(),
             )

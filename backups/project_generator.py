@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 class ProjectType(Enum):
     """Types of RM-DDD projects that can be generated."""
+
     MICROSERVICE = "microservice"
     MODULAR_MONOLITH = "modular_monolith"
     LIBRARY = "library"
@@ -35,6 +36,7 @@ class ProjectType(Enum):
 
 class TemplateType(Enum):
     """Types of project templates."""
+
     MINIMAL = "minimal"
     STANDARD = "standard"
     ENTERPRISE = "enterprise"
@@ -44,6 +46,7 @@ class TemplateType(Enum):
 @dataclass
 class ProjectConfig:
     """Configuration for project generation."""
+
     project_name: str
     project_type: ProjectType
     template_type: TemplateType = TemplateType.STANDARD
@@ -58,60 +61,67 @@ class ProjectConfig:
     include_docker: bool = True
     license_type: str = "MIT"
     metadata: Dict[str, Any] = field(default_factory=dict)
-    
+
     def validate_config(self) -> ValidationResult:
         """Validate project configuration."""
         result = ValidationResult(is_valid=True)
-        
+
         if not self.project_name:
             result.add_error("Project name is required")
-        elif not self.project_name.replace('_', '').replace('-', '').isalnum():
-            result.add_error("Project name must be alphanumeric with underscores or hyphens")
-        
+        elif not self.project_name.replace("_", "").replace("-", "").isalnum():
+            result.add_error(
+                "Project name must be alphanumeric with underscores or hyphens"
+            )
+
         if not self.domain_contexts:
-            result.add_warning("No domain contexts specified - will create default context")
-        
-        if self.python_version and not self.python_version.replace('.', '').isdigit():
+            result.add_warning(
+                "No domain contexts specified - will create default context"
+            )
+
+        if self.python_version and not self.python_version.replace(".", "").isdigit():
             result.add_error("Invalid Python version format")
-        
+
         return result
 
 
 @dataclass
 class ScaffoldingResult:
     """Result of project scaffolding operation."""
+
     project_path: Path
     generated_files: List[Path] = field(default_factory=list)
     created_directories: List[Path] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)
     errors: List[str] = field(default_factory=list)
     generation_time: datetime = field(default_factory=datetime.now)
-    
+
     @property
     def success(self) -> bool:
         """Check if scaffolding was successful."""
         return len(self.errors) == 0
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert result to dictionary."""
         return {
-            'project_path': str(self.project_path),
-            'generated_files': [str(f) for f in self.generated_files],
-            'created_directories': [str(d) for d in self.created_directories],
-            'warnings': self.warnings,
-            'errors': self.errors,
-            'success': self.success,
-            'generation_time': self.generation_time.isoformat()
+            "project_path": str(self.project_path),
+            "generated_files": [str(f) for f in self.generated_files],
+            "created_directories": [str(d) for d in self.created_directories],
+            "warnings": self.warnings,
+            "errors": self.errors,
+            "success": self.success,
+            "generation_time": self.generation_time.isoformat(),
         }
 
 
 class ProjectTemplate:
     """Template for generating RM-DDD projects."""
-    
-    def __init__(self, 
-                 name: str,
-                 template_type: TemplateType,
-                 supported_project_types: List[ProjectType]):
+
+    def __init__(
+        self,
+        name: str,
+        template_type: TemplateType,
+        supported_project_types: List[ProjectType],
+    ):
         self.name = name
         self.template_type = template_type
         self.supported_project_types = supported_project_types
@@ -119,39 +129,39 @@ class ProjectTemplate:
         self._directory_structure: List[str] = []
         self._dependencies: Dict[str, str] = {}
         self._dev_dependencies: Dict[str, str] = {}
-    
+
     def add_file_template(self, relative_path: str, content: str):
         """Add a file template to the project template."""
         self._file_templates[relative_path] = content
-    
+
     def add_directory(self, relative_path: str):
         """Add a directory to the project structure."""
         self._directory_structure.append(relative_path)
-    
+
     def add_dependency(self, package: str, version: str):
         """Add a runtime dependency."""
         self._dependencies[package] = version
-    
+
     def add_dev_dependency(self, package: str, version: str):
         """Add a development dependency."""
         self._dev_dependencies[package] = version
-    
+
     def supports_project_type(self, project_type: ProjectType) -> bool:
         """Check if template supports a project type."""
         return project_type in self.supported_project_types
-    
+
     def get_file_templates(self) -> Dict[str, str]:
         """Get all file templates."""
         return self._file_templates.copy()
-    
+
     def get_directory_structure(self) -> List[str]:
         """Get directory structure."""
         return self._directory_structure.copy()
-    
+
     def get_dependencies(self) -> Dict[str, str]:
         """Get runtime dependencies."""
         return self._dependencies.copy()
-    
+
     def get_dev_dependencies(self) -> Dict[str, str]:
         """Get development dependencies."""
         return self._dev_dependencies.copy()
@@ -160,151 +170,210 @@ class ProjectTemplate:
 class ProjectGenerator(DomainReflectiveModule):
     """
     Systematic project generator for RM-DDD projects.
-    
+
     Provides comprehensive project scaffolding with configurable templates,
     domain context initialization, and systematic best practices.
     """
-    
+
     def __init__(self, domain_context: str = "project_generation"):
         super().__init__(domain_context)
         self._templates: Dict[str, ProjectTemplate] = {}
         self._generated_projects: List[ScaffoldingResult] = []
         self._initialize_default_templates()
-    
+
     def _initialize_default_templates(self):
         """Initialize default project templates."""
         self._create_minimal_template()
         self._create_standard_template()
         self._create_enterprise_template()
-        
+
         logger.debug("Initialized default project templates")
-    
+
     def _create_minimal_template(self):
         """Create minimal project template."""
         template = ProjectTemplate(
             "minimal",
             TemplateType.MINIMAL,
-            list(ProjectType)  # Supports all project types
+            list(ProjectType),  # Supports all project types
         )
-        
+
         # Basic directory structure
         template.add_directory("src")
         template.add_directory("tests")
         template.add_directory("docs")
-        
+
         # Basic files
         template.add_file_template("README.md", self._get_readme_template())
         template.add_file_template("pyproject.toml", self._get_pyproject_template())
         template.add_file_template("src/__init__.py", "")
         template.add_file_template("tests/__init__.py", "")
         template.add_file_template(".gitignore", self._get_gitignore_template())
-        
+
         # Basic dependencies
         template.add_dependency("rm-ddd", ">=0.1.0")
         template.add_dev_dependency("pytest", ">=7.0.0")
         template.add_dev_dependency("black", ">=22.0.0")
         template.add_dev_dependency("mypy", ">=0.991")
-        
+
         self._templates["minimal"] = template
-    
+
     def _create_standard_template(self):
         """Create standard project template."""
-        template = ProjectTemplate(
-            "standard",
-            TemplateType.STANDARD,
-            list(ProjectType)
-        )
-        
+        template = ProjectTemplate("standard", TemplateType.STANDARD, list(ProjectType))
+
         # Enhanced directory structure
         directories = [
-            "src", "tests", "docs", "scripts", "config",
-            "src/domain", "src/infrastructure", "src/application",
-            "tests/unit", "tests/integration", "tests/fixtures"
+            "src",
+            "tests",
+            "docs",
+            "scripts",
+            "config",
+            "src/domain",
+            "src/infrastructure",
+            "src/application",
+            "tests/unit",
+            "tests/integration",
+            "tests/fixtures",
         ]
-        
+
         for directory in directories:
             template.add_directory(directory)
-        
+
         # Standard files
         template.add_file_template("README.md", self._get_readme_template())
         template.add_file_template("pyproject.toml", self._get_pyproject_template())
         template.add_file_template("Makefile", self._get_makefile_template())
-        template.add_file_template("docker-compose.yml", self._get_docker_compose_template())
+        template.add_file_template(
+            "docker-compose.yml", self._get_docker_compose_template()
+        )
         template.add_file_template("Dockerfile", self._get_dockerfile_template())
         template.add_file_template(".github/workflows/ci.yml", self._get_ci_template())
-        
+
         # Domain layer files
         template.add_file_template("src/domain/__init__.py", "")
-        template.add_file_template("src/domain/entities.py", self._get_entities_template())
-        template.add_file_template("src/domain/value_objects.py", self._get_value_objects_template())
-        template.add_file_template("src/domain/services.py", self._get_domain_services_template())
-        template.add_file_template("src/domain/repositories.py", self._get_repositories_template())
-        
+        template.add_file_template(
+            "src/domain/entities.py", self._get_entities_template()
+        )
+        template.add_file_template(
+            "src/domain/value_objects.py", self._get_value_objects_template()
+        )
+        template.add_file_template(
+            "src/domain/services.py", self._get_domain_services_template()
+        )
+        template.add_file_template(
+            "src/domain/repositories.py", self._get_repositories_template()
+        )
+
         # Infrastructure layer files
         template.add_file_template("src/infrastructure/__init__.py", "")
-        template.add_file_template("src/infrastructure/persistence.py", self._get_persistence_template())
-        template.add_file_template("src/infrastructure/external_services.py", self._get_external_services_template())
-        
+        template.add_file_template(
+            "src/infrastructure/persistence.py", self._get_persistence_template()
+        )
+        template.add_file_template(
+            "src/infrastructure/external_services.py",
+            self._get_external_services_template(),
+        )
+
         # Application layer files
         template.add_file_template("src/application/__init__.py", "")
-        template.add_file_template("src/application/services.py", self._get_application_services_template())
-        template.add_file_template("src/application/handlers.py", self._get_handlers_template())
-        
+        template.add_file_template(
+            "src/application/services.py", self._get_application_services_template()
+        )
+        template.add_file_template(
+            "src/application/handlers.py", self._get_handlers_template()
+        )
+
         # Test files
         template.add_file_template("tests/conftest.py", self._get_conftest_template())
-        template.add_file_template("tests/unit/test_entities.py", self._get_test_entities_template())
-        template.add_file_template("tests/integration/test_repositories.py", self._get_test_repositories_template())
-        
+        template.add_file_template(
+            "tests/unit/test_entities.py", self._get_test_entities_template()
+        )
+        template.add_file_template(
+            "tests/integration/test_repositories.py",
+            self._get_test_repositories_template(),
+        )
+
         # Configuration files
         template.add_file_template("config/settings.py", self._get_settings_template())
         template.add_file_template(".env.example", self._get_env_template())
-        
+
         # Enhanced dependencies
         template.add_dependency("rm-ddd", ">=0.1.0")
         template.add_dependency("pydantic", ">=1.10.0")
         template.add_dependency("click", ">=8.0.0")
-        
+
         template.add_dev_dependency("pytest", ">=7.0.0")
         template.add_dev_dependency("pytest-cov", ">=4.0.0")
         template.add_dev_dependency("black", ">=22.0.0")
         template.add_dev_dependency("mypy", ">=0.991")
         template.add_dev_dependency("flake8", ">=5.0.0")
         template.add_dev_dependency("pre-commit", ">=2.20.0")
-        
+
         self._templates["standard"] = template
-    
+
     def _create_enterprise_template(self):
         """Create enterprise project template."""
         template = ProjectTemplate(
             "enterprise",
             TemplateType.ENTERPRISE,
-            [ProjectType.MICROSERVICE, ProjectType.MODULAR_MONOLITH, ProjectType.WEB_API]
+            [
+                ProjectType.MICROSERVICE,
+                ProjectType.MODULAR_MONOLITH,
+                ProjectType.WEB_API,
+            ],
         )
-        
+
         # Enterprise directory structure
         directories = [
-            "src", "tests", "docs", "scripts", "config", "deployment",
-            "src/domain", "src/infrastructure", "src/application", "src/presentation",
-            "src/domain/entities", "src/domain/value_objects", "src/domain/services",
-            "src/domain/events", "src/domain/repositories",
-            "src/infrastructure/persistence", "src/infrastructure/messaging",
-            "src/infrastructure/external", "src/infrastructure/monitoring",
-            "src/application/commands", "src/application/queries", "src/application/handlers",
-            "src/presentation/api", "src/presentation/cli", "src/presentation/web",
-            "tests/unit", "tests/integration", "tests/e2e", "tests/performance",
-            "tests/fixtures", "tests/mocks",
-            "docs/architecture", "docs/api", "docs/deployment",
-            "deployment/docker", "deployment/k8s", "deployment/terraform"
+            "src",
+            "tests",
+            "docs",
+            "scripts",
+            "config",
+            "deployment",
+            "src/domain",
+            "src/infrastructure",
+            "src/application",
+            "src/presentation",
+            "src/domain/entities",
+            "src/domain/value_objects",
+            "src/domain/services",
+            "src/domain/events",
+            "src/domain/repositories",
+            "src/infrastructure/persistence",
+            "src/infrastructure/messaging",
+            "src/infrastructure/external",
+            "src/infrastructure/monitoring",
+            "src/application/commands",
+            "src/application/queries",
+            "src/application/handlers",
+            "src/presentation/api",
+            "src/presentation/cli",
+            "src/presentation/web",
+            "tests/unit",
+            "tests/integration",
+            "tests/e2e",
+            "tests/performance",
+            "tests/fixtures",
+            "tests/mocks",
+            "docs/architecture",
+            "docs/api",
+            "docs/deployment",
+            "deployment/docker",
+            "deployment/k8s",
+            "deployment/terraform",
         ]
-        
+
         for directory in directories:
             template.add_directory(directory)
-        
+
         # Enterprise files (would include many more files)
         template.add_file_template("README.md", self._get_enterprise_readme_template())
-        template.add_file_template("pyproject.toml", self._get_enterprise_pyproject_template())
+        template.add_file_template(
+            "pyproject.toml", self._get_enterprise_pyproject_template()
+        )
         template.add_file_template("Makefile", self._get_enterprise_makefile_template())
-        
+
         # Enterprise dependencies
         template.add_dependency("rm-ddd", ">=0.1.0")
         template.add_dependency("fastapi", ">=0.95.0")
@@ -313,26 +382,28 @@ class ProjectGenerator(DomainReflectiveModule):
         template.add_dependency("redis", ">=4.5.0")
         template.add_dependency("celery", ">=5.2.0")
         template.add_dependency("prometheus-client", ">=0.16.0")
-        
+
         self._templates["enterprise"] = template
-    
+
     def register_template(self, template: ProjectTemplate):
         """Register a custom project template."""
         self._templates[template.name] = template
         logger.info(f"Registered project template: {template.name}")
-    
-    def generate_project(self, 
-                        config: ProjectConfig, 
-                        output_path: Path,
-                        template_name: Optional[str] = None) -> ScaffoldingResult:
+
+    def generate_project(
+        self,
+        config: ProjectConfig,
+        output_path: Path,
+        template_name: Optional[str] = None,
+    ) -> ScaffoldingResult:
         """
         Generate a new RM-DDD project.
-        
+
         Args:
             config: Project configuration
             output_path: Directory where project will be created
             template_name: Optional specific template to use
-            
+
         Returns:
             ScaffoldingResult: Generation results
         """
@@ -342,145 +413,158 @@ class ProjectGenerator(DomainReflectiveModule):
             result = ScaffoldingResult(project_path=output_path)
             result.errors.extend(validation_result.errors)
             return result
-        
+
         # Determine template
         if template_name:
             template = self._templates.get(template_name)
         else:
             template = self._templates.get(config.template_type.value)
-        
+
         if not template:
             result = ScaffoldingResult(project_path=output_path)
-            result.errors.append(f"Template not found: {template_name or config.template_type.value}")
+            result.errors.append(
+                f"Template not found: {template_name or config.template_type.value}"
+            )
             return result
-        
+
         # Check template compatibility
         if not template.supports_project_type(config.project_type):
             result = ScaffoldingResult(project_path=output_path)
-            result.errors.append(f"Template {template.name} does not support project type {config.project_type.value}")
+            result.errors.append(
+                f"Template {template.name} does not support project type {config.project_type.value}"
+            )
             return result
-        
+
         # Generate project
         try:
             result = self._generate_project_from_template(config, output_path, template)
             self._generated_projects.append(result)
             return result
-            
+
         except Exception as e:
             logger.error(f"Project generation failed: {e}")
             result = ScaffoldingResult(project_path=output_path)
             result.errors.append(f"Generation failed: {str(e)}")
             return result
-    
-    def _generate_project_from_template(self, 
-                                      config: ProjectConfig, 
-                                      output_path: Path, 
-                                      template: ProjectTemplate) -> ScaffoldingResult:
+
+    def _generate_project_from_template(
+        self, config: ProjectConfig, output_path: Path, template: ProjectTemplate
+    ) -> ScaffoldingResult:
         """Generate project from template."""
         project_path = output_path / config.project_name
         result = ScaffoldingResult(project_path=project_path)
-        
+
         # Create project directory
         project_path.mkdir(parents=True, exist_ok=True)
         result.created_directories.append(project_path)
-        
+
         # Create directory structure
         for directory in template.get_directory_structure():
             dir_path = project_path / directory
             dir_path.mkdir(parents=True, exist_ok=True)
             result.created_directories.append(dir_path)
-        
+
         # Generate files from templates
         template_context = self._create_template_context(config, template)
-        
+
         for relative_path, content_template in template.get_file_templates().items():
             try:
                 # Render template content
                 if JINJA2_AVAILABLE:
                     from jinja2 import Template
+
                     jinja_template = Template(content_template)
                     content = jinja_template.render(**template_context)
                 else:
                     # Simple string substitution fallback
-                    content = self._simple_template_substitution(content_template, template_context)
-                
+                    content = self._simple_template_substitution(
+                        content_template, template_context
+                    )
+
                 # Write file
                 file_path = project_path / relative_path
                 file_path.parent.mkdir(parents=True, exist_ok=True)
-                
-                with open(file_path, 'w', encoding='utf-8') as f:
+
+                with open(file_path, "w", encoding="utf-8") as f:
                     f.write(content)
-                
+
                 result.generated_files.append(file_path)
-                
+
             except Exception as e:
                 result.errors.append(f"Failed to generate {relative_path}: {str(e)}")
-        
+
         logger.info(f"Generated project {config.project_name} at {project_path}")
         return result
-    
-    def _create_template_context(self, config: ProjectConfig, template: ProjectTemplate) -> Dict[str, Any]:
+
+    def _create_template_context(
+        self, config: ProjectConfig, template: ProjectTemplate
+    ) -> Dict[str, Any]:
         """Create template rendering context."""
         return {
-            'project_name': config.project_name,
-            'project_type': config.project_type.value,
-            'author_name': config.author_name,
-            'author_email': config.author_email,
-            'description': config.description,
-            'python_version': config.python_version,
-            'license_type': config.license_type,
-            'domain_contexts': config.domain_contexts,
-            'dependencies': template.get_dependencies(),
-            'dev_dependencies': template.get_dev_dependencies(),
-            'include_tests': config.include_tests,
-            'include_docs': config.include_docs,
-            'include_ci_cd': config.include_ci_cd,
-            'include_docker': config.include_docker,
-            'generation_date': datetime.now().strftime('%Y-%m-%d'),
-            'generation_time': datetime.now().isoformat(),
-            **config.metadata
+            "project_name": config.project_name,
+            "project_type": config.project_type.value,
+            "author_name": config.author_name,
+            "author_email": config.author_email,
+            "description": config.description,
+            "python_version": config.python_version,
+            "license_type": config.license_type,
+            "domain_contexts": config.domain_contexts,
+            "dependencies": template.get_dependencies(),
+            "dev_dependencies": template.get_dev_dependencies(),
+            "include_tests": config.include_tests,
+            "include_docs": config.include_docs,
+            "include_ci_cd": config.include_ci_cd,
+            "include_docker": config.include_docker,
+            "generation_date": datetime.now().strftime("%Y-%m-%d"),
+            "generation_time": datetime.now().isoformat(),
+            **config.metadata,
         }
-    
-    def _simple_template_substitution(self, template: str, context: Dict[str, Any]) -> str:
+
+    def _simple_template_substitution(
+        self, template: str, context: Dict[str, Any]
+    ) -> str:
         """Simple template substitution when Jinja2 is not available."""
         result = template
         for key, value in context.items():
             placeholder = f"{{{{{key}}}}}"
             result = result.replace(placeholder, str(value))
-        return result  
-  
+        return result
+
     def list_templates(self) -> List[Dict[str, Any]]:
         """List all available project templates."""
         return [
             {
-                'name': template.name,
-                'type': template.template_type.value,
-                'supported_project_types': [pt.value for pt in template.supported_project_types],
-                'file_count': len(template.get_file_templates()),
-                'directory_count': len(template.get_directory_structure())
+                "name": template.name,
+                "type": template.template_type.value,
+                "supported_project_types": [
+                    pt.value for pt in template.supported_project_types
+                ],
+                "file_count": len(template.get_file_templates()),
+                "directory_count": len(template.get_directory_structure()),
             }
             for template in self._templates.values()
         ]
-    
+
     def get_generation_summary(self) -> Dict[str, Any]:
         """Get summary of project generation activity."""
         successful_projects = [p for p in self._generated_projects if p.success]
         failed_projects = [p for p in self._generated_projects if not p.success]
-        
+
         return {
-            'total_projects': len(self._generated_projects),
-            'successful_projects': len(successful_projects),
-            'failed_projects': len(failed_projects),
-            'success_rate': len(successful_projects) / max(len(self._generated_projects), 1),
-            'available_templates': len(self._templates),
-            'template_names': list(self._templates.keys())
+            "total_projects": len(self._generated_projects),
+            "successful_projects": len(successful_projects),
+            "failed_projects": len(failed_projects),
+            "success_rate": len(successful_projects)
+            / max(len(self._generated_projects), 1),
+            "available_templates": len(self._templates),
+            "template_names": list(self._templates.keys()),
         }
-    
+
     # Template content methods (simplified versions for brevity)
-    
+
     def _get_readme_template(self) -> str:
         """Get README.md template."""
-        return '''# {{project_name}}
+        return """# {{project_name}}
 
 {{description}}
 
@@ -567,11 +651,11 @@ This project follows systematic development principles. Please ensure:
 {{author_name}} <{{author_email}}>
 
 Generated with RM-DDD SDK on {{generation_date}}
-'''
-    
+"""
+
     def _get_pyproject_template(self) -> str:
         """Get pyproject.toml template."""
-        return '''[build-system]
+        return """[build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
@@ -631,11 +715,11 @@ python_version = "{{python_version}}"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
-'''
-    
+"""
+
     def _get_makefile_template(self) -> str:
         """Get Makefile template."""
-        return '''# {{project_name}} Makefile
+        return """# {{project_name}} Makefile
 # Systematic development automation
 
 .PHONY: help install test lint format clean build docs
@@ -697,8 +781,8 @@ pdca-cycle:  ## Execute PDCA development cycle
 \tmake lint
 \tmake systematic-check
 \t@echo "PDCA cycle complete - systematic superiority maintained"
-'''
-    
+"""
+
     def _get_entities_template(self) -> str:
         """Get domain entities template."""
         return '''"""
@@ -814,7 +898,7 @@ class ExampleAggregate(AggregateRoot[UUID]):
         
         return result
 '''
-    
+
     def _get_value_objects_template(self) -> str:
         """Get value objects template."""
         return '''"""
@@ -918,10 +1002,10 @@ class EmailAddress(ImmutableValueObject):
         
         return result
 '''
-    
+
     # Additional template methods would be implemented here...
     # For brevity, showing key templates only
-    
+
     def _get_domain_services_template(self) -> str:
         return '''"""Domain services for {{project_name}}."""
 
@@ -940,7 +1024,7 @@ class ExampleDomainService(DomainService):
         # Domain logic here
         return f"Processed: {data}"
 '''
-    
+
     def _get_repositories_template(self) -> str:
         return '''"""Repository interfaces for {{project_name}}."""
 
@@ -958,10 +1042,10 @@ class ExampleRepository(Repository[ExampleEntity, UUID], ABC):
         """Find entities by name."""
         pass
 '''
-    
+
     # Simplified template methods for other files
     def _get_gitignore_template(self) -> str:
-        return '''# Python
+        return """# Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -1003,10 +1087,10 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
-'''
-    
+"""
+
     def _get_dockerfile_template(self) -> str:
-        return '''FROM python:{{python_version}}-slim
+        return """FROM python:{{python_version}}-slim
 
 WORKDIR /app
 
@@ -1018,10 +1102,10 @@ COPY src/ src/
 EXPOSE 8000
 
 CMD ["python", "-m", "{{project_name}}"]
-'''
-    
+"""
+
     def _get_docker_compose_template(self) -> str:
-        return '''version: '3.8'
+        return """version: '3.8'
 
 services:
   {{project_name}}:
@@ -1030,10 +1114,10 @@ services:
       - "8000:8000"
     environment:
       - ENV=development
-'''
-    
+"""
+
     def _get_ci_template(self) -> str:
-        return '''name: CI
+        return """name: CI
 
 on: [push, pull_request]
 
@@ -1059,34 +1143,34 @@ jobs:
     - name: Run linting
       run: |
         make lint
-'''
-    
+"""
+
     # Additional simplified templates...
     def _get_persistence_template(self) -> str:
         return '''"""Infrastructure persistence layer."""
 pass  # Implementation here
 '''
-    
+
     def _get_external_services_template(self) -> str:
         return '''"""External service integrations."""
 pass  # Implementation here
 '''
-    
+
     def _get_application_services_template(self) -> str:
         return '''"""Application services."""
 pass  # Implementation here
 '''
-    
+
     def _get_handlers_template(self) -> str:
         return '''"""Application handlers."""
 pass  # Implementation here
 '''
-    
+
     def _get_conftest_template(self) -> str:
         return '''"""Pytest configuration."""
 import pytest
 '''
-    
+
     def _get_test_entities_template(self) -> str:
         return '''"""Tests for domain entities."""
 import pytest
@@ -1096,52 +1180,52 @@ def test_example_entity_creation():
     entity = ExampleEntity(name="Test")
     assert entity.name == "Test"
 '''
-    
+
     def _get_test_repositories_template(self) -> str:
         return '''"""Integration tests for repositories."""
 pass  # Implementation here
 '''
-    
+
     def _get_settings_template(self) -> str:
         return '''"""Application settings."""
 import os
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///{{project_name}}.db")
 '''
-    
+
     def _get_env_template(self) -> str:
-        return '''# Environment variables
+        return """# Environment variables
 DATABASE_URL=sqlite:///{{project_name}}.db
 DEBUG=true
-'''
-    
+"""
+
     def _get_enterprise_readme_template(self) -> str:
         return self._get_readme_template()  # Would be more comprehensive
-    
+
     def _get_enterprise_pyproject_template(self) -> str:
         return self._get_pyproject_template()  # Would include more dependencies
-    
+
     def _get_enterprise_makefile_template(self) -> str:
         return self._get_makefile_template()  # Would include more targets
-    
+
     # RM Interface Implementation
     async def get_module_status(self):
         """Get module status."""
         from ..core.health import ModuleHealth
-        
+
         summary = self.get_generation_summary()
-        
+
         return ModuleHealth(
             status=ModuleStatus.AVAILABLE,
             message=f"Project generator with {summary['available_templates']} templates",
             capabilities=await self.get_module_capabilities(),
             health_indicators={
-                'available_templates': summary['available_templates'],
-                'generated_projects': summary['total_projects'],
-                'success_rate': summary['success_rate']
-            }
+                "available_templates": summary["available_templates"],
+                "generated_projects": summary["total_projects"],
+                "success_rate": summary["success_rate"],
+            },
         )
-    
+
     async def get_module_capabilities(self):
         """Get module capabilities."""
         return [
@@ -1149,52 +1233,53 @@ DEBUG=true
                 name="rm_ddd_project_generation",
                 description="Generates RM-DDD compliant projects from templates",
                 available=True,
-                version="1.0.0"
+                version="1.0.0",
             )
         ]
-    
+
     async def is_healthy(self) -> bool:
         """Check if project generator is healthy."""
         return len(self._templates) > 0
-    
+
     async def get_health_indicators(self):
         """Get health indicators."""
         return {
-            'generation_summary': self.get_generation_summary(),
-            'domain_context': self.domain_context
+            "generation_summary": self.get_generation_summary(),
+            "domain_context": self.domain_context,
         }
-    
+
     def get_domain_boundaries(self):
         """Get domain boundaries."""
         from ..models import DomainBoundaries
-        
+
         return DomainBoundaries(
             context=self.domain_context,
             invariants=[
                 "Generated projects must be syntactically valid",
                 "All templates must support their declared project types",
-                "Project configuration must be validated before generation"
-            ]
+                "Project configuration must be validated before generation",
+            ],
         )
-    
+
     def validate_domain_invariants(self):
         """Validate domain invariants."""
         result = ValidationResult(is_valid=True)
-        
+
         if not self._templates:
             result.add_error("No project templates available")
-        
+
         # Validate each template
         for name, template in self._templates.items():
             if not template.get_file_templates():
                 result.add_warning(f"Template {name} has no file templates")
-        
+
         return result
 
 
 # Global JINJA2_AVAILABLE check
 try:
     import jinja2
+
     JINJA2_AVAILABLE = True
 except ImportError:
     JINJA2_AVAILABLE = False

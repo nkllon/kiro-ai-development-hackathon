@@ -88,7 +88,9 @@ def analyze_all_files(
                     # Count issues by type
                     for issue in analysis["issues"]:
                         issue_code = issue.get("code", "UNKNOWN")
-                        results["issues_by_type"][issue_code] = results["issues_by_type"].get(issue_code, 0) + 1
+                        results["issues_by_type"][issue_code] = (
+                            results["issues_by_type"].get(issue_code, 0) + 1
+                        )
 
     return results
 
@@ -122,8 +124,13 @@ def analyze_and_fix_all_files(
         "fixes": fix_results,
         "after": after_results,
         "improvement": {
-            "issues_reduced": before_results["total_issues"] - after_results["total_issues"],
-            "reduction_percentage": ((before_results["total_issues"] - after_results["total_issues"]) / max(before_results["total_issues"], 1)) * 100,
+            "issues_reduced": before_results["total_issues"]
+            - after_results["total_issues"],
+            "reduction_percentage": (
+                (before_results["total_issues"] - after_results["total_issues"])
+                / max(before_results["total_issues"], 1)
+            )
+            * 100,
         },
     }
 

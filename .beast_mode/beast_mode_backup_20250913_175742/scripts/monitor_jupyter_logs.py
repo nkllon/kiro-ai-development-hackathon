@@ -50,7 +50,9 @@ def monitor_jupyter_logs():
             if notebook_path.exists():
                 current_modified = notebook_path.stat().st_mtime
                 if current_modified > last_modified:
-                    print(f"\n📝 Notebook modified at {datetime.now().strftime('%H:%M:%S')}")
+                    print(
+                        f"\n📝 Notebook modified at {datetime.now().strftime('%H:%M:%S')}"
+                    )
                     last_modified = current_modified
 
             # Check for kernel activity (simplified)

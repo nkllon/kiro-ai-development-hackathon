@@ -303,7 +303,9 @@ class CodeValidator:
         return {
             "syntax_valid": CodeValidator.validate_syntax(file_path),
             "file_exists": Path(file_path).exists(),
-            "file_size": (Path(file_path).stat().st_size if Path(file_path).exists() else 0),
+            "file_size": (
+                Path(file_path).stat().st_size if Path(file_path).exists() else 0
+            ),
         }
 
 
@@ -375,7 +377,11 @@ class WorkflowOrchestrator:
             test_results = self.test_runner.run_smoke_tests(output_file)
 
             # Determine success
-            success = validation_results.get("syntax_valid", False) and validation_results.get("file_exists", False) and test_results
+            success = (
+                validation_results.get("syntax_valid", False)
+                and validation_results.get("file_exists", False)
+                and test_results
+            )
 
             return GenerationResult(
                 iteration=1,
@@ -403,7 +409,9 @@ class WorkflowOrchestrator:
 
 def main():
     """Main entry point"""
-    parser = argparse.ArgumentParser(description="Generalized Code Generator - Model-driven workflow without patching")
+    parser = argparse.ArgumentParser(
+        description="Generalized Code Generator - Model-driven workflow without patching"
+    )
 
     parser.add_argument("model_file", help="JSON model file")
     parser.add_argument("output_file", help="Output Python file")

@@ -265,7 +265,9 @@ class ProductionDeployment:
 
         # Use Black API with project model configuration
         if BLACK_API_AVAILABLE:
-            print("  🎨 Checking Black formatting with API (using project model config)...")
+            print(
+                "  🎨 Checking Black formatting with API (using project model config)..."
+            )
             python_files = list(Path("src").rglob("*.py"))
 
             # Create FileMode from project model configuration
@@ -279,7 +281,9 @@ class ProductionDeployment:
                     with open(file_path, encoding="utf-8") as f:
                         content = f.read()
 
-                    formatted_content = format_file_contents(content, mode=black_mode, fast=False)
+                    formatted_content = format_file_contents(
+                        content, mode=black_mode, fast=False
+                    )
 
                     # More lenient comparison - ignore minor formatting differences
                     # Strip whitespace and compare normalized content
@@ -305,7 +309,9 @@ class ProductionDeployment:
                     diagnostics = check(content, str(file_path), settings)
 
                     if diagnostics:
-                        results["ruff_issues"].extend([f"{file_path}: {d.message}" for d in diagnostics])
+                        results["ruff_issues"].extend(
+                            [f"{file_path}: {d.message}" for d in diagnostics]
+                        )
                 except Exception as e:
                     print(f"    ⚠️ Ruff API error for {file_path}: {e}")
 
@@ -318,40 +324,54 @@ class ProductionDeployment:
             analysis_results = self._run_ast_based_code_quality_analysis()
 
             # Check if we have any issues
-            total_issues = len(analysis_results["black_issues"]) + len(analysis_results["ruff_issues"]) + len(analysis_results["ast_issues"])
+            total_issues = (
+                len(analysis_results["black_issues"])
+                + len(analysis_results["ruff_issues"])
+                + len(analysis_results["ast_issues"])
+            )
 
             if total_issues == 0:
                 print("✅ Code quality gate: PASSED")
                 if analysis_results["auto_fixes_applied"] > 0:
-                    print(f"   🔧 Auto-fixed {analysis_results['auto_fixes_applied']} issues")
+                    print(
+                        f"   🔧 Auto-fixed {analysis_results['auto_fixes_applied']} issues"
+                    )
                 return True
 
             print("❌ Code quality gate: FAILED")
 
             # Report issues
             if analysis_results["black_issues"]:
-                print(f"Black formatting issues: {len(analysis_results['black_issues'])} files")
+                print(
+                    f"Black formatting issues: {len(analysis_results['black_issues'])} files"
+                )
                 for issue in analysis_results["black_issues"][:5]:  # Show first 5
                     print(f"  - {issue}")
                 if len(analysis_results["black_issues"]) > 5:
                     print(f"  ... and {len(analysis_results['black_issues']) - 5} more")
 
             if analysis_results["ruff_issues"]:
-                print(f"Ruff linting issues: {len(analysis_results['ruff_issues'])} total")
+                print(
+                    f"Ruff linting issues: {len(analysis_results['ruff_issues'])} total"
+                )
                 for issue in analysis_results["ruff_issues"][:5]:  # Show first 5
                     print(f"  - {issue}")
                 if len(analysis_results["ruff_issues"]) > 5:
                     print(f"  ... and {len(analysis_results['ruff_issues']) - 5} more")
 
             if analysis_results["ast_issues"]:
-                print(f"AST analysis issues: {len(analysis_results['ast_issues'])} files")
+                print(
+                    f"AST analysis issues: {len(analysis_results['ast_issues'])} files"
+                )
                 for issue in analysis_results["ast_issues"][:5]:  # Show first 5
                     print(f"  - {issue}")
                 if len(analysis_results["ast_issues"]) > 5:
                     print(f"  ... and {len(analysis_results['ast_issues']) - 5} more")
 
             if analysis_results["auto_fixes_applied"] > 0:
-                print(f"   🔧 Auto-fixed {analysis_results['auto_fixes_applied']} issues")
+                print(
+                    f"   🔧 Auto-fixed {analysis_results['auto_fixes_applied']} issues"
+                )
 
             return False
 
@@ -440,20 +460,36 @@ class ProductionDeployment:
                 results = self._run_bandit_scan_subprocess("src/")
 
             # Parse results
-            high_issues = len([r for r in results.get("results", []) if r.get("issue_severity") == "high"])
+            high_issues = len(
+                [
+                    r
+                    for r in results.get("results", [])
+                    if r.get("issue_severity") == "high"
+                ]
+            )
 
             total_issues = len(results.get("results", []))
 
             if high_issues == 0:
-                print(f"✅ Security gate: PASSED (0 high severity issues, {total_issues} total)")
+                print(
+                    f"✅ Security gate: PASSED (0 high severity issues, {total_issues} total)"
+                )
                 return True
 
-            print(f"❌ Security gate: FAILED ({high_issues} high severity issues, {total_issues} total)")
+            print(
+                f"❌ Security gate: FAILED ({high_issues} high severity issues, {total_issues} total)"
+            )
 
             # Show high severity issues
-            high_severity = [r for r in results.get("results", []) if r.get("issue_severity") == "high"]
+            high_severity = [
+                r
+                for r in results.get("results", [])
+                if r.get("issue_severity") == "high"
+            ]
             for issue in high_severity[:3]:  # Show first 3
-                print(f"  - {issue.get('filename')}:{issue.get('line_number')} - {issue.get('issue_text')}")
+                print(
+                    f"  - {issue.get('filename')}:{issue.get('line_number')} - {issue.get('issue_text')}"
+                )
             if len(high_severity) > 3:
                 print(f"  ... and {len(high_severity) - 3} more high severity issues")
 
@@ -500,8 +536,12 @@ class ProductionDeployment:
         print()
 
         print("📋 Project Model Configuration:")
-        print(f"  - Black line length: {self.project_config.black_config['line_length']}")
-        print(f"  - Black target version: {self.project_config.black_config['target_version']}")
+        print(
+            f"  - Black line length: {self.project_config.black_config['line_length']}"
+        )
+        print(
+            f"  - Black target version: {self.project_config.black_config['target_version']}"
+        )
         print(f"  - Quality gates: {len(self.project_config.quality_gates)} configured")
         print()
 
@@ -526,7 +566,9 @@ class ProductionDeployment:
         print("=" * 40)
 
         # Check git status
-        git_status = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
+        git_status = subprocess.run(
+            ["git", "status", "--porcelain"], capture_output=True, text=True
+        )
 
         if git_status.stdout.strip():
             print("❌ Deployment readiness check: FAILED")
@@ -535,12 +577,16 @@ class ProductionDeployment:
             return False
 
         # Check if we're on the right branch
-        git_branch = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True)
+        git_branch = subprocess.run(
+            ["git", "branch", "--show-current"], capture_output=True, text=True
+        )
 
         current_branch = git_branch.stdout.strip()
         if current_branch != "phase-4-production-readiness":
             print("❌ Deployment readiness check: FAILED")
-            print(f"Expected branch: phase-4-production-readiness, got: {current_branch}")
+            print(
+                f"Expected branch: phase-4-production-readiness, got: {current_branch}"
+            )
             return False
 
         print("✅ Deployment readiness check: PASSED")

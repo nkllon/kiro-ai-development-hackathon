@@ -228,7 +228,7 @@ async def dashboard():
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     connected_clients.append(websocket)
-    
+
     try:
         while True:
             await websocket.receive_text()
@@ -240,7 +240,7 @@ async def main():
     print("🚨 Starting Simple War Room Dashboard...")
     print("📡 Open: http://localhost:8080")
     print("🔥 Press Ctrl+C to stop")
-    
+
     config = uvicorn.Config(app, host="0.0.0.0", port=8080, log_level="info")
     server = uvicorn.Server(config)
     await server.serve()

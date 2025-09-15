@@ -16,14 +16,11 @@ from datetime import datetime
 
 class SporeManagerCoreCore:
     """Minimal valid class."""
-    
+
     def __init__(self):
         self.module_id = "spore_manager_core_core"
         self.timestamp = datetime.now()
-    
+
     def get_info(self) -> Dict[str, Any]:
         """Get module info."""
-        return {
-            'module_id': self.module_id,
-            'timestamp': self.timestamp.isoformat()
-        }
+        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

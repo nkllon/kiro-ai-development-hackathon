@@ -10,6 +10,7 @@ import subprocess
 import os
 from datetime import datetime
 
+
 def create_demo_script():
     """Create a script for recording the demo video."""
     script_content = """#!/bin/bash
@@ -83,26 +84,27 @@ if __name__ == "__main__":
 
     with open("demo_video_script.sh", "w") as f:
         f.write(script_content)
-    
+
     os.chmod("demo_video_script.sh", 0o755)
     print("✅ Demo video script created: demo_video_script.sh")
+
 
 def suggest_demo_content():
     """Suggest content for the demo video."""
     print("🎬 Beast Mode Framework Demo Video Content")
     print("=" * 45)
     print()
-    
+
     print("📋 SUGGESTED DEMO STRUCTURE (5-10 minutes):")
     print("-" * 50)
     print()
-    
+
     print("1. INTRODUCTION (30 seconds)")
     print("   - Show the project repository")
     print("   - Explain the problem: ad-hoc vs systematic development")
     print("   - State the claim: 20.4% systematic superiority")
     print()
-    
+
     print("2. BEAST MODE FRAMEWORK OVERVIEW (1-2 minutes)")
     print("   - Show the project structure")
     print("   - Highlight key components:")
@@ -111,25 +113,25 @@ def suggest_demo_content():
     print("     * PDCA methodology implementation")
     print("     * Automated testing and validation")
     print()
-    
+
     print("3. LIVE DEMONSTRATION (3-5 minutes)")
     print("   - Show Kiro AI in action")
     print("   - Demonstrate systematic development process")
     print("   - Show requirements becoming executable code")
     print("   - Display evidence of systematic superiority")
     print()
-    
+
     print("4. RESULTS AND EVIDENCE (1-2 minutes)")
     print("   - Show metrics and performance data")
     print("   - Display before/after comparisons")
     print("   - Highlight the 20.4% improvement")
     print()
-    
+
     print("5. CONCLUSION (30 seconds)")
     print("   - Summarize the value proposition")
     print("   - Call to action: 'The Requirements ARE the Solution!'")
     print()
-    
+
     print("🎥 RECORDING TIPS:")
     print("-" * 20)
     print("• Use a clear, well-lit screen")
@@ -139,23 +141,25 @@ def suggest_demo_content():
     print("• Upload to YouTube when complete")
     print()
 
+
 def main():
     print("🎬 Beast Mode Framework Demo Video Creator")
     print("=" * 45)
     print()
-    
+
     # Create demo script
     create_demo_script()
-    
+
     # Suggest content
     suggest_demo_content()
-    
+
     print("🚀 NEXT STEPS:")
     print("1. Run: ./demo_video_script.sh")
     print("2. Record your demo video")
     print("3. Upload to YouTube")
     print("4. Update the DevPost form with the YouTube URL")
     print()
+
 
 if __name__ == "__main__":
     main()

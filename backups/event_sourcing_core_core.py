@@ -19,9 +19,11 @@ from .events import DomainEvent, EventStream
 from ..core.health import ModuleHealth
 from ..core.health import ModuleHealth
 
+
 @dataclass
 class EventStoreRecord:
     """Represents a stored event record."""
+
     event_id: UUID
     aggregate_id: Any
     aggregate_type: str
@@ -33,11 +35,22 @@ class EventStoreRecord:
 
     def to_domain_event(self, event_class: Type[DomainEvent]) -> DomainEvent:
         """Convert stored record back to domain event."""
-        return event_class.from_dict({'event_id': str(self.event_id), 'event_type': self.event_type, 'aggregate_id': str(self.aggregate_id), 'timestamp': self.timestamp.isoformat(), 'metadata': self.metadata, 'event_data': self.event_data})
+        return event_class.from_dict(
+            {
+                "event_id": str(self.event_id),
+                "event_type": self.event_type,
+                "aggregate_id": str(self.aggregate_id),
+                "timestamp": self.timestamp.isoformat(),
+                "metadata": self.metadata,
+                "event_data": self.event_data,
+            }
+        )
+
 
 @dataclass
 class Snapshot:
     """Represents an aggregate snapshot for performance optimization."""
+
     aggregate_id: Any
     aggregate_type: str
     aggregate_data: Dict[str, Any]
@@ -46,32 +59,50 @@ class Snapshot:
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert snapshot to dictionary."""
-        return {'aggregate_id': str(self.aggregate_id), 'aggregate_type': self.aggregate_type, 'aggregate_data': self.aggregate_data, 'version': self.version, 'timestamp': self.timestamp.isoformat()}
+        return {
+            "aggregate_id": str(self.aggregate_id),
+            "aggregate_type": self.aggregate_type,
+            "aggregate_data": self.aggregate_data,
+            "version": self.version,
+            "timestamp": self.timestamp.isoformat(),
+        }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'Snapshot':
+    def from_dict(cls, data: Dict[str, Any]) -> "Snapshot":
         """Create snapshot from dictionary."""
-        return cls(aggregate_id=data['aggregate_id'], aggregate_type=data['aggregate_type'], aggregate_data=data['aggregate_data'], version=data['version'], timestamp=datetime.fromisoformat(data['timestamp']))
+        return cls(
+            aggregate_id=data["aggregate_id"],
+            aggregate_type=data["aggregate_type"],
+            aggregate_data=data["aggregate_data"],
+            version=data["version"],
+            timestamp=datetime.fromisoformat(data["timestamp"]),
+        )
+
 
 class EventStore(ABC):
     """
     Abstract interface for event storage.
-    
+
     Defines the contract for storing and retrieving events in an event sourcing
     system. Implementations can use different storage backends (SQL, NoSQL, etc.)
     while maintaining consistent behavior.
     """
 
     @abstractmethod
-    async def append_events(self, aggregate_id: Any, events: List[DomainEvent], expected_version: Optional[int]=None) -> None:
+    async def append_events(
+        self,
+        aggregate_id: Any,
+        events: List[DomainEvent],
+        expected_version: Optional[int] = None,
+    ) -> None:
         """
         Append events to the event store.
-        
+
         Args:
             aggregate_id: ID of the aggregate
             events: List of events to append
             expected_version: Expected current version for optimistic concurrency
-            
+
         Raises:
             ConcurrencyException: If expected version doesn't match
             EventStoreException: If storage fails
@@ -79,30 +110,37 @@ class EventStore(ABC):
         pass
 
     @abstractmethod
-    async def get_events(self, aggregate_id: Any, from_version: int=0, to_version: Optional[int]=None) -> List[DomainEvent]:
+    async def get_events(
+        self, aggregate_id: Any, from_version: int = 0, to_version: Optional[int] = None
+    ) -> List[DomainEvent]:
         """
         Get events for an aggregate.
-        
+
         Args:
             aggregate_id: ID of the aggregate
             from_version: Starting version (inclusive)
             to_version: Ending version (inclusive), None for all
-            
+
         Returns:
             List[DomainEvent]: Events for the aggregate
         """
         pass
 
     @abstractmethod
-    async def get_events_by_type(self, event_type: str, from_timestamp: Optional[datetime]=None, to_timestamp: Optional[datetime]=None) -> List[DomainEvent]:
+    async def get_events_by_type(
+        self,
+        event_type: str,
+        from_timestamp: Optional[datetime] = None,
+        to_timestamp: Optional[datetime] = None,
+    ) -> List[DomainEvent]:
         """
         Get events by type within a time range.
-        
+
         Args:
             event_type: Type of events to retrieve
             from_timestamp: Start time (inclusive)
             to_timestamp: End time (inclusive)
-            
+
         Returns:
             List[DomainEvent]: Events of the specified type
         """
@@ -112,10 +150,10 @@ class EventStore(ABC):
     async def get_aggregate_version(self, aggregate_id: Any) -> int:
         """
         Get the current version of an aggregate.
-        
+
         Args:
             aggregate_id: ID of the aggregate
-            
+
         Returns:
             int: Current version of the aggregate
         """
@@ -125,19 +163,20 @@ class EventStore(ABC):
     async def aggregate_exists(self, aggregate_id: Any) -> bool:
         """
         Check if an aggregate exists in the event store.
-        
+
         Args:
             aggregate_id: ID of the aggregate
-            
+
         Returns:
             bool: True if aggregate exists
         """
         pass
 
+
 class SnapshotStore(ABC):
     """
     Abstract interface for snapshot storage.
-    
+
     Snapshots are used to optimize aggregate reconstruction by storing
     the state of an aggregate at a specific version, avoiding the need
     to replay all events from the beginning.
@@ -147,41 +186,46 @@ class SnapshotStore(ABC):
     async def save_snapshot(self, snapshot: Snapshot) -> None:
         """
         Save an aggregate snapshot.
-        
+
         Args:
             snapshot: Snapshot to save
         """
         pass
 
     @abstractmethod
-    async def get_snapshot(self, aggregate_id: Any, max_version: Optional[int]=None) -> Optional[Snapshot]:
+    async def get_snapshot(
+        self, aggregate_id: Any, max_version: Optional[int] = None
+    ) -> Optional[Snapshot]:
         """
         Get the latest snapshot for an aggregate.
-        
+
         Args:
             aggregate_id: ID of the aggregate
             max_version: Maximum version to consider
-            
+
         Returns:
             Optional[Snapshot]: Latest snapshot or None if not found
         """
         pass
 
     @abstractmethod
-    async def delete_snapshots(self, aggregate_id: Any, before_version: Optional[int]=None) -> None:
+    async def delete_snapshots(
+        self, aggregate_id: Any, before_version: Optional[int] = None
+    ) -> None:
         """
         Delete snapshots for an aggregate.
-        
+
         Args:
             aggregate_id: ID of the aggregate
             before_version: Delete snapshots before this version
         """
         pass
 
+
 class EventSourcedAggregate(ABC):
     """
     Base class for event-sourced aggregates.
-    
+
     Provides the infrastructure for aggregates that are reconstructed
     from events rather than stored as current state. Handles event
     application and state reconstruction.
@@ -215,7 +259,7 @@ class EventSourcedAggregate(ABC):
     def load_from_history(self, events: List[DomainEvent]):
         """
         Reconstruct aggregate state from historical events.
-        
+
         Args:
             events: Historical events to apply
         """
@@ -226,27 +270,29 @@ class EventSourcedAggregate(ABC):
     def apply_event(self, event: DomainEvent):
         """
         Apply a new event to the aggregate.
-        
+
         Args:
             event: New event to apply
         """
         self._apply_event(event, is_new=True)
         self._uncommitted_events.append(event)
 
-    def _apply_event(self, event: DomainEvent, is_new: bool=True):
+    def _apply_event(self, event: DomainEvent, is_new: bool = True):
         """
         Apply an event to the aggregate state.
-        
+
         Args:
             event: Event to apply
             is_new: Whether this is a new event or historical
         """
-        handler_name = f'_handle_{event.event_type}'
+        handler_name = f"_handle_{event.event_type}"
         handler = getattr(self, handler_name, None)
         if handler and callable(handler):
             handler(event)
         else:
-            logger.warning(f'No handler found for event type {event.event_type} in {self.__class__.__name__}')
+            logger.warning(
+                f"No handler found for event type {event.event_type} in {self.__class__.__name__}"
+            )
         if is_new:
             self._version += 1
 
@@ -254,7 +300,7 @@ class EventSourcedAggregate(ABC):
     def create_snapshot(self) -> Snapshot:
         """
         Create a snapshot of the current aggregate state.
-        
+
         Returns:
             Snapshot: Current state snapshot
         """
@@ -264,22 +310,30 @@ class EventSourcedAggregate(ABC):
     def load_from_snapshot(self, snapshot: Snapshot):
         """
         Load aggregate state from a snapshot.
-        
+
         Args:
             snapshot: Snapshot to load from
         """
         pass
 
+
 class EventSourcingRepository(DomainReflectiveModule):
     """
     Repository for event-sourced aggregates.
-    
+
     Provides systematic loading and saving of event-sourced aggregates
     with support for snapshots, optimistic concurrency control, and
     performance optimization.
     """
 
-    def __init__(self, domain_context: str, aggregate_type: str, event_store: EventStore, snapshot_store: Optional[SnapshotStore]=None, snapshot_frequency: int=10):
+    def __init__(
+        self,
+        domain_context: str,
+        aggregate_type: str,
+        event_store: EventStore,
+        snapshot_store: Optional[SnapshotStore] = None,
+        snapshot_frequency: int = 10,
+    ):
         super().__init__(domain_context)
         self.aggregate_type = aggregate_type
         self.event_store = event_store
@@ -289,14 +343,16 @@ class EventSourcingRepository(DomainReflectiveModule):
         self._save_count = 0
         self._snapshot_count = 0
 
-    async def load(self, aggregate_id: Any, aggregate_class: Type[EventSourcedAggregate]) -> Optional[EventSourcedAggregate]:
+    async def load(
+        self, aggregate_id: Any, aggregate_class: Type[EventSourcedAggregate]
+    ) -> Optional[EventSourcedAggregate]:
         """
         Load an aggregate from the event store.
-        
+
         Args:
             aggregate_id: ID of the aggregate to load
             aggregate_class: Class of the aggregate
-            
+
         Returns:
             Optional[EventSourcedAggregate]: Loaded aggregate or None if not found
         """
@@ -310,25 +366,34 @@ class EventSourcingRepository(DomainReflectiveModule):
                 if snapshot:
                     aggregate.load_from_snapshot(snapshot)
                     from_version = snapshot.version + 1
-                    logger.debug(f'Loaded aggregate {aggregate_id} from snapshot at version {snapshot.version}')
+                    logger.debug(
+                        f"Loaded aggregate {aggregate_id} from snapshot at version {snapshot.version}"
+                    )
             events = await self.event_store.get_events(aggregate_id, from_version)
             if events:
                 aggregate.load_from_history(events)
-                logger.debug(f'Applied {len(events)} events to aggregate {aggregate_id}')
+                logger.debug(
+                    f"Applied {len(events)} events to aggregate {aggregate_id}"
+                )
             self._load_count += 1
             return aggregate
         except Exception as e:
-            logger.error(f'Failed to load aggregate {aggregate_id}: {e}')
-            raise DomainException(f'Failed to load aggregate: {str(e)}', error_code='AGGREGATE_LOAD_FAILED')
+            logger.error(f"Failed to load aggregate {aggregate_id}: {e}")
+            raise DomainException(
+                f"Failed to load aggregate: {str(e)}",
+                error_code="AGGREGATE_LOAD_FAILED",
+            )
 
-    async def save(self, aggregate: EventSourcedAggregate, expected_version: Optional[int]=None) -> None:
+    async def save(
+        self, aggregate: EventSourcedAggregate, expected_version: Optional[int] = None
+    ) -> None:
         """
         Save an aggregate to the event store.
-        
+
         Args:
             aggregate: Aggregate to save
             expected_version: Expected version for optimistic concurrency
-            
+
         Raises:
             ConcurrencyException: If expected version doesn't match
         """
@@ -336,15 +401,22 @@ class EventSourcingRepository(DomainReflectiveModule):
             uncommitted_events = aggregate.get_uncommitted_events()
             if not uncommitted_events:
                 return
-            await self.event_store.append_events(aggregate.aggregate_id, uncommitted_events, expected_version)
+            await self.event_store.append_events(
+                aggregate.aggregate_id, uncommitted_events, expected_version
+            )
             aggregate.mark_events_as_committed()
             if self.snapshot_store and aggregate.version % self.snapshot_frequency == 0:
                 await self._create_snapshot(aggregate)
             self._save_count += 1
-            logger.debug(f'Saved aggregate {aggregate.aggregate_id} with {len(uncommitted_events)} events')
+            logger.debug(
+                f"Saved aggregate {aggregate.aggregate_id} with {len(uncommitted_events)} events"
+            )
         except Exception as e:
-            logger.error(f'Failed to save aggregate {aggregate.aggregate_id}: {e}')
-            raise DomainException(f'Failed to save aggregate: {str(e)}', error_code='AGGREGATE_SAVE_FAILED')
+            logger.error(f"Failed to save aggregate {aggregate.aggregate_id}: {e}")
+            raise DomainException(
+                f"Failed to save aggregate: {str(e)}",
+                error_code="AGGREGATE_SAVE_FAILED",
+            )
 
     async def _create_snapshot(self, aggregate: EventSourcedAggregate):
         """Create and save a snapshot of the aggregate."""
@@ -352,19 +424,25 @@ class EventSourcingRepository(DomainReflectiveModule):
             snapshot = aggregate.create_snapshot()
             await self.snapshot_store.save_snapshot(snapshot)
             self._snapshot_count += 1
-            logger.debug(f'Created snapshot for aggregate {aggregate.aggregate_id} at version {aggregate.version}')
+            logger.debug(
+                f"Created snapshot for aggregate {aggregate.aggregate_id} at version {aggregate.version}"
+            )
         except Exception as e:
-            logger.warning(f'Failed to create snapshot for aggregate {aggregate.aggregate_id}: {e}')
+            logger.warning(
+                f"Failed to create snapshot for aggregate {aggregate.aggregate_id}: {e}"
+            )
 
-    async def get_events_for_aggregate(self, aggregate_id: Any, from_version: int=0, to_version: Optional[int]=None) -> List[DomainEvent]:
+    async def get_events_for_aggregate(
+        self, aggregate_id: Any, from_version: int = 0, to_version: Optional[int] = None
+    ) -> List[DomainEvent]:
         """
         Get events for an aggregate without reconstructing it.
-        
+
         Args:
             aggregate_id: ID of the aggregate
             from_version: Starting version
             to_version: Ending version
-            
+
         Returns:
             List[DomainEvent]: Events for the aggregate
         """
@@ -372,16 +450,36 @@ class EventSourcingRepository(DomainReflectiveModule):
 
     def get_repository_metrics(self) -> Dict[str, Any]:
         """Get repository performance metrics."""
-        return {'aggregate_type': self.aggregate_type, 'load_count': self._load_count, 'save_count': self._save_count, 'snapshot_count': self._snapshot_count, 'snapshot_frequency': self.snapshot_frequency, 'has_snapshot_store': self.snapshot_store is not None}
+        return {
+            "aggregate_type": self.aggregate_type,
+            "load_count": self._load_count,
+            "save_count": self._save_count,
+            "snapshot_count": self._snapshot_count,
+            "snapshot_frequency": self.snapshot_frequency,
+            "has_snapshot_store": self.snapshot_store is not None,
+        }
 
     async def get_module_status(self):
         """Get module status."""
         from ..core.health import ModuleHealth
-        return ModuleHealth(status=ModuleStatus.AVAILABLE, message=f'Event sourcing repository for {self.aggregate_type}', capabilities=await self.get_module_capabilities(), health_indicators=self.get_repository_metrics())
+
+        return ModuleHealth(
+            status=ModuleStatus.AVAILABLE,
+            message=f"Event sourcing repository for {self.aggregate_type}",
+            capabilities=await self.get_module_capabilities(),
+            health_indicators=self.get_repository_metrics(),
+        )
 
     async def get_module_capabilities(self):
         """Get module capabilities."""
-        return [ModuleCapability(name=f'event_sourcing_repository_{self.aggregate_type}', description=f'Event sourcing repository for {self.aggregate_type}', available=True, version='1.0.0')]
+        return [
+            ModuleCapability(
+                name=f"event_sourcing_repository_{self.aggregate_type}",
+                description=f"Event sourcing repository for {self.aggregate_type}",
+                available=True,
+                version="1.0.0",
+            )
+        ]
 
     async def is_healthy(self) -> bool:
         """Check if repository is healthy."""
@@ -389,23 +487,34 @@ class EventSourcingRepository(DomainReflectiveModule):
 
     async def get_health_indicators(self):
         """Get health indicators."""
-        return {'repository_metrics': self.get_repository_metrics(), 'domain_context': self.domain_context}
+        return {
+            "repository_metrics": self.get_repository_metrics(),
+            "domain_context": self.domain_context,
+        }
 
     def get_domain_boundaries(self):
         """Get domain boundaries."""
-        return DomainBoundaries(context=self.domain_context, invariants=['Events must be appended in order', 'Aggregate version must be consistent', 'Snapshots must represent valid aggregate state'])
+        return DomainBoundaries(
+            context=self.domain_context,
+            invariants=[
+                "Events must be appended in order",
+                "Aggregate version must be consistent",
+                "Snapshots must represent valid aggregate state",
+            ],
+        )
 
     def validate_domain_invariants(self):
         """Validate domain invariants."""
         result = ValidationResult(is_valid=True)
         if self.snapshot_frequency <= 0:
-            result.add_error('Snapshot frequency must be positive')
+            result.add_error("Snapshot frequency must be positive")
         return result
+
 
 class InMemoryEventStore(EventStore):
     """
     In-memory implementation of EventStore for testing and development.
-    
+
     This implementation stores events in memory and is suitable for
     testing, development, and small applications. For production use,
     consider using a persistent event store implementation.
@@ -416,32 +525,63 @@ class InMemoryEventStore(EventStore):
         self._versions: Dict[Any, int] = {}
         self._lock = asyncio.Lock()
 
-    async def append_events(self, aggregate_id: Any, events: List[DomainEvent], expected_version: Optional[int]=None) -> None:
+    async def append_events(
+        self,
+        aggregate_id: Any,
+        events: List[DomainEvent],
+        expected_version: Optional[int] = None,
+    ) -> None:
         """Append events to the in-memory store."""
         async with self._lock:
             current_version = self._versions.get(aggregate_id, 0)
             if expected_version is not None and current_version != expected_version:
-                raise DomainException(f'Concurrency conflict: expected version {expected_version}, but current version is {current_version}', error_code='CONCURRENCY_CONFLICT')
+                raise DomainException(
+                    f"Concurrency conflict: expected version {expected_version}, but current version is {current_version}",
+                    error_code="CONCURRENCY_CONFLICT",
+                )
             if aggregate_id not in self._events:
                 self._events[aggregate_id] = []
             for event in events:
                 current_version += 1
-                record = EventStoreRecord(event_id=event.event_id, aggregate_id=aggregate_id, aggregate_type=event.__class__.__module__ + '.' + event.__class__.__name__, event_type=event.event_type, event_data=event.get_event_data(), metadata=event.metadata.__dict__, version=current_version, timestamp=event.timestamp)
+                record = EventStoreRecord(
+                    event_id=event.event_id,
+                    aggregate_id=aggregate_id,
+                    aggregate_type=event.__class__.__module__
+                    + "."
+                    + event.__class__.__name__,
+                    event_type=event.event_type,
+                    event_data=event.get_event_data(),
+                    metadata=event.metadata.__dict__,
+                    version=current_version,
+                    timestamp=event.timestamp,
+                )
                 self._events[aggregate_id].append(record)
             self._versions[aggregate_id] = current_version
 
-    async def get_events(self, aggregate_id: Any, from_version: int=0, to_version: Optional[int]=None) -> List[DomainEvent]:
+    async def get_events(
+        self, aggregate_id: Any, from_version: int = 0, to_version: Optional[int] = None
+    ) -> List[DomainEvent]:
         """Get events from the in-memory store."""
         if aggregate_id not in self._events:
             return []
         records = self._events[aggregate_id]
-        filtered_records = [record for record in records if record.version > from_version and (to_version is None or record.version <= to_version)]
+        filtered_records = [
+            record
+            for record in records
+            if record.version > from_version
+            and (to_version is None or record.version <= to_version)
+        ]
         events = []
         for record in filtered_records:
             events.append(record)
         return events
 
-    async def get_events_by_type(self, event_type: str, from_timestamp: Optional[datetime]=None, to_timestamp: Optional[datetime]=None) -> List[DomainEvent]:
+    async def get_events_by_type(
+        self,
+        event_type: str,
+        from_timestamp: Optional[datetime] = None,
+        to_timestamp: Optional[datetime] = None,
+    ) -> List[DomainEvent]:
         """Get events by type from the in-memory store."""
         all_events = []
         for aggregate_events in self._events.values():
@@ -462,6 +602,7 @@ class InMemoryEventStore(EventStore):
         """Check if an aggregate exists."""
         return aggregate_id in self._events and len(self._events[aggregate_id]) > 0
 
+
 class InMemorySnapshotStore(SnapshotStore):
     """
     In-memory implementation of SnapshotStore for testing and development.
@@ -477,9 +618,15 @@ class InMemorySnapshotStore(SnapshotStore):
             if snapshot.aggregate_id not in self._snapshots:
                 self._snapshots[snapshot.aggregate_id] = []
             self._snapshots[snapshot.aggregate_id].append(snapshot)
-            self._snapshots[snapshot.aggregate_id] = sorted(self._snapshots[snapshot.aggregate_id], key=lambda s: s.version, reverse=True)[:10]
+            self._snapshots[snapshot.aggregate_id] = sorted(
+                self._snapshots[snapshot.aggregate_id],
+                key=lambda s: s.version,
+                reverse=True,
+            )[:10]
 
-    async def get_snapshot(self, aggregate_id: Any, max_version: Optional[int]=None) -> Optional[Snapshot]:
+    async def get_snapshot(
+        self, aggregate_id: Any, max_version: Optional[int] = None
+    ) -> Optional[Snapshot]:
         """Get the latest snapshot for an aggregate."""
         if aggregate_id not in self._snapshots:
             return None
@@ -490,7 +637,9 @@ class InMemorySnapshotStore(SnapshotStore):
             return None
         return max(snapshots, key=lambda s: s.version)
 
-    async def delete_snapshots(self, aggregate_id: Any, before_version: Optional[int]=None) -> None:
+    async def delete_snapshots(
+        self, aggregate_id: Any, before_version: Optional[int] = None
+    ) -> None:
         """Delete snapshots for an aggregate."""
         async with self._lock:
             if aggregate_id not in self._snapshots:
@@ -498,20 +647,49 @@ class InMemorySnapshotStore(SnapshotStore):
             if before_version is None:
                 del self._snapshots[aggregate_id]
             else:
-                self._snapshots[aggregate_id] = [s for s in self._snapshots[aggregate_id] if s.version >= before_version]
+                self._snapshots[aggregate_id] = [
+                    s
+                    for s in self._snapshots[aggregate_id]
+                    if s.version >= before_version
+                ]
+
 
 def to_domain_event(self, event_class: Type[DomainEvent]) -> DomainEvent:
     """Convert stored record back to domain event."""
-    return event_class.from_dict({'event_id': str(self.event_id), 'event_type': self.event_type, 'aggregate_id': str(self.aggregate_id), 'timestamp': self.timestamp.isoformat(), 'metadata': self.metadata, 'event_data': self.event_data})
+    return event_class.from_dict(
+        {
+            "event_id": str(self.event_id),
+            "event_type": self.event_type,
+            "aggregate_id": str(self.aggregate_id),
+            "timestamp": self.timestamp.isoformat(),
+            "metadata": self.metadata,
+            "event_data": self.event_data,
+        }
+    )
+
 
 def to_dict(self) -> Dict[str, Any]:
     """Convert snapshot to dictionary."""
-    return {'aggregate_id': str(self.aggregate_id), 'aggregate_type': self.aggregate_type, 'aggregate_data': self.aggregate_data, 'version': self.version, 'timestamp': self.timestamp.isoformat()}
+    return {
+        "aggregate_id": str(self.aggregate_id),
+        "aggregate_type": self.aggregate_type,
+        "aggregate_data": self.aggregate_data,
+        "version": self.version,
+        "timestamp": self.timestamp.isoformat(),
+    }
+
 
 @classmethod
-def from_dict(cls, data: Dict[str, Any]) -> 'Snapshot':
+def from_dict(cls, data: Dict[str, Any]) -> "Snapshot":
     """Create snapshot from dictionary."""
-    return cls(aggregate_id=data['aggregate_id'], aggregate_type=data['aggregate_type'], aggregate_data=data['aggregate_data'], version=data['version'], timestamp=datetime.fromisoformat(data['timestamp']))
+    return cls(
+        aggregate_id=data["aggregate_id"],
+        aggregate_type=data["aggregate_type"],
+        aggregate_data=data["aggregate_data"],
+        version=data["version"],
+        timestamp=datetime.fromisoformat(data["timestamp"]),
+    )
+
 
 def __init__(self, aggregate_id: Any):
     self.aggregate_id = aggregate_id
@@ -519,84 +697,103 @@ def __init__(self, aggregate_id: Any):
     self._uncommitted_events: List[DomainEvent] = []
     self._is_new = True
 
+
 @property
 def version(self) -> int:
     """Get the current version of the aggregate."""
     return self._version
+
 
 @property
 def is_new(self) -> bool:
     """Check if this is a new aggregate (not yet persisted)."""
     return self._is_new
 
+
 def get_uncommitted_events(self) -> List[DomainEvent]:
     """Get events that haven't been persisted yet."""
     return self._uncommitted_events.copy()
+
 
 def mark_events_as_committed(self):
     """Mark all uncommitted events as committed."""
     self._uncommitted_events.clear()
     self._is_new = False
 
+
 def load_from_history(self, events: List[DomainEvent]):
     """
-        Reconstruct aggregate state from historical events.
-        
-        Args:
-            events: Historical events to apply
-        """
+    Reconstruct aggregate state from historical events.
+
+    Args:
+        events: Historical events to apply
+    """
     for event in events:
         self._apply_event(event, is_new=False)
     self._is_new = False
 
+
 def apply_event(self, event: DomainEvent):
     """
-        Apply a new event to the aggregate.
-        
-        Args:
-            event: New event to apply
-        """
+    Apply a new event to the aggregate.
+
+    Args:
+        event: New event to apply
+    """
     self._apply_event(event, is_new=True)
     self._uncommitted_events.append(event)
 
-def _apply_event(self, event: DomainEvent, is_new: bool=True):
+
+def _apply_event(self, event: DomainEvent, is_new: bool = True):
     """
-        Apply an event to the aggregate state.
-        
-        Args:
-            event: Event to apply
-            is_new: Whether this is a new event or historical
-        """
-    handler_name = f'_handle_{event.event_type}'
+    Apply an event to the aggregate state.
+
+    Args:
+        event: Event to apply
+        is_new: Whether this is a new event or historical
+    """
+    handler_name = f"_handle_{event.event_type}"
     handler = getattr(self, handler_name, None)
     if handler and callable(handler):
         handler(event)
     else:
-        logger.warning(f'No handler found for event type {event.event_type} in {self.__class__.__name__}')
+        logger.warning(
+            f"No handler found for event type {event.event_type} in {self.__class__.__name__}"
+        )
     if is_new:
         self._version += 1
+
 
 @abstractmethod
 def create_snapshot(self) -> Snapshot:
     """
-        Create a snapshot of the current aggregate state.
-        
-        Returns:
-            Snapshot: Current state snapshot
-        """
+    Create a snapshot of the current aggregate state.
+
+    Returns:
+        Snapshot: Current state snapshot
+    """
     pass
+
 
 @abstractmethod
 def load_from_snapshot(self, snapshot: Snapshot):
     """
-        Load aggregate state from a snapshot.
-        
-        Args:
-            snapshot: Snapshot to load from
-        """
+    Load aggregate state from a snapshot.
+
+    Args:
+        snapshot: Snapshot to load from
+    """
     pass
 
-def __init__(self, domain_context: str, aggregate_type: str, event_store: EventStore, snapshot_store: Optional[SnapshotStore]=None, snapshot_frequency: int=10):
+
+def __init__(
+    self,
+    domain_context: str,
+    aggregate_type: str,
+    event_store: EventStore,
+    snapshot_store: Optional[SnapshotStore] = None,
+    snapshot_frequency: int = 10,
+):
     super().__init__(domain_context)
     self.aggregate_type = aggregate_type
     self.event_store = event_store
@@ -606,35 +803,78 @@ def __init__(self, domain_context: str, aggregate_type: str, event_store: EventS
     self._save_count = 0
     self._snapshot_count = 0
 
+
 def get_repository_metrics(self) -> Dict[str, Any]:
     """Get repository performance metrics."""
-    return {'aggregate_type': self.aggregate_type, 'load_count': self._load_count, 'save_count': self._save_count, 'snapshot_count': self._snapshot_count, 'snapshot_frequency': self.snapshot_frequency, 'has_snapshot_store': self.snapshot_store is not None}
+    return {
+        "aggregate_type": self.aggregate_type,
+        "load_count": self._load_count,
+        "save_count": self._save_count,
+        "snapshot_count": self._snapshot_count,
+        "snapshot_frequency": self.snapshot_frequency,
+        "has_snapshot_store": self.snapshot_store is not None,
+    }
+
 
 def get_domain_boundaries(self):
     """Get domain boundaries."""
-    return DomainBoundaries(context=self.domain_context, invariants=['Events must be appended in order', 'Aggregate version must be consistent', 'Snapshots must represent valid aggregate state'])
+    return DomainBoundaries(
+        context=self.domain_context,
+        invariants=[
+            "Events must be appended in order",
+            "Aggregate version must be consistent",
+            "Snapshots must represent valid aggregate state",
+        ],
+    )
+
 
 def __init__(self):
     self._events: Dict[Any, List[EventStoreRecord]] = {}
     self._versions: Dict[Any, int] = {}
     self._lock = asyncio.Lock()
+
 
 def __init__(self):
     self._snapshots: Dict[Any, List[Snapshot]] = {}
     self._lock = asyncio.Lock()
 
+
 def to_domain_event(self, event_class: Type[DomainEvent]) -> DomainEvent:
     """Convert stored record back to domain event."""
-    return event_class.from_dict({'event_id': str(self.event_id), 'event_type': self.event_type, 'aggregate_id': str(self.aggregate_id), 'timestamp': self.timestamp.isoformat(), 'metadata': self.metadata, 'event_data': self.event_data})
+    return event_class.from_dict(
+        {
+            "event_id": str(self.event_id),
+            "event_type": self.event_type,
+            "aggregate_id": str(self.aggregate_id),
+            "timestamp": self.timestamp.isoformat(),
+            "metadata": self.metadata,
+            "event_data": self.event_data,
+        }
+    )
+
 
 def to_dict(self) -> Dict[str, Any]:
     """Convert snapshot to dictionary."""
-    return {'aggregate_id': str(self.aggregate_id), 'aggregate_type': self.aggregate_type, 'aggregate_data': self.aggregate_data, 'version': self.version, 'timestamp': self.timestamp.isoformat()}
+    return {
+        "aggregate_id": str(self.aggregate_id),
+        "aggregate_type": self.aggregate_type,
+        "aggregate_data": self.aggregate_data,
+        "version": self.version,
+        "timestamp": self.timestamp.isoformat(),
+    }
+
 
 @classmethod
-def from_dict(cls, data: Dict[str, Any]) -> 'Snapshot':
+def from_dict(cls, data: Dict[str, Any]) -> "Snapshot":
     """Create snapshot from dictionary."""
-    return cls(aggregate_id=data['aggregate_id'], aggregate_type=data['aggregate_type'], aggregate_data=data['aggregate_data'], version=data['version'], timestamp=datetime.fromisoformat(data['timestamp']))
+    return cls(
+        aggregate_id=data["aggregate_id"],
+        aggregate_type=data["aggregate_type"],
+        aggregate_data=data["aggregate_data"],
+        version=data["version"],
+        timestamp=datetime.fromisoformat(data["timestamp"]),
+    )
+
 
 def __init__(self, aggregate_id: Any):
     self.aggregate_id = aggregate_id
@@ -642,84 +882,103 @@ def __init__(self, aggregate_id: Any):
     self._uncommitted_events: List[DomainEvent] = []
     self._is_new = True
 
+
 @property
 def version(self) -> int:
     """Get the current version of the aggregate."""
     return self._version
+
 
 @property
 def is_new(self) -> bool:
     """Check if this is a new aggregate (not yet persisted)."""
     return self._is_new
 
+
 def get_uncommitted_events(self) -> List[DomainEvent]:
     """Get events that haven't been persisted yet."""
     return self._uncommitted_events.copy()
+
 
 def mark_events_as_committed(self):
     """Mark all uncommitted events as committed."""
     self._uncommitted_events.clear()
     self._is_new = False
 
+
 def load_from_history(self, events: List[DomainEvent]):
     """
-        Reconstruct aggregate state from historical events.
-        
-        Args:
-            events: Historical events to apply
-        """
+    Reconstruct aggregate state from historical events.
+
+    Args:
+        events: Historical events to apply
+    """
     for event in events:
         self._apply_event(event, is_new=False)
     self._is_new = False
 
+
 def apply_event(self, event: DomainEvent):
     """
-        Apply a new event to the aggregate.
-        
-        Args:
-            event: New event to apply
-        """
+    Apply a new event to the aggregate.
+
+    Args:
+        event: New event to apply
+    """
     self._apply_event(event, is_new=True)
     self._uncommitted_events.append(event)
 
-def _apply_event(self, event: DomainEvent, is_new: bool=True):
+
+def _apply_event(self, event: DomainEvent, is_new: bool = True):
     """
-        Apply an event to the aggregate state.
-        
-        Args:
-            event: Event to apply
-            is_new: Whether this is a new event or historical
-        """
-    handler_name = f'_handle_{event.event_type}'
+    Apply an event to the aggregate state.
+
+    Args:
+        event: Event to apply
+        is_new: Whether this is a new event or historical
+    """
+    handler_name = f"_handle_{event.event_type}"
     handler = getattr(self, handler_name, None)
     if handler and callable(handler):
         handler(event)
     else:
-        logger.warning(f'No handler found for event type {event.event_type} in {self.__class__.__name__}')
+        logger.warning(
+            f"No handler found for event type {event.event_type} in {self.__class__.__name__}"
+        )
     if is_new:
         self._version += 1
+
 
 @abstractmethod
 def create_snapshot(self) -> Snapshot:
     """
-        Create a snapshot of the current aggregate state.
-        
-        Returns:
-            Snapshot: Current state snapshot
-        """
+    Create a snapshot of the current aggregate state.
+
+    Returns:
+        Snapshot: Current state snapshot
+    """
     pass
+
 
 @abstractmethod
 def load_from_snapshot(self, snapshot: Snapshot):
     """
-        Load aggregate state from a snapshot.
-        
-        Args:
-            snapshot: Snapshot to load from
-        """
+    Load aggregate state from a snapshot.
+
+    Args:
+        snapshot: Snapshot to load from
+    """
     pass
 
-def __init__(self, domain_context: str, aggregate_type: str, event_store: EventStore, snapshot_store: Optional[SnapshotStore]=None, snapshot_frequency: int=10):
+
+def __init__(
+    self,
+    domain_context: str,
+    aggregate_type: str,
+    event_store: EventStore,
+    snapshot_store: Optional[SnapshotStore] = None,
+    snapshot_frequency: int = 10,
+):
     super().__init__(domain_context)
     self.aggregate_type = aggregate_type
     self.event_store = event_store
@@ -729,18 +988,36 @@ def __init__(self, domain_context: str, aggregate_type: str, event_store: EventS
     self._save_count = 0
     self._snapshot_count = 0
 
+
 def get_repository_metrics(self) -> Dict[str, Any]:
     """Get repository performance metrics."""
-    return {'aggregate_type': self.aggregate_type, 'load_count': self._load_count, 'save_count': self._save_count, 'snapshot_count': self._snapshot_count, 'snapshot_frequency': self.snapshot_frequency, 'has_snapshot_store': self.snapshot_store is not None}
+    return {
+        "aggregate_type": self.aggregate_type,
+        "load_count": self._load_count,
+        "save_count": self._save_count,
+        "snapshot_count": self._snapshot_count,
+        "snapshot_frequency": self.snapshot_frequency,
+        "has_snapshot_store": self.snapshot_store is not None,
+    }
+
 
 def get_domain_boundaries(self):
     """Get domain boundaries."""
-    return DomainBoundaries(context=self.domain_context, invariants=['Events must be appended in order', 'Aggregate version must be consistent', 'Snapshots must represent valid aggregate state'])
+    return DomainBoundaries(
+        context=self.domain_context,
+        invariants=[
+            "Events must be appended in order",
+            "Aggregate version must be consistent",
+            "Snapshots must represent valid aggregate state",
+        ],
+    )
+
 
 def __init__(self):
     self._events: Dict[Any, List[EventStoreRecord]] = {}
     self._versions: Dict[Any, int] = {}
     self._lock = asyncio.Lock()
+
 
 def __init__(self):
     self._snapshots: Dict[Any, List[Snapshot]] = {}

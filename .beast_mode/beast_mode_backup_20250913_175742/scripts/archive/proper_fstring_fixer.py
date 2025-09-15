@@ -59,7 +59,9 @@ class ProperFStringFixer:
             matches_after = len(re.findall(pattern, fixed_content))
 
             if matches_before > matches_after:
-                print(f"✅ Fixed {matches_before - matches_after} instances of: {description}")
+                print(
+                    f"✅ Fixed {matches_before - matches_after} instances of: {description}"
+                )
 
         return fixed_content
 

@@ -12,17 +12,18 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 
+
 class PermanentCorrectiveActions:
     def __init__(self):
         self.project_root = Path.cwd()
         self.actions_implemented = 0
-        
+
     def implement_pre_commit_hooks(self):
         """Implement comprehensive pre-commit hooks"""
         print("🛡️ Implementing pre-commit hooks...")
-        
+
         # Create .pre-commit-config.yaml
-        pre_commit_config = '''repos:
+        pre_commit_config = """repos:
   - repo: local
     hooks:
       - id: syntax-check
@@ -49,24 +50,24 @@ class PermanentCorrectiveActions:
         entry: python3 -c "import json; json.load(open('.beast_mode/timeout_config.json')); print('✅ Timeout config valid')"
         language: system
         pass_filenames: false
-'''
-        
-        with open('.pre-commit-config.yaml', 'w') as f:
+"""
+
+        with open(".pre-commit-config.yaml", "w") as f:
             f.write(pre_commit_config)
-        
+
         # Install pre-commit hooks
         try:
-            subprocess.run(['pre-commit', 'install'], check=True, capture_output=True)
+            subprocess.run(["pre-commit", "install"], check=True, capture_output=True)
             print("   ✅ Pre-commit hooks installed")
             self.actions_implemented += 1
         except subprocess.CalledProcessError:
             print("   ⚠️  Pre-commit not installed, but config created")
-        
+
     def implement_ci_cd_validation(self):
         """Implement CI/CD validation pipeline"""
         print("🛡️ Implementing CI/CD validation...")
-        
-        ci_workflow = '''name: Compliance Validation Pipeline
+
+        ci_workflow = """name: Compliance Validation Pipeline
 
 on:
   push:
@@ -119,22 +120,22 @@ jobs:
       run: |
         echo "✅ All quality gates passed"
         echo "🎯 Compliance validation successful"
-'''
-        
+"""
+
         # Create GitHub Actions directory
-        actions_dir = Path('.github/workflows')
+        actions_dir = Path(".github/workflows")
         actions_dir.mkdir(parents=True, exist_ok=True)
-        
-        with open(actions_dir / 'compliance-validation.yml', 'w') as f:
+
+        with open(actions_dir / "compliance-validation.yml", "w") as f:
             f.write(ci_workflow)
-        
+
         print("   ✅ CI/CD validation pipeline created")
         self.actions_implemented += 1
-        
+
     def implement_automation_governance(self):
         """Implement automation governance framework"""
         print("🛡️ Implementing automation governance...")
-        
+
         governance_framework = '''#!/usr/bin/env python3
 """
 Automation Governance Framework
@@ -220,18 +221,18 @@ if __name__ == "__main__":
     print("🛡️ Automation Governance Framework Active")
     print("✅ Configuration loaded and validated")
 '''
-        
-        with open('scripts/automation_governor.py', 'w') as f:
+
+        with open("scripts/automation_governor.py", "w") as f:
             f.write(governance_framework)
-        
-        os.chmod('scripts/automation_governor.py', 0o755)
+
+        os.chmod("scripts/automation_governor.py", 0o755)
         print("   ✅ Automation governance framework created")
         self.actions_implemented += 1
-        
+
     def implement_monitoring_validation(self):
         """Implement monitoring system validation"""
         print("🛡️ Implementing monitoring validation...")
-        
+
         monitoring_validator = '''#!/usr/bin/env python3
 """
 Monitoring System Validator
@@ -326,19 +327,19 @@ if __name__ == "__main__":
     with open('.beast_mode/monitoring_validation.json', 'w') as f:
         json.dump(result, f, indent=2)
 '''
-        
-        with open('scripts/monitoring_validator.py', 'w') as f:
+
+        with open("scripts/monitoring_validator.py", "w") as f:
             f.write(monitoring_validator)
-        
-        os.chmod('scripts/monitoring_validator.py', 0o755)
+
+        os.chmod("scripts/monitoring_validator.py", 0o755)
         print("   ✅ Monitoring validation system created")
         self.actions_implemented += 1
-        
+
     def create_lessons_learned_documentation(self):
         """Create comprehensive lessons learned documentation"""
         print("📚 Creating lessons learned documentation...")
-        
-        lessons_learned = '''# Compliance Crisis - Lessons Learned
+
+        lessons_learned = """# Compliance Crisis - Lessons Learned
 
 ## 🚨 CRISIS SUMMARY
 - **Date**: September 13, 2025
@@ -482,29 +483,31 @@ Before any future automation:
 **Last Updated**: September 13, 2025  
 **Next Review**: October 13, 2025  
 **Approved By**: [To be assigned]
-'''
-        
-        with open('docs/COMPLIANCE_CRISIS_LESSONS_LEARNED.md', 'w') as f:
+"""
+
+        with open("docs/COMPLIANCE_CRISIS_LESSONS_LEARNED.md", "w") as f:
             f.write(lessons_learned)
-        
+
         print("   ✅ Lessons learned documentation created")
         self.actions_implemented += 1
-        
+
     def run_permanent_corrective_actions(self):
         """Run all permanent corrective actions"""
         print("🛡️ PERMANENT CORRECTIVE ACTIONS")
         print("=" * 40)
-        
+
         self.implement_pre_commit_hooks()
         self.implement_ci_cd_validation()
         self.implement_automation_governance()
         self.implement_monitoring_validation()
         self.create_lessons_learned_documentation()
-        
+
         print("\n🛡️ CORRECTIVE ACTIONS SUMMARY")
         print("=" * 35)
         print(f"Actions Implemented: {self.actions_implemented}")
-        print(f"Status: {'✅ COMPLETE' if self.actions_implemented >= 5 else '🟡 PARTIAL'}")
+        print(
+            f"Status: {'✅ COMPLETE' if self.actions_implemented >= 5 else '🟡 PARTIAL'}"
+        )
         print()
         print("🛡️ PERMANENT SAFEGUARDS ACTIVE:")
         print("   • Pre-commit hooks with syntax validation")
@@ -519,13 +522,14 @@ Before any future automation:
         print("   • Human oversight for bulk operations")
         print("   • Real-time compliance validation")
         print("   • Emergency rollback procedures")
-        
+
         return self.actions_implemented >= 5
+
 
 if __name__ == "__main__":
     actions = PermanentCorrectiveActions()
     success = actions.run_permanent_corrective_actions()
-    
+
     if success:
         print("\n✅ Permanent corrective actions implemented successfully!")
         print("🛡️ Compliance crisis prevention measures are now active.")

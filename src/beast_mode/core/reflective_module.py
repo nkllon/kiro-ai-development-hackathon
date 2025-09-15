@@ -16,11 +16,11 @@ Deprecated on: 2025-09-12T10:51:04.491081
 
 # Import the unified interface
 from src.rm_ddd.core.unified_reflective_module import (
-ReflectiveModule,
-ModuleHealth,
-ModuleStatus,
-ModuleCapability,
-GracefulDegradationResult
+    ReflectiveModule,
+    ModuleHealth,
+    ModuleStatus,
+    ModuleCapability,
+    GracefulDegradationResult,
 )
 
 # Alias for backward compatibility
@@ -28,11 +28,10 @@ HealthStatus = ModuleStatus
 
 # Re-export for backward compatibility (temporary)
 __all__ = [
-"ReflectiveModule",
-"ModuleHealth",
-"ModuleStatus",
-"HealthStatus",
-"ModuleCapability",
-"GracefulDegradationResult"
+    "ReflectiveModule",
+    "ModuleHealth",
+    "ModuleStatus",
+    "HealthStatus",
+    "ModuleCapability",
+    "GracefulDegradationResult",
 ]
-

@@ -13,43 +13,44 @@ import subprocess
 from datetime import datetime
 from typing import Dict, List, Any
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
+
 
 class AutomatedComplianceEnforcement:
     """Automated compliance enforcement system."""
-    
+
     def __init__(self):
         self.enforcement_config = {
-            'pre_commit_hooks': True,
-            'ci_cd_integration': True,
-            'real_time_validation': True,
-            'compliance_thresholds': {
-                'overall_compliance': 95.0,
-                'docstring_coverage': 98.0,
-                'type_annotation_coverage': 95.0,
-                'error_handling_coverage': 90.0
+            "pre_commit_hooks": True,
+            "ci_cd_integration": True,
+            "real_time_validation": True,
+            "compliance_thresholds": {
+                "overall_compliance": 95.0,
+                "docstring_coverage": 98.0,
+                "type_annotation_coverage": 95.0,
+                "error_handling_coverage": 90.0,
             },
-            'enforcement_actions': {
-                'block_commit': True,
-                'auto_fix': True,
-                'generate_report': True,
-                'notify_team': False
-            }
+            "enforcement_actions": {
+                "block_commit": True,
+                "auto_fix": True,
+                "generate_report": True,
+                "notify_team": False,
+            },
         }
-        
-        self.enforcement_dir = '.beast_mode/enforcement'
+
+        self.enforcement_dir = ".beast_mode/enforcement"
         os.makedirs(self.enforcement_dir, exist_ok=True)
-    
+
     def create_pre_commit_hooks(self) -> Dict[str, Any]:
         """Create pre-commit hooks for compliance enforcement."""
         print("🔧 Creating Pre-commit Hooks for Compliance Enforcement...")
-        
+
         hooks = {
-            'compliance_check_hook': self.create_compliance_check_hook(),
-            'auto_fix_hook': self.create_auto_fix_hook(),
-            'documentation_hook': self.create_documentation_hook()
+            "compliance_check_hook": self.create_compliance_check_hook(),
+            "auto_fix_hook": self.create_auto_fix_hook(),
+            "documentation_hook": self.create_documentation_hook(),
         }
-        
+
         # Create .pre-commit-config.yaml
         pre_commit_config = """
 repos:
@@ -76,14 +77,14 @@ repos:
         pass_filenames: false
         always_run: true
 """
-        
-        with open('.pre-commit-config.yaml', 'w') as f:
+
+        with open(".pre-commit-config.yaml", "w") as f:
             f.write(pre_commit_config)
-        
+
         print("   ✅ Pre-commit hooks created successfully")
-        
+
         return hooks
-    
+
     def create_compliance_check_hook(self) -> str:
         """Create compliance check hook."""
         hook_content = '''#!/usr/bin/env python3
@@ -113,13 +114,13 @@ def main():
 if __name__ == "__main__":
     main()
 '''
-        
-        hook_path = 'scripts/pre_commit_compliance_check.py'
-        with open(hook_path, 'w') as f:
+
+        hook_path = "scripts/pre_commit_compliance_check.py"
+        with open(hook_path, "w") as f:
             f.write(hook_content)
-        
+
         return hook_path
-    
+
     def create_auto_fix_hook(self) -> str:
         """Create auto-fix hook."""
         hook_content = '''#!/usr/bin/env python3
@@ -147,13 +148,13 @@ def main():
 if __name__ == "__main__":
     main()
 '''
-        
-        hook_path = 'scripts/pre_commit_auto_fix.py'
-        with open(hook_path, 'w') as f:
+
+        hook_path = "scripts/pre_commit_auto_fix.py"
+        with open(hook_path, "w") as f:
             f.write(hook_content)
-        
+
         return hook_path
-    
+
     def create_documentation_hook(self) -> str:
         """Create documentation check hook."""
         hook_content = '''#!/usr/bin/env python3
@@ -200,17 +201,17 @@ def main():
 if __name__ == "__main__":
     main()
 '''
-        
-        hook_path = 'scripts/pre_commit_documentation_check.py'
-        with open(hook_path, 'w') as f:
+
+        hook_path = "scripts/pre_commit_documentation_check.py"
+        with open(hook_path, "w") as f:
             f.write(hook_content)
-        
+
         return hook_path
-    
+
     def create_ci_cd_integration(self) -> Dict[str, Any]:
         """Create CI/CD integration for compliance enforcement."""
         print("🚀 Creating CI/CD Integration for Compliance Enforcement...")
-        
+
         # Create GitHub Actions workflow
         github_workflow = """
 name: Compliance Enforcement
@@ -257,30 +258,30 @@ jobs:
         name: compliance-report
         path: .beast_mode/
 """
-        
-        os.makedirs('.github/workflows', exist_ok=True)
-        with open('.github/workflows/compliance-enforcement.yml', 'w') as f:
+
+        os.makedirs(".github/workflows", exist_ok=True)
+        with open(".github/workflows/compliance-enforcement.yml", "w") as f:
             f.write(github_workflow)
-        
+
         print("   ✅ CI/CD integration created successfully")
-        
+
         return {
-            'github_workflow': '.github/workflows/compliance-enforcement.yml',
-            'status': 'created'
+            "github_workflow": ".github/workflows/compliance-enforcement.yml",
+            "status": "created",
         }
-    
+
     def create_comprehensive_documentation_standards(self) -> Dict[str, Any]:
         """Create comprehensive interface documentation standards."""
         print("📚 Creating Comprehensive Documentation Standards...")
-        
+
         standards = {
-            'docstring_format': 'Google Style',
-            'type_annotation_requirements': 'Comprehensive',
-            'error_handling_standards': 'Robust',
-            'method_documentation': 'Complete',
-            'class_documentation': 'Comprehensive'
+            "docstring_format": "Google Style",
+            "type_annotation_requirements": "Comprehensive",
+            "error_handling_standards": "Robust",
+            "method_documentation": "Complete",
+            "class_documentation": "Comprehensive",
         }
-        
+
         # Create comprehensive documentation standards file
         standards_content = """# Comprehensive Interface Documentation Standards
 
@@ -340,26 +341,26 @@ This document establishes comprehensive documentation standards for all interfac
 - CI/CD pipeline enforcement
 - Real-time compliance reporting
 """
-        
-        os.makedirs('docs', exist_ok=True)
-        with open('docs/COMPREHENSIVE_DOCUMENTATION_STANDARDS.md', 'w') as f:
+
+        os.makedirs("docs", exist_ok=True)
+        with open("docs/COMPREHENSIVE_DOCUMENTATION_STANDARDS.md", "w") as f:
             f.write(standards_content)
-        
+
         print("   ✅ Comprehensive documentation standards created")
-        
+
         return standards
-    
+
     def setup_real_time_validation(self) -> Dict[str, Any]:
         """Setup real-time validation system."""
         print("⚡ Setting up Real-time Validation System...")
-        
+
         validation_system = {
-            'file_watcher': True,
-            'instant_feedback': True,
-            'auto_correction': True,
-            'compliance_dashboard': True
+            "file_watcher": True,
+            "instant_feedback": True,
+            "auto_correction": True,
+            "compliance_dashboard": True,
         }
-        
+
         # Create real-time validation script
         validation_script = '''#!/usr/bin/env python3
 """
@@ -400,122 +401,144 @@ def main():
 if __name__ == "__main__":
     main()
 '''
-        
-        validation_path = 'scripts/real_time_compliance_validator.py'
-        with open(validation_path, 'w') as f:
+
+        validation_path = "scripts/real_time_compliance_validator.py"
+        with open(validation_path, "w") as f:
             f.write(validation_script)
-        
+
         print("   ✅ Real-time validation system created")
-        
+
         return validation_system
-    
+
     def run_enforcement_setup(self) -> Dict[str, Any]:
         """Run complete enforcement setup."""
         print("🚀 BEAST MODE: Automated Compliance Enforcement Setup")
         print("=" * 60)
-        
+
         results = {
-            'pre_commit_hooks': {},
-            'ci_cd_integration': {},
-            'documentation_standards': {},
-            'real_time_validation': {},
-            'enforcement_status': {}
+            "pre_commit_hooks": {},
+            "ci_cd_integration": {},
+            "documentation_standards": {},
+            "real_time_validation": {},
+            "enforcement_status": {},
         }
-        
+
         # Create pre-commit hooks
-        results['pre_commit_hooks'] = self.create_pre_commit_hooks()
-        
+        results["pre_commit_hooks"] = self.create_pre_commit_hooks()
+
         # Create CI/CD integration
-        results['ci_cd_integration'] = self.create_ci_cd_integration()
-        
+        results["ci_cd_integration"] = self.create_ci_cd_integration()
+
         # Create documentation standards
-        results['documentation_standards'] = self.create_comprehensive_documentation_standards()
-        
+        results["documentation_standards"] = (
+            self.create_comprehensive_documentation_standards()
+        )
+
         # Setup real-time validation
-        results['real_time_validation'] = self.setup_real_time_validation()
-        
+        results["real_time_validation"] = self.setup_real_time_validation()
+
         # Update enforcement status
-        results['enforcement_status'] = {
-            'pre_commit_hooks_active': True,
-            'ci_cd_integration_active': True,
-            'documentation_standards_established': True,
-            'real_time_validation_active': True,
-            'automated_enforcement_complete': True
+        results["enforcement_status"] = {
+            "pre_commit_hooks_active": True,
+            "ci_cd_integration_active": True,
+            "documentation_standards_established": True,
+            "real_time_validation_active": True,
+            "automated_enforcement_complete": True,
         }
-        
+
         return results
-    
+
     def save_enforcement_results(self, results: Dict[str, Any]) -> str:
         """Save enforcement setup results."""
-        results_file = '.beast_mode/automated_enforcement_results.json'
-        with open(results_file, 'w') as f:
+        results_file = ".beast_mode/automated_enforcement_results.json"
+        with open(results_file, "w") as f:
             json.dump(results, f, indent=2, default=str)
-        
+
         return results_file
+
 
 def main():
     """Main enforcement setup function."""
     enforcer = AutomatedComplianceEnforcement()
-    
+
     # Run enforcement setup
     results = enforcer.run_enforcement_setup()
-    
+
     # Print summary
     print(f"\n🎉 AUTOMATED COMPLIANCE ENFORCEMENT SETUP COMPLETE!")
     print("=" * 60)
-    
-    enforcement_status = results['enforcement_status']
+
+    enforcement_status = results["enforcement_status"]
     print(f"\n📊 Enforcement Status:")
-    print(f"   Pre-commit Hooks: {'✅ Active' if enforcement_status['pre_commit_hooks_active'] else '❌ Inactive'}")
-    print(f"   CI/CD Integration: {'✅ Active' if enforcement_status['ci_cd_integration_active'] else '❌ Inactive'}")
-    print(f"   Documentation Standards: {'✅ Established' if enforcement_status['documentation_standards_established'] else '❌ Not Established'}")
-    print(f"   Real-time Validation: {'✅ Active' if enforcement_status['real_time_validation_active'] else '❌ Inactive'}")
-    print(f"   Automated Enforcement: {'✅ Complete' if enforcement_status['automated_enforcement_complete'] else '❌ Incomplete'}")
-    
+    print(
+        f"   Pre-commit Hooks: {'✅ Active' if enforcement_status['pre_commit_hooks_active'] else '❌ Inactive'}"
+    )
+    print(
+        f"   CI/CD Integration: {'✅ Active' if enforcement_status['ci_cd_integration_active'] else '❌ Inactive'}"
+    )
+    print(
+        f"   Documentation Standards: {'✅ Established' if enforcement_status['documentation_standards_established'] else '❌ Not Established'}"
+    )
+    print(
+        f"   Real-time Validation: {'✅ Active' if enforcement_status['real_time_validation_active'] else '❌ Inactive'}"
+    )
+    print(
+        f"   Automated Enforcement: {'✅ Complete' if enforcement_status['automated_enforcement_complete'] else '❌ Incomplete'}"
+    )
+
     print(f"\n🔧 Enforcement Components:")
     print(f"   Pre-commit Hooks: {len(results['pre_commit_hooks'])} hooks created")
-    print(f"   CI/CD Workflow: {results['ci_cd_integration'].get('github_workflow', 'Not created')}")
+    print(
+        f"   CI/CD Workflow: {results['ci_cd_integration'].get('github_workflow', 'Not created')}"
+    )
     print(f"   Documentation Standards: docs/COMPREHENSIVE_DOCUMENTATION_STANDARDS.md")
     print(f"   Real-time Validator: scripts/real_time_compliance_validator.py")
-    
+
     # Save results
     results_file = enforcer.save_enforcement_results(results)
     print(f"\n💾 Enforcement setup results saved to {results_file}")
-    
+
     print(f"\n🚀 Next Steps:")
     print(f"   1. Install pre-commit hooks: pre-commit install")
     print(f"   2. Test CI/CD integration with a commit")
     print(f"   3. Start real-time validation system")
     print(f"   4. Monitor compliance dashboard")
-    
+
     return results
+
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        if sys.argv[1] == '--pre-commit':
+        if sys.argv[1] == "--pre-commit":
             # Run compliance check for pre-commit hook
             from .continuous_compliance_monitor import ContinuousComplianceMonitor
+
             monitor = ContinuousComplianceMonitor()
             compliance_status = monitor.check_compliance_status()
-            
-            if compliance_status['overall_compliance'] < 95.0:
-                print(f"❌ Pre-commit compliance check failed: {compliance_status['overall_compliance']:.1f}% < 95%")
+
+            if compliance_status["overall_compliance"] < 95.0:
+                print(
+                    f"❌ Pre-commit compliance check failed: {compliance_status['overall_compliance']:.1f}% < 95%"
+                )
                 sys.exit(1)
             else:
-                print(f"✅ Pre-commit compliance check passed: {compliance_status['overall_compliance']:.1f}%")
+                print(
+                    f"✅ Pre-commit compliance check passed: {compliance_status['overall_compliance']:.1f}%"
+                )
                 sys.exit(0)
-        
-        elif sys.argv[1] == '--auto-fix':
+
+        elif sys.argv[1] == "--auto-fix":
             # Run auto-fix for pre-commit hook
             from .advanced_compliance_accelerator import AdvancedComplianceAccelerator
+
             accelerator = AdvancedComplianceAccelerator()
             results = accelerator.run_advanced_acceleration()
             sys.exit(0)
-        
-        elif sys.argv[1] == '--doc-check':
+
+        elif sys.argv[1] == "--doc-check":
             # Run documentation check for pre-commit hook
             print("✅ Documentation check passed")
             sys.exit(0)
-    
+
     else:
         main()

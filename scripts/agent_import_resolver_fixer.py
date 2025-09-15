@@ -20,39 +20,40 @@ from typing import Dict, List, Set
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
+
 class ImportResolverFixer:
     """Specialized fixer for import resolution issues."""
-    
+
     def __init__(self):
         self.project_root = project_root
         self.fixed_imports = []
         self.failed_fixes = []
-    
+
     def fix_import_issues(self) -> Dict[str, int]:
         """Fix import-related issues in test files."""
         print("🔍 Agent: Fixing import resolution issues...")
-        
+
         # Common import patterns that need fixing
         import_fixes = [
             {
-                'pattern': 'from src.rm_ddd.core.health import ModuleHealth',
-                'replacement': 'from src.rm_ddd.core.health import ModuleHealth',
-                'description': 'Fix ModuleHealth import'
+                "pattern": "from src.rm_ddd.core.health import ModuleHealth",
+                "replacement": "from src.rm_ddd.core.health import ModuleHealth",
+                "description": "Fix ModuleHealth import",
             },
             {
-                'pattern': 'from .metrics import Metric, MetricType',
-                'replacement': 'from src.beast_mode.observability.metrics import Metric, MetricType',
-                'description': 'Fix metrics import path'
+                "pattern": "from .metrics import Metric, MetricType",
+                "replacement": "from src.beast_mode.observability.metrics import Metric, MetricType",
+                "description": "Fix metrics import path",
             },
             {
-                'pattern': 'from src.rm_ddd.core.base_reflective_module import ReflectiveModule',
-                'replacement': 'from src.rm_ddd.core.base_reflective_module import ReflectiveModule',
-                'description': 'Ensure ReflectiveModule import'
-            }
+                "pattern": "from src.rm_ddd.core.base_reflective_module import ReflectiveModule",
+                "replacement": "from src.rm_ddd.core.base_reflective_module import ReflectiveModule",
+                "description": "Ensure ReflectiveModule import",
+            },
         ]
-        
+
         stats = {"successful": 0, "failed": 0}
-        
+
         # Fix imports in test files
         for test_file in self.project_root.rglob("tests/unit/beast_mode/**/*.py"):
             if self._fix_test_file_imports(test_file, import_fixes):
@@ -61,55 +62,72 @@ class ImportResolverFixer:
             else:
                 stats["failed"] += 1
                 print(f"❌ Failed to fix {test_file}")
-        
+
         return stats
-    
+
     def _fix_test_file_imports(self, test_file: Path, import_fixes: List[Dict]) -> bool:
         """Fix imports in a specific test file."""
         try:
             content = test_file.read_text()
             original_content = content
-            
+
             # Apply import fixes
             for fix in import_fixes:
-                if fix['pattern'] in content:
-                    content = content.replace(fix['pattern'], fix['replacement'])
-            
+                if fix["pattern"] in content:
+                    content = content.replace(fix["pattern"], fix["replacement"])
+
             # Add missing imports if needed
-            if 'Metric' in content and 'from src.beast_mode.observability.metrics import Metric' not in content:
-                content = 'from src.beast_mode.observability.metrics import Metric, MetricType\n' + content
-            
-            if 'ModuleHealth' in content and 'from src.rm_ddd.core.health import ModuleHealth' not in content:
-                content = 'from src.rm_ddd.core.health import ModuleHealth\n' + content
-            
-            if 'ReflectiveModule' in content and 'from src.rm_ddd.core.base_reflective_module import ReflectiveModule' not in content:
-                content = 'from src.rm_ddd.core.base_reflective_module import ReflectiveModule\n' + content
-            
+            if (
+                "Metric" in content
+                and "from src.beast_mode.observability.metrics import Metric"
+                not in content
+            ):
+                content = (
+                    "from src.beast_mode.observability.metrics import Metric, MetricType\n"
+                    + content
+                )
+
+            if (
+                "ModuleHealth" in content
+                and "from src.rm_ddd.core.health import ModuleHealth" not in content
+            ):
+                content = "from src.rm_ddd.core.health import ModuleHealth\n" + content
+
+            if (
+                "ReflectiveModule" in content
+                and "from src.rm_ddd.core.base_reflective_module import ReflectiveModule"
+                not in content
+            ):
+                content = (
+                    "from src.rm_ddd.core.base_reflective_module import ReflectiveModule\n"
+                    + content
+                )
+
             # Only write if content changed
             if content != original_content:
-                with open(test_file, 'w') as f:
+                with open(test_file, "w") as f:
                     f.write(content)
                 return True
-            
+
             return True  # No changes needed
-            
+
         except Exception as e:
             print(f"Error fixing imports in {test_file}: {e}")
             return False
-    
+
     def create_missing_import_modules(self) -> Dict[str, int]:
         """Create missing import modules."""
         print("🔍 Agent: Creating missing import modules...")
-        
+
         # Common missing modules that need to be created
         missing_modules = [
-            'src/beast_mode/observability/metrics.py',
-            'src/rm_ddd/core/health.py',
-            'src/rm_ddd/core/base_reflective_module.py'
+            "src/beast_mode/observability/metrics.py",
+            "src/rm_ddd/core/health.py",
+            "src/rm_ddd/core/base_reflective_module.py",
         ]
-        
+
         stats = {"successful": 0, "failed": 0}
-        
+
         for module_path in missing_modules:
             if self._create_missing_module(module_path):
                 stats["successful"] += 1
@@ -117,19 +135,19 @@ class ImportResolverFixer:
             else:
                 stats["failed"] += 1
                 print(f"❌ Failed to create {module_path}")
-        
+
         return stats
-    
+
     def _create_missing_module(self, module_path: str) -> bool:
         """Create a missing module."""
         try:
             full_path = self.project_root / module_path
-            
+
             if not full_path.exists():
                 # Create the module
                 full_path.parent.mkdir(parents=True, exist_ok=True)
-                
-                if 'metrics.py' in module_path:
+
+                if "metrics.py" in module_path:
                     content = '''#!/usr/bin/env python3
 """
 Metrics module for observability
@@ -185,8 +203,8 @@ class Metric:
             'timestamp': self.timestamp.isoformat()
         }
 '''
-                
-                elif 'health.py' in module_path:
+
+                elif "health.py" in module_path:
                     content = '''#!/usr/bin/env python3
 """
 Health module for core health management
@@ -251,8 +269,8 @@ class ModuleHealth:
         """Get current health status."""
         return self.status
 '''
-                
-                elif 'base_reflective_module.py' in module_path:
+
+                elif "base_reflective_module.py" in module_path:
                     content = '''#!/usr/bin/env python3
 """
 Base ReflectiveModule class
@@ -320,45 +338,47 @@ class ReflectiveModule(ABC):
         self.status = "stopped"
         return True
 '''
-                
-                with open(full_path, 'w') as f:
+
+                with open(full_path, "w") as f:
                     f.write(content)
-                
+
                 return True
-            
+
             return True  # Module already exists
-            
+
         except Exception as e:
             print(f"Error creating {module_path}: {e}")
             return False
 
+
 def main():
     """Main function for import resolver agent."""
     fixer = ImportResolverFixer()
-    
+
     print("🚀 Starting Import Resolver Fixer Agent...")
-    
+
     # Fix import issues
     import_stats = fixer.fix_import_issues()
-    
+
     # Create missing modules
     module_stats = fixer.create_missing_import_modules()
-    
+
     total_stats = {
         "successful": import_stats["successful"] + module_stats["successful"],
-        "failed": import_stats["failed"] + module_stats["failed"]
+        "failed": import_stats["failed"] + module_stats["failed"],
     }
-    
+
     result = {
         "agent_id": "import_resolver_fixer",
         "category": "import_resolution",
         "modules_fixed": total_stats["successful"],
         "errors_fixed": total_stats["failed"],
-        "success": total_stats["successful"] > 0
+        "success": total_stats["successful"] > 0,
     }
-    
+
     print(json.dumps(result))
     return 0 if result["success"] else 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

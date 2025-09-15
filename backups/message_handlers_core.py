@@ -14,13 +14,18 @@ from typing import Any, Dict, List, Optional, Callable, Union
 from enum import Enum
 from .models import BeastModeMessage, MessageType, AgentCapabilities
 
+
 class MessageValidationError(Exception):
     """Raised when message validation fails"""
+
     pass
+
 
 class MessageCompatibilityError(Exception):
     """Raised when message format is incompatible"""
+
     pass
+
 
 class MessageRouter:
     """Routes messages to appropriate handlers with validation and compatibility"""
@@ -29,7 +34,14 @@ class MessageRouter:
         self.agent_id = agent_id
         self.handlers: Dict[MessageType, List[BaseMessageHandler]] = {}
         self.fallback_handlers: List[BaseMessageHandler] = []
-        self.stats = {'messages_routed': 0, 'messages_handled': 0, 'validation_errors': 0, 'compatibility_errors': 0, 'handler_errors': 0, 'last_activity': None}
+        self.stats = {
+            "messages_routed": 0,
+            "messages_handled": 0,
+            "validation_errors": 0,
+            "compatibility_errors": 0,
+            "handler_errors": 0,
+            "last_activity": None,
+        }
         self.strict_validation = False
         self.auto_convert_legacy = True
 
@@ -39,60 +51,75 @@ class MessageRouter:
             if msg_type not in self.handlers:
                 self.handlers[msg_type] = []
             self.handlers[msg_type].append(handler)
-        logger.info(f'Registered {handler.__class__.__name__} for types: {[t.value for t in handler.get_supported_types()]}')
+        logger.info(
+            f"Registered {handler.__class__.__name__} for types: {[t.value for t in handler.get_supported_types()]}"
+        )
 
     def register_fallback_handler(self, handler: BaseMessageHandler) -> None:
         """Register a fallback handler for unhandled message types"""
         self.fallback_handlers.append(handler)
-        logger.info(f'Registered fallback handler: {handler.__class__.__name__}')
+        logger.info(f"Registered fallback handler: {handler.__class__.__name__}")
 
     def _convert_legacy_message(self, message_data: Dict[str, Any]) -> BeastModeMessage:
         """
         Convert legacy message formats to current format.
-        
+
         Args:
             message_data: Raw message data
-            
+
         Returns:
             BeastModeMessage: Converted message
-            
+
         Raises:
             MessageCompatibilityError: If conversion fails
         """
         try:
-            if 'type' not in message_data:
-                message_data['type'] = MessageType.SIMPLE_MESSAGE.value
-            if 'source' not in message_data:
-                message_data['source'] = 'unknown_agent'
-            msg_type = message_data['type']
+            if "type" not in message_data:
+                message_data["type"] = MessageType.SIMPLE_MESSAGE.value
+            if "source" not in message_data:
+                message_data["source"] = "unknown_agent"
+            msg_type = message_data["type"]
             if isinstance(msg_type, str):
-                type_mapping = {'message': MessageType.SIMPLE_MESSAGE.value, 'request': MessageType.PROMPT_REQUEST.value, 'response': MessageType.PROMPT_RESPONSE.value, 'discovery': MessageType.AGENT_DISCOVERY.value, 'help': MessageType.HELP_WANTED.value, 'spore': MessageType.SPORE_DELIVERY.value}
+                type_mapping = {
+                    "message": MessageType.SIMPLE_MESSAGE.value,
+                    "request": MessageType.PROMPT_REQUEST.value,
+                    "response": MessageType.PROMPT_RESPONSE.value,
+                    "discovery": MessageType.AGENT_DISCOVERY.value,
+                    "help": MessageType.HELP_WANTED.value,
+                    "spore": MessageType.SPORE_DELIVERY.value,
+                }
                 if msg_type in type_mapping:
-                    message_data['type'] = type_mapping[msg_type]
-            if 'payload' not in message_data:
-                message_data['payload'] = {}
-            if 'timestamp' in message_data and isinstance(message_data['timestamp'], str):
+                    message_data["type"] = type_mapping[msg_type]
+            if "payload" not in message_data:
+                message_data["payload"] = {}
+            if "timestamp" in message_data and isinstance(
+                message_data["timestamp"], str
+            ):
                 try:
-                    message_data['timestamp'] = datetime.fromisoformat(message_data['timestamp'].replace('Z', '+00:00'))
+                    message_data["timestamp"] = datetime.fromisoformat(
+                        message_data["timestamp"].replace("Z", "+00:00")
+                    )
                 except ValueError:
-                    message_data['timestamp'] = datetime.now()
+                    message_data["timestamp"] = datetime.now()
             return BeastModeMessage(**message_data)
         except Exception as e:
-            raise MessageCompatibilityError(f'Failed to convert legacy message: {e}')
+            raise MessageCompatibilityError(f"Failed to convert legacy message: {e}")
 
-    async def route_message(self, message: Union[BeastModeMessage, Dict[str, Any]]) -> List[BeastModeMessage]:
+    async def route_message(
+        self, message: Union[BeastModeMessage, Dict[str, Any]]
+    ) -> List[BeastModeMessage]:
         """
         Route a message to appropriate handlers.
-        
+
         Args:
             message: Message to route (BeastModeMessage or dict)
-            
+
         Returns:
             List of response messages from handlers
         """
         responses = []
-        self.stats['messages_routed'] += 1
-        self.stats['last_activity'] = datetime.now()
+        self.stats["messages_routed"] += 1
+        self.stats["last_activity"] = datetime.now()
         try:
             if isinstance(message, dict):
                 try:
@@ -101,45 +128,57 @@ class MessageRouter:
                     if self.auto_convert_legacy:
                         try:
                             beast_message = self._convert_legacy_message(message)
-                            logger.info(f"Converted legacy message format: {message.get('type', 'unknown')}")
+                            logger.info(
+                                f"Converted legacy message format: {message.get('type', 'unknown')}"
+                            )
                         except MessageCompatibilityError as ce:
-                            self.stats['compatibility_errors'] += 1
-                            logger.error(f'Message compatibility error: {ce}')
+                            self.stats["compatibility_errors"] += 1
+                            logger.error(f"Message compatibility error: {ce}")
                             return responses
                     else:
-                        self.stats['validation_errors'] += 1
-                        logger.error(f'Message validation error: {e}')
+                        self.stats["validation_errors"] += 1
+                        logger.error(f"Message validation error: {e}")
                         return responses
             else:
                 beast_message = message
             if beast_message.source == self.agent_id:
                 return responses
             if beast_message.target and beast_message.target != self.agent_id:
-                logger.debug(f'Message not targeted to us (target: {beast_message.target})')
+                logger.debug(
+                    f"Message not targeted to us (target: {beast_message.target})"
+                )
                 return responses
             handlers = self.handlers.get(beast_message.type, [])
             if not handlers and self.fallback_handlers:
-                handlers = [h for h in self.fallback_handlers if h.can_handle(beast_message)]
+                handlers = [
+                    h for h in self.fallback_handlers if h.can_handle(beast_message)
+                ]
             if not handlers:
-                logger.debug(f'No handlers found for message type: {beast_message.type}')
+                logger.debug(
+                    f"No handlers found for message type: {beast_message.type}"
+                )
                 return responses
             for handler in handlers:
                 try:
                     response = await handler._handle_with_stats(beast_message)
                     if response:
                         responses.append(response)
-                    self.stats['messages_handled'] += 1
+                    self.stats["messages_handled"] += 1
                 except MessageValidationError as e:
-                    self.stats['validation_errors'] += 1
+                    self.stats["validation_errors"] += 1
                     if self.strict_validation:
-                        logger.error(f'Validation error in {handler.__class__.__name__}: {e}')
+                        logger.error(
+                            f"Validation error in {handler.__class__.__name__}: {e}"
+                        )
                     else:
-                        logger.warning(f'Validation warning in {handler.__class__.__name__}: {e}')
+                        logger.warning(
+                            f"Validation warning in {handler.__class__.__name__}: {e}"
+                        )
                 except Exception as e:
-                    self.stats['handler_errors'] += 1
-                    logger.error(f'Handler error in {handler.__class__.__name__}: {e}')
+                    self.stats["handler_errors"] += 1
+                    logger.error(f"Handler error in {handler.__class__.__name__}: {e}")
         except Exception as e:
-            logger.error(f'Error routing message: {e}')
+            logger.error(f"Error routing message: {e}")
         return responses
 
     def get_supported_types(self) -> List[MessageType]:
@@ -151,15 +190,20 @@ class MessageRouter:
         handler_stats = {}
         for msg_type, handlers in self.handlers.items():
             handler_stats[msg_type.value] = [h.get_stats() for h in handlers]
-        return {'router_stats': self.stats.copy(), 'handler_stats': handler_stats, 'fallback_handlers': len(self.fallback_handlers), 'supported_types': [t.value for t in self.get_supported_types()]}
+        return {
+            "router_stats": self.stats.copy(),
+            "handler_stats": handler_stats,
+            "fallback_handlers": len(self.fallback_handlers),
+            "supported_types": [t.value for t in self.get_supported_types()],
+        }
 
     def validate_message_format(self, message_data: Dict[str, Any]) -> bool:
         """
         Validate message format without processing.
-        
+
         Args:
             message_data: Raw message data
-            
+
         Returns:
             bool: True if valid format
         """
@@ -169,131 +213,222 @@ class MessageRouter:
         except Exception:
             return False
 
+
 def __init__(self, agent_id: str):
     self.agent_id = agent_id
     self.handled_count = 0
     self.error_count = 0
     self.last_handled = None
 
+
 @abstractmethod
 def get_supported_types(self) -> List[MessageType]:
     """Return list of supported message types"""
     pass
 
+
 def can_handle(self, message: BeastModeMessage) -> bool:
     """Check if this handler can process the message"""
     return message.type in self.get_supported_types()
 
+
 def get_stats(self) -> Dict[str, Any]:
     """Get handler statistics"""
-    return {'handler_type': self.__class__.__name__, 'supported_types': [t.value for t in self.get_supported_types()], 'handled_count': self.handled_count, 'error_count': self.error_count, 'last_handled': self.last_handled.isoformat() if self.last_handled else None}
+    return {
+        "handler_type": self.__class__.__name__,
+        "supported_types": [t.value for t in self.get_supported_types()],
+        "handled_count": self.handled_count,
+        "error_count": self.error_count,
+        "last_handled": self.last_handled.isoformat() if self.last_handled else None,
+    }
 
-def __init__(self, agent_id: str, message_callback: Optional[Callable[[str, str], None]]=None):
+
+def __init__(
+    self, agent_id: str, message_callback: Optional[Callable[[str, str], None]] = None
+):
     super().__init__(agent_id)
     self.message_callback = message_callback
+
 
 def get_supported_types(self) -> List[MessageType]:
     return [MessageType.SIMPLE_MESSAGE]
 
-def __init__(self, agent_id: str, prompt_processor: Optional[Callable[[str], str]]=None):
+
+def __init__(
+    self, agent_id: str, prompt_processor: Optional[Callable[[str], str]] = None
+):
     super().__init__(agent_id)
     self.prompt_processor = prompt_processor
+
 
 def get_supported_types(self) -> List[MessageType]:
     return [MessageType.PROMPT_REQUEST]
 
-def __init__(self, agent_id: str, response_callback: Optional[Callable[[str, str, str], None]]=None):
+
+def __init__(
+    self,
+    agent_id: str,
+    response_callback: Optional[Callable[[str, str, str], None]] = None,
+):
     super().__init__(agent_id)
     self.response_callback = response_callback
     self.pending_requests: Dict[str, BeastModeMessage] = {}
 
+
 def get_supported_types(self) -> List[MessageType]:
     return [MessageType.PROMPT_RESPONSE]
+
 
 def track_request(self, request: BeastModeMessage) -> None:
     """Track a sent prompt request for correlation"""
     if request.type == MessageType.PROMPT_REQUEST:
         self.pending_requests[request.id] = request
 
-def __init__(self, agent_id: str, capabilities: List[str], discovery_callback: Optional[Callable[[str, AgentCapabilities], None]]=None):
+
+def __init__(
+    self,
+    agent_id: str,
+    capabilities: List[str],
+    discovery_callback: Optional[Callable[[str, AgentCapabilities], None]] = None,
+):
     super().__init__(agent_id)
     self.capabilities = capabilities
     self.discovery_callback = discovery_callback
 
+
 def get_supported_types(self) -> List[MessageType]:
     return [MessageType.AGENT_DISCOVERY]
 
-def __init__(self, agent_id: str, response_callback: Optional[Callable[[str, AgentCapabilities], None]]=None):
+
+def __init__(
+    self,
+    agent_id: str,
+    response_callback: Optional[Callable[[str, AgentCapabilities], None]] = None,
+):
     super().__init__(agent_id)
     self.response_callback = response_callback
+
 
 def get_supported_types(self) -> List[MessageType]:
     return [MessageType.AGENT_RESPONSE]
 
-def __init__(self, agent_id: str, capabilities: List[str], help_callback: Optional[Callable[[str, List[str], str], bool]]=None):
+
+def __init__(
+    self,
+    agent_id: str,
+    capabilities: List[str],
+    help_callback: Optional[Callable[[str, List[str], str], bool]] = None,
+):
     super().__init__(agent_id)
     self.capabilities = capabilities
     self.help_callback = help_callback
 
+
 def get_supported_types(self) -> List[MessageType]:
     return [MessageType.HELP_WANTED]
 
-def __init__(self, agent_id: str, response_callback: Optional[Callable[[str, Dict[str, Any]], None]]=None):
+
+def __init__(
+    self,
+    agent_id: str,
+    response_callback: Optional[Callable[[str, Dict[str, Any]], None]] = None,
+):
     super().__init__(agent_id)
     self.response_callback = response_callback
     self.pending_requests: Dict[str, BeastModeMessage] = {}
 
+
 def get_supported_types(self) -> List[MessageType]:
     return [MessageType.HELP_RESPONSE]
+
 
 def track_help_request(self, request: BeastModeMessage) -> None:
     """Track a sent help request for correlation"""
     if request.type == MessageType.HELP_WANTED:
-        request_id = request.payload.get('request_id', request.id)
+        request_id = request.payload.get("request_id", request.id)
         self.pending_requests[request_id] = request
 
-def __init__(self, agent_id: str, spore_callback: Optional[Callable[[str, str, Dict[str, Any]], None]]=None):
+
+def __init__(
+    self,
+    agent_id: str,
+    spore_callback: Optional[Callable[[str, str, Dict[str, Any]], None]] = None,
+):
     super().__init__(agent_id)
     self.spore_callback = spore_callback
+
 
 def get_supported_types(self) -> List[MessageType]:
     return [MessageType.SPORE_DELIVERY]
 
-def __init__(self, agent_id: str, spore_provider: Optional[Callable[[str], Optional[Dict[str, Any]]]]=None):
+
+def __init__(
+    self,
+    agent_id: str,
+    spore_provider: Optional[Callable[[str], Optional[Dict[str, Any]]]] = None,
+):
     super().__init__(agent_id)
     self.spore_provider = spore_provider
+
 
 def get_supported_types(self) -> List[MessageType]:
     return [MessageType.SPORE_REQUEST]
 
-def __init__(self, agent_id: str, tech_callback: Optional[Callable[[str, Dict[str, Any]], None]]=None):
+
+def __init__(
+    self,
+    agent_id: str,
+    tech_callback: Optional[Callable[[str, Dict[str, Any]], None]] = None,
+):
     super().__init__(agent_id)
     self.tech_callback = tech_callback
+
 
 def get_supported_types(self) -> List[MessageType]:
     return [MessageType.TECHNICAL_EXCHANGE]
 
-def __init__(self, agent_id: str, spawn_callback: Optional[Callable[[str, str, Dict[str, Any]], None]]=None):
+
+def __init__(
+    self,
+    agent_id: str,
+    spawn_callback: Optional[Callable[[str, str, Dict[str, Any]], None]] = None,
+):
     super().__init__(agent_id)
     self.spawn_callback = spawn_callback
+
 
 def get_supported_types(self) -> List[MessageType]:
     return [MessageType.SPORE_SPAWN]
 
-def __init__(self, agent_id: str, health_callback: Optional[Callable[[str, Dict[str, Any]], None]]=None):
+
+def __init__(
+    self,
+    agent_id: str,
+    health_callback: Optional[Callable[[str, Dict[str, Any]], None]] = None,
+):
     super().__init__(agent_id)
     self.health_callback = health_callback
 
+
 def get_supported_types(self) -> List[MessageType]:
     return [MessageType.SYSTEM_HEALTH]
+
 
 def __init__(self, agent_id: str):
     self.agent_id = agent_id
     self.handlers: Dict[MessageType, List[BaseMessageHandler]] = {}
     self.fallback_handlers: List[BaseMessageHandler] = []
-    self.stats = {'messages_routed': 0, 'messages_handled': 0, 'validation_errors': 0, 'compatibility_errors': 0, 'handler_errors': 0, 'last_activity': None}
+    self.stats = {
+        "messages_routed": 0,
+        "messages_handled": 0,
+        "validation_errors": 0,
+        "compatibility_errors": 0,
+        "handler_errors": 0,
+        "last_activity": None,
+    }
     self.strict_validation = False
     self.auto_convert_legacy = True
+
 
 def register_handler(self, handler: BaseMessageHandler) -> None:
     """Register a message handler"""
@@ -301,20 +436,30 @@ def register_handler(self, handler: BaseMessageHandler) -> None:
         if msg_type not in self.handlers:
             self.handlers[msg_type] = []
         self.handlers[msg_type].append(handler)
-    logger.info(f'Registered {handler.__class__.__name__} for types: {[t.value for t in handler.get_supported_types()]}')
+    logger.info(
+        f"Registered {handler.__class__.__name__} for types: {[t.value for t in handler.get_supported_types()]}"
+    )
+
 
 def register_fallback_handler(self, handler: BaseMessageHandler) -> None:
     """Register a fallback handler for unhandled message types"""
     self.fallback_handlers.append(handler)
-    logger.info(f'Registered fallback handler: {handler.__class__.__name__}')
+    logger.info(f"Registered fallback handler: {handler.__class__.__name__}")
+
 
 def get_supported_types(self) -> List[MessageType]:
     """Get all supported message types"""
     return list(self.handlers.keys())
+
 
 def get_handler_stats(self) -> Dict[str, Any]:
     """Get detailed handler statistics"""
     handler_stats = {}
     for msg_type, handlers in self.handlers.items():
         handler_stats[msg_type.value] = [h.get_stats() for h in handlers]
-    return {'router_stats': self.stats.copy(), 'handler_stats': handler_stats, 'fallback_handlers': len(self.fallback_handlers), 'supported_types': [t.value for t in self.get_supported_types()]}
+    return {
+        "router_stats": self.stats.copy(),
+        "handler_stats": handler_stats,
+        "fallback_handlers": len(self.fallback_handlers),
+        "supported_types": [t.value for t in self.get_supported_types()],
+    }

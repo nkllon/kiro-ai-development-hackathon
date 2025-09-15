@@ -96,7 +96,9 @@ class GhostbustersFileTypeProcessor:
         # TODO: Implement _detect_file_patterns
         return {}
 
-    def _classify_ghost(self, file_path: Path, pke_reading: PKEMeterReading) -> GhostClassification:
+    def _classify_ghost(
+        self, file_path: Path, pke_reading: PKEMeterReading
+    ) -> GhostClassification:
         """
         Classify file using ghost classification system
         """
@@ -144,7 +146,9 @@ class GhostbustersFileTypeProcessor:
 
 def main() -> None:
     """Main entry point for Ghostbusters File Type Processor - Paranormal Investigation for Unknown File Types"""
-    print("🚀 Ghostbusters File Type Processor - Paranormal Investigation for Unknown File Types")
+    print(
+        "🚀 Ghostbusters File Type Processor - Paranormal Investigation for Unknown File Types"
+    )
     print("📝 Generated from extracted model")
     print("✅ Ready to use!")
 

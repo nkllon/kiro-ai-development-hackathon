@@ -267,7 +267,9 @@ def validate_generated_code(code: str, script_name: str) -> dict[str, Any]:
     triple_quotes = code.count('"""')
     if triple_quotes % 2 != 0:
         validation_results["string_literals_valid"] = False
-        validation_results["issues_found"].append("Unterminated triple-quoted string literal")
+        validation_results["issues_found"].append(
+            "Unterminated triple-quoted string literal"
+        )
     else:
         validation_results["string_literals_valid"] = True
 
@@ -292,7 +294,9 @@ def validate_generated_code(code: str, script_name: str) -> dict[str, Any]:
     if "class " in code and "def __init__" in code:
         validation_results["class_structure_valid"] = True
     else:
-        validation_results["issues_found"].append("Missing class definition or __init__ method")
+        validation_results["issues_found"].append(
+            "Missing class definition or __init__ method"
+        )
 
     # 5. Check for method signatures
     if "def " in code and "self" in code:
@@ -302,39 +306,63 @@ def validate_generated_code(code: str, script_name: str) -> dict[str, Any]:
 
     # 6. Check for common patterns that cause issues
     if "relationship_typ\n" in code:
-        validation_results["issues_found"].append("Found broken relationship_type pattern")
+        validation_results["issues_found"].append(
+            "Found broken relationship_type pattern"
+        )
 
     if "\\n" in code and "\\n" not in code.replace("\\\\n", ""):
         validation_results["warnings"].append("Potential newline escape issues")
 
     # 7. Check for balanced brackets and parentheses
-    if code.count("(") != code.count(")") or code.count("[") != code.count("]") or code.count("{") != code.count("}"):
+    if (
+        code.count("(") != code.count(")")
+        or code.count("[") != code.count("]")
+        or code.count("{") != code.count("}")
+    ):
         validation_results["issues_found"].append("Unbalanced brackets/parentheses")
 
     return validation_results
 
 
-def print_validation_report(validation_results: dict[str, Any], script_name: str) -> None:
+def print_validation_report(
+    validation_results: dict[str, Any], script_name: str
+) -> None:
     """Print comprehensive validation report"""
     print(f"\n📊 VALIDATION REPORT: {script_name}")
     print("=" * 60)
 
     # Overall status
-    all_critical_passed = validation_results["syntax_valid"] and validation_results["string_literals_valid"] and validation_results["class_structure_valid"]
+    all_critical_passed = (
+        validation_results["syntax_valid"]
+        and validation_results["string_literals_valid"]
+        and validation_results["class_structure_valid"]
+    )
 
     status_emoji = "✅" if all_critical_passed else "❌"
-    print(f"{status_emoji} Overall Status: {'PASSED' if all_critical_passed else 'FAILED'}")
+    print(
+        f"{status_emoji} Overall Status: {'PASSED' if all_critical_passed else 'FAILED'}"
+    )
 
     # Critical checks
     print("\n🔴 CRITICAL CHECKS:")
-    print(f"  {'✅' if validation_results['syntax_valid'] else '❌'} Syntax Valid: {validation_results['syntax_valid']}")
-    print(f"  {'✅' if validation_results['string_literals_valid'] else '❌'} String Literals: {validation_results['string_literals_valid']}")
-    print(f"  {'✅' if validation_results['class_structure_valid'] else '❌'} Class Structure: {validation_results['class_structure_valid']}")
+    print(
+        f"  {'✅' if validation_results['syntax_valid'] else '❌'} Syntax Valid: {validation_results['syntax_valid']}"
+    )
+    print(
+        f"  {'✅' if validation_results['string_literals_valid'] else '❌'} String Literals: {validation_results['string_literals_valid']}"
+    )
+    print(
+        f"  {'✅' if validation_results['class_structure_valid'] else '❌'} Class Structure: {validation_results['class_structure_valid']}"
+    )
 
     # Important checks
     print("\n🟡 IMPORTANT CHECKS:")
-    print(f"  {'✅' if validation_results['imports_valid'] else '⚠️'} Imports Valid: {validation_results['imports_valid']}")
-    print(f"  {'✅' if validation_results['method_signatures_valid'] else '⚠️'} Method Signatures: {validation_results['method_signatures_valid']}")
+    print(
+        f"  {'✅' if validation_results['imports_valid'] else '⚠️'} Imports Valid: {validation_results['imports_valid']}"
+    )
+    print(
+        f"  {'✅' if validation_results['method_signatures_valid'] else '⚠️'} Method Signatures: {validation_results['method_signatures_valid']}"
+    )
 
     # Issues found
     if validation_results["issues_found"]:
@@ -377,10 +405,15 @@ def main():
     print_validation_report(validation_results, "model_dimension_analyzer.py")
 
     # Only write if validation passes
-    if validation_results["syntax_valid"] and validation_results["string_literals_valid"]:
+    if (
+        validation_results["syntax_valid"]
+        and validation_results["string_literals_valid"]
+    ):
         with open("model_dimension_analyzer.py", "w") as f:
             f.write(code)
-        print("\n✅ Generated model_dimension_analyzer.py from model (validation passed)")
+        print(
+            "\n✅ Generated model_dimension_analyzer.py from model (validation passed)"
+        )
     else:
         print("\n❌ Code generation aborted due to validation failures")
         print("🔧 Please fix the issues and regenerate")
