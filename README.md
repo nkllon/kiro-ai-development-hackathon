@@ -15,7 +15,7 @@
 | **📚 Vocabulary** | [Ubiquitous Language](docs/ubiquitous_language_vocabulary.md) • [By Stakeholder](docs/vocabulary_projections/vocabulary_by_stakeholder.md) • [By Phase](docs/vocabulary_projections/vocabulary_by_implementation_phase.md) |
 | **🧠 Ontology** | [Beastmaster Ontology](docs/beastmaster-ontology/README.md) • [Session Analysis](docs/beastmaster-ontology/session-analysis.md) • [Extended Intelligence](docs/BEAST_MODE_EXTENDED_INTELLIGENCE_FRAMEWORK.md) |
 | **📋 Documentation** | [API Reference](docs/API_REFERENCE.md) • [CLI Guide](docs/CLI_USAGE_GUIDE.md) • [Implementation](docs/implementation-reference.md) • [Ecosystem](docs/ecosystem-overview.md) |
-| **🔧 Operations** | [Deployment](docs/deployment_guide.md) • [Governance](docs/governance_implementation_guide.md) • [DevPost Integration](docs/devpost_integration_guide.md) |
+| **🔧 Operations** | [Deployment](docs/deployment_guide.md) • [Governance](docs/governance_implementation_guide.md) • [DevPost Integration](docs/devpost_integration_guide.md) • [Makefile System](makefile_system_implemented/documentation/README.md) |
 
 ## 🎯 "The Requirements ARE the Solution"
 
@@ -86,6 +86,47 @@ graph TB
 
 ```bash
 pip install rm-ddd
+```
+
+### Makefile System
+
+The project includes a comprehensive Makefile system with 175 targets across 31 Makefiles:
+
+```bash
+# Show all available targets
+make help
+
+# Use the unified Makefile system
+make -f makefile_system_implemented/unified/Makefile help
+
+# Include modular Makefiles in your project
+include makefile_system_implemented/modular/*.mk
+```
+
+**Key Makefile Features:**
+- **Unified System**: Single Makefile consolidating all 175 targets
+- **Modular Organization**: Category-based Makefiles (build, test, clean, etc.)
+- **Projections**: Specialized views (Beast Mode, RDI, RM-DDD)
+- **Comprehensive Documentation**: API docs, usage guides, troubleshooting
+- **Validation Scripts**: Automated testing and validation
+- **Integration Tools**: Easy setup and maintenance scripts
+
+**Quick Commands:**
+```bash
+# Build everything
+make build
+
+# Run tests
+make test
+
+# Clean up
+make clean
+
+# Show project status
+make status
+
+# Run comprehensive validation
+make validate-all
 ```
 
 ### Basic Usage
@@ -312,22 +353,25 @@ RM-DDD provides systematic frameworks for deployment decisions based on:
 - **[📊 Browse by Status](docs/by-status/README.md)** - Active, Draft, Beta, Deprecated documents
 - **[✨ Browse by Features](docs/by-features/README.md)** - Documents with examples, code, TOC, etc.
 - **[🕒 Recent Updates](docs/recent-updates/README.md)** - Most recently updated documents
+- **[🔧 Makefile System](makefile_system_implemented/documentation/README.md)** - Complete Makefile system documentation
 
 #### Key Documentation Categories
 - **[Architecture](docs/architecture/README.md)** (479 docs) - System architecture and design patterns
-- **[Requirements](docs/requirements/README.md)** (107 docs) - Functional and non-functional requirements  
+- **[Requirements](docs/requirements/README.md)** (107 docs) - Functional and non-functional requirements
 - **[Design](docs/design/README.md)** (68 docs) - Detailed design specifications and patterns
 - **[Testing](docs/testing/README.md)** (76 docs) - Testing strategies and procedures
 - **[Research](docs/research/README.md)** (47 docs) - Research findings and analysis
 - **[API Reference](docs/api_reference/README.md)** (21 docs) - API documentation and references
 - **[Guides](docs/guides/README.md)** (22 docs) - User guides and tutorials
 - **[Deployment](docs/deployment/README.md)** (11 docs) - Deployment guides and configurations
+- **[Makefile System](makefile_system_implemented/documentation/README.md)** - Complete build system documentation
 
 ### 🔧 Development & Operations
 - **[Deployment Guide](docs/deployment_guide.md)** - Production deployment instructions
 - **[Governance Implementation](docs/governance_implementation_guide.md)** - Governance framework implementation
 - **[Transport Implementation](docs/transport_implementation_guide.md)** - Message transport system
 - **[DevPost Integration](docs/devpost_integration_guide.md)** - DevPost platform integration
+- **[Makefile System](makefile_system_implemented/documentation/README.md)** - Complete build system with 175 targets
 - **[Git Workflow Research](docs/PROPER_GIT_WORKFLOW_RESEARCH.md)** - Git workflow best practices
 
 ## 🤝 Contributing
