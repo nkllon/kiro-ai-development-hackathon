@@ -33,7 +33,7 @@ class BrowserInstance:
 class BrowserSessionManager:
     """Manages browser instances and connections"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.active_browsers: Dict[int, BrowserInstance] = {}
         self.playwright = None
         self.current_connection: Optional[Tuple[Browser, BrowserContext]] = None

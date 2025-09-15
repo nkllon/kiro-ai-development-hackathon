@@ -50,7 +50,7 @@ class EnhancedSCAProcedureV2(ReflectiveModule):
         self.dynamic_thresholds = True
         self.smart_early_termination = True
         # Performance tracking
-        self.performance_history = []
+        self.performance_history: list[float] = []
         self.saturation_levels = {"rdi": 0.0, "health": 0.0, "registry": 0.0}
         # Enhanced metrics
         self.enhanced_metrics = {
