@@ -1,0 +1,115 @@
+# Kiro AI Development Hackathon - GitHub Pages Configuration
+title: Kiro AI Development Hackathon
+description: Advanced AI Development Framework - A comprehensive system for building, testing, and deploying AI-powered applications with enterprise-grade quality and reliability.
+baseurl: "/kiro-ai-development-hackathon"
+url: "https://nkllon.github.io"
+
+# GitHub Pages settings
+github:
+  repository_url: https://github.com/nkllon/kiro-ai-development-hackathon
+
+# Jekyll configuration
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-redirect-from
+
+# Site settings
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# Collections
+collections:
+  guides:
+    output: true
+    permalink: /:collection/:name/
+  examples:
+    output: true
+    permalink: /:collection/:name/
+  tutorials:
+    output: true
+    permalink: /:collection/:name/
+
+# Default layouts
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+  - scope:
+      path: ""
+      type: "guides"
+    values:
+      layout: "guide"
+  - scope:
+      path: ""
+      type: "examples"
+    values:
+      layout: "example"
+  - scope:
+      path: ""
+      type: "tutorials"
+    values:
+      layout: "tutorial"
+
+# Navigation
+navigation:
+  - title: Home
+    url: /
+  - title: Getting Started
+    url: /getting-started/
+  - title: Documentation
+    url: /documentation/
+  - title: API Reference
+    url: /api-reference/
+  - title: Examples
+    url: /examples/
+  - title: Community
+    url: /community/
+
+# Exclude files from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - README.md
+  - LICENSE
+  - .gitignore
+  - .gitattributes
+
+# Include files
+include:
+  - _redirects
+
+# Build settings
+incremental: false
+safe: false
+lsi: false
+excerpt_separator: "\n\n"
+timezone: UTC
+
+# SEO settings
+seo:
+  type: "Organization"
+  name: "Kiro AI Development Hackathon"
+  description: "Advanced AI Development Framework"
+  url: "https://nkllon.github.io/kiro-ai-development-hackathon"
+  logo: "/kiro-ai-development-hackathon/assets/logo.png"
+  social:
+    twitter: "@KiroAI"
+    github: "nkllon"
+    linkedin: "kiro-ai"
+
+# Analytics
+google_analytics: UA-XXXXXXXXX-X
+
+# Search
+search: true
+search_index: true
