@@ -1,0 +1,4 @@
+# RC1 Foundation Dependencies
+click>=8.0.0
+psutil>=5.8.0
+PyYAML>=6.0

@@ -1,0 +1,13 @@
+# Quick Start Configuration
+beast_mode:
+  log_level: INFO
+  monitoring_interval: 30
+  auto_fix_enabled: true
+  
+agent_settings:
+  max_concurrent_agents: 6
+  timeout_seconds: 30
+  
+health_monitoring:
+  enabled: true
+  alert_threshold: 0.8
