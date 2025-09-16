@@ -201,3 +201,4 @@ def auto_navigate_steps():
 
 if __name__ == "__main__":
     auto_navigate_steps()
+

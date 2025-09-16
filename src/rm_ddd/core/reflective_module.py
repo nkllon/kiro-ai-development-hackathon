@@ -260,3 +260,4 @@ class ReflectiveModule(ABC):
 
     def __repr__(self) -> str:
         return f"ReflectiveModule(module_id='{self.module_id}', capabilities={len(self.capabilities)})"
+

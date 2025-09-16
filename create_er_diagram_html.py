@@ -201,3 +201,4 @@ erDiagram
 
 if __name__ == "__main__":
     create_html_with_mermaid()
+

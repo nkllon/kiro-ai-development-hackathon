@@ -45,3 +45,4 @@ detector.emergency_shell_reset()
 - ✅ No more hung shell bullshit
 
 **THE HUNG SHELL IS DEAD. PERIOD.**
+

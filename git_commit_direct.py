@@ -76,3 +76,4 @@ def safe_git_commit():
 if __name__ == "__main__":
     success = safe_git_commit()
     sys.exit(0 if success else 1)
+

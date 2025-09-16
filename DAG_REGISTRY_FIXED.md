@@ -26,3 +26,4 @@ success = register_module_safely("module_a", {"module_b"})
 - No more circular dependencies possible
 - Registry enforces DAG structure
 - Tests can run without import cycles
+

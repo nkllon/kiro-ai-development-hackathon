@@ -142,3 +142,4 @@ if __name__ == "__main__":
         print("❌ DAG structure not enforced")
     
     sys.exit(0 if overall_success else 1)
+

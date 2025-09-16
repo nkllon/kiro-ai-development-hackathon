@@ -1,6 +1,6 @@
 # Ghostbusters Plan Validation Report
 
-**Validation ID:** gb_validation_1757960815
+**Validation ID:** gb_validation_1758038286
 **Overall Status:** WARNING
 **Risk Score:** 117.6/100
 **Confidence Level:** -17.6%

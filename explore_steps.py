@@ -349,3 +349,4 @@ if __name__ == "__main__":
         print(
             f"📝 Identified {len(model['heuristics']['form_patterns']['common_inputs'])} common inputs"
         )
+

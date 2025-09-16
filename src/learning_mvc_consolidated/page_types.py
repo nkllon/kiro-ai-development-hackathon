@@ -26,3 +26,4 @@ class PageType(Enum):
     DASHBOARD = "dashboard"
     ERROR = "error"
     LOADING = "loading"
+

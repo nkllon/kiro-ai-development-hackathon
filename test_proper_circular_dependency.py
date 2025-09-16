@@ -108,3 +108,4 @@ def test_proper_circular_dependency():
 
 if __name__ == "__main__":
     test_proper_circular_dependency()
+

@@ -69,3 +69,4 @@ def test_import_dependency_registry():
 
 if __name__ == "__main__":
     test_import_dependency_registry()
+

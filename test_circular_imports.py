@@ -136,3 +136,4 @@ for file in ["module_a.py", "module_b.py", "module_c.py", "module_d.py"]:
     if os.path.exists(file):
         os.remove(file)
         print(f"Cleaned up {file}")
+

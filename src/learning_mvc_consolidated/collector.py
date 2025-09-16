@@ -83,3 +83,4 @@ class TelemetryCollector:
             json.dump(telemetry_data, f, indent=2)
         print(f"📊 Telemetry saved: {filename}")
         return filename
+

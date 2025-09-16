@@ -139,3 +139,4 @@ def is_registry_dag() -> bool:
 def get_registry_stats() -> Dict[str, any]:
     """Get registry statistics."""
     return simple_registry.get_stats()
+

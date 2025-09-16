@@ -192,3 +192,4 @@ if __name__ == "__main__":
     else:
         print("\n📝 Text diagram created: persistent_dag_registry_er_diagram.txt")
         print("💡 To generate SVG, install mermaid-cli: npm install -g @mermaid-js/mermaid-cli")
+

@@ -21,3 +21,4 @@ class VerificationResult:
     execution_characteristics: Dict[str, Any]
     state_mutations: Dict[str, Any]
     performance_metrics: Dict[str, Any]
+

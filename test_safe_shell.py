@@ -15,3 +15,4 @@ print(f"Output: {stdout}")
 success, stdout, stderr = safe_run('echo "unclosed quote')
 print(f"Dangerous command result: {success}")
 print(f"Error: {stderr}")
+

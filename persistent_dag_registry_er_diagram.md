@@ -111,3 +111,4 @@ erDiagram
 - **Bidirectional Tracking**: Both dependencies and dependents maintained
 - **Transaction Safety**: All operations wrapped in transactions
 - **Validation**: Continuous DAG validation with `validate_dag()` method
+

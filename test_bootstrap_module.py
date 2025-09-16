@@ -149,3 +149,4 @@ def test_registry_bootstrap():
 if __name__ == "__main__":
     success = test_registry_bootstrap()
     sys.exit(0 if success else 1)
+

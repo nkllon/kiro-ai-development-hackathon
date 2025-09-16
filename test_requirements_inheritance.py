@@ -125,3 +125,4 @@ def test_requirements_inheritance():
 if __name__ == "__main__":
     success = test_requirements_inheritance()
     sys.exit(0 if success else 1)
+

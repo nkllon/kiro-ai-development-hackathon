@@ -49,3 +49,4 @@ class PhaseManagerModule:
                 weights[phase] = impact / total_impact
 
         return weights
+

@@ -104,3 +104,4 @@ def register_all_modules():
 if __name__ == "__main__":
     success = register_all_modules()
     sys.exit(0 if success else 1)
+

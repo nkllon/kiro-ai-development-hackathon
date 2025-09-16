@@ -98,3 +98,4 @@ class PerformanceAnalyzer:
                 analysis["confidence"] += 0.2
         
         return analysis
+
