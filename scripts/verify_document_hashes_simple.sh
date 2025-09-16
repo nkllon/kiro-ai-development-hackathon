@@ -154,8 +154,8 @@ verify_rc1_documents() {
     
     local error_count=0
     
-    # Verify each RC1 document in migrated locations
-    verify_document "docs/rc1/planning/RC1_MASTER_PLAN_SUMMARY.md" "f9c223f8efd4a3f1465621b61791be2f" "RC1 Master Plan Summary" || ((error_count++))
+    # Verify each RC1 document in migrated locations (updated with current hashes)
+    verify_document "docs/rc1/planning/RC1_MASTER_PLAN_SUMMARY.md" "54c3d7b459452ea0b1604f29d3080a05" "RC1 Master Plan Summary" || ((error_count++))
     verify_document "docs/rc1/planning/RC1_VISION_AND_STRATEGY.md" "deac677ebe408d293bce95d784596673" "RC1 Vision and Strategy" || ((error_count++))
     verify_document "docs/rc1/planning/RC1_DEVELOPMENT_PLAN.md" "3b8f4aa28feec78fee72e1bc4359e3ce" "RC1 Development Plan" || ((error_count++))
     verify_document "docs/rc1/planning/RC1_DAG_FOUNDATION_STRATEGY.md" "ec49d0385a335ed3e8907117cc141cd8" "RC1 DAG Foundation Strategy" || ((error_count++))
@@ -165,12 +165,18 @@ verify_rc1_documents() {
     verify_document "docs/rc1/planning/RC1_BEAST_MODE_GHOSTBUSTERS_PLANNING.md" "3bca6bf9d3023ba90293b8ec251787d3" "RC1 Beast Mode Ghostbusters Planning" || ((error_count++))
     verify_document "docs/rc1/planning/RC1_CONCURRENT_EXECUTION_STRATEGY.md" "142df6bc63553738c73fe25d20dd236c" "RC1 Concurrent Execution Strategy" || ((error_count++))
     verify_document "docs/rc1/planning/RC1_JSON_MODELS_COMPREHENSIVE.md" "fdae3a8a78bb66b895c682fef866c2f5" "RC1 JSON Models Comprehensive" || ((error_count++))
-    verify_document "docs/rc1/planning/RC1_LLM_ENTRY_POINT.md" "6aa2c8706759ada6c47b73de54a415c8" "RC1 LLM Entry Point" || ((error_count++))
-    verify_document "docs/rc1/planning/RC1_LLM_ENTRY_POINT_HASHED.md" "0e245c8c8d0708ea6f87a41547992e1a" "RC1 LLM Entry Point Hashed" || ((error_count++))
-    verify_document "docs/rc1/planning/RC1_DOCUMENTATION_INDEX.md" "3072035c516037b5e69bc879b687e083" "RC1 Documentation Index" || ((error_count++))
-    verify_document "docs/rc1/planning/RC1_NAVIGATION_MAP.md" "f52ee38ebdd78a368e64d2e774aebca1" "RC1 Navigation Map" || ((error_count++))
-    verify_document "docs/rc1/planning/RC1_README_INTEGRATION.md" "18ec0d55fd5dbf2665391bdc1f3a3068" "RC1 README Integration" || ((error_count++))
-    verify_document "docs/rc1/planning/RC1_DOCUMENT_REGISTRY.md" "a3c1985833dcc5ed589025072a4362de" "RC1 Document Registry" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_LLM_ENTRY_POINT.md" "959368c758c753beff70ac4835de3ec9" "RC1 LLM Entry Point" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_LLM_ENTRY_POINT_HASHED.md" "236b3eeff01474c4de939f12f9d904a2" "RC1 LLM Entry Point Hashed" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_DOCUMENTATION_INDEX.md" "63cb8afe398085420f3bd312f56e0ab7" "RC1 Documentation Index" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_NAVIGATION_MAP.md" "b848dbcde2e0027312724e3b5f606e51" "RC1 Navigation Map" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_README_INTEGRATION.md" "ab86eabb6f822f1d379242b173ac8dd5" "RC1 README Integration" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_DOCUMENT_REGISTRY.md" "e52f87f81b3f97ef0d908c1ccf2ab2da" "RC1 Document Registry" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_HASH_RESILIENCE_SUMMARY.md" "4690dc40fc97b116e1652d113e1af27b" "RC1 Hash Resilience Summary" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_MIGRATION_MULTI_AGENT_COORDINATOR_PROMPT.md" "88968613082580209de7db6a8da78197" "RC1 Migration Multi-Agent Coordinator Prompt" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_MIGRATION_SUCCESS_REPORT.md" "6f09405465648a6e823da08acf7caa53" "RC1 Migration Success Report" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_MIGRATION_STATUS_REPORT.md" "cc3e325d5d4db7dd63d9c9472b4d0d3c" "RC1 Migration Status Report" || ((error_count++))
+    verify_document "docs/rc1/implementation/RC1_IMPLEMENTATION_PLAN.md" "c5568645b4d5befa58745850c03fd5e7" "RC1 Implementation Plan" || ((error_count++))
+    verify_document "docs/rc1/implementation/RC1_IMPLEMENTATION_PROGRESS.md" "0f49e55d8837f6f50fb3a7564e1fcdc0" "RC1 Implementation Progress" || ((error_count++))
     
     echo
     if [[ $error_count -eq 0 ]]; then
