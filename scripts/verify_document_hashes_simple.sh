@@ -53,8 +53,8 @@ find_by_hash() {
     
     local found=false
     
-    # Search RC1 documents
-    for file in RC1_*.md; do
+    # Search RC1 documents in migrated locations
+    find . -name "RC1_*.md" | while read -r file; do
         if [[ -f "$file" ]]; then
             local hash
             hash=$(md5sum "$file" | cut -d' ' -f1)
@@ -113,7 +113,7 @@ list_all_documents() {
     echo
     
     echo -e "${YELLOW}RC1 Documents:${NC}"
-    for file in RC1_*.md; do
+    find . -name "RC1_*.md" | while read -r file; do
         if [[ -f "$file" ]]; then
             local hash
             hash=$(md5sum "$file" | cut -d' ' -f1)
@@ -154,23 +154,23 @@ verify_rc1_documents() {
     
     local error_count=0
     
-    # Verify each RC1 document
-    verify_document "RC1_MASTER_PLAN_SUMMARY.md" "f9c223f8efd4a3f1465621b61791be2f" "RC1 Master Plan Summary" || ((error_count++))
-    verify_document "RC1_VISION_AND_STRATEGY.md" "deac677ebe408d293bce95d784596673" "RC1 Vision and Strategy" || ((error_count++))
-    verify_document "RC1_DEVELOPMENT_PLAN.md" "3b8f4aa28feec78fee72e1bc4359e3ce" "RC1 Development Plan" || ((error_count++))
-    verify_document "RC1_DAG_FOUNDATION_STRATEGY.md" "ec49d0385a335ed3e8907117cc141cd8" "RC1 DAG Foundation Strategy" || ((error_count++))
-    verify_document "RC1_COMPLETE_DAG_ANALYSIS.md" "830f57a10fe8fe9083e8e06cacb390be" "RC1 Complete DAG Analysis" || ((error_count++))
-    verify_document "RC1_DOCUMENT_MANAGEMENT_DAG_STRATEGY.md" "24723a2b9ca2e39693d47a6e9d3ba1a1" "RC1 Document Management DAG Strategy" || ((error_count++))
-    verify_document "RC1_MULTI_DIMENSIONAL_INDEXING_STRATEGY.md" "37da96784cdfff1468d85cdb82a71d14" "RC1 Multi-Dimensional Indexing Strategy" || ((error_count++))
-    verify_document "RC1_BEAST_MODE_GHOSTBUSTERS_PLANNING.md" "3bca6bf9d3023ba90293b8ec251787d3" "RC1 Beast Mode Ghostbusters Planning" || ((error_count++))
-    verify_document "RC1_CONCURRENT_EXECUTION_STRATEGY.md" "142df6bc63553738c73fe25d20dd236c" "RC1 Concurrent Execution Strategy" || ((error_count++))
-    verify_document "RC1_JSON_MODELS_COMPREHENSIVE.md" "fdae3a8a78bb66b895c682fef866c2f5" "RC1 JSON Models Comprehensive" || ((error_count++))
-    verify_document "RC1_LLM_ENTRY_POINT.md" "6aa2c8706759ada6c47b73de54a415c8" "RC1 LLM Entry Point" || ((error_count++))
-    verify_document "RC1_LLM_ENTRY_POINT_HASHED.md" "0e245c8c8d0708ea6f87a41547992e1a" "RC1 LLM Entry Point Hashed" || ((error_count++))
-    verify_document "RC1_DOCUMENTATION_INDEX.md" "3072035c516037b5e69bc879b687e083" "RC1 Documentation Index" || ((error_count++))
-    verify_document "RC1_NAVIGATION_MAP.md" "f52ee38ebdd78a368e64d2e774aebca1" "RC1 Navigation Map" || ((error_count++))
-    verify_document "RC1_README_INTEGRATION.md" "18ec0d55fd5dbf2665391bdc1f3a3068" "RC1 README Integration" || ((error_count++))
-    verify_document "RC1_DOCUMENT_REGISTRY.md" "a3c1985833dcc5ed589025072a4362de" "RC1 Document Registry" || ((error_count++))
+    # Verify each RC1 document in migrated locations
+    verify_document "docs/rc1/planning/RC1_MASTER_PLAN_SUMMARY.md" "f9c223f8efd4a3f1465621b61791be2f" "RC1 Master Plan Summary" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_VISION_AND_STRATEGY.md" "deac677ebe408d293bce95d784596673" "RC1 Vision and Strategy" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_DEVELOPMENT_PLAN.md" "3b8f4aa28feec78fee72e1bc4359e3ce" "RC1 Development Plan" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_DAG_FOUNDATION_STRATEGY.md" "ec49d0385a335ed3e8907117cc141cd8" "RC1 DAG Foundation Strategy" || ((error_count++))
+    verify_document "docs/rc1/analysis/RC1_COMPLETE_DAG_ANALYSIS.md" "830f57a10fe8fe9083e8e06cacb390be" "RC1 Complete DAG Analysis" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_DOCUMENT_MANAGEMENT_DAG_STRATEGY.md" "24723a2b9ca2e39693d47a6e9d3ba1a1" "RC1 Document Management DAG Strategy" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_MULTI_DIMENSIONAL_INDEXING_STRATEGY.md" "37da96784cdfff1468d85cdb82a71d14" "RC1 Multi-Dimensional Indexing Strategy" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_BEAST_MODE_GHOSTBUSTERS_PLANNING.md" "3bca6bf9d3023ba90293b8ec251787d3" "RC1 Beast Mode Ghostbusters Planning" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_CONCURRENT_EXECUTION_STRATEGY.md" "142df6bc63553738c73fe25d20dd236c" "RC1 Concurrent Execution Strategy" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_JSON_MODELS_COMPREHENSIVE.md" "fdae3a8a78bb66b895c682fef866c2f5" "RC1 JSON Models Comprehensive" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_LLM_ENTRY_POINT.md" "6aa2c8706759ada6c47b73de54a415c8" "RC1 LLM Entry Point" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_LLM_ENTRY_POINT_HASHED.md" "0e245c8c8d0708ea6f87a41547992e1a" "RC1 LLM Entry Point Hashed" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_DOCUMENTATION_INDEX.md" "3072035c516037b5e69bc879b687e083" "RC1 Documentation Index" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_NAVIGATION_MAP.md" "f52ee38ebdd78a368e64d2e774aebca1" "RC1 Navigation Map" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_README_INTEGRATION.md" "18ec0d55fd5dbf2665391bdc1f3a3068" "RC1 README Integration" || ((error_count++))
+    verify_document "docs/rc1/planning/RC1_DOCUMENT_REGISTRY.md" "a3c1985833dcc5ed589025072a4362de" "RC1 Document Registry" || ((error_count++))
     
     echo
     if [[ $error_count -eq 0 ]]; then
