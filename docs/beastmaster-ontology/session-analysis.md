@@ -208,7 +208,7 @@ def get_domain_boundaries(self):
 
 ### Examples and Documentation
 - `examples/usps-sun-complete.ttl` - Complete real-world scenario
-- `docs/beastmaster-ontology/README.md` - Consolidated documentation
+- `../readme/project/README.md` - Consolidated documentation
 - `docs/beastmaster-ontology/session-analysis.md` - This analysis document
 
 ## Systematic Superiority Demonstrated

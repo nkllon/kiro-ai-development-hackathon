@@ -79,7 +79,7 @@
 
 ---
 
-### [RM-DDD Implementation Guide: Lessons Learned Integration](RM_DDD_IMPLEMENTATION_GUIDE_LESSONS_LEARNED.md)
+### [RM-DDD Implementation Guide: Lessons Learned Integration](docs/rc1/implementation/docs/rc1/implementation/RM_DDD_IMPLEMENTATION_GUIDE_LESSONS_LEARNED.md)
 **
 
 **Audience:** Developers, AI Engineers, End Users • **Has Examples** • **Has Code**
@@ -100,7 +100,7 @@
 
 ---
 
-### [Repository-Wide Refactoring System](REPOSITORY_REFACTORING_GUIDE.md)
+### [Repository-Wide Refactoring System](docs/readme/project/docs/readme/project/REPOSITORY_REFACTORING_GUIDE.md)
 **
 
 **Audience:** Developers, Architects, AI Engineers, End Users • **Status:** Beta • **Has Examples** • **Has Code** • **Length:** 1172 words
@@ -149,7 +149,7 @@
 
 ---
 
-### [🚨 DISCOVERY EMERGENCY PROTOCOL INTEGRATION GUIDE](DISCOVERY_EMERGENCY_INTEGRATION_GUIDE.md)
+### [🚨 DISCOVERY EMERGENCY PROTOCOL INTEGRATION GUIDE](docs/readme/project/docs/readme/project/DISCOVERY_EMERGENCY_INTEGRATION_GUIDE.md)
 **
 
 **Audience:** Developers, Architects, AI Engineers, End Users • **Has Examples** • **Has Code** • **Length:** 1191 words

@@ -4,7 +4,7 @@
 
 ## 02_REQUIREMENTS
 
-### [CLAUDE.md - Requirements Folder Structure Guide](kiro_simone_adapter/legacy/.simone/02_REQUIREMENTS/CLAUDE.md)
+### [docs/beast_mode/execution/CLAUDE.md - Requirements Folder Structure Guide](../beast_mode/execution/docs/beast_mode/execution/CLAUDE.md)
 **
 
 **Audience:** Developers, Architects, Product Managers, AI Engineers, End Users • **Has Examples**

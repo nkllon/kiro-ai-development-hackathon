@@ -9,7 +9,7 @@
 
 ---
 
-### [Multi-Dimensional Vocabulary Projections](docs/vocabulary_projections/README.md)
+### [Multi-Dimensional Vocabulary Projections](../readme/project/README.md)
 ***Generated:** 2025-01-27 **Purpose:** Multiple perspectives on ubiquitous language vocabulary This directory contains the ubiquitous language vocabulary projected across multiple dimensions to provid...*
 
 **Audience:** Developers, Architects, Product Managers, AI Engineers, End Users

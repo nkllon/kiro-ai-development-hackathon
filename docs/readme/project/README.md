@@ -11,11 +11,11 @@
 
 | **Category** | **Quick Links** |
 |--------------|-----------------|
-| **🏗️ Architecture** | [UML Diagrams](README.md#-system-architecture-diagrams) • [Domain Index](diagrams/domains/README.md) • [ReflectiveModule](diagrams/reflective_module_vertical_sections.md) |
+| **🏗️ Architecture** | [UML Diagrams](docs/readme/project/docs/readme/project/README.md) • [Domain Index](docs/readme/project/README.md) • [ReflectiveModule](diagrams/reflective_module_vertical_sections.md) |
 | **📚 Vocabulary** | [Ubiquitous Language](docs/ubiquitous_language_vocabulary.md) • [By Stakeholder](docs/vocabulary_projections/vocabulary_by_stakeholder.md) • [By Phase](docs/vocabulary_projections/vocabulary_by_implementation_phase.md) |
-| **🧠 Ontology** | [Beastmaster Ontology](docs/beastmaster-ontology/README.md) • [Session Analysis](docs/beastmaster-ontology/session-analysis.md) • [Extended Intelligence](docs/BEAST_MODE_EXTENDED_INTELLIGENCE_FRAMEWORK.md) |
+| **🧠 Ontology** | [Beastmaster Ontology](README.md) • [Session Analysis](docs/beastmaster-ontology/session-analysis.md) • [Extended Intelligence](docs/BEAST_MODE_EXTENDED_INTELLIGENCE_FRAMEWORK.md) |
 | **📋 Documentation** | [API Reference](docs/API_REFERENCE.md) • [CLI Guide](docs/CLI_USAGE_GUIDE.md) • [Implementation](docs/implementation-reference.md) • [Ecosystem](docs/ecosystem-overview.md) |
-| **🔧 Operations** | [Deployment](docs/deployment_guide.md) • [Governance](docs/governance_implementation_guide.md) • [DevPost Integration](docs/devpost_integration_guide.md) • [Makefile System](makefile_system_implemented/documentation/README.md) |
+| **🔧 Operations** | [Deployment](docs/deployment_guide.md) • [Governance](docs/governance_implementation_guide.md) • [DevPost Integration](docs/devpost_integration_guide.md) • [Makefile System](README.md) |
 
 ## 🎯 "The Requirements ARE the Solution"
 
@@ -281,14 +281,14 @@ RM-DDD provides systematic frameworks for deployment decisions based on:
 - **[Rendered UML Diagrams](diagrams/rendered_diagrams.md)** - All major system diagrams with white background
 
 #### Domain Architecture Overview
-- **[Domain Index](diagrams/domains/README.md)** - Complete overview of all 23 system domains
+- **[Domain Index](README.md)** - Complete overview of all 23 system domains
 - **[All Domain Diagrams](diagrams/domains/)** - Individual domain architecture diagrams
 
 ### 📚 Ubiquitous Language & Vocabulary
 
 #### Core Vocabulary
 - **[Ubiquitous Language Vocabulary](docs/ubiquitous_language_vocabulary.md)** - Complete vocabulary with 39 terms across 9 categories
-- **[Multi-Dimensional Projections](docs/vocabulary_projections/README.md)** - 8 different organizational perspectives
+- **[Multi-Dimensional Projections](README.md)** - 8 different organizational perspectives
 
 #### Vocabulary by Perspective
 - **[By Stakeholder](docs/vocabulary_projections/vocabulary_by_stakeholder.md)** - Developers, Architects, Product Managers, DevOps, AI Engineers
@@ -330,10 +330,10 @@ RM-DDD provides systematic frameworks for deployment decisions based on:
 > **📋 All diagrams are vertically oriented for readability and designed to fit on standard paper sizes. Each domain is broken into logical sections with a maximum of 8 classes per section for optimal readability.**
 
 ### Reference Implementations
-- [E-commerce Migration](examples/ecommerce/README.md)
-- [Banking System](examples/banking/README.md)
-- [Healthcare Integration](examples/healthcare/README.md)
-- [Multi-Language Examples](examples/multilang/README.md)
+- [E-commerce Migration](README.md)
+- [Banking System](README.md)
+- [Healthcare Integration](README.md)
+- [Multi-Language Examples](README.md)
 
 ### Advanced Topics
 - [Beast Mode Integration](docs/beast-mode-integration.md)
@@ -343,35 +343,35 @@ RM-DDD provides systematic frameworks for deployment decisions based on:
 - [Compliance Framework](docs/compliance.md)
 
 ### 🧠 Ontology & Knowledge Management
-- **[Beastmaster Ontology](docs/beastmaster-ontology/README.md)** - Complete semantic framework with mathematical alignment
+- **[Beastmaster Ontology](README.md)** - Complete semantic framework with mathematical alignment
 - **[Session Analysis](docs/beastmaster-ontology/session-analysis.md)** - RCA and PDCA cycle analysis
 - **[Extended Intelligence Framework](docs/BEAST_MODE_EXTENDED_INTELLIGENCE_FRAMEWORK.md)** - AI-powered systematic development
 
 ### 📋 Comprehensive Documentation
-- **[📚 Complete Documentation Index](docs/README.md)** - **905 documents** organized by category and audience
-- **[🔍 Browse by Audience](docs/by-audience/README.md)** - Find docs by role (Developers, Architects, etc.)
-- **[📊 Browse by Status](docs/by-status/README.md)** - Active, Draft, Beta, Deprecated documents
-- **[✨ Browse by Features](docs/by-features/README.md)** - Documents with examples, code, TOC, etc.
-- **[🕒 Recent Updates](docs/recent-updates/README.md)** - Most recently updated documents
-- **[🔧 Makefile System](makefile_system_implemented/documentation/README.md)** - Complete Makefile system documentation
+- **[📚 Complete Documentation Index](README.md)** - **905 documents** organized by category and audience
+- **[🔍 Browse by Audience](README.md)** - Find docs by role (Developers, Architects, etc.)
+- **[📊 Browse by Status](README.md)** - Active, Draft, Beta, Deprecated documents
+- **[✨ Browse by Features](README.md)** - Documents with examples, code, TOC, etc.
+- **[🕒 Recent Updates](README.md)** - Most recently updated documents
+- **[🔧 Makefile System](README.md)** - Complete Makefile system documentation
 
 #### Key Documentation Categories
-- **[Architecture](docs/architecture/README.md)** (479 docs) - System architecture and design patterns
-- **[Requirements](docs/requirements/README.md)** (107 docs) - Functional and non-functional requirements
-- **[Design](docs/design/README.md)** (68 docs) - Detailed design specifications and patterns
-- **[Testing](docs/testing/README.md)** (76 docs) - Testing strategies and procedures
-- **[Research](docs/research/README.md)** (47 docs) - Research findings and analysis
-- **[API Reference](docs/api_reference/README.md)** (21 docs) - API documentation and references
-- **[Guides](docs/guides/README.md)** (22 docs) - User guides and tutorials
-- **[Deployment](docs/deployment/README.md)** (11 docs) - Deployment guides and configurations
-- **[Makefile System](makefile_system_implemented/documentation/README.md)** - Complete build system documentation
+- **[Architecture](README.md)** (479 docs) - System architecture and design patterns
+- **[Requirements](README.md)** (107 docs) - Functional and non-functional requirements
+- **[Design](README.md)** (68 docs) - Detailed design specifications and patterns
+- **[Testing](README.md)** (76 docs) - Testing strategies and procedures
+- **[Research](README.md)** (47 docs) - Research findings and analysis
+- **[API Reference](README.md)** (21 docs) - API documentation and references
+- **[Guides](README.md)** (22 docs) - User guides and tutorials
+- **[Deployment](README.md)** (11 docs) - Deployment guides and configurations
+- **[Makefile System](README.md)** - Complete build system documentation
 
 ### 🔧 Development & Operations
 - **[Deployment Guide](docs/deployment_guide.md)** - Production deployment instructions
 - **[Governance Implementation](docs/governance_implementation_guide.md)** - Governance framework implementation
 - **[Transport Implementation](docs/transport_implementation_guide.md)** - Message transport system
 - **[DevPost Integration](docs/devpost_integration_guide.md)** - DevPost platform integration
-- **[Makefile System](makefile_system_implemented/documentation/README.md)** - Complete build system with 175 targets
+- **[Makefile System](README.md)** - Complete build system with 175 targets
 - **[Git Workflow Research](docs/PROPER_GIT_WORKFLOW_RESEARCH.md)** - Git workflow best practices
 
 ## 🤝 Contributing

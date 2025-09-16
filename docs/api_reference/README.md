@@ -51,7 +51,7 @@
 
 ---
 
-### [DevPost API](devpost_api_readme.md)
+### [DevPost API](docs/readme/project/docs/readme/project/devpost_api_readme.md)
 *An unofficial, scrape-based API for DevPost [![Build Status](https://travis-ci.org/ViRb3/devpost-api.svg?branch=master)](https://travis-ci.org/ViRb3/devpost-api) ![Docker Pulls](https://img.shields.io...*
 
 **Audience:** Developers, Architects, AI Engineers, End Users • **Has Examples**

@@ -24,7 +24,7 @@ docs/
     └── repository_refactoring_implementation.md
 
 Makefile                                 # Integration targets
-REPOSITORY_REFACTORING_GUIDE.md         # User guide
+docs/readme/project/REPOSITORY_REFACTORING_GUIDE.md         # User guide
 ```
 
 ## 🔧 **Implementation Details**
@@ -250,7 +250,7 @@ project/
 ├── reports/                       # Generated reports
 ├── backups/                       # Safety backups
 ├── Makefile                       # Integration targets
-└── REPOSITORY_REFACTORING_GUIDE.md
+└── docs/readme/project/REPOSITORY_REFACTORING_GUIDE.md
 ```
 
 ### **Configuration Files**

@@ -321,7 +321,7 @@ make refactor-status
 - [Repository Refactoring Implementation](docs/implementation/rm_ddd/repository_refactoring_implementation.md)
 
 ### **User Guides**
-- [Repository Refactoring Guide](REPOSITORY_REFACTORING_GUIDE.md)
+- [Repository Refactoring Guide](docs/readme/project/docs/readme/project/REPOSITORY_REFACTORING_GUIDE.md)
 
 ## 🎯 **Success Metrics**
 
