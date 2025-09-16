@@ -24,7 +24,7 @@ uv run python -c "import json; print('Model registry loaded')" < project_model_r
 
 # Check Beast Mode framework files
 ls -la docs/BEAST_MODE_EXTENDED_INTELLIGENCE_FRAMEWORK.md
-ls -la pdca.mdc
+ls -la ../../other/misc/pdca.mdcc
 
 # Verify Makefile system
 make help
@@ -75,7 +75,7 @@ make model-driven           # Model-driven building operations
 
 ### **Core Implementation**
 - `docs/BEAST_MODE_EXTENDED_INTELLIGENCE_FRAMEWORK.md` - Beast Mode framework
-- `pdca.mdc` - PDCA cycle with RCA integration
+- `../../other/misc/pdca.mdcc` - PDCA cycle with RCA integration
 - `project_model_registry.json` - Domain architecture
 - `Makefile` - Development workflow
 
@@ -158,7 +158,7 @@ make help
 ## 📞 **Support**
 
 - **Beast Mode Framework**: `docs/BEAST_MODE_EXTENDED_INTELLIGENCE_FRAMEWORK.md`
-- **PDCA Cycle**: `pdca.mdc`
+- **PDCA Cycle**: `../../other/misc/pdca.mdcc`
 - **Project Model**: `project_model_registry.json`
 - **Agent Rules**: `.cursor/rules/kiro-agent-launch.mdc`
 - **Makefile**: `make help` for all available targets

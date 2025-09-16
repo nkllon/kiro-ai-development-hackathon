@@ -175,3 +175,4 @@ def lint_command(command: str) -> dict:
     """Lint a command for safety."""
     return cli_linter.lint_command(command)
 
+

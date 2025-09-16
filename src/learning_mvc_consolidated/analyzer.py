@@ -267,3 +267,4 @@ class CuriousPageAnalyzer:
             print(f"   Status: {', '.join(analysis.status_indicators[:3])}")
         print(f"   Learning state: {self.learning_state.total_pages_analyzed} pages analyzed")
 
+

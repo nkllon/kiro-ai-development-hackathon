@@ -179,7 +179,7 @@
 - `beast_mode_current_state_20250914_213256.png` (1000232 bytes) - Needs manual inspection
 - `back_to_kiro_main.png` (1080288 bytes) - Needs manual inspection
 - `start_chrome_with_debug.sh` (722 bytes) - Needs manual inspection
-- `pdca.mdc` (1401 bytes) - Needs manual inspection
+- `../../other/misc/pdca.mdcc` (1401 bytes) - Needs manual inspection
 - `submissions_detailed.png` (1641929 bytes) - Needs manual inspection
 - `current_position_20250915_012051.png` (1274240 bytes) - Needs manual inspection
 - `step_nav_secure.devpost.com_users_Devpost_1757880978.png` (56069 bytes) - Needs manual inspection

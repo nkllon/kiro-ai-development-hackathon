@@ -128,20 +128,31 @@ class MigrationPlannerAgent:
         root_files = []
         root_path = self.project_root
         
-        # Find all markdown files in root directory
-        for file_path in root_path.glob("*.md"):
-            if file_path.is_file():
+        # Find all files in root directory (excluding directories and hidden files)
+        for file_path in root_path.iterdir():
+            if file_path.is_file() and not file_path.name.startswith('.'):
                 file_info = self._analyze_file(file_path)
                 root_files.append(file_info)
         
-        logger.info(f"Found {len(root_files)} markdown files in root directory")
+        logger.info(f"Found {len(root_files)} files in root directory")
         return root_files
     
     def _analyze_file(self, file_path: Path) -> Dict[str, Any]:
         """Analyze a single file for migration planning"""
         try:
             stat = file_path.stat()
-            content = file_path.read_text(encoding='utf-8', errors='ignore')
+            file_extension = file_path.suffix.lower()
+            
+            # Try to read content for text files
+            content = ""
+            lines = 0
+            if file_extension in ['.md', '.py', '.json', '.txt', '.yml', '.yaml', '.sh', '.html', '.css', '.js']:
+                try:
+                    content = file_path.read_text(encoding='utf-8', errors='ignore')
+                    lines = len(content.splitlines())
+                except Exception:
+                    content = ""
+                    lines = 0
             
             # Basic file analysis
             file_info = {
@@ -149,11 +160,12 @@ class MigrationPlannerAgent:
                 'name': file_path.name,
                 'size': stat.st_size,
                 'modified': datetime.fromtimestamp(stat.st_mtime).isoformat(),
-                'lines': len(content.splitlines()),
+                'lines': lines,
+                'extension': file_extension,
                 'category': self._categorize_file(file_path.name, content),
                 'priority': self._calculate_priority(file_path.name, content),
-                'dependencies': self._extract_dependencies(content),
-                'references': self._extract_references(content)
+                'dependencies': self._extract_dependencies(content) if content else [],
+                'references': self._extract_references(content) if content else []
             }
             
             return file_info
@@ -164,6 +176,8 @@ class MigrationPlannerAgent:
                 'path': str(file_path),
                 'name': file_path.name,
                 'size': 0,
+                'lines': 0,
+                'extension': file_path.suffix.lower(),
                 'category': 'unknown',
                 'priority': 5,
                 'dependencies': [],
@@ -174,29 +188,85 @@ class MigrationPlannerAgent:
         """Categorize file based on name and content patterns"""
         filename_lower = filename.lower()
         content_lower = content.lower()
+        file_extension = Path(filename).suffix.lower()
         
-        # RC1 files
-        if any(pattern in filename_lower for pattern in ['rc1', 'migration', 'implementation']):
+        # Python files
+        if file_extension == '.py':
+            if any(pattern in filename_lower for pattern in ['test', 'spec']):
+                return 'tests'
+            elif any(pattern in filename_lower for pattern in ['beast', 'mode']):
+                return 'beast_mode'
+            elif any(pattern in filename_lower for pattern in ['devpost', 'hackathon']):
+                return 'hackathon'
+            elif any(pattern in filename_lower for pattern in ['rc1', 'migration']):
+                return 'rc1'
+            else:
+                return 'python_scripts'
+        
+        # JSON files
+        elif file_extension == '.json':
+            if any(pattern in filename_lower for pattern in ['config', 'settings']):
+                return 'configuration'
+            elif any(pattern in filename_lower for pattern in ['test', 'spec']):
+                return 'tests'
+            else:
+                return 'data'
+        
+        # Image files
+        elif file_extension in ['.png', '.jpg', '.jpeg', '.gif', '.svg']:
+            return 'images'
+        
+        # Markdown files
+        elif file_extension == '.md':
+            if any(pattern in filename_lower for pattern in ['rc1', 'migration', 'implementation']):
+                return 'rc1'
+            elif any(pattern in filename_lower for pattern in ['readme', 'setup', 'install', 'guide']):
+                return 'readme'
+            elif any(pattern in filename_lower for pattern in ['task', 'todo', 'issue', 'bug']):
+                return 'task'
+            elif any(pattern in filename_lower for pattern in ['summary', 'report', 'analysis', 'complete']):
+                return 'summary'
+            elif 'beast' in filename_lower or 'beast' in content_lower:
+                return 'beast_mode'
+            elif any(pattern in filename_lower for pattern in ['arch', 'design', 'structure']):
+                return 'architecture'
+            else:
+                return 'documentation'
+        
+        # Shell scripts
+        elif file_extension in ['.sh', '.bash']:
+            return 'scripts'
+        
+        # HTML files
+        elif file_extension in ['.html', '.htm']:
+            return 'web'
+        
+        # Text files
+        elif file_extension in ['.txt', '.log']:
+            return 'logs'
+        
+        # RC1 files (by name pattern)
+        elif any(pattern in filename_lower for pattern in ['rc1', 'migration', 'implementation']):
             return 'rc1'
         
         # README files
-        if any(pattern in filename_lower for pattern in ['readme', 'setup', 'install', 'guide']):
+        elif any(pattern in filename_lower for pattern in ['readme', 'setup', 'install', 'guide']):
             return 'readme'
         
         # Task files
-        if any(pattern in filename_lower for pattern in ['task', 'todo', 'issue', 'bug']):
+        elif any(pattern in filename_lower for pattern in ['task', 'todo', 'issue', 'bug']):
             return 'task'
         
         # Summary files
-        if any(pattern in filename_lower for pattern in ['summary', 'report', 'analysis', 'complete']):
+        elif any(pattern in filename_lower for pattern in ['summary', 'report', 'analysis', 'complete']):
             return 'summary'
         
         # Beast Mode files
-        if 'beast' in filename_lower or 'beast' in content_lower:
+        elif 'beast' in filename_lower or 'beast' in content_lower:
             return 'beast_mode'
         
         # Architecture files
-        if any(pattern in filename_lower for pattern in ['arch', 'design', 'structure']):
+        elif any(pattern in filename_lower for pattern in ['arch', 'design', 'structure']):
             return 'architecture'
         
         # Default to other
@@ -271,6 +341,16 @@ class MigrationPlannerAgent:
             'summary': 'Summary and Report Documents',
             'beast_mode': 'Beast Mode Documents',
             'architecture': 'Architecture and Design Documents',
+            'python_scripts': 'Python Scripts and Modules',
+            'tests': 'Test Files and Specifications',
+            'hackathon': 'Hackathon and DevPost Integration',
+            'configuration': 'Configuration and Settings',
+            'data': 'Data Files and JSON',
+            'images': 'Images and Media Files',
+            'documentation': 'Documentation Files',
+            'scripts': 'Shell Scripts and Automation',
+            'web': 'Web Files and HTML',
+            'logs': 'Log Files and Text',
             'other': 'Other Documents'
         }
         
@@ -281,6 +361,16 @@ class MigrationPlannerAgent:
             'summary': ['implementation', 'analysis', 'reports'],
             'beast_mode': ['execution', 'analysis', 'reports'],
             'architecture': ['design', 'patterns', 'diagrams'],
+            'python_scripts': ['core', 'utilities', 'modules'],
+            'tests': ['unit', 'integration', 'e2e'],
+            'hackathon': ['devpost', 'submission', 'automation'],
+            'configuration': ['settings', 'configs', 'templates'],
+            'data': ['json', 'csv', 'exports'],
+            'images': ['screenshots', 'diagrams', 'assets'],
+            'documentation': ['guides', 'references', 'notes'],
+            'scripts': ['deployment', 'maintenance', 'utilities'],
+            'web': ['pages', 'templates', 'static'],
+            'logs': ['debug', 'error', 'audit'],
             'other': ['misc', 'archive', 'temp']
         }
         
@@ -516,3 +606,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

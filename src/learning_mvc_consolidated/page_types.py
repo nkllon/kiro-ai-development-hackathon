@@ -27,3 +27,4 @@ class PageType(Enum):
     ERROR = "error"
     LOADING = "loading"
 
+

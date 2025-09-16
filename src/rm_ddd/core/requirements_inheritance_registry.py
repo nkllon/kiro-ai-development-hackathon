@@ -231,3 +231,4 @@ def get_audit_trail() -> List[InheritanceEvent]:
     """Get audit trail."""
     return requirements_registry.get_audit_trail()
 
+

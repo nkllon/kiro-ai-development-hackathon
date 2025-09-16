@@ -257,3 +257,4 @@ class StepDetector:
             print(f"⚠️ Navigation wait failed: {e}")
             return False
 
+

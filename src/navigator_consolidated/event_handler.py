@@ -85,3 +85,4 @@ class EventHandler:
         if "devpost.com" in response.url and response.status in [200, 201, 302, 303]:
             print(f"📥 Response: {response.status} {response.url}")
 
+

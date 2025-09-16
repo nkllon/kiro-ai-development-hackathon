@@ -493,3 +493,4 @@ class AIFramework:
     def __repr__(self) -> str:
         return f"AIFramework(framework_id='{self.framework_id}')"
 
+

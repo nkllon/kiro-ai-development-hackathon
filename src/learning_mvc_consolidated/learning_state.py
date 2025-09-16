@@ -27,3 +27,4 @@ class LearningState:
     button_patterns: Dict[str, List[str]]
     form_patterns: Dict[str, List[str]]
 
+
