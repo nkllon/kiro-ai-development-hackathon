@@ -66,16 +66,15 @@ class ReflectiveModule(ABC):
     Provides systematic compliance, health monitoring, and registry integration.
     """
 
-
-def __init__(self, module_name: str, version: str = "1.0.0"):
-    """Initialize the reflective module - RDI Compliant"""
-    self.module_name = module_name
-    self.version = version
-    self.module_id = f"{module_name}_{self.__class__.__name__}"
-    self._start_time = datetime.now()
-    self._last_activity = datetime.now()
-    self._error_count = 0
-    self._warning_count = 0
+    def __init__(self, module_name: str, version: str = "1.0.0"):
+        """Initialize the reflective module - RDI Compliant"""
+        self.module_name = module_name
+        self.version = version
+        self.module_id = f"{module_name}_{self.__class__.__name__}"
+        self._start_time = datetime.now()
+        self._last_activity = datetime.now()
+        self._error_count = 0
+        self._warning_count = 0
 
     @abstractmethod
     def get_module_info(self) -> Dict[str, Any]:
