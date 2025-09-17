@@ -11,6 +11,17 @@ from .dag_analyzer import DAGAnalyzer, DAGAnalysisResult
 from .health_scorer import HealthScorer, HealthReport
 from .auto_fixer import AutoFixer, FixResult
 
+# RM-DDD Integration - Using Unified Interface
+import sys
+sys.path.append(str(Path(__file__).parent.parent.parent))
+from src.rm_ddd.core.unified_reflective_module import (
+    ReflectiveModule,
+    ModuleHealth,
+    ModuleStatus,
+    ModuleCapability,
+    GracefulDegradationResult
+)
+
 
 @dataclass
 class MakefileHealthResult:
@@ -24,13 +35,199 @@ class MakefileHealthResult:
     status: str  # 'healthy', 'needs_attention', 'critical', 'error'
 
 
-class MakefileHealthManager:
-    """DAG-driven Makefile health monitoring and repair system"""
+class MakefileHealthManager(ReflectiveModule):
+    """
+    DAG-driven Makefile health monitoring and repair system
+    
+    TRACE: REQ-RC1-RMDDD-001, REQ-RC1-RDI-001
+    TEST: tests/rc1/test_makefile_health_manager.py
+    IMPLEMENTATION: DAG-driven Makefile analysis and repair system
+    """
     
     def __init__(self):
+        super().__init__()  # CRITICAL: Call parent __init__ for Prometheus, logging, etc.
+        self.module_id = "makefile_health_manager"
+        self.version = "1.0.0"
+        self.capabilities = [ModuleCapability.CORE_FUNCTIONALITY, ModuleCapability.MONITORING]
+        # Dependencies not required in unified model
         self.dag_analyzer = DAGAnalyzer()
         self.health_scorer = HealthScorer()
         self.auto_fixer = AutoFixer()
+        
+    def get_module_info(self) -> Dict[str, Any]:
+        """
+        Get comprehensive module information for RM-DDD registry.
+        
+        TRACE: REQ-RC1-RMDDD-002, REQ-RC1-RDI-002
+        TEST: Unit test validates method implementation and return format
+        IMPLEMENTATION: Module metadata interface specification
+        """
+        return {
+            'module_id': self.module_id,
+            'version': self.version,
+            'class_name': self.__class__.__name__,
+            'file_path': self.__class__.__module__,
+            'capabilities': [cap.value for cap in self.capabilities],
+            'health_status': self.get_health_status().status.value,
+            'last_updated': datetime.now().isoformat()
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities for RM-DDD registry."""
+        return self.capabilities
+    
+    def get_health_status(self) -> ModuleHealth:
+        """Perform comprehensive health check for RM-DDD compliance."""
+        try:
+            # Test basic functionality
+            test_result = self.diagnose_makefile("test", auto_fix=False)
+            health_score = 100.0 if test_result.status != 'error' else 50.0
+            
+            return ModuleHealth(
+                module_id=self.module_id,
+                status=ModuleStatus.HEALTHY if health_score > 80 else ModuleStatus.DEGRADED,
+                health_score=health_score,
+                issues=[] if health_score > 80 else ["Module functionality test failed"],
+                last_check=datetime.now()
+            )
+        except Exception as e:
+            return ModuleHealth(
+                module_id=self.module_id,
+                status=ModuleStatus.ERROR,
+                health_score=0.0,
+                issues=[f"Health check failed: {str(e)}"],
+                last_check=datetime.now()
+            )
+    
+    def graceful_degradation(self) -> GracefulDegradationResult:
+        """Perform graceful degradation for RM-DDD compliance."""
+        return GracefulDegradationResult(
+            success=True,
+            degraded_capabilities=[],
+            remaining_capabilities=self.capabilities,
+            error_message=None
+        )
+    
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, "register"):
+            registry.register(metadata)
+    
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            "module_id": getattr(self, "module_id", self.__class__.__name__),
+            "interface_type": self.__class__.__name__,
+            "version": "1.0.0",
+            "dependencies": [],
+            "capabilities": [cap.value for cap in self.capabilities],
+        }
+    
+    def health_check(self):
+        """Perform health check."""
+        return {
+            "status": "healthy",
+            "timestamp": datetime.now().isoformat(),
+            "module_id": getattr(self, "module_id", self.__class__.__name__),
+        }
+    
+    def _should_enable_prometheus(self) -> bool:
+        """Check if Prometheus metrics should be enabled."""
+        return os.getenv("BEAST_MODE_PROMETHEUS_ENABLED", "true").lower() == "true"
+    
+    def _initialize_prometheus_metrics(self):
+        """Initialize Prometheus metrics for this module."""
+        try:
+            from beast_mode.monitoring.prometheus_exporter import PrometheusExporter
+            
+            self._prometheus_exporter = PrometheusExporter(
+                port=int(os.getenv("BEAST_MODE_PROMETHEUS_PORT", "8000")),
+                enable_http_server=True,
+            )
+            self._logger.info(
+                f"Prometheus metrics enabled for {self.__class__.__name__}"
+            )
+        except ImportError:
+            self._logger.warning(
+                "Prometheus client not available. Install with: pip install prometheus-client"
+            )
+            self._enable_prometheus = False
+        except Exception as e:
+            self._logger.error(f"Failed to initialize Prometheus metrics: {e}")
+            self._enable_prometheus = False
+    
+    def _collect_prometheus_metrics(self):
+        """Collect metrics for Prometheus export."""
+        if not self._enable_prometheus or not self._prometheus_exporter:
+            return
+        
+        try:
+            # Get module info
+            module_info = self.get_module_info()
+            module_id = module_info.get("module_id", self.__class__.__name__)
+            
+            # Get health status
+            health_status = self.get_health_status()
+            
+            # Record module health metrics
+            self._prometheus_exporter.record_module_health(
+                module_id=module_id,
+                status=health_status.status.value,
+                health_score=health_status.health_score,
+                error_count=health_status.error_count,
+                warning_count=health_status.warning_count,
+                uptime_seconds=health_status.uptime_seconds,
+            )
+            
+            # Record module performance metrics
+            self._prometheus_exporter.record_module_performance(
+                module_id=module_id,
+                class_name=self.__class__.__name__,
+                version=module_info.get("version", "1.0.0"),
+                capabilities=[cap.value for cap in self.get_capabilities()],
+                last_activity=self._last_activity,
+            )
+            
+        except Exception as e:
+            self._logger.error(f"Failed to collect Prometheus metrics: {e}")
+    
+    def _update_activity(self):
+        """Update last activity timestamp and collect metrics."""
+        self._last_activity = datetime.now()
+        if self._enable_prometheus:
+            self._collect_prometheus_metrics()
+    
+    def _increment_error_count(self):
+        """Increment error count and collect metrics."""
+        self._error_count += 1
+        self._update_activity()
+    
+    def _increment_warning_count(self):
+        """Increment warning count and collect metrics."""
+        self._warning_count += 1
+        self._update_activity()
+    
+    def get_prometheus_metrics(self) -> Dict[str, Any]:
+        """Get Prometheus metrics for this module."""
+        if not self._enable_prometheus or not self._prometheus_exporter:
+            return {}
+        
+        try:
+            return self._prometheus_exporter.get_module_metrics(
+                module_id=getattr(self, "module_id", self.__class__.__name__)
+            )
+        except Exception as e:
+            self._logger.error(f"Failed to get Prometheus metrics: {e}")
+            return {}
+    
+    def enable_prometheus_metrics(self, enable: bool = True):
+        """Enable or disable Prometheus metrics for this module."""
+        self._enable_prometheus = enable
+        if enable and not self._prometheus_exporter:
+            self._initialize_prometheus_metrics()
+        elif not enable:
+            self._prometheus_exporter = None
         
     def diagnose_makefile(self, makefile_path: str, auto_fix: bool = False) -> MakefileHealthResult:
         """

@@ -1,5 +1,9 @@
 """
 Health Monitor - Real-time system health tracking
+
+TRACE: REQ-RC1-RDI-003, REQ-RC1-RMDDD-003
+TEST: tests/rc1/test_rdi_simple.py
+IMPLEMENTATION: Real-time system health monitoring system
 """
 
 import time
@@ -13,7 +17,13 @@ from ..foundation.makefile_health_manager import MakefileHealthManager
 
 
 class HealthMonitor:
-    """Real-time system health monitoring with continuous analysis"""
+    """
+    Real-time system health monitoring with continuous analysis
+    
+    TRACE: REQ-RC1-RDI-003, REQ-RC1-RMDDD-003
+    TEST: tests/rc1/test_rdi_simple.py
+    IMPLEMENTATION: Real-time system health monitoring system
+    """
     
     def __init__(self, monitoring_interval: int = 30):
         self.monitoring_interval = monitoring_interval

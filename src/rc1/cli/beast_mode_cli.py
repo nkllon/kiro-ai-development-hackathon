@@ -1,14 +1,20 @@
 """
 Beast Mode CLI - User-friendly command-line interface
+RM-DDD compliant CLI with auto-generated commands and stdin/stdout pipes.
 """
 
 import click
 import json
 import os
+import sys
 from pathlib import Path
 from typing import List, Optional
 
 from ..foundation.makefile_health_manager import MakefileHealthManager
+
+# RM-DDD Integration - Using Unified Interface
+sys.path.append(str(Path(__file__).parent.parent.parent))
+from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
 
 
 @click.group()

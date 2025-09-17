@@ -1,0 +1,308 @@
+#!/usr/bin/env python3
+"""
+RM-DDD Auto-Generated CLI
+
+This is the proper RM-DDD CLI that auto-generates interfaces for all ReflectiveModules
+through introspection, following RM-DDD specification requirements.
+
+TRACE: REQ-CLI-001, REQ-CLI-002, REQ-CLI-003, REQ-CLI-004, REQ-CLI-005
+TEST: tests/rc1/test_rmddd_auto_cli.py
+IMPLEMENTATION: RM-DDD specification-compliant auto-generated CLI
+"""
+
+import sys
+import inspect
+import argparse
+import json
+from pathlib import Path
+from typing import Dict, Any, List, Optional, Callable
+from datetime import datetime
+
+# Add src to path
+current_dir = Path(__file__).parent
+src_dir = current_dir / "src"
+sys.path.insert(0, str(src_dir))
+
+from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
+from src.rc1.foundation.makefile_health_manager import MakefileHealthManager
+
+
+class RMDDDAutoCLI:
+    """
+    RM-DDD Auto-Generated CLI following specification requirements.
+    
+    This class automatically discovers ReflectiveModules and generates
+    CLI interfaces based on RM-DDD specification requirements.
+    """
+    
+    def __init__(self):
+        self.modules: List[ReflectiveModule] = []
+        self.module_commands: Dict[str, Dict[str, Callable]] = {}
+        self.discover_modules()
+        self.generate_commands()
+    
+    def discover_modules(self):
+        """Discover all ReflectiveModules through introspection."""
+        # Add known modules (in a real system, this would be dynamic discovery)
+        self.modules = [
+            MakefileHealthManager()
+        ]
+        
+        print(f"🔍 Discovered {len(self.modules)} ReflectiveModules:")
+        for module in self.modules:
+            module_id = getattr(module, 'module_id', module.__class__.__name__)
+            print(f"  - {module_id} ({module.__class__.__name__})")
+    
+    def generate_commands(self):
+        """Generate CLI commands for each module through introspection."""
+        for module in self.modules:
+            module_id = getattr(module, 'module_id', module.__class__.__name__)
+            self.module_commands[module_id] = {}
+            
+            # Get all public methods through introspection
+            methods = inspect.getmembers(module, predicate=inspect.ismethod)
+            
+            for method_name, method in methods:
+                if not method_name.startswith('_') and callable(method):
+                    # Generate CLI command for this method
+                    command_name = method_name.replace('_', '-')
+                    self.module_commands[module_id][command_name] = method
+                    
+                    print(f"  📝 Generated command: {module_id} {command_name}")
+    
+    def create_parser(self) -> argparse.ArgumentParser:
+        """Create argument parser with auto-generated commands."""
+        parser = argparse.ArgumentParser(
+            description="RM-DDD Auto-Generated CLI",
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+            epilog="""
+Examples:
+  %(prog)s makefile-health-manager get-module-info
+  %(prog)s makefile-health-manager get-health-status
+  %(prog)s --list-modules
+  %(prog)s --list-commands makefile-health-manager
+            """
+        )
+        
+        # Add global options
+        parser.add_argument('--list-modules', action='store_true',
+                          help='List all available ReflectiveModules')
+        parser.add_argument('--list-commands', metavar='MODULE',
+                          help='List commands for a specific module')
+        parser.add_argument('--module-info', metavar='MODULE',
+                          help='Show detailed information about a module')
+        parser.add_argument('--health-check', metavar='MODULE',
+                          help='Perform health check on a module')
+        parser.add_argument('--capabilities', metavar='MODULE',
+                          help='Show capabilities of a module')
+        parser.add_argument('--version', action='version', version='RM-DDD CLI 1.0.0')
+        
+        # Add subcommands for each module
+        subparsers = parser.add_subparsers(dest='module', help='ReflectiveModule to interact with')
+        
+        for module_id, commands in self.module_commands.items():
+            module_parser = subparsers.add_parser(
+                module_id,
+                help=f'Interact with {module_id} module'
+            )
+            
+            # Add command subparsers
+            command_subparsers = module_parser.add_subparsers(dest='command', help='Available commands')
+            
+            for command_name, method in commands.items():
+                command_parser = command_subparsers.add_parser(
+                    command_name,
+                    help=f'Execute {command_name} command'
+                )
+                
+                # Add method parameters as arguments
+                sig = inspect.signature(method)
+                for param_name, param in sig.parameters.items():
+                    if param_name == 'self':
+                        continue
+                    
+                    # Determine argument type and options
+                    arg_type = str
+                    if param.annotation != inspect.Parameter.empty:
+                        if param.annotation == bool:
+                            arg_type = bool
+                        elif param.annotation == int:
+                            arg_type = int
+                        elif param.annotation == float:
+                            arg_type = float
+                    
+                    # Add argument
+                    if param.default == inspect.Parameter.empty:
+                        command_parser.add_argument(param_name, type=arg_type,
+                                                  help=f'{param_name} parameter')
+                    else:
+                        command_parser.add_argument(f'--{param_name}', type=arg_type,
+                                                  default=param.default,
+                                                  help=f'{param_name} parameter (default: {param.default})')
+        
+        return parser
+    
+    def execute_command(self, module_id: str, command: str, args: Dict[str, Any]) -> Any:
+        """Execute a command on a specific module."""
+        if module_id not in self.module_commands:
+            raise ValueError(f"Module {module_id} not found")
+        
+        if command not in self.module_commands[module_id]:
+            raise ValueError(f"Command {command} not found in module {module_id}")
+        
+        method = self.module_commands[module_id][command]
+        
+        # Filter out None values and convert to method parameters
+        method_args = {k: v for k, v in args.items() if v is not None}
+        
+        # Execute the method
+        return method(**method_args)
+    
+    def run(self, args: Optional[List[str]] = None):
+        """Run the auto-generated CLI."""
+        parser = self.create_parser()
+        parsed_args = parser.parse_args(args)
+        
+        # Handle global options
+        if parsed_args.list_modules:
+            self.list_modules()
+            return
+        
+        if parsed_args.list_commands:
+            self.list_commands(parsed_args.list_commands)
+            return
+        
+        if parsed_args.module_info:
+            self.show_module_info(parsed_args.module_info)
+            return
+        
+        if parsed_args.health_check:
+            self.health_check_module(parsed_args.health_check)
+            return
+        
+        if parsed_args.capabilities:
+            self.show_capabilities(parsed_args.capabilities)
+            return
+        
+        # Handle module commands
+        if parsed_args.module and parsed_args.command:
+            try:
+                # Convert parsed args to dict
+                args_dict = vars(parsed_args)
+                args_dict.pop('module', None)
+                args_dict.pop('command', None)
+                args_dict.pop('list_modules', None)
+                args_dict.pop('list_commands', None)
+                args_dict.pop('module_info', None)
+                args_dict.pop('health_check', None)
+                args_dict.pop('capabilities', None)
+                
+                result = self.execute_command(parsed_args.module, parsed_args.command, args_dict)
+                
+                # Format output
+                if isinstance(result, dict):
+                    print(json.dumps(result, indent=2, default=str))
+                elif isinstance(result, (list, tuple)):
+                    for item in result:
+                        if isinstance(item, dict):
+                            print(json.dumps(item, indent=2, default=str))
+                        else:
+                            print(item)
+                else:
+                    print(result)
+                    
+            except Exception as e:
+                print(f"❌ Error executing command: {e}")
+                return 1
+        else:
+            parser.print_help()
+        
+        return 0
+    
+    def list_modules(self):
+        """List all available ReflectiveModules."""
+        print("📋 Available ReflectiveModules:")
+        print("=" * 50)
+        
+        for module in self.modules:
+            module_id = getattr(module, 'module_id', module.__class__.__name__)
+            module_info = module.get_module_info()
+            health = module.get_health_status()
+            
+            print(f"🔧 {module_id}")
+            print(f"   Class: {module.__class__.__name__}")
+            print(f"   Version: {module_info.get('version', 'Unknown')}")
+            print(f"   Health: {health.status.value} ({health.health_score:.1f}%)")
+            print(f"   Capabilities: {len(module.get_capabilities())}")
+            print()
+    
+    def list_commands(self, module_id: str):
+        """List commands for a specific module."""
+        if module_id not in self.module_commands:
+            print(f"❌ Module {module_id} not found")
+            return
+        
+        print(f"📋 Commands for {module_id}:")
+        print("=" * 50)
+        
+        for command_name, method in self.module_commands[module_id].items():
+            sig = inspect.signature(method)
+            params = list(sig.parameters.keys())
+            if 'self' in params:
+                params.remove('self')
+            
+            print(f"🔧 {command_name}")
+            print(f"   Parameters: {', '.join(params) if params else 'None'}")
+            print(f"   Doc: {method.__doc__ or 'No documentation'}")
+            print()
+    
+    def show_module_info(self, module_id: str):
+        """Show detailed information about a module."""
+        module = next((m for m in self.modules if getattr(m, 'module_id', m.__class__.__name__) == module_id), None)
+        if not module:
+            print(f"❌ Module {module_id} not found")
+            return
+        
+        module_info = module.get_module_info()
+        print(f"📊 Module Information: {module_id}")
+        print("=" * 50)
+        print(json.dumps(module_info, indent=2, default=str))
+    
+    def health_check_module(self, module_id: str):
+        """Perform health check on a module."""
+        module = next((m for m in self.modules if getattr(m, 'module_id', m.__class__.__name__) == module_id), None)
+        if not module:
+            print(f"❌ Module {module_id} not found")
+            return
+        
+        health = module.get_health_status()
+        print(f"🏥 Health Check: {module_id}")
+        print("=" * 50)
+        print(f"Status: {health.status.value}")
+        print(f"Health Score: {health.health_score:.1f}%")
+        print(f"Issues: {', '.join(health.issues) if health.issues else 'None'}")
+        print(f"Last Check: {health.last_check}")
+    
+    def show_capabilities(self, module_id: str):
+        """Show capabilities of a module."""
+        module = next((m for m in self.modules if getattr(m, 'module_id', m.__class__.__name__) == module_id), None)
+        if not module:
+            print(f"❌ Module {module_id} not found")
+            return
+        
+        capabilities = module.get_capabilities()
+        print(f"🎯 Capabilities: {module_id}")
+        print("=" * 50)
+        
+        for cap in capabilities:
+            print(f"• {cap.value}")
+
+
+def main():
+    """Main entry point for RM-DDD auto-generated CLI."""
+    cli = RMDDDAutoCLI()
+    return cli.run()
+
+
+if __name__ == "__main__":
+    sys.exit(main())
