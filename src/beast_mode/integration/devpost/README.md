@@ -13,32 +13,14 @@ This module provides seamless integration with Devpost to keep hackathon project
 
 ## Architecture
 
-### Browser Automation Approach
-
-This integration uses **browser automation** instead of API calls because DevPost does not provide a public API for hackathon project management. The system implements a hybrid approach:
-
-1. **Primary**: Playwright browser automation for reliable data extraction
-2. **Fallback**: Web scraping with BeautifulSoup when automation fails
-3. **Cross-Browser**: Support for Chromium, Firefox, and WebKit
-4. **Rate Limiting**: Respectful data extraction with proper delays
-
-### Data Extraction Methods
-
-- **Hackathon Data**: Extract hackathon information, deadlines, requirements
-- **Project Data**: Extract project details, team members, GitHub links
-- **Search Functionality**: Search for hackathons by query
-- **Real-time Updates**: Live data extraction from DevPost pages
-
-## Architecture
-
 The integration is built with a modular architecture:
 
 - **Models**: Data structures for projects, metadata, and configuration
 - **Interfaces**: Abstract base classes defining component contracts
 - **Validation**: Ensure data meets Devpost requirements
 - **Configuration**: Manage project connections and settings
-- **Web Scraping Fallback**: BeautifulSoup-based fallback when browser automation fails
-- **Browser Automation**: Playwright-based web automation for DevPost data extraction
+- **Authentication**: Handle Devpost API authentication
+- **API Client**: Communicate with Devpost API
 - **Sync Manager**: Orchestrate synchronization operations
 - **File Monitor**: Watch for file system changes
 - **Project Manager**: Manage local project metadata

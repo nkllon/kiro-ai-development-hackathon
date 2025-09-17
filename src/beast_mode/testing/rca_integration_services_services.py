@@ -1,26 +1,36 @@
-#!/usr/bin/env python3
-"""
-Rca Integration Services Services
-=================================
-
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
-
-from typing import Dict, Any
+import re
+import time
+import hashlib
+from typing import Dict, Any, List, Optional, Tuple
+from dataclasses import dataclass, field
 from datetime import datetime
+from enum import Enum
+from ..core.reflective_module import ReflectiveModule, HealthStatus
+from ..analysis.rca_engine import RCAEngine, Failure, FailureCategory, RCAResult, RootCauseType, PreventionPattern
+from .performance_monitor import RCAPerformanceMonitor, ResourceLimits, PerformanceStatus
+from .timeout_handler import RCATimeoutHandler, TimeoutConfiguration, TimeoutStrategy
+from .test_pattern_library import TestPatternLibrary
+from .error_handler import RCAErrorHandler, DegradationLevel
+from .rca_integration_services_services_processing import *
+from .rca_integration_services_services_core import *
+from .rca_integration_services_services_validation import *
+from .rca_integration_services_services_services import *
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class RcaIntegrationServicesServices:
-    """Minimal valid class."""
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def __init__(self):
-        self.module_id = "rca_integration_services_services"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

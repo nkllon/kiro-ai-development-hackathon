@@ -1,26 +1,42 @@
-#!/usr/bin/env python3
 """
 Pdca Orchestrator Core Utils
-============================
 
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
+This module was extracted from pdca_orchestrator_core.py
+as part of RM-DDD compliance refactoring.
 """
 
-from typing import Dict, Any
+import time
+import json
+from typing import Dict, Any, List, Optional, Union
+from dataclasses import dataclass
 from datetime import datetime
+from pathlib import Path
+from .reflective_module import ReflectiveModule, HealthStatus
+from ..intelligence.registry_intelligence_engine import ProjectRegistryIntelligenceEngine, IntelligenceQuery
+from ..tool_health.makefile_health_manager import MakefileHealthManager
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class PdcaOrchestratorCoreUtils:
-    """Minimal valid class."""
+def _identify_required_tools(self, task: DevelopmentTask) -> List[str]:
+    """Identify tools required for task execution"""
+    tools = ['registry_engine']
+    if 'makefile' in task.task_name.lower():
+        tools.append('makefile_manager')
+    return tools
 
-    def __init__(self):
-        self.module_id = "pdca_orchestrator_core_utils"
-        self.timestamp = datetime.now()
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

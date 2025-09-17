@@ -1,26 +1,35 @@
-#!/usr/bin/env python3
-"""
-File Change Detector Core
-=========================
+import logging
+from pathlib import Path
+from typing import List, Dict, Set, Any, Optional, Tuple
+from dataclasses import dataclass, field
+from enum import Enum
+from ...core.reflective_module import ReflectiveModule
+from ..models import CommitInfo, FileChangeAnalysis
+from ...utils.path_normalizer import PathNormalizer, normalize_path, safe_relative_to
+import fnmatch
+import fnmatch
+import fnmatch
+import fnmatch
+import fnmatch
+import fnmatch
+from .file_change_detector_core_validation import *
+from .file_change_detector_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
 
-Auto-generated module after cleanup.
 
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-from typing import Dict, Any
-from datetime import datetime
-
-
-class FileChangeDetectorCore:
-    """Minimal valid class."""
-
-    def __init__(self):
-        self.module_id = "file_change_detector_core"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

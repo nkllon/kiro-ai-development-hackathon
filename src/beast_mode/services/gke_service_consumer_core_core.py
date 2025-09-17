@@ -1,26 +1,32 @@
-#!/usr/bin/env python3
-"""
-Gke Service Consumer Core Core
-==============================
+import time
+import json
+import uuid
+from typing import Dict, Any, List, Optional, Callable
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from enum import Enum
+from ..core.reflective_module import ReflectiveModule, HealthStatus
+from ..orchestration.pdca_orchestrator import PDCAOrchestrator
+from ..intelligence.registry_intelligence_engine import RegistryIntelligenceEngine
+from ..tools.makefile_health_manager import MakefileHealthManager
+from ..testing.comprehensive_test_suite import ComprehensiveTestSuite
+from .gke_service_consumer_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
 
-Auto-generated module after cleanup.
 
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-from typing import Dict, Any
-from datetime import datetime
-
-
-class GkeServiceConsumerCoreCore:
-    """Minimal valid class."""
-
-    def __init__(self):
-        self.module_id = "gke_service_consumer_core_core"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

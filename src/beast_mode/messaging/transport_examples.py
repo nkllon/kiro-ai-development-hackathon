@@ -1,26 +1,37 @@
-#!/usr/bin/env python3
-"""
-Transport Examples
-==================
+from .transport_examples_part_1 import *
+from .transport_examples_part_2 import *
+from .transport_examples_part_3 import *
+from .transport_examples_part_4 import *
+from .transport_examples_part_5 import *
+from .transport_examples_part_6 import *
+from .transport_examples_part_7 import *
+from .transport_examples_part_8 import *
+from .transport_examples_part_9 import *
+from .transport_examples_part_10 import *
+from .transport_examples_part_11 import *
+from .transport_examples_part_12 import *
+from .transport_examples_part_13 import *
+from .transport_examples_part_14 import *
+from .transport_examples_part_15 import *
+from .transport_examples_part_16 import *
+from .transport_examples_part_17 import *
+from .transport_examples_part_18 import *
+from .transport_examples_part_19 import *
+from src.rm_ddd.core.health import ModuleHealth
 
-Auto-generated module after cleanup.
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
-
-from typing import Dict, Any
-from datetime import datetime
-
-
-class TransportExamples:
-    """Minimal valid class."""
-
-    def __init__(self):
-        self.module_id = "transport_examples"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

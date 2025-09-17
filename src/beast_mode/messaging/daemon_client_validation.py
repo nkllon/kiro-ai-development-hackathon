@@ -1,26 +1,48 @@
-#!/usr/bin/env python3
 """
 Daemon Client Validation
-========================
 
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
+This module was extracted from daemon_client.py
+as part of RM-DDD compliance refactoring.
 """
 
-from typing import Dict, Any
+import asyncio
+import json
+import logging
+import threading
+import time
+from collections import deque
 from datetime import datetime
+from typing import Dict, List, Optional, Callable, Any
+from dataclasses import dataclass, asdict
+import redis.asyncio as redis
+from .models import BeastModeMessage, MessageType
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class DaemonClientValidation:
-    """Minimal valid class."""
+def check_mail(self) -> List[QueuedMessage]:
+    """Check for new messages (non-blocking)."""
+    messages = []
+    while self.inbox:
+        messages.append(self.inbox.popleft())
+    return messages
 
-    def __init__(self):
-        self.module_id = "daemon_client_validation"
-        self.timestamp = datetime.now()
+def check_messages(self) -> List[QueuedMessage]:
+    """Check for new messages (non-blocking)."""
+    return self.daemon.check_mail()
 
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

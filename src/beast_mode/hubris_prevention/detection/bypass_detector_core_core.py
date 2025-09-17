@@ -1,26 +1,51 @@
-#!/usr/bin/env python3
-"""
-Bypass Detector Core Core
-=========================
+from typing import List, Dict, Any, Optional
+from datetime import datetime, timedelta
+import logging
+from dataclasses import dataclass
+from ..models import Decision, Actor, BypassAlert, EscalationAction, GovernanceIntervention, InterventionType
+from ..models import TriggerEvent
+from ..models import EscalationStep
+from ..models import SuccessCriterion
+from ..models import RollbackPlan
+from ..models import TriggerEvent
+from ..models import EscalationStep
+from ..models import SuccessCriterion
+from ..models import RollbackPlan
+from ..models import TriggerEvent
+from ..models import EscalationStep
+from ..models import SuccessCriterion
+from ..models import RollbackPlan
+from ..models import TriggerEvent
+from ..models import EscalationStep
+from ..models import SuccessCriterion
+from ..models import RollbackPlan
+from ..models import TriggerEvent
+from ..models import EscalationStep
+from ..models import SuccessCriterion
+from ..models import RollbackPlan
+from ..models import TriggerEvent
+from ..models import EscalationStep
+from ..models import SuccessCriterion
+from ..models import RollbackPlan
+from .bypass_detector_core_core_processing import *
+from .bypass_detector_core_core_core import *
+from .bypass_detector_core_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
 
-Auto-generated module after cleanup.
 
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-from typing import Dict, Any
-from datetime import datetime
-
-
-class BypassDetectorCoreCore:
-    """Minimal valid class."""
-
-    def __init__(self):
-        self.module_id = "bypass_detector_core_core"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

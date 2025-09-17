@@ -1,26 +1,58 @@
-#!/usr/bin/env python3
-"""
-Unified Client
-==============
+from .unified_client_part_1 import *
+from .unified_client_part_2 import *
+from .unified_client_part_3 import *
+from .unified_client_part_4 import *
+from .unified_client_part_5 import *
+from .unified_client_part_6 import *
+from .unified_client_part_7 import *
+from .unified_client_part_8 import *
+from .unified_client_part_9 import *
+from .unified_client_part_10 import *
+from .unified_client_part_11 import *
+from .unified_client_part_12 import *
+from .unified_client_part_13 import *
+from .unified_client_part_14 import *
+from .unified_client_part_15 import *
+from .unified_client_part_16 import *
+from .unified_client_part_17 import *
+from .unified_client_part_18 import *
+from .unified_client_part_19 import *
+from .unified_client_part_20 import *
+from .unified_client_part_21 import *
+from .unified_client_part_22 import *
+from .unified_client_part_23 import *
+from .unified_client_part_24 import *
+from .unified_client_part_25 import *
+from .unified_client_part_26 import *
+from .unified_client_part_27 import *
+from .unified_client_part_28 import *
+from .unified_client_part_29 import *
+from .unified_client_part_30 import *
+from .unified_client_part_31 import *
+from .unified_client_part_32 import *
+from .unified_client_part_33 import *
+from .unified_client_part_34 import *
+from .unified_client_part_35 import *
+from .unified_client_part_36 import *
+from .unified_client_part_37 import *
+from .unified_client_part_38 import *
+from .unified_client_part_39 import *
+from .unified_client_part_40 import *
+from src.rm_ddd.core.health import ModuleHealth
 
-Auto-generated module after cleanup.
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
-
-from typing import Dict, Any
-from datetime import datetime
-
-
-class UnifiedClient:
-    """Minimal valid class."""
-
-    def __init__(self):
-        self.module_id = "unified_client"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

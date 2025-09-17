@@ -1,26 +1,31 @@
-#!/usr/bin/env python3
-"""
-Message History Services
-========================
+import asyncio
+import json
+import logging
+import re
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Set, Tuple, Union
+from dataclasses import dataclass, field
+from enum import Enum
+from .models import BeastModeMessage, MessageType, AgentCapabilities
+from .message_history_services_services import *
+from .message_history_services_core import *
+from src.rm_ddd.core.health import ModuleHealth
 
-Auto-generated module after cleanup.
 
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-from typing import Dict, Any
-from datetime import datetime
-
-
-class MessageHistoryServices:
-    """Minimal valid class."""
-
-    def __init__(self):
-        self.module_id = "message_history_services"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

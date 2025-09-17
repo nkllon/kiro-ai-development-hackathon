@@ -1,26 +1,30 @@
 #!/usr/bin/env python3
 """
-Beast Dag Cli
-=============
+Beast Mode DAG Orchestration CLI Entry Point.
 
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
+Provides the beast-dag command for systematic ecosystem orchestration.
 """
 
-from typing import Dict, Any
-from datetime import datetime
+from .dag_cli import beast_dag
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class BeastDagCli:
-    """Minimal valid class."""
+if __name__ == '__main__':
 
-    def __init__(self):
-        self.module_id = "beast_dag_cli"
-        self.timestamp = datetime.now()
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}
+    beast_dag()

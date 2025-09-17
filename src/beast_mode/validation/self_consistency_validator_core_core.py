@@ -1,26 +1,58 @@
-#!/usr/bin/env python3
-"""
-Self Consistency Validator Core Core
-====================================
-
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
-
-from typing import Dict, Any
+import os
+import subprocess
+import json
+import time
+from pathlib import Path
+from typing import Dict, Any, List, Optional, Tuple
+from dataclasses import dataclass, field
 from datetime import datetime
+from enum import Enum
+from ..core.reflective_module import ReflectiveModule, HealthStatus
+from ..core.pdca_orchestrator import PDCAOrchestrator
+from ..intelligence.model_driven_intelligence_engine import ModelDrivenIntelligenceEngine
+from ..tool_health.makefile_health_manager import MakefileHealthManager
+from ..quality.automated_quality_gates import AutomatedQualityGates
+from ..tool_health.makefile_health_manager import MakefileHealthManager
+from ..services.gke_service_interface import GKEServiceInterface
+from ..metrics.baseline_metrics_engine import BaselineMetricsEngine
+from ..assessment.evidence_package_generator import EvidencePackageGenerator
+from ..core.reflective_module import ReflectiveModule
+from ..core.pdca_orchestrator import PDCAOrchestrator
+from ..intelligence.model_driven_intelligence_engine import ModelDrivenIntelligenceEngine
+from ..tool_health.makefile_health_manager import MakefileHealthManager
+from ..quality.automated_quality_gates import AutomatedQualityGates
+from ..tool_health.makefile_health_manager import MakefileHealthManager
+from ..services.gke_service_interface import GKEServiceInterface
+from ..metrics.baseline_metrics_engine import BaselineMetricsEngine
+from ..assessment.evidence_package_generator import EvidencePackageGenerator
+from ..core.reflective_module import ReflectiveModule
+from ..core.pdca_orchestrator import PDCAOrchestrator
+from ..intelligence.model_driven_intelligence_engine import ModelDrivenIntelligenceEngine
+from ..tool_health.makefile_health_manager import MakefileHealthManager
+from ..quality.automated_quality_gates import AutomatedQualityGates
+from ..tool_health.makefile_health_manager import MakefileHealthManager
+from ..services.gke_service_interface import GKEServiceInterface
+from ..metrics.baseline_metrics_engine import BaselineMetricsEngine
+from ..assessment.evidence_package_generator import EvidencePackageGenerator
+from ..core.reflective_module import ReflectiveModule
+from .self_consistency_validator_core_core_validation import *
+from .self_consistency_validator_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class SelfConsistencyValidatorCoreCore:
-    """Minimal valid class."""
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def __init__(self):
-        self.module_id = "self_consistency_validator_core_core"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

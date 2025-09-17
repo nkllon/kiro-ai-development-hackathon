@@ -1,26 +1,50 @@
-#!/usr/bin/env python3
 """
 Message Handlers Core Validation
-================================
 
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
+This module was extracted from message_handlers_core.py
+as part of RM-DDD compliance refactoring.
 """
 
-from typing import Dict, Any
+import asyncio
+import json
+import logging
+from abc import ABC, abstractmethod
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Callable, Union
+from enum import Enum
+from .models import BeastModeMessage, MessageType, AgentCapabilities
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class MessageHandlersCoreValidation:
-    """Minimal valid class."""
+def validate_message_format(self, message_data: Dict[str, Any]) -> bool:
+    """
+        Validate message format without processing.
+        
+        Args:
+            message_data: Raw message data
+            
+        Returns:
+            bool: True if valid format
+        """
+    try:
+        BeastModeMessage(**message_data)
+        return True
+    except Exception:
+        return False
 
-    def __init__(self):
-        self.module_id = "message_handlers_core_validation"
-        self.timestamp = datetime.now()
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

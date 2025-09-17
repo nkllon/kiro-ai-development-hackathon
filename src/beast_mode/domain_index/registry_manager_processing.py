@@ -1,26 +1,52 @@
-#!/usr/bin/env python3
 """
 Registry Manager Processing
-===========================
 
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
+This module was extracted from registry_manager.py
+as part of RM-DDD compliance refactoring.
 """
 
-from typing import Dict, Any
+import json
+import time
+from pathlib import Path
+from typing import Dict, List, Optional, Any
 from datetime import datetime
+from .base import CachedComponent
+from .interfaces import DomainRegistryInterface
+from .models import Domain, DomainTools, DomainMetadata, PackagePotential, DomainCollection, ValidationResult, DependencyGraph
+from .exceptions import DomainRegistryError, DomainNotFoundError, DomainValidationError, RegistryCorruptionError
+from .config import get_config
+from .domain_cache import DomainCache, DomainSpecificCache
+from .domain_index import DomainIndex
+from .domain_validator import DomainValidator
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class RegistryManagerProcessing:
-    """Minimal valid class."""
+def _parse_domains(self) -> None:
+    """Parse domains from raw registry data"""
+    self._domains = {}
+    domain_arch = self._raw_registry_data.get('domain_architecture', {})
+    for category_name, category_data in domain_arch.items():
+        if category_name == 'overview':
+            continue
+        if isinstance(category_data, dict) and 'domains' in category_data:
+            for domain_name in category_data['domains']:
+                domain = self._create_domain_from_registry(domain_name, category_name, category_data)
+                if domain:
+                    self._domains[domain_name] = domain
 
-    def __init__(self):
-        self.module_id = "registry_manager_processing"
-        self.timestamp = datetime.now()
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

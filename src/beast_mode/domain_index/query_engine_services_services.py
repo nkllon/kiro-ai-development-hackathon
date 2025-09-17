@@ -1,26 +1,32 @@
-#!/usr/bin/env python3
-"""
-Query Engine Services Services
-==============================
-
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
-
-from typing import Dict, Any
+import re
+import time
+from typing import List, Dict, Optional, Any, Set
 from datetime import datetime
+from pathlib import Path
+from .base import CachedComponent
+from .interfaces import QueryEngineInterface
+from .models import Domain, QueryResult
+from .exceptions import QueryEngineError, InvalidQueryError, QueryTimeoutError
+from .config import get_config
+from .query_engine_services_services_services import *
+from .query_engine_services_services_processing import *
+from .query_engine_services_services_core import *
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class QueryEngineServicesServices:
-    """Minimal valid class."""
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def __init__(self):
-        self.module_id = "query_engine_services_services"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

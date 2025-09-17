@@ -1,26 +1,55 @@
-#!/usr/bin/env python3
 """
 Test Failure Detector Core Core Processing
-==========================================
 
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
+This module was extracted from test_failure_detector_core_core.py
+as part of RM-DDD compliance refactoring.
 """
 
-from typing import Dict, Any
+import re
+import os
+import sys
+import json
+import subprocess
+from typing import Dict, Any, List, Optional, Tuple
+from dataclasses import dataclass, field
 from datetime import datetime
+from pathlib import Path
+from ..core.reflective_module import ReflectiveModule, HealthStatus
+from .rca_integration import TestFailureData
+from .error_handler import RCAErrorHandler
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class TestFailureDetectorCoreCoreProcessing:
-    """Minimal valid class."""
+def _parse_json_output(self, json_file: str) -> List[TestFailureData]:
+    """Parse pytest JSON output for failure information"""
+    try:
+        with open(json_file, 'r') as f:
+            data = json.load(f)
+        failures = []
+        if 'tests' in data:
+            for test in data['tests']:
+                if test.get('outcome') in ['failed', 'error']:
+                    failure_data = self._create_failure_from_json(test)
+                    if failure_data:
+                        failures.append(failure_data)
+        return failures
+    except Exception as e:
+        self.logger.error(f'JSON output parsing failed: {e}')
+        return []
 
-    def __init__(self):
-        self.module_id = "test_failure_detector_core_core_processing"
-        self.timestamp = datetime.now()
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

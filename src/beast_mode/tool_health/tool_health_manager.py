@@ -1,26 +1,31 @@
-#!/usr/bin/env python3
-"""
-Tool Health Manager
-===================
+import logging
+import subprocess
+import json
+from datetime import datetime, timedelta
+from typing import Dict, List, Any, Optional
+from dataclasses import dataclass
+from pathlib import Path
+from ..core.reflective_module import ReflectiveModule
+from .tool_health_manager_utils import *
+from .tool_health_manager_core import *
+from .tool_health_manager_validation import *
+from .tool_health_manager_services import *
+from src.rm_ddd.core.health import ModuleHealth
 
-Auto-generated module after cleanup.
 
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-from typing import Dict, Any
-from datetime import datetime
-
-
-class ToolHealthManager:
-    """Minimal valid class."""
-
-    def __init__(self):
-        self.module_id = "tool_health_manager"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

@@ -1,26 +1,27 @@
-#!/usr/bin/env python3
-"""
-Registry Core
-=============
+import asyncio
+import logging
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional, Set, TYPE_CHECKING
+from uuid import uuid4
+from dataclasses import dataclass, field
+from threading import Lock
+from ..models import ModuleStatus, ModuleCapability
+from .health import ModuleHealth
+from .registry_core_core import *
 
-Auto-generated module after cleanup.
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
-
-from typing import Dict, Any
-from datetime import datetime
-
-
-class RegistryCore:
-    """Minimal valid class."""
-
-    def __init__(self):
-        self.module_id = "registry_core"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

@@ -1,26 +1,28 @@
-#!/usr/bin/env python3
-"""
-Report Generator Core Core
-==========================
-
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
-
-from typing import Dict, Any
+from typing import List, Dict, Any, Optional
 from datetime import datetime
+from dataclasses import dataclass
+import json
+from ..interfaces import ComplianceReporter
+from ..models import ComplianceAnalysisResult, ComplianceIssue, IssueSeverity, ComplianceIssueType, RemediationStep, Phase2ValidationResult
+from .report_generator_core_core_validation import *
+from .report_generator_core_core_utils import *
+from .report_generator_core_core_core import *
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class ReportGeneratorCoreCore:
-    """Minimal valid class."""
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def __init__(self):
-        self.module_id = "report_generator_core_core"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

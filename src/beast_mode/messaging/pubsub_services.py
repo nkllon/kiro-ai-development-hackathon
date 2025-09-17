@@ -1,26 +1,37 @@
-#!/usr/bin/env python3
-"""
-Pubsub Services
-===============
+from .pubsub_services_part_1 import *
+from .pubsub_services_part_2 import *
+from .pubsub_services_part_3 import *
+from .pubsub_services_part_4 import *
+from .pubsub_services_part_5 import *
+from .pubsub_services_part_6 import *
+from .pubsub_services_part_7 import *
+from .pubsub_services_part_8 import *
+from .pubsub_services_part_9 import *
+from .pubsub_services_part_10 import *
+from .pubsub_services_part_11 import *
+from .pubsub_services_part_12 import *
+from .pubsub_services_part_13 import *
+from .pubsub_services_part_14 import *
+from .pubsub_services_part_15 import *
+from .pubsub_services_part_16 import *
+from .pubsub_services_part_17 import *
+from .pubsub_services_part_18 import *
+from .pubsub_services_part_19 import *
+from src.rm_ddd.core.health import ModuleHealth
 
-Auto-generated module after cleanup.
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
-
-from typing import Dict, Any
-from datetime import datetime
-
-
-class PubsubServices:
-    """Minimal valid class."""
-
-    def __init__(self):
-        self.module_id = "pubsub_services"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

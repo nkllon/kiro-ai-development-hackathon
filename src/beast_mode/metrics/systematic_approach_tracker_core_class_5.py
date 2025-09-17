@@ -1,0 +1,129 @@
+from src.rm_ddd.core.registry import register_module
+class InterfaceRegistry(ReflectiveModule):
+def get_health_indicators(self) -> Dict[str, any]:
+        """Get health indicators for this module."""
+        return {
+            "module_id": self.module_id,
+            "status": self.health_status,
+            "last_updated": self.last_updated,
+            "capabilities_count": len(self.capabilities),
+            "dependencies_count": len(self.dependencies)
+        }
+    
+    def get_status_report(self) -> Dict[str, any]:
+        """Get comprehensive status report for this module."""
+        return {
+            "module_id": self.module_id,
+            "health_status": self.health_status,
+            "capabilities": self.capabilities,
+            "dependencies": self.dependencies,
+            "last_updated": self.last_updated,
+            "performance_metrics": self.get_metrics()
+        }
+    """Interface Registry - Requirements-Driven Implementation"""
+    
+    def __init__(self):
+        self.interfaces: Dict[str, InterfaceMetadata] = {}
+        self.registry_file = ".beast_mode/interface_registry.json"
+    
+    def register(self, name: str, interface_type: InterfaceType, 
+                file_path: str, line_number: int, methods: List[str]) -> bool:
+        """Register an interface"""
+        try:
+            metadata = InterfaceMetadata(
+                name=name,
+                type=interface_type,
+                status=InterfaceStatus.ACTIVE,
+                file_path=file_path,
+                line_number=line_number,
+                methods=methods,
+                created_at=datetime.now(),
+                compliance_score=0.0
+            )
+            self.interfaces[name] = metadata
+            self.save_registry()
+            return True
+        except Exception as e:
+            print(f"Error registering interface {name}: {e}")
+            return False
+    
+    def get_metadata(self, name: str) -> Optional[InterfaceMetadata]:
+        """Get interface metadata"""
+        return self.interfaces.get(name)
+    
+    def validate_interface(self, name: str) -> bool:
+        """Validate interface compliance"""
+        if name not in self.interfaces:
+            return False
+        
+        metadata = self.interfaces[name]
+        
+        # Basic validation checks
+        if not metadata.name or not metadata.file_path:
+            return False
+        
+        if metadata.compliance_score < 0.0 or metadata.compliance_score > 100.0:
+            return False
+        
+        return True
+    
+    def list_interfaces(self) -> List[str]:
+        """List all registered interfaces"""
+        return list(self.interfaces.keys())
+    
+    def save_registry(self):
+        """Save registry to file"""
+        try:
+            os.makedirs(os.path.dirname(self.registry_file), exist_ok=True)
+            with open(self.registry_file, 'w') as f:
+                json.dump(self._serialize_registry(), f, indent=2)
+        except Exception as e:
+            print(f"Error saving registry: {e}")
+    
+    def _serialize_registry(self) -> Dict[str, Any]:
+        """Serialize registry for JSON storage"""
+        return {
+            name: {
+                'name': metadata.name,
+                'type': metadata.type.value,
+                'status': metadata.status.value,
+                'file_path': metadata.file_path,
+                'line_number': metadata.line_number,
+                'methods': metadata.methods,
+                'created_at': metadata.created_at.isoformat(),
+                'compliance_score': metadata.compliance_score
+            }
+            for name, metadata in self.interfaces.items()
+        }
+
+        register_module(self.__class__.__name__, self)
+# Global registry instance
+registry = InterfaceRegistry()
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+

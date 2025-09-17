@@ -1,26 +1,39 @@
-#!/usr/bin/env python3
 """
 Mpm Dashboard Core Core Utils
-=============================
 
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
+This module was extracted from mpm_dashboard_core_core.py
+as part of RM-DDD compliance refactoring.
 """
 
-from typing import Dict, Any
-from datetime import datetime
+from typing import Dict, Any, List, Optional, Tuple
+from datetime import datetime, timedelta
+from dataclasses import dataclass, field
+from enum import Enum
+import logging
+import time
+from .models import BacklogItem, MPMValidation, DependencySpec
+from .enums import StrategicTrack, BeastReadinessStatus, ApprovalStatus, StakeholderType, RiskLevel
+from .dependency_manager import BacklogDependencyManager
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class MpmDashboardCoreCoreUtils:
-    """Minimal valid class."""
+def _calculate_resource_utilization(self, scenario_params: Dict[str, Any], constraints: ResourceConstraints) -> Dict[str, float]:
+    """Calculate resource utilization for scenario"""
+    return {'developers': min(1.0, scenario_params['efficiency']), 'time': scenario_params['efficiency'], 'budget': 0.8 if constraints.budget_constraints else 1.0}
 
-    def __init__(self):
-        self.module_id = "mpm_dashboard_core_core_utils"
-        self.timestamp = datetime.now()
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

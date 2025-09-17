@@ -1,26 +1,37 @@
-#!/usr/bin/env python3
-"""
-Domain Validator Core Core
-==========================
-
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
-
-from typing import Dict, Any
+import re
+import os
+from pathlib import Path
+from typing import Dict, List, Set, Optional, Any, Tuple
+from dataclasses import dataclass
 from datetime import datetime
+from .base import DomainSystemComponent
+from .models import Domain, DomainCollection, ValidationResult, HealthIssue, IssueSeverity, IssueCategory, DependencyGraph
+from .exceptions import DomainValidationError
+import glob
+import jsonschema
+import glob
+import glob
+import glob
+import glob
+import glob
+from .domain_validator_core_core_core import *
+from .domain_validator_core_core_validation import *
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class DomainValidatorCoreCore:
-    """Minimal valid class."""
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def __init__(self):
-        self.module_id = "domain_validator_core_core"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

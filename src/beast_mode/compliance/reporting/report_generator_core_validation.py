@@ -1,26 +1,36 @@
-#!/usr/bin/env python3
 """
 Report Generator Core Validation
-================================
 
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
+This module was extracted from report_generator_core.py
+as part of RM-DDD compliance refactoring.
 """
 
-from typing import Dict, Any
+from typing import List, Dict, Any, Optional
 from datetime import datetime
+from dataclasses import dataclass
+import json
+from ..interfaces import ComplianceReporter
+from ..models import ComplianceAnalysisResult, ComplianceIssue, IssueSeverity, ComplianceIssueType, RemediationStep, Phase2ValidationResult
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class ReportGeneratorCoreValidation:
-    """Minimal valid class."""
+def _analyze_test_coverage_findings(self, test_status) -> Dict[str, Any]:
+    """Analyze test coverage findings."""
+    return {'current_coverage': test_status.current_coverage, 'baseline_coverage': test_status.baseline_coverage, 'coverage_adequate': test_status.coverage_adequate, 'failing_tests_count': len(test_status.failing_tests), 'missing_tests_count': len(test_status.missing_tests), 'failing_tests': test_status.failing_tests[:10], 'issues_count': len(test_status.issues)}
 
-    def __init__(self):
-        self.module_id = "report_generator_core_validation"
-        self.timestamp = datetime.now()
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

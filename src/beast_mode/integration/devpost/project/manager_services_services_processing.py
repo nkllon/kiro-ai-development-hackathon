@@ -1,26 +1,83 @@
-#!/usr/bin/env python3
 """
 Manager Services Services Processing
-====================================
 
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
+This module was extracted from manager_services_services.py
+as part of RM-DDD compliance refactoring.
 """
 
-from typing import Dict, Any
+import json
+import re
+from pathlib import Path
+from typing import Optional, Dict, Any, List, Union
 from datetime import datetime
+from ..models import DevpostProject, ProjectMetadata, DevpostConfig, ProjectConnection, SyncStatus, ValidationResult
+from ..interfaces import ProjectManagerInterface
+from ..config import DevpostConfigManager
+from ....core.exceptions import ConfigurationError, ValidationError
+import tomllib
+import tomli as tomllib
+import tomllib
+import tomli as tomllib
+import tomllib
+import tomli as tomllib
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class ManagerServicesServicesProcessing:
-    """Minimal valid class."""
+def _parse_readme_content(self, content: str, path: Path) -> Dict[str, Any]:
+    """Parse README content to extract metadata."""
+    lines = content.split('\n')
+    metadata = {'path': path}
+    for line in lines:
+        line = line.strip()
+        if line.startswith('# '):
+            metadata['title'] = line[2:].strip()
+            break
+        elif line.startswith('=') and len(line) > 3:
+            prev_idx = lines.index(line) - 1
+            if prev_idx >= 0:
+                metadata['title'] = lines[prev_idx].strip()
+            break
+    title_found = False
+    description_lines = []
+    in_description_section = False
+    for i, line in enumerate(lines):
+        line = line.strip()
+        if not title_found:
+            if line.startswith('# ') or (line.startswith('=') and len(line) > 3):
+                title_found = True
+            continue
+        if line.lower().startswith('## description'):
+            in_description_section = True
+            continue
+        if line.startswith('##') and (not line.lower().startswith('## description')):
+            if in_description_section:
+                break
+            continue
+        if line:
+            description_lines.append(line)
+        elif in_description_section and (not line):
+            continue
+    if description_lines:
+        full_description = ' '.join(description_lines)
+        sentences = re.split('[.!?]+', full_description)
+        if sentences and sentences[0].strip():
+            metadata['tagline'] = sentences[0].strip()
+        metadata['description'] = full_description
+    return metadata
 
-    def __init__(self):
-        self.module_id = "manager_services_services_processing"
-        self.timestamp = datetime.now()
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

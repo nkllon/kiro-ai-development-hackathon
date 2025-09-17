@@ -1,26 +1,74 @@
-#!/usr/bin/env python3
 """
 Task Dag Rm Core Processing
-===========================
 
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
+This module was extracted from task_dag_rm_core.py
+as part of RM-DDD compliance refactoring.
 """
 
-from typing import Dict, Any
+import json
+import re
+from typing import Dict, List, Set, Optional, Tuple, Any
+from dataclasses import dataclass, field
 from datetime import datetime
+from pathlib import Path
+from enum import Enum
+from ..core.reflective_module import ReflectiveModule, HealthStatus
+import random
+import random
+import random
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class TaskDagRmCoreProcessing:
-    """Minimal valid class."""
+def _parse_tasks_markdown(self, content: str) -> Dict[str, TaskNode]:
+    """
+        Parse tasks from markdown content
+        
+        Expected format:
+        - [ ] 1. Task Name
+          - Description
+          - _Requirements: req1, req2_
+        
+        - [ ] 1.1 Subtask Name
+          - Subtask description
+          - _Requirements: req3_
+        """
+    tasks = {}
+    current_task = None
+    lines = content.split('\n')
+    for line in lines:
+        line = line.strip()
+        task_match = re.match('^-\\s*\\[\\s*[x\\s]\\s*\\]\\s*(\\d+(?:\\.\\d+)*)\\s+(.+)$', line)
+        if task_match:
+            task_id = task_match.group(1)
+            task_name = task_match.group(2)
+            current_task = TaskNode(id=task_id, name=task_name, description='', dependencies=self._extract_dependencies(task_id), requirements=[], estimated_hours=4.0, priority=1)
+            tasks[task_id] = current_task
+            continue
+        req_match = re.match('^_Requirements:\\s*(.+)_$', line)
+        if req_match and current_task:
+            reqs = [r.strip() for r in req_match.group(1).split(',')]
+            current_task.requirements = reqs
+            continue
+        if current_task and line and (not line.startswith('-')) and (not line.startswith('_')):
+            if current_task.description:
+                current_task.description += ' ' + line
+            else:
+                current_task.description = line
+    return tasks
 
-    def __init__(self):
-        self.module_id = "task_dag_rm_core_processing"
-        self.timestamp = datetime.now()
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

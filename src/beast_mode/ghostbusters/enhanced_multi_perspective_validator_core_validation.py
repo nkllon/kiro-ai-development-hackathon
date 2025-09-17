@@ -1,26 +1,36 @@
-#!/usr/bin/env python3
 """
 Enhanced Multi Perspective Validator Core Validation
-====================================================
 
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
+This module was extracted from enhanced_multi_perspective_validator_core.py
+as part of RM-DDD compliance refactoring.
 """
 
-from typing import Dict, Any
+import time
+import json
+from typing import Dict, Any, List, Optional, Tuple
+from dataclasses import dataclass
 from datetime import datetime
+from enum import Enum
+from ..core.reflective_module import ReflectiveModule, HealthStatus
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class EnhancedMultiPerspectiveValidatorCoreValidation:
-    """Minimal valid class."""
+def _assess_testing_complexity(self, decision_context: DecisionContext) -> float:
+    return 0.5
 
-    def __init__(self):
-        self.module_id = "enhanced_multi_perspective_validator_core_validation"
-        self.timestamp = datetime.now()
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

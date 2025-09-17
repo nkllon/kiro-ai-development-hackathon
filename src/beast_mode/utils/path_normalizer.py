@@ -1,26 +1,67 @@
-#!/usr/bin/env python3
-"""
-Path Normalizer
-===============
+from .path_normalizer_part_1 import *
+from .path_normalizer_part_2 import *
+from .path_normalizer_part_3 import *
+from .path_normalizer_part_4 import *
+from .path_normalizer_part_5 import *
+from .path_normalizer_part_6 import *
+from .path_normalizer_part_7 import *
+from .path_normalizer_part_8 import *
+from .path_normalizer_part_9 import *
+from .path_normalizer_part_10 import *
+from .path_normalizer_part_11 import *
+from .path_normalizer_part_12 import *
+from .path_normalizer_part_13 import *
+from .path_normalizer_part_14 import *
+from .path_normalizer_part_15 import *
+from .path_normalizer_part_16 import *
+from .path_normalizer_part_17 import *
+from .path_normalizer_part_18 import *
+from .path_normalizer_part_19 import *
+from .path_normalizer_part_20 import *
+from .path_normalizer_part_21 import *
+from .path_normalizer_part_22 import *
+from .path_normalizer_part_23 import *
+from .path_normalizer_part_24 import *
+from .path_normalizer_part_25 import *
+from .path_normalizer_part_26 import *
+from .path_normalizer_part_27 import *
+from .path_normalizer_part_28 import *
+from .path_normalizer_part_29 import *
+from .path_normalizer_part_30 import *
+from .path_normalizer_part_31 import *
+from .path_normalizer_part_32 import *
+from .path_normalizer_part_33 import *
+from .path_normalizer_part_34 import *
+from .path_normalizer_part_35 import *
+from .path_normalizer_part_36 import *
+from .path_normalizer_part_37 import *
+from .path_normalizer_part_38 import *
+from .path_normalizer_part_39 import *
+from .path_normalizer_part_40 import *
+from .path_normalizer_part_41 import *
+from .path_normalizer_part_42 import *
+from .path_normalizer_part_43 import *
+from .path_normalizer_part_44 import *
+from .path_normalizer_part_45 import *
+from .path_normalizer_part_46 import *
+from .path_normalizer_part_47 import *
+from .path_normalizer_part_48 import *
+from .path_normalizer_part_49 import *
+from src.rm_ddd.core.health import ModuleHealth
 
-Auto-generated module after cleanup.
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
-
-from typing import Dict, Any
-from datetime import datetime
-
-
-class PathNormalizer:
-    """Minimal valid class."""
-
-    def __init__(self):
-        self.module_id = "path_normalizer"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

@@ -1,26 +1,24 @@
-#!/usr/bin/env python3
-"""
-Validation Framework Core Validation
-====================================
+from .validation_framework_core_validation_part_1 import *
+from .validation_framework_core_validation_part_2 import *
+from .validation_framework_core_validation_part_3 import *
+from .validation_framework_core_validation_part_4 import *
+from .validation_framework_core_validation_part_5 import *
+from .validation_framework_core_validation_part_6 import *
+from src.rm_ddd.core.health import ModuleHealth
 
-Auto-generated module after cleanup.
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
-
-from typing import Dict, Any
-from datetime import datetime
-
-
-class ValidationFrameworkCoreValidation:
-    """Minimal valid class."""
-
-    def __init__(self):
-        self.module_id = "validation_framework_core_validation"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

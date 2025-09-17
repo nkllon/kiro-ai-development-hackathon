@@ -1,26 +1,36 @@
-#!/usr/bin/env python3
-"""
-Task Dag Rm Core Core
-=====================
-
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
-
-from typing import Dict, Any
+import json
+import re
+from typing import Dict, List, Set, Optional, Tuple, Any
+from dataclasses import dataclass, field
 from datetime import datetime
+from pathlib import Path
+from enum import Enum
+from ..core.reflective_module import ReflectiveModule, HealthStatus
+import random
+import random
+import random
+import random
+import random
+import random
+from .task_dag_rm_core_core_validation import *
+from .task_dag_rm_core_core_core import *
+from .task_dag_rm_core_core_processing import *
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class TaskDagRmCoreCore:
-    """Minimal valid class."""
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def __init__(self):
-        self.module_id = "task_dag_rm_core_core"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

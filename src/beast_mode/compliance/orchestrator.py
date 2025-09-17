@@ -1,26 +1,28 @@
-#!/usr/bin/env python3
-"""
-Orchestrator
-============
-
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
-
-from typing import Dict, Any
-from datetime import datetime
+import logging
+from typing import List, Dict, Any, Optional
+from pathlib import Path
+from ..core.reflective_module import ReflectiveModule
+from .interfaces import ComplianceValidator, ComplianceAnalyzer, ValidationContext
+from .models import ComplianceAnalysisResult, Phase2ValidationResult, ComplianceIssue, ComplianceIssueType, IssueSeverity, CommitInfo, RDIComplianceStatus, RMComplianceStatus, TestCoverageStatus, TaskReconciliationStatus
+from .rm.rm_validator import RMValidator
+from .orchestrator_core import *
+from .orchestrator_validation import *
+from src.rm_ddd.core.health import ModuleHealth
 
 
-class Orchestrator:
-    """Minimal valid class."""
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
 
-    def __init__(self):
-        self.module_id = "orchestrator"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}

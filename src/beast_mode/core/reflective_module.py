@@ -17,10 +17,10 @@ Deprecated on: 2025-09-12T10:51:04.491081
 # Import the unified interface
 from src.rm_ddd.core.unified_reflective_module import (
     ReflectiveModule,
-    ModuleHealth,
+    ModuleHealth, 
     ModuleStatus,
     ModuleCapability,
-    GracefulDegradationResult,
+    GracefulDegradationResult
 )
 
 # Alias for backward compatibility
@@ -30,8 +30,9 @@ HealthStatus = ModuleStatus
 __all__ = [
     "ReflectiveModule",
     "ModuleHealth",
-    "ModuleStatus",
+    "ModuleStatus", 
     "HealthStatus",
     "ModuleCapability",
-    "GracefulDegradationResult",
+    "GracefulDegradationResult"
 ]
+
