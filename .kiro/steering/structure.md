@@ -119,6 +119,31 @@ spec-name/
 
 ## Critical Requirements
 
+### Artifact Creation Governance
+**MANDATORY FIRST QUESTION**: "Why am I creating this without a spec?"
+
+Every artifact creation must follow one of two paths:
+
+#### 1. Spec-Driven (Systematic)
+- Requirements → Design → Implementation
+- Full traceability and validation
+- Systematic quality and acceptance criteria
+- Use when building production features
+
+#### 2. Vibe Mode (Exploratory)
+- Rapid prototyping and exploration
+- **MUST** be explicitly labeled as Vibe Mode
+- **MUST** have potential to become reference implementation
+- **MUST** be subject to artifact discovery and classification later
+- Use for research, proof-of-concepts, and rapid iteration
+
+#### Brownfield Reality Check
+When entering existing codebases:
+- **First priority**: Discover what artifacts actually exist
+- **Reality over documentation**: Take account of actual system state
+- **Artifact discovery**: Use ContentScanner, ContentClassifier, ContentMetadataExtractor
+- **Systematic classification**: Understand actual vs. documented architecture
+
 ### Kiro Integration
 - `.kiro/` directory MUST be at project root
 - `.kiro/` MUST NOT be in `.gitignore` (hackathon requirement)

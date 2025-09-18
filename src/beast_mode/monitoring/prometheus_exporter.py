@@ -94,9 +94,13 @@ except ImportError:
 
 
 # Import existing monitoring systems
-from beast_mode.performance.performance_monitoring_system import (
-    PerformanceMonitoringSystem,
-)
+try:
+    from src.beast_mode.performance.performance_monitoring_system import (
+        PerformanceMonitoringSystem,
+    )
+except ImportError:
+    # Fallback if performance monitoring system not available
+    PerformanceMonitoringSystem = None
 
 
 class PrometheusExporter:
