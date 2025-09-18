@@ -1,7 +1,12 @@
 """
 VARB Coding Validator
 
-VARB = Validation through Authentic Requirements Behavior
+V.A.R.B = Voice-Authentic Requirements Behavior
+
+V - Voice: Preserves stakeholder's natural communication patterns and emphasis
+A - Authentic: Maintains genuine intent without systematic filtering  
+R - Requirements: Applied to requirements engineering and transformation validation
+B - Behavior: Captures behavioral patterns, assumptions, and thinking styles
 
 A systematic approach to validate requirements transformation by comparing:
 1. Structured implementation (from EARS requirements)
@@ -10,7 +15,7 @@ A systematic approach to validate requirements transformation by comparing:
 VARB coding captures the authentic stakeholder intent without systematic filtering,
 providing ground truth validation for requirements transformation quality.
 
-We're stealing this acronym and making it mean something useful!
+Since we didn't know what VARB originally meant, we defined it ourselves!
 """
 
 import logging

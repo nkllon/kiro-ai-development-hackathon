@@ -19,7 +19,12 @@ from src.spec_scrub.validation.vti_feedback_loop import VTIFeedbackLoop
 
 @click.group()
 def cli():
-    """VARB + VTI Demo - Revolutionary Requirements Validation."""
+    """
+    VARB + VTI Demo - Revolutionary Requirements Validation.
+    
+    VARB = Voice-Authentic Requirements Behavior
+    VTI = Validation-through-Implementation
+    """
     pass
 
 
@@ -28,6 +33,9 @@ def demo():
     """Run comprehensive VARB + VTI demonstration."""
     click.echo("🚀 VARB + VTI Revolutionary Requirements Validation Demo")
     click.echo("=" * 60)
+    click.echo("📖 VARB = Voice-Authentic Requirements Behavior")
+    click.echo("📖 VTI = Validation-through-Implementation")
+    click.echo("")
     
     # Initialize validators
     varb = VARBValidator()
