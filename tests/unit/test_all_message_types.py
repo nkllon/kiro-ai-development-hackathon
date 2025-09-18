@@ -17,13 +17,13 @@ import asyncio
 from src.beast_mode.messaging.models import BeastModeMessage, MessageType, AgentCapabilities
 from src.beast_mode.messaging.message_router import StandardMessageRouter, MessageTypeRegistry
 from src.beast_mode.messaging.message_handlers import MessageValidationError
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# # from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
 
 class TestAllMessageTypes(ReflectiveModule):
     """Test all MessageType enum values with their handlers"""
-    
+
     @pytest.fixture
     def router(self):
         """Create a standard router for testing"""
@@ -43,13 +43,13 @@ class TestAllMessageTypes(ReflectiveModule):
             'on_technical_exchange': Mock(),
             'on_system_health': Mock()
         }
-        
+
         return StandardMessageRouter(
             agent_id="test_agent",
             capabilities=["python", "testing", "docker"],
             callbacks=callbacks
         )
-    
+
     @pytest.mark.asyncio
     async def test_simple_message_type(self, router):
         """Test SIMPLE_MESSAGE type"""
@@ -58,12 +58,12 @@ class TestAllMessageTypes(ReflectiveModule):
             source="sender",
             payload={"content": "Hello world", "context": "greeting"}
         )
-        
+
         responses = await router.process_message(message)
-        
+
         assert len(responses) == 0  # No response expected
         router.callbacks['on_simple_message'].assert_called_once_with("sender", "Hello world")
-    
+
     @pytest.mark.asyncio
     async def test_prompt_request_type(self, router):
         """Test PROMPT_REQUEST type"""
@@ -76,19 +76,19 @@ class TestAllMessageTypes(ReflectiveModule):
                 "timeout": 30
             }
         )
-        
+
         responses = await router.process_message(message)
-        
+
         assert len(responses) == 1
         response = responses[0]
-        
+
         assert response.type == MessageType.PROMPT_RESPONSE
         assert response.source == "test_agent"
         assert response.target == "sender"
         assert response.payload["response"] == "Processed response"
         assert response.payload["original_prompt"] == "What is the capital of France?"
         assert response.correlation_id == message.id
-    
+
     @pytest.mark.asyncio
     async def test_prompt_response_type(self, router):
         """Test PROMPT_RESPONSE type"""
@@ -99,7 +99,7 @@ class TestAllMessageTypes(ReflectiveModule):
             payload={"prompt": "Original question"}
         )
         router.track_sent_message(original_request)
-        
+
         # Now process the response
         message = BeastModeMessage(
             type=MessageType.PROMPT_RESPONSE,
@@ -111,12 +111,12 @@ class TestAllMessageTypes(ReflectiveModule):
             },
             correlation_id=original_request.id
         )
-        
+
         responses = await router.process_message(message)
-        
+
         assert len(responses) == 0  # No response expected
         router.callbacks['on_prompt_response'].assert_called_once()
-    
+
     @pytest.mark.asyncio
     async def test_agent_discovery_type(self, router):
         """Test AGENT_DISCOVERY type"""
@@ -126,7 +126,7 @@ class TestAllMessageTypes(ReflectiveModule):
             availability="ready_for_business",
             specializations=["backend_development"]
         )
-        
+
         message = BeastModeMessage(
             type=MessageType.AGENT_DISCOVERY,
             source="discovering_agent",
@@ -135,23 +135,23 @@ class TestAllMessageTypes(ReflectiveModule):
                 "announcement": "New agent joining the network"
             }
         )
-        
+
         responses = await router.process_message(message)
-        
+
         assert len(responses) == 1
         response = responses[0]
-        
+
         assert response.type == MessageType.AGENT_RESPONSE
         assert response.source == "test_agent"
         assert response.target == "discovering_agent"
-        
+
         # Check our capabilities in response
         our_caps = AgentCapabilities(**response.payload["agent_capabilities"])
         assert our_caps.agent_id == "test_agent"
         assert our_caps.capabilities == ["python", "testing", "docker"]
-        
+
         router.callbacks['on_agent_discovery'].assert_called_once()
-    
+
     @pytest.mark.asyncio
     async def test_agent_response_type(self, router):
         """Test AGENT_RESPONSE type"""
@@ -160,7 +160,7 @@ class TestAllMessageTypes(ReflectiveModule):
             capabilities=["kubernetes", "devops"],
             availability="busy"
         )
-        
+
         message = BeastModeMessage(
             type=MessageType.AGENT_RESPONSE,
             source="responding_agent",
@@ -169,12 +169,12 @@ class TestAllMessageTypes(ReflectiveModule):
                 "response_to": "some_discovery_id"
             }
         )
-        
+
         responses = await router.process_message(message)
-        
+
         assert len(responses) == 0  # No response expected
         router.callbacks['on_agent_response'].assert_called_once()
-    
+
     @pytest.mark.asyncio
     async def test_help_wanted_type(self, router):
         """Test HELP_WANTED type"""
@@ -190,19 +190,19 @@ class TestAllMessageTypes(ReflectiveModule):
                 "context": {"project": "web_app", "framework": "flask"}
             }
         )
-        
+
         responses = await router.process_message(message)
-        
+
         assert len(responses) == 1
         response = responses[0]
-        
+
         assert response.type == MessageType.HELP_RESPONSE
         assert response.source == "test_agent"
         assert response.target == "needy_agent"
         assert response.payload["can_help"] is True
         assert set(response.payload["matching_capabilities"]) == {"python", "testing"}
         assert response.payload["confidence_score"] == 1.0
-    
+
     @pytest.mark.asyncio
     async def test_help_wanted_type_cannot_help(self, router):
         """Test HELP_WANTED type when we cannot help"""
@@ -214,11 +214,11 @@ class TestAllMessageTypes(ReflectiveModule):
                 "description": "Need help with Rust blockchain development"
             }
         )
-        
+
         responses = await router.process_message(message)
-        
+
         assert len(responses) == 0  # No response when we can't help
-    
+
     @pytest.mark.asyncio
     async def test_help_response_type(self, router):
         """Test HELP_RESPONSE type"""
@@ -233,7 +233,7 @@ class TestAllMessageTypes(ReflectiveModule):
             }
         )
         router.track_sent_message(help_request)
-        
+
         message = BeastModeMessage(
             type=MessageType.HELP_RESPONSE,
             source="helper_agent",
@@ -245,12 +245,12 @@ class TestAllMessageTypes(ReflectiveModule):
                 "response_message": "I can help with Python development"
             }
         )
-        
+
         responses = await router.process_message(message)
-        
+
         assert len(responses) == 0  # No response expected
         router.callbacks['on_help_response'].assert_called_once()
-    
+
     @pytest.mark.asyncio
     async def test_spore_delivery_type(self, router):
         """Test SPORE_DELIVERY type"""
@@ -273,11 +273,11 @@ class TestAllMessageTypes(ReflectiveModule):
                 }
             }
         )
-        
+
         responses = await router.process_message(message)
-        
+
         assert len(responses) == 0  # No response expected
-        
+
         # Check callback was called with correct parameters
         router.callbacks['on_spore_delivery'].assert_called_once()
         args = router.callbacks['on_spore_delivery'].call_args[0]
@@ -285,7 +285,7 @@ class TestAllMessageTypes(ReflectiveModule):
         assert args[1] == "optimization_methodology"
         assert "systematic_optimization" in args[2]["content"]
         assert args[2]["metadata"]["version"] == "2.1"
-    
+
     @pytest.mark.asyncio
     async def test_spore_request_type(self, router):
         """Test SPORE_REQUEST type"""
@@ -298,19 +298,19 @@ class TestAllMessageTypes(ReflectiveModule):
                 "metadata": {"purpose": "learning"}
             }
         )
-        
+
         responses = await router.process_message(message)
-        
+
         assert len(responses) == 1
         response = responses[0]
-        
+
         assert response.type == MessageType.SPORE_DELIVERY
         assert response.source == "test_agent"
         assert response.target == "spore_requester"
         assert response.payload["spore_name"] == "test_spore"
         assert response.payload["spore_content"] == "test spore content"
         assert response.payload["metadata"]["version"] == "1.0"
-    
+
     @pytest.mark.asyncio
     async def test_spore_spawn_type(self, router):
         """Test SPORE_SPAWN type (if implemented)"""
@@ -324,13 +324,13 @@ class TestAllMessageTypes(ReflectiveModule):
                 "metadata": {"target": "performance_analysis"}
             }
         )
-        
+
         # Should not raise an error even if no specific handler exists
         responses = await router.process_message(message)
-        
+
         # May or may not have responses depending on implementation
         assert isinstance(responses, list)
-    
+
     @pytest.mark.asyncio
     async def test_technical_exchange_type(self, router):
         """Test TECHNICAL_EXCHANGE type"""
@@ -347,18 +347,18 @@ class TestAllMessageTypes(ReflectiveModule):
                 "metadata": {"environment": "production", "urgency": "low"}
             }
         )
-        
+
         responses = await router.process_message(message)
-        
+
         assert len(responses) == 0  # No response expected
         router.callbacks['on_technical_exchange'].assert_called_once()
-        
+
         # Check callback received correct data
         args = router.callbacks['on_technical_exchange'].call_args[0]
         assert args[0] == "tech_agent"
         assert args[1]["topic"] == "kubernetes_configuration"
         assert args[1]["data"]["cluster_info"]["nodes"] == 3
-    
+
     @pytest.mark.asyncio
     async def test_system_health_type(self, router):
         """Test SYSTEM_HEALTH type"""
@@ -378,47 +378,47 @@ class TestAllMessageTypes(ReflectiveModule):
                 "agent_id": "monitoring_agent"
             }
         )
-        
+
         responses = await router.process_message(message)
-        
+
         assert len(responses) == 0  # No response expected
         router.callbacks['on_system_health'].assert_called_once()
-        
+
         # Check callback received correct data
         args = router.callbacks['on_system_health'].call_args[0]
         assert args[0] == "monitoring_agent"
         assert args[1]["status"] == "healthy"
         assert args[1]["metrics"]["cpu_usage"] == 45.2
-    
+
     def test_message_type_registry_completeness(self):
         """Test that MessageTypeRegistry has info for all message types"""
         registry = MessageTypeRegistry()
-        
+
         for message_type in MessageType:
             type_info = registry.get_type_info(message_type)
-            
+
             assert type_info is not None, f"No type info for {message_type}"
             assert 'description' in type_info, f"No description for {message_type}"
             assert 'required_fields' in type_info, f"No required_fields for {message_type}"
             assert 'optional_fields' in type_info, f"No optional_fields for {message_type}"
             assert 'handler_class' in type_info, f"No handler_class for {message_type}"
-    
+
     @pytest.mark.asyncio
     async def test_all_message_types_have_handlers(self, router):
         """Test that all message types have registered handlers"""
         supported_types = router.get_supported_types()
-        
+
         for message_type in MessageType:
             assert message_type in supported_types, f"No handler registered for {message_type}"
-    
+
     def test_message_validation_for_all_types(self):
         """Test message validation for all message types"""
         registry = MessageTypeRegistry()
-        
+
         for message_type in MessageType:
             type_info = registry.get_type_info(message_type)
             required_fields = type_info.get('required_fields', [])
-            
+
             # Test with all required fields
             payload = {}
             for field in required_fields:
@@ -430,61 +430,61 @@ class TestAllMessageTypes(ReflectiveModule):
                     payload[field] = "test content"
                 else:
                     payload[field] = f"test_{field}"
-            
+
             # Should be valid
             result = registry.validate_payload(message_type, payload)
             assert result['is_valid'], f"Valid payload failed for {message_type}: {result}"
-            
+
             # Test with missing required field (if any)
             if required_fields:
                 incomplete_payload = payload.copy()
                 del incomplete_payload[required_fields[0]]
-                
+
                 result = registry.validate_payload(message_type, incomplete_payload)
                 assert not result['is_valid'], f"Invalid payload passed for {message_type}"
                 assert required_fields[0] in result['missing_fields']
-    
+
     @pytest.mark.asyncio
     async def test_message_type_compatibility_layer(self, router):
         """Test compatibility layer for different message formats"""
         # Enable legacy conversion for this test
         router.auto_convert_legacy = True
-        
+
         # Test legacy message format conversion
         legacy_message_data = {
             "type": "message",  # Old type name
             "source": "legacy_agent",
             "payload": {"content": "Legacy message"}
         }
-        
+
         # Should be converted and processed
         responses = await router.process_message(legacy_message_data)
-        
+
         # Should not raise error and should process as simple message
         assert isinstance(responses, list)
-        
+
         # Check that message was processed (callback should be called)
         router.callbacks['on_simple_message'].assert_called()
-    
+
     def test_create_test_messages_for_all_types(self, router):
         """Test creating test messages for all message types"""
         for message_type in MessageType:
             try:
                 test_message = router.create_test_message(message_type)
-                
+
                 assert test_message.type == message_type
                 assert test_message.source is not None
                 assert isinstance(test_message.payload, dict)
-                
+
                 # Validate the test message payload
                 registry = MessageTypeRegistry()
                 validation_result = registry.validate_payload(message_type, test_message.payload)
-                
+
                 assert validation_result['is_valid'], f"Test message for {message_type} is invalid: {validation_result}"
-                
+
             except Exception as e:
                 pytest.fail(f"Failed to create test message for {message_type}: {e}")
-    
+
     @pytest.mark.asyncio
     async def test_error_handling_for_all_types(self, router):
         """Test error handling for all message types"""
@@ -495,7 +495,7 @@ class TestAllMessageTypes(ReflectiveModule):
                 source="error_test",
                 payload={}  # Empty payload, likely missing required fields
             )
-            
+
             # Should handle gracefully without crashing
             try:
                 responses = await router.process_message(invalid_message)
@@ -503,12 +503,12 @@ class TestAllMessageTypes(ReflectiveModule):
             except Exception as e:
                 # Some validation errors are expected, but shouldn't crash the system
                 assert isinstance(e, (MessageValidationError, ValueError))
-    
+
     def test_message_type_enum_completeness(self):
         """Test that all expected message types are in the enum"""
         expected_types = [
             "SIMPLE_MESSAGE",
-            "PROMPT_REQUEST", 
+            "PROMPT_REQUEST",
             "PROMPT_RESPONSE",
             "AGENT_DISCOVERY",
             "AGENT_RESPONSE",
@@ -520,22 +520,22 @@ class TestAllMessageTypes(ReflectiveModule):
             "TECHNICAL_EXCHANGE",
             "SYSTEM_HEALTH"
         ]
-        
+
         for type_name in expected_types:
             assert hasattr(MessageType, type_name), f"MessageType.{type_name} not found"
-            
+
         # Check that enum values match expected string values
         assert MessageType.SIMPLE_MESSAGE.value == "simple_message"
         assert MessageType.PROMPT_REQUEST.value == "prompt_request"
         assert MessageType.AGENT_DISCOVERY.value == "agent_discovery"
         assert MessageType.HELP_WANTED.value == "help_wanted"
         assert MessageType.SPORE_DELIVERY.value == "spore_delivery"
-    
+
     @pytest.mark.asyncio
     async def test_message_routing_statistics(self, router):
         """Test that message routing statistics are properly tracked"""
         initial_stats = router.get_handler_stats()
-        
+
         # Process various message types
         messages = [
             router.create_test_message(MessageType.SIMPLE_MESSAGE),
@@ -544,16 +544,16 @@ class TestAllMessageTypes(ReflectiveModule):
             router.create_test_message(MessageType.HELP_WANTED),
             router.create_test_message(MessageType.SPORE_DELIVERY)
         ]
-        
+
         for message in messages:
             await router.process_message(message)
-        
+
         final_stats = router.get_handler_stats()
-        
+
         # Check that statistics were updated
         assert final_stats['router_stats']['messages_routed'] > initial_stats['router_stats']['messages_routed']
         assert final_stats['router_stats']['messages_handled'] > initial_stats['router_stats']['messages_handled']
-        
+
         # Check individual handler stats
         for msg_type, handlers in final_stats['handler_stats'].items():
             for handler_stat in handlers:
@@ -568,12 +568,12 @@ class TestAllMessageTypes(ReflectiveModule):
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -581,7 +581,7 @@ class TestAllMessageTypes(ReflectiveModule):
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

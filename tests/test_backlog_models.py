@@ -24,7 +24,7 @@ from src.beast_mode.backlog.models import (
     GhostbustersValidation,
 )
 from src.beast_mode.backlog.enums import (
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
     StrategicTrack,
     DependencyType,
@@ -37,27 +37,27 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
 
 class TestEnums(ReflectiveModule):
     """Test all enum values and behavior"""
-    
+
     def test_strategic_track_values(self):
         """Test StrategicTrack enum has correct values"""
         assert StrategicTrack.PR_GATE.value == "pr_gate"
         assert StrategicTrack.ZERO_FRICTION.value == "zero_friction"
         assert StrategicTrack.COMMUNITY.value == "community"
         assert StrategicTrack.PROOF_ENGINE.value == "proof_engine"
-    
+
     def test_dependency_type_values(self):
         """Test DependencyType enum has correct values"""
         assert DependencyType.BLOCKING.value == "blocking"
         assert DependencyType.INFORMATIONAL.value == "informational"
         assert DependencyType.RESOURCE_SHARED.value == "resource_shared"
-    
+
     def test_risk_level_values(self):
         """Test RiskLevel enum has correct values"""
         assert RiskLevel.LOW.value == "low"
         assert RiskLevel.MEDIUM.value == "medium"
         assert RiskLevel.HIGH.value == "high"
         assert RiskLevel.CRITICAL.value == "critical"
-    
+
     def test_beast_readiness_status_values(self):
         """Test BeastReadinessStatus enum has correct values"""
         assert BeastReadinessStatus.DRAFT.value == "draft"
@@ -70,7 +70,7 @@ class TestEnums(ReflectiveModule):
 
 class TestRequirement(ReflectiveModule):
     """Test Requirement data model"""
-    
+
     def test_valid_requirement_creation(self):
         """Test creating a valid requirement"""
         req = Requirement(
@@ -83,7 +83,7 @@ class TestRequirement(ReflectiveModule):
         assert req.description == "Test requirement"
         assert req.priority == 1
         assert len(req.acceptance_criteria) == 2
-    
+
     def test_requirement_immutability(self):
         """Test that requirement is immutable"""
         req = Requirement(
@@ -93,7 +93,7 @@ class TestRequirement(ReflectiveModule):
         )
         with pytest.raises(AttributeError):
             req.requirement_id = "REQ-002"
-    
+
     def test_empty_requirement_id_validation(self):
         """Test validation for empty requirement ID"""
         with pytest.raises(ValueError, match="Requirement ID cannot be empty"):
@@ -102,7 +102,7 @@ class TestRequirement(ReflectiveModule):
                 description="Test requirement",
                 priority=1
             )
-    
+
     def test_empty_description_validation(self):
         """Test validation for empty description"""
         with pytest.raises(ValueError, match="Requirement description cannot be empty"):
@@ -111,7 +111,7 @@ class TestRequirement(ReflectiveModule):
                 description="",
                 priority=1
             )
-    
+
     def test_invalid_priority_validation(self):
         """Test validation for invalid priority"""
         with pytest.raises(ValueError, match="Priority must be positive"):
@@ -124,7 +124,7 @@ class TestRequirement(ReflectiveModule):
 
 class TestAcceptanceCriterion(ReflectiveModule):
     """Test AcceptanceCriterion data model"""
-    
+
     def test_valid_criterion_creation(self):
         """Test creating a valid acceptance criterion"""
         criterion = AcceptanceCriterion(
@@ -137,7 +137,7 @@ class TestAcceptanceCriterion(ReflectiveModule):
         assert criterion.description == "Test criterion"
         assert criterion.testable is True
         assert criterion.measurable is True
-    
+
     def test_criterion_defaults(self):
         """Test default values for criterion"""
         criterion = AcceptanceCriterion(
@@ -146,7 +146,7 @@ class TestAcceptanceCriterion(ReflectiveModule):
         )
         assert criterion.testable is True
         assert criterion.measurable is True
-    
+
     def test_empty_criterion_id_validation(self):
         """Test validation for empty criterion ID"""
         with pytest.raises(ValueError, match="Criterion ID cannot be empty"):
@@ -154,7 +154,7 @@ class TestAcceptanceCriterion(ReflectiveModule):
                 criterion_id="",
                 description="Test criterion"
             )
-    
+
     def test_empty_description_validation(self):
         """Test validation for empty description"""
         with pytest.raises(ValueError, match="Criterion description cannot be empty"):
@@ -166,7 +166,7 @@ class TestAcceptanceCriterion(ReflectiveModule):
 
 class TestDependencyReference(ReflectiveModule):
     """Test DependencyReference data model"""
-    
+
     def test_valid_dependency_reference_creation(self):
         """Test creating a valid dependency reference"""
         dep_ref = DependencyReference(
@@ -177,7 +177,7 @@ class TestDependencyReference(ReflectiveModule):
         assert dep_ref.dependency_id == "DEP-001"
         assert dep_ref.target_item_id == "ITEM-002"
         assert dep_ref.description == "Depends on item 2"
-    
+
     def test_empty_dependency_id_validation(self):
         """Test validation for empty dependency ID"""
         with pytest.raises(ValueError, match="Dependency ID cannot be empty"):
@@ -186,7 +186,7 @@ class TestDependencyReference(ReflectiveModule):
                 target_item_id="ITEM-002",
                 description="Test dependency"
             )
-    
+
     def test_empty_target_item_id_validation(self):
         """Test validation for empty target item ID"""
         with pytest.raises(ValueError, match="Target item ID cannot be empty"):
@@ -199,7 +199,7 @@ class TestDependencyReference(ReflectiveModule):
 
 class TestGhostbustersValidation(ReflectiveModule):
     """Test GhostbustersValidation data model"""
-    
+
     def test_valid_ghostbusters_validation_creation(self):
         """Test creating a valid ghostbusters validation"""
         validation = GhostbustersValidation(
@@ -217,7 +217,7 @@ class TestGhostbustersValidation(ReflectiveModule):
         assert len(validation.perspectives_validated) == 2
         assert validation.overall_score == 0.8
         assert validation.passed is True
-    
+
     def test_empty_validation_id_validation(self):
         """Test validation for empty validation ID"""
         with pytest.raises(ValueError, match="Validation ID cannot be empty"):
@@ -227,7 +227,7 @@ class TestGhostbustersValidation(ReflectiveModule):
                 validation_timestamp=datetime.now(),
                 perspectives_validated=[StakeholderType.DEVELOPER]
             )
-    
+
     def test_invalid_overall_score_validation(self):
         """Test validation for invalid overall score"""
         with pytest.raises(ValueError, match="Overall score must be between 0.0 and 1.0"):
@@ -242,7 +242,7 @@ class TestGhostbustersValidation(ReflectiveModule):
 
 class TestMPMValidation(ReflectiveModule):
     """Test MPMValidation data model"""
-    
+
     def test_valid_mpm_validation_creation(self):
         """Test creating a valid MPM validation"""
         validation = MPMValidation(
@@ -259,7 +259,7 @@ class TestMPMValidation(ReflectiveModule):
         assert validation.validation_id == "MPM-001"
         assert validation.completeness_score == 0.9
         assert validation.approval_status == ApprovalStatus.APPROVED
-    
+
     def test_mpm_validation_defaults(self):
         """Test default values for MPM validation"""
         validation = MPMValidation(
@@ -273,7 +273,7 @@ class TestMPMValidation(ReflectiveModule):
         )
         assert validation.approval_status == ApprovalStatus.PENDING
         assert len(validation.required_improvements) == 0
-    
+
     def test_invalid_completeness_score_validation(self):
         """Test validation for invalid completeness score"""
         with pytest.raises(ValueError, match="Completeness score must be between 0.0 and 1.0"):
@@ -290,7 +290,7 @@ class TestMPMValidation(ReflectiveModule):
 
 class TestDependencySpec(ReflectiveModule):
     """Test DependencySpec data model"""
-    
+
     def test_valid_dependency_spec_creation(self):
         """Test creating a valid dependency spec"""
         dep_spec = DependencySpec(
@@ -307,7 +307,7 @@ class TestDependencySpec(ReflectiveModule):
         assert dep_spec.dependency_type == DependencyType.BLOCKING
         assert dep_spec.target_track == StrategicTrack.PR_GATE
         assert dep_spec.risk_level == RiskLevel.MEDIUM
-    
+
     def test_dependency_spec_optional_fields(self):
         """Test dependency spec with optional fields"""
         dep_spec = DependencySpec(
@@ -322,7 +322,7 @@ class TestDependencySpec(ReflectiveModule):
         assert dep_spec.target_track is None
         assert dep_spec.estimated_completion is None
         assert dep_spec.mitigation_strategy is None
-    
+
     def test_empty_dependency_id_validation(self):
         """Test validation for empty dependency ID"""
         with pytest.raises(ValueError, match="Dependency ID cannot be empty"):
@@ -339,7 +339,7 @@ class TestDependencySpec(ReflectiveModule):
 
 class TestBacklogItem(ReflectiveModule):
     """Test BacklogItem data model"""
-    
+
     def create_sample_backlog_item(self):
         """Helper method to create a sample backlog item"""
         now = datetime.now()
@@ -372,7 +372,7 @@ class TestBacklogItem(ReflectiveModule):
             created_at=now,
             last_updated=now
         )
-    
+
     def test_valid_backlog_item_creation(self):
         """Test creating a valid backlog item"""
         item = self.create_sample_backlog_item()
@@ -383,13 +383,13 @@ class TestBacklogItem(ReflectiveModule):
         assert len(item.acceptance_criteria) == 1
         assert len(item.dependencies) == 1
         assert item.beast_readiness_status == BeastReadinessStatus.DRAFT
-    
+
     def test_backlog_item_immutability(self):
         """Test that backlog item is immutable"""
         item = self.create_sample_backlog_item()
         with pytest.raises(AttributeError):
             item.title = "Modified title"
-    
+
     def test_empty_item_id_validation(self):
         """Test validation for empty item ID"""
         now = datetime.now()
@@ -406,7 +406,7 @@ class TestBacklogItem(ReflectiveModule):
                 created_at=now,
                 last_updated=now
             )
-    
+
     def test_future_created_at_validation(self):
         """Test validation for future created_at date"""
         future_date = datetime.now() + timedelta(days=1)
@@ -427,7 +427,7 @@ class TestBacklogItem(ReflectiveModule):
 
 class TestSerialization(ReflectiveModule):
     """Test serialization and deserialization of data models"""
-    
+
     def test_backlog_item_serialization(self):
         """Test that backlog item can be serialized to dict"""
         now = datetime.now()
@@ -443,13 +443,13 @@ class TestSerialization(ReflectiveModule):
             created_at=now,
             last_updated=now
         )
-        
+
         item_dict = asdict(item)
         assert item_dict["item_id"] == "ITEM-001"
         assert item_dict["title"] == "Sample item"
         assert item_dict["track"] == StrategicTrack.PR_GATE
         assert item_dict["beast_readiness_status"] == BeastReadinessStatus.DRAFT
-    
+
     def test_dependency_spec_serialization(self):
         """Test that dependency spec can be serialized to dict"""
         dep_spec = DependencySpec(
@@ -461,13 +461,13 @@ class TestSerialization(ReflectiveModule):
             estimated_completion=None,
             risk_level=RiskLevel.HIGH
         )
-        
+
         dep_dict = asdict(dep_spec)
         assert dep_dict["dependency_id"] == "DEP-001"
         assert dep_dict["dependency_type"] == DependencyType.BLOCKING
         assert dep_dict["target_track"] == StrategicTrack.COMMUNITY
         assert dep_dict["risk_level"] == RiskLevel.HIGH
-    
+
     def test_mpm_validation_serialization(self):
         """Test that MPM validation can be serialized to dict"""
         validation = MPMValidation(
@@ -479,7 +479,7 @@ class TestSerialization(ReflectiveModule):
             business_alignment=0.95,
             beast_readiness_assessment="Ready"
         )
-        
+
         validation_dict = asdict(validation)
         assert validation_dict["validation_id"] == "MPM-001"
         assert validation_dict["completeness_score"] == 0.9
@@ -493,12 +493,12 @@ class TestSerialization(ReflectiveModule):
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -506,7 +506,7 @@ class TestSerialization(ReflectiveModule):
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

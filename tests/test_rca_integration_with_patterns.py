@@ -16,13 +16,13 @@ from unittest.mock import Mock, patch
 from src.beast_mode.testing.rca_integration import TestRCAIntegrationEngine, TestFailureData
 from src.beast_mode.testing.test_pattern_library import TestPatternLibrary
 from src.beast_mode.analysis.rca_engine import (
-    RCAEngine, Failure, RootCause, SystematicFix, PreventionPattern, 
+    RCAEngine, Failure, RootCause, SystematicFix, PreventionPattern,
     FailureCategory, RootCauseType
 )
 
 class TestRCAIntegrationWithPatterns(ReflectiveModule):
     """Test suite for RCA integration with test pattern library"""
-    
+
     @pytest.fixture
     def mock_rca_engine(self):
         """Create mock RCA engine"""
@@ -32,7 +32,7 @@ class TestRCAIntegrationWithPatterns(ReflectiveModule):
         engine.match_existing_patterns.return_value = []
         engine.perform_systematic_rca.return_value = Mock()
         return engine
-        
+
     @pytest.fixture
     def test_pattern_library(self, tmp_path):
         """Create test pattern library with temporary directory"""
@@ -41,7 +41,7 @@ class TestRCAIntegrationWithPatterns(ReflectiveModule):
         library.pattern_metrics_path = str(tmp_path / "metrics.json")
         library.learning_data_path = str(tmp_path / "learning.json")
         return library
-        
+
     @pytest.fixture
     def rca_integrator(self, mock_rca_engine, test_pattern_library):
         """Create RCA integrator with mocked dependencies"""
@@ -50,7 +50,7 @@ class TestRCAIntegrationWithPatterns(ReflectiveModule):
         mock_perf_monitor.is_healthy.return_value = True
         mock_perf_monitor.get_module_status.return_value = {"status": "operational"}
         mock_perf_monitor.start_monitoring.return_value = None
-        
+
         # Create mock context manager for monitoring
         mock_context = Mock()
         mock_context.__enter__ = Mock(return_value=Mock(
@@ -64,19 +64,19 @@ class TestRCAIntegrationWithPatterns(ReflectiveModule):
         ))
         mock_context.__exit__ = Mock(return_value=None)
         mock_perf_monitor.monitor_operation.return_value = mock_context
-        
+
         # Create mock timeout handler
         mock_timeout_handler = Mock()
         mock_timeout_handler.is_healthy.return_value = True
         mock_timeout_handler.get_module_status.return_value = {"status": "operational"}
-        
+
         # Create mock timeout context manager
         mock_timeout_context = Mock()
         mock_timeout_context.__enter__ = Mock(return_value=None)
         mock_timeout_context.__exit__ = Mock(return_value=None)
         mock_timeout_handler.manage_operation_timeout.return_value = mock_timeout_context
         mock_timeout_handler.get_timeout_recommendations.return_value = {"degradation_suggested": False}
-        
+
         integrator = TestRCAIntegrationEngine(
             rca_engine=mock_rca_engine,
             test_pattern_library=test_pattern_library,
@@ -84,7 +84,7 @@ class TestRCAIntegrationWithPatterns(ReflectiveModule):
             timeout_handler=mock_timeout_handler
         )
         return integrator
-            
+
     @pytest.fixture
     def sample_test_failure(self):
         """Create sample test failure data"""
@@ -100,18 +100,18 @@ class TestRCAIntegrationWithPatterns(ReflectiveModule):
             test_context={"test_type": "unit"},
             pytest_node_id="tests/test_example.py::test_import_functionality"
         )
-        
+
     def test_pattern_library_integration_in_status(self, rca_integrator):
         """Test that pattern library status is included in module status"""
         status = rca_integrator.get_module_status()
-        
+
         assert "test_pattern_library_status" in status
         assert status["test_pattern_library_status"]["module_name"] == "test_pattern_library"
-        
+
     def test_pattern_matching_during_analysis(self, test_pattern_library, sample_test_failure):
         """Test that test pattern library can match patterns correctly"""
         from src.beast_mode.analysis.rca_engine import Failure, FailureCategory
-        
+
         # Convert test failure to RCA failure for pattern matching
         rca_failure = Failure(
             failure_id="test_001",
@@ -126,11 +126,11 @@ class TestRCAIntegrationWithPatterns(ReflectiveModule):
             },
             category=FailureCategory.DEPENDENCY_ISSUE
         )
-        
+
         # Generate the actual signature that would be created
         actual_signature = test_pattern_library._generate_test_failure_signature(rca_failure)
         print(f"Actual signature: {actual_signature}")
-        
+
         # Add a test pattern with the correct signature
         test_pattern = PreventionPattern(
             pattern_id="test_pattern_001",
@@ -142,21 +142,21 @@ class TestRCAIntegrationWithPatterns(ReflectiveModule):
             automated_checks=["Check dependencies"],
             pattern_hash="test_hash"
         )
-        
+
         test_pattern_library.test_patterns["test_pattern_001"] = test_pattern
         test_pattern_library._build_performance_indexes()
-        
+
         # Test pattern matching
         matches = test_pattern_library.match_test_patterns(rca_failure)
-        
+
         # Verify pattern was found
         assert len(matches) > 0
         assert matches[0].pattern_id == "test_pattern_001"
-        
+
     def test_pattern_learning_from_successful_analysis(self, test_pattern_library, sample_test_failure):
         """Test that successful RCA analyses trigger pattern learning"""
         from src.beast_mode.analysis.rca_engine import Failure, FailureCategory, RootCause, SystematicFix, RootCauseType
-        
+
         # Create RCA failure
         rca_failure = Failure(
             failure_id="test_001",
@@ -170,7 +170,7 @@ class TestRCAIntegrationWithPatterns(ReflectiveModule):
             },
             category=FailureCategory.DEPENDENCY_ISSUE
         )
-        
+
         # Create mock root cause and systematic fix
         root_cause = RootCause(
             cause_type=RootCauseType.TEST_IMPORT_ERROR,
@@ -180,7 +180,7 @@ class TestRCAIntegrationWithPatterns(ReflectiveModule):
             impact_severity="high",
             affected_components=["tests/test_example.py"]
         )
-        
+
         systematic_fix = SystematicFix(
             fix_id="fix_001",
             root_cause=root_cause,
@@ -190,9 +190,9 @@ class TestRCAIntegrationWithPatterns(ReflectiveModule):
             rollback_plan="Remove from requirements",
             estimated_time_minutes=5
         )
-        
+
         initial_learning_count = len(test_pattern_library.learning_data)
-        
+
         # Test pattern learning
         success = test_pattern_library.learn_from_successful_rca(
             failure=rca_failure,
@@ -200,23 +200,23 @@ class TestRCAIntegrationWithPatterns(ReflectiveModule):
             systematic_fixes=[systematic_fix],
             validation_score=0.9
         )
-        
+
         # Verify pattern learning occurred
         assert success is True
         assert len(test_pattern_library.learning_data) > initial_learning_count
-        
+
     def test_pattern_effectiveness_report(self, rca_integrator):
         """Test pattern effectiveness reporting"""
         # Add some test data
         rca_integrator.pattern_matches_found = 5
         rca_integrator.successful_rca_analyses = 10
-        
+
         report = rca_integrator.get_test_pattern_effectiveness_report()
-        
+
         assert "integration_metrics" in report
         assert "pattern_integration_success_rate" in report["integration_metrics"]
         assert "sub_second_performance_met" in report["integration_metrics"]
-        
+
     def test_pattern_library_optimization(self, rca_integrator):
         """Test pattern library optimization functionality"""
         # Add some test patterns
@@ -232,13 +232,13 @@ class TestRCAIntegrationWithPatterns(ReflectiveModule):
                 pattern_hash=f"hash_{i}"
             )
             rca_integrator.test_pattern_library.test_patterns[pattern.pattern_id] = pattern
-            
+
         optimization_results = rca_integrator.optimize_test_pattern_library()
-        
+
         assert "pattern_optimization" in optimization_results
         assert "library_cleanup" in optimization_results
         assert "performance_improvement" in optimization_results
-        
+
     def test_sub_second_performance_requirement(self, rca_integrator, sample_test_failure):
         """Test that pattern matching meets sub-second performance requirement"""
         # Add many patterns to test performance
@@ -254,32 +254,32 @@ class TestRCAIntegrationWithPatterns(ReflectiveModule):
                 pattern_hash=f"perf_hash_{i:03d}"
             )
             rca_integrator.test_pattern_library.test_patterns[pattern.pattern_id] = pattern
-            
+
         rca_integrator.test_pattern_library._build_performance_indexes()
-        
+
         # Mock RCA engine
         rca_integrator.rca_engine.match_existing_patterns.return_value = []
-        
+
         # Test pattern matching performance
         import time
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# # from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
         start_time = time.time()
-        
+
         # Convert test failure to RCA failure for pattern matching
         rca_failure = rca_integrator.convert_to_rca_failure(sample_test_failure)
         matches = rca_integrator.test_pattern_library.match_test_patterns(rca_failure)
-        
+
         match_time_ms = (time.time() - start_time) * 1000
-        
+
         # Verify sub-second performance (Requirement 4.2)
         assert match_time_ms < 1000, f"Pattern matching took {match_time_ms:.2f}ms, exceeds 1 second requirement"
-        
+
     def test_error_handling_in_integration(self, rca_integrator, sample_test_failure):
         """Test error handling when pattern library operations fail"""
         # Mock pattern library to raise exception
         with patch.object(rca_integrator.test_pattern_library, 'match_test_patterns', side_effect=Exception("Pattern matching failed")):
-            
+
             # Mock RCA engine to work normally
             rca_integrator.rca_engine.match_existing_patterns.return_value = []
             mock_rca_result = Mock()
@@ -288,10 +288,10 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
             mock_rca_result.root_causes = []
             mock_rca_result.systematic_fixes = []
             rca_integrator.rca_engine.perform_systematic_rca.return_value = mock_rca_result
-            
+
             # Analysis should still complete despite pattern library failure
             report = rca_integrator.analyze_test_failures([sample_test_failure])
-                
+
             # Should still get a report even with pattern library failure
             assert report is not None
 
@@ -304,12 +304,12 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -317,7 +317,7 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

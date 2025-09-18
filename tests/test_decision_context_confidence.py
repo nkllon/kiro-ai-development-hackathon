@@ -17,7 +17,7 @@ from typing import Dict, Any, List
 from src.beast_mode.orchestration.tool_orchestration_engine import DecisionContext as OrchestrationDecisionContext
 from src.beast_mode.ghostbusters.enhanced_multi_perspective_validator import DecisionContext as ValidatorDecisionContext
 from src.beast_mode.documentation.adr_system import DecisionContext as ADRDecisionContext
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# # from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
 
@@ -33,18 +33,18 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
             "test_classes": 4,
             "test_methods": 10
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestOrchestrationDecisionContext(ReflectiveModule):
     """Test DecisionContext from tool orchestration engine"""
-    
+
     def test_decision_context_has_confidence_score_attribute(self):
         """Test that DecisionContext has confidence_score attribute"""
         context = OrchestrationDecisionContext(
@@ -56,12 +56,12 @@ class TestOrchestrationDecisionContext(ReflectiveModule):
             time_pressure="normal",
             risk_tolerance="medium"
         )
-        
+
         # Should have confidence_score attribute with default value 0.0
         assert hasattr(context, 'confidence_score')
         assert context.confidence_score == 0.0
         assert isinstance(context.confidence_score, float)
-    
+
     def test_decision_context_confidence_score_initialization(self):
         """Test that confidence_score can be initialized with custom value"""
         context = OrchestrationDecisionContext(
@@ -74,9 +74,9 @@ class TestOrchestrationDecisionContext(ReflectiveModule):
             risk_tolerance="low",
             confidence_score=0.85
         )
-        
+
         assert context.confidence_score == 0.85
-    
+
     def test_calculate_confidence_method_exists(self):
         """Test that calculate_confidence method exists and works"""
         context = OrchestrationDecisionContext(
@@ -89,16 +89,16 @@ class TestOrchestrationDecisionContext(ReflectiveModule):
             risk_tolerance="medium",
             confidence_score=0.75
         )
-        
+
         # Should have calculate_confidence method
         assert hasattr(context, 'calculate_confidence')
         assert callable(context.calculate_confidence)
-        
+
         # Should return the confidence_score value
         calculated_confidence = context.calculate_confidence()
         assert calculated_confidence == 0.75
         assert isinstance(calculated_confidence, float)
-    
+
     def test_confidence_score_range_validation(self):
         """Test that confidence_score accepts valid range values"""
         # Test minimum value
@@ -113,7 +113,7 @@ class TestOrchestrationDecisionContext(ReflectiveModule):
             confidence_score=0.0
         )
         assert context_min.confidence_score == 0.0
-        
+
         # Test maximum value
         context_max = OrchestrationDecisionContext(
             decision_id="test-005",
@@ -126,7 +126,7 @@ class TestOrchestrationDecisionContext(ReflectiveModule):
             confidence_score=1.0
         )
         assert context_max.confidence_score == 1.0
-        
+
         # Test mid-range value
         context_mid = OrchestrationDecisionContext(
             decision_id="test-006",
@@ -153,18 +153,18 @@ class TestOrchestrationDecisionContext(ReflectiveModule):
             "test_classes": 4,
             "test_methods": 10
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestValidatorDecisionContext(ReflectiveModule):
     """Test DecisionContext from enhanced multi-perspective validator"""
-    
+
     def test_validator_decision_context_has_confidence_score(self):
         """Test that validator DecisionContext has confidence_score attribute"""
         context = ValidatorDecisionContext(
@@ -178,12 +178,12 @@ class TestValidatorDecisionContext(ReflectiveModule):
             time_pressure="medium",
             impact_scope="module"
         )
-        
+
         assert hasattr(context, 'confidence_score')
         assert context.confidence_score == 0.0
         assert hasattr(context, 'calculate_confidence')
         assert context.calculate_confidence() == 0.0
-    
+
     def test_validator_confidence_score_custom_value(self):
         """Test validator DecisionContext with custom confidence score"""
         context = ValidatorDecisionContext(
@@ -198,7 +198,7 @@ class TestValidatorDecisionContext(ReflectiveModule):
             impact_scope="system",
             confidence_score=0.9
         )
-        
+
         assert context.confidence_score == 0.9
         assert context.calculate_confidence() == 0.9
 
@@ -215,18 +215,18 @@ class TestValidatorDecisionContext(ReflectiveModule):
             "test_classes": 4,
             "test_methods": 10
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestADRDecisionContext(ReflectiveModule):
     """Test DecisionContext from ADR system"""
-    
+
     def test_adr_decision_context_has_confidence_score(self):
         """Test that ADR DecisionContext has confidence_score attribute"""
         context = ADRDecisionContext(
@@ -236,12 +236,12 @@ class TestADRDecisionContext(ReflectiveModule):
             stakeholders=["stakeholder1"],
             timeline="Q1 2024"
         )
-        
+
         assert hasattr(context, 'confidence_score')
         assert context.confidence_score == 0.0
         assert hasattr(context, 'calculate_confidence')
         assert context.calculate_confidence() == 0.0
-    
+
     def test_adr_confidence_score_with_risk_factors(self):
         """Test ADR DecisionContext with risk factors and confidence score"""
         context = ADRDecisionContext(
@@ -253,7 +253,7 @@ class TestADRDecisionContext(ReflectiveModule):
             risk_factors=["technical_debt", "resource_constraints"],
             confidence_score=0.65
         )
-        
+
         assert context.confidence_score == 0.65
         assert context.calculate_confidence() == 0.65
         assert len(context.risk_factors) == 2
@@ -271,18 +271,18 @@ class TestADRDecisionContext(ReflectiveModule):
             "test_classes": 4,
             "test_methods": 10
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestDecisionContextIntegration(ReflectiveModule):
     """Integration tests for DecisionContext confidence functionality"""
-    
+
     def test_all_decision_contexts_have_consistent_interface(self):
         """Test that all DecisionContext classes have consistent confidence interface"""
         contexts = [
@@ -314,18 +314,18 @@ class TestDecisionContextIntegration(ReflectiveModule):
                 timeline="Q1"
             )
         ]
-        
+
         for context in contexts:
             # All should have confidence_score attribute
             assert hasattr(context, 'confidence_score')
             assert isinstance(context.confidence_score, float)
             assert context.confidence_score == 0.0
-            
+
             # All should have calculate_confidence method
             assert hasattr(context, 'calculate_confidence')
             assert callable(context.calculate_confidence)
             assert context.calculate_confidence() == 0.0
-    
+
     def test_confidence_score_modification(self):
         """Test that confidence_score can be modified after initialization"""
         context = OrchestrationDecisionContext(
@@ -337,15 +337,15 @@ class TestDecisionContextIntegration(ReflectiveModule):
             time_pressure="normal",
             risk_tolerance="medium"
         )
-        
+
         # Initial value
         assert context.confidence_score == 0.0
-        
+
         # Modify confidence score
         context.confidence_score = 0.8
         assert context.confidence_score == 0.8
         assert context.calculate_confidence() == 0.8
-        
+
         # Modify again
         context.confidence_score = 0.3
         assert context.confidence_score == 0.3
@@ -363,12 +363,12 @@ if __name__ == "__main__":
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -376,7 +376,7 @@ if __name__ == "__main__":
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

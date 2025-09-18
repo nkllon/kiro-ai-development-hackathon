@@ -15,7 +15,7 @@ from pydantic import ValidationError
 import uuid
 
 from src.beast_mode.messaging.models import BeastModeMessage, MessageType, AgentCapabilities
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# # from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
 
@@ -31,39 +31,39 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
             "test_classes": 3,
             "test_methods": 20
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestMessageType(ReflectiveModule):
     """Test MessageType enum"""
-    
+
     def test_all_message_types_defined(self):
         """Test that all expected message types are defined"""
         expected_types = [
             "simple_message",
-            "prompt_request", 
+            "prompt_request",
             "prompt_response",
             "agent_discovery",
             "agent_response",
             "help_wanted",
-            "help_response", 
+            "help_response",
             "spore_delivery",
             "spore_request",
             "spore_spawn",
             "technical_exchange",
             "system_health"
         ]
-        
+
         for msg_type in expected_types:
             assert hasattr(MessageType, msg_type.upper())
             assert MessageType(msg_type) == msg_type
-    
+
     def test_message_type_string_values(self):
         """Test that message types have correct string values"""
         assert MessageType.SIMPLE_MESSAGE == "simple_message"
@@ -83,25 +83,25 @@ class TestMessageType(ReflectiveModule):
             "test_classes": 3,
             "test_methods": 20
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestBeastModeMessage(ReflectiveModule):
     """Test BeastModeMessage model"""
-    
+
     def test_minimal_message_creation(self):
         """Test creating message with minimal required fields"""
         message = BeastModeMessage(
             type=MessageType.SIMPLE_MESSAGE,
             source="test_agent"
         )
-        
+
         assert message.type == MessageType.SIMPLE_MESSAGE
         assert message.source == "test_agent"
         assert message.target is None
@@ -111,24 +111,24 @@ class TestBeastModeMessage(ReflectiveModule):
         assert message.correlation_id is None
         assert isinstance(message.id, str)
         assert len(message.id) > 0
-    
+
     def test_full_message_creation(self):
         """Test creating message with all fields"""
         test_id = str(uuid.uuid4())
         test_timestamp = datetime.now()
         test_correlation_id = str(uuid.uuid4())
-        
+
         message = BeastModeMessage(
             id=test_id,
             type=MessageType.PROMPT_REQUEST,
             source="agent_1",
-            target="agent_2", 
+            target="agent_2",
             payload={"prompt": "Hello world", "context": "test"},
             timestamp=test_timestamp,
             priority=3,
             correlation_id=test_correlation_id
         )
-        
+
         assert message.id == test_id
         assert message.type == MessageType.PROMPT_REQUEST
         assert message.source == "agent_1"
@@ -137,7 +137,7 @@ class TestBeastModeMessage(ReflectiveModule):
         assert message.timestamp == test_timestamp
         assert message.priority == 3
         assert message.correlation_id == test_correlation_id
-    
+
     def test_priority_validation(self):
         """Test priority field validation"""
         # Valid priorities (1-10)
@@ -148,7 +148,7 @@ class TestBeastModeMessage(ReflectiveModule):
                 priority=priority
             )
             assert message.priority == priority
-        
+
         # Invalid priorities
         with pytest.raises(ValidationError):
             BeastModeMessage(
@@ -156,14 +156,14 @@ class TestBeastModeMessage(ReflectiveModule):
                 source="test",
                 priority=0  # Too low
             )
-        
+
         with pytest.raises(ValidationError):
             BeastModeMessage(
                 type=MessageType.SIMPLE_MESSAGE,
-                source="test", 
+                source="test",
                 priority=11  # Too high
             )
-    
+
     def test_message_serialization(self):
         """Test message serialization to dict"""
         message = BeastModeMessage(
@@ -173,9 +173,9 @@ class TestBeastModeMessage(ReflectiveModule):
             payload={"capabilities": ["python", "testing"]},
             priority=4
         )
-        
+
         data = message.model_dump()
-        
+
         assert data["type"] == "help_wanted"
         assert data["source"] == "needy_agent"
         assert data["target"] == "helper_agent"
@@ -183,7 +183,7 @@ class TestBeastModeMessage(ReflectiveModule):
         assert data["priority"] == 4
         assert "id" in data
         assert "timestamp" in data
-    
+
     def test_message_deserialization(self):
         """Test message deserialization from dict"""
         data = {
@@ -195,54 +195,54 @@ class TestBeastModeMessage(ReflectiveModule):
             "timestamp": datetime.now().isoformat(),
             "priority": 2
         }
-        
+
         message = BeastModeMessage(**data)
-        
+
         assert message.id == data["id"]
         assert message.type == MessageType.SPORE_DELIVERY
         assert message.source == data["source"]
         assert message.target == data["target"]
         assert message.payload == data["payload"]
         assert message.priority == data["priority"]
-    
+
     def test_required_fields(self):
         """Test that required fields are enforced"""
         # Missing type
         with pytest.raises(ValidationError):
             BeastModeMessage(source="test")
-        
+
         # Missing source
         with pytest.raises(ValidationError):
             BeastModeMessage(type=MessageType.SIMPLE_MESSAGE)
-    
+
     def test_auto_generated_id(self):
         """Test that ID is auto-generated if not provided"""
         message1 = BeastModeMessage(
             type=MessageType.SIMPLE_MESSAGE,
             source="test"
         )
-        
+
         message2 = BeastModeMessage(
             type=MessageType.SIMPLE_MESSAGE,
             source="test"
         )
-        
+
         # Should have different IDs
         assert message1.id != message2.id
         assert len(message1.id) > 0
         assert len(message2.id) > 0
-    
+
     def test_auto_generated_timestamp(self):
         """Test that timestamp is auto-generated if not provided"""
         before = datetime.now()
-        
+
         message = BeastModeMessage(
             type=MessageType.SIMPLE_MESSAGE,
             source="test"
         )
-        
+
         after = datetime.now()
-        
+
         assert before <= message.timestamp <= after
 
 
@@ -258,33 +258,33 @@ class TestBeastModeMessage(ReflectiveModule):
             "test_classes": 3,
             "test_methods": 20
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestAgentCapabilities(ReflectiveModule):
     """Test AgentCapabilities model"""
-    
+
     def test_minimal_capabilities_creation(self):
         """Test creating capabilities with minimal fields"""
         caps = AgentCapabilities(agent_id="test_agent")
-        
+
         assert caps.agent_id == "test_agent"
         assert caps.capabilities == []
         assert caps.availability == "ready_for_business"
         assert caps.specializations == []
         assert caps.collaboration_history == []
         assert isinstance(caps.last_seen, datetime)
-    
+
     def test_full_capabilities_creation(self):
         """Test creating capabilities with all fields"""
         test_timestamp = datetime.now()
-        
+
         caps = AgentCapabilities(
             agent_id="full_agent",
             capabilities=["python", "testing", "devops"],
@@ -293,14 +293,14 @@ class TestAgentCapabilities(ReflectiveModule):
             collaboration_history=["project_1", "project_2"],
             last_seen=test_timestamp
         )
-        
+
         assert caps.agent_id == "full_agent"
         assert caps.capabilities == ["python", "testing", "devops"]
         assert caps.availability == "busy"
         assert caps.specializations == ["machine_learning", "web_scraping"]
         assert caps.collaboration_history == ["project_1", "project_2"]
         assert caps.last_seen == test_timestamp
-    
+
     def test_capabilities_serialization(self):
         """Test capabilities serialization"""
         caps = AgentCapabilities(
@@ -308,14 +308,14 @@ class TestAgentCapabilities(ReflectiveModule):
             capabilities=["python", "redis"],
             availability="offline"
         )
-        
+
         data = caps.model_dump()
-        
+
         assert data["agent_id"] == "serialize_test"
         assert data["capabilities"] == ["python", "redis"]
         assert data["availability"] == "offline"
         assert "last_seen" in data
-    
+
     def test_capabilities_deserialization(self):
         """Test capabilities deserialization"""
         data = {
@@ -326,26 +326,26 @@ class TestAgentCapabilities(ReflectiveModule):
             "collaboration_history": [],
             "last_seen": datetime.now().isoformat()
         }
-        
+
         caps = AgentCapabilities(**data)
-        
+
         assert caps.agent_id == "deserialize_test"
         assert caps.capabilities == ["java", "kubernetes"]
         assert caps.specializations == ["microservices"]
-    
+
     def test_required_agent_id(self):
         """Test that agent_id is required"""
         with pytest.raises(ValidationError):
             AgentCapabilities()
-    
+
     def test_auto_generated_last_seen(self):
         """Test that last_seen is auto-generated"""
         before = datetime.now()
-        
+
         caps = AgentCapabilities(agent_id="timestamp_test")
-        
+
         after = datetime.now()
-        
+
 
     def get_interface_metadata(self):
         """Get interface metadata for registry."""
@@ -356,12 +356,12 @@ class TestAgentCapabilities(ReflectiveModule):
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -369,7 +369,7 @@ class TestAgentCapabilities(ReflectiveModule):
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

@@ -16,28 +16,28 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 from src.devpost_integration.models import (
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
     # Core Models
     DevpostProject, ProjectMetadata, TeamMember, ProjectLink, MediaFile,
     SubmissionRequirement, SyncOperation, FileChangeEvent,
-    
+
     # Deadline and Notification Models (Task 2.3)
     Deadline, ProjectSummary, NotificationSettings, ValidationRules,
     NotificationMessage, ReminderTiming, GlobalSettings,
-    
+
     # Configuration Models
     DevpostConfig, ProjectConnection, MultiProjectConfig,
-    
+
     # Result Models
     SyncResult, ValidationResult, PreviewData, ProjectStatus,
     AuthResult, ConnectionResult, ContextSwitchResult, ConflictResolution,
     ProjectDashboard, FormattingIssue, CompletionStatus,
-    
+
     # Enums
     SubmissionStatus, ChangeType, ContentType, SyncOperationType,
     DeadlineType, MediaType, NotificationTiming, ConflictResolutionStrategy,
-    
+
     # Utility Functions
     validate_project_metadata, create_default_notification_settings,
     create_default_validation_rules
@@ -46,7 +46,7 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
 
 class TestCoreModels(ReflectiveModule):
     """Test core data models."""
-    
+
     def test_devpost_project_creation(self):
         """Test DevpostProject model creation and defaults."""
         project = DevpostProject(
@@ -57,7 +57,7 @@ class TestCoreModels(ReflectiveModule):
             hackathon_id="hack-456",
             hackathon_name="Test Hackathon"
         )
-        
+
         assert project.id == "test-123"
         assert project.title == "Test Project"
         assert project.submission_status == SubmissionStatus.DRAFT
@@ -65,7 +65,7 @@ class TestCoreModels(ReflectiveModule):
         assert len(project.tags) == 0
         assert len(project.links) == 0
         assert len(project.media) == 0
-    
+
     def test_project_metadata_validation(self):
         """Test project metadata validation."""
         # Valid metadata
@@ -76,12 +76,12 @@ class TestCoreModels(ReflectiveModule):
             tags=["python", "ai", "hackathon"],
             team_members=["Alice", "Bob"]
         )
-        
+
         result = validate_project_metadata(metadata)
         assert result.is_valid
         assert len(result.errors) == 0
         assert result.completion_percentage == 100.0
-    
+
     def test_project_metadata_validation_failures(self):
         """Test project metadata validation with invalid data."""
         # Invalid metadata - too short
@@ -92,7 +92,7 @@ class TestCoreModels(ReflectiveModule):
             tags=[],  # Empty
             team_members=[]  # Empty
         )
-        
+
         result = validate_project_metadata(metadata)
         assert not result.is_valid
         assert len(result.errors) == 3  # title, tagline, description
@@ -101,7 +101,7 @@ class TestCoreModels(ReflectiveModule):
         assert "tagline" in result.missing_fields
         assert "description" in result.missing_fields
         assert result.completion_percentage < 100.0
-    
+
     def test_team_member_model(self):
         """Test TeamMember model."""
         member = TeamMember(
@@ -110,12 +110,12 @@ class TestCoreModels(ReflectiveModule):
             role="Developer",
             devpost_username="alice_dev"
         )
-        
+
         assert member.name == "Alice Smith"
         assert member.email == "alice@example.com"
         assert member.role == "Developer"
         assert member.devpost_username == "alice_dev"
-    
+
     def test_media_file_model(self):
         """Test MediaFile model."""
         media = MediaFile(
@@ -125,7 +125,7 @@ class TestCoreModels(ReflectiveModule):
             caption="Main application screenshot",
             file_size=1024000
         )
-        
+
         assert media.filename == "screenshot.png"
         assert media.media_type == MediaType.SCREENSHOT
         assert media.caption == "Main application screenshot"
@@ -136,7 +136,7 @@ class TestCoreModels(ReflectiveModule):
 
 class TestDeadlineAndNotificationModels(ReflectiveModule):
     """Test deadline and notification models (Task 2.3)."""
-    
+
     def test_deadline_creation(self):
         """Test Deadline model creation and methods."""
         future_time = datetime.now() + timedelta(days=7)
@@ -148,7 +148,7 @@ class TestDeadlineAndNotificationModels(ReflectiveModule):
             description="Final submission deadline",
             is_hard_deadline=True
         )
-        
+
         assert deadline.hackathon_id == "hack-123"
         assert deadline.project_id == "proj-456"
         assert deadline.deadline_type == DeadlineType.SUBMISSION
@@ -156,7 +156,7 @@ class TestDeadlineAndNotificationModels(ReflectiveModule):
         assert deadline.is_hard_deadline
         assert len(deadline.requirements) == 0
         assert len(deadline.notification_schedule) == 0
-    
+
     def test_deadline_time_calculations(self):
         """Test deadline time calculation methods."""
         # Future deadline
@@ -167,13 +167,13 @@ class TestDeadlineAndNotificationModels(ReflectiveModule):
             deadline_type=DeadlineType.SUBMISSION,
             deadline_time=future_time
         )
-        
+
         time_remaining = deadline.time_remaining()
         assert time_remaining.days >= 2  # Should be around 3 days
         assert deadline.is_approaching(timedelta(days=5))  # Within 5 days
         assert not deadline.is_approaching(timedelta(days=1))  # Not within 1 day
         assert not deadline.is_overdue()
-        
+
         # Past deadline
         past_time = datetime.now() - timedelta(hours=1)
         past_deadline = Deadline(
@@ -182,10 +182,10 @@ class TestDeadlineAndNotificationModels(ReflectiveModule):
             deadline_type=DeadlineType.SUBMISSION,
             deadline_time=past_time
         )
-        
+
         assert past_deadline.is_overdue()
         assert past_deadline.time_remaining().total_seconds() < 0
-    
+
     def test_project_summary_model(self):
         """Test ProjectSummary model for multi-project management."""
         summary = ProjectSummary(
@@ -200,14 +200,14 @@ class TestDeadlineAndNotificationModels(ReflectiveModule):
             validation_errors=1,
             is_active=True
         )
-        
+
         assert summary.project_id == "proj-123"
         assert summary.title == "Test Project"
         assert summary.completion_percentage == 75.5
         assert summary.pending_changes == 3
         assert summary.validation_errors == 1
         assert summary.is_active
-    
+
     def test_notification_settings_model(self):
         """Test NotificationSettings model."""
         settings = NotificationSettings(
@@ -223,13 +223,13 @@ class TestDeadlineAndNotificationModels(ReflectiveModule):
             quiet_hours_start=22,
             quiet_hours_end=8
         )
-        
+
         assert settings.desktop_notifications
         assert not settings.email_notifications
         assert len(settings.deadline_advance_times) == 3
         assert settings.quiet_hours_start == 22
         assert settings.quiet_hours_end == 8
-    
+
     def test_validation_rules_model(self):
         """Test ValidationRules model."""
         rules = ValidationRules(
@@ -241,14 +241,14 @@ class TestDeadlineAndNotificationModels(ReflectiveModule):
             max_tags=8,
             custom_rules={"min_team_size": 2, "max_team_size": 4}
         )
-        
+
         assert len(rules.required_fields) == 4
         assert rules.min_description_length == 150
         assert MediaType.SCREENSHOT in rules.required_media_types
         assert MediaType.VIDEO in rules.required_media_types
         assert rules.max_tags == 8
         assert rules.custom_rules["min_team_size"] == 2
-    
+
     def test_notification_message_model(self):
         """Test NotificationMessage model."""
         message = NotificationMessage(
@@ -258,13 +258,13 @@ class TestDeadlineAndNotificationModels(ReflectiveModule):
             notification_type="deadline",
             action_url="https://devpost.com/projects/proj-123"
         )
-        
+
         assert message.title == "Deadline Approaching"
         assert message.notification_type == "deadline"
         assert message.project_id == "proj-123"
         assert not message.delivered
         assert message.action_url is not None
-    
+
     def test_reminder_timing_model(self):
         """Test ReminderTiming model."""
         reminder = ReminderTiming(
@@ -273,12 +273,12 @@ class TestDeadlineAndNotificationModels(ReflectiveModule):
             enabled=True,
             custom_message="Don't forget to submit your project!"
         )
-        
+
         assert reminder.advance_time == timedelta(days=3)
         assert reminder.notification_type == "deadline_reminder"
         assert reminder.enabled
         assert reminder.custom_message is not None
-    
+
     def test_global_settings_model(self):
         """Test GlobalSettings model."""
         settings = GlobalSettings(
@@ -289,7 +289,7 @@ class TestDeadlineAndNotificationModels(ReflectiveModule):
             backup_configurations=True,
             analytics_enabled=False
         )
-        
+
         assert settings.default_sync_interval == 600
         assert settings.max_concurrent_projects == 5
         assert settings.auto_switch_on_file_change
@@ -300,14 +300,14 @@ class TestDeadlineAndNotificationModels(ReflectiveModule):
 
 class TestConfigurationModels(ReflectiveModule):
     """Test configuration models."""
-    
+
     def test_devpost_config_creation(self):
         """Test DevpostConfig model creation with defaults."""
         config = DevpostConfig(
             project_id="proj-123",
             hackathon_id="hack-456"
         )
-        
+
         assert config.project_id == "proj-123"
         assert config.hackathon_id == "hack-456"
         assert config.sync_enabled
@@ -318,7 +318,7 @@ class TestConfigurationModels(ReflectiveModule):
         assert "*.py" in config.watch_patterns
         assert isinstance(config.notification_preferences, NotificationSettings)
         assert isinstance(config.validation_rules, ValidationRules)
-    
+
     def test_project_connection_model(self):
         """Test ProjectConnection model."""
         connection = ProjectConnection(
@@ -329,21 +329,21 @@ class TestConfigurationModels(ReflectiveModule):
             sync_status="synced",
             is_active=True
         )
-        
+
         assert connection.local_path == Path("/path/to/project")
         assert connection.devpost_project_id == "proj-123"
         assert connection.hackathon_id == "hack-456"
         assert connection.sync_status == "synced"
         assert connection.is_active
         assert isinstance(connection.configuration, DevpostConfig)
-    
+
     def test_multi_project_config_model(self):
         """Test MultiProjectConfig model."""
         config = MultiProjectConfig(
             active_project_id="proj-123",
             conflict_resolution_strategy=ConflictResolutionStrategy.TIMESTAMP_BASED
         )
-        
+
         assert config.active_project_id == "proj-123"
         assert config.conflict_resolution_strategy == ConflictResolutionStrategy.TIMESTAMP_BASED
         assert len(config.project_connections) == 0
@@ -352,7 +352,7 @@ class TestConfigurationModels(ReflectiveModule):
 
 class TestResultModels(ReflectiveModule):
     """Test result and status models."""
-    
+
     def test_sync_result_model(self):
         """Test SyncResult model."""
         result = SyncResult(
@@ -360,13 +360,13 @@ class TestResultModels(ReflectiveModule):
             changes_made=["Updated description", "Added screenshot"],
             sync_duration=timedelta(seconds=15)
         )
-        
+
         assert result.success
         assert len(result.changes_made) == 2
         assert result.error is None
         assert result.sync_duration == timedelta(seconds=15)
         assert isinstance(result.timestamp, datetime)
-    
+
     def test_validation_result_model(self):
         """Test ValidationResult model."""
         result = ValidationResult(
@@ -376,13 +376,13 @@ class TestResultModels(ReflectiveModule):
             missing_fields=["title", "description"],
             completion_percentage=60.0
         )
-        
+
         assert not result.is_valid
         assert len(result.errors) == 2
         assert len(result.warnings) == 1
         assert len(result.missing_fields) == 2
         assert result.completion_percentage == 60.0
-    
+
     def test_project_status_model(self):
         """Test ProjectStatus model."""
         status = ProjectStatus(
@@ -395,14 +395,14 @@ class TestResultModels(ReflectiveModule):
             validation_errors=["Missing tagline"],
             deadline=datetime.now() + timedelta(days=2)
         )
-        
+
         assert status.connected
         assert status.project_id == "proj-123"
         assert status.project_name == "Test Project"
         assert len(status.pending_changes) == 2
         assert len(status.validation_errors) == 1
         assert status.deadline is not None
-    
+
     def test_project_dashboard_model(self):
         """Test ProjectDashboard model."""
         project1 = ProjectSummary(
@@ -411,14 +411,14 @@ class TestResultModels(ReflectiveModule):
             hackathon_name="Hackathon A",
             deadline=datetime.now() + timedelta(days=5)
         )
-        
+
         project2 = ProjectSummary(
             project_id="proj-2",
             title="Project 2",
             hackathon_name="Hackathon B",
             deadline=datetime.now() - timedelta(days=1)  # Overdue
         )
-        
+
         dashboard = ProjectDashboard(
             projects=[project1, project2],
             active_project=project1,
@@ -426,7 +426,7 @@ class TestResultModels(ReflectiveModule):
             projects_with_deadlines=2,
             overdue_projects=1
         )
-        
+
         assert len(dashboard.projects) == 2
         assert dashboard.active_project == project1
         assert dashboard.total_projects == 2
@@ -437,11 +437,11 @@ class TestResultModels(ReflectiveModule):
 
 class TestUtilityFunctions(ReflectiveModule):
     """Test utility functions."""
-    
+
     def test_create_default_notification_settings(self):
         """Test default notification settings creation."""
         settings = create_default_notification_settings()
-        
+
         assert isinstance(settings, NotificationSettings)
         assert settings.desktop_notifications
         assert not settings.email_notifications
@@ -450,11 +450,11 @@ class TestUtilityFunctions(ReflectiveModule):
         assert timedelta(hours=1) in settings.deadline_advance_times
         assert settings.sync_failure_notifications
         assert settings.submission_status_notifications
-    
+
     def test_create_default_validation_rules(self):
         """Test default validation rules creation."""
         rules = create_default_validation_rules()
-        
+
         assert isinstance(rules, ValidationRules)
         assert "title" in rules.required_fields
         assert "tagline" in rules.required_fields
@@ -467,7 +467,7 @@ class TestUtilityFunctions(ReflectiveModule):
 
 class TestEnums(ReflectiveModule):
     """Test enum values and behavior."""
-    
+
     def test_submission_status_enum(self):
         """Test SubmissionStatus enum."""
         assert SubmissionStatus.DRAFT == "draft"
@@ -475,14 +475,14 @@ class TestEnums(ReflectiveModule):
         assert SubmissionStatus.JUDGING == "judging"
         assert SubmissionStatus.COMPLETE == "complete"
         assert SubmissionStatus.WITHDRAWN == "withdrawn"
-    
+
     def test_deadline_type_enum(self):
         """Test DeadlineType enum."""
         assert DeadlineType.SUBMISSION == "submission"
         assert DeadlineType.JUDGING == "judging"
         assert DeadlineType.FINAL == "final"
         assert DeadlineType.MILESTONE == "milestone"
-    
+
     def test_notification_timing_enum(self):
         """Test NotificationTiming enum."""
         assert NotificationTiming.SEVEN_DAYS == "7_days"
@@ -491,7 +491,7 @@ class TestEnums(ReflectiveModule):
         assert NotificationTiming.SIX_HOURS == "6_hours"
         assert NotificationTiming.ONE_HOUR == "1_hour"
         assert NotificationTiming.THIRTY_MINUTES == "30_minutes"
-    
+
     def test_conflict_resolution_strategy_enum(self):
         """Test ConflictResolutionStrategy enum."""
         assert ConflictResolutionStrategy.LOCAL_WINS == "local_wins"
@@ -502,7 +502,7 @@ class TestEnums(ReflectiveModule):
 
 class TestModelIntegration(ReflectiveModule):
     """Test model integration and relationships."""
-    
+
     def test_deadline_with_requirements(self):
         """Test Deadline model with submission requirements."""
         requirement1 = SubmissionRequirement(
@@ -512,7 +512,7 @@ class TestModelIntegration(ReflectiveModule):
             required=True,
             completed=True
         )
-        
+
         requirement2 = SubmissionRequirement(
             requirement_id="req-2",
             title="Demo Video",
@@ -520,7 +520,7 @@ class TestModelIntegration(ReflectiveModule):
             required=True,
             completed=False
         )
-        
+
         deadline = Deadline(
             hackathon_id="hack-123",
             project_id="proj-456",
@@ -533,12 +533,12 @@ class TestModelIntegration(ReflectiveModule):
                 NotificationTiming.ONE_HOUR
             ]
         )
-        
+
         assert len(deadline.requirements) == 2
         assert len(deadline.notification_schedule) == 3
         assert deadline.requirements[0].completed
         assert not deadline.requirements[1].completed
-    
+
     def test_devpost_project_with_full_data(self):
         """Test DevpostProject with complete data."""
         team_member = TeamMember(
@@ -546,20 +546,20 @@ class TestModelIntegration(ReflectiveModule):
             email="alice@example.com",
             role="Lead Developer"
         )
-        
+
         project_link = ProjectLink(
             title="GitHub Repository",
             url="https://github.com/user/project",
             link_type="github"
         )
-        
+
         media_file = MediaFile(
             filename="demo.mp4",
             file_path=Path("media/demo.mp4"),
             media_type=MediaType.VIDEO,
             caption="Project demonstration video"
         )
-        
+
         requirement = SubmissionRequirement(
             requirement_id="req-1",
             title="Project Demo",
@@ -567,7 +567,7 @@ class TestModelIntegration(ReflectiveModule):
             required=True,
             completed=True
         )
-        
+
         project = DevpostProject(
             id="proj-123",
             title="Amazing Hackathon Project",
@@ -585,7 +585,7 @@ class TestModelIntegration(ReflectiveModule):
             updated_at=datetime.now() - timedelta(hours=2),
             deadline=datetime.now() + timedelta(days=2)
         )
-        
+
         assert len(project.team_members) == 1
         assert len(project.tags) == 3
         assert len(project.links) == 1
@@ -609,12 +609,12 @@ if __name__ == "__main__":
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -622,7 +622,7 @@ if __name__ == "__main__":
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

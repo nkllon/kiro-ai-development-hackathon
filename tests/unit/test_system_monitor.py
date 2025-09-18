@@ -18,7 +18,7 @@ from src.beast_mode.monitoring.system_monitor import SystemMonitor, SystemStatus
 from src.beast_mode.monitoring.health_monitor import HealthStatus
 from src.beast_mode.monitoring.alerting import AlertSeverity
 from src.beast_mode.monitoring.recovery import RecoveryResult
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# # from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
 
@@ -34,54 +34,54 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
             "test_classes": 1,
             "test_methods": 10
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestSystemMonitor(ReflectiveModule):
     """Test cases for SystemMonitor."""
-    
+
     @pytest.fixture
     def system_monitor(self):
         """Create a system monitor instance for testing."""
         return SystemMonitor("redis://localhost:6379")
-        
+
     @pytest.mark.asyncio
     async def test_start_stop_monitoring(self, system_monitor):
         """Test starting and stopping integrated monitoring."""
         assert not system_monitor.monitoring_active
-        
+
         # Mock the component start methods to avoid actual Redis connections
         system_monitor.health_monitor.start_monitoring = AsyncMock()
         system_monitor.metrics_collector.start_collection = AsyncMock()
         system_monitor.alert_manager.start_alerting = AsyncMock()
         system_monitor.recovery_manager.start_recovery_system = AsyncMock()
-        
+
         await system_monitor.start_monitoring()
         assert system_monitor.monitoring_active
         assert system_monitor.integration_task is not None
-        
+
         # Mock the component stop methods
         system_monitor.health_monitor.stop_monitoring = AsyncMock()
         system_monitor.metrics_collector.stop_collection = AsyncMock()
         system_monitor.alert_manager.stop_alerting = AsyncMock()
         system_monitor.recovery_manager.stop_recovery_system = AsyncMock()
-        
+
         await system_monitor.stop_monitoring()
         assert not system_monitor.monitoring_active
-        
+
     def test_add_status_callback(self, system_monitor):
         """Test adding status callbacks."""
         callback = MagicMock()
-        
+
         system_monitor.add_status_callback(callback)
         assert callback in system_monitor.status_callbacks
-        
+
     @pytest.mark.asyncio
     async def test_get_system_status(self, system_monitor):
         """Test getting comprehensive system status."""
@@ -93,20 +93,20 @@ class TestSystemMonitor(ReflectiveModule):
             "degraded": 0,
             "unhealthy": 0
         })
-        
+
         system_monitor.alert_manager.get_alert_summary = MagicMock(return_value={
             "active_alerts": 2,
             "active_by_severity": {"critical": 1, "high": 1}
         })
-        
+
         system_monitor.alert_manager.get_alerts_by_severity = MagicMock(return_value=[
             MagicMock(severity=AlertSeverity.CRITICAL)
         ])
-        
+
         system_monitor.recovery_manager.get_recovery_summary = MagicMock(return_value={
             "active_recoveries": 1
         })
-        
+
         system_monitor.metrics_collector.get_performance_report = MagicMock(return_value={
             "kpis": {
                 "message_throughput": {"total_messages": 1000},
@@ -114,9 +114,9 @@ class TestSystemMonitor(ReflectiveModule):
                 "message_latency": {"avg_ms": 150.0}
             }
         })
-        
+
         status = await system_monitor.get_system_status()
-        
+
         assert isinstance(status, SystemStatus)
         assert status.overall_health == HealthStatus.HEALTHY
         assert status.active_alerts == 2
@@ -126,7 +126,7 @@ class TestSystemMonitor(ReflectiveModule):
         assert status.error_rate == 2.5
         assert status.avg_latency_ms == 150.0
         assert isinstance(status.timestamp, datetime)
-        
+
     @pytest.mark.asyncio
     async def test_get_comprehensive_report(self, system_monitor):
         """Test getting comprehensive monitoring report."""
@@ -141,7 +141,7 @@ class TestSystemMonitor(ReflectiveModule):
             avg_latency_ms=100.0,
             timestamp=datetime.now()
         )
-        
+
         system_monitor.get_system_status = AsyncMock(return_value=system_status)
         system_monitor.health_monitor.get_health_summary = AsyncMock(return_value={})
         system_monitor.health_monitor.get_system_health = AsyncMock(return_value={})
@@ -152,9 +152,9 @@ class TestSystemMonitor(ReflectiveModule):
         system_monitor.recovery_manager.get_recovery_summary = MagicMock(return_value={})
         system_monitor.recovery_manager.get_active_recoveries = MagicMock(return_value=[])
         system_monitor.recovery_manager.get_recovery_history = MagicMock(return_value=[])
-        
+
         report = await system_monitor.get_comprehensive_report()
-        
+
         assert "system_status" in report
         assert "health" in report
         assert "component_health" in report
@@ -162,115 +162,115 @@ class TestSystemMonitor(ReflectiveModule):
         assert "alerts" in report
         assert "recovery" in report
         assert "timestamp" in report
-        
+
         # Check alert structure
         assert "summary" in report["alerts"]
         assert "active" in report["alerts"]
         assert "recent" in report["alerts"]
-        
+
         # Check recovery structure
         assert "summary" in report["recovery"]
         assert "active" in report["recovery"]
         assert "recent" in report["recovery"]
-        
+
     def test_record_message_sent(self, system_monitor):
         """Test recording message sent events."""
         system_monitor.metrics_collector.increment_counter = MagicMock()
         system_monitor.metrics_collector.record_timer = MagicMock()
-        
+
         # Without latency
         system_monitor.record_message_sent()
-        
+
         assert system_monitor.metrics_collector.increment_counter.call_count == 2
         system_monitor.metrics_collector.increment_counter.assert_any_call("messages_sent")
         system_monitor.metrics_collector.increment_counter.assert_any_call("operations")
-        
+
         # With latency
         system_monitor.record_message_sent(latency_ms=150.0)
-        
+
         system_monitor.metrics_collector.record_timer.assert_called_with("message_latency", 150.0)
-        
+
     def test_record_message_received(self, system_monitor):
         """Test recording message received events."""
         system_monitor.metrics_collector.increment_counter = MagicMock()
         system_monitor.metrics_collector.record_timer = MagicMock()
-        
+
         # Without processing time
         system_monitor.record_message_received()
-        
+
         assert system_monitor.metrics_collector.increment_counter.call_count == 2
         system_monitor.metrics_collector.increment_counter.assert_any_call("messages_received")
         system_monitor.metrics_collector.increment_counter.assert_any_call("operations")
-        
+
         # With processing time
         system_monitor.record_message_received(processing_time_ms=50.0)
-        
+
         system_monitor.metrics_collector.record_timer.assert_called_with("message_processing_time", 50.0)
-        
+
     def test_record_error(self, system_monitor):
         """Test recording error events."""
         system_monitor.metrics_collector.increment_counter = MagicMock()
-        
+
         # Default error type
         system_monitor.record_error()
-        
+
         system_monitor.metrics_collector.increment_counter.assert_called_with(
             "errors", labels={"type": "general"}
         )
-        
+
         # Specific error type
         system_monitor.record_error("connection_failed")
-        
+
         system_monitor.metrics_collector.increment_counter.assert_called_with(
             "errors", labels={"type": "connection_failed"}
         )
-        
+
     def test_record_agent_connection(self, system_monitor):
         """Test recording agent connection events."""
         system_monitor.metrics_collector.increment_counter = MagicMock()
         system_monitor.metrics_collector.get_gauge_value = MagicMock(return_value=5)
         system_monitor.metrics_collector.set_gauge = MagicMock()
-        
+
         # Agent connected
         system_monitor.record_agent_connection("agent1", True)
-        
+
         system_monitor.metrics_collector.increment_counter.assert_called_with("agent_connections")
         system_monitor.metrics_collector.set_gauge.assert_called_with("active_connections", 6)
-        
+
         # Agent disconnected
         system_monitor.record_agent_connection("agent1", False)
-        
+
         system_monitor.metrics_collector.increment_counter.assert_called_with("agent_disconnections")
         system_monitor.metrics_collector.set_gauge.assert_called_with("active_connections", 4)
-        
+
     @pytest.mark.asyncio
     async def test_report_component_failure(self, system_monitor):
         """Test reporting component failures."""
         system_monitor.record_error = MagicMock()
         system_monitor.recovery_manager.report_failure = AsyncMock()
-        
+
         await system_monitor.report_component_failure(
             "redis", "connection_failed", {"error": "Connection refused"}
         )
-        
+
         system_monitor.record_error.assert_called_with("redis_connection_failed")
         system_monitor.recovery_manager.report_failure.assert_called_with(
             "redis", "connection_failed", {"error": "Connection refused"}
         )
-        
+
     @pytest.mark.asyncio
     async def test_setup_integrations(self, system_monitor):
         """Test setting up integrations between components."""
         system_monitor.alert_manager.add_alert_handler = MagicMock()
         system_monitor.recovery_manager.add_recovery_callback = MagicMock()
         system_monitor._register_integrated_alert_rules = AsyncMock()
-        
+
         await system_monitor._setup_integrations()
-        
+
         system_monitor.alert_manager.add_alert_handler.assert_called_once()
         system_monitor.recovery_manager.add_recovery_callback.assert_called_once()
         system_monitor._register_integrated_alert_rules.assert_called_once()
-        
+
     @pytest.mark.asyncio
     async def test_check_health_alerts(self, system_monitor):
         """Test health-based alert checking."""
@@ -279,14 +279,14 @@ class TestSystemMonitor(ReflectiveModule):
             "total_components": 5
         })
         system_monitor.alert_manager.fire_alert = AsyncMock()
-        
+
         await system_monitor._check_health_alerts()
-        
+
         system_monitor.alert_manager.fire_alert.assert_called_once()
         call_args = system_monitor.alert_manager.fire_alert.call_args
         assert call_args[1]["name"] == "unhealthy_components"
         assert call_args[1]["severity"] == AlertSeverity.HIGH
-        
+
     @pytest.mark.asyncio
     async def test_check_metric_alerts(self, system_monitor):
         """Test metric-based alert checking."""
@@ -297,18 +297,18 @@ class TestSystemMonitor(ReflectiveModule):
             }
         })
         system_monitor.alert_manager.fire_alert = AsyncMock()
-        
+
         await system_monitor._check_metric_alerts()
-        
+
         # Should fire two alerts
         assert system_monitor.alert_manager.fire_alert.call_count == 2
-        
+
         # Check alert names
         call_args_list = system_monitor.alert_manager.fire_alert.call_args_list
         alert_names = [call[1]["name"] for call in call_args_list]
         assert "high_error_rate" in alert_names
         assert "high_latency" in alert_names
-        
+
     @pytest.mark.asyncio
     async def test_update_system_status(self, system_monitor):
         """Test system status update and callback notification."""
@@ -317,7 +317,7 @@ class TestSystemMonitor(ReflectiveModule):
         async_callback = AsyncMock()
         system_monitor.add_status_callback(sync_callback)
         system_monitor.add_status_callback(async_callback)
-        
+
         # Mock get_system_status
         test_status = SystemStatus(
             overall_health=HealthStatus.HEALTHY,
@@ -330,49 +330,49 @@ class TestSystemMonitor(ReflectiveModule):
             timestamp=datetime.now()
         )
         system_monitor.get_system_status = AsyncMock(return_value=test_status)
-        
+
         await system_monitor._update_system_status()
-        
+
         # Both callbacks should have been called
         sync_callback.assert_called_once_with(test_status)
         async_callback.assert_called_once_with(test_status)
-        
+
     @pytest.mark.asyncio
     async def test_handle_alert_triggers_recovery(self, system_monitor):
         """Test alert handling that triggers recovery."""
         system_monitor.recovery_manager.trigger_recovery = AsyncMock()
-        
+
         # Create alerts that should trigger recovery
         redis_alert = MagicMock()
         redis_alert.name = "redis_connection_failed"
         redis_alert.severity = AlertSeverity.CRITICAL
         redis_alert.id = "alert1"
         redis_alert.details = {"component": "redis"}
-        
+
         error_alert = MagicMock()
         error_alert.name = "high_error_rate"
         error_alert.severity = AlertSeverity.HIGH
         error_alert.id = "alert2"
         error_alert.details = {"error_rate": 15.0}
-        
+
         # Handle alerts
         await system_monitor._handle_alert(redis_alert)
         await system_monitor._handle_alert(error_alert)
-        
+
         # Should trigger appropriate recoveries
         assert system_monitor.recovery_manager.trigger_recovery.call_count == 2
-        
+
         call_args_list = system_monitor.recovery_manager.trigger_recovery.call_args_list
         recovery_actions = [call[0][0] for call in call_args_list]
         assert "redis_reconnect" in recovery_actions
         assert "reset_message_counters" in recovery_actions
-        
+
     @pytest.mark.asyncio
     async def test_handle_recovery_event(self, system_monitor):
         """Test recovery event handling."""
         system_monitor.metrics_collector.increment_counter = MagicMock()
         system_monitor.alert_manager.fire_alert = AsyncMock()
-        
+
         # Create recovery attempt
         recovery_attempt = MagicMock()
         recovery_attempt.action_name = "test_action"
@@ -382,21 +382,21 @@ class TestSystemMonitor(ReflectiveModule):
             "result": RecoveryResult.FAILED,
             "message": "Recovery failed"
         }
-        
+
         await system_monitor._handle_recovery_event(recovery_attempt)
-        
+
         # Should record metric
         system_monitor.metrics_collector.increment_counter.assert_called_with(
             "recovery_attempts",
             labels={"action": "test_action", "result": "failed"}
         )
-        
+
         # Should fire alert for failed recovery
         system_monitor.alert_manager.fire_alert.assert_called_once()
         call_args = system_monitor.alert_manager.fire_alert.call_args
         assert call_args[1]["name"] == "recovery_failed"
         assert call_args[1]["severity"] == AlertSeverity.HIGH
-        
+
     @pytest.mark.asyncio
     async def test_alert_condition_functions(self, system_monitor):
         """Test integrated alert condition functions."""
@@ -406,11 +406,11 @@ class TestSystemMonitor(ReflectiveModule):
             "degraded": 0,
             "healthy": 2
         })
-        
+
         result = await system_monitor._check_component_health_alert(None)
         assert result["should_alert"] is True
         assert "1 components are unhealthy" in result["message"]
-        
+
         # Test performance alert
         system_monitor.metrics_collector.get_performance_report = MagicMock(return_value={
             "kpis": {
@@ -418,12 +418,12 @@ class TestSystemMonitor(ReflectiveModule):
                 "message_latency": {"avg_ms": 600.0}  # Above 500ms threshold
             }
         })
-        
+
         result = await system_monitor._check_performance_alert(None)
         assert result["should_alert"] is True
         assert "Error rate: 8.0%" in result["message"]
         assert "High latency: 600.0ms" in result["message"]
-        
+
         # Test recovery failure alert
         failed_attempts = [
             MagicMock(result=RecoveryResult.FAILED),
@@ -431,7 +431,7 @@ class TestSystemMonitor(ReflectiveModule):
             MagicMock(result=RecoveryResult.FAILED)
         ]
         system_monitor.recovery_manager.get_recovery_history = MagicMock(return_value=failed_attempts)
-        
+
         result = await system_monitor._check_recovery_failure_alert(None)
         assert result["should_alert"] is True
 
@@ -444,12 +444,12 @@ class TestSystemMonitor(ReflectiveModule):
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -457,7 +457,7 @@ class TestSystemMonitor(ReflectiveModule):
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

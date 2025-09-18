@@ -12,7 +12,7 @@ Enhanced: 2025-09-14T06:30:15.548204
 import unittest
 import sys
 import os
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# # from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
 # Add src to path
@@ -30,22 +30,22 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'src'))
             "test_classes": 1,
             "test_methods": 2
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestBeastModeIntegration(unittest.TestCase, ReflectiveModule):
     """beast_mode integration tests."""
-    
+
     def test_system_integration(self):
         """Test system integration."""
         self.assertTrue(True)
-    
+
     def test_module_interaction(self):
         """Test module interaction."""
         self.assertTrue(True)
@@ -62,12 +62,12 @@ if __name__ == '__main__':
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -75,7 +75,7 @@ if __name__ == '__main__':
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

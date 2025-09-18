@@ -8,13 +8,13 @@ Enhanced: 2025-09-14T06:30:15.508729
 
 
 
-    
+
     def test_center_calculation(self):
         """Test center point calculation."""
         bbox = BoundingBox(x=10, y=20, width=100, height=50)
         center = bbox.center()
         assert center == (60, 45)  # (10 + 100/2, 20 + 50/2)
-    
+
     def test_area_calculation(self):
         """Test area calculation."""
         bbox = BoundingBox(x=0, y=0, width=100, height=50)
@@ -23,7 +23,7 @@ Enhanced: 2025-09-14T06:30:15.508729
 
 class TestPNGImage(ReflectiveModule):
     """Test PNGImage functionality."""
-    
+
     def test_aspect_ratio(self):
         """Test aspect ratio calculation."""
         image = PNGImage(
@@ -34,7 +34,7 @@ class TestPNGImage(ReflectiveModule):
             color_mode="RGB"
         )
         assert abs(image.aspect_ratio() - 1.777) < 0.01
-    
+
     def test_size_calculation(self):
         """Test size in MB calculation."""
         # 1MB of data
@@ -51,7 +51,7 @@ class TestPNGImage(ReflectiveModule):
 
 class TestQualityViolation(ReflectiveModule):
     """Test QualityViolation functionality."""
-    
+
     def test_severity_enum_conversion(self):
         """Test automatic conversion of string severity to enum."""
         violation = QualityViolation(
@@ -67,7 +67,7 @@ class TestQualityViolation(ReflectiveModule):
 
 class TestAnalysisResult(ReflectiveModule):
     """Test AnalysisResult functionality."""
-    
+
     def test_has_errors(self):
         """Test error detection."""
         violation = QualityViolation(
@@ -85,7 +85,7 @@ class TestAnalysisResult(ReflectiveModule):
             processing_time=0.1
         )
         assert result.has_errors() is True
-    
+
     def test_has_warnings(self):
         """Test warning detection."""
         violation = QualityViolation(
@@ -107,7 +107,7 @@ class TestAnalysisResult(ReflectiveModule):
 
 class TestQualityReport(ReflectiveModule):
     """Test QualityReport functionality."""
-    
+
     def test_violation_counts(self):
         """Test violation counting methods."""
         violations = [
@@ -115,7 +115,7 @@ class TestQualityReport(ReflectiveModule):
             QualityViolation("rule2", Severity.ERROR, None, 1.0, 2.0, "Error 2"),
             QualityViolation("rule3", Severity.WARNING, None, 1.0, 2.0, "Warning 1")
         ]
-        
+
         report = QualityReport(
             overall_score=65.0,
             violations=violations,
@@ -123,10 +123,10 @@ class TestQualityReport(ReflectiveModule):
             processing_time=1.0,
             audience_mode="general"
         )
-        
+
         assert report.error_count() == 2
         assert report.warning_count() == 1
-    
+
     def test_is_passing(self):
         """Test passing criteria."""
         # Failing due to low score
@@ -138,7 +138,7 @@ class TestQualityReport(ReflectiveModule):
             audience_mode="general"
         )
         assert report1.is_passing() is False
-        
+
         # Failing due to errors
         error_violation = QualityViolation("rule1", Severity.ERROR, None, 1.0, 2.0, "Error")
         report2 = QualityReport(
@@ -149,7 +149,7 @@ class TestQualityReport(ReflectiveModule):
             audience_mode="general"
         )
         assert report2.is_passing() is False
-        
+
         # Passing
         warning_violation = QualityViolation("rule1", Severity.WARNING, None, 1.0, 2.0, "Warning")
         report3 = QualityReport(
@@ -169,12 +169,12 @@ class TestQualityReport(ReflectiveModule):
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -182,7 +182,7 @@ class TestQualityReport(ReflectiveModule):
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

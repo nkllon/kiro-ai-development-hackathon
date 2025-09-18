@@ -17,12 +17,12 @@ from src.beast_mode.hubris_prevention.models import Decision, InterventionType
 
 class TestGovernanceBypassDetector(ReflectiveModule):
     """Test cases for governance bypass detection."""
-    
+
     def setup_method(self):
         """Set up test fixtures."""
         self.detector = GovernanceBypassDetector()
         self.actor_id = "test_actor_001"
-    
+
     def test_emergency_abuse_detection(self):
         """Test detection of emergency claim abuse."""
         # Create decisions with excessive emergency claims
@@ -37,15 +37,15 @@ class TestGovernanceBypassDetector(ReflectiveModule):
                 accountability_verified=False
             )
             decisions.append(decision)
-        
+
         # Should detect bypass attempt
         alert = self.detector.detect_bypass_attempts(self.actor_id, decisions, [])
-        
+
         assert alert is not None
         assert alert.actor_id == self.actor_id
         assert alert.bypass_type == "systematic_governance_bypass"
         assert alert.alert_level in ["medium", "high", "critical"]
-    
+
     def test_approval_skipping_detection(self):
         """Test detection of systematic approval skipping."""
         # Create high-impact decisions without accountability verification
@@ -60,13 +60,13 @@ class TestGovernanceBypassDetector(ReflectiveModule):
                 accountability_verified=False  # No approval
             )
             decisions.append(decision)
-        
+
         # Should detect bypass attempt
         alert = self.detector.detect_bypass_attempts(self.actor_id, decisions, [])
-        
+
         assert alert is not None
         assert alert.alert_level in ["high", "critical"]
-    
+
     def test_no_bypass_with_compliant_behavior(self):
         """Test that compliant behavior doesn't trigger alerts."""
         # Create compliant decisions
@@ -81,37 +81,37 @@ class TestGovernanceBypassDetector(ReflectiveModule):
                 accountability_verified=True  # Properly verified
             )
             decisions.append(decision)
-        
+
         # Should not detect bypass attempt
         alert = self.detector.detect_bypass_attempts(self.actor_id, decisions, [])
-        
+
         assert alert is None
-    
+
     def test_escalation_needed_for_persistent_patterns(self):
         """Test escalation for persistent bypass patterns."""
         # Test escalation after timeout period
         pattern_duration = timedelta(hours=50)  # Exceeds 48-hour threshold
-        
+
         escalation = self.detector.check_escalation_needed(self.actor_id, pattern_duration)
-        
+
         assert escalation is not None
         assert escalation.actor_id == self.actor_id
         assert escalation.escalation_type == "governance_bypass_intervention"
         assert len(escalation.success_criteria) > 0
-    
+
     def test_no_escalation_for_short_patterns(self):
         """Test no escalation for short-duration patterns."""
         # Test no escalation within timeout period
         pattern_duration = timedelta(hours=24)  # Within 48-hour threshold
-        
+
         escalation = self.detector.check_escalation_needed(self.actor_id, pattern_duration)
-        
+
         assert escalation is None
-    
+
     def test_governance_intervention_creation(self):
         """Test creation of governance interventions."""
         from src.beast_mode.hubris_prevention.models import BypassAlert
-        
+
         # Create a critical bypass alert
         alert = BypassAlert(
             actor_id=self.actor_id,
@@ -121,17 +121,17 @@ class TestGovernanceBypassDetector(ReflectiveModule):
             success_rate=0.8,
             alert_level="critical"
         )
-        
+
         # Create intervention
         intervention = self.detector.create_governance_intervention(self.actor_id, alert)
-        
+
         assert intervention is not None
         assert intervention.target_actor == self.actor_id
         assert intervention.intervention_type == InterventionType.EMERGENCY_GOVERNANCE
         assert len(intervention.escalation_path) > 0
         assert len(intervention.success_criteria) > 0
         assert intervention.rollback_plan is not None
-    
+
     def test_authority_escalation_detection(self):
         """Test detection of unauthorized authority escalation."""
         # Create decisions with authority escalation
@@ -147,17 +147,17 @@ class TestGovernanceBypassDetector(ReflectiveModule):
                 metadata={"self_authorized": True, "authority_escalation": True}
             )
             decisions.append(decision)
-        
+
         # Should detect bypass attempt
         alert = self.detector.detect_bypass_attempts(self.actor_id, decisions, [])
-        
+
         assert alert is not None
         assert alert.alert_level == "critical"  # Authority escalation is critical
-    
+
     def test_bypass_severity_calculation(self):
         """Test bypass severity calculation."""
         from src.beast_mode.hubris_prevention.detection.bypass_detector import BypassPattern
-        
+
         # Create test patterns
         patterns = [
             BypassPattern(
@@ -169,7 +169,7 @@ class TestGovernanceBypassDetector(ReflectiveModule):
                 last_detected=datetime.now()
             ),
             BypassPattern(
-                pattern_type="approval_skipping", 
+                pattern_type="approval_skipping",
                 severity="critical",
                 evidence=["Test evidence"],
                 confidence=0.9,
@@ -177,19 +177,19 @@ class TestGovernanceBypassDetector(ReflectiveModule):
                 last_detected=datetime.now()
             )
         ]
-        
+
         # Calculate severity
         severity = self.detector._calculate_bypass_severity(patterns)
-        
+
         assert 0.0 <= severity <= 1.0
         assert severity > 0.5  # Should be high due to critical pattern
-    
+
     def test_pattern_storage_and_cleanup(self):
         """Test pattern storage and automatic cleanup."""
         from src.beast_mode.hubris_prevention.detection.bypass_detector import BypassPattern
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
-        
+
         # Create old and new patterns
         old_pattern = BypassPattern(
             pattern_type="emergency_abuse",
@@ -199,25 +199,25 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
             first_detected=datetime.now() - timedelta(days=10),
             last_detected=datetime.now() - timedelta(days=8)
         )
-        
+
         new_pattern = BypassPattern(
             pattern_type="approval_skipping",
-            severity="high", 
+            severity="high",
             evidence=["New evidence"],
             confidence=0.8,
             first_detected=datetime.now() - timedelta(hours=1),
             last_detected=datetime.now()
         )
-        
+
         # Store patterns
         self.detector._store_patterns(self.actor_id, [old_pattern, new_pattern])
-        
+
         # Check that only new pattern is kept (old one should be cleaned up)
         stored_patterns = self.detector.detected_patterns.get(self.actor_id, [])
-        
+
         # Should have at least the new pattern
         assert len(stored_patterns) >= 1
-        
+
         # New pattern should be present
         recent_patterns = [p for p in stored_patterns if p.last_detected >= datetime.now() - timedelta(days=1)]
 
@@ -230,12 +230,12 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -243,7 +243,7 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

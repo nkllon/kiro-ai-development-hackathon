@@ -46,25 +46,25 @@ except ImportError as e:
 
 class PerformanceMetrics(ModuleHealth):
     """Collect and analyze performance metrics."""
-    
+
     def __init__(self):
         self.metrics = {}
         self.start_times = {}
         self.memory_snapshots = []
-    
+
     def start_timer(self, operation: str):
         """Start timing an operation."""
         self.start_times[operation] = time.time()
-    
+
     def end_timer(self, operation: str) -> float:
         """End timing an operation and return duration."""
         if operation not in self.start_times:
             return 0.0
-        
+
         duration = time.time() - self.start_times[operation]
         self.metrics[operation] = duration
         return duration
-    
+
     def record_memory_snapshot(self, label: str):
         """Record a memory snapshot."""
         process = psutil.Process(os.getpid())
@@ -77,12 +77,12 @@ class PerformanceMetrics(ModuleHealth):
         }
         self.memory_snapshots.append(memory_info)
         return memory_info
-    
+
     def get_performance_summary(self) -> Dict[str, Any]:
         """Get performance summary."""
         if not self.metrics:
             return {"error": "No metrics recorded"}
-        
+
         durations = list(self.metrics.values())
         return {
             "total_operations": len(self.metrics),
@@ -98,19 +98,19 @@ class PerformanceMetrics(ModuleHealth):
 
 class TestModelRegistryPerformance(ModuleHealth):
     """Test Model Registry performance."""
-    
+
     @performance_test
     def test_large_scale_model_registration(self):
         """Test performance with large-scale model registration."""
         registry = ModelRegistry()
         metrics = PerformanceMetrics()
-        
+
         # Test with different scales
         scales = [100, 500, 1000, 2000]
-        
+
         for scale in scales:
             metrics.start_timer(f"register_{scale}_models")
-            
+
             for i in range(scale):
                 registry.register_model(
                     f"model_{i}",
@@ -122,22 +122,22 @@ class TestModelRegistryPerformance(ModuleHealth):
                         "features": [f"feature_{j}" for j in range(10)]
                     }
                 )
-            
+
             duration = metrics.end_timer(f"register_{scale}_models")
-            
+
             # Performance assertions
             models_per_second = scale / duration
             assert models_per_second > 100, f"Registration too slow: {models_per_second:.2f} models/sec"
-            
+
             # Memory usage check
             memory_snapshot = metrics.record_memory_snapshot(f"after_{scale}_models")
             assert memory_snapshot["rss_mb"] < 500, f"Memory usage too high: {memory_snapshot['rss_mb']:.2f} MB"
-    
+
     @performance_test
     def test_model_retrieval_performance(self):
         """Test model retrieval performance."""
         registry = ModelRegistry()
-        
+
         # Register test models
         for i in range(1000):
             registry.register_model(
@@ -146,24 +146,24 @@ class TestModelRegistryPerformance(ModuleHealth):
                 "1.0.0",
                 {"index": i}
             )
-        
+
         metrics = PerformanceMetrics()
-        
+
         # Test retrieval performance
         metrics.start_timer("retrieve_100_models")
         for i in range(100):
             registry.get_model(f"model_{i}")
         duration = metrics.end_timer("retrieve_100_models")
-        
+
         # Performance assertions
         retrievals_per_second = 100 / duration
         assert retrievals_per_second > 1000, f"Retrieval too slow: {retrievals_per_second:.2f} retrievals/sec"
-    
+
     @performance_test
     def test_concurrent_model_operations(self):
         """Test concurrent model operations."""
         registry = ModelRegistry()
-        
+
         async def register_models(start_idx, count):
             """Register models concurrently."""
             for i in range(start_idx, start_idx + count):
@@ -173,12 +173,12 @@ class TestModelRegistryPerformance(ModuleHealth):
                     "1.0.0",
                     {"index": i}
                 )
-        
+
         async def retrieve_models(start_idx, count):
             """Retrieve models concurrently."""
             for i in range(start_idx, start_idx + count):
                 registry.get_model(f"concurrent_model_{i}")
-        
+
         async def test_concurrent_operations():
             """Test concurrent operations."""
             # Register models concurrently
@@ -186,18 +186,18 @@ class TestModelRegistryPerformance(ModuleHealth):
                 register_models(i * 100, 100) for i in range(10)
             ]
             await asyncio.gather(*register_tasks)
-            
+
             # Retrieve models concurrently
             retrieve_tasks = [
                 retrieve_models(i * 100, 100) for i in range(10)
             ]
             await asyncio.gather(*retrieve_tasks)
-        
+
         # Run concurrent test
         start_time = time.time()
         asyncio.run(test_concurrent_operations())
         total_time = time.time() - start_time
-        
+
         # Performance assertions
         assert total_time < 5.0, f"Concurrent operations too slow: {total_time:.2f}s"
         assert len(registry.models) == 1000, "Not all models registered"
@@ -205,19 +205,19 @@ class TestModelRegistryPerformance(ModuleHealth):
 
 class TestReflectiveModulePerformance(ModuleHealth):
     """Test ReflectiveModule performance."""
-    
+
     @performance_test
     def test_module_creation_performance(self):
         """Test module creation performance."""
         metrics = PerformanceMetrics()
-        
+
         # Test module creation at different scales
         scales = [100, 500, 1000]
-        
+
         for scale in scales:
             modules = []
             metrics.start_timer(f"create_{scale}_modules")
-            
+
             for i in range(scale):
                 module = ReflectiveModule(
                     f"module_{i}",
@@ -225,23 +225,23 @@ class TestReflectiveModulePerformance(ModuleHealth):
                     f"Test module {i}"
                 )
                 modules.append(module)
-            
+
             duration = metrics.end_timer(f"create_{scale}_modules")
-            
+
             # Performance assertions
             modules_per_second = scale / duration
             assert modules_per_second > 1000, f"Module creation too slow: {modules_per_second:.2f} modules/sec"
-            
+
             # Memory usage check
             memory_snapshot = metrics.record_memory_snapshot(f"after_{scale}_modules")
             assert memory_snapshot["rss_mb"] < 200, f"Memory usage too high: {memory_snapshot['rss_mb']:.2f} MB"
-    
+
     @performance_test
     def test_capability_management_performance(self):
         """Test capability management performance."""
         module = ReflectiveModule("test_module", "1.0.0")
         metrics = PerformanceMetrics()
-        
+
         # Test capability registration
         metrics.start_timer("register_1000_capabilities")
         for i in range(1000):
@@ -253,34 +253,34 @@ class TestReflectiveModulePerformance(ModuleHealth):
                 }
             )
         duration = metrics.end_timer("register_1000_capabilities")
-        
+
         # Performance assertions
         capabilities_per_second = 1000 / duration
         assert capabilities_per_second > 500, f"Capability registration too slow: {capabilities_per_second:.2f} capabilities/sec"
-        
+
         # Test capability retrieval
         metrics.start_timer("retrieve_100_capabilities")
         for i in range(100):
             module.get_capability(f"capability_{i}")
         duration = metrics.end_timer("retrieve_100_capabilities")
-        
+
         # Performance assertions
         retrievals_per_second = 100 / duration
         assert retrievals_per_second > 1000, f"Capability retrieval too slow: {retrievals_per_second:.2f} retrievals/sec"
-    
+
     @performance_test
     def test_health_status_updates_performance(self):
         """Test health status updates performance."""
         module = ReflectiveModule("test_module", "1.0.0")
         metrics = PerformanceMetrics()
-        
+
         # Test health status updates
         metrics.start_timer("1000_health_updates")
         for i in range(1000):
             status = HealthStatus.HEALTHY if i % 2 == 0 else HealthStatus.DEGRADED
             module.update_health_status(status)
         duration = metrics.end_timer("1000_health_updates")
-        
+
         # Performance assertions
         updates_per_second = 1000 / duration
         assert updates_per_second > 2000, f"Health updates too slow: {updates_per_second:.2f} updates/sec"
@@ -288,19 +288,19 @@ class TestReflectiveModulePerformance(ModuleHealth):
 
 class TestPDCAPerformance(ModuleHealth):
     """Test PDCA performance."""
-    
+
     @performance_test
     def test_pdca_cycle_creation_performance(self):
         """Test PDCA cycle creation performance."""
         metrics = PerformanceMetrics()
-        
+
         # Test cycle creation at different scales
         scales = [100, 500, 1000]
-        
+
         for scale in scales:
             cycles = []
             metrics.start_timer(f"create_{scale}_cycles")
-            
+
             for i in range(scale):
                 cycle = PDCACycle(
                     f"cycle_{i}",
@@ -308,19 +308,19 @@ class TestPDCAPerformance(ModuleHealth):
                     created_at=datetime.now()
                 )
                 cycles.append(cycle)
-            
+
             duration = metrics.end_timer(f"create_{scale}_cycles")
-            
+
             # Performance assertions
             cycles_per_second = scale / duration
             assert cycles_per_second > 1000, f"Cycle creation too slow: {cycles_per_second:.2f} cycles/sec"
-    
+
     @performance_test
     def test_pdca_phase_transitions_performance(self):
         """Test PDCA phase transitions performance."""
         cycle = PDCACycle("test_cycle", "test_objective")
         metrics = PerformanceMetrics()
-        
+
         # Test phase transitions
         metrics.start_timer("1000_phase_transitions")
         for i in range(1000):
@@ -330,21 +330,21 @@ class TestPDCAPerformance(ModuleHealth):
                    PDCAPhase.ACT
             cycle.transition_to_phase(phase)
         duration = metrics.end_timer("1000_phase_transitions")
-        
+
         # Performance assertions
         transitions_per_second = 1000 / duration
         assert transitions_per_second > 2000, f"Phase transitions too slow: {transitions_per_second:.2f} transitions/sec"
-    
+
     @performance_test
     def test_pdca_validation_performance(self):
         """Test PDCA validation performance."""
         cycle = PDCACycle("test_cycle", "test_objective")
         metrics = PerformanceMetrics()
-        
+
         # Add validation criteria
         criteria = [f"criterion_{i}" for i in range(100)]
         cycle.add_validation_criteria(criteria)
-        
+
         # Test validation performance
         metrics.start_timer("1000_validations")
         for i in range(1000):
@@ -353,7 +353,7 @@ class TestPDCAPerformance(ModuleHealth):
             }
             cycle.validate_criteria(validation_results)
         duration = metrics.end_timer("1000_validations")
-        
+
         # Performance assertions
         validations_per_second = 1000 / duration
         assert validations_per_second > 500, f"Validations too slow: {validations_per_second:.2f} validations/sec"
@@ -361,26 +361,26 @@ class TestPDCAPerformance(ModuleHealth):
 
 class TestMemoryPerformance(ModuleHealth):
     """Test memory performance and usage."""
-    
+
     @slow_test
     def test_memory_usage_under_load(self):
         """Test memory usage under load."""
         metrics = PerformanceMetrics()
-        
+
         # Record initial memory
         initial_memory = metrics.record_memory_snapshot("initial")
-        
+
         # Create large number of objects
         modules = []
         registry = ModelRegistry()
         cycles = []
-        
+
         for i in range(10000):
             # Create module
             module = ReflectiveModule(f"load_module_{i}", "1.0.0")
             module.register_capability("load_capability", {"data": "x" * 1000})
             modules.append(module)
-            
+
             # Register model
             registry.register_model(
                 f"load_model_{i}",
@@ -388,90 +388,90 @@ class TestMemoryPerformance(ModuleHealth):
                 "1.0.0",
                 {"data": "x" * 2000}
             )
-            
+
             # Create cycle
             cycle = PDCACycle(f"load_cycle_{i}", f"Load objective {i}")
             cycle.add_validation_criteria([f"criterion_{j}" for j in range(10)])
             cycles.append(cycle)
-        
+
         # Record peak memory
         peak_memory = metrics.record_memory_snapshot("peak")
-        
+
         # Calculate memory increase
         memory_increase = peak_memory["rss_mb"] - initial_memory["rss_mb"]
-        
+
         # Memory usage should be reasonable
         assert memory_increase < 1000, f"Memory usage too high: {memory_increase:.2f} MB increase"
-        
+
         # Test memory cleanup
         del modules
         del registry
         del cycles
         gc.collect()
-        
+
         # Record memory after cleanup
         cleanup_memory = metrics.record_memory_snapshot("cleanup")
         memory_after_cleanup = cleanup_memory["rss_mb"] - initial_memory["rss_mb"]
-        
+
         # Memory should be mostly cleaned up
         assert memory_after_cleanup < 200, f"Memory not properly cleaned up: {memory_after_cleanup:.2f} MB remaining"
-    
+
     @slow_test
     def test_memory_leak_detection(self):
         """Test for memory leaks."""
         tracemalloc.start()
-        
+
         # Record initial memory
         initial_snapshot = tracemalloc.take_snapshot()
-        
+
         # Perform operations that might cause leaks
         for iteration in range(100):
             modules = []
             registry = ModelRegistry()
-            
+
             # Create and destroy objects
             for i in range(1000):
                 module = ReflectiveModule(f"leak_test_{iteration}_{i}", "1.0.0")
                 module.register_capability("test_capability", {"data": "x" * 100})
                 modules.append(module)
-                
+
                 registry.register_model(
                     f"leak_model_{iteration}_{i}",
                     "classification",
                     "1.0.0",
                     {"data": "x" * 100}
                 )
-            
+
             # Clean up
             del modules
             del registry
             gc.collect()
-        
+
         # Record final memory
         final_snapshot = tracemalloc.take_snapshot()
-        
+
         # Calculate memory difference
         top_stats = final_snapshot.compare_to(initial_snapshot, 'lineno')
-        
+
         # Check for significant memory leaks
         total_memory_diff = sum(stat.size_diff for stat in top_stats)
         memory_diff_mb = total_memory_diff / 1024 / 1024
-        
+
         # Memory difference should be small
         assert memory_diff_mb < 50, f"Potential memory leak detected: {memory_diff_mb:.2f} MB difference"
-        
+
         tracemalloc.stop()
 
 
 class TestConcurrencyPerformance(ModuleHealth):
     """Test concurrency and threading performance."""
-    
+
     @performance_test
     def test_threading_performance(self):
         """Test threading performance."""
         registry = ModelRegistry()
         metrics = PerformanceMetrics()
-        
+
         def register_models(start_idx, count):
             """Register models in thread."""
             for i in range(start_idx, start_idx + count):
@@ -481,48 +481,48 @@ class TestConcurrencyPerformance(ModuleHealth):
                     "1.0.0",
                     {"index": i}
                 )
-        
+
         def retrieve_models(start_idx, count):
             """Retrieve models in thread."""
             for i in range(start_idx, start_idx + count):
                 registry.get_model(f"thread_model_{i}")
-        
+
         # Test threading performance
         metrics.start_timer("threading_test")
-        
+
         with ThreadPoolExecutor(max_workers=10) as executor:
             # Submit registration tasks
             registration_futures = [
                 executor.submit(register_models, i * 100, 100)
                 for i in range(10)
             ]
-            
+
             # Wait for completion
             for future in registration_futures:
                 future.result()
-            
+
             # Submit retrieval tasks
             retrieval_futures = [
                 executor.submit(retrieve_models, i * 100, 100)
                 for i in range(10)
             ]
-            
+
             # Wait for completion
             for future in retrieval_futures:
                 future.result()
-        
+
         duration = metrics.end_timer("threading_test")
-        
+
         # Performance assertions
         operations_per_second = 2000 / duration  # 1000 registrations + 1000 retrievals
         assert operations_per_second > 500, f"Threading performance too slow: {operations_per_second:.2f} ops/sec"
-    
+
     @performance_test
     def test_asyncio_performance(self):
         """Test asyncio performance."""
         registry = ModelRegistry()
         metrics = PerformanceMetrics()
-        
+
         async def register_models_async(start_idx, count):
             """Register models asynchronously."""
             for i in range(start_idx, start_idx + count):
@@ -533,13 +533,13 @@ class TestConcurrencyPerformance(ModuleHealth):
                     {"index": i}
                 )
                 await asyncio.sleep(0)  # Yield control
-        
+
         async def retrieve_models_async(start_idx, count):
             """Retrieve models asynchronously."""
             for i in range(start_idx, start_idx + count):
                 registry.get_model(f"async_model_{i}")
                 await asyncio.sleep(0)  # Yield control
-        
+
         async def test_asyncio_performance():
             """Test asyncio performance."""
             # Register models concurrently
@@ -548,19 +548,19 @@ class TestConcurrencyPerformance(ModuleHealth):
                 for i in range(10)
             ]
             await asyncio.gather(*registration_tasks)
-            
+
             # Retrieve models concurrently
             retrieval_tasks = [
                 retrieve_models_async(i * 100, 100)
                 for i in range(10)
             ]
             await asyncio.gather(*retrieval_tasks)
-        
+
         # Run asyncio test
         metrics.start_timer("asyncio_test")
         asyncio.run(test_asyncio_performance())
         duration = metrics.end_timer("asyncio_test")
-        
+
         # Performance assertions
         operations_per_second = 2000 / duration
         assert operations_per_second > 300, f"Asyncio performance too slow: {operations_per_second:.2f} ops/sec"
@@ -568,37 +568,37 @@ class TestConcurrencyPerformance(ModuleHealth):
 
 class TestScalabilityLimits(ModuleHealth):
     """Test scalability limits and boundaries."""
-    
+
     @slow_test
     def test_maximum_module_capacity(self):
         """Test maximum module capacity."""
         modules = []
         metrics = PerformanceMetrics()
-        
+
         try:
             # Try to create maximum number of modules
             for i in range(50000):  # 50K modules
                 module = ReflectiveModule(f"max_module_{i}", "1.0.0")
                 modules.append(module)
-                
+
                 if i % 10000 == 0:
                     memory_snapshot = metrics.record_memory_snapshot(f"at_{i}_modules")
                     if memory_snapshot["rss_mb"] > 2000:  # 2GB limit
                         break
-            
+
             # Should be able to create at least 10K modules
             assert len(modules) >= 10000, f"Could only create {len(modules)} modules"
-            
+
         except MemoryError:
             # Memory error is acceptable at high limits
             assert len(modules) >= 1000, f"Memory error too early: only {len(modules)} modules"
-    
+
     @slow_test
     def test_maximum_model_capacity(self):
         """Test maximum model capacity."""
         registry = ModelRegistry()
         metrics = PerformanceMetrics()
-        
+
         try:
             # Try to register maximum number of models
             for i in range(100000):  # 100K models
@@ -608,15 +608,15 @@ class TestScalabilityLimits(ModuleHealth):
                     "1.0.0",
                     {"index": i, "data": "x" * 100}
                 )
-                
+
                 if i % 20000 == 0:
                     memory_snapshot = metrics.record_memory_snapshot(f"at_{i}_models")
                     if memory_snapshot["rss_mb"] > 2000:  # 2GB limit
                         break
-            
+
             # Should be able to register at least 20K models
             assert len(registry.models) >= 20000, f"Could only register {len(registry.models)} models"
-            
+
         except MemoryError:
             # Memory error is acceptable at high limits
             assert len(registry.models) >= 5000, f"Memory error too early: only {len(registry.models)} models"
@@ -624,7 +624,7 @@ class TestScalabilityLimits(ModuleHealth):
 
 class TestPerformanceRegression(ModuleHealth):
     """Test for performance regressions."""
-    
+
     @performance_test
     def test_benchmark_regression(self):
         """Test for performance regressions against benchmarks."""
@@ -636,10 +636,10 @@ class TestPerformanceRegression(ModuleHealth):
             "capability_registration": 1000,  # capabilities per second
             "health_updates": 5000,     # updates per second
         }
-        
+
         metrics = PerformanceMetrics()
         results = {}
-        
+
         # Test model registration
         registry = ModelRegistry()
         metrics.start_timer("benchmark_model_registration")
@@ -647,14 +647,14 @@ class TestPerformanceRegression(ModuleHealth):
             registry.register_model(f"benchmark_model_{i}", "classification", "1.0.0")
         duration = metrics.end_timer("benchmark_model_registration")
         results["model_registration"] = 1000 / duration
-        
+
         # Test model retrieval
         metrics.start_timer("benchmark_model_retrieval")
         for i in range(1000):
             registry.get_model(f"benchmark_model_{i}")
         duration = metrics.end_timer("benchmark_model_retrieval")
         results["model_retrieval"] = 1000 / duration
-        
+
         # Test module creation
         modules = []
         metrics.start_timer("benchmark_module_creation")
@@ -663,7 +663,7 @@ class TestPerformanceRegression(ModuleHealth):
             modules.append(module)
         duration = metrics.end_timer("benchmark_module_creation")
         results["module_creation"] = 1000 / duration
-        
+
         # Test capability registration
         module = ReflectiveModule("benchmark_module", "1.0.0")
         metrics.start_timer("benchmark_capability_registration")
@@ -671,14 +671,14 @@ class TestPerformanceRegression(ModuleHealth):
             module.register_capability(f"benchmark_capability_{i}", {"data": "test"})
         duration = metrics.end_timer("benchmark_capability_registration")
         results["capability_registration"] = 1000 / duration
-        
+
         # Test health updates
         metrics.start_timer("benchmark_health_updates")
         for i in range(1000):
             module.update_health_status(HealthStatus.HEALTHY)
         duration = metrics.end_timer("benchmark_health_updates")
         results["health_updates"] = 1000 / duration
-        
+
         # Check against benchmarks
         for operation, benchmark in benchmarks.items():
             actual = results[operation]
@@ -693,7 +693,7 @@ if __name__ == "__main__":
         metadata = self.get_interface_metadata()
         if hasattr(registry, 'register'):
             registry.register(metadata)
-            
+
     def get_interface_metadata(self):
         """Get interface metadata for registry."""
         return {

@@ -86,7 +86,7 @@ class TestOrchestrationController(ModuleHealth):
     def test_launch_swarm_invalid_config(self):
         """Test swarm launch with invalid configuration."""
         from pydantic import ValidationError
-        
+
         # Test that invalid config fails at creation time
         with pytest.raises(ValidationError):
             SwarmConfig(instance_count=1, min_instances=2, max_instances=1)  # min > max
@@ -133,7 +133,7 @@ class TestOrchestrationController(ModuleHealth):
     def test_monitor_swarm_active(self, controller, sample_tasks):
         """Test monitoring active swarm."""
         import time
-        
+
         # Launch swarm first
         swarm_state = controller.launch_swarm(sample_tasks)
         swarm_id = swarm_state.swarm_id
@@ -347,12 +347,12 @@ class TestOrchestrationController(ModuleHealth):
     def test_configuration_validation(self):
         """Test configuration validation."""
         from pydantic import ValidationError
-        
+
         # Test invalid instance count - should fail at SwarmConfig creation
         with pytest.raises(ValidationError):
             SwarmConfig(instance_count=0)
 
-        # Test invalid min/max instances - should fail at SwarmConfig creation  
+        # Test invalid min/max instances - should fail at SwarmConfig creation
         with pytest.raises(ValidationError):
             SwarmConfig(min_instances=5, max_instances=3)
 
@@ -426,7 +426,7 @@ class TestOrchestrationController(ModuleHealth):
         # Test monitor_swarm with invalid swarm
         with pytest.raises(ValueError):
             controller.monitor_swarm("invalid-swarm-id")
-            
+
         # Test distribute_tasks with empty list (should work but return empty plan)
         plan = controller.distribute_tasks([])
         assert plan.total_tasks == 0
@@ -535,7 +535,7 @@ from src.rm_ddd.core.health import ModuleHealth
         metadata = self.get_interface_metadata()
         if hasattr(registry, 'register'):
             registry.register(metadata)
-            
+
     def get_interface_metadata(self):
         """Get interface metadata for registry."""
         return {

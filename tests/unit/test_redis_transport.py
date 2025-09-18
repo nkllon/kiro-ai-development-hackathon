@@ -33,7 +33,7 @@ def redis_transport():
             'stats': {}
         }
         mock_daemon_class.return_value = mock_daemon
-        
+
         transport = RedisTransport('test_agent')
         transport.daemon = mock_daemon
         return transport
@@ -55,10 +55,10 @@ async def test_send_message(redis_transport):
         source="test_agent",
         payload={"text": "test message"}
     )
-    
+
     result = await redis_transport.send_message(message)
     assert result is True
-    
+
     # Verify daemon's send_message was called
     redis_transport.daemon.send_message.assert_called_once_with(message)
 
@@ -68,12 +68,12 @@ async def test_subscribe_handler(redis_transport):
     """Test subscribing message handlers"""
     handler_called = False
     received_message = None
-    
+
     def test_handler(message):
         nonlocal handler_called, received_message
         handler_called = True
         received_message = message
-    
+
     result = await redis_transport.subscribe(test_handler)
     assert result is True
     assert len(redis_transport.message_handlers) == 1
@@ -84,7 +84,7 @@ async def test_start_daemon(redis_transport):
     """Test starting the Redis daemon"""
     result = await redis_transport.start_daemon()
     assert result is True
-    
+
     # Verify daemon methods were called
     redis_transport.daemon.start_daemon.assert_called_once()
     redis_transport.daemon.announce_presence.assert_called_once()
@@ -94,7 +94,7 @@ async def test_start_daemon(redis_transport):
 async def test_stop_daemon(redis_transport):
     """Test stopping the Redis daemon"""
     await redis_transport.stop_daemon()
-    
+
     # Verify daemon stop was called
     redis_transport.daemon.stop_daemon.assert_called_once()
 
@@ -102,7 +102,7 @@ async def test_stop_daemon(redis_transport):
 def test_get_status(redis_transport):
     """Test getting transport status"""
     status = redis_transport.get_status()
-    
+
     assert status['transport_type'] == 'redis'
     assert status['agent_id'] == 'test_agent'
     assert 'daemon_running' in status
@@ -113,7 +113,7 @@ def test_get_status(redis_transport):
 def test_get_capabilities(redis_transport):
     """Test getting transport capabilities"""
     capabilities = redis_transport.get_capabilities()
-    
+
     assert capabilities['reliable_delivery'] is False  # Redis pub/sub limitation
     assert capabilities['message_persistence'] is True
     assert capabilities['shared_state'] is True
@@ -127,37 +127,37 @@ async def test_message_processing_loop(redis_transport):
     # Set up mock messages
     from src.beast_mode.messaging.daemon_client import QueuedMessage
     from datetime import datetime
-    
+
     test_message = BeastModeMessage(
         type=MessageType.SIMPLE_MESSAGE,
         source="other_agent",
         payload={"text": "incoming message"}
     )
-    
+
     queued_msg = QueuedMessage(
         message=test_message,
         received_at=datetime.now()
     )
-    
+
     redis_transport.daemon.check_mail.return_value = [queued_msg]
-    
+
     # Add handler
     handler_calls = []
-    
+
     def test_handler(message):
         handler_calls.append(message)
-    
+
     await redis_transport.subscribe(test_handler)
-    
+
     # Start processing
     await redis_transport._start_message_processing()
-    
+
     # Let it process for a short time
     await asyncio.sleep(0.2)
-    
+
     # Stop processing
     await redis_transport._stop_message_processing()
-    
+
     # Verify handler was called
     assert len(handler_calls) > 0
     assert handler_calls[0].payload["text"] == "incoming message"
@@ -169,16 +169,16 @@ def test_backward_compatibility_methods(redis_transport):
     spore_data = {"pattern": "test_pattern"}
     redis_transport.send_spore(spore_data)
     redis_transport.daemon.send_spore.assert_called_once_with(spore_data)
-    
+
     # Test presence announcement
     redis_transport.announce_presence()
     redis_transport.daemon.announce_presence.assert_called()
-    
+
     # Test unread count
     redis_transport.daemon.get_unread_count.return_value = 5
     count = redis_transport.get_unread_count()
     assert count == 5
-    
+
     # Test check mail
     redis_transport.daemon.check_mail.return_value = []
     messages = redis_transport.check_mail()
@@ -189,7 +189,7 @@ def test_transport_factory_registration():
     """Test that Redis transport is registered with factory"""
     available_transports = TransportFactory.get_available_transports()
     assert 'redis' in available_transports
-    
+
     # Test creating transport via factory
     transport = TransportFactory.create_transport('redis', agent_id='factory_test')
     assert isinstance(transport, RedisTransport)
@@ -201,13 +201,13 @@ async def test_error_handling(redis_transport):
     """Test error handling in transport methods"""
     # Test send_message error handling
     redis_transport.daemon.send_message.side_effect = Exception("Send error")
-    
+
     result = await redis_transport.send_message(BeastModeMessage(
         type=MessageType.SIMPLE_MESSAGE,
         source="test",
         payload={}
     ))
-    
+
     assert result is False  # Should return False on error, not raise
 
 
@@ -215,40 +215,40 @@ async def test_error_handling(redis_transport):
 async def test_async_handler_support(redis_transport):
     """Test support for async message handlers"""
     async_handler_called = False
-    
+
     async def async_handler(message):
         nonlocal async_handler_called
         async_handler_called = True
-    
+
     await redis_transport.subscribe(async_handler)
-    
+
     # Mock a message
     from src.beast_mode.messaging.daemon_client import QueuedMessage
     from datetime import datetime
 from src.rm_ddd.core.health import ModuleHealth
 
-    
+
     test_message = BeastModeMessage(
         type=MessageType.SIMPLE_MESSAGE,
         source="test",
         payload={}
     )
-    
+
     queued_msg = QueuedMessage(message=test_message, received_at=datetime.now())
     redis_transport.daemon.check_mail.return_value = [queued_msg]
-    
+
     # Start and stop processing quickly
     await redis_transport._start_message_processing()
     await asyncio.sleep(0.1)
     await redis_transport._stop_message_processing()
-    
+
 
     def register_module(self, registry):
         """Register module with registry."""
         metadata = self.get_interface_metadata()
         if hasattr(registry, 'register'):
             registry.register(metadata)
-            
+
     def get_interface_metadata(self):
         """Get interface metadata for registry."""
         return {

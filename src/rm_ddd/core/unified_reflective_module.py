@@ -220,3 +220,62 @@ class ReflectiveModule(ABC):
             self._initialize_prometheus_metrics()
         elif not enable:
             self._prometheus_exporter = None
+
+    def store_content(self, content_id: str, collection: str, data: Dict[str, Any]) -> bool:
+        """Store content in unified CMS (Directus integration)."""
+        try:
+            # Initialize CMS connection if needed
+            if not hasattr(self, '_cms_client'):
+                self._initialize_cms_client()
+            
+            # Store content with metadata
+            content_data = {
+                "id": content_id,
+                "collection": collection,
+                "data": data,
+                "module_id": getattr(self, "module_id", self.__class__.__name__),
+                "timestamp": datetime.now().isoformat(),
+                "version": "1.0.0"
+            }
+            
+            # For now, store in memory until Directus is fully configured
+            if not hasattr(self, '_content_store'):
+                self._content_store = {}
+            
+            self._content_store[content_id] = content_data
+            self._logger.info(f"Stored content {content_id} in collection {collection}")
+            return True
+            
+        except Exception as e:
+            self._logger.error(f"Failed to store content {content_id}: {e}")
+            return False
+
+    def get_content(self, content_id: str) -> Optional[Dict[str, Any]]:
+        """Retrieve content from unified CMS."""
+        try:
+            # Initialize CMS connection if needed
+            if not hasattr(self, '_cms_client'):
+                self._initialize_cms_client()
+            
+            # For now, retrieve from memory store
+            if hasattr(self, '_content_store') and content_id in self._content_store:
+                return self._content_store[content_id]
+            
+            self._logger.warning(f"Content {content_id} not found")
+            return None
+            
+        except Exception as e:
+            self._logger.error(f"Failed to retrieve content {content_id}: {e}")
+            return None
+
+    def _initialize_cms_client(self):
+        """Initialize CMS client connection."""
+        try:
+            # TODO: Initialize actual Directus client when available
+            # For now, use in-memory storage
+            self._cms_client = "memory_store"
+            self._logger.info("CMS client initialized (memory mode)")
+            
+        except Exception as e:
+            self._logger.error(f"Failed to initialize CMS client: {e}")
+            self._cms_client = None
