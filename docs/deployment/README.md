@@ -2,7 +2,7 @@
 
 **11 documents** in this category
 
-### [Nginx Docker Implementation](deployment/local/nginx/README.md)
+### [Nginx Docker Implementation](../readme/project/README.md)
 *This directory contains the nginx Docker configuration for the Kiro AI Development Hackathon project.*
 
 **Audience:** Developers, Architects, Product Managers, AI Engineers, End Users • **Status:** Stable • **Has Examples** • **Has Code**
@@ -23,14 +23,14 @@
 
 ---
 
-### [Research CMA System - GCP Cloud Run Deployment](deployment/gcp/README.md)
+### [Research CMA System - GCP Cloud Run Deployment](../readme/project/README.md)
 **
 
 **Audience:** Developers, Architects, Product Managers, DevOps Engineers, AI Engineers, End Users • **Status:** Stable • **Has Examples** • **Has Code**
 
 ---
 
-### [UML Documentation System Deployed](UML_DOCUMENTATION_SYSTEM_DEPLOYED.md)
+### [UML Documentation System Deployed](docs/beast_mode/execution/docs/beast_mode/execution/UML_DOCUMENTATION_SYSTEM_DEPLOYED.md)
 **
 
 **Audience:** Developers, Architects, AI Engineers, End Users • **Has Examples** • **Has Code**
@@ -51,28 +51,28 @@
 
 ---
 
-### [🚀 Systematic PDCA Orchestrator - Deployment Ready](DEPLOYMENT_READY.md)
+### [🚀 Systematic PDCA Orchestrator - Deployment Ready](docs/beast_mode/execution/docs/beast_mode/execution/DEPLOYMENT_READY.md)
 **
 
 **Audience:** Developers, Architects, Product Managers, DevOps Engineers, AI Engineers, End Users • **Status:** Stable • **Has Examples** • **Has Code**
 
 ---
 
-### [🚨 PERMANENT CLI FIX DEPLOYED](PERMANENT_CLI_FIX_DEPLOYED.md)
+### [🚨 PERMANENT CLI FIX DEPLOYED](docs/other/misc/docs/other/misc/PERMANENT_CLI_FIX_DEPLOYED.md)
 **
 
 **Audience:** Developers, Architects, AI Engineers • **Has Examples** • **Has Code**
 
 ---
 
-### [🚨 SHELL COMMAND FIX DEPLOYED - PERMANENT SOLUTION](SHELL_COMMAND_FIX_DEPLOYED.md)
+### [🚨 SHELL COMMAND FIX DEPLOYED - PERMANENT SOLUTION](docs/other/misc/docs/other/misc/SHELL_COMMAND_FIX_DEPLOYED.md)
 **
 
 **Audience:** Architects, AI Engineers • **Has Examples** • **Has Code**
 
 ---
 
-### [🚨 SHELL KILLER DEPLOYED](SHELL_KILLER_DEPLOYED.md)
+### [🚨 SHELL KILLER DEPLOYED](docs/other/misc/docs/other/misc/SHELL_KILLER_DEPLOYED.md)
 **
 
 **Audience:** Architects, AI Engineers • **Has Examples** • **Has Code**

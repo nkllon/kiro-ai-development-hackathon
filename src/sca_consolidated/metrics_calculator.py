@@ -77,3 +77,5 @@ class MetricsCalculatorModule:
             if recent_utilization
             else 0.0
         )
+
+

@@ -78,3 +78,5 @@ class IndirectVerificationAnalyzer:
             scores["modular_score"] += 0.1
         
         return scores
+
+

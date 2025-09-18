@@ -471,3 +471,5 @@ def get_persistent_registry_stats() -> Dict[str, Any]:
 def get_module_with_most_dependents() -> Tuple[str, int]:
     """Get the module with the most dependents from persistent registry."""
     return persistent_dag_registry.get_module_with_most_dependents()
+
+

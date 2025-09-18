@@ -2,10 +2,10 @@
 
 ## Most Recently Updated Documents
 
-- [RM-DDD SDK: Systematic Domain-Driven Development](README.md) - *Updated 2025-09-15*
+- [RM-DDD SDK: Systematic Domain-Driven Development](docs/readme/project/docs/readme/project/README.md) - *Updated 2025-09-15*
   [![PyPI version](https://badge.fury.io/py/rm-ddd.svg)](https://badge.fury.io/py/rm-ddd) [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/) [![Licens...
 
-- [Multi-Dimensional Vocabulary Projections](docs/vocabulary_projections/README.md) - *Updated 2025-09-15*
+- [Multi-Dimensional Vocabulary Projections](../readme/project/README.md) - *Updated 2025-09-15*
   **Generated:** 2025-01-27 **Purpose:** Multiple perspectives on ubiquitous language vocabulary This directory contains the ubiquitous language vocabulary projected across multiple dimensions to provid...
 
 - [Vocabulary by Domain Boundary](docs/vocabulary_projections/vocabulary_by_domain_boundary.md) - *Updated 2025-09-15*
@@ -35,7 +35,7 @@
 - [Ubiquitous Language Vocabulary](docs/ubiquitous_language_vocabulary.md) - *Updated 2025-09-15*
   **Generated:** 2025-01-27 **Purpose:** Systematic vocabulary for domain-driven development This document establishes the foundational vocabulary and conceptual framework for the Beast Mode Framework, ...
 
-- [Domain Architecture Overview](diagrams/domains/README.md) - *Updated 2025-09-15*
+- [Domain Architecture Overview](../readme/project/README.md) - *Updated 2025-09-15*
   This directory contains organized UML diagrams for all major domains in the system.
 
 - [Migration Domain Architecture](diagrams/domains/migration_domain_diagrams.md) - *Updated 2025-09-15*

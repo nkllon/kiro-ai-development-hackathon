@@ -335,3 +335,5 @@ def get_importers_of(module_path: str) -> List[str]:
 def get_import_registry_stats() -> Dict[str, Any]:
     """Get import registry statistics."""
     return import_registry.get_registry_stats()
+
+

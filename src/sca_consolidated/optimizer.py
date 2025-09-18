@@ -77,3 +77,5 @@ class OptimizationModule:
                     )
 
         return recommendations
+
+

@@ -237,3 +237,5 @@ class DomainService(ABC):
 
     def __repr__(self) -> str:
         return f"DomainService(service_id='{self.service_id}', name='{self.service_name}')"
+
+

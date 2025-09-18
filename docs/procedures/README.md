@@ -2,7 +2,7 @@
 
 **5 documents** in this category
 
-### [Task 9: Ongoing Governance and Maintenance Procedures - Implementation Summary](task_9_governance_maintenance_procedures_summary.md)
+### [Task 9: Ongoing Governance and Maintenance Procedures - Implementation Summary](docs/task/completed/docs/task/completed/task_9_governance_maintenance_procedures_summary.md)
 **
 
 **Audience:** Developers, Architects, Product Managers, DevOps Engineers, AI Engineers, End Users • **Status:** Stable • **Has Examples** • **Has Code** • **Length:** 1310 words

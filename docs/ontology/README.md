@@ -2,14 +2,14 @@
 
 **10 documents** in this category
 
-### [Beastmaster Ontology v0.2](spores/beastmaster-ontology-v0.2/README.md)
+### [Beastmaster Ontology v0.2](../readme/project../readme/project/README.md)
 ***What changed from v0.1 → v0.2 (based on feedback):** - Added **Process/Workflow/Step** modeling. - Added **QualityGate/Validation** concepts.*
 
 **Audience:** AI Engineers
 
 ---
 
-### [Beastmaster Ontology v0.3 - RM-DDD Enhanced](spores/beastmaster-ontology-v0.3/README.md)
+### [Beastmaster Ontology v0.3 - RM-DDD Enhanced](../readme/project../readme/project/README.md)
 ***What changed from v0.2 → v0.3 (RM-DDD Integration):***
 
 **Audience:** Developers, Architects, DevOps Engineers, AI Engineers • **Has Examples**
@@ -37,21 +37,21 @@
 
 ---
 
-### [🎯 BEASTMASTER NETWORK ANNOUNCEMENT](BEASTMASTER_NETWORK_ANNOUNCEMENT.md)
+### [🎯 BEASTMASTER NETWORK ANNOUNCEMENT](docs/beast_mode/execution/docs/beast_mode/execution/BEASTMASTER_NETWORK_ANNOUNCEMENT.md)
 **
 
 **Audience:** Developers, Architects, Product Managers, DevOps Engineers, AI Engineers, End Users • **Status:** Stable
 
 ---
 
-### [🐉 Beastmaster Ontology v0.8 — Foundation & Complete Framework](docs/beastmaster-ontology/README.md)
+### [🐉 Beastmaster Ontology v0.8 — Foundation & Complete Framework](../readme/project/README.md)
 **
 
 **Audience:** Developers, Architects, Product Managers, AI Engineers, End Users • **Status:** Draft • **Has Examples** • **Has Code** • **Length:** 1839 words
 
 ---
 
-### [🐉 Beastmaster Ontology v0.8 — Foundation & Complete Framework](.beast_mode/beast_mode_backup_20250913_175742/docs/beastmaster-ontology/README.md)
+### [🐉 Beastmaster Ontology v0.8 — Foundation & Complete Framework](../readme/project/README.md)
 **
 
 **Audience:** Developers, Architects, Product Managers, AI Engineers, End Users • **Status:** Draft • **Has Examples** • **Has Code** • **Length:** 1839 words

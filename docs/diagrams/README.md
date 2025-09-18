@@ -44,7 +44,7 @@
 
 ---
 
-### [Domain Architecture Overview](diagrams/domains/README.md)
+### [Domain Architecture Overview](../readme/project/README.md)
 *This directory contains organized UML diagrams for all major domains in the system.*
 
 **Audience:** Architects, Product Managers, DevOps Engineers, AI Engineers, End Users
@@ -121,7 +121,7 @@
 
 ---
 
-### [Persistent DAG Registry - Entity Relationship Diagram](persistent_dag_registry_er_diagram.md)
+### [Persistent DAG Registry - Entity Relationship Diagram](docs/other/misc/docs/other/misc/persistent_dag_registry_er_diagram.md)
 **
 
 **Audience:** DevOps Engineers, AI Engineers • **Has Examples**

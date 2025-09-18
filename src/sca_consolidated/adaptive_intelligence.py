@@ -79,3 +79,5 @@ class AdaptiveIntelligenceModule:
                     return True
 
         return False
+
+

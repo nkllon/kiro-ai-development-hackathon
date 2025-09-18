@@ -45,3 +45,5 @@ safe_shell = SafeShellWrapper()
 def safe_run(command: str) -> tuple[bool, str, str]:
     """Safe run command - no dquote issues"""
     return safe_shell.safe_execute(command)
+
+

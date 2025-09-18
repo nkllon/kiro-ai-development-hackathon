@@ -256,3 +256,5 @@ class StepDetector:
         except Exception as e:
             print(f"⚠️ Navigation wait failed: {e}")
             return False
+
+

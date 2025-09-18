@@ -135,7 +135,7 @@ This framework is genuinely novel:
 
 ## 🎖️ Bottom Line
 
-**README.md** = complete one-shot story for humans & general LLMs
+**docs/readme/project/README.md** = complete one-shot story for humans & general LLMs
 **Modules** = focused slices for specialized agents
 **Org adoption** = executives read adoption-strategy.md, developers dive into tooling/
 

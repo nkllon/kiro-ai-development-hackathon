@@ -1,0 +1,628 @@
+@prefix : <http://kiro.dev/documentation-system#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix schema: <http://schema.org/> .
+
+# Documentation System Ontology
+# Version: 2.0.0
+# Date: 2025-09-16
+# Description: Comprehensive ontology for multi-dimensional documentation system
+
+# =============================================================================
+# CORE CLASSES
+# =============================================================================
+
+# Document Classes
+:Document rdf:type owl:Class ;
+    rdfs:label "Document" ;
+    rdfs:comment "A document in the documentation system" ;
+    rdfs:subClassOf schema:CreativeWork .
+
+:MarkdownDocument rdf:type owl:Class ;
+    rdfs:label "Markdown Document" ;
+    rdfs:comment "A document in Markdown format" ;
+    rdfs:subClassOf :Document .
+
+:TaskDocument rdf:type owl:Class ;
+    rdfs:label "Task Document" ;
+    rdfs:comment "A document describing a task or task-related information" ;
+    rdfs:subClassOf :Document .
+
+:SummaryDocument rdf:type owl:Class ;
+    rdfs:label "Summary Document" ;
+    rdfs:comment "A document that summarizes other documents or processes" ;
+    rdfs:subClassOf :Document .
+
+:SpecificationDocument rdf:type owl:Class ;
+    rdfs:label "Specification Document" ;
+    rdfs:comment "A document that specifies requirements, design, or architecture" ;
+    rdfs:subClassOf :Document .
+
+:ReadmeDocument rdf:type owl:Class ;
+    rdfs:label "README Document" ;
+    rdfs:comment "A README document providing overview and instructions" ;
+    rdfs:subClassOf :Document .
+
+# Dimension Classes
+:Dimension rdf:type owl:Class ;
+    rdfs:label "Dimension" ;
+    rdfs:comment "A dimensional hierarchy in the documentation system" .
+
+:TechnicalDimension rdf:type owl:Class ;
+    rdfs:label "Technical Dimension" ;
+    rdfs:comment "A technical aspect dimension" ;
+    rdfs:subClassOf :Dimension .
+
+:OperationalDimension rdf:type owl:Class ;
+    rdfs:label "Operational Dimension" ;
+    rdfs:comment "An operational aspect dimension" ;
+    rdfs:subClassOf :Dimension .
+
+:ContentDimension rdf:type owl:Class ;
+    rdfs:label "Content Dimension" ;
+    rdfs:comment "A content aspect dimension" ;
+    rdfs:subClassOf :Dimension .
+
+# Specific Technical Dimensions
+:TemporalDimension rdf:type owl:Class ;
+    rdfs:label "Temporal Dimension" ;
+    rdfs:comment "Time-based dimension for project phases and stages" ;
+    rdfs:subClassOf :TechnicalDimension .
+
+:SpatialDimension rdf:type owl:Class ;
+    rdfs:label "Spatial Dimension" ;
+    rdfs:comment "Location-based dimension for repository structure" ;
+    rdfs:subClassOf :TechnicalDimension .
+
+:SemanticDimension rdf:type owl:Class ;
+    rdfs:label "Semantic Dimension" ;
+    rdfs:comment "Meaning-based dimension for domain concepts" ;
+    rdfs:subClassOf :TechnicalDimension .
+
+:StructuralDimension rdf:type owl:Class ;
+    rdfs:label "Structural Dimension" ;
+    rdfs:comment "Code structure-based dimension" ;
+    rdfs:subClassOf :TechnicalDimension .
+
+:QualityDimension rdf:type owl:Class ;
+    rdfs:label "Quality Dimension" ;
+    rdfs:comment "Quality metrics-based dimension" ;
+    rdfs:subClassOf :TechnicalDimension .
+
+# Specific Operational Dimensions
+:StakeholderDimension rdf:type owl:Class ;
+    rdfs:label "Stakeholder Dimension" ;
+    rdfs:comment "Stakeholder-based dimension" ;
+    rdfs:subClassOf :OperationalDimension .
+
+:ProcessDimension rdf:type owl:Class ;
+    rdfs:label "Process Dimension" ;
+    rdfs:comment "Process-based dimension" ;
+    rdfs:subClassOf :OperationalDimension .
+
+:LifecycleDimension rdf:type owl:Class ;
+    rdfs:label "Lifecycle Dimension" ;
+    rdfs:comment "Lifecycle-based dimension" ;
+    rdfs:subClassOf :OperationalDimension .
+
+# Specific Content Dimensions
+:DocumentTypeDimension rdf:type owl:Class ;
+    rdfs:label "Document Type Dimension" ;
+    rdfs:comment "Document type-based dimension" ;
+    rdfs:subClassOf :ContentDimension .
+
+:ComplexityDimension rdf:type owl:Class ;
+    rdfs:label "Complexity Dimension" ;
+    rdfs:comment "Complexity-based dimension" ;
+    rdfs:subClassOf :ContentDimension .
+
+# Hierarchy and Organization Classes
+:Hierarchy rdf:type owl:Class ;
+    rdfs:label "Hierarchy" ;
+    rdfs:comment "A hierarchical organization structure" .
+
+:HierarchyLevel rdf:type owl:Class ;
+    rdfs:label "Hierarchy Level" ;
+    rdfs:comment "A level within a hierarchical structure" ;
+    rdfs:subClassOf :Hierarchy .
+
+:Index rdf:type owl:Class ;
+    rdfs:label "Index" ;
+    rdfs:comment "An index for efficient document retrieval" .
+
+:NavigationPath rdf:type owl:Class ;
+    rdfs:label "Navigation Path" ;
+    rdfs:comment "A path for navigating through documents" .
+
+# Agent and Execution Classes
+:Agent rdf:type owl:Class ;
+    rdfs:label "Agent" ;
+    rdfs:comment "An autonomous agent in the system" .
+
+:DocumentDiscoveryAgent rdf:type owl:Class ;
+    rdfs:label "Document Discovery Agent" ;
+    rdfs:comment "Agent responsible for discovering and cataloging documents" ;
+    rdfs:subClassOf :Agent .
+
+:DimensionalAnalysisAgent rdf:type owl:Class ;
+    rdfs:label "Dimensional Analysis Agent" ;
+    rdfs:comment "Agent responsible for analyzing dimensional hierarchies" ;
+    rdfs:subClassOf :Agent .
+
+:ContentAnalysisAgent rdf:type owl:Class ;
+    rdfs:label "Content Analysis Agent" ;
+    rdfs:comment "Agent responsible for analyzing document content" ;
+    rdfs:subClassOf :Agent .
+
+:NavigationGeneratorAgent rdf:type owl:Class ;
+    rdfs:label "Navigation Generator Agent" ;
+    rdfs:comment "Agent responsible for generating navigation structures" ;
+    rdfs:subClassOf :Agent .
+
+:IndexBuilderAgent rdf:type owl:Class ;
+    rdfs:label "Index Builder Agent" ;
+    rdfs:comment "Agent responsible for building indexes" ;
+    rdfs:subClassOf :Agent .
+
+:QualityMonitorAgent rdf:type owl:Class ;
+    rdfs:label "Quality Monitor Agent" ;
+    rdfs:comment "Agent responsible for monitoring document quality" ;
+    rdfs:subClassOf :Agent .
+
+# Activity and Process Classes
+:Activity rdf:type owl:Class ;
+    rdfs:label "Activity" ;
+    rdfs:comment "An activity or process in the system" ;
+    rdfs:subClassOf prov:Activity .
+
+:MigrationActivity rdf:type owl:Class ;
+    rdfs:label "Migration Activity" ;
+    rdfs:comment "An activity for migrating from one state to another" ;
+    rdfs:subClassOf :Activity .
+
+:ExecutionActivity rdf:type owl:Class ;
+    rdfs:label "Execution Activity" ;
+    rdfs:comment "An activity for executing system operations" ;
+    rdfs:subClassOf :Activity .
+
+:Phase rdf:type owl:Class ;
+    rdfs:label "Phase" ;
+    rdfs:comment "A phase within an activity" ;
+    rdfs:subClassOf :Activity .
+
+# Quality and Metrics Classes
+:QualityMetric rdf:type owl:Class ;
+    rdfs:label "Quality Metric" ;
+    rdfs:comment "A metric for measuring quality" .
+
+:PerformanceMetric rdf:type owl:Class ;
+    rdfs:label "Performance Metric" ;
+    rdfs:comment "A metric for measuring performance" .
+
+:ValidationResult rdf:type owl:Class ;
+    rdfs:label "Validation Result" ;
+    rdfs:comment "The result of a validation process" .
+
+# =============================================================================
+# PROPERTIES
+# =============================================================================
+
+# Document Properties
+:hasContent rdf:type owl:ObjectProperty ;
+    rdfs:label "has content" ;
+    rdfs:comment "Relates a document to its content" ;
+    rdfs:domain :Document ;
+    rdfs:range schema:Text .
+
+:hasFormat rdf:type owl:ObjectProperty ;
+    rdfs:label "has format" ;
+    rdfs:comment "Relates a document to its format" ;
+    rdfs:domain :Document ;
+    rdfs:range xsd:string .
+
+:hasSize rdf:type owl:DatatypeProperty ;
+    rdfs:label "has size" ;
+    rdfs:comment "Relates a document to its size in bytes" ;
+    rdfs:domain :Document ;
+    rdfs:range xsd:integer .
+
+:hasCreationDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "has creation date" ;
+    rdfs:comment "Relates a document to its creation date" ;
+    rdfs:domain :Document ;
+    rdfs:range xsd:dateTime .
+
+:hasModificationDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "has modification date" ;
+    rdfs:comment "Relates a document to its last modification date" ;
+    rdfs:domain :Document ;
+    rdfs:range xsd:dateTime .
+
+:hasPath rdf:type owl:DatatypeProperty ;
+    rdfs:label "has path" ;
+    rdfs:comment "Relates a document to its file path" ;
+    rdfs:domain :Document ;
+    rdfs:range xsd:string .
+
+# Dimension Properties
+:belongsToDimension rdf:type owl:ObjectProperty ;
+    rdfs:label "belongs to dimension" ;
+    rdfs:comment "Relates a document to a dimension" ;
+    rdfs:domain :Document ;
+    rdfs:range :Dimension .
+
+:hasHierarchy rdf:type owl:ObjectProperty ;
+    rdfs:label "has hierarchy" ;
+    rdfs:comment "Relates a dimension to its hierarchy" ;
+    rdfs:domain :Dimension ;
+    rdfs:range :Hierarchy .
+
+:hasLevel rdf:type owl:ObjectProperty ;
+    rdfs:label "has level" ;
+    rdfs:comment "Relates a hierarchy to its levels" ;
+    rdfs:domain :Hierarchy ;
+    rdfs:range :HierarchyLevel .
+
+:hasParentLevel rdf:type owl:ObjectProperty ;
+    rdfs:label "has parent level" ;
+    rdfs:comment "Relates a hierarchy level to its parent" ;
+    rdfs:domain :HierarchyLevel ;
+    rdfs:range :HierarchyLevel .
+
+:hasChildLevel rdf:type owl:ObjectProperty ;
+    rdfs:label "has child level" ;
+    rdfs:comment "Relates a hierarchy level to its children" ;
+    rdfs:domain :HierarchyLevel ;
+    rdfs:range :HierarchyLevel .
+
+# Relationship Properties
+:relatesTo rdf:type owl:ObjectProperty ;
+    rdfs:label "relates to" ;
+    rdfs:comment "Relates one document to another" ;
+    rdfs:domain :Document ;
+    rdfs:range :Document .
+
+:dependsOn rdf:type owl:ObjectProperty ;
+    rdfs:label "depends on" ;
+    rdfs:comment "Relates a document to documents it depends on" ;
+    rdfs:domain :Document ;
+    rdfs:range :Document .
+
+:references rdf:type owl:ObjectProperty ;
+    rdfs:label "references" ;
+    rdfs:comment "Relates a document to documents it references" ;
+    rdfs:domain :Document ;
+    rdfs:range :Document .
+
+:implements rdf:type owl:ObjectProperty ;
+    rdfs:label "implements" ;
+    rdfs:comment "Relates a document to what it implements" ;
+    rdfs:domain :Document ;
+    rdfs:range :Document .
+
+:precedes rdf:type owl:ObjectProperty ;
+    rdfs:label "precedes" ;
+    rdfs:comment "Relates a document to documents it precedes" ;
+    rdfs:domain :Document ;
+    rdfs:range :Document .
+
+:follows rdf:type owl:ObjectProperty ;
+    rdfs:label "follows" ;
+    rdfs:comment "Relates a document to documents it follows" ;
+    rdfs:domain :Document ;
+    rdfs:range :Document .
+
+:contains rdf:type owl:ObjectProperty ;
+    rdfs:label "contains" ;
+    rdfs:comment "Relates a document to documents it contains" ;
+    rdfs:domain :Document ;
+    rdfs:range :Document .
+
+:containedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "contained by" ;
+    rdfs:comment "Relates a document to documents that contain it" ;
+    rdfs:domain :Document ;
+    rdfs:range :Document .
+
+# Index and Navigation Properties
+:hasIndex rdf:type owl:ObjectProperty ;
+    rdfs:label "has index" ;
+    rdfs:comment "Relates a dimension to its indexes" ;
+    rdfs:domain :Dimension ;
+    rdfs:range :Index .
+
+:indexesDocument rdf:type owl:ObjectProperty ;
+    rdfs:label "indexes document" ;
+    rdfs:comment "Relates an index to documents it indexes" ;
+    rdfs:domain :Index ;
+    rdfs:range :Document .
+
+:hasNavigationPath rdf:type owl:ObjectProperty ;
+    rdfs:label "has navigation path" ;
+    rdfs:comment "Relates a dimension to its navigation paths" ;
+    rdfs:domain :Dimension ;
+    rdfs:range :NavigationPath .
+
+:connectsTo rdf:type owl:ObjectProperty ;
+    rdfs:label "connects to" ;
+    rdfs:comment "Relates a navigation path to documents it connects" ;
+    rdfs:domain :NavigationPath ;
+    rdfs:range :Document .
+
+# Agent Properties
+:executesActivity rdf:type owl:ObjectProperty ;
+    rdfs:label "executes activity" ;
+    rdfs:comment "Relates an agent to activities it executes" ;
+    rdfs:domain :Agent ;
+    rdfs:range :Activity .
+
+:hasExecutionStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "has execution status" ;
+    rdfs:comment "Relates an agent to its execution status" ;
+    rdfs:domain :Agent ;
+    rdfs:range xsd:string .
+
+:hasExecutionTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "has execution time" ;
+    rdfs:comment "Relates an agent to its execution time in seconds" ;
+    rdfs:domain :Agent ;
+    rdfs:range xsd:float .
+
+:hasSuccessRate rdf:type owl:DatatypeProperty ;
+    rdfs:label "has success rate" ;
+    rdfs:comment "Relates an agent to its success rate" ;
+    rdfs:domain :Agent ;
+    rdfs:range xsd:float .
+
+# Activity Properties
+:hasPhase rdf:type owl:ObjectProperty ;
+    rdfs:label "has phase" ;
+    rdfs:comment "Relates an activity to its phases" ;
+    rdfs:domain :Activity ;
+    rdfs:range :Phase .
+
+:hasDependency rdf:type owl:ObjectProperty ;
+    rdfs:label "has dependency" ;
+    rdfs:comment "Relates an activity to activities it depends on" ;
+    rdfs:domain :Activity ;
+    rdfs:range :Activity .
+
+:hasValidationCriteria rdf:type owl:ObjectProperty ;
+    rdfs:label "has validation criteria" ;
+    rdfs:comment "Relates an activity to its validation criteria" ;
+    rdfs:domain :Activity ;
+    rdfs:range :ValidationResult .
+
+:hasOutput rdf:type owl:ObjectProperty ;
+    rdfs:label "has output" ;
+    rdfs:comment "Relates an activity to its outputs" ;
+    rdfs:domain :Activity ;
+    rdfs:range xsd:string .
+
+# Quality and Metrics Properties
+:hasQualityMetric rdf:type owl:ObjectProperty ;
+    rdfs:label "has quality metric" ;
+    rdfs:comment "Relates a document to its quality metrics" ;
+    rdfs:domain :Document ;
+    rdfs:range :QualityMetric .
+
+:hasPerformanceMetric rdf:type owl:ObjectProperty ;
+    rdfs:label "has performance metric" ;
+    rdfs:comment "Relates an activity to its performance metrics" ;
+    rdfs:domain :Activity ;
+    rdfs:range :PerformanceMetric .
+
+:hasMetricValue rdf:type owl:DatatypeProperty ;
+    rdfs:label "has metric value" ;
+    rdfs:comment "Relates a metric to its value" ;
+    rdfs:domain :QualityMetric, :PerformanceMetric ;
+    rdfs:range xsd:float .
+
+:hasMetricType rdf:type owl:DatatypeProperty ;
+    rdfs:label "has metric type" ;
+    rdfs:comment "Relates a metric to its type" ;
+    rdfs:domain :QualityMetric, :PerformanceMetric ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# INDIVIDUALS (INSTANCES)
+# =============================================================================
+
+# Specific Dimensions
+:temporalDimension rdf:type :TemporalDimension ;
+    rdfs:label "Temporal Dimension" ;
+    rdfs:comment "Time-based dimension for project phases and stages" .
+
+:spatialDimension rdf:type :SpatialDimension ;
+    rdfs:label "Spatial Dimension" ;
+    rdfs:comment "Location-based dimension for repository structure" .
+
+:semanticDimension rdf:type :SemanticDimension ;
+    rdfs:label "Semantic Dimension" ;
+    rdfs:comment "Meaning-based dimension for domain concepts" .
+
+:structuralDimension rdf:type :StructuralDimension ;
+    rdfs:label "Structural Dimension" ;
+    rdfs:comment "Code structure-based dimension" .
+
+:qualityDimension rdf:type :QualityDimension ;
+    rdfs:label "Quality Dimension" ;
+    rdfs:comment "Quality metrics-based dimension" .
+
+:stakeholderDimension rdf:type :StakeholderDimension ;
+    rdfs:label "Stakeholder Dimension" ;
+    rdfs:comment "Stakeholder-based dimension" .
+
+:processDimension rdf:type :ProcessDimension ;
+    rdfs:label "Process Dimension" ;
+    rdfs:comment "Process-based dimension" .
+
+:lifecycleDimension rdf:type :LifecycleDimension ;
+    rdfs:label "Lifecycle Dimension" ;
+    rdfs:comment "Lifecycle-based dimension" .
+
+:documentTypeDimension rdf:type :DocumentTypeDimension ;
+    rdfs:label "Document Type Dimension" ;
+    rdfs:comment "Document type-based dimension" .
+
+:complexityDimension rdf:type :ComplexityDimension ;
+    rdfs:label "Complexity Dimension" ;
+    rdfs:comment "Complexity-based dimension" .
+
+# Specific Agents
+:documentDiscoveryAgent rdf:type :DocumentDiscoveryAgent ;
+    rdfs:label "Document Discovery Agent" ;
+    rdfs:comment "Agent responsible for discovering and cataloging documents" ;
+    :hasExecutionStatus "ready" ;
+    :hasSuccessRate 1.0 .
+
+:dimensionalAnalysisAgent rdf:type :DimensionalAnalysisAgent ;
+    rdfs:label "Dimensional Analysis Agent" ;
+    rdfs:comment "Agent responsible for analyzing dimensional hierarchies" ;
+    :hasExecutionStatus "ready" ;
+    :hasSuccessRate 1.0 .
+
+:contentAnalysisAgent rdf:type :ContentAnalysisAgent ;
+    rdfs:label "Content Analysis Agent" ;
+    rdfs:comment "Agent responsible for analyzing document content" ;
+    :hasExecutionStatus "ready" ;
+    :hasSuccessRate 1.0 .
+
+:navigationGeneratorAgent rdf:type :NavigationGeneratorAgent ;
+    rdfs:label "Navigation Generator Agent" ;
+    rdfs:comment "Agent responsible for generating navigation structures" ;
+    :hasExecutionStatus "ready" ;
+    :hasSuccessRate 1.0 .
+
+:indexBuilderAgent rdf:type :IndexBuilderAgent ;
+    rdfs:label "Index Builder Agent" ;
+    rdfs:comment "Agent responsible for building indexes" ;
+    :hasExecutionStatus "ready" ;
+    :hasSuccessRate 1.0 .
+
+:qualityMonitorAgent rdf:type :QualityMonitorAgent ;
+    rdfs:label "Quality Monitor Agent" ;
+    rdfs:comment "Agent responsible for monitoring document quality" ;
+    :hasExecutionStatus "ready" ;
+    :hasSuccessRate 1.0 .
+
+# Quality Metrics
+:completenessMetric rdf:type :QualityMetric ;
+    rdfs:label "Completeness Metric" ;
+    rdfs:comment "Metric for measuring document completeness" ;
+    :hasMetricType "completeness" .
+
+:accuracyMetric rdf:type :QualityMetric ;
+    rdfs:label "Accuracy Metric" ;
+    rdfs:comment "Metric for measuring document accuracy" ;
+    :hasMetricType "accuracy" .
+
+:consistencyMetric rdf:type :QualityMetric ;
+    rdfs:label "Consistency Metric" ;
+    rdfs:comment "Metric for measuring document consistency" ;
+    :hasMetricType "consistency" .
+
+:freshnessMetric rdf:type :QualityMetric ;
+    rdfs:label "Freshness Metric" ;
+    rdfs:comment "Metric for measuring document freshness" ;
+    :hasMetricType "freshness" .
+
+# Performance Metrics
+:executionTimeMetric rdf:type :PerformanceMetric ;
+    rdfs:label "Execution Time Metric" ;
+    rdfs:comment "Metric for measuring execution time" ;
+    :hasMetricType "execution_time" .
+
+:throughputMetric rdf:type :PerformanceMetric ;
+    rdfs:label "Throughput Metric" ;
+    rdfs:comment "Metric for measuring throughput" ;
+    :hasMetricType "throughput" .
+
+:responseTimeMetric rdf:type :PerformanceMetric ;
+    rdfs:label "Response Time Metric" ;
+    rdfs:comment "Metric for measuring response time" ;
+    :hasMetricType "response_time" .
+
+# =============================================================================
+# PROPERTY CHAINS AND INVERSE PROPERTIES
+# =============================================================================
+
+# Inverse Properties
+:isContainedBy owl:inverseOf :contains .
+:isReferencedBy owl:inverseOf :references .
+:isDependentOn owl:inverseOf :dependsOn .
+:isImplementedBy owl:inverseOf :implements .
+:isPrecededBy owl:inverseOf :precedes .
+:isFollowedBy owl:inverseOf :follows .
+
+# Property Chains
+:hasAncestor owl:propertyChainAxiom ( :hasParentLevel :hasParentLevel* ) .
+:hasDescendant owl:propertyChainAxiom ( :hasChildLevel :hasChildLevel* ) .
+
+# =============================================================================
+# RULES AND CONSTRAINTS
+# =============================================================================
+
+# Functional Properties
+:hasSize rdf:type owl:FunctionalProperty .
+:hasCreationDate rdf:type owl:FunctionalProperty .
+:hasModificationDate rdf:type owl:FunctionalProperty .
+:hasPath rdf:type owl:FunctionalProperty .
+:hasExecutionStatus rdf:type owl:FunctionalProperty .
+:hasExecutionTime rdf:type owl:FunctionalProperty .
+:hasSuccessRate rdf:type owl:FunctionalProperty .
+:hasMetricValue rdf:type owl:FunctionalProperty .
+:hasMetricType rdf:type owl:FunctionalProperty .
+
+# Disjoint Classes
+:MarkdownDocument owl:disjointWith :TaskDocument .
+:TaskDocument owl:disjointWith :SummaryDocument .
+:SummaryDocument owl:disjointWith :SpecificationDocument .
+:SpecificationDocument owl:disjointWith :ReadmeDocument .
+
+:TechnicalDimension owl:disjointWith :OperationalDimension .
+:OperationalDimension owl:disjointWith :ContentDimension .
+:ContentDimension owl:disjointWith :TechnicalDimension .
+
+# =============================================================================
+# ANNOTATIONS
+# =============================================================================
+
+:Document rdfs:comment "A document in the documentation system"@en ;
+    skos:definition "A document in the documentation system"@en ;
+    skos:example "A markdown file containing project documentation"@en .
+
+:Dimension rdfs:comment "A dimensional hierarchy in the documentation system"@en ;
+    skos:definition "A dimensional hierarchy in the documentation system"@en ;
+    skos:example "Temporal dimension organizing documents by time"@en .
+
+:Agent rdfs:comment "An autonomous agent in the system"@en ;
+    skos:definition "An autonomous agent in the system"@en ;
+    skos:example "Document discovery agent that catalogs documents"@en .
+
+:Activity rdfs:comment "An activity or process in the system"@en ;
+    skos:definition "An activity or process in the system"@en ;
+    skos:example "Migration activity that transforms document organization"@en .
+
+# =============================================================================
+# ONTOLOGY METADATA
+# =============================================================================
+
+<http://kiro.dev/documentation-system> rdf:type owl:Ontology ;
+    rdfs:label "Documentation System Ontology" ;
+    rdfs:comment "Comprehensive ontology for multi-dimensional documentation system" ;
+    owl:versionInfo "2.0.0" ;
+    dc:creator "RC1 Documentation System" ;
+    dc:created "2025-09-16"^^xsd:date ;
+    dc:modified "2025-09-16"^^xsd:date ;
+    dc:description "Ontology defining classes, properties, and relationships for a comprehensive multi-dimensional documentation system with DAG-driven organization, concurrent agent execution, and systematic document management" ;
+    owl:imports <http://www.w3.org/2004/02/skos/core> ,
+                <http://www.w3.org/ns/prov> ,
+                <http://schema.org/> .

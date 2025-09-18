@@ -206,7 +206,7 @@ echo '{"auth_token": "YOUR_TOKEN"}' > ~/.devpost/auth.json
 
 The system automatically monitors your project files for changes:
 
-- **Documentation Changes**: README.md, docs/, etc.
+- **Documentation Changes**: docs/readme/project/README.md, docs/, etc.
 - **Media Files**: Images, videos, presentations
 - **Configuration Updates**: package.json, pyproject.toml, etc.
 - **Code Changes**: Source files for technology detection
@@ -368,7 +368,7 @@ Organize your project for optimal Devpost integration:
 
 ```
 your-project/
-├── README.md              # Main project description
+├── docs/readme/project/README.md              # Main project description
 ├── docs/                  # Additional documentation
 ├── media/                 # Screenshots, videos, presentations
 ├── src/                   # Source code
@@ -382,7 +382,7 @@ your-project/
 
 Follow these guidelines for better Devpost integration:
 
-1. **README.md Structure**:
+1. **docs/readme/project/README.md Structure**:
    ```markdown
    # Project Title
    
@@ -452,7 +452,7 @@ mkdir my-hackathon-project
 cd my-hackathon-project
 
 # 2. Create basic project structure
-echo "# My Hackathon Project" > README.md
+echo "# My Hackathon Project" > docs/readme/project/README.md
 mkdir media src docs
 
 # 3. Connect to Devpost

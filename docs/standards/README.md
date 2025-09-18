@@ -9,7 +9,7 @@
 
 ---
 
-### [CLI Implementation Standards - Enforcement Notice](CLI_STANDARDS_ENFORCEMENT.md)
+### [CLI Implementation Standards - Enforcement Notice](docs/beast_mode/execution/docs/beast_mode/execution/CLI_STANDARDS_ENFORCEMENT.md)
 **
 
 **Audience:** Developers, Architects, AI Engineers, End Users • **Has Examples** • **Has Code**
@@ -58,7 +58,7 @@
 
 ---
 
-### [RMDDD Interface Standards](RMDDD_INTERFACE_STANDARDS.md)
+### [RMDDD Interface Standards](docs/other/misc/docs/other/misc/RMDDD_INTERFACE_STANDARDS.md)
 **
 
 **Audience:** Developers, Architects, AI Engineers, End Users • **Status:** Stable • **Has Examples** • **Has Code** • **Length:** 1233 words

@@ -230,3 +230,5 @@ def get_requirements_coverage() -> Dict[str, Any]:
 def get_audit_trail() -> List[InheritanceEvent]:
     """Get audit trail."""
     return requirements_registry.get_audit_trail()
+
+
