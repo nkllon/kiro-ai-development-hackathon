@@ -51,7 +51,8 @@ class VARBDefenseSystem:
             
             VARBInterpretationLevel.NSFW: {
                 # We're not actually defining these, but we acknowledge they exist
-                "Redacted": "We know someone will think of these, but we're staying professional"
+                "Redacted": "We know someone will think of these, but we're staying professional",
+                "User Suggested": "Someone already tried 'Vibe Aligned Raw Butt-f***' - rejected with humor!"
             }
         }
     
