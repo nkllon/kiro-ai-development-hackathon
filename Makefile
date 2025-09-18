@@ -119,7 +119,7 @@ test: ## Run working test suite
 	@echo "🧪 Beast Mode Test Execution (RCA_ON_FAILURE=$(RCA_ON_FAILURE))"
 	@if [ "$(RCA_ON_FAILURE)" = "true" ]; then \
 		echo "🔍 RCA integration enabled - will analyze failures automatically"; \
-		if python3 -m pytest tests/test_working.py -v --tb=short; then \
+		if python3 -m pytest tests/test_working.py tests/test_comprehensive_working.py -v --tb=short; then \
 			echo "$(GREEN)✅ All tests passed - no RCA needed$(RESET)"; \
 		else \
 			echo "$(RED)❌ Tests failed - triggering automatic RCA analysis...$(RESET)"; \
@@ -128,7 +128,7 @@ test: ## Run working test suite
 		fi; \
 	else \
 		echo "🧪 Standard test execution (RCA disabled)"; \
-		python3 -m pytest tests/test_working.py -v --tb=short; \
+		python3 -m pytest tests/test_working.py tests/test_comprehensive_working.py -v --tb=short; \
 	fi
 
 comprehensive-test: ## Run comprehensive test suite with working tests
