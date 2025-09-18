@@ -495,94 +495,298 @@ class DecisionPoint:
     trace_context: Dict[str, Any]
 ```
 
-## Extended Directus Schema
+## Referential Integrity Architecture
+
+### Core Principle: Physics-Informed Data Consistency
+
+The referential integrity architecture follows physics-informed principles where data relationships mirror real-world constraints. Every relationship has explicit cascade behaviors that prevent orphaned data and maintain system consistency under all failure conditions.
+
+### Referential Integrity Hierarchy
+
+```mermaid
+graph TD
+    subgraph "Core Entity Layer"
+        RI[repository_items<br/>Root Entity]
+        DU[directus_users<br/>System Entity]
+    end
+    
+    subgraph "Specification Layer"
+        SP[specifications<br/>CASCADE DELETE]
+        REQ[requirements<br/>CASCADE DELETE]
+    end
+    
+    subgraph "Analysis Layer"
+        AA[analysis_artifacts<br/>SET NULL DELETE]
+    end
+    
+    subgraph "Monitoring Layer"
+        OT[operation_traces<br/>No Dependencies]
+    end
+    
+    RI --> SP
+    SP --> REQ
+    RI -.-> AA
+    DU --> RI
+    DU --> SP
+    DU --> REQ
+    DU --> AA
+    
+    classDef core fill:#e1f5fe
+    classDef spec fill:#f3e5f5
+    classDef analysis fill:#e8f5e8
+    classDef monitoring fill:#fff3e0
+    
+    class RI,DU core
+    class SP,REQ spec
+    class AA analysis
+    class OT monitoring
+```
+
+### Referential Integrity Rules
+
+#### 1. Cascade Deletion Rules
+
+**Strong Consistency (CASCADE DELETE):**
+- `specifications` → `repository_items`: When a repository item is deleted, all associated specifications are automatically deleted
+- `requirements` → `specifications`: When a specification is deleted, all associated requirements are automatically deleted
+
+**Weak Consistency (SET NULL DELETE):**
+- `analysis_artifacts` → `repository_items`: When a repository item is deleted, analysis artifacts remain but lose their association (repository_item_id becomes NULL)
+
+**No Dependencies:**
+- `operation_traces`: Monitoring data is preserved independently for audit purposes
+
+#### 2. Update Cascade Rules
+
+**All foreign key relationships use CASCADE UPDATE:**
+- Primary key changes propagate automatically through the entire hierarchy
+- Maintains referential integrity during data migrations and UUID regeneration
+
+#### 3. Constraint Validation
+
+**NOT NULL Constraints:**
+- All primary keys and critical foreign keys are NOT NULL
+- Optional relationships (like analysis_artifacts.repository_item_id) allow NULL for flexibility
+
+**Data Type Constraints:**
+- UUIDs for all primary and foreign keys ensure global uniqueness
+- JSONB for structured data with validation at application layer
+- VARCHAR with explicit length limits prevent unbounded growth
+
+### Extended Directus Schema
 
 Building upon the existing 5-collection Directus schema from commit 4d2a4e62:
 
 ```sql
--- Extend existing schema with repository-wide collections
+-- Repository Discovery Directus Schema Extension
+-- Generated with explicit referential integrity constraints
+-- Extends existing 5-collection pattern with repository content
+
+-- Create repository_items table (Root Entity)
 CREATE TABLE repository_items (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    item_type ENUM('specification', 'source_code', 'documentation', 'analysis', 'script') NOT NULL,
+    item_type VARCHAR(50) NOT NULL,
     path VARCHAR(1000) NOT NULL,
     name VARCHAR(255) NOT NULL,
     content_hash VARCHAR(64),
-    
-    -- Extend existing pattern
+    file_size INTEGER,
+    mime_type VARCHAR(100),
+    encoding VARCHAR(50),
+    is_binary BOOLEAN NOT NULL DEFAULT FALSE,
+    line_count INTEGER,
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     date_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_created UUID REFERENCES directus_users(id),
     user_updated UUID REFERENCES directus_users(id)
 );
 
+-- Indexes for repository_items
+CREATE INDEX idx_repository_items_item_type ON repository_items(item_type);
+CREATE INDEX idx_repository_items_path ON repository_items(path);
+CREATE INDEX idx_repository_items_content_hash ON repository_items(content_hash);
+
+-- Create specifications table (Strong Dependency)
 CREATE TABLE specifications (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    repository_item_id UUID REFERENCES repository_items(id),
+    repository_item_id UUID NOT NULL,
     spec_name VARCHAR(255) NOT NULL,
-    status ENUM('draft', 'active', 'deprecated') DEFAULT 'draft',
-    
-    -- Follow existing pattern
+    status VARCHAR(20) NOT NULL DEFAULT 'draft',
+    priority INTEGER NOT NULL DEFAULT 3,
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    date_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    date_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_created UUID REFERENCES directus_users(id),
+    user_updated UUID REFERENCES directus_users(id)
 );
 
+-- Indexes for specifications
+CREATE INDEX idx_specifications_status ON specifications(status);
+CREATE INDEX idx_specifications_priority ON specifications(priority);
+
+-- Foreign key constraints for specifications (CASCADE DELETE)
+ALTER TABLE specifications ADD CONSTRAINT fk_specifications_repository_item_id 
+    FOREIGN KEY (repository_item_id) REFERENCES repository_items(id) 
+    ON UPDATE CASCADE ON DELETE CASCADE;
+
+-- Create requirements table (Strong Dependency Chain)
 CREATE TABLE requirements (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    specification_id UUID REFERENCES specifications(id),
+    specification_id UUID NOT NULL,
     requirement_number VARCHAR(50) NOT NULL,
     user_story TEXT NOT NULL,
     acceptance_criteria JSONB NOT NULL,
-    
-    -- Follow existing pattern  
+    priority INTEGER NOT NULL DEFAULT 3,
+    status VARCHAR(20) NOT NULL DEFAULT 'draft',
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    date_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    date_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_created UUID REFERENCES directus_users(id),
+    user_updated UUID REFERENCES directus_users(id)
 );
 
+-- Indexes for requirements
+CREATE INDEX idx_requirements_spec_id ON requirements(specification_id);
+CREATE INDEX idx_requirements_status ON requirements(status);
+
+-- Foreign key constraints for requirements (CASCADE DELETE)
+ALTER TABLE requirements ADD CONSTRAINT fk_requirements_specification_id 
+    FOREIGN KEY (specification_id) REFERENCES specifications(id) 
+    ON UPDATE CASCADE ON DELETE CASCADE;
+
+-- Create analysis_artifacts table (Weak Dependency)
 CREATE TABLE analysis_artifacts (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    repository_item_id UUID REFERENCES repository_items(id),
-    analysis_type ENUM('conflict_report', 'overlap_matrix', 'landscape_analysis', 'rca_report') NOT NULL,
+    repository_item_id UUID,  -- Nullable for weak dependency
+    analysis_type VARCHAR(50) NOT NULL,
     analysis_data JSONB NOT NULL,
-    confidence_score DECIMAL(3,2) DEFAULT 1.0,
-    
-    -- Follow existing pattern
+    confidence_score DECIMAL(3,2) NOT NULL DEFAULT 1.0,
+    generated_by VARCHAR(100),
+    correlation_id VARCHAR(100),
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    date_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    date_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_created UUID REFERENCES directus_users(id),
+    user_updated UUID REFERENCES directus_users(id)
 );
 
--- Monitoring tables
+-- Indexes for analysis_artifacts
+CREATE INDEX idx_analysis_artifacts_type ON analysis_artifacts(analysis_type);
+CREATE INDEX idx_analysis_artifacts_correlation ON analysis_artifacts(correlation_id);
+
+-- Foreign key constraints for analysis_artifacts (SET NULL DELETE)
+ALTER TABLE analysis_artifacts ADD CONSTRAINT fk_analysis_artifacts_repository_item_id 
+    FOREIGN KEY (repository_item_id) REFERENCES repository_items(id) 
+    ON UPDATE CASCADE ON DELETE SET NULL;
+
+-- Create operation_traces table (Independent Monitoring)
 CREATE TABLE operation_traces (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     trace_id VARCHAR(255) NOT NULL,
     operation_name VARCHAR(255) NOT NULL,
     component_name VARCHAR(255) NOT NULL,
-    start_time TIMESTAMP NOT NULL,
-    end_time TIMESTAMP,
-    duration_ms INTEGER,
+    duration_ms DECIMAL(10,3),
     input_parameters JSONB,
     output_result JSONB,
     error_info JSONB,
-    performance_metrics JSONB,
-    correlation_id VARCHAR(255),
-    
-    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    correlation_id VARCHAR(255) NOT NULL,
+    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_created UUID REFERENCES directus_users(id),
+    user_updated UUID REFERENCES directus_users(id)
 );
 
-CREATE TABLE decision_points (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    decision_id VARCHAR(255) NOT NULL,
-    trace_id VARCHAR(255) REFERENCES operation_traces(trace_id),
-    decision_name VARCHAR(255) NOT NULL,
-    timestamp TIMESTAMP NOT NULL,
-    input_conditions JSONB NOT NULL,
-    decision_logic TEXT NOT NULL,
-    decision_result JSONB NOT NULL,
-    confidence_score DECIMAL(3,2) NOT NULL,
-    reasoning JSONB NOT NULL,
-    
-    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+-- Indexes for operation_traces
+CREATE INDEX idx_operation_traces_trace_id ON operation_traces(trace_id);
+CREATE INDEX idx_operation_traces_operation ON operation_traces(operation_name);
+CREATE INDEX idx_operation_traces_correlation ON operation_traces(correlation_id);
+
+-- No foreign key constraints for operation_traces (independent monitoring data)
 ```
+
+### Referential Integrity Validation
+
+#### Constraint Validation Functions
+
+```sql
+-- Function to validate referential integrity across the entire schema
+CREATE OR REPLACE FUNCTION validate_repository_integrity() 
+RETURNS TABLE(table_name TEXT, constraint_name TEXT, violation_count INTEGER) AS $$
+BEGIN
+    -- Check for orphaned specifications
+    RETURN QUERY
+    SELECT 'specifications'::TEXT, 'fk_specifications_repository_item_id'::TEXT, 
+           COUNT(*)::INTEGER
+    FROM specifications s
+    LEFT JOIN repository_items ri ON s.repository_item_id = ri.id
+    WHERE ri.id IS NULL;
+    
+    -- Check for orphaned requirements
+    RETURN QUERY
+    SELECT 'requirements'::TEXT, 'fk_requirements_specification_id'::TEXT,
+           COUNT(*)::INTEGER
+    FROM requirements r
+    LEFT JOIN specifications s ON r.specification_id = s.id
+    WHERE s.id IS NULL;
+    
+    -- Check for invalid analysis artifact references (should be NULL, not invalid UUIDs)
+    RETURN QUERY
+    SELECT 'analysis_artifacts'::TEXT, 'fk_analysis_artifacts_repository_item_id'::TEXT,
+           COUNT(*)::INTEGER
+    FROM analysis_artifacts aa
+    LEFT JOIN repository_items ri ON aa.repository_item_id = ri.id
+    WHERE aa.repository_item_id IS NOT NULL AND ri.id IS NULL;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+#### Data Consistency Triggers
+
+```sql
+-- Trigger to maintain data consistency on repository_items deletion
+CREATE OR REPLACE FUNCTION cleanup_repository_item_deletion()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Log the deletion for audit purposes
+    INSERT INTO operation_traces (
+        trace_id, operation_name, component_name, 
+        input_parameters, correlation_id
+    ) VALUES (
+        gen_random_uuid()::TEXT,
+        'repository_item_deletion',
+        'referential_integrity_trigger',
+        jsonb_build_object('deleted_item_id', OLD.id, 'item_path', OLD.path),
+        gen_random_uuid()::TEXT
+    );
+    
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_cleanup_repository_item_deletion
+    BEFORE DELETE ON repository_items
+    FOR EACH ROW EXECUTE FUNCTION cleanup_repository_item_deletion();
+```
+
+### Physics-Informed Consistency Rules
+
+#### 1. Conservation of Information
+- **Principle**: Information cannot be destroyed without explicit intent
+- **Implementation**: Analysis artifacts survive repository item deletion (SET NULL) to preserve analytical insights
+- **Validation**: Orphaned analysis artifacts maintain their analytical value independently
+
+#### 2. Cascade Propagation Laws
+- **Principle**: Changes propagate through dependency hierarchies following physical laws
+- **Implementation**: CASCADE DELETE follows the natural hierarchy (repository_items → specifications → requirements)
+- **Validation**: No orphaned records exist in strong dependency chains
+
+#### 3. Temporal Consistency
+- **Principle**: All changes are timestamped and traceable
+- **Implementation**: Every table includes date_created, date_updated, and user tracking
+- **Validation**: Complete audit trail for all data modifications
+
+#### 4. Referential Stability
+- **Principle**: References remain stable under normal operations
+- **Implementation**: UUID primary keys prevent reference instability
+- **Validation**: Foreign key constraints prevent invalid references
+
+This referential integrity architecture ensures data consistency while providing flexibility for analytical workloads and complete auditability for debugging and compliance purposes.
 
 ## Error Handling
 
