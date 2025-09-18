@@ -47,15 +47,17 @@ Convert the Repository Content Discovery and Indexing design into a series of pr
   - **Integration Test**: Verify metadata can be extracted from sample repository files
   - _Requirements: 1.3, 16.1, 18.1_
 
-- [ ] 1.2.2 Extend Directus schema for repository content
-  - **Target**: Directus Schema Extension (250 lines)
+- [ ] 1.2.2 Extend Directus schema for repository content with referential integrity
+  - **Target**: Directus Schema Extension with Physics-Informed Referential Integrity (300 lines)
   - **Dependencies**: Directus Schema Recovery (from 1.1.2)
   - **Recursive Check**: Ensure Directus recovery is complete and tested
-  - Add repository_items, specifications, requirements, and analysis_artifacts collections
-  - Create migration scripts to extend the existing 5-collection pattern
-  - Write integration tests to verify extended schema works with existing Directus infrastructure
-  - **Integration Test**: Verify new collections can store and query repository content
-  - _Requirements: 8.1, 30.3, 18.2_
+  - Add repository_items, specifications, requirements, analysis_artifacts, and operation_traces collections
+  - Implement physics-informed referential integrity with CASCADE DELETE for strong dependencies and SET NULL for weak dependencies
+  - Create comprehensive migration scripts with explicit foreign key constraints, indexes, and validation functions
+  - Add referential integrity validation functions and data consistency triggers
+  - Write integration tests to verify extended schema maintains data consistency under all failure conditions
+  - **Integration Test**: Verify referential integrity constraints prevent orphaned data and maintain consistency
+  - _Requirements: 8.1, 30.1, 30.2, 30.3, 30.4, 30.5, 18.2_
 
 ## Phase 2: Content Discovery Layer (Recursive Descent)
 
@@ -216,16 +218,17 @@ Convert the Repository Content Discovery and Indexing design into a series of pr
 
 ### 5.1 Core API Components
 
-- [ ] 5.1.1 Implement ContentQueryAPI
-  - **Target**: ContentQueryAPI (200 lines)
+- [ ] 5.1.1 Implement ContentQueryAPI with referential integrity validation
+  - **Target**: ContentQueryAPI with Referential Integrity Support (250 lines)
   - **Dependencies**: Directus Schema Extension (1.2.2), ContentInventoryManager (2.2.1)
-  - **Recursive Check**: Verify Directus schema extension and content inventory are implemented and tested
+  - **Recursive Check**: Verify Directus schema extension with referential integrity and content inventory are implemented and tested
   - Create ContentQueryAPI class inheriting from ReflectiveModule
-  - Implement get_content_by_type() method with filtering and sorting capabilities
-  - Add search_content() method for full-text search across repository content
-  - Write unit tests for core API functionality
-  - **Integration Test**: Verify ContentQueryAPI can query and filter repository content through Directus
-  - _Requirements: 8.2, 16.1, 18.1_
+  - Implement get_content_by_type() method with filtering, sorting, and referential integrity validation
+  - Add search_content() method for full-text search across repository content with relationship traversal
+  - Implement referential integrity validation for all query operations to prevent accessing orphaned data
+  - Write unit tests for core API functionality including referential integrity edge cases
+  - **Integration Test**: Verify ContentQueryAPI maintains referential integrity during concurrent access and data modifications
+  - _Requirements: 8.2, 30.1, 30.4, 16.1, 18.1_
 
 - [ ] 5.1.2 Implement RelationshipAPI
   - **Target**: RelationshipAPI (200 lines)
@@ -240,6 +243,19 @@ Convert the Repository Content Discovery and Indexing design into a series of pr
 
 ### 5.2 Real-Time Services Layer
 
+- [ ] 5.2.0 Implement ReferentialIntegrityValidator
+  - **Target**: ReferentialIntegrityValidator (200 lines)
+  - **Dependencies**: Directus Schema Extension (1.2.2)
+  - **Recursive Check**: Verify Directus schema extension with referential integrity is implemented and tested
+  - Create ReferentialIntegrityValidator class inheriting from ReflectiveModule
+  - Implement validate_repository_integrity() function to check for orphaned records across all tables
+  - Add constraint validation functions for specifications, requirements, and analysis_artifacts relationships
+  - Implement data consistency triggers for audit logging and cleanup operations
+  - Add physics-informed consistency validation: conservation of information, cascade propagation, temporal consistency
+  - Write comprehensive tests for all referential integrity validation scenarios
+  - **Integration Test**: Verify referential integrity validator detects and prevents all data consistency violations
+  - _Requirements: 30.1, 30.2, 30.3, 30.4, 30.5, 16.1, 18.1_
+
 - [ ] 5.2.1 Implement RealTimeService
   - **Target**: RealTimeService (250 lines)
   - **Dependencies**: ContentQueryAPI (5.1.1), RelationshipAPI (5.1.2), IntelligenceSynthesizer (4.2.1)
@@ -251,17 +267,19 @@ Convert the Repository Content Discovery and Indexing design into a series of pr
   - **Integration Test**: Verify complete real-time intelligence pipeline from content changes to notifications
   - _Requirements: 8.5, 29.2, 18.1_
 
-- [ ] 5.2.2 Implement ChangeTracker
-  - **Target**: ChangeTracker (300 lines)
+- [ ] 5.2.2 Implement ChangeTracker with referential integrity enforcement
+  - **Target**: ChangeTracker with Physics-Informed Consistency (350 lines)
   - **Dependencies**: RealTimeService (5.2.1), ContentInventoryManager (2.2.1)
   - **Recursive Check**: Verify RealTimeService and ContentInventoryManager are implemented and tested
   - Create ChangeTracker class inheriting from ReflectiveModule
-  - Implement change tracking and versioning using Directus built-in capabilities
-  - Add CRUD operations for specifications, requirements, and analysis artifacts
-  - Add validation and consistency checking for repository content modifications
-  - Write integration tests for CRUD operations and change tracking
-  - **Integration Test**: Verify complete change tracking workflow from detection through persistence
-  - _Requirements: 8.3, 8.5, 7.1, 18.1_
+  - Implement change tracking and versioning using Directus built-in capabilities with referential integrity enforcement
+  - Add CRUD operations for specifications, requirements, and analysis artifacts with cascade behavior validation
+  - Implement physics-informed consistency rules: conservation of information, cascade propagation laws, temporal consistency
+  - Add comprehensive validation and consistency checking for all repository content modifications
+  - Implement audit logging for all referential integrity operations using operation_traces table
+  - Write integration tests for CRUD operations, change tracking, and referential integrity enforcement
+  - **Integration Test**: Verify complete change tracking workflow maintains referential integrity under all modification scenarios
+  - _Requirements: 8.3, 8.5, 7.1, 30.1, 30.2, 30.3, 30.4, 30.5, 18.1_
 
 ## Phase 6: Security and Operations Layer (Recursive Descent)
 
@@ -311,17 +329,19 @@ Convert the Repository Content Discovery and Indexing design into a series of pr
 
 ### 7.2 Monitoring and Observability
 
-- [ ] 7.2.1 Implement MonitoringDashboard
-  - **Target**: MonitoringDashboard (250 lines)
-  - **Dependencies**: PerformanceOptimizer (7.1.1), SecurityManager (6.1.1)
-  - **Recursive Check**: Verify PerformanceOptimizer and SecurityManager are implemented and tested
+- [ ] 7.2.1 Implement MonitoringDashboard with referential integrity monitoring
+  - **Target**: MonitoringDashboard with Physics-Informed Consistency Monitoring (300 lines)
+  - **Dependencies**: PerformanceOptimizer (7.1.1), SecurityManager (6.1.1), ReferentialIntegrityValidator (5.2.0)
+  - **Recursive Check**: Verify PerformanceOptimizer, SecurityManager, and ReferentialIntegrityValidator are implemented and tested
   - Create MonitoringDashboard class inheriting from ReflectiveModule
   - Implement usage tracking and performance metrics for all ReflectiveModule operations
-  - Add comprehensive logging with correlation IDs for operation traceability
-  - Create monitoring dashboards for repository intelligence system health
-  - Write monitoring tests to verify tracking and logging functionality
-  - **Integration Test**: Verify complete monitoring pipeline provides comprehensive system observability
-  - _Requirements: 22.1, 22.2, 22.5, 18.1_
+  - Add comprehensive logging with correlation IDs for operation traceability including referential integrity operations
+  - Implement real-time monitoring of referential integrity health and constraint violations
+  - Add physics-informed consistency monitoring: conservation of information violations, cascade propagation failures, temporal consistency issues
+  - Create monitoring dashboards for repository intelligence system health including referential integrity status
+  - Write monitoring tests to verify tracking, logging, and referential integrity monitoring functionality
+  - **Integration Test**: Verify complete monitoring pipeline provides comprehensive system observability including referential integrity health
+  - _Requirements: 22.1, 22.2, 22.5, 30.4, 30.5, 18.1_
 
 ## Phase 8: System Integration Layer (Recursive Descent)
 
