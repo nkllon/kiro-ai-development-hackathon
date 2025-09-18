@@ -9,7 +9,8 @@ This implementation plan converts the spec consistency reconciliation design int
   - Implement spec overlap detection algorithms using AST parsing and semantic analysis
   - Build approval workflow system with mandatory architectural review gates
   - Create pre-commit hooks for spec validation and consistency checking
-  - _Requirements: R6.1, R6.2, R7.1, R7.2_
+  - Integrate RDI traceability validation using Spec Scrub RDI Consistency framework
+  - _Requirements: R6.1, R6.2, R7.1, R7.2, R12.1, R12.4_
 
 - [ ] 1.1 Build Overlap Detection Engine
   - Implement semantic analysis of spec requirements using NLP techniques
@@ -36,11 +37,12 @@ This implementation plan converts the spec consistency reconciliation design int
   - Create src/spec_reconciliation/consolidation.py file
   - Implement SpecConsolidator class with ReflectiveModule compliance
   - Implement analyze_overlap method for overlap analysis using existing GovernanceController functionality
-  - Implement create_consolidation_plan method for consolidation planning
+  - Implement create_consolidation_plan method for consolidation planning with RDI traceability matrix generation
   - Implement merge_requirements method for requirement merging with conflict resolution
   - Implement preserve_traceability method for traceability tracking
+  - Implement integrate_rdi_validation method for Spec Scrub RDI integration
   - Add SpecConsolidator to __init__.py exports
-  - _Requirements: R1.2, R1.3, R1.4, R8.1, R8.2_
+  - _Requirements: R1.2, R1.3, R1.4, R8.1, R8.2, R12.1, R12.3_
 
 - [ ] 3.1 Implement Overlap Analysis Engine
   - Build comprehensive spec parsing system to extract requirements, interfaces, and terminology
@@ -61,7 +63,8 @@ This implementation plan converts the spec consistency reconciliation design int
   - Create impact analysis system showing effects of consolidation on existing implementations
   - Build change tracking system documenting all consolidation decisions and rationale
   - Implement validation system ensuring traceability completeness and accuracy
-  - _Requirements: R1.4, R8.2, R10.3_
+  - Integrate with Spec Scrub traceability matrix generation for comprehensive RDI validation
+  - _Requirements: R1.4, R8.2, R10.3, R12.3, R12.5_
 
 - [ ] 4. Create Continuous Monitoring Module
   - Create src/spec_reconciliation/monitoring.py file
@@ -70,8 +73,10 @@ This implementation plan converts the spec consistency reconciliation design int
   - Implement detect_terminology_inconsistencies method for terminology monitoring
   - Implement validate_architectural_decisions method for decision validation
   - Implement trigger_automatic_correction method for automated corrections
+  - Implement monitor_rdi_compliance method for continuous RDI traceability monitoring
+  - Integrate with Spec Scrub continuous monitoring to prevent future fragmentation
   - Add ContinuousMonitor to __init__.py exports
-  - _Requirements: R9.1, R9.2, R9.3, R9.4, R9.5_
+  - _Requirements: R9.1, R9.2, R9.3, R9.4, R9.5, R12.4, R12.5_
 
 - [ ] 4.1 Build Continuous Consistency Monitoring
   - Implement automated spec analysis system running on schedule and triggered by changes

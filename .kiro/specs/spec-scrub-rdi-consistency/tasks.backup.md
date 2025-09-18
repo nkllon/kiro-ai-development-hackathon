@@ -14,7 +14,7 @@ All spec scrub components need to be implemented from scratch.
 
 ### Phase 0: Brownfield Discovery and Recovery 🔍 DISCOVERY
 
-- [x] 0.1 Discover Existing Spec-Related Implementations [desi-x1y2]
+- [ ] 0.1 Discover Existing Spec-Related Implementations [desi-x1y2]
   - **Target**: Discovery and cataloging of existing spec functionality
   - **Location**: Repository-wide scan with results in `brownfield_analysis/`
   - **Dependencies**: None (foundation discovery)
@@ -52,7 +52,7 @@ All spec scrub components need to be implemented from scratch.
 
 ### Phase 1: Core Parsing Infrastructure ⚡ PARALLEL EXECUTION
 
-- [x] 1.1 Leverage Beast Mode RequirementsValidator [rp-a1b2]
+- [ ] 1.1 Implement RequirementsParser [rp-a1b2]
   - **Target**: RequirementsParser (150 lines)
   - **Location**: `src/spec_scrub/parsers/requirements_parser.py`
   - **Dependencies**: ReflectiveModule Infrastructure (✅ DONE)
@@ -64,7 +64,7 @@ All spec scrub components need to be implemented from scratch.
   - **Integration Test**: Verify RequirementsParser can parse sample requirements documents
   - _Requirements: 1.1, 1.2, 10.1_
 
-- [x] 1.2 Leverage Existing Parsing Infrastructure [dp-c3d4] ⚡ PARALLEL
+- [ ] 1.2 Implement DesignParser [dp-c3d4] ⚡ PARALLEL
   - **Target**: DesignParser (150 lines)
   - **Location**: `src/spec_scrub/parsers/design_parser.py`
   - **Dependencies**: ReflectiveModule Infrastructure (✅ DONE)
@@ -76,7 +76,7 @@ All spec scrub components need to be implemented from scratch.
   - **Integration Test**: Verify DesignParser can parse sample design documents
   - _Requirements: 1.1, 1.2, 10.1_
 
-- [x] 1.3 Leverage Beast Mode HierarchicalTaskParser [tp-e5f6] ⚡ PARALLEL
+- [ ] 1.3 Implement TaskParser [tp-e5f6] ⚡ PARALLEL
   - **Target**: TaskParser (150 lines)
   - **Location**: `src/spec_scrub/parsers/task_parser.py`
   - **Dependencies**: ReflectiveModule Infrastructure (✅ DONE)

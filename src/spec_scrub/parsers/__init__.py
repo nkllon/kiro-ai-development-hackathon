@@ -1,9 +1,10 @@
 """
 Spec Scrub Parsers
 
-Parsers for extracting structured data from specification documents.
+Leverages existing Beast Mode parsing infrastructure for RDI traceability validation.
 """
 
-from .requirements_parser import RequirementsParser
+from src.beast_mode.requirements.requirements_validator import RequirementsValidator
+from src.beast_mode.task_dag.hierarchical_task_parser import HierarchicalTaskParser
 
-__all__ = ['RequirementsParser']
+__all__ = ['RequirementsValidator', 'HierarchicalTaskParser']
