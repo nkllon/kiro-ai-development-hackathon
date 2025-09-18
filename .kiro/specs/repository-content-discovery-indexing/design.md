@@ -10,6 +10,7 @@ The Repository Content Discovery and Indexing system provides systematic discove
 - **Multi-Perspective Intelligence**: Synthesize diverse viewpoints for richer repository understanding
 - **Real-Time Awareness**: Provide immediate intelligence for operational decision-making
 - **Complete Observability**: "If you can't monitor it, you can't debug it either"
+- **No Big Problems, Only Small Ones**: "There are no big problems, only a crap ton of little ones" - Break everything into manageable RM-DDD components under 300 lines
 
 ## Architecture
 
