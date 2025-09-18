@@ -12,7 +12,7 @@
 
 ### Phase 1: Content Discovery Components
 
-- [-] 1. Implement ContentScanner
+- [-] 1. Implement ContentScanner [cs-a7f3]
   - **Target**: ContentScanner (150 lines)
   - **Dependencies**: ContentMetadataExtractor (✅ DONE)
   - Create ContentScanner class inheriting from ReflectiveModule
@@ -22,7 +22,7 @@
   - **Integration Test**: Verify ContentScanner can discover and catalog sample repository structure
   - _Requirements: 1.1, 16.1, 18.1_
 
-- [ ] 2. Implement ContentClassifier
+- [ ] 2. Implement ContentClassifier [cc-b8e4]
   - **Target**: ContentClassifier (150 lines)
   - **Dependencies**: ContentMetadataExtractor (✅ DONE)
   - Create ContentClassifier class inheriting from ReflectiveModule
@@ -32,7 +32,7 @@
   - **Integration Test**: Verify ContentClassifier can correctly classify sample repository files
   - _Requirements: 1.2, 16.1, 18.1_
 
-- [ ] 3. Implement ContentInventoryManager
+- [ ] 3. Implement ContentInventoryManager [cim-c9f5]
   - **Target**: ContentInventoryManager (150 lines)
   - **Dependencies**: ContentScanner (1), ContentClassifier (2)
   - Create ContentInventoryManager class inheriting from ReflectiveModule
@@ -43,7 +43,7 @@
   - _Requirements: 1.4, 1.5, 16.1, 18.1_
 ### Phase 2: Specification Analysis Components
 
-- [ ] 4. Implement SpecificationParser
+- [ ] 4. Implement SpecificationParser [sp-d1a6]
   - **Target**: SpecificationParser (200 lines)
   - **Dependencies**: ContentInventoryManager (3)
   - Create SpecificationParser class inheriting from ReflectiveModule
@@ -53,7 +53,7 @@
   - **Integration Test**: Verify SpecificationParser can extract structured data from sample spec files
   - _Requirements: 2.1, 16.1, 18.1_
 
-- [ ] 5. Implement DependencyAnalyzer
+- [ ] 5. Implement DependencyAnalyzer [da-e2b7]
   - **Target**: DependencyAnalyzer (200 lines)
   - **Dependencies**: SpecificationParser (4), ContentInventoryManager (3)
   - Create DependencyAnalyzer class inheriting from ReflectiveModule
@@ -63,7 +63,7 @@
   - **Integration Test**: Verify DependencyAnalyzer can map relationships in sample specification set
   - _Requirements: 2.2, 16.1, 18.1_
 
-- [ ] 6. Implement OverlapDetector
+- [ ] 6. Implement OverlapDetector [od-f3c8]
   - **Target**: OverlapDetector (300 lines)
   - **Dependencies**: SpecificationParser (4), ContentInventoryManager (3)
   - Create OverlapDetector class inheriting from ReflectiveModule
@@ -76,7 +76,7 @@
 
 ### Phase 3: Intelligence and API Components
 
-- [ ] 7. Implement PerspectiveCoordinator
+- [ ] 7. Implement PerspectiveCoordinator [pc-g4d9]
   - **Target**: PerspectiveCoordinator (250 lines)
   - **Dependencies**: DependencyAnalyzer (5), OverlapDetector (6)
   - Create PerspectiveCoordinator class inheriting from ReflectiveModule
@@ -86,7 +86,7 @@
   - **Integration Test**: Verify PerspectiveCoordinator can orchestrate multi-perspective analysis
   - _Requirements: 4.1, 4.2, 14.1, 16.1, 18.1_
 
-- [ ] 8. Implement IntelligenceSynthesizer
+- [ ] 8. Implement IntelligenceSynthesizer [is-h5ea]
   - **Target**: IntelligenceSynthesizer (250 lines)
   - **Dependencies**: PerspectiveCoordinator (7)
   - Create IntelligenceSynthesizer class inheriting from ReflectiveModule
