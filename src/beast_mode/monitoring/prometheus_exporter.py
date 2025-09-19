@@ -106,6 +106,10 @@ except ImportError:
 class PrometheusExporter:
     """
     Prometheus metrics exporter for Beast Mode framework.
+    
+    DEPRECATED: This class now serves as a backward compatibility wrapper
+    around the new daemon-based monitoring system. New code should use
+    MonitoringClient directly.
 
     Integrates with existing monitoring infrastructure to expose metrics
     via Prometheus format for real-time visibility and alerting.
@@ -115,11 +119,13 @@ class PrometheusExporter:
     
     _instance = None
     _initialized = False
+    _instance_lock = threading.Lock()
 
     def __new__(cls, *args, **kwargs):
         """Singleton pattern to prevent duplicate instances."""
-        if cls._instance is None:
-            cls._instance = super(PrometheusExporter, cls).__new__(cls)
+        with cls._instance_lock:
+            if cls._instance is None:
+                cls._instance = super(PrometheusExporter, cls).__new__(cls)
         return cls._instance
 
     def __init__(
@@ -129,49 +135,75 @@ class PrometheusExporter:
         enable_http_server: bool = True,
     ):
         """Initialize Prometheus exporter (singleton)."""
-        # Prevent re-initialization
-        if self._initialized:
-            return
+        # Thread-safe initialization check
+        with self._instance_lock:
+            # Prevent re-initialization
+            if self._initialized:
+                return
+                
+            self.port = port
+            self.monitoring_interval = monitoring_interval
+            self.enable_http_server = enable_http_server
+
+            self.logger = self._setup_logging()
             
-        self.port = port
-        self.monitoring_interval = monitoring_interval
-        self.enable_http_server = enable_http_server
+            # Initialize thread safety attributes
+            self.export_thread = None
+            self.export_active = False
+            self.performance_monitor = None
+            
+            # Import the new monitoring client
+            try:
+                from .client import MonitoringClient
+                self.monitoring_client = MonitoringClient(
+                    client_id="prometheus_exporter_legacy",
+                    daemon_port=port,
+                    fallback_mode=True
+                )
+                self.logger.info("Using new daemon-based monitoring system")
+                self._use_daemon = True
+            except ImportError:
+                self.logger.warning("New monitoring client not available, falling back to legacy mode")
+                self._use_daemon = False
 
-        self.logger = self._setup_logging()
+            if not PROMETHEUS_AVAILABLE and not self._use_daemon:
+                self.logger.warning(
+                    "Prometheus client not available. Install with: pip install prometheus-client"
+                )
+                self._initialized = True
+                return
 
-        if not PROMETHEUS_AVAILABLE:
-            self.logger.warning(
-                "Prometheus client not available. Install with: pip install prometheus-client"
-            )
+            # Initialize monitoring system
+            if self._use_daemon:
+                self._initialize_daemon_metrics()
+                # When using daemon mode, we don't start our own HTTP server
+                # The daemon handles the HTTP endpoint
+                self.logger.info(f"Using daemon HTTP server, not starting local server")
+            else:
+                # Legacy initialization
+                try:
+                    self._initialize_prometheus_metrics()
+                except Exception as e:
+                    self.logger.error(f"Failed to initialize Prometheus metrics: {e}")
+                    self._initialized = True
+                    return
+
+                # Connect to existing monitoring systems
+                self.performance_monitor = PerformanceMonitoringSystem(
+                    monitoring_interval=monitoring_interval, enable_alerts=True
+                )
+
+                # HTTP server for metrics endpoint (only in legacy mode)
+                self.http_server = None
+
+                # Start HTTP server and metrics export (only once, only in legacy mode)
+                if self.enable_http_server:
+                    self.start_http_server()
+
+                self.start_metrics_export()
+            
+            # Mark as initialized
             self._initialized = True
-            return
-
-        # Initialize Prometheus metrics (only once)
-        try:
-            self._initialize_prometheus_metrics()
-        except Exception as e:
-            self.logger.error(f"Failed to initialize Prometheus metrics: {e}")
-            self._initialized = True
-            return
-
-        # Connect to existing monitoring systems
-        self.performance_monitor = PerformanceMonitoringSystem(
-            monitoring_interval=monitoring_interval, enable_alerts=True
-        )
-
-        # HTTP server for metrics endpoint
-        self.http_server = None
-        self.export_thread = None
-        self.export_active = False
-
-        # Start HTTP server and metrics export (only once)
-        if self.enable_http_server:
-            self.start_http_server()
-
-        self.start_metrics_export()
-        
-        # Mark as initialized
-        self._initialized = True
 
     def _setup_logging(self) -> logging.Logger:
         """Setup logging for Prometheus exporter."""
@@ -193,33 +225,45 @@ class PrometheusExporter:
         if not PROMETHEUS_AVAILABLE:
             return
 
+        # Clear existing metrics to prevent duplicates
+        try:
+            # Create a new registry to avoid conflicts
+            self.registry = CollectorRegistry()
+        except Exception:
+            # Use default registry if custom registry fails
+            self.registry = REGISTRY
+
         # System metrics
         self.system_cpu_percent = Gauge(
-            "beast_mode_system_cpu_percent", "System CPU usage percentage", ["host"]
+            "beast_mode_system_cpu_percent", "System CPU usage percentage", ["host"], registry=self.registry
         )
 
         self.system_memory_percent = Gauge(
             "beast_mode_system_memory_percent",
             "System memory usage percentage",
             ["host"],
+            registry=self.registry
         )
 
         self.system_memory_used_bytes = Gauge(
             "beast_mode_system_memory_used_bytes",
             "System memory used in bytes",
             ["host"],
+            registry=self.registry
         )
 
         self.system_disk_usage_percent = Gauge(
             "beast_mode_system_disk_usage_percent",
             "System disk usage percentage",
             ["host", "mountpoint"],
+            registry=self.registry
         )
 
         self.system_load_average = Gauge(
             "beast_mode_system_load_average",
             "System load average",
             ["host", "period"],  # period: 1m, 5m, 15m
+            registry=self.registry
         )
 
         # Application metrics
@@ -227,6 +271,7 @@ class PrometheusExporter:
             "beast_mode_app_operations_total",
             "Total number of operations",
             ["operation_type", "status"],  # status: completed, failed
+            registry=self.registry
         )
 
         self.app_operation_duration_seconds = Histogram(
@@ -234,32 +279,38 @@ class PrometheusExporter:
             "Operation duration in seconds",
             ["operation_type"],
             buckets=(0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0, 5.0, 10.0),
+            registry=self.registry
         )
 
         self.app_throughput_ops_per_second = Gauge(
             "beast_mode_app_throughput_ops_per_second",
             "Application throughput in operations per second",
             ["operation_type"],
+            registry=self.registry
         )
 
         self.app_error_rate = Gauge(
             "beast_mode_app_error_rate",
             "Application error rate percentage",
             ["component"],
+            registry=self.registry
         )
 
         self.app_cache_hit_rate = Gauge(
-            "beast_mode_app_cache_hit_rate", "Cache hit rate percentage", ["cache_name"]
+            "beast_mode_app_cache_hit_rate", "Cache hit rate percentage", ["cache_name"],
+            registry=self.registry
         )
 
         self.app_active_operations = Gauge(
             "beast_mode_app_active_operations",
             "Number of active operations",
             ["operation_type"],
+            registry=self.registry
         )
 
         self.app_queue_size = Gauge(
-            "beast_mode_app_queue_size", "Queue size", ["queue_name"]
+            "beast_mode_app_queue_size", "Queue size", ["queue_name"],
+            registry=self.registry
         )
 
         # Module-specific metrics
@@ -267,48 +318,56 @@ class PrometheusExporter:
             "beast_mode_module_health_score",
             "Module health score (0-100)",
             ["module_id", "class_name"],
+            registry=self.registry
         )
 
         self.module_status = Gauge(
             "beast_mode_module_status",
             "Module status (1=healthy, 0=unhealthy)",
             ["module_id", "class_name", "status"],
+            registry=self.registry
         )
 
         self.module_error_count = Counter(
             "beast_mode_module_errors_total",
             "Total number of module errors",
             ["module_id", "class_name"],
+            registry=self.registry
         )
 
         self.module_warning_count = Counter(
             "beast_mode_module_warnings_total",
             "Total number of module warnings",
             ["module_id", "class_name"],
+            registry=self.registry
         )
 
         self.module_uptime_seconds = Gauge(
             "beast_mode_module_uptime_seconds",
             "Module uptime in seconds",
             ["module_id", "class_name"],
+            registry=self.registry
         )
 
         self.module_last_activity = Gauge(
             "beast_mode_module_last_activity_timestamp",
             "Module last activity timestamp",
             ["module_id", "class_name"],
+            registry=self.registry
         )
 
         self.module_capabilities_count = Gauge(
             "beast_mode_module_capabilities_count",
             "Number of module capabilities",
             ["module_id", "class_name"],
+            registry=self.registry
         )
 
         self.module_version_info = Info(
             "beast_mode_module_version",
             "Module version information",
             ["module_id", "class_name"],
+            registry=self.registry
         )
 
         # Health metrics
@@ -316,18 +375,21 @@ class PrometheusExporter:
             "beast_mode_component_health_status",
             "Component health status (1=healthy, 0=unhealthy)",
             ["component_name", "component_type"],
+            registry=self.registry
         )
 
         self.component_health_score = Gauge(
             "beast_mode_component_health_score",
             "Component health score (0-100)",
             ["component_name", "component_type"],
+            registry=self.registry
         )
 
         self.alert_count = Counter(
             "beast_mode_alerts_total",
             "Total number of alerts",
             ["alert_level", "alert_type"],
+            registry=self.registry
         )
 
         # Performance optimization metrics
@@ -335,21 +397,25 @@ class PrometheusExporter:
             "beast_mode_optimization_improvement_factor",
             "Performance improvement factor from optimization",
             ["optimization_strategy"],
+            registry=self.registry
         )
 
         self.cache_operations_total = Counter(
             "beast_mode_cache_operations_total",
             "Total cache operations",
             ["cache_name", "operation"],  # operation: hit, miss, eviction
+            registry=self.registry
         )
 
         self.cache_size_bytes = Gauge(
-            "beast_mode_cache_size_bytes", "Cache size in bytes", ["cache_name"]
+            "beast_mode_cache_size_bytes", "Cache size in bytes", ["cache_name"],
+            registry=self.registry
         )
 
         # Framework info
         self.framework_info = Info(
-            "beast_mode_framework_info", "Beast Mode framework information"
+            "beast_mode_framework_info", "Beast Mode framework information",
+            registry=self.registry
         )
 
         # Set framework info
@@ -364,13 +430,166 @@ class PrometheusExporter:
 
         self.logger.info("Prometheus metrics initialized")
 
+    def _initialize_daemon_metrics(self):
+        """Initialize metrics using the new daemon-based system."""
+        if not self._use_daemon:
+            return
+
+        try:
+            # Register all the metrics that were previously created directly
+            # System metrics
+            self.monitoring_client.register_gauge(
+                "beast_mode_system_cpu_percent", 
+                "System CPU usage percentage", 
+                ["host"]
+            )
+            self.monitoring_client.register_gauge(
+                "beast_mode_system_memory_percent",
+                "System memory usage percentage",
+                ["host"]
+            )
+            self.monitoring_client.register_gauge(
+                "beast_mode_system_memory_used_bytes",
+                "System memory used in bytes",
+                ["host"]
+            )
+            self.monitoring_client.register_gauge(
+                "beast_mode_system_disk_usage_percent",
+                "System disk usage percentage",
+                ["host", "mountpoint"]
+            )
+            self.monitoring_client.register_gauge(
+                "beast_mode_system_load_average",
+                "System load average",
+                ["host", "period"]
+            )
+
+            # Application metrics
+            self.monitoring_client.register_counter(
+                "beast_mode_app_operations_total",
+                "Total number of operations",
+                ["operation_type", "status"]
+            )
+            self.monitoring_client.register_histogram(
+                "beast_mode_app_operation_duration_seconds",
+                "Operation duration in seconds",
+                ["operation_type"],
+                [0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0, 5.0, 10.0]
+            )
+            self.monitoring_client.register_gauge(
+                "beast_mode_app_throughput_ops_per_second",
+                "Application throughput in operations per second",
+                ["operation_type"]
+            )
+            self.monitoring_client.register_gauge(
+                "beast_mode_app_error_rate",
+                "Application error rate percentage",
+                ["component"]
+            )
+            self.monitoring_client.register_gauge(
+                "beast_mode_app_cache_hit_rate", 
+                "Cache hit rate percentage", 
+                ["cache_name"]
+            )
+            self.monitoring_client.register_gauge(
+                "beast_mode_app_active_operations",
+                "Number of active operations",
+                ["operation_type"]
+            )
+            self.monitoring_client.register_gauge(
+                "beast_mode_app_queue_size", 
+                "Queue size", 
+                ["queue_name"]
+            )
+
+            # Module-specific metrics
+            self.monitoring_client.register_gauge(
+                "beast_mode_module_health_score",
+                "Module health score (0-100)",
+                ["module_id", "class_name"]
+            )
+            self.monitoring_client.register_gauge(
+                "beast_mode_module_status",
+                "Module status (1=healthy, 0=unhealthy)",
+                ["module_id", "class_name", "status"]
+            )
+            self.monitoring_client.register_counter(
+                "beast_mode_module_errors_total",
+                "Total number of module errors",
+                ["module_id", "class_name"]
+            )
+            self.monitoring_client.register_counter(
+                "beast_mode_module_warnings_total",
+                "Total number of module warnings",
+                ["module_id", "class_name"]
+            )
+            self.monitoring_client.register_gauge(
+                "beast_mode_module_uptime_seconds",
+                "Module uptime in seconds",
+                ["module_id", "class_name"]
+            )
+
+            # Health metrics
+            self.monitoring_client.register_gauge(
+                "beast_mode_component_health_status",
+                "Component health status (1=healthy, 0=unhealthy)",
+                ["component_name", "component_type"]
+            )
+            self.monitoring_client.register_gauge(
+                "beast_mode_component_health_score",
+                "Component health score (0-100)",
+                ["component_name", "component_type"]
+            )
+            self.monitoring_client.register_counter(
+                "beast_mode_alerts_total",
+                "Total number of alerts",
+                ["alert_level", "alert_type"]
+            )
+
+            # Performance optimization metrics
+            self.monitoring_client.register_gauge(
+                "beast_mode_optimization_improvement_factor",
+                "Performance improvement factor from optimization",
+                ["optimization_strategy"]
+            )
+            self.monitoring_client.register_counter(
+                "beast_mode_cache_operations_total",
+                "Total cache operations",
+                ["cache_name", "operation"]
+            )
+            self.monitoring_client.register_gauge(
+                "beast_mode_cache_size_bytes", 
+                "Cache size in bytes", 
+                ["cache_name"]
+            )
+
+            self.logger.info("Daemon-based metrics initialized")
+            
+            # Connect to existing monitoring systems for data collection
+            # DISABLED: This creates recursive monitoring loops
+            # self.performance_monitor = PerformanceMonitoringSystem(
+            #     monitoring_interval=self.monitoring_interval, enable_alerts=True
+            # )
+            self.performance_monitor = None
+
+            # Start metrics export thread for daemon-based system
+            self.export_thread = None
+            self.export_active = False
+            self.start_metrics_export()
+
+        except Exception as e:
+            self.logger.error(f"Failed to initialize daemon-based metrics: {e}")
+            # Fall back to legacy mode
+            self._use_daemon = False
+            self._initialize_prometheus_metrics()
+
     def start_http_server(self):
         """Start HTTP server for metrics endpoint."""
         if not PROMETHEUS_AVAILABLE or not self.enable_http_server:
             return
 
         try:
-            start_http_server(self.port)
+            start_http_server(self.port, registry=self.registry)
             self.logger.info(f"Prometheus metrics server started on port {self.port}")
             self.logger.info(
                 f"Metrics available at: http://localhost:{self.port}/metrics"
@@ -391,9 +610,43 @@ class PrometheusExporter:
     def stop_metrics_export(self):
         """Stop metrics export thread."""
         self.export_active = False
-        if hasattr(self, "export_thread") and self.export_thread:
+        if hasattr(self, "export_thread") and self.export_thread and self.export_thread.is_alive():
             self.export_thread.join(timeout=5)
+            if self.export_thread.is_alive():
+                self.logger.warning("Export thread did not stop gracefully")
         self.logger.info("Metrics export stopped")
+
+    def shutdown(self):
+        """Shutdown the exporter and clean up resources."""
+        with self._instance_lock:
+            if not self._initialized:
+                return
+                
+            self.logger.info("Shutting down Prometheus exporter")
+            
+            # Stop metrics export
+            self.stop_metrics_export()
+            
+            # Shutdown monitoring client if using daemon
+            if self._use_daemon and hasattr(self, 'monitoring_client'):
+                self.monitoring_client.shutdown()
+            
+            # Reset singleton state for testing
+            PrometheusExporter._instance = None
+            PrometheusExporter._initialized = False
+            
+            self.logger.info("Prometheus exporter shutdown complete")
+
+    @classmethod
+    def reset_singleton(cls):
+        """Reset singleton state for testing purposes."""
+        with cls._instance_lock:
+            if cls._instance and hasattr(cls._instance, 'export_active'):
+                cls._instance.export_active = False
+                if hasattr(cls._instance, 'export_thread') and cls._instance.export_thread:
+                    cls._instance.export_thread.join(timeout=2)
+            cls._instance = None
+            cls._initialized = False
 
     def _export_metrics_loop(self):
         """Main metrics export loop."""
@@ -411,7 +664,7 @@ class PrometheusExporter:
 
     def _export_system_metrics(self):
         """Export system metrics to Prometheus."""
-        if not PROMETHEUS_AVAILABLE:
+        if not PROMETHEUS_AVAILABLE and not self._use_daemon:
             return
 
         try:
@@ -437,38 +690,83 @@ class PrometheusExporter:
                 cpu_percent = psutil.cpu_percent(
                     interval=0.1
                 )  # Reduced interval for macOS
-                self.system_cpu_percent.labels(host=hostname).set(cpu_percent)
+                
+                if self._use_daemon:
+                    self.monitoring_client.set_gauge(
+                        "beast_mode_system_cpu_percent", 
+                        cpu_percent, 
+                        {"host": hostname}
+                    )
+                else:
+                    self.system_cpu_percent.labels(host=hostname).set(cpu_percent)
             except (PermissionError, OSError) as e:
                 self.logger.debug(f"CPU metrics collection failed on macOS: {e}")
 
             # Memory metrics
             try:
                 memory = psutil.virtual_memory()
-                self.system_memory_percent.labels(host=hostname).set(memory.percent)
-                self.system_memory_used_bytes.labels(host=hostname).set(memory.used)
+                
+                if self._use_daemon:
+                    self.monitoring_client.set_gauge(
+                        "beast_mode_system_memory_percent", 
+                        memory.percent, 
+                        {"host": hostname}
+                    )
+                    self.monitoring_client.set_gauge(
+                        "beast_mode_system_memory_used_bytes", 
+                        memory.used, 
+                        {"host": hostname}
+                    )
+                else:
+                    self.system_memory_percent.labels(host=hostname).set(memory.percent)
+                    self.system_memory_used_bytes.labels(host=hostname).set(memory.used)
             except (PermissionError, OSError) as e:
                 self.logger.debug(f"Memory metrics collection failed on macOS: {e}")
 
             # Disk metrics
             disk = psutil.disk_usage("/")
-            self.system_disk_usage_percent.labels(host=hostname, mountpoint="/").set(
-                disk.percent
-            )
+            if self._use_daemon:
+                self.monitoring_client.set_gauge(
+                    "beast_mode_system_disk_usage_percent", 
+                    disk.percent, 
+                    {"host": hostname, "mountpoint": "/"}
+                )
+            else:
+                self.system_disk_usage_percent.labels(host=hostname, mountpoint="/").set(
+                    disk.percent
+                )
 
             # Load average
             load_avg = psutil.getloadavg()
-            self.system_load_average.labels(host=hostname, period="1m").set(load_avg[0])
-            self.system_load_average.labels(host=hostname, period="5m").set(load_avg[1])
-            self.system_load_average.labels(host=hostname, period="15m").set(
-                load_avg[2]
-            )
+            if self._use_daemon:
+                self.monitoring_client.set_gauge(
+                    "beast_mode_system_load_average", 
+                    load_avg[0], 
+                    {"host": hostname, "period": "1m"}
+                )
+                self.monitoring_client.set_gauge(
+                    "beast_mode_system_load_average", 
+                    load_avg[1], 
+                    {"host": hostname, "period": "5m"}
+                )
+                self.monitoring_client.set_gauge(
+                    "beast_mode_system_load_average", 
+                    load_avg[2], 
+                    {"host": hostname, "period": "15m"}
+                )
+            else:
+                self.system_load_average.labels(host=hostname, period="1m").set(load_avg[0])
+                self.system_load_average.labels(host=hostname, period="5m").set(load_avg[1])
+                self.system_load_average.labels(host=hostname, period="15m").set(
+                    load_avg[2]
+                )
 
         except Exception as e:
             self.logger.error(f"Failed to export system metrics: {e}")
 
     def _export_application_metrics(self):
         """Export application metrics to Prometheus."""
-        if not PROMETHEUS_AVAILABLE:
+        if not PROMETHEUS_AVAILABLE or not self.performance_monitor:
             return
 
         try:
@@ -519,7 +817,7 @@ class PrometheusExporter:
 
     def _export_health_metrics(self):
         """Export health metrics to Prometheus."""
-        if not PROMETHEUS_AVAILABLE:
+        if not PROMETHEUS_AVAILABLE or not self.performance_monitor:
             return
 
         try:
@@ -563,7 +861,7 @@ class PrometheusExporter:
 
     def _export_performance_metrics(self):
         """Export performance optimization metrics to Prometheus."""
-        if not PROMETHEUS_AVAILABLE:
+        if not PROMETHEUS_AVAILABLE or not self.performance_monitor:
             return
 
         try:
