@@ -121,6 +121,59 @@ services:
     profiles:
       - monitoring
     
+  # Directus CMS
+  directus:
+    image: directus/directus:latest
+    ports:
+      - "8055:8055"
+    environment:
+      - KEY=255d861b-5ea1-5996-9aa3-922530ec40b1
+      - SECRET=6116487b-cda1-52c2-b5b5-c8022c45e263
+      - DB_CLIENT=pg
+      - DB_HOST=directus-db
+      - DB_PORT=5432
+      - DB_DATABASE=directus
+      - DB_USER=directus
+      - DB_PASSWORD=directus
+      - ADMIN_EMAIL=admin@example.com
+      - ADMIN_PASSWORD=d1r3ctu5
+      - CACHE_ENABLED=false
+      - RATE_LIMITER_ENABLED=false
+      - LOG_LEVEL=info
+    volumes:
+      - directus-uploads:/directus/uploads
+      - directus-extensions:/directus/extensions
+    depends_on:
+      - directus-db
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8055/server/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - systematic-pdca-local
+
+  # Directus Database
+  directus-db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=directus
+      - POSTGRES_PASSWORD=directus
+      - POSTGRES_DB=directus
+    volumes:
+      - directus-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U directus"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - systematic-pdca-local
+
   # Optional: Local log aggregation
   grafana:
     image: grafana/grafana:latest
@@ -137,6 +190,9 @@ volumes:
   grafana-storage:
   prometheus-data:
   nginx-logs:
+  directus-uploads:
+  directus-extensions:
+  directus-db-data:
 
 networks:
   systematic-pdca-local:
