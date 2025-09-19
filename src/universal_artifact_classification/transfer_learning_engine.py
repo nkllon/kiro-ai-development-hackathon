@@ -49,9 +49,8 @@ class TransferLearningEngine:
             self.code_model.to(self.device)
             self.code_model.eval()
             
-            # For now, use CodeBERT for all types - can expand later
-            self.text_tokenizer = self.code_tokenizer
-            self.text_model = self.code_model
+            # Try to load additional specialized models
+            self._load_specialized_models()
             
             logger.info(f"Loaded pre-trained model: {self.config.base_model_name}")
             
@@ -60,6 +59,42 @@ class TransferLearningEngine:
             # Fallback to basic classification
             self.code_model = None
             self.code_tokenizer = None
+    
+    def _load_specialized_models(self):
+        """Load specialized models for different artifact types"""
+        try:
+            # GraphCodeBERT for structural code analysis (optional)
+            try:
+                self.graph_tokenizer = AutoTokenizer.from_pretrained("microsoft/graphcodebert-base")
+                self.graph_model = AutoModel.from_pretrained("microsoft/graphcodebert-base")
+                self.graph_model.to(self.device)
+                self.graph_model.eval()
+                logger.info("Loaded GraphCodeBERT for structural analysis")
+            except Exception as e:
+                logger.warning(f"Could not load GraphCodeBERT: {e}")
+                self.graph_model = None
+                self.graph_tokenizer = None
+            
+            # RoBERTa for documentation and text analysis (optional)
+            try:
+                self.text_tokenizer = AutoTokenizer.from_pretrained("roberta-base")
+                self.text_model = AutoModel.from_pretrained("roberta-base")
+                self.text_model.to(self.device)
+                self.text_model.eval()
+                logger.info("Loaded RoBERTa for text analysis")
+            except Exception as e:
+                logger.warning(f"Could not load RoBERTa: {e}")
+                # Fallback to CodeBERT for text
+                self.text_tokenizer = self.code_tokenizer
+                self.text_model = self.code_model
+                
+        except Exception as e:
+            logger.warning(f"Error loading specialized models: {e}")
+            # Use CodeBERT for everything
+            self.text_tokenizer = self.code_tokenizer
+            self.text_model = self.code_model
+            self.graph_tokenizer = self.code_tokenizer
+            self.graph_model = self.code_model
     
     def classify_artifact(self, artifact_path: Path) -> ClassificationResult:
         """
@@ -113,10 +148,13 @@ class TransferLearningEngine:
             return None
     
     def _extract_features(self, content: str, artifact_path: Path) -> Dict[str, Any]:
-        """Extract semantic features using pre-trained model"""
+        """Extract semantic features using appropriate pre-trained model"""
         try:
+            # Select appropriate model based on artifact type
+            model, tokenizer = self._select_model_for_artifact(artifact_path, content)
+            
             # Tokenize content
-            inputs = self.code_tokenizer(
+            inputs = tokenizer(
                 content,
                 max_length=self.config.max_sequence_length,
                 truncation=True,
@@ -127,7 +165,7 @@ class TransferLearningEngine:
             
             # Get embeddings
             with torch.no_grad():
-                outputs = self.code_model(**inputs)
+                outputs = model(**inputs)
                 # Use [CLS] token embedding as feature vector
                 features = outputs.last_hidden_state[:, 0, :].cpu().numpy()[0]
             
@@ -135,7 +173,8 @@ class TransferLearningEngine:
                 "semantic_embedding": features,
                 "content_length": len(content),
                 "file_extension": artifact_path.suffix.lower(),
-                "filename": artifact_path.name.lower()
+                "filename": artifact_path.name.lower(),
+                "model_used": self._get_model_name(model)
             }
             
         except Exception as e:
@@ -143,8 +182,48 @@ class TransferLearningEngine:
             return {
                 "file_extension": artifact_path.suffix.lower(),
                 "filename": artifact_path.name.lower(),
-                "content_length": len(content) if content else 0
+                "content_length": len(content) if content else 0,
+                "model_used": "fallback"
             }
+    
+    def _select_model_for_artifact(self, artifact_path: Path, content: str) -> tuple:
+        """Select the most appropriate model for this artifact type"""
+        extension = artifact_path.suffix.lower()
+        filename = artifact_path.name.lower()
+        
+        # Use GraphCodeBERT for structured code files (if available)
+        if (hasattr(self, 'graph_model') and self.graph_model and 
+            extension in {'.py', '.js', '.ts', '.java', '.cpp', '.c', '.go'} and
+            self._has_structural_code_patterns(content)):
+            return self.graph_model, self.graph_tokenizer
+        
+        # Use RoBERTa for documentation and text files (if available)
+        if (hasattr(self, 'text_model') and self.text_model != self.code_model and
+            (extension in {'.md', '.rst', '.txt'} or 'readme' in filename)):
+            return self.text_model, self.text_tokenizer
+        
+        # Default to CodeBERT for everything else
+        return self.code_model, self.code_tokenizer
+    
+    def _has_structural_code_patterns(self, content: str) -> bool:
+        """Check if content has structural patterns that benefit from GraphCodeBERT"""
+        # Simple heuristics for structural code
+        structural_indicators = [
+            'class ', 'def ', 'function ', 'import ', 'from ',
+            '{', '}', '(', ')', '[', ']', '=>', '->'
+        ]
+        
+        indicator_count = sum(1 for indicator in structural_indicators if indicator in content)
+        return indicator_count >= 3  # Threshold for "structural" code
+    
+    def _get_model_name(self, model) -> str:
+        """Get human-readable name for the model"""
+        if hasattr(self, 'graph_model') and model == self.graph_model:
+            return "graphcodebert"
+        elif hasattr(self, 'text_model') and model == self.text_model and model != self.code_model:
+            return "roberta"
+        else:
+            return "codebert"
     
     def _classify_from_features(self, features: Dict[str, Any], artifact_path: Path) -> Dict[str, Any]:
         """Classify artifact based on extracted features"""

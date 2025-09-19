@@ -74,15 +74,20 @@ class AdaptiveBabelFish(ReflectiveModule):
                 self.heuristic_hits += 1
                 processing_time = (time.time() - start_time) * 1000
                 
+                # Still check for anomalies even in heuristic classifications
+                anomaly_indicators = []
+                if self.anomaly_detector.is_anomaly(quick_result):
+                    anomaly_indicators = self.anomaly_detector.get_anomaly_indicators(quick_result)
+                
                 return ArtifactUnderstanding(
                     primary_type=quick_result.predicted_type,
                     confidence=quick_result.confidence,
                     semantic_features={},
                     learned_patterns=[],
                     heuristic_rules_used=quick_result.features_used,
-                    anomaly_indicators=[],
+                    anomaly_indicators=anomaly_indicators,
                     learning_opportunities=[],
-                    explanation=f"Fast heuristic classification ({processing_time:.1f}ms)"
+                    explanation=f"Fast heuristic classification ({processing_time:.1f}ms) using {len(quick_result.features_used)} rules"
                 )
             
             # Phase 2: Deep learning for complex cases
@@ -103,15 +108,18 @@ class AdaptiveBabelFish(ReflectiveModule):
             # Phase 4: Generate new heuristics for efficiency
             self.heuristic_engine.update_rules(artifact_path, deep_result)
             
+            # Phase 5: Confidence calibration based on model performance
+            calibrated_confidence = self._calibrate_confidence(deep_result, artifact_path)
+            
             return ArtifactUnderstanding(
                 primary_type=deep_result.predicted_type,
-                confidence=deep_result.confidence,
+                confidence=calibrated_confidence,
                 semantic_features=self.transfer_learning_engine.get_semantic_features(artifact_path),
                 learned_patterns=learning_opportunities,
                 heuristic_rules_used=[],
                 anomaly_indicators=anomaly_indicators,
                 learning_opportunities=learning_opportunities,
-                explanation=f"Deep learning classification ({processing_time:.1f}ms)"
+                explanation=f"Deep learning classification ({processing_time:.1f}ms) using {deep_result.model_used} model"
             )
             
         except Exception as e:
@@ -160,6 +168,45 @@ class AdaptiveBabelFish(ReflectiveModule):
             "new_patterns_learned": adaptation_result.get("patterns_learned", 0),
             "accuracy_improvement": adaptation_result.get("accuracy_delta", 0.0)
         }
+    
+    def _calibrate_confidence(self, result: ClassificationResult, artifact_path: Path) -> float:
+        """
+        Calibrate confidence based on model performance and artifact characteristics.
+        
+        This adaptive confidence calibration helps the Babel Fish become more accurate
+        in its confidence estimates over time.
+        """
+        base_confidence = result.confidence
+        
+        # Adjust confidence based on model used
+        model_confidence_multipliers = {
+            "codebert": 1.0,
+            "graphcodebert": 1.05,  # Slightly higher for structural code
+            "roberta": 0.95,        # Slightly lower for text analysis
+            "extension_fallback": 0.7,
+            "fallback": 0.3
+        }
+        
+        model_multiplier = model_confidence_multipliers.get(result.model_used, 1.0)
+        calibrated = base_confidence * model_multiplier
+        
+        # Adjust based on file characteristics
+        extension = artifact_path.suffix.lower()
+        
+        # Higher confidence for well-known extensions
+        if extension in {'.py', '.js', '.java', '.cpp', '.c'}:
+            calibrated *= 1.02
+        elif extension in {'.md', '.txt', '.rst'}:
+            calibrated *= 1.01
+        elif extension in {'.json', '.yaml', '.yml', '.toml'}:
+            calibrated *= 1.03
+        
+        # Lower confidence for unusual extensions
+        if not extension or extension in {'.tmp', '.bak', '.old'}:
+            calibrated *= 0.8
+        
+        # Ensure confidence stays in valid range
+        return max(0.0, min(1.0, calibrated))
     
     def health_check(self) -> Dict[str, Any]:
         """Health check for the Adaptive Babel Fish"""
