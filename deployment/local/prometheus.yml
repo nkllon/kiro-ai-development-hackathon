@@ -28,13 +28,21 @@ scrape_configs:
     scrape_interval: 5s
     metrics_path: /metrics
 
-  # Beast Mode Prometheus Exporter (direct)
+  # Beast Mode Metrics Exporter (Docker networking)
   - job_name: 'beast-mode-metrics'
     static_configs:
-      - targets: ['host.docker.internal:8001']
+      - targets: ['beast-mode-metrics:8000']
     scrape_interval: 10s
     metrics_path: /metrics
     scrape_timeout: 5s
+    
+  # Systematic PDCA Orchestrator Application Metrics
+  - job_name: 'systematic-pdca-app'
+    static_configs:
+      - targets: ['systematic-pdca-orchestrator:8080']
+    scrape_interval: 15s
+    metrics_path: /metrics
+    scrape_timeout: 10s
 
 # Storage configuration (moved to command line arguments in docker-compose.yml)
 

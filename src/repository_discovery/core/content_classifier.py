@@ -153,14 +153,16 @@ class ContentClassifier(ReflectiveModule):
                 ]
             },
             ContentType.CONFIGURATION: {
-                'extensions': ['.json', '.yaml', '.yml', '.toml', '.ini', '.cfg', '.conf'],
-                'path_patterns': [r'.*config.*', r'.*\.kiro/.*'],
+                'extensions': ['.json', '.yaml', '.yml', '.toml', '.ini', '.cfg', '.conf', '.xml'],
+                'path_patterns': [r'.*config.*', r'.*\.kiro/.*', r'.*deployment/.*'],
                 'content_patterns': [
                     r'\[.*\]',  # INI sections
                     r'.*:\s*.*',  # YAML/JSON key-value
                     r'version\s*=',
                     r'dependencies'
-                ]
+                ],
+                'exclusion_extensions': ['.html', '.htm', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.pdf', '.zip', '.tar', '.gz'],
+                'exclusion_patterns': [r'.*\.html?$', r'.*\.(png|jpg|jpeg|gif|svg)$', r'.*\.(pdf|zip|tar|gz)$']
             },
             ContentType.DATA: {
                 'extensions': ['.csv', '.json', '.xml', '.sql', '.db'],
@@ -388,6 +390,24 @@ class ContentClassifier(ReflectiveModule):
         for content_type, patterns in self._file_extension_patterns.items():
             score = 0.0
             reasons = []
+            
+            # Check exclusions first - if file matches exclusion, skip this content type
+            if 'exclusion_extensions' in patterns:
+                if file_path.suffix.lower() in patterns['exclusion_extensions']:
+                    type_scores[content_type] = 0.0
+                    all_reasons[content_type] = [f"Excluded by extension {file_path.suffix}"]
+                    continue
+            
+            if 'exclusion_patterns' in patterns:
+                excluded = False
+                for exclusion_pattern in patterns['exclusion_patterns']:
+                    if re.search(exclusion_pattern, str(file_path), re.IGNORECASE):
+                        type_scores[content_type] = 0.0
+                        all_reasons[content_type] = [f"Excluded by pattern {exclusion_pattern}"]
+                        excluded = True
+                        break
+                if excluded:
+                    continue
             
             # Check file extension (30% weight)
             if file_path.suffix.lower() in patterns['extensions']:

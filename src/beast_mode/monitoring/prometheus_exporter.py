@@ -109,7 +109,18 @@ class PrometheusExporter:
 
     Integrates with existing monitoring infrastructure to expose metrics
     via Prometheus format for real-time visibility and alerting.
+    
+    Implements singleton pattern to prevent duplicate metric registration.
     """
+    
+    _instance = None
+    _initialized = False
+
+    def __new__(cls, *args, **kwargs):
+        """Singleton pattern to prevent duplicate instances."""
+        if cls._instance is None:
+            cls._instance = super(PrometheusExporter, cls).__new__(cls)
+        return cls._instance
 
     def __init__(
         self,
@@ -117,7 +128,11 @@ class PrometheusExporter:
         monitoring_interval: float = 5.0,
         enable_http_server: bool = True,
     ):
-        """Initialize Prometheus exporter."""
+        """Initialize Prometheus exporter (singleton)."""
+        # Prevent re-initialization
+        if self._initialized:
+            return
+            
         self.port = port
         self.monitoring_interval = monitoring_interval
         self.enable_http_server = enable_http_server
@@ -128,10 +143,16 @@ class PrometheusExporter:
             self.logger.warning(
                 "Prometheus client not available. Install with: pip install prometheus-client"
             )
+            self._initialized = True
             return
 
-        # Initialize Prometheus metrics
-        self._initialize_prometheus_metrics()
+        # Initialize Prometheus metrics (only once)
+        try:
+            self._initialize_prometheus_metrics()
+        except Exception as e:
+            self.logger.error(f"Failed to initialize Prometheus metrics: {e}")
+            self._initialized = True
+            return
 
         # Connect to existing monitoring systems
         self.performance_monitor = PerformanceMonitoringSystem(
@@ -143,11 +164,14 @@ class PrometheusExporter:
         self.export_thread = None
         self.export_active = False
 
-        # Start HTTP server and metrics export
+        # Start HTTP server and metrics export (only once)
         if self.enable_http_server:
             self.start_http_server()
 
         self.start_metrics_export()
+        
+        # Mark as initialized
+        self._initialized = True
 
     def _setup_logging(self) -> logging.Logger:
         """Setup logging for Prometheus exporter."""

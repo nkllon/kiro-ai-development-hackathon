@@ -52,7 +52,33 @@ services:
     networks:
       - systematic-pdca-local
     
-  # Optional: Local monitoring (Prometheus-compatible)
+  # Beast Mode Metrics Exporter
+  beast-mode-metrics:
+    build:
+      context: ../..
+      dockerfile: deployment/beast-mode-metrics/Dockerfile
+    expose:
+      - "8000"
+    environment:
+      - ENVIRONMENT=development
+      - PYTHONPATH=/app
+      - PROMETHEUS_PORT=8000
+      - BEAST_MODE_PROMETHEUS_ENABLED=true
+    volumes:
+      - ../../src:/app/src:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/metrics"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+    networks:
+      - systematic-pdca-local
+    profiles:
+      - monitoring
+
+  # Prometheus Server
   prometheus:
     image: prom/prometheus:latest
     ports:
@@ -88,6 +114,10 @@ services:
       retries: 3
       start_period: 10s
     restart: unless-stopped
+    depends_on:
+      - beast-mode-metrics
+    networks:
+      - systematic-pdca-local
     profiles:
       - monitoring
     
