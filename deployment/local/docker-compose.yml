@@ -140,6 +140,15 @@ services:
       - CACHE_ENABLED=false
       - RATE_LIMITER_ENABLED=false
       - LOG_LEVEL=info
+      # Google SMTP Configuration
+      - MAIL_FROM=lou@louspringer.com
+      - MAIL_TRANSPORT=smtp
+      - MAIL_HOST=smtp.gmail.com
+      - MAIL_PORT=587
+      - MAIL_USER=lou@louspringer.com
+      - MAIL_PASSWORD=xjvk evlz qzsg qtfh
+      - MAIL_SECURE=false
+      - MAIL_VERIFY_SSL=false
     volumes:
       - directus-uploads:/directus/uploads
       - directus-extensions:/directus/extensions
