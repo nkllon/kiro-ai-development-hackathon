@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database for Directus
+  postgres:
+    image: postgres:13
+    container_name: directus_postgres
+    environment:
+      POSTGRES_DB: directus
+      POSTGRES_USER: directus
+      POSTGRES_PASSWORD: directus
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - directus_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U directus -d directus"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Directus CMS
+  directus:
+    image: directus/directus:latest
+    container_name: directus_cms
+    ports:
+      - "8055:8055"
+    environment:
+      # Database Configuration
+      KEY: "directus-key-change-in-production"
+      SECRET: "directus-secret-change-in-production"
+      DB_CLIENT: "pg"
+      DB_HOST: "postgres"
+      DB_PORT: "5432"
+      DB_DATABASE: "directus"
+      DB_USER: "directus"
+      DB_PASSWORD: "directus"
+      
+      # Admin User Configuration
+      ADMIN_EMAIL: "admin@directus.local"
+      ADMIN_PASSWORD: "directus"
+      
+      # Security Configuration
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "true"
+      
+      # API Configuration
+      PUBLIC_URL: "http://localhost:8055"
+      
+      # File Storage Configuration
+      STORAGE_LOCATIONS: "local"
+      STORAGE_LOCAL_DRIVER: "local"
+      STORAGE_LOCAL_ROOT: "./uploads"
+      
+      # Email Configuration (for production)
+      EMAIL_FROM: "no-reply@directus.local"
+      EMAIL_TRANSPORT: "smtp"
+      EMAIL_SMTP_HOST: "localhost"
+      EMAIL_SMTP_PORT: "587"
+      
+      # Logging Configuration
+      LOG_LEVEL: "info"
+      LOG_STYLE: "pretty"
+      
+      # Cache Configuration
+      CACHE_ENABLED: "true"
+      CACHE_STORE: "memory"
+      
+      # Rate Limiting
+      RATE_LIMITER_ENABLED: "true"
+      RATE_LIMITER_STORE: "memory"
+      RATE_LIMITER_POINTS: "25"
+      RATE_LIMITER_DURATION: "1"
+      
+      # WebSocket Configuration
+      WEBSOCKETS_ENABLED: "true"
+      
+    volumes:
+      - directus_uploads:/directus/uploads
+      - directus_extensions:/directus/extensions
+      - ./directus/snapshots:/directus/snapshots
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - directus_network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8055/server/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+  # Redis for caching and sessions (optional but recommended)
+  redis:
+    image: redis:7-alpine
+    container_name: directus_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - directus_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+volumes:
+  postgres_data:
+    driver: local
+  directus_uploads:
+    driver: local
+  directus_extensions:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  directus_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
