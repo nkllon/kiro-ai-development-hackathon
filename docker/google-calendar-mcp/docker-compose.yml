@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  google-calendar-mcp:
+    build:
+      context: ../../
+      dockerfile: docker/google-calendar-mcp/Dockerfile
+    container_name: google_calendar_mcp
+    expose:
+      - "3000"
+      - "8080"  # Prometheus metrics
+    environment:
+      - GOOGLE_CALENDAR_PORT=3000
+      - GOOGLE_CALENDAR_LOG_LEVEL=${GOOGLE_CALENDAR_LOG_LEVEL:-info}
+      - BEAST_MODE_PROMETHEUS_ENABLED=true
+      - BEAST_MODE_PROMETHEUS_PORT=8080
+      - PYTHONPATH=/app
+    volumes:
+      # Mount credentials (create this directory and add your OAuth credentials)
+      - ./credentials:/app/credentials:ro
+      # Mount logs for persistence (use existing logs volume)
+      - ../../logs:/app/logs
+      # Mount cache for performance
+      - google_calendar_cache:/app/cache
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import sys; sys.path.insert(0, '/app'); from src.beast_mode.mcp_integrations.google_calendar import GoogleCalendarMCPServer; server = GoogleCalendarMCPServer({'host': 'localhost', 'port': 3000}); health = server.get_health_status(); exit(0 if health.status.name == 'HEALTHY' else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - systematic-pdca-local  # Use existing network
+
+volumes:
+  google_calendar_cache:
+
+networks:
+  # BEAST MODE REQUIREMENT: Use existing Beast Mode network topology
+  # This ensures integration with Directus CMS and other Beast Mode components
+  systematic-pdca-local:
+    external: true

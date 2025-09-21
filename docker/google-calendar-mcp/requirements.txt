@@ -1,0 +1,19 @@
+# Google Calendar MCP Integration Dependencies - Minimal for Docker
+
+# Core Google Calendar API
+google-auth>=2.0.0
+google-auth-oauthlib>=1.0.0
+google-api-python-client>=2.0.0
+
+# Web framework for MCP server
+fastapi>=0.100.0
+uvicorn>=0.20.0
+
+# HTTP client
+httpx>=0.24.0
+
+# Monitoring (optional - will gracefully degrade if not available)
+prometheus-client>=0.15.0
+
+# Basic utilities
+pydantic>=2.0.0
