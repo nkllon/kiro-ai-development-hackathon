@@ -1,18 +1,19 @@
 # Implementation Plan
 
-- [ ] 1. Set up project structure and core interfaces
+- [x] 1. Set up project structure and core interfaces
   - Create directory structure for MCP server components
   - Define base interfaces and data models for calendar operations
   - Implement ReflectiveModule base classes for all components
   - _Requirements: 1.1, 8.1_
 
-- [ ] 2. Implement authentication and credential management
-- [ ] 2.1 Create OAuth 2.0 authentication manager
-  - Implement GoogleAuthManager class inheriting from ReflectiveModule
-  - Add OAuth flow handling with browser redirect support
-  - Implement secure token storage with encryption
+- [ ] 2. **HIGH PRIORITY: Implement OAuth 2.0 authentication (CRITICAL GAP)**
+- [ ] 2.1 Complete OAuth 2.0 authentication manager
+  - Implement GoogleAuthManager OAuth flow with browser redirect support
+  - Add secure token storage with encryption and file permissions (600)
+  - Implement automatic token refresh logic with retry mechanisms
+  - Add credential validation and Google Cloud Project verification
   - Write unit tests for authentication flows and error scenarios
-  - _Requirements: 2.1, 2.2, 6.1, 6.2_
+  - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 6.1, 6.2_
 
 - [ ] 2.2 Implement credential validation and security
   - Add credential file validation with proper permissions (600)
@@ -29,27 +30,39 @@
   - Write integration tests for Docker infrastructure
   - _Requirements: 1.1, 1.2, 1.3, 5.4_
 
-- [ ] 3.2 Implement health monitoring and observability
-  - Create health check endpoints (/health, /ready, /metrics)
-  - Implement structured logging with correlation IDs
-  - Add Prometheus metrics export for monitoring
+- [x] 3.2 Implement health monitoring and observability
+  - ~~Create health check endpoints (/health, /ready, /metrics)~~ Use ReflectiveModule health status
+  - Implement structured logging with correlation IDs (already in base class)
+  - Add Prometheus metrics export for monitoring (configured in docker-compose)
+  - Configure Grafana dashboards for visualization
   - Write tests for health monitoring and metrics collection
   - _Requirements: 1.3, 7.1, 7.2, 7.3_
 
-- [ ] 4. Develop core MCP server functionality
-- [ ] 4.1 Implement MCP protocol server
-  - Create GoogleCalendarMCPServer class with ReflectiveModule inheritance
-  - Implement HTTP/SSE transport layer for Claude Desktop communication
-  - Add MCP request/response handling with proper error responses
-  - Write unit tests for MCP protocol implementation
-  - _Requirements: 3.1, 3.2, 3.3_
+- [ ] 3.3 **LOW PRIORITY: Implement Directus CMS registration**
+  - Add ReflectiveModule.register_module() call on server startup
+  - Ensure Directus CMS connectivity for systematic management
+  - Implement interface metadata for registry
+  - Write tests for Directus integration
+  - _Requirements: 9.7_
 
-- [ ] 4.2 Implement calendar operations handler
-  - Create CalendarOperationsHandler with Google Calendar API integration
-  - Implement event querying, creation, updating, and deletion methods
-  - Add availability checking and recurring event support
-  - Write comprehensive tests for all calendar operations
-  - _Requirements: 4.1, 4.2, 4.3, 4.4_
+- [ ] 4. **HIGH PRIORITY: Implement Google Calendar API integration (CRITICAL GAP)**
+- [ ] 4.1 Complete Google Calendar API operations
+  - Implement real Google Calendar API v3 calls in CalendarOperationsHandler
+  - Add event CRUD operations (create, read, update, delete) using Google API
+  - Implement availability checking using Google Calendar freebusy API
+  - Add recurring event support with Google Calendar recurrence rules
+  - Implement rate limiting with exponential backoff for Google API guidelines
+  - Write comprehensive tests for all calendar operations with API mocks
+  - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9_
+
+- [ ] 4.2 **HIGH PRIORITY: Complete MCP protocol implementation (CRITICAL GAP)**
+  - Implement HTTP/SSE transport layer for Claude Desktop communication
+  - Add complete MCP request/response handling according to official MCP specifications
+  - Create MCP tool descriptions for calendar operations
+  - Implement MCP resource protocol for calendar data
+  - Add claude_desktop_config.json template for Claude Desktop integration
+  - Write unit tests for MCP protocol compliance
+  - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8_
 
 - [ ] 5. Create error handling and recovery systems
 - [ ] 5.1 Implement comprehensive error handling

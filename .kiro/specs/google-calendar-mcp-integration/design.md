@@ -4,7 +4,15 @@
 
 The Google Calendar MCP Integration provides seamless calendar functionality within the Kiro AI development environment through a containerized Model Context Protocol (MCP) server. This design leverages Docker for reliable deployment, OAuth 2.0 for secure authentication, and the Beast Mode framework's ReflectiveModule pattern for systematic monitoring and health management.
 
-The integration follows a microservices architecture where the MCP server acts as a bridge between Claude Desktop and Google Calendar API, providing natural language calendar operations while maintaining security and reliability standards.
+**ARCHITECTURAL CONSTRAINT**: This is a **Beast Mode MCP** implementation that MUST comply with systematic framework requirements:
+
+- **ReflectiveModule Inheritance**: All components inherit from unified ReflectiveModule
+- **Prometheus Metrics**: MANDATORY port 8080 metrics endpoint (not optional)
+- **Grafana Integration**: MANDATORY observability dashboards (not optional)  
+- **Directus Registration**: MUST use ReflectiveModule.register_module() for interface registration
+- **Systematic Patterns**: MUST follow PDCA methodology and Beast Mode error handling
+
+The integration follows a microservices architecture where the MCP server acts as a bridge between Claude Desktop and Google Calendar API, providing natural language calendar operations while maintaining Beast Mode systematic standards.
 
 ## Architecture
 
@@ -88,6 +96,43 @@ graph TB
     style RM fill:#f3e5f5
     style HM fill:#fff3e0
 ```
+
+## Beast Mode Framework Compliance
+
+### ReflectiveModule Integration
+
+All components MUST inherit from the unified ReflectiveModule base class:
+
+```python
+class GoogleCalendarMCPServer(ReflectiveModule):
+    """Beast Mode compliant MCP server."""
+    
+    def __init__(self, config: Dict[str, Any]):
+        super().__init__()
+        # Beast Mode systematic initialization
+        
+    def register_module(self, registry):
+        """Register with Directus CMS for systematic management."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, "register"):
+            registry.register(metadata)
+```
+
+### Mandatory Infrastructure Dependencies
+
+The Beast Mode MCP requires these infrastructure components (NOT optional):
+
+1. **Prometheus** (port 8080): Metrics collection and alerting
+2. **Grafana** (port 3001): Observability dashboards and visualization  
+3. **Directus CMS**: Interface registration and systematic management
+4. **Docker Network**: Integration with Beast Mode network topology
+
+### Systematic Patterns
+
+- **PDCA Methodology**: Plan-Do-Check-Act cycles for all operations
+- **Correlation IDs**: All logging MUST include systematic correlation tracking
+- **Health Status**: ReflectiveModule health reporting (not HTTP endpoints)
+- **Error Handling**: Beast Mode systematic error patterns with recovery
 
 ## Components and Interfaces
 
