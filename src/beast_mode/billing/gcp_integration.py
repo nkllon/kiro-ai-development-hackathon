@@ -14,7 +14,6 @@ from typing import Dict, Any
 from datetime import datetime
 
 
-<<<<<<< HEAD
 class GCPBillingMonitor(BillingProvider, ReflectiveModule):
     """
     GCP Billing Monitor for Beast Mode
@@ -309,15 +308,3 @@ class GCPBillingMonitor(BillingProvider, ReflectiveModule):
                 })
         
         return recommendations
-=======
-class GcpIntegration:
-    """Minimal valid class."""
-
-    def __init__(self):
-        self.module_id = "gcp_integration"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}
->>>>>>> release/rc1-project-cleanup-redo

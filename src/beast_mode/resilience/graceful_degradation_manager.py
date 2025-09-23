@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """
-<<<<<<< HEAD
 Beast Mode Framework - Graceful Degradation Manager
 Implements UC-12: Graceful degradation management for operational reliability
 Provides circuit breakers, fallback mechanisms, and automatic recovery
@@ -16,27 +15,12 @@ import logging
 from contextlib import contextmanager
 
 from ..core.reflective_module import ReflectiveModule, HealthStatus
-=======
-Graceful Degradation Manager
-============================
-
-Auto-generated module after cleanup.
-
-Author: Beast Mode Framework
-Date: 2025-09-14
-Purpose: Minimal valid module
-"""
-
-from typing import Dict, Any
-from datetime import datetime
->>>>>>> release/rc1-project-cleanup-redo
 
 class CircuitState(Enum):
     CLOSED = "closed"      # Normal operation
     OPEN = "open"          # Circuit breaker triggered
     HALF_OPEN = "half_open"  # Testing recovery
 
-<<<<<<< HEAD
 class DegradationLevel(Enum):
     NONE = "none"          # Full functionality
     MINIMAL = "minimal"    # Minor features disabled
@@ -757,15 +741,3 @@ elper methods for graceful degradation implementation
             recommendations.append("System operating within normal parameters")
             
         return recommendations
-=======
-class GracefulDegradationManager:
-    """Minimal valid class."""
-
-    def __init__(self):
-        self.module_id = "graceful_degradation_manager"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}
->>>>>>> release/rc1-project-cleanup-redo

@@ -14,7 +14,6 @@ from typing import Dict, Any
 from datetime import datetime
 
 
-<<<<<<< HEAD
 class HumilityEnforcerImpl(HumilityEnforcer):
     """
     Implementation of systematic humility enforcement.
@@ -554,15 +553,3 @@ class HumilityEnforcerImpl(HumilityEnforcer):
         index = min(len(frequencies) - 1, int(scaling_factor - 1))
         
         return frequencies[index]
-=======
-class HumilityEnforcer:
-    """Minimal valid class."""
-
-    def __init__(self):
-        self.module_id = "humility_enforcer"
-        self.timestamp = datetime.now()
-
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}
->>>>>>> release/rc1-project-cleanup-redo

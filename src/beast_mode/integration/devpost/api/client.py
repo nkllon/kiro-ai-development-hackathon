@@ -21,7 +21,6 @@ class Client:
         self.module_id = "client"
         self.timestamp = datetime.now()
 
-<<<<<<< HEAD
 class DevpostAPIClient(DevpostAPIClientInterface):
     """
     HTTP client for Devpost API with comprehensive error handling and retry logic.
@@ -1782,8 +1781,3 @@ class DevpostAPIClient(DevpostAPIClientInterface):
             Response data as dictionary
         """
         return await self._make_request("DELETE", endpoint, params=params, headers=headers, timeout=timeout)
-=======
-    def get_info(self) -> Dict[str, Any]:
-        """Get module info."""
-        return {"module_id": self.module_id, "timestamp": self.timestamp.isoformat()}
->>>>>>> release/rc1-project-cleanup-redo
