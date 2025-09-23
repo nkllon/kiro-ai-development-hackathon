@@ -19,7 +19,7 @@ from src.beast_mode.hubris_prevention.models import (
 
 class TestActor(ReflectiveModule):
     """Test cases for Actor model."""
-    
+
     def test_actor_creation(self):
         """Test basic actor creation."""
         actor = Actor(
@@ -28,7 +28,7 @@ class TestActor(ReflectiveModule):
             role="developer",
             permissions=["read", "write"]
         )
-        
+
         assert actor.actor_id == "test_actor_001"
         assert actor.name == "Test Actor"
         assert actor.role == "developer"
@@ -36,7 +36,7 @@ class TestActor(ReflectiveModule):
         assert isinstance(actor.created_at, datetime)
         assert actor.last_active is None
         assert actor.metadata == {}
-    
+
     def test_actor_with_metadata(self):
         """Test actor creation with metadata."""
         metadata = {"department": "engineering", "level": "senior"}
@@ -47,13 +47,13 @@ class TestActor(ReflectiveModule):
             permissions=["read", "write", "admin"],
             metadata=metadata
         )
-        
+
         assert actor.metadata == metadata
 
 
 class TestDecision(ReflectiveModule):
     """Test cases for Decision model."""
-    
+
     def test_decision_creation(self):
         """Test basic decision creation."""
         decision = Decision(
@@ -62,7 +62,7 @@ class TestDecision(ReflectiveModule):
             impact_level="high",
             description="Deploy to production"
         )
-        
+
         assert decision.actor_id == "test_actor_001"
         assert decision.decision_type == "deployment"
         assert decision.impact_level == "high"
@@ -71,7 +71,7 @@ class TestDecision(ReflectiveModule):
         assert decision.accountability_verified is False
         assert decision.emergency_claimed is False
         assert len(decision.decision_id) > 0  # UUID generated
-    
+
     def test_decision_with_emergency_claim(self):
         """Test decision with emergency claim."""
         decision = Decision(
@@ -81,17 +81,17 @@ class TestDecision(ReflectiveModule):
             description="Emergency security patch",
             emergency_claimed=True
         )
-        
+
         assert decision.emergency_claimed is True
 
 
 class TestAccountabilityChain(ReflectiveModule):
     """Test cases for AccountabilityChain model."""
-    
+
     def test_empty_accountability_chain(self):
         """Test creation of empty accountability chain."""
         chain = AccountabilityChain(actor_id="test_actor_001")
-        
+
         assert chain.actor_id == "test_actor_001"
         assert chain.immediate_accountability == []
         assert chain.ultimate_accountability == []
@@ -103,7 +103,7 @@ class TestAccountabilityChain(ReflectiveModule):
 
 class TestHubrisScore(ReflectiveModule):
     """Test cases for HubrisScore model."""
-    
+
     def test_hubris_score_creation(self):
         """Test basic hubris score creation."""
         score = HubrisScore(
@@ -112,14 +112,14 @@ class TestHubrisScore(ReflectiveModule):
             trend_direction=TrendDirection.STABLE,
             risk_level=RiskLevel.LOW
         )
-        
+
         assert score.actor_id == "test_actor_001"
         assert score.score == 0.3
         assert score.trend_direction == TrendDirection.STABLE
         assert score.risk_level == RiskLevel.LOW
         assert isinstance(score.calculated_at, datetime)
         assert score.valid_until is None
-    
+
     def test_high_hubris_score(self):
         """Test high hubris score with critical risk."""
         score = HubrisScore(
@@ -128,7 +128,7 @@ class TestHubrisScore(ReflectiveModule):
             trend_direction=TrendDirection.WORSENING,
             risk_level=RiskLevel.CRITICAL
         )
-        
+
         assert score.score == 0.9
         assert score.risk_level == RiskLevel.CRITICAL
         assert score.trend_direction == TrendDirection.WORSENING
@@ -136,13 +136,13 @@ class TestHubrisScore(ReflectiveModule):
 
 class TestRealityCheckResult(ReflectiveModule):
     """Test cases for RealityCheckResult model."""
-    
+
     def test_reality_check_result_creation(self):
         """Test basic reality check result creation."""
         from src.beast_mode.hubris_prevention.models import ImpactValidation
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
-        
+
         impact_validation = ImpactValidation(
             decision_id="decision_001",
             impact_level="medium",
@@ -150,14 +150,14 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
             required_approvals=["manager"],
             validation_criteria={"threshold": 0.5}
         )
-        
+
         result = RealityCheckResult(
             decision_id="decision_001",
             actor_id="test_actor_001",
             impact_validation=impact_validation,
             overall_result=RealityCheckOutcome.PASSED
         )
-        
+
         assert result.decision_id == "decision_001"
         assert result.actor_id == "test_actor_001"
         assert result.overall_result == RealityCheckOutcome.PASSED
@@ -166,21 +166,21 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
 
 class TestEnums(ReflectiveModule):
     """Test cases for enum values."""
-    
+
     def test_trend_direction_values(self):
         """Test TrendDirection enum values."""
         assert TrendDirection.IMPROVING.value == "improving"
         assert TrendDirection.STABLE.value == "stable"
         assert TrendDirection.WORSENING.value == "worsening"
         assert TrendDirection.CRITICAL.value == "critical"
-    
+
     def test_risk_level_values(self):
         """Test RiskLevel enum values."""
         assert RiskLevel.LOW.value == "low"
         assert RiskLevel.MEDIUM.value == "medium"
         assert RiskLevel.HIGH.value == "high"
         assert RiskLevel.CRITICAL.value == "critical"
-    
+
     def test_intervention_type_values(self):
         """Test InterventionType enum values."""
         assert InterventionType.WARNING.value == "warning"
@@ -188,7 +188,7 @@ class TestEnums(ReflectiveModule):
         assert InterventionType.REALITY_CHECK.value == "reality_check"
         assert InterventionType.QUARANTINE.value == "quarantine"
         assert InterventionType.EMERGENCY_GOVERNANCE.value == "emergency_governance"
-    
+
     def test_reality_check_outcome_values(self):
         """Test RealityCheckOutcome enum values."""
         assert RealityCheckOutcome.PASSED.value == "passed"
@@ -204,12 +204,12 @@ class TestEnums(ReflectiveModule):
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -217,7 +217,7 @@ class TestEnums(ReflectiveModule):
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

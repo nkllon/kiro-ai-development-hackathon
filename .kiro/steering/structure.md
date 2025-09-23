@@ -1,52 +1,115 @@
+---
+inclusion: always
+---
+
 # Project Structure & Organization
 
-## Root Directory Layout
+## File Placement Rules
 
+### Root Directory Structure
 ```
 kiro-ai-development-hackathon/
 ├── .kiro/                      # REQUIRED: Kiro configuration (NOT in .gitignore)
-│   ├── specs/                  # Specification files for features
-│   ├── hooks/                  # Agent hooks and automation
-│   └── steering/               # Development steering rules
-├── src/                        # Main source code
-├── tests/                      # Test suite
+│   ├── specs/                  # Feature specifications
+│   ├── hooks/                  # Agent automation hooks
+│   └── steering/               # AI assistant guidance rules
+├── src/                        # All source code
+├── tests/                      # Test suite (mirrors src/ structure)
 ├── scripts/                    # Utility and automation scripts
 ├── docs/                       # Documentation
 ├── examples/                   # Usage examples and demos
-├── makefiles/                  # Modular Makefile components
 ├── assessment_results/         # Beast Mode assessment outputs
-├── metrics_data/               # Performance and velocity metrics
-└── patterns/                   # Learned patterns and templates
+└── metrics_data/               # Performance metrics
 ```
 
-## Source Code Organization (`src/`)
+### Source Code Organization (`src/`)
 
-### Beast Mode Framework (`src/beast_mode/`)
-The core systematic development framework with modular architecture:
-
+**Beast Mode Framework** (`src/beast_mode/`):
 - `analysis/` - RCA engines and failure analysis
-- `assessment/` - Production readiness and health assessment
-- `autonomous/` - Self-managing system components
-- `backlog/` - Task and requirement management
+- `assessment/` - Production readiness evaluation
+- `autonomous/` - Self-managing components
 - `cli/` - Command-line interfaces
-- `compliance/` - RM and regulatory compliance
-- `core/` - PDCA orchestrator and fundamental components
+- `core/` - PDCA orchestrator and base classes
 - `execution/` - Task execution engines
 - `ghostbusters/` - AI agent framework
-- `intelligence/` - Model-driven decision engines
-- `orchestration/` - Tool and workflow orchestration
-- `quality/` - Automated quality gates and validation
+- `orchestration/` - Tool and workflow coordination
+- `quality/` - Automated quality gates
 - `testing/` - Test framework and validation
-- `tool_health/` - Systematic tool repair and maintenance
 
-### Spec Reconciliation (`src/spec_reconciliation/`)
+**Spec Reconciliation** (`src/spec_reconciliation/`):
 - Specification validation and governance
 - Cross-spec consistency checking
 - Requirements traceability
 
-## Specifications Directory (`.kiro/specs/`)
+## Code Organization Standards
 
-Each spec follows a standard structure:
+### File Placement Rules
+- **Source code**: Always in `src/` with appropriate subdirectory
+- **Tests**: Mirror `src/` structure in `tests/` (e.g., `src/beast_mode/core/` → `tests/unit/beast_mode/core/`)
+- **Scripts**: Utility scripts in `scripts/`, not scattered in root
+- **Documentation**: Technical docs in `docs/`, not mixed with code
+- **Examples**: Working examples in `examples/`, not inline in source
+
+### Naming Conventions
+- **Python modules**: `snake_case.py`
+- **Classes**: `PascalCase` (e.g., `ReflectiveModule`)
+- **Functions/methods**: `snake_case`
+- **Constants**: `UPPER_SNAKE_CASE`
+- **Directories**: `snake_case` or `kebab-case` for multi-word
+
+### Module Structure
+Every Python module should follow this pattern:
+```python
+"""Module docstring describing purpose and usage."""
+
+import os
+import sys
+from typing import Dict, List, Optional, Any
+
+import requests
+from pydantic import BaseModel
+
+from beast_mode.core import ReflectiveModule
+from src.utils import helper_function
+
+# Constants
+DEFAULT_TIMEOUT = 30
+MAX_RETRIES = 3
+
+class ComponentName(ReflectiveModule):
+    """Component implementing systematic functionality."""
+    
+    def __init__(self, config: Dict[str, Any]) -> None:
+        super().__init__()
+        self._config = config
+```
+
+## Architecture Patterns
+
+### Reflective Module Pattern
+All major components must inherit from `ReflectiveModule`:
+- Implement health monitoring endpoints (`/health`, `/ready`, `/metrics`)
+- Provide status reporting capabilities
+- Support systematic debugging and analysis
+- Include structured logging with correlation IDs
+
+### Systematic Organization
+- **No ad-hoc placement**: Every file has a designated location
+- **Consistent patterns**: Follow established naming and structure
+- **Model-driven**: Consult project registry for architectural decisions
+- **Separation of concerns**: Clear boundaries between components
+
+### Testing Requirements
+- **Test coverage**: >90% for all new code
+- **Test structure**: Mirror source structure in `tests/` (e.g., `src/beast_mode/core/` → `tests/unit/beast_mode/core/`)
+- **Test types**: Unit (`tests/unit/`), integration (`tests/integration/`)
+- **Fixtures**: Shared test data in `tests/fixtures/`
+- **Mocking**: Use `unittest.mock` for external dependencies
+- **Parametrized tests**: Use `pytest.mark.parametrize` for multiple scenarios
+
+## Specifications Structure (`.kiro/specs/`)
+
+Each specification follows this structure:
 ```
 spec-name/
 ├── requirements.md    # Functional and non-functional requirements
@@ -54,59 +117,46 @@ spec-name/
 └── tasks.md          # Implementation tasks and dependencies
 ```
 
-### Key Specifications
-- `beast-mode-framework/` - Core Beast Mode system
-- `ghostbusters-framework/` - AI agent system
-- `spec-framework/` - Meta-specification system
-- `test-rca-integration/` - RCA and testing integration
-- `git-devops-pipeline/` - CI/CD and deployment
-
-## Testing Structure (`tests/`)
-
-```
-tests/
-├── unit/              # Unit tests for individual components
-├── integration/       # Integration tests across modules
-├── orchestration/     # Orchestration and workflow tests
-├── analysis/          # RCA and analysis engine tests
-├── fixtures/          # Test data and fixtures
-└── conftest.py        # Pytest configuration and shared fixtures
-```
-
-## Organization Principles
-
-### Systematic Organization Standards
-- **No Ad-Hoc Placement**: Everything has a designated location
-- **Consistent Patterns**: Naming and structure follow systematic conventions
-- **Model-Driven Structure**: Organization based on project registry
-- **Separation of Concerns**: Clear boundaries between components
-
-## Architecture Principles
-
-### Modular Design
-- Each component in `src/beast_mode/` is self-contained
-- Clear separation of concerns between analysis, execution, and orchestration
-- Reflective Module (RM) pattern for all major components
-
-### Systematic Organization
-- No ad-hoc file placement - everything has a designated location
-- Consistent naming patterns across the codebase
-- Model-driven structure based on project registry
-
-### Quality Standards
-- All modules must have corresponding tests in `tests/`
-- Documentation required for all public interfaces
-- Examples provided in `examples/` for major features
-
 ## Critical Requirements
+
+### Artifact Creation Governance
+**MANDATORY FIRST QUESTION**: "Why am I creating this without a spec?"
+
+Every artifact creation must follow one of two paths:
+
+#### 1. Spec-Driven (Systematic)
+- Requirements → Design → Implementation
+- Full traceability and validation
+- Systematic quality and acceptance criteria
+- Use when building production features
+
+#### 2. Vibe Mode (Exploratory)
+- Rapid prototyping and exploration
+- **MUST** be explicitly labeled as Vibe Mode
+- **MUST** have potential to become reference implementation
+- **MUST** be subject to artifact discovery and classification later
+- Use for research, proof-of-concepts, and rapid iteration
+
+#### Brownfield Reality Check
+When entering existing codebases:
+- **First priority**: Discover what artifacts actually exist
+- **Reality over documentation**: Take account of actual system state
+- **Artifact discovery**: Use ContentScanner, ContentClassifier, ContentMetadataExtractor
+- **Systematic classification**: Understand actual vs. documented architecture
 
 ### Kiro Integration
 - `.kiro/` directory MUST be at project root
 - `.kiro/` MUST NOT be in `.gitignore` (hackathon requirement)
-- Steering rules in `.kiro/steering/` guide AI assistant behavior
+- All steering rules in `.kiro/steering/` guide AI behavior
 
 ### Beast Mode Compliance
-- All modules inherit from ReflectiveModule interface
-- Systematic approach - no workarounds or ad-hoc solutions
-- PDCA methodology applied to all development tasks
-- Model-driven decisions using project registry
+- All modules inherit from `ReflectiveModule`
+- Use systematic approaches, never ad-hoc solutions
+- Apply PDCA methodology to all development tasks
+- Make model-driven decisions using project registry
+
+### Quality Gates
+- All code must pass existing test suite
+- New features require corresponding tests
+- Documentation must be updated with code changes
+- Health endpoints required for all services

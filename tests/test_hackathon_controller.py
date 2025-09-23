@@ -35,7 +35,7 @@ from src.rm_ddd.core.base_reflective_module import ReflectiveModule, ModuleCapab
 
 class TestHackathonDemoController(ReflectiveModule):
     """Test suite for the hackathon demo controller."""
-    
+
     def setup_method(self):
         """Set up test fixtures."""
         self.project_path = Path(".")
@@ -52,28 +52,28 @@ class TestHackathonDemoController(ReflectiveModule):
             required_elements=["README.md", ".kiro directory", "Working demo"]
         )
         self.controller = HackathonDemoController(self.project_path, self.test_config)
-    
+
     def test_controller_initialization(self):
         """Test that the demo controller initializes correctly."""
         assert self.controller.project_path == self.project_path
         assert self.controller.config.hackathon_name == "Test Hackathon"
         assert len(self.controller.validation_gates) == 5
-    
+
     def test_hackathon_templates(self):
         """Test predefined hackathon templates."""
         templates = self.controller.get_hackathon_templates()
-        
+
         assert "devpost" in templates
         assert "mlh" in templates
-        
+
         devpost_template = templates["devpost"]
         assert devpost_template.hackathon_name == "DevPost Hackathon"
         assert devpost_template.demo_time_limit == 10
-        
+
         mlh_template = templates["mlh"]
         assert mlh_template.hackathon_name == "MLH Hackathon"
         assert mlh_template.demo_time_limit == 5  # MLH typically shorter
-    
+
     def test_template_customization(self):
         """Test hackathon template customization."""
         customizations = {
@@ -81,17 +81,17 @@ class TestHackathonDemoController(ReflectiveModule):
             "demo_time_limit": 8,
             "submission_deadline": datetime.now() + timedelta(days=3)
         }
-        
+
         custom_config = self.controller.customize_hackathon_config("devpost", customizations)
-        
+
         assert custom_config.hackathon_name == "Custom Hackathon"
         assert custom_config.demo_time_limit == 8
         assert custom_config.submission_deadline == customizations["submission_deadline"]
-        
+
         # Should preserve other template values
         assert len(custom_config.judging_criteria) > 0
         assert len(custom_config.required_elements) > 0
-    
+
     def test_judge_package_generation(self):
         """Test judge evaluation package generation."""
         # Create a minimal demo package
@@ -119,9 +119,9 @@ class TestHackathonDemoController(ReflectiveModule):
                 team_eligibility=True, overall_compliance_score=0
             )
         )
-        
+
         judge_package = self.controller.generate_judge_package(demo_package)
-        
+
         # Verify judge package structure
         assert "executive_summary" in judge_package
         assert "quick_start_guide" in judge_package
@@ -130,13 +130,13 @@ class TestHackathonDemoController(ReflectiveModule):
         assert "systematic_excellence" in judge_package
         assert "compliance_status" in judge_package
         assert "demo_reliability" in judge_package
-        
+
         # Verify technical highlights
         tech_highlights = judge_package["technical_highlights"]
         assert "score" in tech_highlights
         assert "test_coverage" in tech_highlights
         assert "key_features" in tech_highlights
-    
+
     def test_demo_rehearsal_execution(self):
         """Test demo rehearsal execution and timing analysis."""
         demo_package = DemoPackage(
@@ -164,9 +164,9 @@ class TestHackathonDemoController(ReflectiveModule):
                 team_eligibility=True, overall_compliance_score=0
             )
         )
-        
+
         rehearsal_results = self.controller.execute_demo_rehearsal(demo_package)
-        
+
         # Verify rehearsal results structure
         assert "start_time" in rehearsal_results
         assert "end_time" in rehearsal_results
@@ -174,13 +174,13 @@ class TestHackathonDemoController(ReflectiveModule):
         assert "total_duration" in rehearsal_results
         assert "issues" in rehearsal_results
         assert "suggestions" in rehearsal_results
-        
+
         # Verify section analysis
         sections = rehearsal_results["sections"]
         assert "opening_hook" in sections
         assert "problem_statement" in sections
         assert "technical_demonstration" in sections
-        
+
         # Each section should have timing analysis
         for section_name, section_data in sections.items():
             assert "target_duration" in section_data
@@ -199,12 +199,12 @@ if __name__ == "__main__":
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -212,7 +212,7 @@ if __name__ == "__main__":
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

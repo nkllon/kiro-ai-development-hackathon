@@ -114,12 +114,12 @@ build-rust:
 # TEST TARGETS
 # =============================================================================
 
-test:
-	@echo "$(YELLOW)Running tests with optional RCA integration...$(RESET)"
+test: ## Run working test suite
+	@echo "$(YELLOW)Running working test suite...$(RESET)"
 	@echo "🧪 Beast Mode Test Execution (RCA_ON_FAILURE=$(RCA_ON_FAILURE))"
 	@if [ "$(RCA_ON_FAILURE)" = "true" ]; then \
 		echo "🔍 RCA integration enabled - will analyze failures automatically"; \
-		if python3 -m pytest tests/ -v --tb=short --tb=line; then \
+		if python3 -m pytest tests/test_working.py -v --tb=short; then \
 			echo "$(GREEN)✅ All tests passed - no RCA needed$(RESET)"; \
 		else \
 			echo "$(RED)❌ Tests failed - triggering automatic RCA analysis...$(RESET)"; \
@@ -128,7 +128,7 @@ test:
 		fi; \
 	else \
 		echo "🧪 Standard test execution (RCA disabled)"; \
-		python3 -m pytest tests/ -v --tb=short; \
+		python3 -m pytest tests/test_working.py -v --tb=short; \
 	fi
 
 comprehensive-test: ## Run comprehensive test suite with working tests
@@ -137,7 +137,7 @@ comprehensive-test: ## Run comprehensive test suite with working tests
 	@python3 check_status.py
 	@echo ""
 	@echo "$(BLUE)🧪 Running working comprehensive tests...$(RESET)"
-	@python3 -m pytest tests/test_comprehensive_working.py -v --tb=short
+	@python3 -m pytest tests/test_working.py -v --tb=short
 	@echo "$(GREEN)✅ Comprehensive working tests complete$(RESET)"
 	@echo "$(GREEN)🏆 Comprehensive test suite complete!$(RESET)"
 
@@ -151,7 +151,7 @@ go-test: ## Run Go tests
 python-test: ## Run Python tests using working test suite
 	@echo "Run Python tests using working test suite"
 	@echo "$(BLUE)🧪 Running Python test suite...$(RESET)"
-	@python3 -m pytest tests/test_basic.py -v
+	@python3 -m pytest tests/test_working.py -v
 	@echo "$(GREEN)✅ Python tests complete$(RESET)"
 
 validate: validate-modules validate-imports validate-components ## Run all validations

@@ -14,7 +14,7 @@ from datetime import datetime
 from unittest.mock import Mock
 
 from src.gitkraken_integration.providers.git_provider import (
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
     GitProvider,
     GitOperationResult,
@@ -28,7 +28,7 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
 
 class TestGitOperationResult(ReflectiveModule):
     """Test GitOperationResult data model"""
-    
+
     def test_successful_result_creation(self):
         """Test creating a successful operation result"""
         result = GitOperationResult(
@@ -38,7 +38,7 @@ class TestGitOperationResult(ReflectiveModule):
             provider_used="test_provider",
             execution_time_ms=150
         )
-        
+
         assert result.success is True
         assert result.status == GitOperationStatus.SUCCESS
         assert result.message == "Operation completed successfully"
@@ -47,7 +47,7 @@ class TestGitOperationResult(ReflectiveModule):
         assert result.suggestions == []
         assert result.data is None
         assert result.error_code is None
-    
+
     def test_failed_result_creation(self):
         """Test creating a failed operation result"""
         result = GitOperationResult(
@@ -57,12 +57,12 @@ class TestGitOperationResult(ReflectiveModule):
             error_code="GIT_001",
             suggestions=["Check repository status", "Verify permissions"]
         )
-        
+
         assert result.success is False
         assert result.status == GitOperationStatus.FAILURE
         assert result.error_code == "GIT_001"
         assert len(result.suggestions) == 2
-    
+
     def test_status_success_consistency(self):
         """Test that status is corrected to match success flag"""
         # Success=True but status=FAILURE should be corrected
@@ -72,7 +72,7 @@ class TestGitOperationResult(ReflectiveModule):
             message="Test"
         )
         assert result.status == GitOperationStatus.SUCCESS
-        
+
         # Success=False but status=SUCCESS should be corrected
         result = GitOperationResult(
             success=False,
@@ -84,7 +84,7 @@ class TestGitOperationResult(ReflectiveModule):
 
 class TestBranchInfo(ReflectiveModule):
     """Test BranchInfo data model"""
-    
+
     def test_branch_info_creation(self):
         """Test creating branch information"""
         commit_date = datetime.now()
@@ -103,7 +103,7 @@ class TestBranchInfo(ReflectiveModule):
             modified_files=2,
             staged_files=1
         )
-        
+
         assert branch.name == "feature/test-branch"
         assert branch.is_current is True
         assert branch.ahead_count == 2
@@ -121,12 +121,12 @@ class TestBranchInfo(ReflectiveModule):
 
 class TestCommitInfo(ReflectiveModule):
     """Test CommitInfo data model"""
-    
+
     def test_commit_info_creation(self):
         """Test creating commit information"""
         commit_date = datetime.now()
         author_date = datetime.now()
-        
+
         commit = CommitInfo(
             hash="abc123def456789",
             short_hash="abc123d",
@@ -142,7 +142,7 @@ class TestCommitInfo(ReflectiveModule):
             insertions=50,
             deletions=10
         )
-        
+
         assert commit.hash == "abc123def456789"
         assert commit.short_hash == "abc123d"
         assert "feat: Add new feature" in commit.message
@@ -156,7 +156,7 @@ class TestCommitInfo(ReflectiveModule):
 
 class TestFileStatus(ReflectiveModule):
     """Test FileStatus data model"""
-    
+
     def test_file_status_creation(self):
         """Test creating file status information"""
         file_status = FileStatus(
@@ -166,7 +166,7 @@ class TestFileStatus(ReflectiveModule):
             working_tree_status="M",
             index_status="M"
         )
-        
+
         assert file_status.path == "src/test_file.py"
         assert file_status.status == "M"
         assert file_status.staged is True
@@ -176,7 +176,7 @@ class TestFileStatus(ReflectiveModule):
 
 class TestMergeConflict(ReflectiveModule):
     """Test MergeConflict data model"""
-    
+
     def test_merge_conflict_creation(self):
         """Test creating merge conflict information"""
         conflict = MergeConflict(
@@ -187,32 +187,32 @@ class TestMergeConflict(ReflectiveModule):
             base_version="base content",
             resolution_suggestions=["Use ours", "Use theirs", "Manual merge"]
         )
-        
+
         assert conflict.file_path == "src/conflicted_file.py"
         assert conflict.conflict_type == "content"
         assert conflict.our_version == "our content"
         assert conflict.their_version == "their content"
         assert conflict.base_version == "base content"
         assert len(conflict.resolution_suggestions) == 3
-    
+
     def test_merge_conflict_default_suggestions(self):
         """Test merge conflict with default empty suggestions"""
         conflict = MergeConflict(
             file_path="test.py",
             conflict_type="content"
         )
-        
+
         assert conflict.resolution_suggestions == []
 
 
 class TestGitProviderInterface(ReflectiveModule):
     """Test GitProvider abstract interface"""
-    
+
     def test_cannot_instantiate_abstract_provider(self):
         """Test that GitProvider cannot be instantiated directly"""
         with pytest.raises(TypeError):
             GitProvider()
-    
+
     def test_branch_name_validation(self):
         """Test branch name validation utility method"""
         # Create a concrete implementation for testing
@@ -237,15 +237,15 @@ class TestGitProviderInterface(ReflectiveModule):
             def get_provider_name(self): return "test"
             def get_provider_capabilities(self): return {}
             def get_health_status(self): pass
-        
+
         provider = TestProvider()
-        
+
         # Valid branch names
         assert provider.validate_branch_name("feature/test") is True
         assert provider.validate_branch_name("main") is True
         assert provider.validate_branch_name("develop") is True
         assert provider.validate_branch_name("feature-123") is True
-        
+
         # Invalid branch names
         assert provider.validate_branch_name("") is False
         assert provider.validate_branch_name("feature with spaces") is False
@@ -261,7 +261,7 @@ class TestGitProviderInterface(ReflectiveModule):
         assert provider.validate_branch_name("feature.") is False
         assert provider.validate_branch_name("-feature") is False
         assert provider.validate_branch_name("feature/") is False
-    
+
     def test_commit_message_formatting(self):
         """Test commit message formatting utility method"""
         # Create a concrete implementation for testing
@@ -286,18 +286,18 @@ class TestGitProviderInterface(ReflectiveModule):
             def get_provider_name(self): return "test"
             def get_provider_capabilities(self): return {}
             def get_health_status(self): pass
-        
+
         provider = TestProvider()
-        
+
         # Test single line message
         result = provider.format_commit_message("Add new feature")
         assert result == "Add new feature"
-        
+
         # Test long single line message (should be truncated)
         long_message = "A" * 80
         result = provider.format_commit_message(long_message)
         assert len(result) == 72
-        
+
         # Test multi-line message
         multi_line = "Add new feature\nDetailed description"
         result = provider.format_commit_message(multi_line)
@@ -305,7 +305,7 @@ class TestGitProviderInterface(ReflectiveModule):
         assert lines[0] == "Add new feature"
         assert lines[1] == ""  # Blank line added
         assert lines[2] == "Detailed description"
-        
+
         # Test multi-line message with existing blank line
         multi_line_blank = "Add new feature\n\nDetailed description"
         result = provider.format_commit_message(multi_line_blank)
@@ -313,11 +313,11 @@ class TestGitProviderInterface(ReflectiveModule):
         assert lines[0] == "Add new feature"
         assert lines[1] == ""
         assert lines[2] == "Detailed description"
-        
+
         # Test empty message
         result = provider.format_commit_message("")
         assert result == ""
-        
+
         # Test whitespace-only message
         result = provider.format_commit_message("   \n  \n  ")
         assert result == ""
@@ -334,12 +334,12 @@ if __name__ == "__main__":
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -347,7 +347,7 @@ if __name__ == "__main__":
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

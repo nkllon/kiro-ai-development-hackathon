@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, 'feature/**' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Job 1: Test and Coverage (includes build, quality checks, and coverage reporting)
+  test-and-coverage:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: ['18']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run unit tests with coverage
+      run: |
+        echo "🧪 Running unit tests with coverage..."
+        echo "======================================"
+        npm run test:coverage | tee test-output.log
+        
+        echo ""
+        echo "📊 Test Results Summary:"
+        echo "======================="
+        
+        # Extract test results from the log
+        TEST_FILES=$(grep "Test Files" test-output.log | tail -1 | sed 's/.*Test Files[[:space:]]*//' | sed 's/[[:space:]]*passed.*//')
+        TESTS_PASSED=$(grep "Tests" test-output.log | tail -1 | sed 's/.*Tests[[:space:]]*//' | sed 's/[[:space:]]*passed.*//')
+        
+        echo "✅ Test Files: $TEST_FILES passed"
+        echo "✅ Total Tests: $TESTS_PASSED passed"
+        echo "📁 Unit Test Files: $(find src/tests/unit -name '*.test.ts' | wc -l | tr -d ' ') files"
+        echo "📁 Source Files: $(find src -name '*.ts' -not -path 'src/tests/*' | wc -l | tr -d ' ') files"
+        
+        echo ""
+        echo "📈 Coverage Summary (from detailed report above):"
+        echo "================================================="
+        echo "• Lines, Functions, Branches, and Statements coverage shown in table above"
+        echo "• Full HTML report available in coverage/index.html artifact"
+        
+        # Clean up temp file
+        rm -f test-output.log
+      env:
+        NODE_ENV: test
+        
+    - name: Upload coverage reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage/
+        retention-days: 30
+

@@ -30,7 +30,7 @@ from src.devpost_integration.models import (
 
 class TestValidationIssue(ReflectiveModule):
     """Test suite for ValidationIssue."""
-    
+
     def test_validation_issue_creation(self):
         """Test creating validation issues."""
         issue = ValidationIssue(
@@ -41,7 +41,7 @@ class TestValidationIssue(ReflectiveModule):
             suggestion="Please provide a title",
             fix_action="Add a title to your project"
         )
-        
+
         assert issue.field_name == "title"
         assert issue.category == ValidationCategory.REQUIRED_FIELDS
         assert issue.severity == ValidationSeverity.ERROR
@@ -52,7 +52,7 @@ class TestValidationIssue(ReflectiveModule):
 
 class TestValidationReport(ReflectiveModule):
     """Test suite for ValidationReport."""
-    
+
     @pytest.fixture
     def sample_issues(self):
         """Create sample validation issues."""
@@ -76,7 +76,7 @@ class TestValidationReport(ReflectiveModule):
                 message="Not enough tags"
             )
         ]
-    
+
     def test_validation_report_creation(self, sample_issues):
         """Test creating validation reports."""
         report = ValidationReport(
@@ -86,13 +86,13 @@ class TestValidationReport(ReflectiveModule):
             passed_checks=["tagline_check", "team_check"],
             completion_percentage=60.0
         )
-        
+
         assert not report.is_valid
         assert report.overall_score == 75.0
         assert len(report.issues) == 3
         assert len(report.passed_checks) == 2
         assert report.completion_percentage == 60.0
-    
+
     def test_get_issues_by_severity(self, sample_issues):
         """Test filtering issues by severity."""
         report = ValidationReport(
@@ -100,19 +100,19 @@ class TestValidationReport(ReflectiveModule):
             overall_score=75.0,
             issues=sample_issues
         )
-        
+
         critical_issues = report.get_issues_by_severity(ValidationSeverity.CRITICAL)
         warning_issues = report.get_issues_by_severity(ValidationSeverity.WARNING)
         error_issues = report.get_issues_by_severity(ValidationSeverity.ERROR)
-        
+
         assert len(critical_issues) == 1
         assert len(warning_issues) == 1
         assert len(error_issues) == 1
-        
+
         assert critical_issues[0].field_name == "title"
         assert warning_issues[0].field_name == "description"
         assert error_issues[0].field_name == "tags"
-    
+
     def test_get_issues_by_category(self, sample_issues):
         """Test filtering issues by category."""
         report = ValidationReport(
@@ -120,15 +120,15 @@ class TestValidationReport(ReflectiveModule):
             overall_score=75.0,
             issues=sample_issues
         )
-        
+
         required_field_issues = report.get_issues_by_category(ValidationCategory.REQUIRED_FIELDS)
         content_quality_issues = report.get_issues_by_category(ValidationCategory.CONTENT_QUALITY)
-        
+
         assert len(required_field_issues) == 1
         assert len(content_quality_issues) == 2
-        
+
         assert required_field_issues[0].field_name == "title"
-    
+
     def test_has_critical_issues(self, sample_issues):
         """Test checking for critical issues."""
         report = ValidationReport(
@@ -136,9 +136,9 @@ class TestValidationReport(ReflectiveModule):
             overall_score=75.0,
             issues=sample_issues
         )
-        
+
         assert report.has_critical_issues()
-        
+
         # Test without critical issues
         non_critical_issues = [issue for issue in sample_issues if issue.severity != ValidationSeverity.CRITICAL]
         report_no_critical = ValidationReport(
@@ -146,9 +146,9 @@ class TestValidationReport(ReflectiveModule):
             overall_score=85.0,
             issues=non_critical_issues
         )
-        
+
         assert not report_no_critical.has_critical_issues()
-    
+
     def test_has_errors(self, sample_issues):
         """Test checking for error-level issues."""
         report = ValidationReport(
@@ -156,13 +156,13 @@ class TestValidationReport(ReflectiveModule):
             overall_score=75.0,
             issues=sample_issues
         )
-        
+
         assert report.has_errors()
 
 
 class TestValidationRules(ReflectiveModule):
     """Test suite for individual validation rules."""
-    
+
     @pytest.fixture
     def sample_metadata(self):
         """Create sample project metadata."""
@@ -176,63 +176,63 @@ class TestValidationRules(ReflectiveModule):
             demo_url="https://example.com/demo",
             video_url="https://youtube.com/watch?v=test"
         )
-    
+
     def test_required_field_rule(self):
         """Test required field validation rule."""
         rule = RequiredFieldRule("title", min_length=3)
-        
+
         # Test with valid title
         metadata = ProjectMetadata(title="Valid Title", tagline="", description="")
         issues = rule.validate(metadata)
         assert len(issues) == 0
-        
+
         # Test with missing title
         metadata = ProjectMetadata(title=None, tagline="", description="")
         issues = rule.validate(metadata)
         assert len(issues) == 1
         assert issues[0].field_name == "title"
         assert "missing" in issues[0].message.lower()
-        
+
         # Test with too short title
         metadata = ProjectMetadata(title="Hi", tagline="", description="")
         issues = rule.validate(metadata)
         assert len(issues) == 1
         assert issues[0].field_name == "title"
         assert "at least 3 characters" in issues[0].message
-    
+
     def test_content_quality_rule(self):
         """Test content quality validation rule."""
         rule = ContentQualityRule("description", min_length=50, min_words=10)
-        
+
         # Test with valid description
         metadata = ProjectMetadata(
-            title="", tagline="", 
+            title="", tagline="",
             description="This is a comprehensive description that meets all the requirements for length and word count validation."
         )
         issues = rule.validate(metadata)
         assert len(issues) == 0
-        
+
         # Test with too short description
         metadata = ProjectMetadata(title="", tagline="", description="Too short")
         issues = rule.validate(metadata)
         assert len(issues) >= 1
         assert any("at least 50 characters" in issue.message for issue in issues)
-        
+
         # Test with forbidden patterns
         rule_with_patterns = ContentQualityRule(
-            "description", 
-            min_length=10, 
+            "description",
+            min_length=10,
             forbidden_patterns=[r'\btodo\b']
         )
         metadata = ProjectMetadata(title="", tagline="", description="This has a TODO item in it")
         issues = rule_with_patterns.validate(metadata)
         assert len(issues) >= 1
         assert any("discouraged content pattern" in issue.message for issue in issues)
-    
+
     def test_link_validation_rule(self):
         """Test link validation rule."""
         rule = LinkValidationRule()
-        
+
         # Test with valid links
         metadata = ProjectMetadata(
             title="", tagline="", description="",
@@ -244,7 +244,7 @@ class TestValidationRules(ReflectiveModule):
         # Should have no critical errors, might have warnings about video platform
         critical_issues = [i for i in issues if i.severity == ValidationSeverity.ERROR]
         assert len(critical_issues) == 0
-        
+
         # Test with invalid URLs
         metadata = ProjectMetadata(
             title="", tagline="", description="",
@@ -254,11 +254,11 @@ class TestValidationRules(ReflectiveModule):
         issues = rule.validate(metadata)
         assert len(issues) >= 2
         assert any("not valid" in issue.message for issue in issues)
-    
+
     def test_team_validation_rule(self):
         """Test team validation rule."""
         rule = TeamValidationRule(min_members=1, max_members=4)
-        
+
         # Test with valid team size
         metadata = ProjectMetadata(
             title="", tagline="", description="",
@@ -266,7 +266,7 @@ class TestValidationRules(ReflectiveModule):
         )
         issues = rule.validate(metadata)
         assert len(issues) == 0
-        
+
         # Test with no team members
         metadata = ProjectMetadata(
             title="", tagline="", description="",
@@ -275,7 +275,7 @@ class TestValidationRules(ReflectiveModule):
         issues = rule.validate(metadata)
         assert len(issues) == 1
         assert "at least 1 member" in issues[0].message
-        
+
         # Test with too many team members
         metadata = ProjectMetadata(
             title="", tagline="", description="",
@@ -284,11 +284,11 @@ class TestValidationRules(ReflectiveModule):
         issues = rule.validate(metadata)
         assert len(issues) == 1
         assert "more than recommended" in issues[0].message
-    
+
     def test_tag_validation_rule(self):
         """Test tag validation rule."""
         rule = TagValidationRule(min_tags=2, max_tags=5)
-        
+
         # Test with valid tags
         metadata = ProjectMetadata(
             title="", tagline="", description="",
@@ -296,7 +296,7 @@ class TestValidationRules(ReflectiveModule):
         )
         issues = rule.validate(metadata)
         assert len(issues) == 0
-        
+
         # Test with too few tags
         metadata = ProjectMetadata(
             title="", tagline="", description="",
@@ -305,7 +305,7 @@ class TestValidationRules(ReflectiveModule):
         issues = rule.validate(metadata)
         assert len(issues) == 1
         assert "at least 2 tags" in issues[0].message
-        
+
         # Test with too many tags
         metadata = ProjectMetadata(
             title="", tagline="", description="",
@@ -314,7 +314,7 @@ class TestValidationRules(ReflectiveModule):
         issues = rule.validate(metadata)
         assert len(issues) == 1
         assert "Too many tags" in issues[0].message
-        
+
         # Test with duplicate tags
         metadata = ProjectMetadata(
             title="", tagline="", description="",
@@ -327,19 +327,19 @@ class TestValidationRules(ReflectiveModule):
 
 class TestValidationEngine(ReflectiveModule):
     """Test suite for ValidationEngine."""
-    
+
     @pytest.fixture
     def temp_config_dir(self):
         """Create temporary directory for config files."""
         with tempfile.TemporaryDirectory() as temp_dir:
             yield Path(temp_dir)
-    
+
     @pytest.fixture
     def validation_engine(self, temp_config_dir):
         """Create validation engine instance for testing."""
         config_path = temp_config_dir / "validation_config.json"
         return ValidationEngine(config_path=config_path)
-    
+
     @pytest.fixture
     def sample_metadata(self):
         """Create sample project metadata."""
@@ -353,97 +353,97 @@ class TestValidationEngine(ReflectiveModule):
             demo_url="https://example.com/demo",
             video_url="https://youtube.com/watch?v=test"
         )
-    
+
     def test_validation_engine_initialization(self, validation_engine):
         """Test validation engine initializes correctly."""
         assert validation_engine is not None
         assert len(validation_engine.built_in_rules) > 0
         assert len(validation_engine.rule_registry) > 0
         assert validation_engine.config is not None
-    
+
     def test_config_loading_and_saving(self, temp_config_dir):
         """Test configuration loading and saving."""
         config_path = temp_config_dir / "test_config.json"
-        
+
         # Test with non-existent config (should use defaults)
         engine = ValidationEngine(config_path=config_path)
         assert engine.config['validation_timeout'] == 30
-        
+
         # Test saving config
         engine.config['custom_setting'] = 'test_value'
         engine._save_config()
-        
+
         # Test loading saved config
         engine2 = ValidationEngine(config_path=config_path)
         assert engine2.config['custom_setting'] == 'test_value'
-    
+
     def test_add_custom_rule(self, validation_engine):
         """Test adding custom validation rules."""
         initial_rule_count = len(validation_engine.rule_registry)
-        
+
         custom_rule = RequiredFieldRule("custom_field", min_length=5)
         validation_engine.add_custom_rule(custom_rule)
-        
+
         assert len(validation_engine.rule_registry) == initial_rule_count + 1
         assert custom_rule.rule_id in validation_engine.rule_registry
         assert custom_rule in validation_engine.custom_rules
-    
+
     def test_remove_rule(self, validation_engine):
         """Test removing validation rules."""
         # Add a custom rule first
         custom_rule = RequiredFieldRule("test_field", min_length=3)
         validation_engine.add_custom_rule(custom_rule)
-        
+
         rule_id = custom_rule.rule_id
         assert rule_id in validation_engine.rule_registry
-        
+
         # Remove the rule
         removed = validation_engine.remove_rule(rule_id)
         assert removed
         assert rule_id not in validation_engine.rule_registry
         assert custom_rule not in validation_engine.custom_rules
-        
+
         # Try to remove non-existent rule
         removed_again = validation_engine.remove_rule("non_existent_rule")
         assert not removed_again
-    
+
     def test_get_active_rules(self, validation_engine):
         """Test getting active validation rules."""
         # Test with default configuration (all rules active)
         active_rules = validation_engine.get_active_rules()
         assert len(active_rules) > 0
-        
+
         # Test with disabled rules
         validation_engine.config['disabled_rules'] = ['required_field_title']
         active_rules = validation_engine.get_active_rules()
-        
+
         # Should not include the disabled rule
         rule_ids = [rule.rule_id for rule in active_rules]
         assert 'required_field_title' not in rule_ids
-        
+
         # Test with enabled rules only
         validation_engine.config['enabled_rules'] = ['required_field_tagline', 'link_validation']
         validation_engine.config['disabled_rules'] = []
         active_rules = validation_engine.get_active_rules()
-        
+
         rule_ids = [rule.rule_id for rule in active_rules]
         assert 'required_field_tagline' in rule_ids
         assert 'link_validation' in rule_ids
         assert len(rule_ids) == 2
-    
+
     def test_validate_metadata(self, validation_engine, sample_metadata):
         """Test validating project metadata."""
         report = validation_engine.validate_metadata(sample_metadata)
-        
+
         assert isinstance(report, ValidationReport)
         assert report.validation_timestamp is not None
         assert report.overall_score >= 0
         assert report.completion_percentage >= 0
         assert len(report.passed_checks) > 0
-        
+
         # Should pass validation with good metadata
         assert report.is_valid or not report.has_critical_issues()
-    
+
     def test_validate_metadata_with_issues(self, validation_engine):
         """Test validation with problematic metadata."""
         # Create metadata with issues
@@ -455,15 +455,15 @@ class TestValidationEngine(ReflectiveModule):
             team_members=[],  # No team members
             repository_url="not-a-url"  # Invalid URL
         )
-        
+
         report = validation_engine.validate_metadata(bad_metadata)
-        
+
         assert not report.is_valid
         assert len(report.issues) > 0
         assert report.has_critical_issues() or report.has_errors()
         assert len(report.missing_fields) > 0
         assert report.overall_score < 100
-    
+
     def test_validate_project(self, validation_engine):
         """Test validating a complete Devpost project."""
         project = DevpostProject(
@@ -480,19 +480,19 @@ class TestValidationEngine(ReflectiveModule):
                 ProjectLink(title="Demo", url="https://example.com/demo", link_type="demo")
             ]
         )
-        
+
         report = validation_engine.validate_project(project)
-        
+
         assert isinstance(report, ValidationReport)
         assert report.context is not None
         assert report.context.hackathon_id == "hackathon-456"
-    
+
     def test_calculate_overall_score(self, validation_engine):
         """Test overall score calculation."""
         # Test with no issues
         score = validation_engine._calculate_overall_score([], 5)
         assert score == 100.0
-        
+
         # Test with various severity issues
         issues = [
             ValidationIssue("field1", ValidationCategory.REQUIRED_FIELDS, ValidationSeverity.CRITICAL, "Critical issue"),
@@ -500,13 +500,13 @@ class TestValidationEngine(ReflectiveModule):
             ValidationIssue("field3", ValidationCategory.FORMATTING, ValidationSeverity.WARNING, "Warning issue"),
             ValidationIssue("field4", ValidationCategory.COMPLETENESS, ValidationSeverity.INFO, "Info issue")
         ]
-        
+
         score = validation_engine._calculate_overall_score(issues, 10)
-        
+
         # Should be less than 100 due to penalties
         assert score < 100
         assert score >= 0  # Should not go below 0
-    
+
     def test_get_validation_suggestions(self, validation_engine):
         """Test getting validation suggestions."""
         issues = [
@@ -519,17 +519,17 @@ class TestValidationEngine(ReflectiveModule):
                 "Description is short", suggestion="Consider expanding the description"
             )
         ]
-        
+
         report = ValidationReport(is_valid=False, overall_score=75.0, issues=issues)
         suggestions = validation_engine.get_validation_suggestions(report)
-        
+
         assert len(suggestions) > 2  # Enhanced suggestions include more information
         assert any("CRITICAL ISSUES FOUND" in s for s in suggestions)  # Status summary
         assert any("Required Fields:" in s for s in suggestions)  # Category grouping
         assert any("Content Quality:" in s for s in suggestions)  # Category grouping
         assert any("🚨 CRITICAL" in s for s in suggestions)  # Critical issues
         assert any("⚠️  WARNING" in s for s in suggestions)  # Warnings
-    
+
     def test_export_validation_report_json(self, validation_engine):
         """Test exporting validation report as JSON."""
         issues = [
@@ -538,14 +538,14 @@ class TestValidationEngine(ReflectiveModule):
                 "Title is required", suggestion="Add a title"
             )
         ]
-        
+
         report = ValidationReport(
             is_valid=False, overall_score=80.0, issues=issues,
             passed_checks=["tagline_check"], missing_fields=["title"]
         )
-        
+
         json_report = validation_engine.export_validation_report(report, "json")
-        
+
         # Should be valid JSON
         parsed = json.loads(json_report)
         assert parsed['is_valid'] == False
@@ -553,7 +553,7 @@ class TestValidationEngine(ReflectiveModule):
         assert len(parsed['issues']) == 1
         assert len(parsed['passed_checks']) == 1
         assert len(parsed['missing_fields']) == 1
-    
+
     def test_export_validation_report_markdown(self, validation_engine):
         """Test exporting validation report as Markdown."""
         issues = [
@@ -562,41 +562,41 @@ class TestValidationEngine(ReflectiveModule):
                 "Title is required", suggestion="Add a title"
             )
         ]
-        
+
         report = ValidationReport(
             is_valid=False, overall_score=80.0, issues=issues,
             passed_checks=["tagline_check"]
         )
-        
+
         markdown_report = validation_engine.export_validation_report(report, "markdown")
-        
+
         assert "# Validation Report" in markdown_report
         assert "Overall Score" in markdown_report
         assert "❌ Error Issues" in markdown_report
         assert "✅ tagline_check" in markdown_report
-    
+
     def test_export_validation_report_html(self, validation_engine):
         """Test exporting validation report as HTML."""
         report = ValidationReport(is_valid=True, overall_score=95.0)
-        
+
         html_report = validation_engine.export_validation_report(report, "html")
-        
+
         assert "<html>" in html_report
         assert "<title>Validation Report</title>" in html_report
         assert "95.0/100" in html_report
-    
+
     def test_export_validation_report_invalid_format(self, validation_engine):
         """Test exporting with invalid format raises error."""
         report = ValidationReport(is_valid=True, overall_score=95.0)
-        
+
         with pytest.raises(ValueError, match="Unsupported export format"):
             validation_engine.export_validation_report(report, "invalid_format")
-    
+
     def test_configure_hackathon_rules(self, validation_engine):
         """Test configuring hackathon-specific validation rules."""
         hackathon_id = "test-hackathon-2025"
         hackathon_name = "Test Hackathon 2025"
-        
+
         rules_config = {
             'required_fields': ['project_video', 'team_bio'],
             'content_quality': {
@@ -606,46 +606,46 @@ class TestValidationEngine(ReflectiveModule):
                 }
             }
         }
-        
+
         initial_rule_count = len(validation_engine.rule_registry)
-        
+
         validation_engine.configure_hackathon_rules(hackathon_id, hackathon_name, rules_config)
-        
+
         # Should have added new rules
         assert len(validation_engine.rule_registry) > initial_rule_count
-        
+
         # Check configuration was saved
         assert hackathon_id in validation_engine.config['hackathon_specific_rules']
         assert validation_engine.config['hackathon_specific_rules'][hackathon_id]['name'] == hackathon_name
-    
+
     def test_get_hackathon_validation_summary(self, validation_engine):
         """Test getting hackathon validation summary."""
         hackathon_id = "test-hackathon-2025"
         hackathon_name = "Test Hackathon 2025"
-        
+
         rules_config = {
             'required_fields': ['project_video'],
             'content_quality': {
                 'team_bio': {'min_length': 100}
             }
         }
-        
+
         validation_engine.configure_hackathon_rules(hackathon_id, hackathon_name, rules_config)
-        
+
         summary = validation_engine.get_hackathon_validation_summary(hackathon_id)
-        
+
         assert summary['hackathon_id'] == hackathon_id
         assert summary['hackathon_name'] == hackathon_name
         assert summary['total_rules'] > 0
         assert 'project_video' in summary['required_fields']
         assert 'team_bio' in summary['content_quality_rules']
-    
+
     def test_validate_submission_readiness(self, validation_engine, sample_metadata):
         """Test validating submission readiness with requirements."""
         from src.devpost_integration.models import SubmissionRequirement
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
-        
+
         requirements = [
             SubmissionRequirement(
                 requirement_id="video_demo",
@@ -662,18 +662,18 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
                 completed=True
             )
         ]
-        
+
         report = validation_engine.validate_submission_readiness(
-            sample_metadata, 
-            "test-hackathon", 
+            sample_metadata,
+            "test-hackathon",
             requirements
         )
-        
+
         assert isinstance(report, ValidationReport)
         # Should have issues due to incomplete video demo requirement
         assert not report.is_valid
         assert any("video_demo" in issue.field_name for issue in report.issues)
-    
+
     def test_get_missing_requirements(self, validation_engine):
         """Test extracting missing requirements from validation report."""
         issues = [
@@ -686,20 +686,20 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
                 "Required submission item not completed: Video Demo"
             )
         ]
-        
+
         report = ValidationReport(is_valid=False, overall_score=60.0, issues=issues)
         missing = validation_engine.get_missing_requirements(report)
-        
+
         assert len(missing) == 2
         assert any("Required field: title" in req for req in missing)
         assert any("Video Demo" in req for req in missing)
-    
+
     def test_enhanced_validation_suggestions(self, validation_engine):
         """Test enhanced validation suggestions with categorization."""
         issues = [
             ValidationIssue(
                 "title", ValidationCategory.REQUIRED_FIELDS, ValidationSeverity.CRITICAL,
-                "Title is missing", suggestion="Please provide a title", 
+                "Title is missing", suggestion="Please provide a title",
                 fix_action="Add a title to your project"
             ),
             ValidationIssue(
@@ -708,14 +708,14 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
                 fix_action="Add more detail to the description"
             )
         ]
-        
+
         report = ValidationReport(
             is_valid=False, overall_score=75.0, issues=issues,
             missing_fields=["title"], completion_percentage=80.0
         )
-        
+
         suggestions = validation_engine.get_validation_suggestions(report)
-        
+
         assert len(suggestions) > 0
         assert any("CRITICAL ISSUES FOUND" in s for s in suggestions)
         assert any("Required Fields:" in s for s in suggestions)
@@ -725,14 +725,14 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
 
 class TestUtilityFunctions(ReflectiveModule):
     """Test suite for utility functions."""
-    
+
     def test_create_default_validation_engine(self):
         """Test creating default validation engine."""
         engine = create_default_validation_engine()
-        
+
         assert isinstance(engine, ValidationEngine)
         assert len(engine.built_in_rules) > 0
-    
+
     def test_validate_project_metadata(self):
         """Test quick validation function."""
         metadata = ProjectMetadata(
@@ -740,12 +740,12 @@ class TestUtilityFunctions(ReflectiveModule):
             tagline="A test project for validation",
             description="This is a comprehensive description that meets all the requirements for validation testing."
         )
-        
+
         report = validate_project_metadata(metadata)
-        
+
         assert isinstance(report, ValidationReport)
         assert report.validation_timestamp is not None
-    
+
     def test_validate_project_metadata_with_hackathon(self):
         """Test validation with hackathon-specific context."""
         metadata = ProjectMetadata(
@@ -753,9 +753,9 @@ class TestUtilityFunctions(ReflectiveModule):
             tagline="A test project for validation",
             description="This is a comprehensive description that meets all the requirements."
         )
-        
+
         report = validate_project_metadata(metadata, hackathon_id="test-hackathon")
-        
+
         assert isinstance(report, ValidationReport)
         assert report.context is not None
         assert report.context.hackathon_id == "test-hackathon"
@@ -772,12 +772,12 @@ if __name__ == "__main__":
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -785,7 +785,7 @@ if __name__ == "__main__":
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

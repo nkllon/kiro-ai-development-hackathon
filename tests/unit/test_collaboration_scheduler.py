@@ -26,7 +26,7 @@ from src.beast_mode.messaging.collaboration_scheduler import (
     OfficeHoursPattern
 )
 from src.beast_mode.messaging.models import BeastModeMessage, MessageType
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# # from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
 
@@ -42,23 +42,23 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
             "test_classes": 4,
             "test_methods": 32
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestCollaborationScheduler(ReflectiveModule):
     """Test collaboration scheduler functionality"""
-    
+
     @pytest.fixture
     def scheduler(self):
         """Create a test collaboration scheduler"""
         return CollaborationScheduler("test_agent")
-    
+
     @pytest.fixture
     def sample_office_hours(self):
         """Create sample office hours"""
@@ -70,7 +70,7 @@ class TestCollaborationScheduler(ReflectiveModule):
             timezone="UTC",
             description="Daily office hours for collaboration"
         )
-    
+
     def test_scheduler_initialization(self, scheduler):
         """Test scheduler initialization"""
         assert scheduler.agent_id == "test_agent"
@@ -79,7 +79,7 @@ class TestCollaborationScheduler(ReflectiveModule):
         assert len(scheduler.active_sessions) == 0
         assert scheduler.pattern_analysis_enabled is True
         assert scheduler._running is False
-    
+
     def test_set_office_hours(self, scheduler):
         """Test setting office hours"""
         office_hours = scheduler.set_office_hours(
@@ -89,34 +89,34 @@ class TestCollaborationScheduler(ReflectiveModule):
             description="Test office hours",
             capabilities_focus=["python", "testing"]
         )
-        
+
         assert office_hours.agent_id == "test_agent"
         assert office_hours.pattern == OfficeHoursPattern.DAILY
         assert office_hours.start_time == time(9, 0)
         assert office_hours.end_time == time(17, 0)
         assert office_hours.description == "Test office hours"
         assert office_hours.capabilities_focus == ["python", "testing"]
-        
+
         # Check it's stored
         assert "test_agent" in scheduler.office_hours
         assert scheduler.office_hours["test_agent"] == office_hours
-    
+
     def test_get_office_hours(self, scheduler, sample_office_hours):
         """Test getting office hours"""
         scheduler.office_hours["test_agent"] = sample_office_hours
-        
+
         # Get own office hours
         office_hours = scheduler.get_office_hours()
         assert office_hours == sample_office_hours
-        
+
         # Get specific agent's office hours
         office_hours = scheduler.get_office_hours("test_agent")
         assert office_hours == sample_office_hours
-        
+
         # Get non-existent agent's office hours
         office_hours = scheduler.get_office_hours("unknown_agent")
         assert office_hours is None
-    
+
     def test_update_office_hours_from_message(self, scheduler):
         """Test updating office hours from message"""
         message = BeastModeMessage(
@@ -136,10 +136,10 @@ class TestCollaborationScheduler(ReflectiveModule):
                 }
             }
         )
-        
+
         success = scheduler.update_office_hours_from_message(message)
         assert success is True
-        
+
         # Check office hours were stored
         office_hours = scheduler.get_office_hours("other_agent")
         assert office_hours is not None
@@ -151,7 +151,7 @@ class TestCollaborationScheduler(ReflectiveModule):
         assert office_hours.capabilities_focus == ["python", "ai"]
         assert office_hours.max_concurrent_sessions == 5
         assert office_hours.session_duration_minutes == 45
-    
+
     def test_update_office_hours_from_invalid_message(self, scheduler):
         """Test updating office hours from invalid message"""
         message = BeastModeMessage(
@@ -159,42 +159,42 @@ class TestCollaborationScheduler(ReflectiveModule):
             source="other_agent",
             payload={}  # Missing office_hours data
         )
-        
+
         success = scheduler.update_office_hours_from_message(message)
         assert success is False
-        
+
         # Check no office hours were stored
         office_hours = scheduler.get_office_hours("other_agent")
         assert office_hours is None
-    
+
     @patch('src.beast_mode.messaging.collaboration_scheduler.datetime')
     def test_is_agent_available(self, mock_datetime, scheduler, sample_office_hours):
         """Test checking agent availability"""
         scheduler.office_hours["test_agent"] = sample_office_hours
-        
+
         # Mock current time to be within office hours
         mock_datetime.now.return_value = datetime(2024, 1, 1, 10, 0)  # 10 AM
-        
+
         # Should be available during office hours
         available = scheduler.is_agent_available("test_agent")
         assert available is True
-        
+
         # Mock current time to be outside office hours
         mock_datetime.now.return_value = datetime(2024, 1, 1, 18, 0)  # 6 PM
-        
+
         # Should not be available outside office hours
         available = scheduler.is_agent_available("test_agent")
         assert available is False
-        
+
         # Test with specific time
         check_time = datetime(2024, 1, 1, 14, 0)  # 2 PM
         available = scheduler.is_agent_available("test_agent", check_time)
         assert available is True
-        
+
         # Test agent without office hours
         available = scheduler.is_agent_available("unknown_agent")
         assert available is False
-    
+
     def test_schedule_collaboration(self, scheduler, sample_office_hours):
         """Test scheduling collaboration"""
         scheduler.office_hours["test_agent"] = sample_office_hours
@@ -204,7 +204,7 @@ class TestCollaborationScheduler(ReflectiveModule):
             start_time=time(9, 0),
             end_time=time(17, 0)
         )
-        
+
         # Schedule collaboration
         start_time = datetime(2024, 1, 1, 10, 0)
         session = scheduler.schedule_collaboration(
@@ -216,7 +216,7 @@ class TestCollaborationScheduler(ReflectiveModule):
             description="Testing collaboration scheduling",
             required_capabilities=["python", "testing"]
         )
-        
+
         assert session is not None
         assert session.organizer_id == "test_agent"
         assert session.participants == ["test_agent", "other_agent"]
@@ -227,10 +227,10 @@ class TestCollaborationScheduler(ReflectiveModule):
         assert session.description == "Testing collaboration scheduling"
         assert session.required_capabilities == ["python", "testing"]
         assert session.status == CollaborationStatus.SCHEDULED
-        
+
         # Check session is stored
         assert session.session_id in scheduler.sessions
-    
+
     def test_start_collaboration_session(self, scheduler):
         """Test starting collaboration session"""
         # Create a scheduled session
@@ -241,23 +241,23 @@ class TestCollaborationScheduler(ReflectiveModule):
             status=CollaborationStatus.SCHEDULED
         )
         scheduler.sessions[session.session_id] = session
-        
+
         # Start the session
         success = scheduler.start_collaboration_session(session.session_id)
         assert success is True
-        
+
         # Check session status
         updated_session = scheduler.sessions[session.session_id]
         assert updated_session.status == CollaborationStatus.ACTIVE
         assert updated_session.actual_start is not None
         assert session.session_id in scheduler.active_sessions
         assert scheduler.collaboration_stats['total_sessions'] == 1
-    
+
     def test_start_nonexistent_session(self, scheduler):
         """Test starting non-existent session"""
         success = scheduler.start_collaboration_session("nonexistent_id")
         assert success is False
-    
+
     def test_start_already_active_session(self, scheduler):
         """Test starting already active session"""
         # Create an active session
@@ -268,11 +268,11 @@ class TestCollaborationScheduler(ReflectiveModule):
             status=CollaborationStatus.ACTIVE
         )
         scheduler.sessions[session.session_id] = session
-        
+
         # Try to start it again
         success = scheduler.start_collaboration_session(session.session_id)
         assert success is False
-    
+
     def test_end_collaboration_session(self, scheduler):
         """Test ending collaboration session"""
         # Create an active session
@@ -286,16 +286,16 @@ class TestCollaborationScheduler(ReflectiveModule):
         scheduler.sessions[session.session_id] = session
         scheduler.active_sessions.add(session.session_id)
         scheduler.collaboration_stats['total_sessions'] = 1
-        
+
         # End the session
         success_metrics = {"outcome": "successful", "knowledge_shared": True}
         success = scheduler.end_collaboration_session(
-            session.session_id, 
+            session.session_id,
             success=True,
             success_metrics=success_metrics
         )
         assert success is True
-        
+
         # Check session status
         updated_session = scheduler.sessions[session.session_id]
         assert updated_session.status == CollaborationStatus.COMPLETED
@@ -304,7 +304,7 @@ class TestCollaborationScheduler(ReflectiveModule):
         assert session.session_id not in scheduler.active_sessions
         assert scheduler.collaboration_stats['successful_sessions'] == 1
         assert scheduler.collaboration_stats['average_duration'] > 0
-    
+
     def test_cancel_collaboration_session(self, scheduler):
         """Test cancelling collaboration session"""
         # Create a scheduled session
@@ -315,19 +315,19 @@ class TestCollaborationScheduler(ReflectiveModule):
             status=CollaborationStatus.SCHEDULED
         )
         scheduler.sessions[session.session_id] = session
-        
+
         # Cancel the session
         success = scheduler.cancel_collaboration_session(
-            session.session_id, 
+            session.session_id,
             reason="Participant unavailable"
         )
         assert success is True
-        
+
         # Check session status
         updated_session = scheduler.sessions[session.session_id]
         assert updated_session.status == CollaborationStatus.CANCELLED
         assert updated_session.collaboration_data['cancellation_reason'] == "Participant unavailable"
-    
+
     def test_get_session(self, scheduler):
         """Test getting session by ID"""
         # Create a session
@@ -337,15 +337,15 @@ class TestCollaborationScheduler(ReflectiveModule):
             topic="Test session"
         )
         scheduler.sessions[session.session_id] = session
-        
+
         # Get the session
         retrieved_session = scheduler.get_session(session.session_id)
         assert retrieved_session == session
-        
+
         # Get non-existent session
         retrieved_session = scheduler.get_session("nonexistent_id")
         assert retrieved_session is None
-    
+
     def test_get_active_sessions(self, scheduler):
         """Test getting active sessions"""
         # Create sessions with different statuses
@@ -367,21 +367,21 @@ class TestCollaborationScheduler(ReflectiveModule):
             topic="Completed session",
             status=CollaborationStatus.COMPLETED
         )
-        
+
         scheduler.sessions[active_session1.session_id] = active_session1
         scheduler.sessions[active_session2.session_id] = active_session2
         scheduler.sessions[completed_session.session_id] = completed_session
-        
+
         scheduler.active_sessions.add(active_session1.session_id)
         scheduler.active_sessions.add(active_session2.session_id)
-        
+
         # Get active sessions
         active_sessions = scheduler.get_active_sessions()
         assert len(active_sessions) == 2
         assert active_session1 in active_sessions
         assert active_session2 in active_sessions
         assert completed_session not in active_sessions
-    
+
     def test_get_sessions_for_agent(self, scheduler):
         """Test getting sessions for specific agent"""
         # Create sessions with different participants
@@ -400,42 +400,42 @@ class TestCollaborationScheduler(ReflectiveModule):
             participants=["test_agent", "third_agent"],
             topic="Session 3"
         )
-        
+
         scheduler.sessions[session1.session_id] = session1
         scheduler.sessions[session2.session_id] = session2
         scheduler.sessions[session3.session_id] = session3
-        
+
         # Get sessions for test_agent
         agent_sessions = scheduler.get_sessions_for_agent("test_agent")
         assert len(agent_sessions) == 2
         assert session1 in agent_sessions
         assert session3 in agent_sessions
         assert session2 not in agent_sessions
-        
+
         # Get sessions for other_agent
         agent_sessions = scheduler.get_sessions_for_agent("other_agent")
         assert len(agent_sessions) == 2
         assert session1 in agent_sessions
         assert session2 in agent_sessions
         assert session3 not in agent_sessions
-    
+
     def test_queue_offline_collaboration(self, scheduler):
         """Test queuing offline collaboration"""
         collaboration_data = {
             "topic": "Offline collaboration",
             "description": "Test offline collaboration"
         }
-        
+
         queue_id = scheduler.queue_offline_collaboration(
             target_agent="offline_agent",
             collaboration_type="knowledge_exchange",
             data=collaboration_data,
             priority=3
         )
-        
+
         assert queue_id is not None
         assert len(scheduler.offline_collaboration_queue) == 1
-        
+
         queue_item = scheduler.offline_collaboration_queue[0]
         assert queue_item['id'] == queue_id
         assert queue_item['target_agent'] == "offline_agent"
@@ -443,7 +443,7 @@ class TestCollaborationScheduler(ReflectiveModule):
         assert queue_item['data'] == collaboration_data
         assert queue_item['priority'] == 3
         assert queue_item['requester'] == "test_agent"
-    
+
     def test_process_offline_collaboration_queue(self, scheduler):
         """Test processing offline collaboration queue"""
         # Queue multiple collaborations
@@ -465,63 +465,63 @@ class TestCollaborationScheduler(ReflectiveModule):
             data={"test": 3},
             priority=3
         )
-        
+
         assert len(scheduler.offline_collaboration_queue) == 3
-        
+
         # Process queue for agent1
         agent1_requests = scheduler.process_offline_collaboration_queue("agent1")
         assert len(agent1_requests) == 2
         assert len(scheduler.offline_collaboration_queue) == 1  # Only agent2 request remains
-        
+
         # Check agent1 requests
         assert agent1_requests[0]['collaboration_type'] == "type1"
         assert agent1_requests[1]['collaboration_type'] == "type3"
-        
+
         # Process queue for agent2
         agent2_requests = scheduler.process_offline_collaboration_queue("agent2")
         assert len(agent2_requests) == 1
         assert len(scheduler.offline_collaboration_queue) == 0  # Queue is empty
-        
+
         assert agent2_requests[0]['collaboration_type'] == "type2"
-    
+
     def test_set_and_trigger_collaboration_callback(self, scheduler):
         """Test setting and triggering collaboration callbacks"""
         callback_called = False
         callback_args = None
         callback_kwargs = None
-        
+
         def test_callback(*args, **kwargs):
             nonlocal callback_called, callback_args, callback_kwargs
             callback_called = True
             callback_args = args
             callback_kwargs = kwargs
-        
+
         # Set callback
         scheduler.set_collaboration_callback("test_callback", test_callback)
         assert "test_callback" in scheduler.collaboration_callbacks
-        
+
         # Trigger callback
         scheduler.trigger_collaboration_callback(
-            "test_callback", 
-            "arg1", 
-            "arg2", 
+            "test_callback",
+            "arg1",
+            "arg2",
             kwarg1="value1"
         )
-        
+
         assert callback_called is True
         assert callback_args == ("arg1", "arg2")
         assert callback_kwargs == {"kwarg1": "value1"}
-    
+
     def test_trigger_nonexistent_callback(self, scheduler):
         """Test triggering non-existent callback"""
         # Should not raise an error
         scheduler.trigger_collaboration_callback("nonexistent_callback", "arg1")
-    
+
     def test_cleanup_expired_sessions(self, scheduler):
         """Test cleanup of expired sessions"""
         # Create sessions with different statuses and times
         current_time = datetime.now()
-        
+
         # Expired scheduled session
         expired_session = CollaborationSession(
             organizer_id="test_agent",
@@ -530,7 +530,7 @@ class TestCollaborationScheduler(ReflectiveModule):
             status=CollaborationStatus.SCHEDULED,
             scheduled_end=current_time - timedelta(hours=2)
         )
-        
+
         # Recent scheduled session
         recent_session = CollaborationSession(
             organizer_id="test_agent",
@@ -539,7 +539,7 @@ class TestCollaborationScheduler(ReflectiveModule):
             status=CollaborationStatus.SCHEDULED,
             scheduled_end=current_time + timedelta(hours=1)
         )
-        
+
         # Active session
         active_session = CollaborationSession(
             organizer_id="test_agent",
@@ -547,28 +547,28 @@ class TestCollaborationScheduler(ReflectiveModule):
             topic="Active session",
             status=CollaborationStatus.ACTIVE
         )
-        
+
         scheduler.sessions[expired_session.session_id] = expired_session
         scheduler.sessions[recent_session.session_id] = recent_session
         scheduler.sessions[active_session.session_id] = active_session
-        
+
         scheduler.active_sessions.add(expired_session.session_id)
         scheduler.active_sessions.add(active_session.session_id)
-        
+
         # Run cleanup
         expired_count = scheduler._cleanup_expired_sessions()
-        
+
         assert expired_count == 1
         assert scheduler.sessions[expired_session.session_id].status == CollaborationStatus.EXPIRED
         assert scheduler.sessions[recent_session.session_id].status == CollaborationStatus.SCHEDULED
         assert scheduler.sessions[active_session.session_id].status == CollaborationStatus.ACTIVE
         assert expired_session.session_id not in scheduler.active_sessions
         assert active_session.session_id in scheduler.active_sessions
-    
+
     def test_cleanup_old_sessions(self, scheduler):
         """Test cleanup of old sessions"""
         current_time = datetime.now()
-        
+
         # Old completed session
         old_session = CollaborationSession(
             organizer_id="test_agent",
@@ -577,7 +577,7 @@ class TestCollaborationScheduler(ReflectiveModule):
             status=CollaborationStatus.COMPLETED,
             updated_at=current_time - timedelta(days=35)
         )
-        
+
         # Recent completed session
         recent_session = CollaborationSession(
             organizer_id="test_agent",
@@ -586,36 +586,36 @@ class TestCollaborationScheduler(ReflectiveModule):
             status=CollaborationStatus.COMPLETED,
             updated_at=current_time - timedelta(days=15)
         )
-        
+
         scheduler.sessions[old_session.session_id] = old_session
         scheduler.sessions[recent_session.session_id] = recent_session
-        
+
         # Run cleanup
         cleaned_count = scheduler.cleanup_old_sessions(days_old=30)
-        
+
         assert cleaned_count == 1
         assert old_session.session_id not in scheduler.sessions
         assert recent_session.session_id in scheduler.sessions
-    
+
     def test_get_collaboration_stats(self, scheduler):
         """Test getting collaboration statistics"""
         # Set up some test data
         scheduler.collaboration_stats['total_sessions'] = 10
         scheduler.collaboration_stats['successful_sessions'] = 8
         scheduler.collaboration_stats['average_duration'] = 45.5
-        
+
         scheduler.active_sessions.add("session1")
         scheduler.active_sessions.add("session2")
-        
+
         scheduler.collaboration_patterns["pattern1"] = Mock()
         scheduler.collaboration_patterns["pattern2"] = Mock()
-        
+
         scheduler.office_hours["agent1"] = Mock()
-        
+
         scheduler.offline_collaboration_queue.append({"test": "data"})
-        
+
         stats = scheduler.get_collaboration_stats()
-        
+
         assert stats['total_sessions'] == 10
         assert stats['successful_sessions'] == 8
         assert stats['average_duration'] == 45.5
@@ -623,14 +623,14 @@ class TestCollaborationScheduler(ReflectiveModule):
         assert stats['total_patterns'] == 2
         assert stats['office_hours_set'] == 1
         assert stats['queued_collaborations'] == 1
-    
+
     def test_get_scheduler_info(self, scheduler):
         """Test getting scheduler information"""
         scheduler._running = True
         scheduler.pattern_analysis_enabled = False
-        
+
         info = scheduler.get_scheduler_info()
-        
+
         assert info['agent_id'] == "test_agent"
         assert info['running'] is True
         assert info['pattern_analysis_enabled'] is False
@@ -640,27 +640,27 @@ class TestCollaborationScheduler(ReflectiveModule):
         assert info['collaboration_patterns'] == 0
         assert info['offline_queue_size'] == 0
         assert info['callbacks_registered'] == 0
-    
+
     @pytest.mark.asyncio
     async def test_background_tasks(self, scheduler):
         """Test background task management"""
         assert scheduler._running is False
         assert scheduler._cleanup_task is None
         assert scheduler._pattern_analysis_task is None
-        
+
         # Start background tasks
         scheduler.start_background_tasks()
-        
+
         assert scheduler._running is True
         assert scheduler._cleanup_task is not None
         assert scheduler._pattern_analysis_task is not None
-        
+
         # Give tasks a moment to start
         await asyncio.sleep(0.1)
-        
+
         # Stop background tasks
         scheduler.stop_background_tasks()
-        
+
         assert scheduler._running is False
         assert scheduler._cleanup_task is None
         assert scheduler._pattern_analysis_task is None
@@ -678,18 +678,18 @@ class TestCollaborationScheduler(ReflectiveModule):
             "test_classes": 4,
             "test_methods": 32
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestOfficeHours(ReflectiveModule):
     """Test office hours functionality"""
-    
+
     def test_office_hours_creation(self):
         """Test office hours creation"""
         office_hours = OfficeHours(
@@ -704,7 +704,7 @@ class TestOfficeHours(ReflectiveModule):
             max_concurrent_sessions=5,
             session_duration_minutes=45
         )
-        
+
         assert office_hours.agent_id == "test_agent"
         assert office_hours.pattern == OfficeHoursPattern.WEEKDAYS
         assert office_hours.start_time == time(9, 0)
@@ -730,23 +730,23 @@ class TestOfficeHours(ReflectiveModule):
             "test_classes": 4,
             "test_methods": 32
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestCollaborationSession(ReflectiveModule):
     """Test collaboration session functionality"""
-    
+
     def test_collaboration_session_creation(self):
         """Test collaboration session creation"""
         start_time = datetime(2024, 1, 1, 10, 0)
         end_time = datetime(2024, 1, 1, 11, 0)
-        
+
         session = CollaborationSession(
             session_type=CollaborationType.KNOWLEDGE_EXCHANGE,
             organizer_id="organizer_agent",
@@ -757,7 +757,7 @@ class TestCollaborationSession(ReflectiveModule):
             description="Sharing best practices",
             required_capabilities=["python", "machine_learning"]
         )
-        
+
         assert session.session_type == CollaborationType.KNOWLEDGE_EXCHANGE
         assert session.organizer_id == "organizer_agent"
         assert session.participants == ["organizer_agent", "participant_agent"]
@@ -782,18 +782,18 @@ class TestCollaborationSession(ReflectiveModule):
             "test_classes": 4,
             "test_methods": 32
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestCollaborationPattern(ReflectiveModule):
     """Test collaboration pattern functionality"""
-    
+
     def test_collaboration_pattern_creation(self):
         """Test collaboration pattern creation"""
         pattern = CollaborationPattern(
@@ -808,7 +808,7 @@ class TestCollaborationPattern(ReflectiveModule):
             last_occurrence=datetime(2024, 1, 1, 10, 0),
             confidence_score=0.85
         )
-        
+
         assert pattern.pattern_type == "recurring_weekly"
         assert pattern.participants == ["agent1", "agent2"]
         assert pattern.frequency == 5
@@ -829,12 +829,12 @@ class TestCollaborationPattern(ReflectiveModule):
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -842,7 +842,7 @@ class TestCollaborationPattern(ReflectiveModule):
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

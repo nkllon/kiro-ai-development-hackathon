@@ -15,7 +15,7 @@ from src.beast_mode.dag_orchestration.models.dag_models import (
     ExecutionPhase, TeamAssignment, OptimizedExecution, ResourceAllocation
 )
 from src.beast_mode.dag_orchestration.models.enums import (
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
     TaskStatus, OptimizationStrategy, ParallelizationLevel
 )
@@ -23,7 +23,7 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
 
 class TestTaskNode(ReflectiveModule):
     """Test TaskNode data model."""
-    
+
     def test_task_node_creation(self):
         """Test basic task node creation."""
         task = TaskNode(
@@ -35,14 +35,14 @@ class TestTaskNode(ReflectiveModule):
             completion_status=TaskStatus.NOT_STARTED,
             dependencies=["task_0"]
         )
-        
+
         assert task.task_id == "test_task_1"
         assert task.spec_name == "test_spec"
         assert task.task_name == "Test Task"
         assert task.estimated_effort == 5
         assert task.dependencies == ["task_0"]
         assert task.completion_status == TaskStatus.NOT_STARTED
-    
+
     def test_task_node_with_priority(self):
         """Test task node with priority and complexity."""
         task = TaskNode(
@@ -56,11 +56,11 @@ class TestTaskNode(ReflectiveModule):
             priority=2,
             complexity=2.5
         )
-        
+
         assert task.priority == 2
         assert task.complexity == 2.5
         assert task.estimated_effort == 3
-    
+
     def test_task_node_validation(self):
         """Test task node validation."""
         # Test negative effort validation
@@ -73,7 +73,7 @@ class TestTaskNode(ReflectiveModule):
                 estimated_effort=-1,
                 completion_status=TaskStatus.NOT_STARTED
             )
-        
+
         # Test invalid priority validation
         with pytest.raises(ValueError, match="Priority must be between 1 and 5"):
             TaskNode(
@@ -89,7 +89,7 @@ class TestTaskNode(ReflectiveModule):
 
 class TestDependencyEdge(ReflectiveModule):
     """Test DependencyEdge data model."""
-    
+
     def test_dependency_edge_creation(self):
         """Test dependency edge creation."""
         edge = DependencyEdge(
@@ -98,26 +98,26 @@ class TestDependencyEdge(ReflectiveModule):
             dependency_type="requires",
             weight=1.5
         )
-        
+
         assert edge.source_id == "task1"
         assert edge.target_id == "task2"
         assert edge.dependency_type == "requires"
         assert edge.weight == 1.5
-    
+
     def test_dependency_edge_defaults(self):
         """Test dependency edge with default values."""
         edge = DependencyEdge(
             source_id="task1",
             target_id="task2"
         )
-        
+
         assert edge.dependency_type == "requires"
         assert edge.weight == 1.0
 
 
 class TestResourceRequirements(ReflectiveModule):
     """Test ResourceRequirements data model."""
-    
+
     def test_resource_requirements_creation(self):
         """Test resource requirements creation."""
         req = ResourceRequirements(
@@ -126,12 +126,12 @@ class TestResourceRequirements(ReflectiveModule):
             estimated_hours=40,
             tools_required=["pytest", "docker"]
         )
-        
+
         assert req.developers_needed == 3
         assert req.skill_requirements == ["python", "docker"]
         assert req.estimated_hours == 40
         assert req.tools_required == ["pytest", "docker"]
-    
+
     def test_resource_requirements_validation(self):
         """Test resource requirements validation."""
         # Test negative developers validation
@@ -141,7 +141,7 @@ class TestResourceRequirements(ReflectiveModule):
                 skill_requirements=["python"],
                 estimated_hours=10
             )
-        
+
         # Test negative hours validation
         with pytest.raises(ValueError, match="Estimated hours cannot be negative"):
             ResourceRequirements(
@@ -153,7 +153,7 @@ class TestResourceRequirements(ReflectiveModule):
 
 class TestParallelGroup(ReflectiveModule):
     """Test ParallelGroup data model."""
-    
+
     def test_parallel_group_creation(self):
         """Test parallel group creation."""
         task1 = TaskNode(
@@ -164,7 +164,7 @@ class TestParallelGroup(ReflectiveModule):
             estimated_effort=5,
             completion_status=TaskStatus.NOT_STARTED
         )
-        
+
         task2 = TaskNode(
             task_id="task2",
             spec_name="spec1",
@@ -173,13 +173,13 @@ class TestParallelGroup(ReflectiveModule):
             estimated_effort=3,
             completion_status=TaskStatus.NOT_STARTED
         )
-        
+
         group = ParallelGroup(
             group_id="parallel_group_1",
             tasks=[task1, task2],
             estimated_duration=5
         )
-        
+
         assert group.group_id == "parallel_group_1"
         assert len(group.tasks) == 2
         assert group.estimated_duration == 5
@@ -189,7 +189,7 @@ class TestParallelGroup(ReflectiveModule):
 
 class TestExecutionPhase(ReflectiveModule):
     """Test ExecutionPhase data model."""
-    
+
     def test_execution_phase_creation(self):
         """Test execution phase creation."""
         task = TaskNode(
@@ -200,13 +200,13 @@ class TestExecutionPhase(ReflectiveModule):
             estimated_effort=8,
             completion_status=TaskStatus.NOT_STARTED
         )
-        
+
         resource_req = ResourceRequirements(
             developers_needed=1,
             skill_requirements=["python"],
             estimated_hours=16
         )
-        
+
         phase = ExecutionPhase(
             phase_name="Phase 1",
             tasks=[task],
@@ -215,7 +215,7 @@ class TestExecutionPhase(ReflectiveModule):
             estimated_duration=2,
             resource_requirements=resource_req
         )
-        
+
         assert phase.phase_name == "Phase 1"
         assert len(phase.tasks) == 1
         assert phase.dependencies_satisfied == ["Phase 0"]
@@ -224,7 +224,7 @@ class TestExecutionPhase(ReflectiveModule):
 
 class TestTeamAssignment(ReflectiveModule):
     """Test TeamAssignment data model."""
-    
+
     def test_team_assignment_creation(self):
         """Test team assignment creation."""
         assignment = TeamAssignment(
@@ -234,7 +234,7 @@ class TestTeamAssignment(ReflectiveModule):
             capabilities=["python", "testing"],
             availability=0.85
         )
-        
+
         assert assignment.team_name == "Backend Team"
         assert assignment.assigned_tasks == ["task1", "task2"]
         assert assignment.availability == 0.85
@@ -243,11 +243,11 @@ class TestTeamAssignment(ReflectiveModule):
 
 class TestOptimizedExecution(ReflectiveModule):
     """Test OptimizedExecution data model."""
-    
+
     def test_optimized_execution_creation(self):
         """Test optimized execution creation."""
         resource_alloc = ResourceAllocation(teams=[], resource_utilization=0.8)
-        
+
         execution = OptimizedExecution(
             execution_id="exec_001",
             execution_phases=[],
@@ -256,7 +256,7 @@ class TestOptimizedExecution(ReflectiveModule):
             estimated_timeline=4,
             maximum_parallelism=2
         )
-        
+
         assert execution.execution_id == "exec_001"
         assert execution.estimated_timeline == 4
         assert execution.maximum_parallelism == 2
@@ -266,20 +266,20 @@ class TestOptimizedExecution(ReflectiveModule):
 
 class TestEnums(ReflectiveModule):
     """Test enum values."""
-    
+
     def test_task_status_enum(self):
         """Test TaskStatus enum values."""
         assert TaskStatus.NOT_STARTED.value == "not_started"
         assert TaskStatus.IN_PROGRESS.value == "in_progress"
         assert TaskStatus.COMPLETED.value == "completed"
         assert TaskStatus.BLOCKED.value == "blocked"
-    
+
     def test_optimization_strategy_enum(self):
         """Test OptimizationStrategy enum values."""
         assert OptimizationStrategy.SPEED_OPTIMIZED.value == "speed_optimized"
         assert OptimizationStrategy.RESOURCE_OPTIMIZED.value == "resource_optimized"
         assert OptimizationStrategy.BALANCED.value == "balanced"
-    
+
     def test_parallelization_level_enum(self):
         """Test ParallelizationLevel enum values."""
         assert ParallelizationLevel.NONE.value == "none"
@@ -290,7 +290,7 @@ class TestEnums(ReflectiveModule):
 
 class TestIntegrationScenarios(ReflectiveModule):
     """Test integration scenarios with multiple models."""
-    
+
     def test_complete_workflow_models(self):
         """Test complete workflow using multiple models."""
         # Create tasks
@@ -303,7 +303,7 @@ class TestIntegrationScenarios(ReflectiveModule):
             completion_status=TaskStatus.NOT_STARTED,
             priority=1
         )
-        
+
         task2 = TaskNode(
             task_id="dev_task",
             spec_name="dev_spec",
@@ -314,14 +314,14 @@ class TestIntegrationScenarios(ReflectiveModule):
             dependencies=["setup_task"],
             priority=2
         )
-        
+
         # Create dependency edge
         edge = DependencyEdge(
             source_id="setup_task",
             target_id="dev_task",
             dependency_type="requires"
         )
-        
+
         # Create resource requirements
         resources = ResourceRequirements(
             developers_needed=2,
@@ -329,14 +329,14 @@ class TestIntegrationScenarios(ReflectiveModule):
             estimated_hours=48,
             tools_required=["pytest", "coverage"]
         )
-        
+
         # Create parallel group
         parallel_group = ParallelGroup(
             group_id="dev_group",
             tasks=[task2],
             estimated_duration=8
         )
-        
+
         # Create team assignment
         team = TeamAssignment(
             team_name="Development Team",
@@ -345,10 +345,10 @@ class TestIntegrationScenarios(ReflectiveModule):
             capabilities=["python", "testing"],
             availability=0.90
         )
-        
+
         # Create resource allocation
         resource_alloc = ResourceAllocation(teams=[team], resource_utilization=0.85)
-        
+
         # Create execution phase
         phase = ExecutionPhase(
             phase_name="Development Phase",
@@ -358,7 +358,7 @@ class TestIntegrationScenarios(ReflectiveModule):
             estimated_duration=3,
             resource_requirements=resources
         )
-        
+
         # Create optimized execution
         execution = OptimizedExecution(
             execution_id="project_exec",
@@ -368,7 +368,7 @@ class TestIntegrationScenarios(ReflectiveModule):
             estimated_timeline=2,
             maximum_parallelism=2
         )
-        
+
         # Verify the complete workflow
         assert len(execution.parallel_groups) == 1
         assert len(execution.execution_phases) == 1
@@ -391,12 +391,12 @@ if __name__ == "__main__":
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -404,7 +404,7 @@ if __name__ == "__main__":
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

@@ -17,27 +17,27 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'src'))
 
 class TestCompetitiveLaunch(unittest.TestCase, ReflectiveModule):
     """competitive_launch tests."""
-    
+
     def test_imports(self):
         """Test that competitive_launch imports work."""
         try:
             import src.competitive_launch
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
             self.assertTrue(True)
         except ImportError as e:
             self.fail(f"Import failed: {e}")
-    
+
     def test_rdi_compliance(self):
         """Test RDI compliance in competitive_launch."""
         # This is a placeholder for RDI compliance tests
         self.assertTrue(True)
-    
+
     def test_health_monitoring(self):
         """Test health monitoring in competitive_launch."""
         # This is a placeholder for health monitoring tests
         self.assertTrue(True)
-    
+
     def test_registry_integration(self):
         """Test registry integration in competitive_launch."""
         # This is a placeholder for registry integration tests
@@ -55,12 +55,12 @@ if __name__ == '__main__':
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -68,7 +68,7 @@ if __name__ == '__main__':
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

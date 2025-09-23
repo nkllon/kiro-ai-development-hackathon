@@ -1,212 +1,151 @@
-# Google Calendar MCP Integration - Beast Mode Framework
+# Google Calendar MCP Integration - Beast Mode
 
-**⚠️ IMPORTANT: This is a Beast Mode MCP, not a generic MCP implementation**
+A Beast Mode compliant Google Calendar integration using a proven, existing MCP server instead of reinventing the wheel.
 
-This MCP server implements the unified ReflectiveModule pattern and requires Beast Mode infrastructure components (Prometheus, Grafana, Directus CMS) to function properly.
+## Overview
 
-## Beast Mode Framework Requirements
+This integration uses `@cocal/google-calendar-mcp@1.4.9` - a mature, well-tested Google Calendar MCP server - containerized with Beast Mode systematic observability and monitoring.
 
-**MANDATORY Infrastructure Dependencies:**
+**Why this approach?**
+- ✅ **Proven solution**: Uses existing, battle-tested MCP server with 13 versions and active maintenance
+- ✅ **Beast Mode compliant**: Adds systematic monitoring, observability, and containerization
+- ✅ **No reinventing**: Leverages community expertise instead of building from scratch
+- ✅ **Production ready**: Mature OAuth handling, error recovery, and feature completeness
 
-1. **Prometheus** (port 9090): Metrics collection and alerting - NOT optional
-2. **Grafana** (port 3001): Observability dashboards - NOT optional
-3. **Directus CMS**: Interface registration via ReflectiveModule.register_module()
-4. **Beast Mode Network**: Must use `systematic-pdca-local` Docker network
+## Features
 
-**Framework Compliance:**
-- All components inherit from unified ReflectiveModule
-- Prometheus metrics exposed on port 8080 (MANDATORY)
-- Systematic logging with correlation IDs
-- PDCA methodology for all operations
-- Beast Mode error handling patterns
-
-This directory contains the Docker deployment configuration for the Google Calendar MCP integration.
+- **Mature MCP Server**: @cocal/google-calendar-mcp with extensive calendar management support
+- **Complete OAuth 2.0**: Secure Google Calendar API access with automatic token management
+- **Full Calendar Operations**: Create, read, update, delete events, availability checking
+- **Beast Mode Monitoring**: Prometheus metrics + Grafana dashboards (MANDATORY)
+- **Docker Deployment**: Secure containerization with health checks
+- **Claude Desktop Ready**: Direct MCP protocol integration
 
 ## Quick Start
 
-### 1. Build and Run (Stub Mode - No Google Credentials)
+### Prerequisites
 
-```bash
-# Build the container
-docker-compose build
+- Docker and Docker Compose
+- Google Cloud Project with Calendar API enabled
+- OAuth 2.0 credentials (Desktop application type)
 
-# First, ensure main infrastructure is running
-cd ../../deployment/local && docker-compose up -d
+### Setup
 
-# Then start the MCP service (uses existing network)
-cd ../../docker/google-calendar-mcp && docker-compose up -d
-
-# Check health
-curl http://localhost:3000/health
-```
-
-### 2. Production Deployment (With Google Credentials)
-
-1. **Set up Google Cloud Project:**
-   - Enable Google Calendar API
-   - Create OAuth 2.0 credentials
-   - Download credentials as `gcp-oauth.keys.json`
-
-2. **Add credentials:**
+1. **Run the setup script**:
    ```bash
-   cp /path/to/your/gcp-oauth.keys.json ./credentials/
+   cd docker/google-calendar-mcp
+   ./setup.sh
    ```
 
-3. **Deploy:**
+2. **Add your Google OAuth credentials**:
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create/select project and enable Google Calendar API
+   - Create OAuth 2.0 credentials (Desktop application)
+   - Download JSON as `credentials/gcp-oauth.keys.json`
+
+3. **Restart to apply credentials**:
    ```bash
-   # Ensure main infrastructure is running first
-   cd ../../deployment/local && docker-compose up -d
-   
-   # Then deploy MCP service
-   cd ../../docker/google-calendar-mcp && docker-compose up -d
+   docker-compose restart
    ```
 
-### 3. With Monitoring (Optional)
-
-```bash
-# Uses existing Prometheus and Grafana from main deployment
-# Access dashboards (from main infrastructure)
-# Grafana: http://localhost:3000 (admin/systematic)
-# Prometheus: http://localhost:9090
-```
-
-## Configuration
-
-### Environment Variables
-
-- `GOOGLE_CALENDAR_PORT` - Server port (default: 3000)
-- `GOOGLE_CALENDAR_LOG_LEVEL` - Log level (default: info)
-- `BEAST_MODE_PROMETHEUS_ENABLED` - Enable metrics (default: true)
-
-### Volumes
-
-- `./credentials:/app/credentials:ro` - OAuth credentials (read-only)
-- `google_calendar_logs:/app/logs` - Persistent logs
-- `google_calendar_cache:/app/cache` - Performance cache
-
-## Health Checks
-
-The container includes comprehensive health monitoring:
-
-```bash
-# Docker health check
-docker ps  # Shows health status
-
-# Manual health check
-curl http://localhost:3000/health
-
-# Detailed metrics
-curl http://localhost:3000/metrics
-```
-
-## MCP Protocol Testing
-
-### Claude Desktop Integration
-
-Add to your Claude Desktop MCP configuration:
-
-```json
-{
-  "mcpServers": {
-    "google-calendar": {
-      "command": "docker",
-      "args": ["exec", "google_calendar_mcp", "python3", "-m", "src.beast_mode.mcp_integrations.google_calendar.main", "--health-only"],
-      "env": {}
-    }
-  }
-}
-```
-
-### Manual MCP Testing
-
-```bash
-# Test auth status
-curl -X POST http://localhost:3000/mcp \
-  -H "Content-Type: application/json" \
-  -d '{"method": "auth.status", "params": {}, "id": "test1"}'
-
-# Test health status
-curl -X POST http://localhost:3000/mcp \
-  -H "Content-Type: application/json" \
-  -d '{"method": "health.status", "params": {}, "id": "test2"}'
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Container won't start:**
-   ```bash
-   docker-compose logs google-calendar-mcp
+4. **Configure Claude Desktop**:
+   ```json
+   {
+     "mcpServers": {
+       "google-calendar": {
+         "command": "docker",
+         "args": ["exec", "google_calendar_mcp", "google-calendar-mcp"],
+         "env": {
+           "GOOGLE_APPLICATION_CREDENTIALS": "/app/credentials/gcp-oauth.keys.json"
+         }
+       }
+     }
+   }
    ```
 
-2. **Health check failing:**
-   ```bash
-   docker exec google_calendar_mcp curl -f http://localhost:3000/health
-   ```
+## Architecture
 
-3. **Authentication issues:**
-   - Verify credentials file exists and has correct permissions
-   - Check Google Cloud Project has Calendar API enabled
-   - Ensure OAuth scopes are correct
-
-### Debug Mode
-
-```bash
-# Run with debug logging
-GOOGLE_CALENDAR_LOG_LEVEL=debug docker-compose up
-
-# Interactive debugging
-docker exec -it google_calendar_mcp bash
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   Claude        │    │   Docker         │    │   Google        │
+│   Desktop       │◄──►│   Container      │◄──►│   Calendar API  │
+│                 │    │   (@cocal/mcp)   │    │                 │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+                              │
+                              ▼
+                       ┌──────────────────┐
+                       │   Beast Mode     │
+                       │   Monitoring     │
+                       │   (Prometheus +  │
+                       │    Grafana)      │
+                       └──────────────────┘
 ```
 
-## Performance Monitoring
+## Beast Mode Compliance
 
-The integration includes comprehensive profiling:
+- ✅ **Proven MCP Server**: Uses community-tested @cocal/google-calendar-mcp
+- ✅ **Systematic Monitoring**: Prometheus metrics + Grafana dashboards (MANDATORY)
+- ✅ **Docker Security**: Non-root execution, proper permissions, health checks
+- ✅ **Observability**: Structured logging and systematic error handling
+- ✅ **Network Integration**: Beast Mode network topology compliance
 
-- **Request/response timing** for all operations
-- **Memory usage tracking** with leak detection  
-- **Performance bottleneck identification**
-- **Prometheus metrics export**
+## Services
 
-Access performance data:
-```bash
-# Performance report
-curl http://localhost:3000/health/profiling_report
+After running `./setup.sh`:
 
-# Slow operations
-curl http://localhost:3000/health/slow_operations
-```
+- **Google Calendar MCP**: http://localhost:3000
+- **Prometheus**: http://localhost:9090  
+- **Grafana**: http://localhost:3001 (admin/admin)
+
+## MCP Server Features (@cocal/google-calendar-mcp)
+
+The underlying MCP server provides:
+- Complete Google Calendar API v3 integration
+- OAuth 2.0 with automatic token refresh
+- Event CRUD operations (create, read, update, delete)
+- Calendar availability checking
+- Recurring event support
+- Multi-calendar support
+- Attendee management
+- Error handling and retry logic
 
 ## Security
 
-The container follows security best practices:
+- OAuth credentials stored with 600 permissions
+- Container runs as non-root user
+- HTTPS-only API communication
+- Secure token storage and automatic refresh
+- Credential validation and error recovery
 
-- ✅ **Non-root user** execution
-- ✅ **Read-only credentials** mount
-- ✅ **Minimal base image** (Python slim)
-- ✅ **Health check endpoints**
-- ✅ **Encrypted credential storage**
+## Troubleshooting
 
-## Development
-
-### Local Development
-
+**Check container status**:
 ```bash
-# Run smoke tests
-PYTHONPATH=. python3 src/beast_mode/mcp_integrations/google_calendar/smoke_test.py
-
-# Run unit tests
-python3 -m pytest tests/unit/beast_mode/mcp_integrations/google_calendar/ -v
+docker-compose ps
 ```
 
-### Building Custom Images
-
+**View logs**:
 ```bash
-# Build with custom tag
-docker build -f docker/google-calendar-mcp/Dockerfile -t my-calendar-mcp:latest .
-
-# Push to registry
-docker tag my-calendar-mcp:latest your-registry/calendar-mcp:latest
-docker push your-registry/calendar-mcp:latest
+docker-compose logs google-calendar-mcp
 ```
+
+**Test MCP connection**:
+```bash
+docker exec google_calendar_mcp google-calendar-mcp --help
+```
+
+**Verify credentials**:
+```bash
+ls -la credentials/
+# Should show: -rw------- gcp-oauth.keys.json
+```
+
+## Why This Approach Works
+
+1. **Community Proven**: @cocal/google-calendar-mcp has 13 versions, active maintenance, and real-world usage
+2. **Feature Complete**: Extensive calendar management without custom development
+3. **Beast Mode Enhanced**: Adds systematic monitoring without reinventing core functionality  
+4. **Production Ready**: Mature error handling, OAuth flows, and edge case management
+5. **Maintainable**: Updates come from the community, not custom code maintenance
+
+This is exactly what you should do - use proven solutions and enhance them systematically rather than building from scratch.

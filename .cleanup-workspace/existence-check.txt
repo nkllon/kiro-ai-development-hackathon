@@ -1,0 +1,13 @@
+File existence check:
+=== .gitguardian.yaml ===
+cleanup-redo:        0 files
+final-integration:        0 files
+
+=== .kiro/specs/multi-perspective-ghostbusters/design.md ===
+cleanup-redo:        0 files
+final-integration:        0 files
+
+=== docs/beast_mode/execution/beast_mode_cli.py ===
+cleanup-redo:        0 files
+final-integration:        0 files
+

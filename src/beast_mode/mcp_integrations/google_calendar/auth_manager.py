@@ -4,8 +4,16 @@ This module provides OAuth 2.0 authentication management for Google Calendar API
 following the Beast Mode framework's ReflectiveModule pattern.
 """
 
-from datetime import datetime
+import json
+import os
+import webbrowser
+from datetime import datetime, timedelta
+from pathlib import Path
 from typing import Any, Dict, Optional
+from urllib.parse import urlencode, parse_qs, urlparse
+
+import requests
+from cryptography.fernet import Fernet
 
 from .base import GoogleCalendarReflectiveModule
 from .interfaces.auth_interfaces import AuthManagerInterface
@@ -86,20 +94,41 @@ class GoogleAuthManager(GoogleCalendarReflectiveModule, AuthManagerInterface):
             self.logger.info("Starting OAuth 2.0 authentication flow")
             self.is_auth_flow_active = True
             
-            # TODO: Implement actual OAuth flow
-            # This is a stub implementation
+            # Load client credentials
+            client_config = self._load_client_credentials()
+            if not client_config:
+                self.logger.error("Failed to load client credentials")
+                return False
             
-            # Simulate successful authentication
+            # Step 1: Generate authorization URL
+            auth_url = self._generate_auth_url(client_config)
+            
+            # Step 2: Open browser for user authorization
+            self.logger.info("Opening browser for OAuth authorization")
+            webbrowser.open(auth_url)
+            
+            # Step 3: Get authorization code (simplified - in production use callback server)
+            auth_code = input("Please enter the authorization code from the browser: ")
+            
+            # Step 4: Exchange authorization code for tokens
+            tokens = self._exchange_code_for_tokens(client_config, auth_code)
+            if not tokens:
+                self.logger.error("Failed to exchange authorization code for tokens")
+                return False
+            
+            # Step 5: Create and store token info
+            expires_at = datetime.utcnow() + timedelta(seconds=tokens.get('expires_in', 3600))
             self.token_info = TokenInfo(
-                access_token="stub_access_token",
-                refresh_token="stub_refresh_token",
-                expires_at=datetime.utcnow(),
+                access_token=tokens['access_token'],
+                refresh_token=tokens.get('refresh_token'),
+                expires_at=expires_at,
                 scopes=self.scopes
             )
             
-            self.is_auth_flow_active = False
-            # Health is managed by unified ReflectiveModule
+            # Step 6: Save tokens securely
+            self._save_tokens()
             
+            self.is_auth_flow_active = False
             self.logger.info("OAuth 2.0 authentication completed successfully")
             return True
             
@@ -109,7 +138,6 @@ class GoogleAuthManager(GoogleCalendarReflectiveModule, AuthManagerInterface):
                 f"Authentication failed: {e}",
                 extra={"correlation_id": self.correlation_id, "error": str(e)}
             )
-            # Health is managed by unified ReflectiveModule
             return False
     
     def is_authenticated(self) -> bool:
@@ -153,12 +181,37 @@ class GoogleAuthManager(GoogleCalendarReflectiveModule, AuthManagerInterface):
             
             self.logger.info("Refreshing access token")
             
-            # TODO: Implement actual token refresh
-            # This is a stub implementation
+            # Load client credentials
+            client_config = self._load_client_credentials()
+            if not client_config:
+                self.logger.error("Failed to load client credentials for token refresh")
+                return False
             
-            # Simulate successful token refresh
-            self.token_info.access_token = "refreshed_access_token"
-            self.token_info.expires_at = datetime.utcnow()
+            # Prepare refresh request
+            token_url = "https://oauth2.googleapis.com/token"
+            data = {
+                'client_id': client_config['client_id'],
+                'client_secret': client_config['client_secret'],
+                'refresh_token': self.token_info.refresh_token,
+                'grant_type': 'refresh_token'
+            }
+            
+            # Make refresh request
+            response = requests.post(token_url, data=data, timeout=30)
+            response.raise_for_status()
+            
+            tokens = response.json()
+            
+            # Update token info
+            self.token_info.access_token = tokens['access_token']
+            self.token_info.expires_at = datetime.utcnow() + timedelta(seconds=tokens.get('expires_in', 3600))
+            
+            # Update refresh token if provided
+            if 'refresh_token' in tokens:
+                self.token_info.refresh_token = tokens['refresh_token']
+            
+            # Save updated tokens
+            self._save_tokens()
             
             self.logger.info("Access token refreshed successfully")
             return True
@@ -168,7 +221,6 @@ class GoogleAuthManager(GoogleCalendarReflectiveModule, AuthManagerInterface):
                 f"Token refresh failed: {e}",
                 extra={"correlation_id": self.correlation_id, "error": str(e)}
             )
-            # Health is managed by unified ReflectiveModule
             return False
     
     def revoke_authentication(self) -> bool:
@@ -180,12 +232,39 @@ class GoogleAuthManager(GoogleCalendarReflectiveModule, AuthManagerInterface):
         try:
             self.logger.info("Revoking authentication")
             
-            # TODO: Implement actual token revocation with Google
+            # Revoke token with Google if we have one
+            if self.token_info and self.token_info.access_token:
+                try:
+                    revoke_url = "https://oauth2.googleapis.com/revoke"
+                    params = {'token': self.token_info.access_token}
+                    response = requests.post(revoke_url, params=params, timeout=30)
+                    
+                    if response.status_code == 200:
+                        self.logger.info("Token revoked with Google successfully")
+                    else:
+                        self.logger.warning(f"Token revocation returned status: {response.status_code}")
+                        
+                except Exception as e:
+                    self.logger.warning(f"Failed to revoke token with Google: {e}")
             
             # Clear local tokens
             self.token_info = None
             
-            # Health is managed by unified ReflectiveModule
+            # Remove stored token files
+            try:
+                token_file = Path(self.credentials_file).parent / "tokens.encrypted"
+                key_file = Path(self.credentials_file).parent / "token.key"
+                
+                if token_file.exists():
+                    token_file.unlink()
+                if key_file.exists():
+                    key_file.unlink()
+                    
+                self.logger.info("Local token files removed")
+                
+            except Exception as e:
+                self.logger.warning(f"Failed to remove local token files: {e}")
+            
             self.logger.info("Authentication revoked successfully")
             return True
             
@@ -202,21 +281,198 @@ class GoogleAuthManager(GoogleCalendarReflectiveModule, AuthManagerInterface):
         Returns:
             True if credentials file is valid, False otherwise
         """
-        # TODO: Implement actual file validation
-        # Check file exists, has 600 permissions, contains valid JSON
-        return True
+        try:
+            credentials_path = Path(self.credentials_file)
+            
+            # Check if file exists
+            if not credentials_path.exists():
+                self.logger.warning(f"Credentials file not found: {self.credentials_file}")
+                return False
+            
+            # Check file permissions (should be 600)
+            file_mode = credentials_path.stat().st_mode & 0o777
+            if file_mode != 0o600:
+                self.logger.warning(f"Credentials file has incorrect permissions: {oct(file_mode)}, should be 600")
+                # Try to fix permissions
+                credentials_path.chmod(0o600)
+            
+            # Validate JSON content
+            with open(credentials_path, 'r') as f:
+                config = json.load(f)
+                
+            # Check required fields
+            required_fields = ['client_id', 'client_secret', 'auth_uri', 'token_uri']
+            if 'installed' in config:
+                client_config = config['installed']
+            elif 'web' in config:
+                client_config = config['web']
+            else:
+                self.logger.error("Invalid credentials file format")
+                return False
+            
+            for field in required_fields:
+                if field not in client_config:
+                    self.logger.error(f"Missing required field in credentials: {field}")
+                    return False
+            
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Error validating credentials file: {e}")
+            return False
     
     def _load_existing_tokens(self):
         """Load existing tokens from secure storage if available."""
-        # TODO: Implement secure token loading
-        # Load from encrypted storage, validate expiration
-        pass
+        try:
+            token_file = Path(self.credentials_file).parent / "tokens.encrypted"
+            
+            if not token_file.exists():
+                self.logger.info("No existing tokens found")
+                return
+            
+            # Load encryption key
+            key_file = Path(self.credentials_file).parent / "token.key"
+            if not key_file.exists():
+                self.logger.warning("Token encryption key not found")
+                return
+            
+            with open(key_file, 'rb') as f:
+                key = f.read()
+            
+            # Decrypt and load tokens
+            fernet = Fernet(key)
+            with open(token_file, 'rb') as f:
+                encrypted_data = f.read()
+            
+            decrypted_data = fernet.decrypt(encrypted_data)
+            token_data = json.loads(decrypted_data.decode())
+            
+            # Create TokenInfo object
+            expires_at = datetime.fromisoformat(token_data['expires_at'])
+            self.token_info = TokenInfo(
+                access_token=token_data['access_token'],
+                refresh_token=token_data.get('refresh_token'),
+                expires_at=expires_at,
+                scopes=token_data.get('scopes', self.scopes)
+            )
+            
+            self.logger.info("Existing tokens loaded successfully")
+            
+        except Exception as e:
+            self.logger.warning(f"Failed to load existing tokens: {e}")
     
     def _save_tokens(self):
         """Save tokens to secure storage."""
-        # TODO: Implement secure token storage
-        # Encrypt and save tokens with proper permissions
-        pass
+        try:
+            if not self.token_info:
+                return
+            
+            token_file = Path(self.credentials_file).parent / "tokens.encrypted"
+            key_file = Path(self.credentials_file).parent / "token.key"
+            
+            # Generate or load encryption key
+            if not key_file.exists():
+                key = Fernet.generate_key()
+                with open(key_file, 'wb') as f:
+                    f.write(key)
+                key_file.chmod(0o600)
+            else:
+                with open(key_file, 'rb') as f:
+                    key = f.read()
+            
+            # Prepare token data
+            token_data = {
+                'access_token': self.token_info.access_token,
+                'refresh_token': self.token_info.refresh_token,
+                'expires_at': self.token_info.expires_at.isoformat(),
+                'scopes': self.token_info.scopes
+            }
+            
+            # Encrypt and save tokens
+            fernet = Fernet(key)
+            encrypted_data = fernet.encrypt(json.dumps(token_data).encode())
+            
+            with open(token_file, 'wb') as f:
+                f.write(encrypted_data)
+            token_file.chmod(0o600)
+            
+            self.logger.info("Tokens saved securely")
+            
+        except Exception as e:
+            self.logger.error(f"Failed to save tokens: {e}")
+    
+    def _load_client_credentials(self) -> Optional[Dict[str, str]]:
+        """Load OAuth client credentials from file.
+        
+        Returns:
+            Client credentials dictionary or None if failed
+        """
+        try:
+            with open(self.credentials_file, 'r') as f:
+                config = json.load(f)
+            
+            if 'installed' in config:
+                return config['installed']
+            elif 'web' in config:
+                return config['web']
+            else:
+                self.logger.error("Invalid credentials file format")
+                return None
+                
+        except Exception as e:
+            self.logger.error(f"Failed to load client credentials: {e}")
+            return None
+    
+    def _generate_auth_url(self, client_config: Dict[str, str]) -> str:
+        """Generate OAuth authorization URL.
+        
+        Args:
+            client_config: Client configuration dictionary
+            
+        Returns:
+            Authorization URL
+        """
+        params = {
+            'client_id': client_config['client_id'],
+            'redirect_uri': 'urn:ietf:wg:oauth:2.0:oob',  # For installed apps
+            'scope': ' '.join(self.scopes),
+            'response_type': 'code',
+            'access_type': 'offline',  # To get refresh token
+            'prompt': 'consent'  # Force consent to get refresh token
+        }
+        
+        auth_uri = client_config.get('auth_uri', 'https://accounts.google.com/o/oauth2/auth')
+        return f"{auth_uri}?{urlencode(params)}"
+    
+    def _exchange_code_for_tokens(self, client_config: Dict[str, str], auth_code: str) -> Optional[Dict[str, Any]]:
+        """Exchange authorization code for access and refresh tokens.
+        
+        Args:
+            client_config: Client configuration dictionary
+            auth_code: Authorization code from OAuth flow
+            
+        Returns:
+            Token dictionary or None if failed
+        """
+        try:
+            token_uri = client_config.get('token_uri', 'https://oauth2.googleapis.com/token')
+            
+            data = {
+                'client_id': client_config['client_id'],
+                'client_secret': client_config['client_secret'],
+                'code': auth_code,
+                'grant_type': 'authorization_code',
+                'redirect_uri': 'urn:ietf:wg:oauth:2.0:oob'
+            }
+            
+            response = requests.post(token_uri, data=data, timeout=30)
+            response.raise_for_status()
+            
+            return response.json()
+            
+        except Exception as e:
+            self.logger.error(f"Failed to exchange code for tokens: {e}")
+            return None
     
     def shutdown(self) -> bool:
         """Gracefully shutdown the authentication manager.

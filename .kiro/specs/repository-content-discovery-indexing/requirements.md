@@ -374,6 +374,162 @@ Repository Content Discovery and Indexing (This Spec)
 4. WHEN scaling operations THEN I SHALL provide intelligence that supports parallel work streams
 5. WHEN under pressure THEN I SHALL prioritize critical intelligence over comprehensive analysis
 
+### Requirement 30: Referential Integrity and Business Data Consistency
+
+**User Story:** As a systematic repository intelligence system, I want comprehensive referential integrity constraints, so that I can ensure business data consistency and prevent orphaned or inconsistent repository intelligence.
+
+#### Acceptance Criteria
+
+1. WHEN repository items are deleted THEN I SHALL cascade delete all dependent specifications, requirements, and analysis artifacts to prevent orphaned data
+2. WHEN specifications are removed THEN I SHALL cascade delete all associated requirements while preserving repository item metadata for audit trails
+3. WHEN analysis artifacts reference repository items THEN I SHALL enforce foreign key constraints with SET NULL on delete to preserve analysis history
+4. WHEN operation traces are stored THEN I SHALL enforce correlation ID consistency and prevent trace data corruption through proper constraints
+5. WHEN referential integrity violations occur THEN I SHALL provide detailed error messages with specific constraint violations and remediation guidance
+
+### Requirement 31: Infrastructure Directory Structure Management
+
+**User Story:** As a systematic repository discovery system, I want proper directory structure management, so that I can organize components according to domain boundaries and maintain clean architecture.
+
+#### Acceptance Criteria
+
+1. WHEN implementing analysis components THEN I SHALL organize them in `src/repository_discovery/analysis/` directory with proper module structure
+2. WHEN implementing API components THEN I SHALL organize them in `src/repository_discovery/api/` directory with clear interface boundaries
+3. WHEN implementing intelligence components THEN I SHALL organize them in `src/repository_discovery/intelligence/` directory with proper domain separation
+4. WHEN implementing validation components THEN I SHALL organize them in `src/repository_discovery/validation/` directory with comprehensive test coverage
+5. WHEN directory structure changes THEN I SHALL maintain proper `__init__.py` files and import paths for all modules
+
+### Requirement 32: Content Scanner Operation Control
+
+**User Story:** As a repository discovery system, I want operational control over content scanning, so that I can manage long-running scan operations and provide progress feedback.
+
+#### Acceptance Criteria
+
+1. WHEN starting content scans THEN I SHALL provide scan progress tracking with file count, completion percentage, and estimated time remaining
+2. WHEN scans are running THEN I SHALL support scan cancellation with graceful cleanup and partial result preservation
+3. WHEN scan operations fail THEN I SHALL provide detailed error information and recovery options
+4. WHEN scanning large repositories THEN I SHALL implement incremental scanning with resume capability
+5. WHEN scan performance degrades THEN I SHALL provide performance metrics and optimization recommendations
+
+### Requirement 33: Content Inventory Change Detection
+
+**User Story:** As a repository intelligence system, I want automated change detection, so that I can maintain current inventory state without manual intervention.
+
+#### Acceptance Criteria
+
+1. WHEN repository content changes THEN I SHALL detect changes using git integration with commit-level granularity
+2. WHEN building inventory THEN I SHALL combine scanning and classification results into unified content inventory
+3. WHEN changes are detected THEN I SHALL update inventory incrementally rather than full rebuilds
+4. WHEN inventory management occurs THEN I SHALL maintain change history with timestamps and change types
+5. WHEN change detection fails THEN I SHALL provide fallback mechanisms and error recovery
+
+### Requirement 34: Specification Parsing and Requirements Extraction
+
+**User Story:** As a repository intelligence system, I want structured specification parsing, so that I can extract requirements, user stories, and acceptance criteria systematically.
+
+#### Acceptance Criteria
+
+1. WHEN parsing specifications THEN I SHALL extract structured requirements with proper requirement numbering and hierarchy
+2. WHEN analyzing markdown content THEN I SHALL parse user stories, acceptance criteria, and requirement metadata
+3. WHEN extraction fails THEN I SHALL provide detailed parsing errors with line numbers and recovery suggestions
+4. WHEN requirements change THEN I SHALL detect changes and update extracted structured data
+5. WHEN parsing completes THEN I SHALL validate extracted requirements against specification format standards
+
+### Requirement 35: Overlap Detection and Conflict Analysis
+
+**User Story:** As a repository intelligence system, I want systematic overlap detection, so that I can identify conflicting objectives and overlapping functionality across specifications.
+
+#### Acceptance Criteria
+
+1. WHEN analyzing specifications THEN I SHALL create searchable knowledge base of all requirements for overlap detection
+2. WHEN detecting overlaps THEN I SHALL identify overlapping functionality with confidence scoring and conflict severity
+3. WHEN conflicts are found THEN I SHALL create overlap matrices showing relationships between conflicting requirements
+4. WHEN overlap analysis completes THEN I SHALL provide recommendations for conflict resolution
+5. WHEN overlap patterns emerge THEN I SHALL identify systematic patterns and anti-patterns in requirement conflicts
+
+### Requirement 36: Multi-Perspective Intelligence Synthesis
+
+**User Story:** As a repository intelligence system, I want systematic perspective synthesis, so that I can combine diverse viewpoints while preserving unique insights and resolving conflicts.
+
+#### Acceptance Criteria
+
+1. WHEN synthesizing perspectives THEN I SHALL combine diverse viewpoints while preserving unique insights from each perspective
+2. WHEN conflicts arise between perspectives THEN I SHALL implement systematic conflict resolution protocols with confidence scoring
+3. WHEN synthesis completes THEN I SHALL create perspective analysis models with conflict resolution documentation
+4. WHEN uncertainty exists THEN I SHALL provide uncertainty quantification and alternative perspective options
+5. WHEN synthesis fails THEN I SHALL escalate to deterministic validation methods or human oversight with clear escalation criteria
+
+### Requirement 37: Performance Standards and Scalability
+
+**User Story:** As a high-performance repository intelligence system, I want explicit performance standards, so that I can meet operational requirements for large repositories and real-time analysis.
+
+#### Acceptance Criteria
+
+1. WHEN scanning repository content THEN I SHALL scan 10,000 files within 30 seconds with memory usage under 500MB for repositories up to 1GB
+2. WHEN processing inventory THEN I SHALL process 10,000 items within 60 seconds with memory usage under 1GB for inventories up to 100,000 items
+3. WHEN detecting changes THEN I SHALL provide change detection latency under 5 seconds for real-time repository monitoring
+4. WHEN reporting progress THEN I SHALL provide progress updates every 1000 files during scanning operations
+5. WHEN performance degrades THEN I SHALL identify bottlenecks and provide optimization recommendations to maintain performance standards
+
+### Requirement 38: System Integration and Wiring
+
+**User Story:** As a repository intelligence system, I want systematic component integration, so that I can wire all components into a unified system with proper configuration and initialization.
+
+#### Acceptance Criteria
+
+1. WHEN integrating components THEN I SHALL create a SystemIntegrator that coordinates all discovery and analysis operations
+2. WHEN initializing the system THEN I SHALL provide system-wide configuration with proper error handling and validation
+3. WHEN wiring components THEN I SHALL create a main RepositoryIntelligence aggregate root that manages all bounded contexts
+4. WHEN system startup occurs THEN I SHALL validate all component dependencies and provide clear startup status
+5. WHEN integration testing occurs THEN I SHALL verify complete system integration from content discovery through intelligence synthesis to API access
+
+### Requirement 39: Comprehensive Validation Suite
+
+**User Story:** As a systematic repository intelligence system, I want comprehensive validation capabilities, so that I can ensure RDI traceability and systematic compliance.
+
+#### Acceptance Criteria
+
+1. WHEN validating implementation THEN I SHALL achieve >90% test coverage across unit, integration, and system tests
+2. WHEN validating RDI traceability THEN I SHALL ensure every implementation traces back to specific requirements with no gaps
+3. WHEN validating systematic compliance THEN I SHALL prove the system follows its own systematic principles through measurable validation
+4. WHEN validating superiority THEN I SHALL demonstrate measurable superiority over ad-hoc discovery methods through comparative testing
+5. WHEN validation completes THEN I SHALL provide comprehensive validation reports with traceability matrices and compliance verification
+
+### Requirement 40: Physics-Informed Architecture Constraints
+
+**User Story:** As a repository intelligence system operating in physical reality, I want physics-informed architecture constraints, so that I can design for real-world constraints and failure modes rather than idealistic assumptions.
+
+#### Acceptance Criteria
+
+1. WHEN designing data relationships THEN I SHALL mirror real-world constraints with explicit cascade behaviors that prevent orphaned data
+2. WHEN implementing referential integrity THEN I SHALL follow physics-informed principles where data consistency reflects conservation laws and entropy management
+3. WHEN handling system failures THEN I SHALL design for graceful degradation based on physical reality constraints rather than assuming perfect conditions
+4. WHEN managing resources THEN I SHALL acknowledge finite memory, CPU, and network constraints in all architectural decisions
+5. WHEN validating architecture THEN I SHALL demonstrate that physics-informed constraints improve system reliability compared to idealistic architectural assumptions
+
+### Requirement 41: Complete Monitoring Integration Protocol
+
+**User Story:** As a repository intelligence system, I want complete monitoring integration, so that I can ensure "if you can't monitor it, you can't debug it either" across all components.
+
+#### Acceptance Criteria
+
+1. WHEN implementing components THEN I SHALL implement the MonitorableComponent protocol with monitoring endpoints, current state, health metrics, performance metrics, debug context, consistency validation, operation history, and decision logs
+2. WHEN operations execute THEN I SHALL provide complete operation traceability with correlation IDs, performance metrics, and decision point logging
+3. WHEN debugging issues THEN I SHALL provide comprehensive debug context including input conditions, decision logic, alternative outcomes, and reasoning chains
+4. WHEN monitoring system health THEN I SHALL provide real-time health metrics and performance monitoring across all repository intelligence components
+5. WHEN validating monitoring THEN I SHALL demonstrate that complete monitoring integration enables systematic debugging and issue resolution compared to partial monitoring approaches
+
+### Requirement 42: Implementation Status Validation and Recovery
+
+**User Story:** As a repository intelligence system, I want implementation status validation, so that I can accurately assess current capabilities and avoid claiming functionality that doesn't exist.
+
+#### Acceptance Criteria
+
+1. WHEN assessing implementation status THEN I SHALL validate actual working code with specific file paths, function names, and executable tests rather than theoretical compliance claims
+2. WHEN discovering partial implementations THEN I SHALL identify skeleton code that lacks core functionality and requires completion rather than claiming full implementation
+3. WHEN validating completed components THEN I SHALL verify test coverage, functionality completeness, and integration readiness with measurable criteria
+4. WHEN planning implementation work THEN I SHALL base task planning on actual code analysis rather than documentation assumptions
+5. WHEN reporting system status THEN I SHALL provide accurate implementation percentages based on working, tested code rather than file existence or theoretical design complianceth specific constraint violations and recovery recommendations
+
 ## Stakeholder Personas
 
 ### Primary Stakeholder: "Beast Master" (Human Operator)

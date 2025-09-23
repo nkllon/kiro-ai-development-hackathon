@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  google-workspace-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: google_workspace_mcp
+    ports:
+      - "8000:8000"
+    environment:
+      - GOOGLE_OAUTH_CLIENT_ID=${GOOGLE_OAUTH_CLIENT_ID}
+      - GOOGLE_OAUTH_CLIENT_SECRET=${GOOGLE_OAUTH_CLIENT_SECRET}
+      - OAUTHLIB_INSECURE_TRANSPORT=1
+      - WORKSPACE_MCP_PORT=8000
+    volumes:
+      - google_workspace_credentials:/home/mcpuser/.config/google-calendar-mcp
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - mcp_network
+
+volumes:
+  google_workspace_credentials:
+
+networks:
+  mcp_network:
+    driver: bridge

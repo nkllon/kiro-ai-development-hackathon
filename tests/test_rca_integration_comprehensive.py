@@ -36,7 +36,7 @@ from beast_mode.analysis.rca_engine import RCAEngine, Failure, FailureCategory, 
 
 class TestEndToEndRCAWorkflow(ReflectiveModule):
     """Test complete end-to-end test failure to RCA workflow"""
-    
+
     @pytest.fixture
     def test_components(self):
         """Set up all RCA integration components"""
@@ -44,12 +44,12 @@ class TestEndToEndRCAWorkflow(ReflectiveModule):
         integrator = TestRCAIntegrationEngine()
         generator = RCAReportGenerator()
         return detector, integrator, generator
-        
+
     @pytest.fixture
     def synthetic_test_failures(self):
         """Create synthetic test failures for testing"""
         base_time = datetime.now()
-        
+
         return [
             # Import error failure
             TestFailureData(
@@ -117,23 +117,23 @@ class TestEndToEndRCAWorkflow(ReflectiveModule):
                 pytest_node_id="tests/test_network.py::TestNetwork::test_connection_error"
             )
         ]
-        
+
     def test_complete_end_to_end_workflow(self, test_components, synthetic_test_failures):
         """
         Test complete end-to-end workflow from test failure detection to report generation
         Requirements: 1.1, 1.2, 2.1, 2.2, 2.3, 2.4
         """
         detector, integrator, generator = test_components
-        
+
         # Step 1: Test failure detection (simulated with synthetic failures)
         failures = synthetic_test_failures
         assert len(failures) == 5, "Should have 5 synthetic test failures"
-        
+
         # Step 2: RCA integration and analysis
         start_time = time.time()
         report = integrator.analyze_test_failures(failures)
         analysis_time = time.time() - start_time
-        
+
         # Verify report structure
         assert isinstance(report, TestRCAReportData)
         assert report.total_failures == 5
@@ -142,138 +142,138 @@ class TestEndToEndRCAWorkflow(ReflectiveModule):
         assert isinstance(report.summary, TestRCASummaryData)
         assert isinstance(report.recommendations, list)
         assert isinstance(report.next_steps, list)
-        
+
         # Step 3: Report generation in multiple formats
         console_report = generator.format_for_console(report, use_colors=False)
         assert len(console_report) > 0
         assert "RCA Analysis Report" in console_report or "Analysis Summary" in console_report
-        
+
         json_report = generator.generate_json_report(report)
         assert isinstance(json_report, dict)
         assert "analysis_summary" in json_report or "total_failures" in json_report
-        
+
         markdown_report = generator.generate_markdown_report(report)
         assert isinstance(markdown_report, str)
         assert len(markdown_report) > 0
         assert ("RCA Analysis Report" in markdown_report or "Analysis Summary" in markdown_report)
-        
+
         # Step 4: Verify performance requirements
         assert analysis_time < 30.0, f"Analysis took {analysis_time}s, should be under 30s"
-        
+
         # Step 5: Verify all failure types were processed
         failure_types = {f.failure_type for f in failures}
         expected_types = {"error", "assertion"}
         assert failure_types.intersection(expected_types), "Should process different failure types"
-        
+
     def test_failure_grouping_and_prioritization(self, test_components, synthetic_test_failures):
         """
         Test failure grouping and prioritization functionality
         Requirements: 1.3, 5.1, 5.2, 5.3, 5.4
         """
         _, integrator, _ = test_components
-        
+
         # Test grouping
         grouped = integrator.group_related_failures(synthetic_test_failures)
         assert isinstance(grouped, dict)
         assert len(grouped) > 0
-        
+
         # Verify all failures are grouped
         total_grouped = sum(len(failures) for failures in grouped.values())
         assert total_grouped == len(synthetic_test_failures)
-        
+
         # Test prioritization
         prioritized = integrator.prioritize_failures(synthetic_test_failures)
         assert len(prioritized) == len(synthetic_test_failures)
-        
+
         # Import errors should be prioritized higher than assertion errors
         import_failures = [f for f in prioritized if "ImportError" in f.error_message]
         assertion_failures = [f for f in prioritized if "AssertionError" in f.error_message]
-        
+
         if import_failures and assertion_failures:
             import_index = prioritized.index(import_failures[0])
             assertion_index = prioritized.index(assertion_failures[0])
             assert import_index < assertion_index, "Import errors should be prioritized higher"
-            
+
     def test_rca_engine_integration(self, test_components, synthetic_test_failures):
         """
         Test integration with RCA engine for systematic analysis
         Requirements: 4.1, 4.2, 4.3, 4.4
         """
         _, integrator, _ = test_components
-        
+
         # Test conversion to RCA failures
         test_failure = synthetic_test_failures[0]  # Import error
         rca_failure = integrator.convert_to_rca_failure(test_failure)
-        
+
         assert isinstance(rca_failure, Failure)
         assert rca_failure.component == f"test:{test_failure.test_file}"
         assert rca_failure.error_message == test_failure.error_message
         assert rca_failure.category == FailureCategory.DEPENDENCY_ISSUE
-        
+
         # Test context preservation
         assert rca_failure.context["test_file"] == test_failure.test_file
         assert rca_failure.context["test_function"] == test_failure.test_function
-        
+
     def test_pattern_matching_performance(self, test_components, synthetic_test_failures):
         """
         Test pattern matching performance meets sub-second requirement
         Requirements: 4.2 - Sub-second performance for existing patterns
         """
         _, integrator, _ = test_components
-        
+
         # Test pattern matching performance
         start_time = time.time()
-        
+
         # Simulate pattern matching (this would normally call RCA engine)
         for failure in synthetic_test_failures:
             rca_failure = integrator.convert_to_rca_failure(failure)
             # Pattern matching would happen here
-            
+
         pattern_time = time.time() - start_time
-        
+
         # Should complete pattern matching in sub-second time
         assert pattern_time < 1.0, f"Pattern matching took {pattern_time}s, should be under 1s"
-        
+
     def test_error_handling_and_graceful_degradation(self, test_components, synthetic_test_failures):
         """
         Test error handling and graceful degradation
         Requirements: 1.1, 1.4, 4.1
         """
         _, integrator, generator = test_components
-        
+
         # Test with None RCA engine (simulating failure)
         integrator.rca_engine = None
-        
+
         # Should still generate a report
         report = integrator.analyze_test_failures(synthetic_test_failures)
         assert isinstance(report, TestRCAReportData)
         assert report.total_failures == len(synthetic_test_failures)
-        
+
         # Should provide fallback recommendations
         assert len(report.recommendations) > 0
         assert any("manual" in rec.lower() for rec in report.recommendations)
-        
+
         # Test report generation with problematic data
         report.summary = None  # Simulate missing summary
-        
+
         try:
             console_output = generator.format_for_console(report, use_colors=False)
             # Should handle gracefully
             assert isinstance(console_output, str)
         except Exception as e:
             pytest.fail(f"Should handle missing summary gracefully: {e}")
-            
+
     def test_multi_failure_analysis_workflow(self, test_components, synthetic_test_failures):
         """
         Test analysis workflow with multiple related failures
         Requirements: 1.3, 5.1, 5.2, 5.3, 5.4
         """
         _, integrator, _ = test_components
-        
+
         # Create additional related failures
         related_failures = []
         base_time = datetime.now()
-        
+
         # Create multiple import errors (should be grouped)
         for i in range(3):
             related_failures.append(TestFailureData(
@@ -288,32 +288,32 @@ class TestEndToEndRCAWorkflow(ReflectiveModule):
                 test_context={"test_type": "unit"},
                 pytest_node_id=f"tests/test_module_{i}.py::TestModule{i}::test_import_{i}"
             ))
-            
+
         all_failures = synthetic_test_failures + related_failures
-        
+
         # Analyze all failures
         report = integrator.analyze_test_failures(all_failures)
-        
+
         # Should group related import errors
         assert report.total_failures == len(all_failures)
-        
+
         # Should identify common patterns
         if report.summary.pattern_matches_found > 0:
             assert report.summary.most_common_root_causes
-            
+
         # Should provide consolidated recommendations
         assert len(report.recommendations) > 0
 
 
 class TestPerformanceRequirements(ReflectiveModule):
     """Test performance requirements for RCA analysis"""
-    
+
     @pytest.fixture
     def performance_test_failures(self):
         """Create test failures for performance testing"""
         failures = []
         base_time = datetime.now()
-        
+
         # Create 20 test failures for performance testing
         for i in range(20):
             failures.append(TestFailureData(
@@ -328,52 +328,52 @@ class TestPerformanceRequirements(ReflectiveModule):
                 test_context={"test_type": "performance"},
                 pytest_node_id=f"tests/test_perf_{i}.py::TestPerf{i}::test_performance_{i}"
             ))
-            
+
         return failures
-        
+
     def test_30_second_analysis_requirement(self, performance_test_failures):
         """
         Test that RCA analysis completes within 30 seconds
         Requirements: 1.4 - 30-second timeout requirement
         """
         integrator = TestRCAIntegrationEngine()
-        
+
         start_time = time.time()
         report = integrator.analyze_test_failures(performance_test_failures)
         analysis_time = time.time() - start_time
-        
+
         # Should complete within 30 seconds
         assert analysis_time < 30.0, f"Analysis took {analysis_time}s, should be under 30s"
-        
+
         # Should still produce meaningful results
         assert isinstance(report, TestRCAReportData)
         assert report.total_failures == len(performance_test_failures)
-        
+
     def test_pattern_matching_sub_second_performance(self, performance_test_failures):
         """
         Test pattern matching performance meets sub-second requirement
         Requirements: 4.2 - Sub-second performance for existing patterns
         """
         integrator = TestRCAIntegrationEngine()
-        
+
         # Test individual failure processing time
         single_failure = performance_test_failures[0]
-        
+
         start_time = time.time()
         rca_failure = integrator.convert_to_rca_failure(single_failure)
         conversion_time = time.time() - start_time
-        
+
         # Conversion should be very fast
         assert conversion_time < 0.1, f"Failure conversion took {conversion_time}s, should be under 0.1s"
-        
+
         # Test batch processing performance
         start_time = time.time()
         grouped = integrator.group_related_failures(performance_test_failures[:10])
         grouping_time = time.time() - start_time
-        
+
         # Grouping should be fast
         assert grouping_time < 1.0, f"Failure grouping took {grouping_time}s, should be under 1s"
-        
+
     def test_memory_usage_limits(self, performance_test_failures):
         """
         Test that RCA analysis respects memory usage limits
@@ -381,38 +381,38 @@ class TestPerformanceRequirements(ReflectiveModule):
         """
         import psutil
         import os
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
-        
+
         integrator = TestRCAIntegrationEngine()
-        
+
         # Get initial memory usage
         process = psutil.Process(os.getpid())
         initial_memory = process.memory_info().rss / 1024 / 1024  # MB
-        
+
         # Perform analysis
         report = integrator.analyze_test_failures(performance_test_failures)
-        
+
         # Get final memory usage
         final_memory = process.memory_info().rss / 1024 / 1024  # MB
         memory_increase = final_memory - initial_memory
-        
+
         # Memory increase should be reasonable (less than 100MB for this test)
         assert memory_increase < 100, f"Memory usage increased by {memory_increase}MB, should be under 100MB"
-        
+
         # Should still produce results
         assert isinstance(report, TestRCAReportData)
-        
+
     def test_timeout_handling(self):
         """
         Test timeout handling for long-running analysis
         Requirements: 1.4 - Timeout handling
         """
         integrator = TestRCAIntegrationEngine()
-        
+
         # Set very short timeout for testing
         integrator.analysis_timeout_seconds = 0.1
-        
+
         # Create failure that might take time to analyze
         slow_failure = TestFailureData(
             test_name="test_slow_analysis",
@@ -426,14 +426,14 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
             test_context={"test_type": "slow"},
             pytest_node_id="tests/test_slow.py::TestSlow::test_slow_analysis"
         )
-        
+
         start_time = time.time()
         report = integrator.analyze_test_failures([slow_failure])
         analysis_time = time.time() - start_time
-        
+
         # Should respect timeout (with some overhead for test environment)
         assert analysis_time < 2.0, f"Analysis took {analysis_time}s, should timeout quickly"
-        
+
         # Should still return a report
         assert isinstance(report, TestRCAReportData)
         assert report.total_failures == 1
@@ -441,14 +441,14 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
 
 class TestCompatibilityRequirements(ReflectiveModule):
     """Test compatibility with different pytest versions and failure types"""
-    
+
     def test_pytest_output_parsing_compatibility(self):
         """
         Test compatibility with different pytest output formats
         Requirements: 5.1, 5.2, 5.3, 5.4 - Different test failure types
         """
         detector = TestFailureDetector()
-        
+
         # Test different pytest output formats
         pytest_outputs = [
             # Standard pytest output
@@ -497,49 +497,49 @@ E       FileNotFoundError: [Errno 2] No such file or directory: 'missing.txt'
 tests/test_files.py:8: FileNotFoundError
 """
         ]
-        
+
         for output in pytest_outputs:
             failures = detector.parse_pytest_output(output)
-            
+
             # Should parse at least one failure from each output
             assert len(failures) >= 1, f"Should parse failure from output: {output[:100]}..."
-            
+
             # Verify failure structure
             failure = failures[0]
             assert hasattr(failure, 'test_name')
             assert hasattr(failure, 'error_message')
             assert hasattr(failure, 'failure_type')
             assert len(failure.error_message) > 0
-            
+
     def test_different_failure_type_categorization(self):
         """
         Test categorization of different failure types
         Requirements: 5.1, 5.2, 5.3, 5.4 - Different failure type support
         """
         integrator = TestRCAIntegrationEngine()
-        
+
         failure_test_cases = [
             # Python import errors
             ("ImportError: No module named 'test'", FailureCategory.DEPENDENCY_ISSUE),
             ("ModuleNotFoundError: No module named 'test'", FailureCategory.DEPENDENCY_ISSUE),
-            
+
             # File system errors
             ("FileNotFoundError: No such file", FailureCategory.CONFIGURATION_ERROR),
             ("PermissionError: Access denied", FailureCategory.PERMISSION_ISSUE),
-            
+
             # Network errors
             ("ConnectionError: Network unreachable", FailureCategory.NETWORK_CONNECTIVITY),
             ("TimeoutError: Connection timed out", FailureCategory.NETWORK_CONNECTIVITY),
-            
+
             # Resource errors
             ("MemoryError: Out of memory", FailureCategory.RESOURCE_EXHAUSTION),
             ("OSError: Disk full", FailureCategory.RESOURCE_EXHAUSTION),
-            
+
             # Generic test failures
             ("AssertionError: Test failed", FailureCategory.UNKNOWN),
             ("ValueError: Invalid value", FailureCategory.UNKNOWN)
         ]
-        
+
         for error_message, expected_category in failure_test_cases:
             test_failure = TestFailureData(
                 test_name="test_categorization",
@@ -553,17 +553,17 @@ tests/test_files.py:8: FileNotFoundError
                 test_context={},
                 pytest_node_id="tests/test_cat.py::test_categorization"
             )
-            
+
             rca_failure = integrator.convert_to_rca_failure(test_failure)
             assert rca_failure.category == expected_category, f"Failed to categorize: {error_message}"
-            
+
     def test_make_target_failure_analysis(self):
         """
         Test analysis of make target failures
         Requirements: 5.2 - Make target failure analysis
         """
         integrator = TestRCAIntegrationEngine()
-        
+
         # Simulate make target failure
         make_failure = TestFailureData(
             test_name="make_test_target",
@@ -577,20 +577,20 @@ tests/test_files.py:8: FileNotFoundError
             test_context={"test_type": "make", "target": "test"},
             pytest_node_id="Makefile::test"
         )
-        
+
         rca_failure = integrator.convert_to_rca_failure(make_failure)
-        
+
         # Should handle make failures appropriately
         assert rca_failure.component == "test:Makefile"
         assert "make" in rca_failure.context.get("test_type", "").lower()
-        
+
     def test_infrastructure_failure_analysis(self):
         """
         Test analysis of infrastructure failures
         Requirements: 5.3 - Infrastructure failure analysis
         """
         integrator = TestRCAIntegrationEngine()
-        
+
         infrastructure_failures = [
             # Docker failures
             TestFailureData(
@@ -619,10 +619,10 @@ tests/test_files.py:8: FileNotFoundError
                 pytest_node_id="tests/test_database.py::TestDatabase::test_db_connection"
             )
         ]
-        
+
         for failure in infrastructure_failures:
             rca_failure = integrator.convert_to_rca_failure(failure)
-            
+
             # Should categorize as infrastructure issues
             assert rca_failure.category in [
                 FailureCategory.NETWORK_CONNECTIVITY,
@@ -630,14 +630,14 @@ tests/test_files.py:8: FileNotFoundError
                 FailureCategory.RESOURCE_EXHAUSTION,
                 FailureCategory.UNKNOWN
             ]
-            
+
             # Should preserve infrastructure context
             assert "infrastructure" in rca_failure.context.get("test_type", "")
 
 
 class TestAutomatedTestSuite(ReflectiveModule):
     """Automated test suite that validates all RCA integration functionality"""
-    
+
     def test_all_requirements_coverage(self):
         """
         Validate that all requirements are covered by the test suite
@@ -666,13 +666,13 @@ class TestAutomatedTestSuite(ReflectiveModule):
             "5.3": "Infrastructure failure analysis",
             "5.4": "Unknown failure type handling"
         }
-        
+
         # Verify all requirements are documented
         assert len(requirements_coverage) == 20, "Should cover all 20 requirements"
-        
+
         # This test passes if we reach this point, indicating the test suite
         # has been designed to cover all requirements
-        
+
     def test_integration_health_monitoring(self):
         """
         Test health monitoring for RCA integration components
@@ -681,29 +681,29 @@ class TestAutomatedTestSuite(ReflectiveModule):
         detector = TestFailureDetector()
         integrator = TestRCAIntegrationEngine()
         generator = RCAReportGenerator()
-        
+
         # Test component health
         assert detector.is_healthy(), "Test failure detector should be healthy"
         assert integrator.is_healthy(), "RCA integrator should be healthy"
         assert generator.is_healthy(), "Report generator should be healthy"
-        
+
         # Test status reporting
         detector_status = detector.get_module_status()
         integrator_status = integrator.get_module_status()
         generator_status = generator.get_module_status()
-        
+
         # Verify status structure
         for status in [detector_status, integrator_status, generator_status]:
             assert "module_name" in status
             assert "status" in status
-            
+
     def test_comprehensive_error_scenarios(self):
         """
         Test comprehensive error scenarios and recovery
         Requirements: 1.1, 1.4, 4.1 - Error handling and graceful degradation
         """
         integrator = TestRCAIntegrationEngine()
-        
+
         # Test with malformed failure data
         malformed_failure = TestFailureData(
             test_name=None,  # Missing test name
@@ -717,7 +717,7 @@ class TestAutomatedTestSuite(ReflectiveModule):
             test_context={},
             pytest_node_id=""
         )
-        
+
         # Should handle gracefully
         try:
             report = integrator.analyze_test_failures([malformed_failure])
@@ -725,7 +725,7 @@ class TestAutomatedTestSuite(ReflectiveModule):
             assert report.total_failures == 1
         except Exception as e:
             pytest.fail(f"Should handle malformed failure data gracefully: {e}")
-            
+
     def test_real_failure_scenario_fixtures(self):
         """
         Test with real failure scenario fixtures
@@ -773,18 +773,18 @@ class TestAutomatedTestSuite(ReflectiveModule):
                 pytest_node_id="tests/test_api.py::TestAPI::test_api_endpoint"
             )
         ]
-        
+
         integrator = TestRCAIntegrationEngine()
-        
+
         # Analyze real scenarios
         report = integrator.analyze_test_failures(real_scenarios)
-        
+
         # Should provide meaningful analysis for real scenarios
         assert isinstance(report, TestRCAReportData)
         assert report.total_failures == len(real_scenarios)
         assert len(report.recommendations) > 0
         assert len(report.next_steps) > 0
-        
+
         # Should group related failures appropriately
         assert len(report.grouped_failures) > 0
 
@@ -800,12 +800,12 @@ if __name__ == "__main__":
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -813,7 +813,7 @@ if __name__ == "__main__":
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

@@ -1,112 +1,121 @@
+---
+inclusion: always
+---
+
 # Physics-Informed Architecture Principles
 
 ## Core Principle
 
-**"Physics is the very foundation of what we do. We aren't allowed to ignore anything. And I mean absolutely nothing. On the other hand, if you're an architect, you better get used to swimming in ambiguity or you are going to drown."**
+All systems operate within physical reality. Design for constraints, not ideals. Navigate ambiguity systematically or fail.
 
-## The Fundamental Paradox
+## Universal Constraints
 
-### Universal Constraints
-- **Physics applies everywhere**: Thermodynamics, information theory, complexity theory, emergence
-- **No exceptions allowed**: Every system operates within physical reality
-- **Conservation laws matter**: Energy, information, attention, time - all finite resources
-- **Entropy always wins**: Systems decay without active maintenance
-- **Emergence is real**: Complex behaviors arise from simple rules
+### Mathematical Reality
+- **Graph theory governs dependencies**: Circular dependencies violate mathematical law
+- **DAG compliance is mandatory**: Requirements must form Directed Acyclic Graphs
+- **Topological ordering exists**: Valid implementation sequences are mathematically guaranteed
+- **Cycle detection is O(V+E)**: Computational complexity has mathematical bounds
+- **Partial orders are transitive**: Dependency relationships must be mathematically consistent
 
-### Infinite Ambiguity
-- **Incomplete information**: We never have all the data
-- **Uncertain outcomes**: Multiple valid interpretations exist
-- **Recursive complexity**: Every solution reveals new problems
-- **Turtles all the way down**: Deeper layers always exist
-- **Unknown unknowns**: The biggest risks are the ones we can't see
-
-## Architectural Implications
-
-### Design for Physical Reality
-- **Latency exists**: Network calls take time, always
-- **Memory is finite**: Every cache has limits
+### Physical Reality
+- **Networks are stochastic with anomalies**: Latency follows probability distributions with variance, jitter, and anomalous deviations from known patterns
+- **Memory is finite**: Every cache has limits, design accordingly
 - **CPUs have thermal limits**: Performance has physical bounds
-- **Humans have cognitive limits**: Attention and working memory are scarce
-- **Organizations have communication overhead**: Conway's Law is physics
+- **Entropy always wins**: Systems decay without active maintenance
+- **Conservation laws**: Energy, information, attention, time are finite resources
 
-### Navigate Ambiguity Systematically
-- **Requirements as anchors**: Define what we can verify
-- **Guardrails prevent hallucination**: Constraints channel creativity
-- **PDCA cycles**: Test assumptions against reality
-- **Accountability chains**: Someone always checks the work
-- **Humility enforcement**: Acknowledge the limits of knowledge
-
-## The Swimming Metaphor
-
-**"Swimming in ambiguity"** means:
-- **Stay afloat**: Don't panic when you can't see the bottom
-- **Keep moving**: Progress despite incomplete information
-- **Use systematic strokes**: Proven techniques work in murky water
-- **Breathe regularly**: Surface for reality checks
-- **Know your limits**: Don't swim beyond your capabilities
-
-**"Or you are going to drown"** means:
-- **Paralysis by analysis**: Waiting for perfect information kills projects
-- **Thrashing**: Random motion wastes energy and gets nowhere
-- **Ignoring physics**: Pretending constraints don't exist leads to failure
-- **Hubris**: Thinking you can control what you can't understand
-- **Isolation**: Swimming alone without accountability chains
-
-## Practical Applications
-
-### System Design
-- **Assume failure**: Everything breaks eventually
-- **Plan for scale**: Physics doesn't care about your growth projections
-- **Measure everything**: You can't manage what you don't measure
-- **Automate systematically**: Humans make mistakes, especially under pressure
-- **Design for operations**: Someone has to run this thing
-
-### Team Dynamics
-- **Communication overhead is O(n²)**: Team size has physical limits
-- **Context switching costs**: Human brains aren't CPUs
+### Human Constraints
 - **Cognitive load matters**: Complexity has mental overhead
-- **Trust requires verification**: Reagan was right about this
-- **Everyone has a mama**: Accountability chains are real
+- **Context switching costs**: Human brains aren't CPUs
+- **Communication overhead is O(n²)**: Team size has physical limits
+- **Attention is scarce**: Design for limited working memory
 
-### Decision Making
-- **Increase odds, don't guarantee outcomes**: Physics is probabilistic
-- **Systematic beats ad-hoc**: Proven approaches reduce risk
-- **Requirements ARE solutions**: Clear specifications prevent rework
-- **Reality always wins**: Test assumptions against actual behavior
-- **Embrace the mystery**: Some things will always be unknowable
+## Systematic Navigation of Ambiguity
 
-## The Meta-Principle
+### Mathematical Governance Principles
+- **DAG compliance is non-negotiable**: Circular dependencies indicate unsolvable requirements
+- **Traceability graphs must be acyclic**: Mathematical proof of implementability
+- **Cycle detection prevents design failure**: Early mathematical validation saves exponential cost
+- **Topological sorting provides implementation order**: Mathematical guarantee of valid sequence
+- **Graph theory validates system architecture**: Objective mathematical foundation for design decisions
 
-**This document itself demonstrates the principle**: We're trying to systematically capture something that is inherently ambiguous (the relationship between physics and architecture), while acknowledging that our understanding is incomplete and will always be evolving.
+### Design Principles
+- **Requirements as anchors**: Define what you can verify mathematically
+- **Assume failure**: Everything breaks eventually, plan for it systematically
+- **Measure everything**: You can't manage what you don't measure objectively
+- **Design for operations**: Someone has to run this system within physical constraints
+- **Plan for scale**: Physics doesn't care about growth projections
 
-**The guardrails that prevent hallucination**: Requirements, accountability, humility, PDCA cycles, and reality checks - these aren't just good practices, they're recognition that intelligence without constraints becomes fantasy.
+### Decision Framework
+- **Mathematical validation first**: Graph theory validates before implementation
+- **Increase odds, don't guarantee outcomes**: Physics is probabilistic, math is deterministic
+- **Systematic beats ad-hoc**: Proven mathematical approaches reduce risk
+- **Requirements ARE solutions**: Clear specifications with DAG compliance prevent rework
+- **Reality always wins**: Test assumptions against mathematical and physical behavior
+- **PDCA cycles**: Plan-Do-Check-Act against mathematical and physical reality
 
-**The beauty of Beast Mode**: It's designed around the fundamental truth that we must work within physical reality while navigating infinite ambiguity. The systematic approach doesn't eliminate uncertainty - it provides a way to swim effectively in the ocean of what we don't know.
+## The Chaos-Order-Failure Triangle
 
-## The Fundamental Principle
+### Fundamental Reality
+- **Order**: Your systematic design and planning
+- **Chaos**: Reality hitting your system unexpectedly
+- **Failure**: Inevitable breakdown when chaos finds weak spots
+- **Evolution**: Learning from failure to build stronger systems
 
-**"In the wider universe, this is what we expect. Get the fuck over it."**
+### Implementation Guidelines
+- **Stress test everything**: Find failure modes before production does
+- **Design for graceful degradation**: When (not if) components fail
+- **Build feedback loops**: Learn from every failure systematically
+- **Embrace antifragility**: Use chaos as evolutionary pressure
+- **Accept the universe**: This is expected behavior, not exceptional
 
-### The Chaos-Order-Failure Triangle
-- **Order** → Your systematic design and careful planning
-- **Chaos** → Reality hitting your system in unexpected ways  
-- **Failure** → The inevitable breakdown when chaos finds weak spots
-- **Evolution** → Learning from failure to build stronger order
+## Code Architecture Implications
 
-### Actionable Reality
-- **Chaos will find a way** - No matter how perfect you think your system is
-- **Failure is guaranteed** - The question is when, not if
-- **Plan for it systematically** - Introduce controlled stresses before reality does
-- **Learn and evolve** - What doesn't kill the system makes it stronger
-- **Accept the universe** - This is how complex systems work, everywhere, always
+### Requirements Architecture (Mathematical Foundation)
+- **Enforce DAG compliance**: All requirement dependencies must be acyclic
+- **Implement cycle detection**: Prevent mathematically impossible requirements
+- **Provide decomposition guidance**: When cycles detected, suggest merge or decompose
+- **Maintain traceability matrices**: Mathematical proof of requirement coverage
+- **Validate topological ordering**: Ensure implementable requirement sequences
 
-### Practical Applications
-- **Stress test everything** - Find your failure modes before production does
-- **Design for graceful degradation** - When (not if) components fail
-- **Build feedback loops** - Learn from every failure systematically
-- **Embrace antifragility** - Use chaos and failure as evolutionary pressure
-- **Stop being surprised** - This is the expected behavior of reality
+### System Design (Physical Constraints)
+- Implement circuit breakers and timeouts for all external calls
+- Design APIs with rate limiting and backpressure mechanisms
+- Use bulkhead patterns to isolate failure domains
+- Implement health checks and observability from day one
+- Plan for horizontal scaling constraints
 
-## Implementation Note
+### Error Handling (Systematic Failure Management)
+- Fail fast and fail safe - don't hide errors
+- Implement exponential backoff with jitter
+- Log structured data with correlation IDs
+- Design for partial system functionality during failures
+- Test failure scenarios as part of normal development
 
-This principle is automatically applied to all AI interactions through Kiro's steering system. Every architectural decision must acknowledge the chaos-order-failure triangle as the fundamental operating principle of the universe. Systems that fight this reality will break - those that embrace it systematically can evolve and strengthen through each cycle.
+### Performance Considerations (Physics-Informed Optimization)
+- Profile early and often - measure don't guess
+- Design for the 99th percentile, not the average case
+- Implement caching with explicit invalidation strategies
+- Consider memory allocation patterns in hot paths
+- Plan for garbage collection pauses and mitigation
+
+## AI Assistant Guidelines
+
+When working in this codebase:
+
+1. **Enforce mathematical constraints first** - validate DAG compliance before implementation
+2. **Always consider physical constraints** when suggesting solutions
+3. **Design for failure scenarios** - ask "what happens when this breaks?"
+4. **Prefer systematic approaches** over ad-hoc solutions
+5. **Validate assumptions** against mathematical and measurable reality
+6. **Acknowledge uncertainty** - be explicit about what you don't know
+7. **Focus on requirements** as the mathematically-validated foundation for all decisions
+8. **Consider operational complexity** - who maintains this system within physical constraints?
+9. **Plan for evolution** - systems must adapt or die within mathematical and physical laws
+
+### Requirements Engineering Mandates
+- **Reject circular dependencies immediately** - they violate mathematical law
+- **Provide decomposition guidance** when cycles are detected
+- **Maintain traceability as mathematical proof** of system validity
+- **Use graph theory to validate architecture** before implementation
+- **Treat DAG compliance as a quality gate** - non-negotiable mathematical requirement

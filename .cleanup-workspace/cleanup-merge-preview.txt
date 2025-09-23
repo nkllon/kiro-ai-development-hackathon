@@ -1,0 +1,601 @@
+81c919860788d53fd335c53aabbfc37e4e3c6e0a
+100644 82f78d7bef1c692640d42a33def1889f4a073aea 1	../docs/beastmaster-ontology/README.md
+100644 193f465eea6f9b8825942df257d67e73763d3cb8 3	../docs/beastmaster-ontology/README.md
+100644 77c6f12639fb8b448ac0b37cad758682962a0405 1	../docs/beastmaster-ontology/session-analysis.md
+100644 98d0d9ef39552e89d875fbccdb97e2210843225f 3	../docs/beastmaster-ontology/session-analysis.md
+100644 67b9d286e526c986b885ecbf1b5dd396e1185252 1	../docs/devpost_integration_guide.md
+100644 f67798e18d2826a1b1b6563c798281bbee1b5b1f 3	../docs/devpost_integration_guide.md
+100644 993f9b0994a23d1423f916128e6156b84de082e0 1	../docs/other/misc/pyproject.toml
+100644 528c7184e6c23d8c70d33b38cfdb6c126e98c40b 2	../docs/other/misc/pyproject.toml
+100644 7de2b5756e156c252f3591f2b6aa0bf857ccbb3c 3	../docs/other/misc/pyproject.toml
+100644 d4cbebc8ba8a25bf9b3828521dc55904ed641a93 1	../docs/readme/project/README.md
+100644 a325ceb8d802c2acd495fa596db04be1f1c23c76 2	../docs/readme/project/README.md
+100644 b1d0cd21af03d39463a99cab61d6d9cb48af0861 3	../docs/readme/project/README.md
+100644 a216ef70ecbfb50f13870074abc043d67d2abb95 1	../docs/summary/analysis/HACKATHON_RULES_UPDATE_ANALYSIS.md
+100644 a216ef70ecbfb50f13870074abc043d67d2abb95 3	../docs/summary/analysis/HACKATHON_RULES_UPDATE_ANALYSIS.md
+100644 dc1710e3a8b008b92c7af1712c9cb8aa07e1cf8c 1	../docs/summary/analysis/MVP_DAG_ANALYSIS.md
+100644 dc1710e3a8b008b92c7af1712c9cb8aa07e1cf8c 3	../docs/summary/analysis/MVP_DAG_ANALYSIS.md
+100644 0c8dfb7b5b6b4b135891cfc587ece20b7b75218e 1	../docs/summary/analysis/RDI_DAG_MATHEMATICAL_ANALYSIS.md
+100644 0c8dfb7b5b6b4b135891cfc587ece20b7b75218e 3	../docs/summary/analysis/RDI_DAG_MATHEMATICAL_ANALYSIS.md
+100644 6110e1dc6f8a50a8b19fdd1de6239f3f39a86769 1	../docs/summary/analysis/UNIQUENESS_ANALYSIS.md
+100644 6110e1dc6f8a50a8b19fdd1de6239f3f39a86769 3	../docs/summary/analysis/UNIQUENESS_ANALYSIS.md
+100644 fecd07dfb4f68cd5dc9619a263cf665dc376e6b0 1	../docs/summary/analysis/spec_consolidation_analysis_report.md
+100644 fecd07dfb4f68cd5dc9619a263cf665dc376e6b0 3	../docs/summary/analysis/spec_consolidation_analysis_report.md
+100644 975c38b0209d5ecf8ffc0d585c537bb601e23d60 1	../docs/summary/analysis/unified_rdi_rm_analysis_system_spec.md
+100644 975c38b0209d5ecf8ffc0d585c537bb601e23d60 3	../docs/summary/analysis/unified_rdi_rm_analysis_system_spec.md
+100644 d35811135f6d9c9dfff4e66d78177e554cc2f6ac 1	../docs/summary/implementation/BEAST_MODE_COLLABORATION_NETWORK_COMPLETION_SUMMARY.md
+100644 d35811135f6d9c9dfff4e66d78177e554cc2f6ac 3	../docs/summary/implementation/BEAST_MODE_COLLABORATION_NETWORK_COMPLETION_SUMMARY.md
+100644 5020809f51133e2037aea888c3169f7191e28727 1	../docs/summary/implementation/BEAST_MODE_PROJECT_AUDIT_REPORT.md
+100644 5020809f51133e2037aea888c3169f7191e28727 3	../docs/summary/implementation/BEAST_MODE_PROJECT_AUDIT_REPORT.md
+100644 81accc1e172cf78379514c5e1d8e002d79de9857 1	../docs/summary/implementation/DEVPOST_INTEGRATION_COMPLETION_SUMMARY.md
+100644 81accc1e172cf78379514c5e1d8e002d79de9857 3	../docs/summary/implementation/DEVPOST_INTEGRATION_COMPLETION_SUMMARY.md
+100644 630cbdc11262b90778a54faa5d8850875cefc371 1	../docs/summary/implementation/HACKATHON_DEMO_FRAMEWORK_FINAL_SUMMARY.md
+100644 630cbdc11262b90778a54faa5d8850875cefc371 3	../docs/summary/implementation/HACKATHON_DEMO_FRAMEWORK_FINAL_SUMMARY.md
+100644 5498c6c714004ba78bfa6c0039cdf7e2e215ec9e 1	../docs/summary/implementation/HACKATHON_DEMO_FRAMEWORK_SUMMARY.md
+100644 5498c6c714004ba78bfa6c0039cdf7e2e215ec9e 3	../docs/summary/implementation/HACKATHON_DEMO_FRAMEWORK_SUMMARY.md
+100644 8f80e1115422ab486fc31da7da0497bfdad84c64 1	../docs/summary/implementation/PITCH_DECK_SUMMARY.md
+100644 8f80e1115422ab486fc31da7da0497bfdad84c64 3	../docs/summary/implementation/PITCH_DECK_SUMMARY.md
+100644 07cb27357f737cc6136214a6cec69cf7da75844a 1	../docs/summary/implementation/RMI_RM_DDD_CONFORMANCE_AUDIT_REPORT.md
+100644 07cb27357f737cc6136214a6cec69cf7da75844a 3	../docs/summary/implementation/RMI_RM_DDD_CONFORMANCE_AUDIT_REPORT.md
+100644 f19ccddaa56657973c8c32b09d1bcb8b490c7d3f 1	../docs/summary/implementation/beast_mode_execution_report.md
+100644 f19ccddaa56657973c8c32b09d1bcb8b490c7d3f 3	../docs/summary/implementation/beast_mode_execution_report.md
+100644 32fe158f5c337a555704ab699fd3337b6ea3d671 1	../docs/summary/implementation/compliance_report_20250904_135904.md
+100644 32fe158f5c337a555704ab699fd3337b6ea3d671 3	../docs/summary/implementation/compliance_report_20250904_135904.md
+100644 d3b88d88c90152a534ab50281eb2037e93082a4e 1	../docs/web/pages/devpost_search_code_with_kiro.html
+100644 d3b88d88c90152a534ab50281eb2037e93082a4e 3	../docs/web/pages/devpost_search_code_with_kiro.html
+100644 d43d5c70f7dd37254014d8a94475b30f22452658 1	../docs/web/pages/devpost_search_kiro.html
+100644 d43d5c70f7dd37254014d8a94475b30f22452658 3	../docs/web/pages/devpost_search_kiro.html
+100644 b5e4a26e854ced6a947c6b0de7f2bb3cecf27f65 1	../docs/web/pages/devpost_search_kiro_ai.html
+100644 b5e4a26e854ced6a947c6b0de7f2bb3cecf27f65 3	../docs/web/pages/devpost_search_kiro_ai.html
+100644 632ef8ec3600496bf8bdb7c2a8add2eecd7b797c 1	../docs/web/pages/devpost_user_api_project.html
+100644 632ef8ec3600496bf8bdb7c2a8add2eecd7b797c 3	../docs/web/pages/devpost_user_api_project.html
+160000 659fcf7938b1ad47f3c272612dab17a269517b92 1	../hackathons/gke-ai-microservices
+160000 9f01f1d2d6e1a07aed5382ac96e954c0e3d4ac52 3	../hackathons/gke-ai-microservices
+100644 92352936d78f44c352a8799fb8a95c0a98fc1cfd 1	../src/rc1/migration/backups/AGENT_LAUNCH_README_20250916_114346.md
+100644 92352936d78f44c352a8799fb8a95c0a98fc1cfd 3	../src/rc1/migration/backups/AGENT_LAUNCH_README_20250916_114346.md
+100644 fc717e086720820852d052d0f25595325537082a 1	../src/rc1/migration/backups/ARCHITECTURE_REFACTOR_20250916_114346.md
+100644 fc717e086720820852d052d0f25595325537082a 3	../src/rc1/migration/backups/ARCHITECTURE_REFACTOR_20250916_114346.md
+100644 d3bc607abe21accf7887d1846cf03b0583814ca4 1	../src/rc1/migration/backups/BEASTMASTER_NETWORK_ANNOUNCEMENT_20250916_114346.md
+100644 d3bc607abe21accf7887d1846cf03b0583814ca4 3	../src/rc1/migration/backups/BEASTMASTER_NETWORK_ANNOUNCEMENT_20250916_114346.md
+100644 864733e492e2678ce2573feb8b934f73ba32a126 1	../src/rc1/migration/backups/BEAST_MODE_CLI_STATUS_REPORT_20250916_114346.md
+100644 864733e492e2678ce2573feb8b934f73ba32a126 3	../src/rc1/migration/backups/BEAST_MODE_CLI_STATUS_REPORT_20250916_114346.md
+100644 bacc668921d89ad748db1e24f1ce512ebcc90f4c 1	../src/rc1/migration/backups/BEAST_MODE_IMPLEMENTATION_COMPARISON_20250916_114346.md
+100644 bacc668921d89ad748db1e24f1ce512ebcc90f4c 3	../src/rc1/migration/backups/BEAST_MODE_IMPLEMENTATION_COMPARISON_20250916_114346.md
+100644 32690a0ca9ce3eb2f5d3ddb11073b8d7582e7633 1	../src/rc1/migration/backups/BEAST_MODE_REFACTOR_STRATEGY_20250916_114346.md
+100644 32690a0ca9ce3eb2f5d3ddb11073b8d7582e7633 3	../src/rc1/migration/backups/BEAST_MODE_REFACTOR_STRATEGY_20250916_114346.md
+100644 e711803c4c783fb9450876e927c4559dbab96eeb 1	../src/rc1/migration/backups/CHATGPT_RESEARCH_SPORE_20250916_114346.md
+100644 e711803c4c783fb9450876e927c4559dbab96eeb 3	../src/rc1/migration/backups/CHATGPT_RESEARCH_SPORE_20250916_114346.md
+100644 e17ddc74f87911c14588b1219759fe87992443db 1	../src/rc1/migration/backups/CLI_README_20250916_114346.md
+100644 e17ddc74f87911c14588b1219759fe87992443db 3	../src/rc1/migration/backups/CLI_README_20250916_114346.md
+100644 f3516bf558eba01480dc298ae2c3833dd6633f8a 1	../src/rc1/migration/backups/CLI_STANDARDS_ENFORCEMENT_20250916_114346.md
+100644 f3516bf558eba01480dc298ae2c3833dd6633f8a 3	../src/rc1/migration/backups/CLI_STANDARDS_ENFORCEMENT_20250916_114346.md
+100644 c2633a8a19f00e076427133b33844b325fb7d294 1	../src/rc1/migration/backups/COMPREHENSIVE_TEST_RESULTS_20250916_114346.md
+100644 c2633a8a19f00e076427133b33844b325fb7d294 3	../src/rc1/migration/backups/COMPREHENSIVE_TEST_RESULTS_20250916_114346.md
+100644 2d6d8e5b20c32ed0c050802699e13e230e2385e0 1	../src/rc1/migration/backups/DEPLOYMENT_READY_20250916_114346.md
+100644 2d6d8e5b20c32ed0c050802699e13e230e2385e0 3	../src/rc1/migration/backups/DEPLOYMENT_READY_20250916_114346.md
+100644 36509c7f9ff853f0158f6a791644d1496d35e8da 1	../src/rc1/migration/backups/FINAL_WEEK_EXECUTION_PLAN_20250916_114346.md
+100644 36509c7f9ff853f0158f6a791644d1496d35e8da 3	../src/rc1/migration/backups/FINAL_WEEK_EXECUTION_PLAN_20250916_114346.md
+100644 460e314f7243fee0f0a63979c87c7e44a057e1a2 1	../src/rc1/migration/backups/GIT_INTEGRATION_20250916_114346.md
+100644 460e314f7243fee0f0a63979c87c7e44a057e1a2 3	../src/rc1/migration/backups/GIT_INTEGRATION_20250916_114346.md
+100644 57fcb482aeac81a88c87e078f41d1bfeeb6319c9 1	../src/rc1/migration/backups/GKE_HACKATHON_FEEDBACK_BEAST_MODE_20250916_114346.md
+100644 57fcb482aeac81a88c87e078f41d1bfeeb6319c9 3	../src/rc1/migration/backups/GKE_HACKATHON_FEEDBACK_BEAST_MODE_20250916_114346.md
+100644 80e11002061ce42f7979b0721ae5c7424899f40f 1	../src/rc1/migration/backups/HACKATHON_FINAL_CHECKLIST_20250916_114346.md
+100644 80e11002061ce42f7979b0721ae5c7424899f40f 3	../src/rc1/migration/backups/HACKATHON_FINAL_CHECKLIST_20250916_114346.md
+100644 84331e547027e6494eeeba0a69a0fe1420f19c5c 1	../src/rc1/migration/backups/HACKATHON_SUBMISSION_PACKAGE_20250916_114346.md
+100644 84331e547027e6494eeeba0a69a0fe1420f19c5c 3	../src/rc1/migration/backups/HACKATHON_SUBMISSION_PACKAGE_20250916_114346.md
+100644 bbe9e497f7a991734d0b266f80cc76e48e7b5fa3 1	../src/rc1/migration/backups/IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 bbe9e497f7a991734d0b266f80cc76e48e7b5fa3 3	../src/rc1/migration/backups/IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 e19e6e83d4432345ea85659931cf53d8c4581de3 1	../src/rc1/migration/backups/INTEGRATION_TEST_FINDINGS_20250916_114346.md
+100644 e19e6e83d4432345ea85659931cf53d8c4581de3 3	../src/rc1/migration/backups/INTEGRATION_TEST_FINDINGS_20250916_114346.md
+100644 9cfc7e0a32dbfdad5fca9ee815c43f66326bd5be 1	../src/rc1/migration/backups/MARKETING_ONE_PAGER_20250916_114346.md
+100644 9cfc7e0a32dbfdad5fca9ee815c43f66326bd5be 3	../src/rc1/migration/backups/MARKETING_ONE_PAGER_20250916_114346.md
+100644 de06b689af5ea57f05ca75cc0d82295bf4e137f9 1	../src/rc1/migration/backups/Makefile_20250916_132012
+100644 de06b689af5ea57f05ca75cc0d82295bf4e137f9 3	../src/rc1/migration/backups/Makefile_20250916_132012
+100644 7f68ac3f7837929f10c53f7b690ad7fab4495749 1	../src/rc1/migration/backups/Makefile_20250916_132012.hackathon
+100644 7f68ac3f7837929f10c53f7b690ad7fab4495749 3	../src/rc1/migration/backups/Makefile_20250916_132012.hackathon
+100644 f246297d61457f5ced22b2320f3f8d2522c80d76 1	../src/rc1/migration/backups/PLUGGABLE_TRANSPORT_REFACTOR_LOG_20250916_114346.md
+100644 f246297d61457f5ced22b2320f3f8d2522c80d76 3	../src/rc1/migration/backups/PLUGGABLE_TRANSPORT_REFACTOR_LOG_20250916_114346.md
+100644 8cce0e34c6a30a1fe44bbbc8325a4f7fdadaca02 1	../src/rc1/migration/backups/QUICK_START_FOR_JUDGES_20250916_114346.md
+100644 8cce0e34c6a30a1fe44bbbc8325a4f7fdadaca02 3	../src/rc1/migration/backups/QUICK_START_FOR_JUDGES_20250916_114346.md
+100644 9ac1bd52da1856c4bdff1ec3d3b7a210268c23bf 1	../src/rc1/migration/backups/RCA_MITIGATION_PLAN_20250916_114346.md
+100644 9ac1bd52da1856c4bdff1ec3d3b7a210268c23bf 3	../src/rc1/migration/backups/RCA_MITIGATION_PLAN_20250916_114346.md
+100644 7b6fdd3f7d4210494eade5f3703af4d1ad4250cc 1	../src/rc1/migration/backups/RDI_CHAIN_VALIDATION_20250916_114346.md
+100644 7b6fdd3f7d4210494eade5f3703af4d1ad4250cc 3	../src/rc1/migration/backups/RDI_CHAIN_VALIDATION_20250916_114346.md
+100644 1224d161c7d77fc21ad1121735fc04bed364c90c 1	../src/rc1/migration/backups/RDI_DAG_DISCOVERY_PAPER_20250916_114346.md
+100644 1224d161c7d77fc21ad1121735fc04bed364c90c 3	../src/rc1/migration/backups/RDI_DAG_DISCOVERY_PAPER_20250916_114346.md
+100644 ba26b14102ef842a05313a23dab46dbc634a31e4 1	../src/rc1/migration/backups/RDI_DAG_EMPIRICAL_EVIDENCE_20250916_114346.md
+100644 ba26b14102ef842a05313a23dab46dbc634a31e4 3	../src/rc1/migration/backups/RDI_DAG_EMPIRICAL_EVIDENCE_20250916_114346.md
+100644 071edc8cf8f0e3070aa5450003642d4f3f59d355 1	../src/rc1/migration/backups/RDI_DAG_INDUSTRY_IMPLICATIONS_20250916_114346.md
+100644 071edc8cf8f0e3070aa5450003642d4f3f59d355 3	../src/rc1/migration/backups/RDI_DAG_INDUSTRY_IMPLICATIONS_20250916_114346.md
+100644 d810d3b7bf7c427dd10f9a2ccbdebc3fb1294d59 1	../src/rc1/migration/backups/RDI_IMPLEMENTATION_SPORE_20250916_114346.md
+100644 d810d3b7bf7c427dd10f9a2ccbdebc3fb1294d59 3	../src/rc1/migration/backups/RDI_IMPLEMENTATION_SPORE_20250916_114346.md
+100644 133c94bd4001094958d153438af8ce62cfd6141b 1	../src/rc1/migration/backups/REQUIREMENTS_TRACEABILITY_EXPERIMENT_FINDINGS_20250916_114346.md
+100644 133c94bd4001094958d153438af8ce62cfd6141b 3	../src/rc1/migration/backups/REQUIREMENTS_TRACEABILITY_EXPERIMENT_FINDINGS_20250916_114346.md
+100644 47624b0d2066d2522a46d59e8b85079f572c52d5 1	../src/rc1/migration/backups/RM_COMPLIANCE_IMPLEMENTATION_20250916_114346.md
+100644 47624b0d2066d2522a46d59e8b85079f572c52d5 3	../src/rc1/migration/backups/RM_COMPLIANCE_IMPLEMENTATION_20250916_114346.md
+100644 df98902d9cbe1333f0bcb2d2d1488080b3c1f953 1	../src/rc1/migration/backups/RM_IMPLEMENTATION_SPORE_20250916_114346.md
+100644 df98902d9cbe1333f0bcb2d2d1488080b3c1f953 3	../src/rc1/migration/backups/RM_IMPLEMENTATION_SPORE_20250916_114346.md
+100644 47da1d86d8fbe3151f831ff1b592133e59bb0ce0 1	../src/rc1/migration/backups/RM_RDI_IMPLEMENTATION_PROMPT_20250916_114346.md
+100644 47da1d86d8fbe3151f831ff1b592133e59bb0ce0 3	../src/rc1/migration/backups/RM_RDI_IMPLEMENTATION_PROMPT_20250916_114346.md
+100644 01615b985852a3118cd7cc37464e929a323b4b0c 1	../src/rc1/migration/backups/SPORE_COMPLETION_SUMMARY_20250916_114346.md
+100644 01615b985852a3118cd7cc37464e929a323b4b0c 3	../src/rc1/migration/backups/SPORE_COMPLETION_SUMMARY_20250916_114346.md
+100644 478da3d07b602e60f5052718123af0f8986d3c68 1	../src/rc1/migration/backups/SYSTEMATIC_DEVELOPMENT_ECOSYSTEM_SPEC_ANNOUNCEMENT_20250916_114346.md
+100644 478da3d07b602e60f5052718123af0f8986d3c68 3	../src/rc1/migration/backups/SYSTEMATIC_DEVELOPMENT_ECOSYSTEM_SPEC_ANNOUNCEMENT_20250916_114346.md
+100644 e22d096c38e034df1c20ae6b5c971834fe82312f 1	../src/rc1/migration/backups/TASK_10_COLLABORATION_SCHEDULING_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 e22d096c38e034df1c20ae6b5c971834fe82312f 3	../src/rc1/migration/backups/TASK_10_COLLABORATION_SCHEDULING_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 2d62e15927d83b09135d672aaa12f9a9578579b3 1	../src/rc1/migration/backups/TASK_10_ERROR_HANDLING_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 2d62e15927d83b09135d672aaa12f9a9578579b3 3	../src/rc1/migration/backups/TASK_10_ERROR_HANDLING_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 c4a3785c69712eeb77d57013bb7d9d99d8034910 1	../src/rc1/migration/backups/TASK_11_COMPREHENSIVE_TEST_SUITE_SUMMARY_20250916_114346.md
+100644 c4a3785c69712eeb77d57013bb7d9d99d8034910 3	../src/rc1/migration/backups/TASK_11_COMPREHENSIVE_TEST_SUITE_SUMMARY_20250916_114346.md
+100644 7dad809e68d87753b357b0fb12bd8e9c586741e0 1	../src/rc1/migration/backups/TASK_11_MESSAGE_COMPATIBILITY_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 7dad809e68d87753b357b0fb12bd8e9c586741e0 3	../src/rc1/migration/backups/TASK_11_MESSAGE_COMPATIBILITY_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 8b4c35aeececa0f5c35b8ee165f556ff54ed27cc 1	../src/rc1/migration/backups/TASK_12_CAPABILITY_VERIFICATION_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 8b4c35aeececa0f5c35b8ee165f556ff54ed27cc 3	../src/rc1/migration/backups/TASK_12_CAPABILITY_VERIFICATION_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 4a3911207542cd803aaa77d599310a822d3ea315 1	../src/rc1/migration/backups/TASK_13_COMPREHENSIVE_INTEGRATION_TEST_SUITE_SUMMARY_20250916_114346.md
+100644 4a3911207542cd803aaa77d599310a822d3ea315 3	../src/rc1/migration/backups/TASK_13_COMPREHENSIVE_INTEGRATION_TEST_SUITE_SUMMARY_20250916_114346.md
+100644 663aabb4ce51b308d65577ac3159a29f677fe7a5 1	../src/rc1/migration/backups/TASK_14_COMPLETION_SUMMARY_20250916_114346.md
+100644 663aabb4ce51b308d65577ac3159a29f677fe7a5 3	../src/rc1/migration/backups/TASK_14_COMPLETION_SUMMARY_20250916_114346.md
+100644 f7ea68803abef41108e013a80992f02bdeec8bff 1	../src/rc1/migration/backups/TASK_14_MONITORING_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 f7ea68803abef41108e013a80992f02bdeec8bff 3	../src/rc1/migration/backups/TASK_14_MONITORING_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 2465b1635c01d8410d93e0ceaf5c1083c0e4f5ff 1	../src/rc1/migration/backups/TASK_18_COMPLETION_SUMMARY_20250916_114346.md
+100644 2465b1635c01d8410d93e0ceaf5c1083c0e4f5ff 3	../src/rc1/migration/backups/TASK_18_COMPLETION_SUMMARY_20250916_114346.md
+100644 21bfb7588741fa9ac513bba2bfabffef0716b803 1	../src/rc1/migration/backups/TASK_2_2_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 21bfb7588741fa9ac513bba2bfabffef0716b803 3	../src/rc1/migration/backups/TASK_2_2_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 16cd0860415b299bee2a9ad1c9e4d7793d09e270 1	../src/rc1/migration/backups/TASK_3_BUS_CLIENT_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 16cd0860415b299bee2a9ad1c9e4d7793d09e270 3	../src/rc1/migration/backups/TASK_3_BUS_CLIENT_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 79d647c6cbb8272c2dffad2a3c967ccd354554ac 1	../src/rc1/migration/backups/TASK_4_2_AUTOMATED_CORRECTION_WORKFLOWS_SUMMARY_20250916_114346.md
+100644 79d647c6cbb8272c2dffad2a3c967ccd354554ac 3	../src/rc1/migration/backups/TASK_4_2_AUTOMATED_CORRECTION_WORKFLOWS_SUMMARY_20250916_114346.md
+100644 99695e207f7e0e1c50728a6e94161fa621e3b006 1	../src/rc1/migration/backups/TASK_6_MESSAGE_TYPE_HANDLING_SUMMARY_20250916_114346.md
+100644 99695e207f7e0e1c50728a6e94161fa621e3b006 3	../src/rc1/migration/backups/TASK_6_MESSAGE_TYPE_HANDLING_SUMMARY_20250916_114346.md
+100644 fc242c6510fbd5c7272709c17f46a42996b6f3ae 1	../src/rc1/migration/backups/TASK_7_1_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 fc242c6510fbd5c7272709c17f46a42996b6f3ae 3	../src/rc1/migration/backups/TASK_7_1_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 7da0633c0ab4585811e3d67fa0392e29743553f2 1	../src/rc1/migration/backups/TASK_7_2_BATCH_SYNC_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 7da0633c0ab4585811e3d67fa0392e29743553f2 3	../src/rc1/migration/backups/TASK_7_2_BATCH_SYNC_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 a37c1538a8457a2722b597226d242b091b4a0a3c 1	../src/rc1/migration/backups/TASK_7_3_VALIDATION_ENGINE_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 a37c1538a8457a2722b597226d242b091b4a0a3c 3	../src/rc1/migration/backups/TASK_7_3_VALIDATION_ENGINE_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 f35cbf841bf8c0f6b881f3c676eeb8e1691d5807 1	../src/rc1/migration/backups/TASK_7_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 f35cbf841bf8c0f6b881f3c676eeb8e1691d5807 3	../src/rc1/migration/backups/TASK_7_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 120bc70f92eea0f0c68488ab717fa8398453dc8c 1	../src/rc1/migration/backups/TASK_7_MAILBOX_LOGGER_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 120bc70f92eea0f0c68488ab717fa8398453dc8c 3	../src/rc1/migration/backups/TASK_7_MAILBOX_LOGGER_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 9e777d460dc9d2ef056518c52d7b6f6bacfbcf18 1	../src/rc1/migration/backups/TASK_8_1_DEVPOST_PREVIEW_GENERATOR_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 9e777d460dc9d2ef056518c52d7b6f6bacfbcf18 3	../src/rc1/migration/backups/TASK_8_1_DEVPOST_PREVIEW_GENERATOR_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 842a519e2e2a8450d8060043475c101bd09a1ff8 1	../src/rc1/migration/backups/TASK_8_MESSAGE_HISTORY_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 842a519e2e2a8450d8060043475c101bd09a1ff8 3	../src/rc1/migration/backups/TASK_8_MESSAGE_HISTORY_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 fde31c95e37cc1b09facd30dad2a85f81a99aa93 1	../src/rc1/migration/backups/TASK_8_PREVIEW_GENERATION_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 fde31c95e37cc1b09facd30dad2a85f81a99aa93 3	../src/rc1/migration/backups/TASK_8_PREVIEW_GENERATION_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 1236399bad03da57e40e2d210d5773364d51273e 1	../src/rc1/migration/backups/TASK_9_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 1236399bad03da57e40e2d210d5773364d51273e 3	../src/rc1/migration/backups/TASK_9_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 9bf8c75c59076f9ecf96aded0dc267ea7ad45641 1	../src/rc1/migration/backups/TASK_9_SPORE_MANAGEMENT_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 9bf8c75c59076f9ecf96aded0dc267ea7ad45641 3	../src/rc1/migration/backups/TASK_9_SPORE_MANAGEMENT_IMPLEMENTATION_SUMMARY_20250916_114346.md
+100644 17fdd0c7d29f99801af0bdf332470fd73b924cd7 1	../src/rc1/migration/backups/TASK_DAG_SYSTEM_SUMMARY_20250916_114346.md
+100644 17fdd0c7d29f99801af0bdf332470fd73b924cd7 3	../src/rc1/migration/backups/TASK_DAG_SYSTEM_SUMMARY_20250916_114346.md
+100644 01a8db8c9938786b8eaa6d1930ecad90d9431200 1	../src/rc1/migration/backups/analyze_devpost_submission_reality_20250916_132012.py
+100644 01a8db8c9938786b8eaa6d1930ecad90d9431200 3	../src/rc1/migration/backups/analyze_devpost_submission_reality_20250916_132012.py
+100644 8ee28d5ad1f00059f0452f378ba7a13576dfcdc5 1	../src/rc1/migration/backups/analyze_spec_landscape_20250916_132012.py
+100644 8ee28d5ad1f00059f0452f378ba7a13576dfcdc5 3	../src/rc1/migration/backups/analyze_spec_landscape_20250916_132012.py
+100644 2ccf1781e8f29f52f534bc207e1d28cb95d47d59 1	../src/rc1/migration/backups/apologize_and_explain_20250916_132012.py
+100644 2ccf1781e8f29f52f534bc207e1d28cb95d47d59 3	../src/rc1/migration/backups/apologize_and_explain_20250916_132012.py
+100644 89fd4a664eacfc9b3c4b3464b5e78dbd8bbfea2b 1	../src/rc1/migration/backups/ask_for_spore_and_listen_20250916_132012.py
+100644 89fd4a664eacfc9b3c4b3464b5e78dbd8bbfea2b 3	../src/rc1/migration/backups/ask_for_spore_and_listen_20250916_132012.py
+100644 f9880ec023bd33ba5acceb3814e0acac1be31f5b 1	../src/rc1/migration/backups/ask_repeat_answer_20250916_132012.py
+100644 f9880ec023bd33ba5acceb3814e0acac1be31f5b 3	../src/rc1/migration/backups/ask_repeat_answer_20250916_132012.py
+100644 a9736cce80298c780260a59814fee969c8b7bc46 1	../src/rc1/migration/backups/background_spore_request_20250916_132012.py
+100644 a9736cce80298c780260a59814fee969c8b7bc46 3	../src/rc1/migration/backups/background_spore_request_20250916_132012.py
+100755 e2e11c0549c624f7a5026419945d1c8ac9d0f57f 1	../src/rc1/migration/backups/beast_20250916_132012
+100755 e2e11c0549c624f7a5026419945d1c8ac9d0f57f 3	../src/rc1/migration/backups/beast_20250916_132012
+100644 5ddf0e4e8faadc3ac2529eec02e479f5f1d90253 1	../src/rc1/migration/backups/beast_dag_simple_20250916_132012.py
+100644 5ddf0e4e8faadc3ac2529eec02e479f5f1d90253 3	../src/rc1/migration/backups/beast_dag_simple_20250916_132012.py
+100644 085708673a4ac2c804791e9fa2f5e1b060f9852e 1	../src/rc1/migration/backups/beast_mode_bus_client_from_spore_20250916_132012.py
+100644 085708673a4ac2c804791e9fa2f5e1b060f9852e 3	../src/rc1/migration/backups/beast_mode_bus_client_from_spore_20250916_132012.py
+100755 358a7143791ad2a234295a2393bbb6c6b3876a7d 1	../src/rc1/migration/backups/beast_mode_cli_20250916_132012.py
+100755 358a7143791ad2a234295a2393bbb6c6b3876a7d 3	../src/rc1/migration/backups/beast_mode_cli_20250916_132012.py
+100644 f467c7b9e66da719499afa0646a47ab391f4c387 1	../src/rc1/migration/backups/beast_mode_dag_visualization_20250916_114346.md
+100644 f467c7b9e66da719499afa0646a47ab391f4c387 3	../src/rc1/migration/backups/beast_mode_dag_visualization_20250916_114346.md
+100644 a084f4ef909c24b260f3c7d7bc4b12bf4352496e 1	../src/rc1/migration/backups/beast_mode_mvp_demo_20250916_132012.py
+100644 a084f4ef909c24b260f3c7d7bc4b12bf4352496e 3	../src/rc1/migration/backups/beast_mode_mvp_demo_20250916_132012.py
+100755 ca8ee3f314155739955eeb8d6c336d645023cf35 1	../src/rc1/migration/backups/beast_mode_spore_distributor_20250916_132012.py
+100755 ca8ee3f314155739955eeb8d6c336d645023cf35 3	../src/rc1/migration/backups/beast_mode_spore_distributor_20250916_132012.py
+100755 a5c07f22c8d2c78d8dc7cf27e80653f89b2afc30 1	../src/rc1/migration/backups/beast_mode_spore_receiver_20250916_132012.py
+100755 a5c07f22c8d2c78d8dc7cf27e80653f89b2afc30 3	../src/rc1/migration/backups/beast_mode_spore_receiver_20250916_132012.py
+100755 e85e76a6dba8a03a4b71e92b909cee3ea7aa5f24 1	../src/rc1/migration/backups/bootstrap_beast_mode_network_20250916_132012.py
+100755 e85e76a6dba8a03a4b71e92b909cee3ea7aa5f24 3	../src/rc1/migration/backups/bootstrap_beast_mode_network_20250916_132012.py
+100644 5b7719a3150bc6cef59bbca8b9d08d96a86c597b 1	../src/rc1/migration/backups/broadcast_gke_feedback_20250916_132012.py
+100644 5b7719a3150bc6cef59bbca8b9d08d96a86c597b 3	../src/rc1/migration/backups/broadcast_gke_feedback_20250916_132012.py
+100644 fce6de8021eebeee0662ac7ee8bc939c9c35f14d 1	../src/rc1/migration/backups/chat_up_claude_20250916_132012.py
+100644 fce6de8021eebeee0662ac7ee8bc939c9c35f14d 3	../src/rc1/migration/backups/chat_up_claude_20250916_132012.py
+100644 194fc36ef18273587683ea97d38bb9d2c5cb4836 1	../src/rc1/migration/backups/check_queue_and_responses_20250916_132012.py
+100644 194fc36ef18273587683ea97d38bb9d2c5cb4836 3	../src/rc1/migration/backups/check_queue_and_responses_20250916_132012.py
+100644 4b18503cd316f2b199dc87a1f06ad4733b14c7ed 1	../src/rc1/migration/backups/clean_cli_20250916_132012.py
+100644 4b18503cd316f2b199dc87a1f06ad4733b14c7ed 3	../src/rc1/migration/backups/clean_cli_20250916_132012.py
+100644 18e5a11f36ef4c71d2d6e17698f76f133fc2089d 1	../src/rc1/migration/backups/cli_20250916_132012.py
+100644 18e5a11f36ef4c71d2d6e17698f76f133fc2089d 3	../src/rc1/migration/backups/cli_20250916_132012.py
+100644 65910522efe16877ac05e406d6e72a8dbc45e8fc 1	../src/rc1/migration/backups/communicate_with_agents_20250916_132012.py
+100644 65910522efe16877ac05e406d6e72a8dbc45e8fc 3	../src/rc1/migration/backups/communicate_with_agents_20250916_132012.py
+100644 b63ed4694c24f1ca295edd80f728cd0bc420cef1 1	../src/rc1/migration/backups/component_boundary_resolution_20250916_114346.md
+100644 b63ed4694c24f1ca295edd80f728cd0bc420cef1 3	../src/rc1/migration/backups/component_boundary_resolution_20250916_114346.md
+100644 fdb21344887dc781ec7db70e1e7d3d972c9a4cc8 1	../src/rc1/migration/backups/conversational_listener_20250916_132012.py
+100644 fdb21344887dc781ec7db70e1e7d3d972c9a4cc8 3	../src/rc1/migration/backups/conversational_listener_20250916_132012.py
+100644 a851f00568955080c458aaf05649afd96e08f2bb 1	../src/rc1/migration/backups/debug_beast_network_comprehensive_20250916_132011.py
+100644 a851f00568955080c458aaf05649afd96e08f2bb 3	../src/rc1/migration/backups/debug_beast_network_comprehensive_20250916_132011.py
+100644 89108f23bb449daddcc361fba068fa589b79fc34 1	../src/rc1/migration/backups/demo_20250916_132012.py
+100644 89108f23bb449daddcc361fba068fa589b79fc34 3	../src/rc1/migration/backups/demo_20250916_132012.py
+100644 a29207ed5f5cbd3b826fa7c43d628ffcf64211f5 1	../src/rc1/migration/backups/demo_beast_mode_testing_20250916_132012.py
+100644 a29207ed5f5cbd3b826fa7c43d628ffcf64211f5 3	../src/rc1/migration/backups/demo_beast_mode_testing_20250916_132012.py
+100644 2abf0f6850fa06c8f56500fdbb0a05b7bce88d85 1	../src/rc1/migration/backups/demo_hackathon_showcase_20250916_132012.py
+100644 2abf0f6850fa06c8f56500fdbb0a05b7bce88d85 3	../src/rc1/migration/backups/demo_hackathon_showcase_20250916_132012.py
+100644 ce52783d6d8ef40af87d579f7e07d2510b2998c7 1	../src/rc1/migration/backups/demo_spore_installation_20250916_132012.py
+100644 ce52783d6d8ef40af87d579f7e07d2510b2998c7 3	../src/rc1/migration/backups/demo_spore_installation_20250916_132012.py
+100644 182b0c088064b0f3fbc05f9de8086ea4e020a0d3 1	../src/rc1/migration/backups/devpost_api_readme_20250916_114346.md
+100644 182b0c088064b0f3fbc05f9de8086ea4e020a0d3 3	../src/rc1/migration/backups/devpost_api_readme_20250916_114346.md
+100644 7916d8ea55172490330c3da46909c8d44389744d 1	../src/rc1/migration/backups/devpost_robots_20250916_132011.txt
+100644 7916d8ea55172490330c3da46909c8d44389744d 3	../src/rc1/migration/backups/devpost_robots_20250916_132011.txt
+100644 b77b9fd3962eae820483c392850a4cc9a2bbeede 1	../src/rc1/migration/backups/discover_subscriptions_20250916_132012.py
+100644 b77b9fd3962eae820483c392850a4cc9a2bbeede 3	../src/rc1/migration/backups/discover_subscriptions_20250916_132012.py
+100644 d027020a230f96ed985493b339d8e21cfd36e781 1	../src/rc1/migration/backups/dog_ate_homework_20250916_132012.py
+100644 d027020a230f96ed985493b339d8e21cfd36e781 3	../src/rc1/migration/backups/dog_ate_homework_20250916_132012.py
+100644 7fd6bc2a762f51b2f0f99009535e57d7a85cf149 1	../src/rc1/migration/backups/execute_systematic_cleanup_20250916_132012.py
+100644 7fd6bc2a762f51b2f0f99009535e57d7a85cf149 3	../src/rc1/migration/backups/execute_systematic_cleanup_20250916_132012.py
+100644 87f266102452e8927ab38442d3b79ed5907dbfc7 1	../src/rc1/migration/backups/final_questions_20250916_132012.py
+100644 87f266102452e8927ab38442d3b79ed5907dbfc7 3	../src/rc1/migration/backups/final_questions_20250916_132012.py
+100644 73825e725fffb301b397766c393a356d3d0226f7 1	../src/rc1/migration/backups/fixed_logger_20250916_132012.py
+100644 73825e725fffb301b397766c393a356d3d0226f7 3	../src/rc1/migration/backups/fixed_logger_20250916_132012.py
+100644 d9b76cd6fd1f70f1eaed54f0c3ad6b4c4252b7d1 1	../src/rc1/migration/backups/implement_metrics_engine_beast_mode_20250916_132012.py
+100644 d9b76cd6fd1f70f1eaed54f0c3ad6b4c4252b7d1 3	../src/rc1/migration/backups/implement_metrics_engine_beast_mode_20250916_132012.py
+100644 75044bfdd329b85590b579f2425192399a2d3043 1	../src/rc1/migration/backups/implement_tool_health_manager_20250916_132012.py
+100644 75044bfdd329b85590b579f2425192399a2d3043 3	../src/rc1/migration/backups/implement_tool_health_manager_20250916_132012.py
+100644 8f275a04c6b8b5d4033c48997f126d73a42b980e 1	../src/rc1/migration/backups/listen_beast_network_20250916_132012.py
+100644 8f275a04c6b8b5d4033c48997f126d73a42b980e 3	../src/rc1/migration/backups/listen_beast_network_20250916_132012.py
+100644 a25b12800dc5ba6959ccfddaed97c4837ccc7502 1	../src/rc1/migration/backups/listen_for_response_20250916_132012.py
+100644 a25b12800dc5ba6959ccfddaed97c4837ccc7502 3	../src/rc1/migration/backups/listen_for_response_20250916_132012.py
+100644 86b5cb866b6d6f78ed3be8156fb5a80ff15ce266 1	../src/rc1/migration/backups/live_fire_gcp_billing_20250916_132012.py
+100644 86b5cb866b6d6f78ed3be8156fb5a80ff15ce266 3	../src/rc1/migration/backups/live_fire_gcp_billing_20250916_132012.py
+100644 49b1e4a9b136f457d26bfbca4860d80753ea0cc0 1	../src/rc1/migration/backups/message_kiro_spore_creator_180411_20250916_132012.txt
+100644 49b1e4a9b136f457d26bfbca4860d80753ea0cc0 3	../src/rc1/migration/backups/message_kiro_spore_creator_180411_20250916_132012.txt
+100644 e377335ed61b0200cfd4704bebd3cdec03566421 1	../src/rc1/migration/backups/message_kiro_spore_creator_180838_20250916_132012.txt
+100644 e377335ed61b0200cfd4704bebd3cdec03566421 3	../src/rc1/migration/backups/message_kiro_spore_creator_180838_20250916_132012.txt
+100644 0c19d039c71e0bbcab3c4c6cc519b1d5fab758de 1	../src/rc1/migration/backups/message_kiro_spore_creator_180955_20250916_132012.txt
+100644 0c19d039c71e0bbcab3c4c6cc519b1d5fab758de 3	../src/rc1/migration/backups/message_kiro_spore_creator_180955_20250916_132012.txt
+100644 d15c5f4c974829ab0e4f25b141ab023dafc07a63 1	../src/rc1/migration/backups/message_kiro_spore_creator_181312_20250916_132012.txt
+100644 d15c5f4c974829ab0e4f25b141ab023dafc07a63 3	../src/rc1/migration/backups/message_kiro_spore_creator_181312_20250916_132012.txt
+100644 64286266f8bc96dcd3bf38be280a9e6b846e0c47 1	../src/rc1/migration/backups/migration_simple_20250916_132011.py
+100644 64286266f8bc96dcd3bf38be280a9e6b846e0c47 3	../src/rc1/migration/backups/migration_simple_20250916_132011.py
+100644 5e2724205c2c45cde6f1237b1c1eab17542bc7ff 1	../src/rc1/migration/backups/pdca_20250916_132012.mdc
+100644 5e2724205c2c45cde6f1237b1c1eab17542bc7ff 3	../src/rc1/migration/backups/pdca_20250916_132012.mdc
+100644 fee95106b47e823f105071e146a518d383cc03f0 1	../src/rc1/migration/backups/peek_bus_20250916_132012.py
+100644 fee95106b47e823f105071e146a518d383cc03f0 3	../src/rc1/migration/backups/peek_bus_20250916_132012.py
+100644 f31cc3e7cd14351715a2674b5f856a8c458c8f71 1	../src/rc1/migration/backups/ping_pubsub_network_20250916_132012.py
+100644 f31cc3e7cd14351715a2674b5f856a8c458c8f71 3	../src/rc1/migration/backups/ping_pubsub_network_20250916_132012.py
+100755 a19772514da52646f3210008f7bedb3f99f120f0 1	../src/rc1/migration/backups/play_with_pubsub_20250916_132012.py
+100755 a19772514da52646f3210008f7bedb3f99f120f0 3	../src/rc1/migration/backups/play_with_pubsub_20250916_132012.py
+100644 334b5096b32eb9b874883a58c359a52265648a5a 1	../src/rc1/migration/backups/proper_logger_20250916_132011.py
+100644 334b5096b32eb9b874883a58c359a52265648a5a 3	../src/rc1/migration/backups/proper_logger_20250916_132011.py
+100644 5d7990c61c00baba9aec890a4ff7cbcb6e7af4a1 1	../src/rc1/migration/backups/quick_stream_test_20250916_132012.py
+100644 5d7990c61c00baba9aec890a4ff7cbcb6e7af4a1 3	../src/rc1/migration/backups/quick_stream_test_20250916_132012.py
+100755 ca82f73649aaf5d80abca1cb035e0b0afdd1924e 1	../src/rc1/migration/backups/recording_controls_20250916_132011.sh
+100755 ca82f73649aaf5d80abca1cb035e0b0afdd1924e 3	../src/rc1/migration/backups/recording_controls_20250916_132011.sh
+100644 0ba9631479ac42ca35814be1788e69777abc8a48 1	../src/rc1/migration/backups/redis_deep_investigation_20250916_132012.py
+100644 0ba9631479ac42ca35814be1788e69777abc8a48 3	../src/rc1/migration/backups/redis_deep_investigation_20250916_132012.py
+100644 213f334ae2ad2a726522064fdde0b6ce8c493f9b 1	../src/rc1/migration/backups/requirements_20250916_132012.txt
+100644 213f334ae2ad2a726522064fdde0b6ce8c493f9b 3	../src/rc1/migration/backups/requirements_20250916_132012.txt
+100644 bb94307d10651cc139c6d17e56dfd621d6c89dc1 1	../src/rc1/migration/backups/research_devpost_api_20250916_132012.py
+100644 bb94307d10651cc139c6d17e56dfd621d6c89dc1 3	../src/rc1/migration/backups/research_devpost_api_20250916_132012.py
+100644 66ed9b16dce45684fce3128fdf2ec53a67dcb5b9 1	../src/rc1/migration/backups/research_kiro_hackathon_submission_20250916_132012.py
+100644 66ed9b16dce45684fce3128fdf2ec53a67dcb5b9 3	../src/rc1/migration/backups/research_kiro_hackathon_submission_20250916_132012.py
+100644 04aff99c08e35d242db8fc16fbc923d08fe08640 1	../src/rc1/migration/backups/respond_to_claude_20250916_132012.py
+100644 04aff99c08e35d242db8fc16fbc923d08fe08640 3	../src/rc1/migration/backups/respond_to_claude_20250916_132012.py
+100644 a85e002cf92d4ae71cbf5a5224b712610b0c1409 1	../src/rc1/migration/backups/run_beast_mode_comprehensive_tests_20250916_132012.py
+100644 a85e002cf92d4ae71cbf5a5224b712610b0c1409 3	../src/rc1/migration/backups/run_beast_mode_comprehensive_tests_20250916_132012.py
+100644 591f896bd24ec86a320949cfd98e9c0b60727ba0 1	../src/rc1/migration/backups/run_beast_mode_tests_20250916_132012.py
+100644 591f896bd24ec86a320949cfd98e9c0b60727ba0 3	../src/rc1/migration/backups/run_beast_mode_tests_20250916_132012.py
+100644 5430ed2cd6b2bbe09616fb62d960ea07b1c72922 1	../src/rc1/migration/backups/run_migration_20250916_132011.py
+100644 5430ed2cd6b2bbe09616fb62d960ea07b1c72922 3	../src/rc1/migration/backups/run_migration_20250916_132011.py
+100644 7307ad1d93895b74653b9b0ef8d22ceafd804c7a 1	../src/rc1/migration/backups/semantic_analysis_20250916_132011.py
+100644 7307ad1d93895b74653b9b0ef8d22ceafd804c7a 3	../src/rc1/migration/backups/semantic_analysis_20250916_132011.py
+100644 7097d741ed587610fae4accc6e31f3c996da3714 1	../src/rc1/migration/backups/send_apology_message_20250916_132012.py
+100644 7097d741ed587610fae4accc6e31f3c996da3714 3	../src/rc1/migration/backups/send_apology_message_20250916_132012.py
+100644 ca1db121991a7e1aa0d2cb181e0b6212ba0b7f5c 1	../src/rc1/migration/backups/send_design_to_claude_20250916_132012.py
+100644 ca1db121991a7e1aa0d2cb181e0b6212ba0b7f5c 3	../src/rc1/migration/backups/send_design_to_claude_20250916_132012.py
+100644 d388629f8af5cca29bfafcc21f2be75f45ea5f4c 1	../src/rc1/migration/backups/send_hello_to_network_20250916_132012.py
+100644 d388629f8af5cca29bfafcc21f2be75f45ea5f4c 3	../src/rc1/migration/backups/send_hello_to_network_20250916_132012.py
+100644 aba0c6a1beff9e6ca286ca2e1c4a203b6fc12ad9 1	../src/rc1/migration/backups/send_spec_to_claude_20250916_132012.py
+100644 aba0c6a1beff9e6ca286ca2e1c4a203b6fc12ad9 3	../src/rc1/migration/backups/send_spec_to_claude_20250916_132012.py
+100644 3592f20fcda02ee2524bd1e9d800376def163882 1	../src/rc1/migration/backups/send_tasks_to_claude_20250916_132011.py
+100644 3592f20fcda02ee2524bd1e9d800376def163882 3	../src/rc1/migration/backups/send_tasks_to_claude_20250916_132011.py
+100644 999d8b45f1a3c5d82a23b93d1c6b68490f750d41 1	../src/rc1/migration/backups/simple_listener_20250916_132012.py
+100644 999d8b45f1a3c5d82a23b93d1c6b68490f750d41 3	../src/rc1/migration/backups/simple_listener_20250916_132012.py
+100644 3e280d931153a97cfabcd70ad629b112e86df619 1	../src/rc1/migration/backups/simple_pubsub_test_20250916_132012.py
+100644 3e280d931153a97cfabcd70ad629b112e86df619 3	../src/rc1/migration/backups/simple_pubsub_test_20250916_132012.py
+100755 007933839feb1bd83376bc45eb30139b013be3b0 1	../src/rc1/migration/backups/start_beast_mode_bootstrap_20250916_132012.sh
+100755 007933839feb1bd83376bc45eb30139b013be3b0 3	../src/rc1/migration/backups/start_beast_mode_bootstrap_20250916_132012.sh
+100644 f390b18103c0b333862111d9d8207fe4c146ec04 1	../src/rc1/migration/backups/talk_like_orchestrator_20250916_132012.py
+100644 f390b18103c0b333862111d9d8207fe4c146ec04 3	../src/rc1/migration/backups/talk_like_orchestrator_20250916_132012.py
+100644 a65c10a352a24e1464debd960227b2ac3a365146 1	../src/rc1/migration/backups/task_5_1_validation_report_20250916_114346.md
+100644 a65c10a352a24e1464debd960227b2ac3a365146 3	../src/rc1/migration/backups/task_5_1_validation_report_20250916_114346.md
+100644 d4d9f9de5fcaf276dcd02ff93a32d620aabf1e0a 1	../src/rc1/migration/backups/task_5_2_component_boundary_resolution_implementation_summary_20250916_114346.md
+100644 d4d9f9de5fcaf276dcd02ff93a32d620aabf1e0a 3	../src/rc1/migration/backups/task_5_2_component_boundary_resolution_implementation_summary_20250916_114346.md
+100644 a715429945bef731bd3ea39165a0d10e1ab17e1b 1	../src/rc1/migration/backups/task_5_2_component_boundary_resolution_summary_20250916_114346.md
+100644 a715429945bef731bd3ea39165a0d10e1ab17e1b 3	../src/rc1/migration/backups/task_5_2_component_boundary_resolution_summary_20250916_114346.md
+100644 500ea6709da7606b0e0d2b26f825a7b1f508e2c0 1	../src/rc1/migration/backups/task_5_completion_summary_20250916_114346.md
+100644 500ea6709da7606b0e0d2b26f825a7b1f508e2c0 3	../src/rc1/migration/backups/task_5_completion_summary_20250916_114346.md
+100644 e9385b57c766038191cbd92b7b1b11a3808f77ca 1	../src/rc1/migration/backups/task_6_1_consolidated_functionality_test_suite_implementation_summary_20250916_114346.md
+100644 e9385b57c766038191cbd92b7b1b11a3808f77ca 3	../src/rc1/migration/backups/task_6_1_consolidated_functionality_test_suite_implementation_summary_20250916_114346.md
+100644 912cb18da1cc9a0ebe47b18fd4fc5a74787f2846 1	../src/rc1/migration/backups/task_6_1_consolidated_functionality_test_suite_summary_20250916_114346.md
+100644 912cb18da1cc9a0ebe47b18fd4fc5a74787f2846 3	../src/rc1/migration/backups/task_6_1_consolidated_functionality_test_suite_summary_20250916_114346.md
+100644 6d464b2881dafe16a5dcbc04ef8cbb8b20fab559 1	../src/rc1/migration/backups/task_6_2_implementation_migration_summary_20250916_114346.md
+100644 6d464b2881dafe16a5dcbc04ef8cbb8b20fab559 3	../src/rc1/migration/backups/task_6_2_implementation_migration_summary_20250916_114346.md
+100644 6cab06728724d774388d39125e778179b67e26d1 1	../src/rc1/migration/backups/task_6_comprehensive_quality_validation_report_20250916_114346.md
+100644 6cab06728724d774388d39125e778179b67e26d1 3	../src/rc1/migration/backups/task_6_comprehensive_quality_validation_report_20250916_114346.md
+100644 1583ae2475014bb428cbf9e36e720836f3d9217b 1	../src/rc1/migration/backups/task_7_1_unit_tests_implementation_summary_20250916_114346.md
+100644 1583ae2475014bb428cbf9e36e720836f3d9217b 3	../src/rc1/migration/backups/task_7_1_unit_tests_implementation_summary_20250916_114346.md
+100644 3824d4e01d8d33f74c25c468f9571befeddaf883 1	../src/rc1/migration/backups/task_7_2_cli_integration_tests_summary_20250916_114346.md
+100644 3824d4e01d8d33f74c25c468f9571befeddaf883 3	../src/rc1/migration/backups/task_7_2_cli_integration_tests_summary_20250916_114346.md
+100644 34871154171df8fc812a8ceeb244771d94d688d2 1	../src/rc1/migration/backups/task_9_governance_maintenance_procedures_summary_20250916_114346.md
+100644 34871154171df8fc812a8ceeb244771d94d688d2 3	../src/rc1/migration/backups/task_9_governance_maintenance_procedures_summary_20250916_114346.md
+100644 b83ba88c9570aee975c1aa63f83351b250a769b5 1	../src/rc1/migration/backups/task_dag_standalone_20250916_132011.py
+100644 b83ba88c9570aee975c1aa63f83351b250a769b5 3	../src/rc1/migration/backups/task_dag_standalone_20250916_132011.py
+100644 f1557b2f2208ea07d624895362961f96f29a6fb2 1	../src/rc1/migration/backups/test_beast_dag_orchestration_20250916_132012.py
+100644 f1557b2f2208ea07d624895362961f96f29a6fb2 3	../src/rc1/migration/backups/test_beast_dag_orchestration_20250916_132012.py
+100644 67fdb587933f4f123c57d36adc5bddd8c068e6d6 1	../src/rc1/migration/backups/test_bootstrap_orchestrator_20250916_132012.py
+100644 67fdb587933f4f123c57d36adc5bddd8c068e6d6 3	../src/rc1/migration/backups/test_bootstrap_orchestrator_20250916_132012.py
+100644 cf53d3cb5dad8b143955559e69d839b240774bb6 1	../src/rc1/migration/backups/test_bus_client_20250916_132012.py
+100644 cf53d3cb5dad8b143955559e69d839b240774bb6 3	../src/rc1/migration/backups/test_bus_client_20250916_132012.py
+100644 d62725c6f6c68272bc5a101ba9fa3c7e0f3599e5 1	../src/rc1/migration/backups/test_cli_basic_20250916_132012.py
+100644 d62725c6f6c68272bc5a101ba9fa3c7e0f3599e5 3	../src/rc1/migration/backups/test_cli_basic_20250916_132012.py
+100644 5e67030a6f23810d3000b6f0ec2d776263322692 1	../src/rc1/migration/backups/test_cost_correlation_20250916_132012.py
+100644 5e67030a6f23810d3000b6f0ec2d776263322692 3	../src/rc1/migration/backups/test_cost_correlation_20250916_132012.py
+100644 0f869a904eef71eea4bf50e751e9d2a4431b66de 1	../src/rc1/migration/backups/test_deployment_20250916_132012.py
+100644 0f869a904eef71eea4bf50e751e9d2a4431b66de 3	../src/rc1/migration/backups/test_deployment_20250916_132012.py
+100644 1da6feb4e06ea4c86e1e5747a0a3f90f8b09cade 1	../src/rc1/migration/backups/test_enhanced_learning_20250916_132012.py
+100644 1da6feb4e06ea4c86e1e5747a0a3f90f8b09cade 3	../src/rc1/migration/backups/test_enhanced_learning_20250916_132012.py
+100644 14a397c2f6b5266c6a4109d80c50d8220b057e02 1	../src/rc1/migration/backups/test_execution_strategy_20250916_132012.py
+100644 14a397c2f6b5266c6a4109d80c50d8220b057e02 3	../src/rc1/migration/backups/test_execution_strategy_20250916_132012.py
+100644 4d2222287a4bd7fe3226e220c417ecf8b6b02783 1	../src/rc1/migration/backups/test_gcp_integration_20250916_132011.py
+100644 4d2222287a4bd7fe3226e220c417ecf8b6b02783 3	../src/rc1/migration/backups/test_gcp_integration_20250916_132011.py
+100644 6d38e602b1a61fdbee9b6666069ff0dfe8430bc2 1	../src/rc1/migration/backups/test_git_integration_20250916_132012.py
+100644 6d38e602b1a61fdbee9b6666069ff0dfe8430bc2 3	../src/rc1/migration/backups/test_git_integration_20250916_132012.py
+100644 24533efda0442d313a4f438d4b7923a1410c11d4 1	../src/rc1/migration/backups/test_gke_terraform_20250916_132012.py
+100644 24533efda0442d313a4f438d4b7923a1410c11d4 3	../src/rc1/migration/backups/test_gke_terraform_20250916_132012.py
+100644 93990f9d6dbbc530da3a12cd65e8b0af72405159 1	../src/rc1/migration/backups/test_multi_service_gcp_20250916_132012.py
+100644 93990f9d6dbbc530da3a12cd65e8b0af72405159 3	../src/rc1/migration/backups/test_multi_service_gcp_20250916_132012.py
+100644 ec141ef9613f2f8f5ce82f9620df5162489e3072 1	../src/rc1/migration/backups/test_pdca_integration_20250916_132012.py
+100644 ec141ef9613f2f8f5ce82f9620df5162489e3072 3	../src/rc1/migration/backups/test_pdca_integration_20250916_132012.py
+100644 2f05b9311755469e8cf111054fc251fd4277bf48 1	../src/rc1/migration/backups/test_real_registry_20250916_132012.py
+100644 2f05b9311755469e8cf111054fc251fd4277bf48 3	../src/rc1/migration/backups/test_real_registry_20250916_132012.py
+100644 6ef2bf77df5ba4591e4163b6ebd72c25ccdeca1d 1	../src/rc1/migration/backups/test_rm_compliance_20250916_132012.py
+100644 6ef2bf77df5ba4591e4163b6ebd72c25ccdeca1d 3	../src/rc1/migration/backups/test_rm_compliance_20250916_132012.py
+100644 870c97832aaf666e6ecb3b38b87746a8692c7f07 1	../src/rc1/migration/backups/test_simple_pdca_20250916_132012.py
+100644 870c97832aaf666e6ecb3b38b87746a8692c7f07 3	../src/rc1/migration/backups/test_simple_pdca_20250916_132012.py
+100644 4458c5d4da33e63295a94edd43a51f4795ae3a3b 1	../src/rc1/migration/backups/test_spore_network_20250916_132012.py
+100644 4458c5d4da33e63295a94edd43a51f4795ae3a3b 3	../src/rc1/migration/backups/test_spore_network_20250916_132012.py
+100644 be3b35ef32d3e5bad2f9ebd943ab709a6c4b2143 1	../src/rc1/migration/backups/test_streaming_costs_20250916_132012.py
+100644 be3b35ef32d3e5bad2f9ebd943ab709a6c4b2143 3	../src/rc1/migration/backups/test_streaming_costs_20250916_132012.py
+100644 9db9d5fd7e2789ea094a56ad7c2b768961d4d914 1	../src/rc1/migration/backups/test_systo_metrics_engine_20250916_132012.py
+100644 9db9d5fd7e2789ea094a56ad7c2b768961d4d914 3	../src/rc1/migration/backups/test_systo_metrics_engine_20250916_132012.py
+100644 372116e0e5c0c79e53222ef2d6858cba306977c2 1	../src/rc1/migration/backups/test_tool_health_manager_20250916_132012.py
+100644 372116e0e5c0c79e53222ef2d6858cba306977c2 3	../src/rc1/migration/backups/test_tool_health_manager_20250916_132012.py
+100644 ce5c2ff937bf080ea98400e8a907b11105c83b6b 1	../src/rc1/migration/backups/test_transport_refactor_20250916_132012.py
+100644 ce5c2ff937bf080ea98400e8a907b11105c83b6b 3	../src/rc1/migration/backups/test_transport_refactor_20250916_132012.py
+100644 6aff94dbbb16228767139e12d73fd822e58cb4d4 1	../src/rc1/migration/backups/test_unified_monitor_20250916_132012.py
+100644 6aff94dbbb16228767139e12d73fd822e58cb4d4 3	../src/rc1/migration/backups/test_unified_monitor_20250916_132012.py
+100644 1288de0df51dfa382ed26169492b1671736e1ddf 1	../src/rc1/migration/backups/test_validation_suite_20250916_132012.py
+100644 1288de0df51dfa382ed26169492b1671736e1ddf 3	../src/rc1/migration/backups/test_validation_suite_20250916_132012.py
+100644 3ba9790917e9de38986cc00f161a65ae1c83d6a8 1	../src/rc1/migration/backups/thank_you_and_signoff_20250916_132012.py
+100644 3ba9790917e9de38986cc00f161a65ae1c83d6a8 3	../src/rc1/migration/backups/thank_you_and_signoff_20250916_132012.py
+100644 2d866de88b6bcddce1efd779b6653d874b81033c 1	../src/rc1/migration/backups/threaded_conversation_20250916_132011.py
+100644 2d866de88b6bcddce1efd779b6653d874b81033c 3	../src/rc1/migration/backups/threaded_conversation_20250916_132011.py
+100644 99ae8df59510f3c98a95135867093523c7ba7f94 1	../src/rc1/migration/backups/unified_beast_mode_system_spec_20250916_114346.md
+100644 99ae8df59510f3c98a95135867093523c7ba7f94 3	../src/rc1/migration/backups/unified_beast_mode_system_spec_20250916_114346.md
+100644 79807959babc738349ac2d30356ac45cbb310e26 1	../src/rc1/migration/backups/unified_testing_rca_framework_spec_20250916_114346.md
+100644 79807959babc738349ac2d30356ac45cbb310e26 3	../src/rc1/migration/backups/unified_testing_rca_framework_spec_20250916_114346.md
+100644 2b7d12f09c4d5f22960dbca546bcd67d33074613 1	../src/rc1/migration/backups/validate_gke_config_20250916_132012.py
+100644 2b7d12f09c4d5f22960dbca546bcd67d33074613 3	../src/rc1/migration/backups/validate_gke_config_20250916_132012.py
+100644 2a77ac5b18cfdacb32bceafe24ba61ef882632de 1	../src/rc1/migration/backups/validate_hackathon_submission_20250916_132012.py
+100644 2a77ac5b18cfdacb32bceafe24ba61ef882632de 3	../src/rc1/migration/backups/validate_hackathon_submission_20250916_132012.py
+100644 7a9e909268a0e1f374ae0afc7d630e72f1205a05 1	../src/rc1/migration/backups/validate_infrastructure_systematic_20250916_132012.py
+100644 7a9e909268a0e1f374ae0afc7d630e72f1205a05 3	../src/rc1/migration/backups/validate_infrastructure_systematic_20250916_132012.py
+100644 3ac4bac1c9f1127e5c5d2dc259e38cb2d5666d79 1	../src/rc1/migration/backups/validate_spore_instructions_20250916_132011.py
+100644 3ac4bac1c9f1127e5c5d2dc259e38cb2d5666d79 3	../src/rc1/migration/backups/validate_spore_instructions_20250916_132011.py
+100644 1d9d386abba5af041a4965463e0e2d36bf42e6ec 1	../src/rc1/migration/backups/validate_tool_orchestrator_20250916_132012.py
+100644 1d9d386abba5af041a4965463e0e2d36bf42e6ec 3	../src/rc1/migration/backups/validate_tool_orchestrator_20250916_132012.py
+
+Auto-merging docs/README.md
+CONFLICT (modify/delete): docs/beastmaster-ontology/README.md deleted in master and modified in origin/release/rc1-project-cleanup-redo.  Version origin/release/rc1-project-cleanup-redo of docs/beastmaster-ontology/README.md left in tree.
+CONFLICT (modify/delete): docs/beastmaster-ontology/session-analysis.md deleted in master and modified in origin/release/rc1-project-cleanup-redo.  Version origin/release/rc1-project-cleanup-redo of docs/beastmaster-ontology/session-analysis.md left in tree.
+CONFLICT (modify/delete): docs/devpost_integration_guide.md deleted in master and modified in origin/release/rc1-project-cleanup-redo.  Version origin/release/rc1-project-cleanup-redo of docs/devpost_integration_guide.md left in tree.
+Auto-merging docs/other/misc/pyproject.toml
+CONFLICT (content): Merge conflict in docs/other/misc/pyproject.toml
+Auto-merging docs/readme/project/README.md
+CONFLICT (content): Merge conflict in docs/readme/project/README.md
+CONFLICT (rename/delete): HACKATHON_RULES_UPDATE_ANALYSIS.md renamed to docs/summary/analysis/HACKATHON_RULES_UPDATE_ANALYSIS.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): MVP_DAG_ANALYSIS.md renamed to docs/summary/analysis/MVP_DAG_ANALYSIS.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): RDI_DAG_MATHEMATICAL_ANALYSIS.md renamed to docs/summary/analysis/RDI_DAG_MATHEMATICAL_ANALYSIS.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): UNIQUENESS_ANALYSIS.md renamed to docs/summary/analysis/UNIQUENESS_ANALYSIS.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): spec_consolidation_analysis_report.md renamed to docs/summary/analysis/spec_consolidation_analysis_report.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): unified_rdi_rm_analysis_system_spec.md renamed to docs/summary/analysis/unified_rdi_rm_analysis_system_spec.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): BEAST_MODE_COLLABORATION_NETWORK_COMPLETION_SUMMARY.md renamed to docs/summary/implementation/BEAST_MODE_COLLABORATION_NETWORK_COMPLETION_SUMMARY.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): BEAST_MODE_PROJECT_AUDIT_REPORT.md renamed to docs/summary/implementation/BEAST_MODE_PROJECT_AUDIT_REPORT.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): DEVPOST_INTEGRATION_COMPLETION_SUMMARY.md renamed to docs/summary/implementation/DEVPOST_INTEGRATION_COMPLETION_SUMMARY.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): HACKATHON_DEMO_FRAMEWORK_FINAL_SUMMARY.md renamed to docs/summary/implementation/HACKATHON_DEMO_FRAMEWORK_FINAL_SUMMARY.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): HACKATHON_DEMO_FRAMEWORK_SUMMARY.md renamed to docs/summary/implementation/HACKATHON_DEMO_FRAMEWORK_SUMMARY.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): PITCH_DECK_SUMMARY.md renamed to docs/summary/implementation/PITCH_DECK_SUMMARY.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): RMI_RM_DDD_CONFORMANCE_AUDIT_REPORT.md renamed to docs/summary/implementation/RMI_RM_DDD_CONFORMANCE_AUDIT_REPORT.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): beast_mode_execution_report.md renamed to docs/summary/implementation/beast_mode_execution_report.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): compliance_report_20250904_135904.md renamed to docs/summary/implementation/compliance_report_20250904_135904.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): devpost_search_code_with_kiro.html renamed to docs/web/pages/devpost_search_code_with_kiro.html in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): devpost_search_kiro.html renamed to docs/web/pages/devpost_search_kiro.html in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): devpost_search_kiro_ai.html renamed to docs/web/pages/devpost_search_kiro_ai.html in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): devpost_user_api_project.html renamed to docs/web/pages/devpost_user_api_project.html in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (modify/delete): hackathons/gke-ai-microservices deleted in master and modified in origin/release/rc1-project-cleanup-redo.  Version origin/release/rc1-project-cleanup-redo of hackathons/gke-ai-microservices left in tree.
+CONFLICT (rename/delete): AGENT_LAUNCH_README.md renamed to src/rc1/migration/backups/AGENT_LAUNCH_README_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): ARCHITECTURE_REFACTOR.md renamed to src/rc1/migration/backups/ARCHITECTURE_REFACTOR_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): BEASTMASTER_NETWORK_ANNOUNCEMENT.md renamed to src/rc1/migration/backups/BEASTMASTER_NETWORK_ANNOUNCEMENT_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): BEAST_MODE_CLI_STATUS_REPORT.md renamed to src/rc1/migration/backups/BEAST_MODE_CLI_STATUS_REPORT_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): BEAST_MODE_IMPLEMENTATION_COMPARISON.md renamed to src/rc1/migration/backups/BEAST_MODE_IMPLEMENTATION_COMPARISON_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): BEAST_MODE_REFACTOR_STRATEGY.md renamed to src/rc1/migration/backups/BEAST_MODE_REFACTOR_STRATEGY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): CHATGPT_RESEARCH_SPORE.md renamed to src/rc1/migration/backups/CHATGPT_RESEARCH_SPORE_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): CLI_README.md renamed to src/rc1/migration/backups/CLI_README_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): CLI_STANDARDS_ENFORCEMENT.md renamed to src/rc1/migration/backups/CLI_STANDARDS_ENFORCEMENT_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): COMPREHENSIVE_TEST_RESULTS.md renamed to src/rc1/migration/backups/COMPREHENSIVE_TEST_RESULTS_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): DEPLOYMENT_READY.md renamed to src/rc1/migration/backups/DEPLOYMENT_READY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): FINAL_WEEK_EXECUTION_PLAN.md renamed to src/rc1/migration/backups/FINAL_WEEK_EXECUTION_PLAN_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): GIT_INTEGRATION.md renamed to src/rc1/migration/backups/GIT_INTEGRATION_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): GKE_HACKATHON_FEEDBACK_BEAST_MODE.md renamed to src/rc1/migration/backups/GKE_HACKATHON_FEEDBACK_BEAST_MODE_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): HACKATHON_FINAL_CHECKLIST.md renamed to src/rc1/migration/backups/HACKATHON_FINAL_CHECKLIST_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): HACKATHON_SUBMISSION_PACKAGE.md renamed to src/rc1/migration/backups/HACKATHON_SUBMISSION_PACKAGE_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): INTEGRATION_TEST_FINDINGS.md renamed to src/rc1/migration/backups/INTEGRATION_TEST_FINDINGS_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): MARKETING_ONE_PAGER.md renamed to src/rc1/migration/backups/MARKETING_ONE_PAGER_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): Makefile renamed to src/rc1/migration/backups/Makefile_20250916_132012 in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): Makefile.hackathon renamed to src/rc1/migration/backups/Makefile_20250916_132012.hackathon in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): PLUGGABLE_TRANSPORT_REFACTOR_LOG.md renamed to src/rc1/migration/backups/PLUGGABLE_TRANSPORT_REFACTOR_LOG_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): QUICK_START_FOR_JUDGES.md renamed to src/rc1/migration/backups/QUICK_START_FOR_JUDGES_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): RCA_MITIGATION_PLAN.md renamed to src/rc1/migration/backups/RCA_MITIGATION_PLAN_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): RDI_CHAIN_VALIDATION.md renamed to src/rc1/migration/backups/RDI_CHAIN_VALIDATION_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): RDI_DAG_DISCOVERY_PAPER.md renamed to src/rc1/migration/backups/RDI_DAG_DISCOVERY_PAPER_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): RDI_DAG_EMPIRICAL_EVIDENCE.md renamed to src/rc1/migration/backups/RDI_DAG_EMPIRICAL_EVIDENCE_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): RDI_DAG_INDUSTRY_IMPLICATIONS.md renamed to src/rc1/migration/backups/RDI_DAG_INDUSTRY_IMPLICATIONS_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): RDI_IMPLEMENTATION_SPORE.md renamed to src/rc1/migration/backups/RDI_IMPLEMENTATION_SPORE_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): REQUIREMENTS_TRACEABILITY_EXPERIMENT_FINDINGS.md renamed to src/rc1/migration/backups/REQUIREMENTS_TRACEABILITY_EXPERIMENT_FINDINGS_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): RM_COMPLIANCE_IMPLEMENTATION.md renamed to src/rc1/migration/backups/RM_COMPLIANCE_IMPLEMENTATION_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): RM_IMPLEMENTATION_SPORE.md renamed to src/rc1/migration/backups/RM_IMPLEMENTATION_SPORE_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): RM_RDI_IMPLEMENTATION_PROMPT.md renamed to src/rc1/migration/backups/RM_RDI_IMPLEMENTATION_PROMPT_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): SPORE_COMPLETION_SUMMARY.md renamed to src/rc1/migration/backups/SPORE_COMPLETION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): SYSTEMATIC_DEVELOPMENT_ECOSYSTEM_SPEC_ANNOUNCEMENT.md renamed to src/rc1/migration/backups/SYSTEMATIC_DEVELOPMENT_ECOSYSTEM_SPEC_ANNOUNCEMENT_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_10_COLLABORATION_SCHEDULING_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_10_COLLABORATION_SCHEDULING_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_10_ERROR_HANDLING_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_10_ERROR_HANDLING_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_11_COMPREHENSIVE_TEST_SUITE_SUMMARY.md renamed to src/rc1/migration/backups/TASK_11_COMPREHENSIVE_TEST_SUITE_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_11_MESSAGE_COMPATIBILITY_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_11_MESSAGE_COMPATIBILITY_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_12_CAPABILITY_VERIFICATION_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_12_CAPABILITY_VERIFICATION_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_13_COMPREHENSIVE_INTEGRATION_TEST_SUITE_SUMMARY.md renamed to src/rc1/migration/backups/TASK_13_COMPREHENSIVE_INTEGRATION_TEST_SUITE_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_14_COMPLETION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_14_COMPLETION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_14_MONITORING_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_14_MONITORING_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_18_COMPLETION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_18_COMPLETION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_2_2_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_2_2_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_3_BUS_CLIENT_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_3_BUS_CLIENT_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_4_2_AUTOMATED_CORRECTION_WORKFLOWS_SUMMARY.md renamed to src/rc1/migration/backups/TASK_4_2_AUTOMATED_CORRECTION_WORKFLOWS_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_6_MESSAGE_TYPE_HANDLING_SUMMARY.md renamed to src/rc1/migration/backups/TASK_6_MESSAGE_TYPE_HANDLING_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_7_1_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_7_1_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_7_2_BATCH_SYNC_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_7_2_BATCH_SYNC_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_7_3_VALIDATION_ENGINE_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_7_3_VALIDATION_ENGINE_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_7_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_7_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_7_MAILBOX_LOGGER_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_7_MAILBOX_LOGGER_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_8_1_DEVPOST_PREVIEW_GENERATOR_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_8_1_DEVPOST_PREVIEW_GENERATOR_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_8_MESSAGE_HISTORY_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_8_MESSAGE_HISTORY_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_8_PREVIEW_GENERATION_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_8_PREVIEW_GENERATION_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_9_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_9_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_9_SPORE_MANAGEMENT_IMPLEMENTATION_SUMMARY.md renamed to src/rc1/migration/backups/TASK_9_SPORE_MANAGEMENT_IMPLEMENTATION_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): TASK_DAG_SYSTEM_SUMMARY.md renamed to src/rc1/migration/backups/TASK_DAG_SYSTEM_SUMMARY_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): analyze_devpost_submission_reality.py renamed to src/rc1/migration/backups/analyze_devpost_submission_reality_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): analyze_spec_landscape.py renamed to src/rc1/migration/backups/analyze_spec_landscape_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): apologize_and_explain.py renamed to src/rc1/migration/backups/apologize_and_explain_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): ask_for_spore_and_listen.py renamed to src/rc1/migration/backups/ask_for_spore_and_listen_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): ask_repeat_answer.py renamed to src/rc1/migration/backups/ask_repeat_answer_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): background_spore_request.py renamed to src/rc1/migration/backups/background_spore_request_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): beast renamed to src/rc1/migration/backups/beast_20250916_132012 in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): beast_dag_simple.py renamed to src/rc1/migration/backups/beast_dag_simple_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): beast_mode_bus_client_from_spore.py renamed to src/rc1/migration/backups/beast_mode_bus_client_from_spore_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): beast_mode_cli.py renamed to src/rc1/migration/backups/beast_mode_cli_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): beast_mode_dag_visualization.md renamed to src/rc1/migration/backups/beast_mode_dag_visualization_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): beast_mode_mvp_demo.py renamed to src/rc1/migration/backups/beast_mode_mvp_demo_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): beast_mode_spore_distributor.py renamed to src/rc1/migration/backups/beast_mode_spore_distributor_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): beast_mode_spore_receiver.py renamed to src/rc1/migration/backups/beast_mode_spore_receiver_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): bootstrap_beast_mode_network.py renamed to src/rc1/migration/backups/bootstrap_beast_mode_network_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): broadcast_gke_feedback.py renamed to src/rc1/migration/backups/broadcast_gke_feedback_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): chat_up_claude.py renamed to src/rc1/migration/backups/chat_up_claude_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): check_queue_and_responses.py renamed to src/rc1/migration/backups/check_queue_and_responses_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): clean_cli.py renamed to src/rc1/migration/backups/clean_cli_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): cli.py renamed to src/rc1/migration/backups/cli_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): communicate_with_agents.py renamed to src/rc1/migration/backups/communicate_with_agents_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): component_boundary_resolution.md renamed to src/rc1/migration/backups/component_boundary_resolution_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): conversational_listener.py renamed to src/rc1/migration/backups/conversational_listener_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): debug_beast_network_comprehensive.py renamed to src/rc1/migration/backups/debug_beast_network_comprehensive_20250916_132011.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): demo.py renamed to src/rc1/migration/backups/demo_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): demo_beast_mode_testing.py renamed to src/rc1/migration/backups/demo_beast_mode_testing_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): demo_hackathon_showcase.py renamed to src/rc1/migration/backups/demo_hackathon_showcase_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): demo_spore_installation.py renamed to src/rc1/migration/backups/demo_spore_installation_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): devpost_api_readme.md renamed to src/rc1/migration/backups/devpost_api_readme_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): devpost_robots.txt renamed to src/rc1/migration/backups/devpost_robots_20250916_132011.txt in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): discover_subscriptions.py renamed to src/rc1/migration/backups/discover_subscriptions_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): dog_ate_homework.py renamed to src/rc1/migration/backups/dog_ate_homework_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): execute_systematic_cleanup.py renamed to src/rc1/migration/backups/execute_systematic_cleanup_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): final_questions.py renamed to src/rc1/migration/backups/final_questions_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): fixed_logger.py renamed to src/rc1/migration/backups/fixed_logger_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): implement_metrics_engine_beast_mode.py renamed to src/rc1/migration/backups/implement_metrics_engine_beast_mode_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): implement_tool_health_manager.py renamed to src/rc1/migration/backups/implement_tool_health_manager_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): listen_beast_network.py renamed to src/rc1/migration/backups/listen_beast_network_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): listen_for_response.py renamed to src/rc1/migration/backups/listen_for_response_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): live_fire_gcp_billing.py renamed to src/rc1/migration/backups/live_fire_gcp_billing_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): message_kiro_spore_creator_180411.txt renamed to src/rc1/migration/backups/message_kiro_spore_creator_180411_20250916_132012.txt in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): message_kiro_spore_creator_180838.txt renamed to src/rc1/migration/backups/message_kiro_spore_creator_180838_20250916_132012.txt in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): message_kiro_spore_creator_180955.txt renamed to src/rc1/migration/backups/message_kiro_spore_creator_180955_20250916_132012.txt in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): message_kiro_spore_creator_181312.txt renamed to src/rc1/migration/backups/message_kiro_spore_creator_181312_20250916_132012.txt in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): migration_simple.py renamed to src/rc1/migration/backups/migration_simple_20250916_132011.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): pdca.mdc renamed to src/rc1/migration/backups/pdca_20250916_132012.mdc in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): peek_bus.py renamed to src/rc1/migration/backups/peek_bus_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): ping_pubsub_network.py renamed to src/rc1/migration/backups/ping_pubsub_network_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): play_with_pubsub.py renamed to src/rc1/migration/backups/play_with_pubsub_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): proper_logger.py renamed to src/rc1/migration/backups/proper_logger_20250916_132011.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): quick_stream_test.py renamed to src/rc1/migration/backups/quick_stream_test_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): recording_controls.sh renamed to src/rc1/migration/backups/recording_controls_20250916_132011.sh in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): redis_deep_investigation.py renamed to src/rc1/migration/backups/redis_deep_investigation_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): requirements.txt renamed to src/rc1/migration/backups/requirements_20250916_132012.txt in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): research_devpost_api.py renamed to src/rc1/migration/backups/research_devpost_api_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): research_kiro_hackathon_submission.py renamed to src/rc1/migration/backups/research_kiro_hackathon_submission_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): respond_to_claude.py renamed to src/rc1/migration/backups/respond_to_claude_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): run_beast_mode_comprehensive_tests.py renamed to src/rc1/migration/backups/run_beast_mode_comprehensive_tests_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): run_beast_mode_tests.py renamed to src/rc1/migration/backups/run_beast_mode_tests_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): run_migration.py renamed to src/rc1/migration/backups/run_migration_20250916_132011.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): semantic_analysis.py renamed to src/rc1/migration/backups/semantic_analysis_20250916_132011.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): send_apology_message.py renamed to src/rc1/migration/backups/send_apology_message_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): send_design_to_claude.py renamed to src/rc1/migration/backups/send_design_to_claude_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): send_hello_to_network.py renamed to src/rc1/migration/backups/send_hello_to_network_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): send_spec_to_claude.py renamed to src/rc1/migration/backups/send_spec_to_claude_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): send_tasks_to_claude.py renamed to src/rc1/migration/backups/send_tasks_to_claude_20250916_132011.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): simple_listener.py renamed to src/rc1/migration/backups/simple_listener_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): simple_pubsub_test.py renamed to src/rc1/migration/backups/simple_pubsub_test_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): start_beast_mode_bootstrap.sh renamed to src/rc1/migration/backups/start_beast_mode_bootstrap_20250916_132012.sh in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): talk_like_orchestrator.py renamed to src/rc1/migration/backups/talk_like_orchestrator_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): task_5_1_validation_report.md renamed to src/rc1/migration/backups/task_5_1_validation_report_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): task_5_2_component_boundary_resolution_implementation_summary.md renamed to src/rc1/migration/backups/task_5_2_component_boundary_resolution_implementation_summary_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): task_5_2_component_boundary_resolution_summary.md renamed to src/rc1/migration/backups/task_5_2_component_boundary_resolution_summary_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): task_5_completion_summary.md renamed to src/rc1/migration/backups/task_5_completion_summary_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): task_6_1_consolidated_functionality_test_suite_implementation_summary.md renamed to src/rc1/migration/backups/task_6_1_consolidated_functionality_test_suite_implementation_summary_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): task_6_1_consolidated_functionality_test_suite_summary.md renamed to src/rc1/migration/backups/task_6_1_consolidated_functionality_test_suite_summary_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): task_6_2_implementation_migration_summary.md renamed to src/rc1/migration/backups/task_6_2_implementation_migration_summary_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): task_6_comprehensive_quality_validation_report.md renamed to src/rc1/migration/backups/task_6_comprehensive_quality_validation_report_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): task_7_1_unit_tests_implementation_summary.md renamed to src/rc1/migration/backups/task_7_1_unit_tests_implementation_summary_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): task_7_2_cli_integration_tests_summary.md renamed to src/rc1/migration/backups/task_7_2_cli_integration_tests_summary_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): task_9_governance_maintenance_procedures_summary.md renamed to src/rc1/migration/backups/task_9_governance_maintenance_procedures_summary_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): task_dag_standalone.py renamed to src/rc1/migration/backups/task_dag_standalone_20250916_132011.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_beast_dag_orchestration.py renamed to src/rc1/migration/backups/test_beast_dag_orchestration_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_bootstrap_orchestrator.py renamed to src/rc1/migration/backups/test_bootstrap_orchestrator_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_bus_client.py renamed to src/rc1/migration/backups/test_bus_client_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_cli_basic.py renamed to src/rc1/migration/backups/test_cli_basic_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_cost_correlation.py renamed to src/rc1/migration/backups/test_cost_correlation_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_deployment.py renamed to src/rc1/migration/backups/test_deployment_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_enhanced_learning.py renamed to src/rc1/migration/backups/test_enhanced_learning_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_execution_strategy.py renamed to src/rc1/migration/backups/test_execution_strategy_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_gcp_integration.py renamed to src/rc1/migration/backups/test_gcp_integration_20250916_132011.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_git_integration.py renamed to src/rc1/migration/backups/test_git_integration_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_gke_terraform.py renamed to src/rc1/migration/backups/test_gke_terraform_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_multi_service_gcp.py renamed to src/rc1/migration/backups/test_multi_service_gcp_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_pdca_integration.py renamed to src/rc1/migration/backups/test_pdca_integration_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_real_registry.py renamed to src/rc1/migration/backups/test_real_registry_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_rm_compliance.py renamed to src/rc1/migration/backups/test_rm_compliance_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_simple_pdca.py renamed to src/rc1/migration/backups/test_simple_pdca_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_spore_network.py renamed to src/rc1/migration/backups/test_spore_network_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_streaming_costs.py renamed to src/rc1/migration/backups/test_streaming_costs_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_systo_metrics_engine.py renamed to src/rc1/migration/backups/test_systo_metrics_engine_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_tool_health_manager.py renamed to src/rc1/migration/backups/test_tool_health_manager_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_transport_refactor.py renamed to src/rc1/migration/backups/test_transport_refactor_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_unified_monitor.py renamed to src/rc1/migration/backups/test_unified_monitor_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): test_validation_suite.py renamed to src/rc1/migration/backups/test_validation_suite_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): thank_you_and_signoff.py renamed to src/rc1/migration/backups/thank_you_and_signoff_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): threaded_conversation.py renamed to src/rc1/migration/backups/threaded_conversation_20250916_132011.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): unified_beast_mode_system_spec.md renamed to src/rc1/migration/backups/unified_beast_mode_system_spec_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): unified_testing_rca_framework_spec.md renamed to src/rc1/migration/backups/unified_testing_rca_framework_spec_20250916_114346.md in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): validate_gke_config.py renamed to src/rc1/migration/backups/validate_gke_config_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): validate_hackathon_submission.py renamed to src/rc1/migration/backups/validate_hackathon_submission_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): validate_infrastructure_systematic.py renamed to src/rc1/migration/backups/validate_infrastructure_systematic_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): validate_spore_instructions.py renamed to src/rc1/migration/backups/validate_spore_instructions_20250916_132011.py in origin/release/rc1-project-cleanup-redo, but deleted in master.
+CONFLICT (rename/delete): validate_tool_orchestrator.py renamed to src/rc1/migration/backups/validate_tool_orchestrator_20250916_132012.py in origin/release/rc1-project-cleanup-redo, but deleted in master.

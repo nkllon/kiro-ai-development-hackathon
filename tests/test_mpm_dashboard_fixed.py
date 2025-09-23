@@ -22,7 +22,7 @@ from src.beast_mode.backlog.models import (
     BacklogItem, MPMValidation, Requirement, AcceptanceCriterion, DependencyReference
 )
 from src.beast_mode.backlog.enums import (
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
     StrategicTrack, BeastReadinessStatus, ApprovalStatus, StakeholderType, RiskLevel
 )
@@ -30,31 +30,31 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
 
 class TestMPMDashboard(ReflectiveModule):
     """Test suite for MPMDashboard functionality"""
-    
+
     @pytest.fixture
     def mock_dependency_manager(self):
         """Create mock dependency manager"""
         mock_manager = Mock()
         mock_manager.calculate_critical_path.return_value = ["item1", "item2"]
         return mock_manager
-    
+
     @pytest.fixture
     def mpm_dashboard(self, mock_dependency_manager):
         """Create MPMDashboard instance for testing"""
         return MPMDashboard(mock_dependency_manager)
-    
+
     @pytest.fixture
     def sample_backlog_items(self):
         """Create sample backlog items for testing"""
         now = datetime.now()
-        
+
         items = {}
-        
+
         # Create items across different tracks and statuses
         for i in range(10):
             track = list(StrategicTrack)[i % 4]
             status = list(BeastReadinessStatus)[i % 7]
-            
+
             mpm_validation = MPMValidation(
                 validation_id=f"val_{i}",
                 validated_by="test_mpm",
@@ -65,7 +65,7 @@ class TestMPMDashboard(ReflectiveModule):
                 beast_readiness_assessment="Good quality item",
                 approval_status=ApprovalStatus.APPROVED
             )
-            
+
             item = BacklogItem(
                 item_id=f"item_{i}",
                 title=f"Test Item {i}",
@@ -90,17 +90,17 @@ class TestMPMDashboard(ReflectiveModule):
                 last_updated=now,
                 mpm_validation=mpm_validation if i % 2 == 0 else None
             )
-            
+
             items[f"item_{i}"] = item
-        
+
         return items
-    
+
     def test_get_portfolio_status_basic(self, mpm_dashboard, sample_backlog_items):
         """Test basic portfolio status calculation"""
         mpm_dashboard.update_backlog_items(sample_backlog_items)
-        
+
         status = mpm_dashboard.get_portfolio_status()
-        
+
         assert isinstance(status, PortfolioStatus)
         assert status.total_items == 10
         assert status.completion_percentage >= 0.0
@@ -108,25 +108,25 @@ class TestMPMDashboard(ReflectiveModule):
         assert len(status.track_breakdown) == 4  # Four strategic tracks
         assert isinstance(status.risk_assessment, dict)
         assert isinstance(status.last_updated, datetime)
-    
+
     def test_empty_backlog_handling(self, mpm_dashboard):
         """Test handling of empty backlog"""
         mpm_dashboard.update_backlog_items({})
-        
+
         status = mpm_dashboard.get_portfolio_status()
-        
+
         assert status.total_items == 0
         assert status.beast_ready_items == 0
         assert status.completion_percentage == 0.0
         assert status.delivery_confidence == 0.0
         assert len(status.critical_path_items) == 0
-    
+
     def test_generate_mpm_report(self, mpm_dashboard, sample_backlog_items):
         """Test MPM-specific report generation"""
         mpm_dashboard.update_backlog_items(sample_backlog_items)
-        
+
         report = mpm_dashboard.generate_stakeholder_report(StakeholderType.MPM)
-        
+
         assert isinstance(report, StakeholderReport)
         assert report.audience == StakeholderType.MPM
         assert "Strategic Portfolio Management" in report.title
@@ -135,11 +135,11 @@ class TestMPMDashboard(ReflectiveModule):
         assert len(report.recommendations) >= 0
         assert len(report.next_steps) >= 0
         assert report.valid_until > report.generated_at
-    
+
     def test_scenario_planning_basic(self, mpm_dashboard, sample_backlog_items):
         """Test basic scenario planning"""
         mpm_dashboard.update_backlog_items(sample_backlog_items)
-        
+
         constraints = ResourceConstraints(
             available_developers=3,
             available_hours_per_week=120,
@@ -148,9 +148,9 @@ class TestMPMDashboard(ReflectiveModule):
             skill_constraints={},
             priority_constraints=[]
         )
-        
+
         result = mpm_dashboard.run_scenario_planning(constraints, ScenarioType.REALISTIC)
-        
+
         assert isinstance(result, ScenarioResult)
         assert result.scenario_type == ScenarioType.REALISTIC
         assert result.estimated_completion > datetime.now()
@@ -171,12 +171,12 @@ if __name__ == "__main__":
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -184,7 +184,7 @@ if __name__ == "__main__":
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

@@ -14,6 +14,36 @@ from typing import Dict, Any
 from datetime import datetime
 
 
+class BeastModeError(Exception):
+    """Base exception for Beast Mode Framework."""
+    
+    def __init__(self, message: str, error_code: str = None):
+        super().__init__(message)
+        self.message = message
+        self.error_code = error_code
+        self.timestamp = datetime.now()
+    
+    def __str__(self):
+        if self.error_code:
+            return f"[{self.error_code}] {self.message}"
+        return self.message
+
+
+class BeastModeConfigurationError(BeastModeError):
+    """Configuration related errors."""
+    pass
+
+
+class BeastModeRuntimeError(BeastModeError):
+    """Runtime related errors."""
+    pass
+
+
+class BeastModeValidationError(BeastModeError):
+    """Validation related errors."""
+    pass
+
+
 class Exceptions:
     """Minimal valid class."""
 

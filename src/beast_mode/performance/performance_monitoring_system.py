@@ -314,11 +314,17 @@ class PerformanceMonitoringSystem:
             # Load average
             load_avg = psutil.getloadavg()
 
-            # Process and thread counts
-            process_count = len(psutil.pids())
-            thread_count = sum(
-                p.num_threads() for p in psutil.process_iter(["num_threads"])
-            )
+            # Process and thread counts (with error handling for PID access issues)
+            try:
+                process_count = len(psutil.pids())
+                thread_count = sum(
+                    p.num_threads() for p in psutil.process_iter(["num_threads"])
+                    if p.pid != 0  # Skip kernel scheduler (PID 0)
+                )
+            except (psutil.AccessDenied, psutil.NoSuchProcess, OSError):
+                # Fallback values if we can't access process info
+                process_count = 0
+                thread_count = 0
 
             # Create system usage snapshot
             system_usage = SystemResourceUsage(

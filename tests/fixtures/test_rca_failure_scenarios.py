@@ -34,12 +34,12 @@ class FailureScenario(ReflectiveModule):
 
 class RCAFailureScenarioFixtures(ReflectiveModule):
     """Comprehensive failure scenario fixtures for RCA testing"""
-    
+
     @pytest.fixture
     def synthetic_import_error_scenario(self):
         """Synthetic scenario: Multiple import errors in related modules"""
         base_time = datetime.now()
-        
+
         failures = [
             TestFailureData(
                 test_name="test_pandas_import",
@@ -78,7 +78,7 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
                 pytest_node_id="tests/test_visualization.py::TestVisualization::test_matplotlib_import"
             )
         ]
-        
+
         return FailureScenario(
             name="synthetic_import_error_scenario",
             description="Multiple related import errors for data science dependencies",
@@ -92,12 +92,12 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
                 "fix_suggestion": "pip install pandas numpy matplotlib"
             }
         )
-        
+
     @pytest.fixture
     def synthetic_configuration_error_scenario(self):
         """Synthetic scenario: Configuration file and environment issues"""
         base_time = datetime.now()
-        
+
         failures = [
             TestFailureData(
                 test_name="test_config_file_loading",
@@ -136,7 +136,7 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
                 pytest_node_id="tests/test_security.py::TestSecurity::test_secrets_file"
             )
         ]
-        
+
         return FailureScenario(
             name="synthetic_configuration_error_scenario",
             description="Configuration and environment setup failures",
@@ -150,12 +150,12 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
                 "fix_suggestion": "Create config files and set environment variables"
             }
         )
-        
+
     @pytest.fixture
     def synthetic_network_connectivity_scenario(self):
         """Synthetic scenario: Network and service connectivity issues"""
         base_time = datetime.now()
-        
+
         failures = [
             TestFailureData(
                 test_name="test_api_connection",
@@ -194,7 +194,7 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
                 pytest_node_id="tests/test_cache.py::TestCache::test_redis_connection"
             )
         ]
-        
+
         return FailureScenario(
             name="synthetic_network_connectivity_scenario",
             description="Network connectivity and service availability failures",
@@ -208,12 +208,12 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
                 "fix_suggestion": "Start required services and check network connectivity"
             }
         )
-        
+
     @pytest.fixture
     def real_django_test_failure_scenario(self):
         """Real scenario: Django application test failures"""
         base_time = datetime.now()
-        
+
         failures = [
             TestFailureData(
                 test_name="test_user_model_creation",
@@ -252,7 +252,7 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
                 pytest_node_id="tests/test_templates.py::TestTemplates::test_template_rendering"
             )
         ]
-        
+
         return FailureScenario(
             name="real_django_test_failure_scenario",
             description="Real Django application test failures",
@@ -267,12 +267,12 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
                 "fix_suggestion": "Run migrations and create template files"
             }
         )
-        
+
     @pytest.fixture
     def real_fastapi_test_failure_scenario(self):
         """Real scenario: FastAPI application test failures"""
         base_time = datetime.now()
-        
+
         failures = [
             TestFailureData(
                 test_name="test_api_endpoint_authentication",
@@ -311,7 +311,7 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
                 pytest_node_id="tests/test_models.py::TestModels::test_pydantic_validation"
             )
         ]
-        
+
         return FailureScenario(
             name="real_fastapi_test_failure_scenario",
             description="Real FastAPI application test failures",
@@ -326,12 +326,12 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
                 "fix_suggestion": "Set up database tables and configure authentication"
             }
         )
-        
+
     @pytest.fixture
     def real_data_science_pipeline_scenario(self):
         """Real scenario: Data science pipeline test failures"""
         base_time = datetime.now()
-        
+
         failures = [
             TestFailureData(
                 test_name="test_data_loading",
@@ -370,7 +370,7 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
                 pytest_node_id="tests/test_features.py::TestFeatures::test_feature_engineering"
             )
         ]
-        
+
         return FailureScenario(
             name="real_data_science_pipeline_scenario",
             description="Real data science pipeline test failures",
@@ -385,12 +385,12 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
                 "fix_suggestion": "Provide test data files and handle missing values"
             }
         )
-        
+
     @pytest.fixture
     def complex_mixed_failure_scenario(self):
         """Complex scenario: Mixed failure types across different systems"""
         base_time = datetime.now()
-        
+
         failures = [
             # Infrastructure failure
             TestFailureData(
@@ -458,7 +458,7 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
                 pytest_node_id="tests/test_business.py::TestBusiness::test_business_logic"
             )
         ]
-        
+
         return FailureScenario(
             name="complex_mixed_failure_scenario",
             description="Complex mixed failure types across different systems",
@@ -473,7 +473,7 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
                 "fix_suggestion": "Address infrastructure, dependencies, and configuration issues systematically"
             }
         )
-        
+
     @pytest.fixture
     def all_failure_scenarios(self, synthetic_import_error_scenario, synthetic_configuration_error_scenario,
                              synthetic_network_connectivity_scenario, real_django_test_failure_scenario,
@@ -489,13 +489,13 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
             real_data_science_pipeline_scenario,
             complex_mixed_failure_scenario
         ]
-        
+
     @pytest.fixture
     def performance_stress_scenario(self):
         """Large scenario for performance and stress testing"""
         base_time = datetime.now()
         failures = []
-        
+
         # Generate 200 diverse failures for stress testing
         failure_types = ["error", "assertion", "timeout"]
         error_templates = [
@@ -509,18 +509,18 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
             "KeyError: 'missing_key_{}'",
             "AttributeError: '{}' object has no attribute 'method_{}'"
         ]
-        
+
         for i in range(200):
             failure_type = failure_types[i % 3]
             error_template = error_templates[i % len(error_templates)]
-            
+
             if "Expected {}, got {}" in error_template:
                 error_message = error_template.format(i + 10, i)
             elif "{}" in error_template:
                 error_message = error_template.format(i)
             else:
                 error_message = error_template
-                
+
             failures.append(TestFailureData(
                 test_name=f"test_stress_{i}",
                 test_file=f"tests/test_module_{i % 20}.py",  # Group into 20 files
@@ -538,7 +538,7 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
                 },
                 pytest_node_id=f"tests/test_module_{i % 20}.py::TestStress{i % 10}::test_stress_{i}"
             ))
-            
+
         return FailureScenario(
             name="performance_stress_scenario",
             description="Large-scale scenario for performance and stress testing",
@@ -559,12 +559,12 @@ class RCAFailureScenarioFixtures(ReflectiveModule):
 def create_temporary_test_files(scenario: FailureScenario, temp_dir: str) -> List[str]:
     """Create temporary test files based on scenario failures"""
     created_files = []
-    
+
     for failure in scenario.failures:
         if failure.test_file and failure.test_file != "Makefile":
             file_path = Path(temp_dir) / failure.test_file
             file_path.parent.mkdir(parents=True, exist_ok=True)
-            
+
             # Create a simple test file that would produce the failure
             test_content = f'''"""
 Test file for {failure.test_name}
@@ -572,7 +572,7 @@ This file is created for RCA integration testing
 """
 
 import pytest
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# # from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
 class {failure.test_class or "TestGenerated"}:
@@ -581,10 +581,10 @@ class {failure.test_class or "TestGenerated"}:
         # This test is designed to fail with: {failure.error_message}
         assert False, "Synthetic test failure for RCA testing"
 '''
-            
+
             file_path.write_text(test_content)
             created_files.append(str(file_path))
-            
+
     return created_files
 
 
@@ -613,7 +613,7 @@ def save_scenario_to_json(scenario: FailureScenario, file_path: str):
             for f in scenario.failures
         ]
     }
-    
+
     with open(file_path, 'w') as f:
         json.dump(scenario_data, f, indent=2)
 
@@ -622,7 +622,7 @@ def load_scenario_from_json(file_path: str) -> FailureScenario:
     """Load a failure scenario from JSON file"""
     with open(file_path, 'r') as f:
         data = json.load(f)
-        
+
     failures = [
         TestFailureData(
             test_name=f["test_name"],
@@ -638,7 +638,7 @@ def load_scenario_from_json(file_path: str) -> FailureScenario:
         )
         for f in data["failures"]
     ]
-    
+
     return FailureScenario(
         name=data["name"],
         description=data["description"],
@@ -657,12 +657,12 @@ def load_scenario_from_json(file_path: str) -> FailureScenario:
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -670,7 +670,7 @@ def load_scenario_from_json(file_path: str) -> FailureScenario:
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

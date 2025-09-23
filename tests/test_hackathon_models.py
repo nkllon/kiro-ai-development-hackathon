@@ -24,7 +24,7 @@ from hackathon_demo_framework import (
     JudgeMaterials
 )
 from hackathon_demo_framework.models import (
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
     ValidationResult,
     TechnicalAssessment,
@@ -34,7 +34,7 @@ from src.multi_instance_orchestration.core.reflective_module import ReflectiveMo
 
 class TestHackathonModels(ReflectiveModule):
     """Test suite for hackathon demo framework models."""
-    
+
     def test_hackathon_config_validation(self):
         """Test hackathon configuration validation."""
         # Test valid configuration
@@ -50,7 +50,7 @@ class TestHackathonModels(ReflectiveModule):
             required_elements=["README.md"]
         )
         assert config.hackathon_name == "Valid Hackathon"
-        
+
         # Test invalid configuration - weights don't sum to 100
         with pytest.raises(ValueError, match="must sum to 100%"):
             HackathonConfig(
@@ -64,7 +64,7 @@ class TestHackathonModels(ReflectiveModule):
                 ],
                 required_elements=["README.md"]
             )
-    
+
     def test_demo_script_generation(self):
         """Test demo script structure and timing."""
         demo_script = DemoScript(
@@ -77,12 +77,12 @@ class TestHackathonModels(ReflectiveModule):
             closing_call_to_action="Test closing",
             total_duration=0  # Will be calculated
         )
-        
+
         # Check that timing is calculated correctly
         assert demo_script.total_duration == 510  # Sum of default timings
         assert "opening_hook" in demo_script.timing_breakdown
         assert demo_script.timing_breakdown["opening_hook"] == 30
-    
+
     def test_technical_assessment_calculation(self):
         """Test technical assessment score calculation."""
         assessment = TechnicalAssessment(
@@ -94,11 +94,11 @@ class TestHackathonModels(ReflectiveModule):
             demo_stability_score=88.0,
             overall_technical_score=0  # Will be calculated
         )
-        
+
         # Check that overall score is calculated
         assert assessment.overall_technical_score > 0
         assert 80 <= assessment.overall_technical_score <= 90  # Should be in this range
-    
+
     def test_compliance_assessment_calculation(self):
         """Test compliance assessment score calculation."""
         assessment = ComplianceAssessment(
@@ -109,12 +109,12 @@ class TestHackathonModels(ReflectiveModule):
             team_eligibility=True,
             overall_compliance_score=0  # Will be calculated
         )
-        
+
         # Check that score is calculated based on requirements
         assert assessment.overall_compliance_score > 0
         # Should be penalized for missing tests requirement
         assert assessment.overall_compliance_score < 100
-    
+
     def test_demo_package_readiness(self):
         """Test demo package readiness assessment."""
         # Create a demo package with good scores
@@ -142,15 +142,15 @@ class TestHackathonModels(ReflectiveModule):
                 deadline_compliance=True, team_eligibility=True, overall_compliance_score=0
             )
         )
-        
+
         # Check readiness assessment
         readiness_score = demo_package.get_readiness_score()
         assert readiness_score > 80  # Should be ready with good scores
-        
+
         # Test submission readiness
         is_ready = demo_package.is_submission_ready()
         assert is_ready  # Should be ready with these scores
-    
+
     def test_validation_result_structure(self):
         """Test validation result structure and logic."""
         # Test successful validation
@@ -162,7 +162,7 @@ class TestHackathonModels(ReflectiveModule):
         )
         assert success_result.is_valid
         assert success_result.score == 95.0
-        
+
         # Test failed validation
         failure_result = ValidationResult(
             is_valid=False,
@@ -186,12 +186,12 @@ if __name__ == "__main__":
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -199,7 +199,7 @@ if __name__ == "__main__":
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

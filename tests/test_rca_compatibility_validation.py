@@ -39,18 +39,18 @@ from beast_mode.analysis.rca_engine import FailureCategory
             "test_classes": 5,
             "test_methods": 14
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestPytestVersionCompatibility(ReflectiveModule):
     """Test compatibility with different pytest versions and output formats"""
-    
+
     @pytest.fixture
     def pytest_output_samples(self):
         """Sample pytest outputs from different versions and configurations"""
@@ -157,7 +157,7 @@ _________________ ERROR collecting tests/test_broken.py _________________
 
 tests/test_broken.py:5: in <module>
     from broken_import import something
-from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+# # from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 E   ImportError: No module named 'broken_import'
 """,
@@ -177,37 +177,37 @@ tests/test_setup.py:8: FileNotFoundError
         pass
 """
         }
-        
+
     def test_pytest_output_parsing_compatibility(self, pytest_output_samples):
         """
         Test parsing compatibility with different pytest output formats
         Requirements: 5.1 - Pytest failure analysis
         """
         detector = TestFailureDetector()
-        
+
         for version_name, output in pytest_output_samples.items():
             failures = detector.parse_pytest_output(output)
-            
+
             # Should parse at least one failure from each output format
             assert len(failures) >= 1, f"Failed to parse {version_name} output"
-            
+
             # Verify failure structure
             for failure in failures:
                 assert hasattr(failure, 'test_name'), f"Missing test_name in {version_name}"
                 assert hasattr(failure, 'error_message'), f"Missing error_message in {version_name}"
                 assert hasattr(failure, 'failure_type'), f"Missing failure_type in {version_name}"
                 assert len(failure.error_message) > 0, f"Empty error_message in {version_name}"
-                
+
                 # Verify pytest node ID is extracted
                 assert hasattr(failure, 'pytest_node_id'), f"Missing pytest_node_id in {version_name}"
-                
+
     def test_pytest_version_specific_features(self):
         """
         Test handling of pytest version-specific features
         Requirements: 5.1 - Pytest compatibility
         """
         detector = TestFailureDetector()
-        
+
         # Test pytest 6+ assertion rewriting
         pytest6_assertion = """
 =================================== FAILURES ===================================
@@ -222,21 +222,21 @@ E        +  and   42 > 50
 
 tests/test_complex.py:12: AssertionError
 """
-        
+
         failures = detector.parse_pytest_output(pytest6_assertion)
         assert len(failures) == 1
-        
+
         failure = failures[0]
         assert "assert" in failure.error_message.lower()
         assert failure.failure_type in ["assertion", "error"]
-        
+
     def test_pytest_plugin_compatibility(self):
         """
         Test compatibility with common pytest plugins
         Requirements: 5.1 - Pytest ecosystem compatibility
         """
         detector = TestFailureDetector()
-        
+
         # pytest-xdist output (parallel execution)
         xdist_output = """
 =================================== FAILURES ===================================
@@ -249,11 +249,11 @@ E       AssertionError: Parallel test failure
 
 tests/test_parallel.py:5: AssertionError
 """
-        
+
         failures = detector.parse_pytest_output(xdist_output)
         assert len(failures) == 1
         assert "parallel test failure" in failures[0].error_message.lower()
-        
+
         # pytest-cov output (coverage plugin)
         cov_output = """
 =================================== FAILURES ===================================
@@ -266,7 +266,7 @@ E       NameError: name 'result' is not defined
 
 tests/test_coverage.py:10: NameError
 """
-        
+
         failures = detector.parse_pytest_output(cov_output)
         assert len(failures) == 1
         assert "nameerror" in failures[0].error_message.lower()
@@ -284,18 +284,18 @@ tests/test_coverage.py:10: NameError
             "test_classes": 5,
             "test_methods": 14
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestFailureTypeCategorization(ReflectiveModule):
     """Test categorization of different failure types"""
-    
+
     @pytest.fixture
     def failure_categorization_test_cases(self):
         """Test cases for failure categorization"""
@@ -316,14 +316,14 @@ class TestFailureTypeCategorization(ReflectiveModule):
                 "expected_category": FailureCategory.DEPENDENCY_ISSUE,
                 "test_type": "dependency"
             },
-            
+
             # File system errors
             {
                 "error_message": "FileNotFoundError: [Errno 2] No such file or directory: 'config.json'",
                 "expected_category": FailureCategory.CONFIGURATION_ERROR,
                 "test_type": "filesystem"
             },
-            
+
             # Permission errors
             {
                 "error_message": "PermissionError: [Errno 13] Permission denied: '/root/file'",
@@ -335,7 +335,7 @@ class TestFailureTypeCategorization(ReflectiveModule):
                 "expected_category": FailureCategory.PERMISSION_ISSUE,
                 "test_type": "permission"
             },
-            
+
             # Network connectivity errors
             {
                 "error_message": "ConnectionError: HTTPSConnectionPool(host='api.example.com', port=443)",
@@ -352,7 +352,7 @@ class TestFailureTypeCategorization(ReflectiveModule):
                 "expected_category": FailureCategory.NETWORK_CONNECTIVITY,
                 "test_type": "network"
             },
-            
+
             # Resource exhaustion errors
             {
                 "error_message": "MemoryError: Unable to allocate array",
@@ -369,7 +369,7 @@ class TestFailureTypeCategorization(ReflectiveModule):
                 "expected_category": FailureCategory.RESOURCE_EXHAUSTION,
                 "test_type": "resource"
             },
-            
+
             # Generic test failures
             {
                 "error_message": "AssertionError: Expected 5, got 3",
@@ -387,14 +387,14 @@ class TestFailureTypeCategorization(ReflectiveModule):
                 "test_type": "type"
             }
         ]
-        
+
     def test_failure_categorization_accuracy(self, failure_categorization_test_cases):
         """
         Test accuracy of failure categorization for different error types
         Requirements: 5.1, 5.2, 5.3, 5.4 - Different failure type categorization
         """
         integrator = TestRCAIntegrationEngine()
-        
+
         for test_case in failure_categorization_test_cases:
             # Create test failure
             test_failure = TestFailureData(
@@ -409,29 +409,29 @@ class TestFailureTypeCategorization(ReflectiveModule):
                 test_context={"test_type": test_case['test_type']},
                 pytest_node_id=f"tests/test_{test_case['test_type']}.py::Test{test_case['test_type'].title()}::test_{test_case['test_type']}_failure"
             )
-            
+
             # Convert to RCA failure
             rca_failure = integrator.convert_to_rca_failure(test_failure)
-            
+
             # Verify categorization (allow some flexibility for implementation)
             # The main goal is to ensure categorization doesn't crash and provides some categorization
             assert rca_failure.category is not None, (
                 f"Failed to categorize '{test_case['error_message']}' - got None category"
             )
-            
+
             # For import errors, we expect DEPENDENCY_ISSUE categorization to work
             if "ImportError" in test_case["error_message"] or "ModuleNotFoundError" in test_case["error_message"]:
                 assert rca_failure.category == FailureCategory.DEPENDENCY_ISSUE, (
                     f"Import errors should be categorized as DEPENDENCY_ISSUE, got {rca_failure.category}"
                 )
-            
+
     def test_complex_error_message_parsing(self):
         """
         Test parsing of complex error messages with multiple components
         Requirements: 5.1, 5.2, 5.3, 5.4 - Complex error handling
         """
         integrator = TestRCAIntegrationEngine()
-        
+
         complex_errors = [
             # Chained exceptions
             {
@@ -449,7 +449,7 @@ class TestFailureTypeCategorization(ReflectiveModule):
                 "expected_category": FailureCategory.RESOURCE_EXHAUSTION
             }
         ]
-        
+
         for error_case in complex_errors:
             test_failure = TestFailureData(
                 test_name="test_complex_error",
@@ -463,9 +463,9 @@ class TestFailureTypeCategorization(ReflectiveModule):
                 test_context={"test_type": "complex"},
                 pytest_node_id="tests/test_complex.py::TestComplex::test_complex_error"
             )
-            
+
             rca_failure = integrator.convert_to_rca_failure(test_failure)
-            
+
             # Should categorize complex errors appropriately
             assert rca_failure.category == error_case["expected_category"], (
                 f"Failed to categorize complex error: {error_case['error_message'][:100]}..."
@@ -484,25 +484,25 @@ class TestFailureTypeCategorization(ReflectiveModule):
             "test_classes": 5,
             "test_methods": 14
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestMakeTargetFailureCompatibility(ReflectiveModule):
     """Test compatibility with make target failures"""
-    
+
     def test_make_target_failure_detection(self):
         """
         Test detection and analysis of make target failures
         Requirements: 5.2 - Make target failure analysis
         """
         integrator = TestRCAIntegrationEngine()
-        
+
         make_failure_scenarios = [
             # Make test target failure
             {
@@ -529,7 +529,7 @@ class TestMakeTargetFailureCompatibility(ReflectiveModule):
                 "context": {"target": "clean", "exit_code": 1}
             }
         ]
-        
+
         for scenario in make_failure_scenarios:
             make_failure = TestFailureData(
                 test_name=scenario["test_name"],
@@ -547,22 +547,22 @@ class TestMakeTargetFailureCompatibility(ReflectiveModule):
                 },
                 pytest_node_id=f"Makefile::{scenario['context']['target']}"
             )
-            
+
             # Convert to RCA failure
             rca_failure = integrator.convert_to_rca_failure(make_failure)
-            
+
             # Verify make failure handling
             assert rca_failure.component == "test:Makefile"
             assert "make" in rca_failure.context.get("test_type", "").lower()
             assert rca_failure.context.get("target") == scenario["context"]["target"]
-            
+
     def test_makefile_parsing_compatibility(self):
         """
         Test compatibility with different Makefile structures
         Requirements: 5.2 - Makefile compatibility
         """
         detector = TestFailureDetector()
-        
+
         # Test different make error formats
         make_outputs = [
             # GNU Make error
@@ -592,12 +592,12 @@ test_sample.py::test_function FAILED
 make: *** [Makefile:25: test] Error 1
 """
         ]
-        
+
         for output in make_outputs:
             # Should be able to extract failure information from make output
             # This tests the detector's ability to handle make-wrapped pytest output
             failures = detector.parse_pytest_output(output)
-            
+
             # May not parse make-specific errors, but should handle embedded pytest output
             if "FAILED tests/" in output:
                 assert len(failures) >= 0  # Should at least not crash
@@ -615,25 +615,25 @@ make: *** [Makefile:25: test] Error 1
             "test_classes": 5,
             "test_methods": 14
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestInfrastructureFailureCompatibility(ReflectiveModule):
     """Test compatibility with infrastructure failures"""
-    
+
     def test_docker_failure_analysis(self):
         """
         Test analysis of Docker-related test failures
         Requirements: 5.3 - Infrastructure failure analysis
         """
         integrator = TestRCAIntegrationEngine()
-        
+
         docker_failures = [
             # Container startup failure
             {
@@ -656,7 +656,7 @@ class TestInfrastructureFailureCompatibility(ReflectiveModule):
                 "expected_category": FailureCategory.CONFIGURATION_ERROR
             }
         ]
-        
+
         for i, failure_case in enumerate(docker_failures):
             docker_failure = TestFailureData(
                 test_name=f"test_docker_{i}",
@@ -670,21 +670,21 @@ class TestInfrastructureFailureCompatibility(ReflectiveModule):
                 test_context={"test_type": "infrastructure", "service": "docker"},
                 pytest_node_id=f"tests/test_docker.py::TestDocker::test_docker_{i}"
             )
-            
+
             rca_failure = integrator.convert_to_rca_failure(docker_failure)
-            
+
             # Verify categorization
             assert rca_failure.category == failure_case["expected_category"], (
                 f"Docker failure not categorized correctly: {failure_case['error_message'][:100]}..."
             )
-            
+
     def test_database_failure_analysis(self):
         """
         Test analysis of database-related test failures
         Requirements: 5.3 - Infrastructure failure analysis
         """
         integrator = TestRCAIntegrationEngine()
-        
+
         database_failures = [
             # Connection refused
             {
@@ -707,7 +707,7 @@ class TestInfrastructureFailureCompatibility(ReflectiveModule):
                 "expected_category": FailureCategory.NETWORK_CONNECTIVITY
             }
         ]
-        
+
         for i, failure_case in enumerate(database_failures):
             db_failure = TestFailureData(
                 test_name=f"test_database_{i}",
@@ -721,21 +721,21 @@ class TestInfrastructureFailureCompatibility(ReflectiveModule):
                 test_context={"test_type": "infrastructure", "service": "database"},
                 pytest_node_id=f"tests/test_database.py::TestDatabase::test_database_{i}"
             )
-            
+
             rca_failure = integrator.convert_to_rca_failure(db_failure)
-            
+
             # Verify categorization
             assert rca_failure.category == failure_case["expected_category"], (
                 f"Database failure not categorized correctly: {failure_case['error_message'][:100]}..."
             )
-            
+
     def test_cloud_service_failure_analysis(self):
         """
         Test analysis of cloud service failures
         Requirements: 5.3 - Infrastructure failure analysis
         """
         integrator = TestRCAIntegrationEngine()
-        
+
         cloud_failures = [
             # AWS S3 access denied
             {
@@ -758,7 +758,7 @@ class TestInfrastructureFailureCompatibility(ReflectiveModule):
                 "expected_category": FailureCategory.PERMISSION_ISSUE
             }
         ]
-        
+
         for i, failure_case in enumerate(cloud_failures):
             cloud_failure = TestFailureData(
                 test_name=f"test_cloud_{i}",
@@ -772,9 +772,9 @@ class TestInfrastructureFailureCompatibility(ReflectiveModule):
                 test_context={"test_type": "infrastructure", "service": "cloud"},
                 pytest_node_id=f"tests/test_cloud.py::TestCloud::test_cloud_{i}"
             )
-            
+
             rca_failure = integrator.convert_to_rca_failure(cloud_failure)
-            
+
             # Verify categorization
             assert rca_failure.category == failure_case["expected_category"], (
                 f"Cloud failure not categorized correctly: {failure_case['error_message'][:100]}..."
@@ -793,25 +793,25 @@ class TestInfrastructureFailureCompatibility(ReflectiveModule):
             "test_classes": 5,
             "test_methods": 14
         }
-        
+
         # Assert RDI chain integrity
         assert rdi_validation["chain_integrity"] is True
         assert rdi_validation["traceability_complete"] is True
         assert len(rdi_validation["requirements"]) > 0
-        
+
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
 class TestUnknownFailureTypeHandling(ReflectiveModule):
     """Test handling of unknown failure types"""
-    
+
     def test_unknown_error_graceful_handling(self):
         """
         Test graceful handling of unknown error types
         Requirements: 5.4 - Unknown failure type handling
         """
         integrator = TestRCAIntegrationEngine()
-        
+
         unknown_failures = [
             # Custom exception
             {
@@ -834,7 +834,7 @@ class TestUnknownFailureTypeHandling(ReflectiveModule):
                 "expected_category": FailureCategory.UNKNOWN
             }
         ]
-        
+
         for i, failure_case in enumerate(unknown_failures):
             unknown_failure = TestFailureData(
                 test_name=f"test_unknown_{i}",
@@ -848,27 +848,27 @@ class TestUnknownFailureTypeHandling(ReflectiveModule):
                 test_context={"test_type": "unknown"},
                 pytest_node_id=f"tests/test_unknown.py::TestUnknown::test_unknown_{i}"
             )
-            
+
             # Should handle gracefully without crashing
             try:
                 rca_failure = integrator.convert_to_rca_failure(unknown_failure)
-                
+
                 # Should categorize as unknown
                 assert rca_failure.category == failure_case["expected_category"]
-                
+
                 # Should preserve original information
                 assert rca_failure.component == "test:tests/test_unknown.py"
-                
+
             except Exception as e:
                 pytest.fail(f"Should handle unknown failure gracefully: {e}")
-                
+
     def test_malformed_failure_data_handling(self):
         """
         Test handling of malformed failure data
         Requirements: 5.4 - Robust error handling
         """
         integrator = TestRCAIntegrationEngine()
-        
+
         # Test with various malformed data
         malformed_cases = [
             # Missing required fields
@@ -898,16 +898,16 @@ class TestUnknownFailureTypeHandling(ReflectiveModule):
                 pytest_node_id="tests/test.py::test_invalid_timestamp"
             )
         ]
-        
+
         for i, malformed_failure in enumerate(malformed_cases):
             try:
                 rca_failure = integrator.convert_to_rca_failure(malformed_failure)
-                
+
                 # Should create a valid RCA failure even with malformed input
                 assert hasattr(rca_failure, 'component')
                 assert hasattr(rca_failure, 'category')
                 assert rca_failure.category == FailureCategory.UNKNOWN
-                
+
             except Exception as e:
                 pytest.fail(f"Should handle malformed failure data gracefully (case {i}): {e}")
 
@@ -923,12 +923,12 @@ if __name__ == "__main__":
             'dependencies': [],
             'capabilities': []
         }
-        
+
     def register_module(self, registry):
         """Register module with registry."""
         if hasattr(registry, 'register'):
             registry.register(self.get_interface_metadata())
-            
+
     def health_check(self):
         """Perform health check."""
         return {
@@ -936,7 +936,7 @@ if __name__ == "__main__":
             'timestamp': datetime.now().isoformat(),
             'module_id': getattr(self, 'module_id', self.__class__.__name__)
         }
-        
+
     def get_health_status(self):
         """Get current health status."""
         return self.health_check()

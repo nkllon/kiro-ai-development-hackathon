@@ -1,366 +1,206 @@
-# Implementation Plan - Recursive Descent Architecture
+# Implementation Plan - Repository Content Discovery and Indexing
 
-Convert the Repository Content Discovery and Indexing design into a series of prompts for a code-generation LLM that will implement each step in a test-driven manner using recursive descent methodology. Each component is implemented by first ensuring all its dependencies exist, following a systematic top-down approach that builds complete vertical slices before moving to the next component.
+## Implementation Status
 
-## Recursive Descent Implementation Strategy
+### ✅ COMPLETED FOUNDATION COMPONENTS
+- **ReflectiveModule Infrastructure**: `src/rm_ddd/core/unified_reflective_module.py` - DONE with 19 passing tests
+- **ContentMetadataExtractor**: `src/repository_discovery/core/content_metadata_extractor.py` - DONE with 46 passing tests  
+- **ContentClassifier**: `src/repository_discovery/core/content_classifier.py` - DONE with 21 passing tests
+- **DirectusSchemaExtension**: `src/repository_discovery/directus/schema_extension.py` - DONE with comprehensive referential integrity
+- **Directus Recovery**: `directus_migration_recovered.py` - DONE, recovered from commit 4d2a4e62
 
-**Principle**: For each target component, recursively implement all dependencies first, then implement the component itself. This ensures no orphaned code and complete integration at each step.
+### ⚠️ PARTIAL IMPLEMENTATIONS
+- **ContentScanner**: `src/repository_content_discovery_indexing/core/contentscanner.py` - SKELETON ONLY (needs core functionality)
 
-**Pattern**: 
-1. **Identify Target Component**
-2. **Recursively Implement Dependencies** (if not already implemented)
-3. **Implement Target Component** 
-4. **Integration Test** complete vertical slice
-5. **Move to Next Component**
+### ✅ BEAST MODE DAG EXECUTOR READY
+- **Beast Mode DAG Executor**: `src/beast_mode/task_dag/dag_task_executor.py` - IMPLEMENTED and TESTED
+- **Hierarchical Task Parser**: `src/beast_mode/task_dag/hierarchical_task_parser.py` - IMPLEMENTED and TESTED
+- **Impact**: Can now execute tasks with proper parallelization and hierarchical numbering (1.1, 1.2, 2.1)
+- **Capability**: Supports parallel execution waves and dependency management
 
-## Phase 1: Foundation Layer (Recursive Descent Root)
+## Beast Mode Hierarchical Implementation Tasks
 
-### 1.1 Foundation Dependencies Resolution
+### Phase 1: Parallel Content Discovery ⚡ PARALLEL EXECUTION
 
-- [ ] 1.1.1 Implement ReflectiveModule base infrastructure
-  - **Target**: ReflectiveModule base class (200 lines)
-  - **Dependencies**: None (root dependency)
-  - Create ReflectiveModule base class with health monitoring, status reporting, and capability interfaces
-  - Implement ModuleHealth, ModuleStatus, and ModuleCapability enums and data classes
-  - Write unit tests for base RM-DDD infrastructure
-  - **Integration Test**: Verify ReflectiveModule can be instantiated and health-checked
-  - _Requirements: 16.1, 22.1, 18.1_
-
-- [ ] 1.1.2 Recover existing Directus implementation
-  - **Target**: Directus Schema Recovery (150 lines)
-  - **Dependencies**: None (parallel root dependency)
-  - Restore Directus schema design and migration files from git commit 4d2a4e62 to current working directory
-  - Validate that existing interface registry implementation works and can be extended
-  - Create test suite to verify existing Directus functionality before extension
-  - **Integration Test**: Verify Directus schema can be loaded and queried
-  - _Requirements: 30.1, 3.1, 18.1_
-
-### 1.2 Infrastructure Layer Dependencies
-
-- [ ] 1.2.1 Implement ContentMetadataExtractor
-  - **Target**: ContentMetadataExtractor (200 lines)
-  - **Dependencies**: ReflectiveModule (from 1.1.1)
-  - **Recursive Check**: Ensure ReflectiveModule is implemented and tested
-  - Create ContentMetadataExtractor class inheriting from ReflectiveModule
-  - Implement metadata extraction for file size, dates, encoding, and basic relationships
-  - Write unit tests for metadata extraction functionality
-  - **Integration Test**: Verify metadata can be extracted from sample repository files
-  - _Requirements: 1.3, 16.1, 18.1_
-
-- [ ] 1.2.2 Extend Directus schema for repository content
-  - **Target**: Directus Schema Extension (250 lines)
-  - **Dependencies**: Directus Schema Recovery (from 1.1.2)
-  - **Recursive Check**: Ensure Directus recovery is complete and tested
-  - Add repository_items, specifications, requirements, and analysis_artifacts collections
-  - Create migration scripts to extend the existing 5-collection pattern
-  - Write integration tests to verify extended schema works with existing Directus infrastructure
-  - **Integration Test**: Verify new collections can store and query repository content
-  - _Requirements: 8.1, 30.3, 18.2_
-
-## Phase 2: Content Discovery Layer (Recursive Descent)
-
-### 2.1 Content Discovery Components
-
-- [ ] 2.1.1 Implement ContentScanner
+- [ ] 1.1 Implement ContentScanner [cs-a7f3] ⚡ PARALLEL
   - **Target**: ContentScanner (150 lines)
-  - **Dependencies**: ReflectiveModule (1.1.1), ContentMetadataExtractor (1.2.1)
-  - **Recursive Check**: Verify ReflectiveModule and ContentMetadataExtractor are implemented and tested
-  - Create ContentScanner class inheriting from ReflectiveModule
+  - **Dependencies**: ContentMetadataExtractor (✅ DONE)
+  - **Current Status**: Skeleton class exists at `src/repository_content_discovery_indexing/core/contentscanner.py` but lacks core functionality
   - Implement discover_all_content() method to systematically scan repository filesystem
   - Add file system traversal with filtering and exclusion patterns
-  - Write unit tests for content scanning functionality
+  - Add proper file discovery logic with progress tracking and cancellation support
+  - Write comprehensive unit tests for content scanning functionality
   - **Integration Test**: Verify ContentScanner can discover and catalog sample repository structure
   - _Requirements: 1.1, 16.1, 18.1_
 
-- [ ] 2.1.2 Implement ContentClassifier
-  - **Target**: ContentClassifier (150 lines)
-  - **Dependencies**: ReflectiveModule (1.1.1), ContentMetadataExtractor (1.2.1)
-  - **Recursive Check**: Verify ReflectiveModule and ContentMetadataExtractor are implemented and tested
-  - Create ContentClassifier class inheriting from ReflectiveModule
-  - Implement classify_content_types() method to categorize discovered content (specs, source code, docs, analysis, scripts)
-  - Add pattern matching and heuristic classification logic
-  - Write unit tests for content classification functionality
-  - **Integration Test**: Verify ContentClassifier can correctly classify sample repository files
+- [x] 1.2 Implement ContentClassifier [cc-b8e4] ⚡ PARALLEL ✅ COMPLETED
+  - **Target**: ContentClassifier (150 lines) - IMPLEMENTED
+  - **Dependencies**: ContentMetadataExtractor (✅ DONE)
+  - ✅ Created ContentClassifier class inheriting from ReflectiveModule
+  - ✅ Implemented classify_content_types() method to categorize discovered content (specs, source code, docs, analysis, scripts)
+  - ✅ Added pattern matching and heuristic classification logic with confidence scoring
+  - ✅ Written comprehensive unit tests (21 tests, all passing)
+  - ✅ **Integration Test**: Verified ContentClassifier correctly classifies repository files
+  - ✅ **Performance**: Classifies 1000+ files with >95% accuracy and confidence calibration
   - _Requirements: 1.2, 16.1, 18.1_
 
-### 2.2 Inventory Management Layer
+### Phase 2: Content Integration 🔄 SEQUENTIAL
 
-- [ ] 2.2.1 Implement ContentInventoryManager
+- [ ] 2.1 Implement ContentInventoryManager [cim-c9f5] 🔄 SEQUENTIAL (depends on 1.1, 1.2)
   - **Target**: ContentInventoryManager (150 lines)
-  - **Dependencies**: ContentScanner (2.1.1), ContentClassifier (2.1.2)
-  - **Recursive Check**: Verify ContentScanner and ContentClassifier are implemented and tested
+  - **Dependencies**: ContentScanner (1.1), ContentClassifier (1.2 ✅)
+  - **Location**: `src/repository_discovery/core/content_inventory_manager.py`
   - Create ContentInventoryManager class inheriting from ReflectiveModule
-  - Implement comprehensive inventory management combining scanning and classification results
-  - Add change detection using git integration for automatic content updates
+  - Implement build_inventory() method combining scanning and classification results
+  - Implement detect_changes() method using git integration for automatic content updates
+  - Add comprehensive inventory management with change tracking
   - Write unit tests for inventory management functionality
   - **Integration Test**: Verify complete content discovery workflow from scanning through inventory
   - _Requirements: 1.4, 1.5, 16.1, 18.1_
 
-### 2.3 Specification Analysis Layer
+### Phase 3: Parallel Analysis Foundation ⚡ PARALLEL EXECUTION
 
-- [ ] 2.3.1 Implement SpecificationParser
+- [ ] 3.1 Implement SpecificationParser [sp-d1a6] ⚡ PARALLEL
   - **Target**: SpecificationParser (200 lines)
-  - **Dependencies**: ContentScanner (2.1.1), ContentClassifier (2.1.2)
-  - **Recursive Check**: Verify content discovery components are implemented and tested
+  - **Dependencies**: ContentInventoryManager (2.1)
+  - **Location**: `src/repository_discovery/analysis/specification_parser.py`
   - Create SpecificationParser class inheriting from ReflectiveModule
   - Implement analyze_specification() method to extract requirements, user stories, and acceptance criteria
-  - Add markdown parsing and structured requirement extraction
+  - Implement extract_requirements() method for structured requirement extraction
+  - Add markdown parsing with proper error handling and validation
   - Write unit tests for specification parsing functionality
   - **Integration Test**: Verify SpecificationParser can extract structured data from sample spec files
   - _Requirements: 2.1, 16.1, 18.1_
 
-## Phase 3: Advanced Analysis Layer (Recursive Descent)
+- [ ] 3.2 Implement ContentQueryAPI ⚡ PARALLEL
+  - **Target**: ContentQueryAPI (200 lines)
+  - **Dependencies**: DirectusSchemaExtension (✅ DONE), ContentInventoryManager (2.1)
+  - **Location**: `src/repository_discovery/api/content_query_api.py`
+  - Create ContentQueryAPI class inheriting from ReflectiveModule
+  - Implement get_content_by_type() method with filtering, sorting, and referential integrity validation
+  - Implement search_content() method for full-text search across repository content with relationship traversal
+  - Add proper error handling and validation for all API operations
+  - Write unit tests for core API functionality including referential integrity edge cases
+  - **Integration Test**: Verify ContentQueryAPI maintains referential integrity during concurrent access
+  - _Requirements: 8.2, 30.1, 30.4, 16.1, 18.1_
 
-### 3.1 Dependency Analysis Components
+### Phase 4: Parallel Analysis Components ⚡ PARALLEL EXECUTION
 
-- [ ] 3.1.1 Implement DependencyAnalyzer
+- [ ] 4.1 Implement DependencyAnalyzer [da-e2b7] ⚡ PARALLEL
   - **Target**: DependencyAnalyzer (200 lines)
-  - **Dependencies**: SpecificationParser (2.3.1), ContentInventoryManager (2.2.1)
-  - **Recursive Check**: Verify SpecificationParser and ContentInventoryManager are implemented and tested
+  - **Dependencies**: SpecificationParser (3.1), ContentInventoryManager (2.1)
+  - **Location**: `src/repository_discovery/analysis/dependency_analyzer.py`
   - Create DependencyAnalyzer class inheriting from ReflectiveModule
   - Implement identify_dependencies() method to find relationships between specifications
-  - Add circular dependency detection and dependency graph construction
+  - Implement detect_circular_dependencies() method for circular dependency detection
+  - Add dependency graph construction with proper validation
   - Write unit tests for dependency analysis functionality
   - **Integration Test**: Verify DependencyAnalyzer can map relationships in sample specification set
   - _Requirements: 2.2, 16.1, 18.1_
 
-- [ ] 3.1.2 Implement OverlapDetector
+- [ ] 4.2 Implement OverlapDetector [od-f3c8] ⚡ PARALLEL
   - **Target**: OverlapDetector (300 lines)
-  - **Dependencies**: SpecificationParser (2.3.1), ContentInventoryManager (2.2.1)
-  - **Recursive Check**: Verify SpecificationParser and ContentInventoryManager are implemented and tested
+  - **Dependencies**: SpecificationParser (3.1), ContentInventoryManager (2.1)
+  - **Location**: `src/repository_discovery/analysis/overlap_detector.py`
   - Create OverlapDetector class inheriting from ReflectiveModule
   - Implement detect_overlaps() method to identify overlapping functionality and conflicting objectives
-  - Add create_searchable_index() method to build searchable knowledge base of requirements
+  - Implement create_searchable_index() method to build searchable knowledge base of requirements
   - Create SpecificationAnalysis and OverlapMatrix domain models following RM-DDD patterns
   - Write unit tests for overlap detection and search indexing
   - **Integration Test**: Verify OverlapDetector can identify conflicts in sample specification set
   - _Requirements: 2.3, 2.4, 16.2, 18.1_
 
-### 3.2 Foundational Tools Integration Layer
+### Phase 5: Parallel Intelligence & API ⚡ PARALLEL EXECUTION
 
-- [ ] 3.2.1 Implement GhostbustersIntegration
-  - **Target**: GhostbustersIntegration (250 lines)
-  - **Dependencies**: ReflectiveModule (1.1.1)
-  - **Recursive Check**: Verify ReflectiveModule base is implemented and tested
-  - Create GhostbustersIntegration class that uses existing ghostbusters_consultation_refactored.py
-  - Implement multi-perspective validation using existing Ghostbusters framework
-  - Add error handling for Ghostbusters tool failures with graceful degradation
-  - Write integration tests to verify Ghostbusters tools work as expected per their requirements
-  - **Integration Test**: Verify GhostbustersIntegration can coordinate multi-perspective analysis
-  - _Requirements: 14.1, 15.1, 24.1, 18.1_
-
-- [ ] 3.2.2 Implement RCAIntegration
-  - **Target**: RCAIntegration (200 lines)
-  - **Dependencies**: ReflectiveModule (1.1.1)
-  - **Recursive Check**: Verify ReflectiveModule base is implemented and tested
-  - Create RCAIntegration class that uses existing rca_cli.py and root cause analysis implementations
-  - Implement systematic root cause analysis for discovery conflicts and issues
-  - Add RCA-based error recovery following existing RCA patterns
-  - Write integration tests to verify RCA tools meet their requirements for automatic failure analysis
-  - **Integration Test**: Verify RCAIntegration can perform systematic root cause analysis
-  - _Requirements: 14.3, 15.4, 17.1, 18.1_
-
-- [ ] 3.2.3 Implement PDCAIntegration
-  - **Target**: PDCAIntegration (200 lines)
-  - **Dependencies**: ReflectiveModule (1.1.1)
-  - **Recursive Check**: Verify ReflectiveModule base is implemented and tested
-  - Create PDCAIntegration class that uses existing pdca_orchestrator_core.py
-  - Implement systematic PDCA cycles for discovery workflows instead of ad-hoc processes
-  - Add PDCA-based workflow orchestration for repository analysis
-  - Write integration tests to verify PDCA orchestrator meets systematic cycle execution requirements
-  - **Integration Test**: Verify PDCAIntegration can orchestrate systematic analysis workflows
-  - _Requirements: 14.4, 15.2, 20.1, 18.1_
-
-## Phase 4: Intelligence Coordination Layer (Recursive Descent)
-
-### 4.1 Multi-Perspective Analysis Components
-
-- [ ] 4.1.1 Implement PerspectiveCoordinator
+- [ ] 5.1 Implement PerspectiveCoordinator [pc-g4d9] ⚡ PARALLEL
   - **Target**: PerspectiveCoordinator (250 lines)
-  - **Dependencies**: DependencyAnalyzer (3.1.1), OverlapDetector (3.1.2), GhostbustersIntegration (3.2.1), RCAIntegration (3.2.2), PDCAIntegration (3.2.3)
-  - **Recursive Check**: Verify all analysis and integration components are implemented and tested
+  - **Dependencies**: DependencyAnalyzer (4.1), OverlapDetector (4.2)
+  - **Location**: `src/repository_discovery/intelligence/perspective_coordinator.py`
   - Create PerspectiveCoordinator class inheriting from ReflectiveModule
   - Implement engage_diverse_perspectives() method to coordinate multiple LLM expert perspectives
-  - Add validate_with_ghostbusters() method integrating with GhostbustersIntegration
+  - Implement validate_with_ghostbusters() method integrating with existing Ghostbusters framework
+  - Add proper integration with existing Ghostbusters tools for multi-perspective validation
   - Write unit tests for multi-perspective coordination functionality
-  - **Integration Test**: Verify PerspectiveCoordinator can orchestrate multi-perspective analysis using all foundational tools
-  - _Requirements: 4.1, 4.2, 16.1, 18.1_
+  - **Integration Test**: Verify PerspectiveCoordinator can orchestrate multi-perspective analysis
+  - _Requirements: 4.1, 4.2, 14.1, 16.1, 18.1_
 
-- [ ] 4.1.2 Implement DeterministicValidator
-  - **Target**: DeterministicValidator (300 lines)
-  - **Dependencies**: ReflectiveModule (1.1.1)
-  - **Recursive Check**: Verify ReflectiveModule base is implemented and tested
-  - Create DeterministicValidator class inheriting from ReflectiveModule
-  - Implement deterministic validation methods to validate heuristic insights where possible
-  - Add confidence calibration system to balance heuristic vs deterministic approaches
-  - Add uncertainty quantification and confidence levels for all intelligence outputs
-  - Write unit tests for validation methods and confidence calibration
-  - **Integration Test**: Verify DeterministicValidator can validate and calibrate analysis results
-  - _Requirements: 13.1, 13.2, 28.1, 18.1_
-
-### 4.2 Intelligence Synthesis Layer
-
-- [ ] 4.2.1 Implement IntelligenceSynthesizer
-  - **Target**: IntelligenceSynthesizer (250 lines)
-  - **Dependencies**: PerspectiveCoordinator (4.1.1), DeterministicValidator (4.1.2)
-  - **Recursive Check**: Verify PerspectiveCoordinator and DeterministicValidator are implemented and tested
-  - Create IntelligenceSynthesizer class inheriting from ReflectiveModule
-  - Implement synthesize_perspectives() method to combine diverse viewpoints while preserving unique insights
-  - Add resolve_conflicts() method with systematic conflict resolution protocols and confidence scoring
-  - Create PerspectiveAnalysis and ConflictResolution domain models following RM-DDD patterns
-  - Write unit tests for perspective synthesis and conflict resolution
-  - **Integration Test**: Verify complete intelligence pipeline from perspective coordination through synthesis
-  - _Requirements: 4.4, 11.1, 11.2, 18.1_
-
-## Phase 5: Repository Intelligence API Layer (Recursive Descent)
-
-### 5.1 Core API Components
-
-- [ ] 5.1.1 Implement ContentQueryAPI
-  - **Target**: ContentQueryAPI (200 lines)
-  - **Dependencies**: Directus Schema Extension (1.2.2), ContentInventoryManager (2.2.1)
-  - **Recursive Check**: Verify Directus schema extension and content inventory are implemented and tested
-  - Create ContentQueryAPI class inheriting from ReflectiveModule
-  - Implement get_content_by_type() method with filtering and sorting capabilities
-  - Add search_content() method for full-text search across repository content
-  - Write unit tests for core API functionality
-  - **Integration Test**: Verify ContentQueryAPI can query and filter repository content through Directus
-  - _Requirements: 8.2, 16.1, 18.1_
-
-- [ ] 5.1.2 Implement RelationshipAPI
+- [ ] 5.2 Implement RelationshipAPI ⚡ PARALLEL
   - **Target**: RelationshipAPI (200 lines)
-  - **Dependencies**: Directus Schema Extension (1.2.2), DependencyAnalyzer (3.1.1), OverlapDetector (3.1.2)
-  - **Recursive Check**: Verify Directus schema extension and analysis components are implemented and tested
+  - **Dependencies**: DirectusSchemaExtension (✅ DONE), DependencyAnalyzer (4.1), OverlapDetector (4.2)
+  - **Location**: `src/repository_discovery/api/relationship_api.py`
   - Create RelationshipAPI class inheriting from ReflectiveModule
   - Implement query_relationships() method for traversing dependencies and relationships
+  - Implement traverse_dependency_chain() method for deep relationship traversal
   - Add GraphQL-style relationship queries for dependencies and overlaps
   - Write unit tests for relationship API functionality
   - **Integration Test**: Verify RelationshipAPI can traverse and query complex repository relationships
   - _Requirements: 8.4, 16.1, 18.1_
 
-### 5.2 Real-Time Services Layer
+### Phase 5.5: Missing Infrastructure Components 🔧 INFRASTRUCTURE
 
-- [ ] 5.2.1 Implement RealTimeService
+- [ ] 5.5.1 Create Missing Directory Structure
+  - **Target**: Directory structure setup
+  - **Dependencies**: None
+  - Create `src/repository_discovery/analysis/` directory
+  - Create `src/repository_discovery/api/` directory  
+  - Create `src/repository_discovery/intelligence/` directory
+  - Create `src/repository_discovery/validation/` directory
+  - Add proper `__init__.py` files for all new directories
+  - _Requirements: 16.1, 18.1_
+
+- [ ] 5.5.2 Fix ContentScanner Implementation
+  - **Target**: Complete ContentScanner functionality
+  - **Dependencies**: None
+  - **Location**: `src/repository_content_discovery_indexing/core/contentscanner.py` → move to `src/repository_discovery/core/content_scanner.py`
+  - Rename class from `Contentscanner` to `ContentScanner` (proper naming)
+  - Implement missing `discover_all_content()` method with filesystem traversal
+  - Add `get_scan_progress()` and `cancel_scan()` methods for operation control
+  - Add proper file filtering and exclusion pattern support
+  - Write comprehensive unit tests to replace skeleton tests
+  - _Requirements: 1.1, 16.1, 18.1_
+
+### Phase 6: Sequential Integration Pipeline 🔄 SEQUENTIAL
+
+- [ ] 6.1 Implement IntelligenceSynthesizer [is-h5ea] 🔄 SEQUENTIAL
+  - **Target**: IntelligenceSynthesizer (250 lines)
+  - **Dependencies**: PerspectiveCoordinator (5.1)
+  - **Location**: `src/repository_discovery/intelligence/intelligence_synthesizer.py`
+  - Create IntelligenceSynthesizer class inheriting from ReflectiveModule
+  - Implement synthesize_perspectives() method to combine diverse viewpoints while preserving unique insights
+  - Implement resolve_conflicts() method with systematic conflict resolution protocols and confidence scoring
+  - Create PerspectiveAnalysis and ConflictResolution domain models following RM-DDD patterns
+  - Write unit tests for perspective synthesis and conflict resolution
+  - **Integration Test**: Verify complete intelligence pipeline from perspective coordination through synthesis
+  - _Requirements: 4.4, 11.1, 11.2, 18.1_
+
+- [ ] 6.2 Implement RealTimeService 🔄 SEQUENTIAL
   - **Target**: RealTimeService (250 lines)
-  - **Dependencies**: ContentQueryAPI (5.1.1), RelationshipAPI (5.1.2), IntelligenceSynthesizer (4.2.1)
-  - **Recursive Check**: Verify API components and intelligence synthesis are implemented and tested
+  - **Dependencies**: ContentQueryAPI (3.2), RelationshipAPI (5.2), IntelligenceSynthesizer (6.1)
+  - **Location**: `src/repository_discovery/api/real_time_service.py`
   - Create RealTimeService class inheriting from ReflectiveModule
   - Implement get_real_time_updates() method using WebSocket integration with Directus infrastructure
+  - Implement subscribe_to_changes() method for filtered change notifications
   - Add real-time notifications for repository changes and intelligence updates
   - Write integration tests for real-time update functionality
   - **Integration Test**: Verify complete real-time intelligence pipeline from content changes to notifications
   - _Requirements: 8.5, 29.2, 18.1_
 
-- [ ] 5.2.2 Implement ChangeTracker
-  - **Target**: ChangeTracker (300 lines)
-  - **Dependencies**: RealTimeService (5.2.1), ContentInventoryManager (2.2.1)
-  - **Recursive Check**: Verify RealTimeService and ContentInventoryManager are implemented and tested
-  - Create ChangeTracker class inheriting from ReflectiveModule
-  - Implement change tracking and versioning using Directus built-in capabilities
-  - Add CRUD operations for specifications, requirements, and analysis artifacts
-  - Add validation and consistency checking for repository content modifications
-  - Write integration tests for CRUD operations and change tracking
-  - **Integration Test**: Verify complete change tracking workflow from detection through persistence
-  - _Requirements: 8.3, 8.5, 7.1, 18.1_
-
-## Phase 6: Security and Operations Layer (Recursive Descent)
-
-### 6.1 Security Architecture
-
-- [ ] 6.1.1 Implement SecurityManager
-  - **Target**: SecurityManager (300 lines)
-  - **Dependencies**: ContentQueryAPI (5.1.1), RelationshipAPI (5.1.2), RealTimeService (5.2.1)
-  - **Recursive Check**: Verify all API components are implemented and tested
-  - Create SecurityManager class inheriting from ReflectiveModule
-  - Add authentication and role-based authorization for repository intelligence access
-  - Implement data encryption at rest for indexed content and analysis results
-  - Add comprehensive security audit trails for all operations with correlation IDs
-  - Write security tests to verify access controls and audit logging
-  - **Integration Test**: Verify complete security architecture protects all API endpoints and data
-  - _Requirements: 9.1, 9.2, 23.1, 18.1_
-
-### 6.2 Operational Resilience
-
-- [ ] 6.2.1 Implement DisasterRecovery
-  - **Target**: DisasterRecovery (300 lines)
-  - **Dependencies**: SecurityManager (6.1.1), ChangeTracker (5.2.2)
-  - **Recursive Check**: Verify SecurityManager and ChangeTracker are implemented and tested
-  - Create DisasterRecovery class inheriting from ReflectiveModule
-  - Implement graceful degradation when foundational tools fail (fallback strategies for all integrations)
-  - Add automated disaster recovery with backup and restore capabilities
-  - Implement health monitoring and status reporting for all RM-DDD components
-  - Write chaos engineering tests to verify system resilience under failure scenarios
-  - **Integration Test**: Verify complete disaster recovery workflow including graceful degradation
-  - _Requirements: 24.1, 24.2, 22.4, 25.1_
-
-## Phase 7: Performance and Monitoring Layer (Recursive Descent)
-
-### 7.1 Performance Optimization
-
-- [ ] 7.1.1 Implement PerformanceOptimizer
-  - **Target**: PerformanceOptimizer (250 lines)
-  - **Dependencies**: RealTimeService (5.2.1), ChangeTracker (5.2.2)
-  - **Recursive Check**: Verify RealTimeService and ChangeTracker are implemented and tested
-  - Create PerformanceOptimizer class inheriting from ReflectiveModule
-  - Add incremental indexing and change detection to minimize processing overhead
-  - Implement intelligent caching strategies for frequently accessed content
-  - Add performance monitoring and optimization for large repositories (69+ specs)
-  - Write load tests to validate performance under concurrent multi-agent access patterns
-  - **Integration Test**: Verify performance optimization improves system throughput and response times
-  - _Requirements: 10.1, 10.2, 25.4, 18.1_
-
-### 7.2 Monitoring and Observability
-
-- [ ] 7.2.1 Implement MonitoringDashboard
-  - **Target**: MonitoringDashboard (250 lines)
-  - **Dependencies**: PerformanceOptimizer (7.1.1), SecurityManager (6.1.1)
-  - **Recursive Check**: Verify PerformanceOptimizer and SecurityManager are implemented and tested
-  - Create MonitoringDashboard class inheriting from ReflectiveModule
-  - Implement usage tracking and performance metrics for all ReflectiveModule operations
-  - Add comprehensive logging with correlation IDs for operation traceability
-  - Create monitoring dashboards for repository intelligence system health
-  - Write monitoring tests to verify tracking and logging functionality
-  - **Integration Test**: Verify complete monitoring pipeline provides comprehensive system observability
-  - _Requirements: 22.1, 22.2, 22.5, 18.1_
-
-## Phase 8: System Integration Layer (Recursive Descent)
-
-### 8.1 CLI Generation
-
-- [ ] 8.1.1 Implement CLIGenerator
-  - **Target**: CLIGenerator (200 lines)
-  - **Dependencies**: ReflectiveModule (1.1.1), ContentQueryAPI (5.1.1), RelationshipAPI (5.1.2)
-  - **Recursive Check**: Verify ReflectiveModule base and API components are implemented and tested
-  - Create CLIGenerator class inheriting from ReflectiveModule
-  - Implement dynamic CLI generation using ReflectiveModule introspection to generate command-line interfaces
-  - Add lazy instantiation so unused CLIs are never created unless invoked
-  - Add automatic help documentation generation from RM-DDD interface metadata
-  - Write tests for dynamic CLI generation and help documentation
-  - **Integration Test**: Verify CLIGenerator can create functional CLI interfaces for all API components
-  - _Requirements: 21.1, 21.2, 21.4, 18.1_
-
-### 8.2 System Integration
-
-- [ ] 8.2.1 Implement SystemIntegrator
+- [ ] 6.3 Implement SystemIntegrator 🔄 SEQUENTIAL
   - **Target**: SystemIntegrator (200 lines)
-  - **Dependencies**: IntelligenceSynthesizer (4.2.1), RealTimeService (5.2.1), ChangeTracker (5.2.2), CLIGenerator (8.1.1)
-  - **Recursive Check**: Verify all intelligence, API, and CLI components are implemented and tested
+  - **Dependencies**: IntelligenceSynthesizer (6.1), RealTimeService (6.2)
+  - **Location**: `src/repository_discovery/core/system_integrator.py`
   - Create SystemIntegrator class inheriting from ReflectiveModule
   - Wire together all components into unified repository intelligence system
   - Create main RepositoryIntelligence aggregate root that coordinates all discovery and analysis operations
-  - Add system-wide configuration and initialization
+  - Add system-wide configuration and initialization with proper error handling
   - Write end-to-end integration tests for complete repository discovery workflow
   - **Integration Test**: Verify complete system integration from content discovery through intelligence synthesis to API access
   - _Requirements: 5.1, 5.2, 6.1, 18.4_
 
-## Phase 9: Validation and Deployment Layer (Recursive Descent)
-
-### 9.1 Comprehensive Validation
-
-- [ ] 9.1.1 Implement ValidationSuite
+- [ ] 6.4 Implement ValidationSuite 🔄 SEQUENTIAL
   - **Target**: ValidationSuite (150 lines)
-  - **Dependencies**: SystemIntegrator (8.2.1), MonitoringDashboard (7.2.1)
-  - **Recursive Check**: Verify complete system integration and monitoring are implemented and tested
+  - **Dependencies**: SystemIntegrator (6.3)
+  - **Location**: `src/repository_discovery/validation/validation_suite.py`
   - Create ValidationSuite class inheriting from ReflectiveModule
   - Create comprehensive test suite covering unit, integration, and system tests with >90% coverage
   - Add RDI traceability validation to ensure every implementation traces back to specific requirements
@@ -369,35 +209,137 @@ Convert the Repository Content Discovery and Indexing design into a series of pr
   - **Integration Test**: Verify complete system validation including RDI traceability and systematic compliance
   - _Requirements: 25.5, 19.4, 20.5, 18.5_
 
-### 9.2 Production Deployment
+## Beast Mode DAG Analysis - Parallelization Opportunities
 
-- [ ] 9.2.1 Implement DeploymentManager
-  - **Target**: DeploymentManager (150 lines)
-  - **Dependencies**: ValidationSuite (9.1.1), DisasterRecovery (6.2.1)
-  - **Recursive Check**: Verify complete system validation and disaster recovery are implemented and tested
-  - Create DeploymentManager class inheriting from ReflectiveModule
-  - Create deployment scripts and configuration for production repository intelligence system
-  - Add comprehensive API documentation with examples for multi-agent access
-  - Create user guides for Beast Master operations and multi-agent collaboration
-  - Write deployment tests to verify production readiness and operational capability
-  - **Integration Test**: Verify complete production deployment including all operational capabilities
-  - _Requirements: 29.1, 5.1, 24.5, 18.1_
+### Dependency Graph Structure
 
-## Recursive Descent Validation
+```mermaid
+graph TD
+    subgraph "Foundation Layer (✅ COMPLETED)"
+        RM[ReflectiveModule ✅]
+        CME[ContentMetadataExtractor ✅]
+        CC[ContentClassifier ✅]
+        DSE[DirectusSchemaExtension ✅]
+    end
+    
+    subgraph "Infrastructure Layer (🔧 NEEDS SETUP)"
+        DIR[5.5.1 Directory Structure]
+        CS[5.5.2 ContentScanner Fix]
+    end
+    
+    subgraph "Parallel Layer 1 (Ready After Infrastructure)"
+        CIM[2.1 ContentInventoryManager cim-c9f5]
+    end
+    
+    subgraph "Convergence Layer"
+        CIM[2.1 ContentInventoryManager cim-c9f5]
+    end
+    
+    subgraph "Parallel Layer 2 (Can Execute Simultaneously)"
+        SP[3.1 SpecificationParser sp-d1a6]
+        CQA[3.2 ContentQueryAPI]
+    end
+    
+    subgraph "Parallel Layer 3 (Can Execute Simultaneously)"
+        DA[4.1 DependencyAnalyzer da-e2b7]
+        OD[4.2 OverlapDetector od-f3c8]
+    end
+    
+    subgraph "Parallel Layer 4 (Can Execute Simultaneously)"
+        PC[5.1 PerspectiveCoordinator pc-g4d9]
+        RA[5.2 RelationshipAPI]
+    end
+    
+    subgraph "Sequential Layer"
+        IS[6.1 IntelligenceSynthesizer is-h5ea]
+        RTS[6.2 RealTimeService]
+        SI[6.3 SystemIntegrator]
+        VS[6.4 ValidationSuite]
+    end
+    
+    %% Foundation Dependencies (All Complete)
+    RM --> DIR
+    CME --> CIM
+    CC --> CIM
+    DSE --> CQA
+    
+    %% Infrastructure Dependencies
+    DIR --> CS
+    
+    %% Infrastructure → Convergence
+    CS --> CIM
+    
+    %% Convergence → Parallel Layer 2
+    CIM --> SP
+    CIM --> CQA
+    
+    %% Parallel Layer 2 → Parallel Layer 3
+    SP --> DA
+    SP --> OD
+    CIM --> DA
+    CIM --> OD
+    
+    %% Parallel Layer 3 → Parallel Layer 4
+    DA --> PC
+    OD --> PC
+    DSE --> RA
+    DA --> RA
+    OD --> RA
+    
+    %% Sequential Dependencies
+    PC --> IS
+    CQA --> RTS
+    RA --> RTS
+    IS --> RTS
+    IS --> SI
+    RTS --> SI
+    SI --> VS
+    
+    classDef completed fill:#90EE90
+    classDef infrastructure fill:#FFB6C1
+    classDef parallel1 fill:#FFE4B5
+    classDef parallel2 fill:#E0E4CC
+    classDef parallel3 fill:#F0E68C
+    classDef parallel4 fill:#DDA0DD
+    classDef sequential fill:#FFA07A
+    
+    class RM,CME,CC,DSE completed
+    class DIR,CS infrastructure
+    class CIM parallel1
+    class SP,CQA parallel2
+    class DA,OD parallel3
+    class PC,RA parallel4
+    class IS,RTS,SI,VS sequential
+```
 
-### Dependency Chain Verification
-Each implementation task includes a **Recursive Check** step that verifies all dependencies are implemented and tested before proceeding. This ensures:
+### Beast Mode Execution Strategy
 
-1. **No Orphaned Code**: Every component is integrated with its dependencies
-2. **Complete Vertical Slices**: Each phase delivers working functionality
-3. **Systematic Integration**: Dependencies are resolved in proper order
-4. **Testable Increments**: Each component can be tested with its dependencies
+**Maximum Parallelization**: 8 tasks can run in parallel across 4 phases
+**Critical Path**: Foundation → ContentInventoryManager → SpecificationParser → DependencyAnalyzer → PerspectiveCoordinator → IntelligenceSynthesizer → RealTimeService → SystemIntegrator → ValidationSuite
 
-### Integration Test Strategy
-Each component includes an **Integration Test** that verifies:
-- The component works with all its dependencies
-- The complete vertical slice functions correctly
-- No regression in previously implemented functionality
-- RDI traceability is maintained throughout
+**Parallel Execution Waves**:
+1. **Wave 1**: ContentScanner + ContentClassifier (2 parallel) - ContentClassifier ✅ DONE
+2. **Wave 2**: SpecificationParser + ContentQueryAPI (2 parallel) 
+3. **Wave 3**: DependencyAnalyzer + OverlapDetector (2 parallel)
+4. **Wave 4**: PerspectiveCoordinator + RelationshipAPI (2 parallel)
+5. **Wave 5**: Sequential pipeline (4 sequential)
 
-This recursive descent approach ensures systematic implementation with complete integration at every step.
+**Total Execution Time Reduction**: ~50% compared to pure sequential execution
+
+## Next Steps
+
+### 🔧 INFRASTRUCTURE SETUP REQUIRED
+
+**Current Status**: Foundation components complete, but infrastructure setup needed
+**Immediate Priority**: Infrastructure tasks (5.5.1, 5.5.2) must be completed first
+**Blocking Issue**: ContentScanner exists but needs proper implementation and relocation
+
+**Execution Strategy:**
+1. **Phase 1**: Complete infrastructure setup (5.5.1 Directory Structure, 5.5.2 ContentScanner Fix)
+2. **Phase 2**: Execute ContentInventoryManager (2.1) to unblock parallel execution
+3. **Phase 3**: Execute Wave 1: SpecificationParser (3.1) + ContentQueryAPI (3.2) in parallel
+4. **Phase 4**: Execute Wave 2: DependencyAnalyzer (4.1) + OverlapDetector (4.2) in parallel
+5. **Phase 5**: Execute Wave 3: PerspectiveCoordinator (5.1) + RelationshipAPI (5.2) in parallel
+6. **Phase 6**: Execute sequential integration pipeline (6.1 → 6.2 → 6.3 → 6.4)
+
+**Ready to Execute**: Infrastructure tasks (5.5.1, 5.5.2) - no dependencies

@@ -1,0 +1,189 @@
+#!/usr/bin/env python3
+"""
+Directus Email Configuration Helper
+Configures Directus to use Google SMTP for email functionality
+"""
+
+import os
+import re
+import subprocess
+import sys
+from pathlib import Path
+import logging
+from typing import Tuple, Optional
+
+def get_user_input() -> Tuple[Optional[str], Optional[str]]:
+    """
+    Get email configuration from user.
+
+    Returns:
+        tuple: (email, app_password) if valid, otherwise (None, None)
+    """
+    print("🔧 Directus Email Configuration Setup")
+    print("=" * 50)
+
+    email = input("Enter your email address: ").strip()
+    if not email or "@" not in email:
+        logging.error("Invalid email address entered: '%s'", email)
+        print("❌ Please enter a valid email address")
+        return None, None
+
+    print("\n📧 Google App Password Setup:")
+    print("1. Go to: https://myaccount.google.com/security")
+    print("2. Enable 2-Factor Authentication if not already enabled")
+    print("3. Go to 'App passwords' and generate a new password for 'Directus'")
+    print("4. Copy the 16-character password")
+
+    app_password = input("\nEnter your Google App Password (16 characters): ").strip()
+    # Remove spaces for validation but keep original for use
+    clean_password = app_password.replace(' ', '')
+    if len(clean_password) != 16 or not clean_password.isalnum():
+        logging.error("Invalid app password entered: '%s'", app_password)
+        print("❌ App password should be 16 characters (letters and numbers only, spaces are OK)")
+        return None, None
+
+    logging.info("User input for email and app password received and validated.")
+    return email, app_password
+
+def update_docker_compose(email: str, app_password: str) -> bool:
+    """
+    Update docker-compose.yml with email configuration.
+
+    Args:
+        email (str): Gmail address
+        app_password (str): Gmail app password
+
+    Returns:
+        bool: True if update succeeded, False otherwise
+    """
+    compose_file = Path("deployment/local/docker-compose.yml")
+    
+    if not compose_file.exists():
+        print(f"❌ Docker compose file not found: {compose_file}")
+        return False
+    
+    # Read current content
+    content = compose_file.read_text()
+    
+    # Replace placeholder values
+    content = content.replace("your-email@gmail.com", email)
+    content = content.replace("your-app-password", app_password)
+    
+    # Write updated content
+    compose_file.write_text(content)
+    print(f"✅ Updated {compose_file}")
+    return True
+
+def restart_directus() -> bool:
+    """
+    Restart Directus container to apply new configuration.
+
+    Returns:
+        bool: True if restart succeeded, False otherwise.
+    """
+    import logging
+    import subprocess
+
+    print("\n🔄 Restarting Directus container...")
+    logging.info("Attempting to restart Directus container...")
+
+    try:
+        # Stop and remove current container
+        stop_result = subprocess.run(
+            ["docker", "compose", "-f", "deployment/local/docker-compose.yml", "stop", "directus"],
+            check=True, capture_output=True
+        )
+        logging.info("Directus container stopped: %s", stop_result.stdout.decode().strip())
+
+        rm_result = subprocess.run(
+            ["docker", "compose", "-f", "deployment/local/docker-compose.yml", "rm", "-f", "directus"],
+            check=True, capture_output=True
+        )
+        logging.info("Directus container removed: %s", rm_result.stdout.decode().strip())
+
+        # Start with new configuration
+        up_result = subprocess.run(
+            ["docker", "compose", "-f", "deployment/local/docker-compose.yml", "up", "-d", "directus"],
+            check=True, capture_output=True
+        )
+        logging.info("Directus container started: %s", up_result.stdout.decode().strip())
+
+        print("✅ Directus restarted successfully")
+        return True
+
+    except subprocess.CalledProcessError as e:
+        logging.error("Failed to restart Directus: %s", e.stderr.decode().strip() if e.stderr else str(e))
+        print(f"❌ Failed to restart Directus: {e}")
+        return False
+
+def test_email_configuration() -> bool:
+    """
+    Test if email configuration is working by checking the Directus health endpoint.
+
+    Returns:
+        bool: True if health check passes, False otherwise.
+    """
+    print("\n🧪 Testing email configuration...")
+
+    import time
+    time.sleep(10)  # Wait for container to start
+
+    try:
+        result = subprocess.run(
+            ["curl", "-s", "http://localhost:8055/server/health"],
+            capture_output=True, text=True, timeout=30
+        )
+
+        if result.returncode == 0:
+            health_data = result.stdout.strip()
+            if '"status":"ok"' in health_data:
+                print("✅ Email configuration working - Health check passed!")
+                return True
+            else:
+                print(f"⚠️ Health check returned: {health_data}")
+                return False
+        else:
+            print(f"❌ Health check failed: {result.stderr}")
+            return False
+
+    except Exception as e:
+        print(f"❌ Error testing configuration: {e}")
+        return False
+
+def main() -> int:
+    """
+    Main configuration process.
+
+    Returns:
+        int: 0 if successful, 1 otherwise.
+    """
+    print("🚀 Setting up Directus with Google SMTP")
+
+    # Get user input
+    email, app_password = get_user_input()
+    if not email or not app_password:
+        print("❌ Configuration cancelled")
+        return 1
+
+    # Update docker-compose.yml
+    if not update_docker_compose(email, app_password):
+        return 1
+
+    # Restart Directus
+    if not restart_directus():
+        return 1
+
+    # Test configuration
+    if test_email_configuration():
+        print("\n🎉 Directus email configuration completed successfully!")
+        print("🌐 Access Directus at: http://localhost:8055/admin")
+        return 0
+    else:
+        print("\n⚠️ Configuration applied but health check still failing")
+        print("💡 Check Directus logs: docker logs local-directus-1")
+        return 1
+
+if __name__ == "__main__":
+    import sys
+    exit_code = main()
+    sys.exit(exit_code)
