@@ -1,0 +1,1290 @@
+
+    
+<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WCFRZ3V"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe>
+
+
+    
+
+    
+
+
+
+
+
+
+
+
+    
+    
+    
+  
+
+  
+  
+    
+      
+        
+          
+      
+      
+        
+  
+    
+    
+
+
+      
+      
+        
+          
+  
+    
+  
+
+  
+
+  
+    
+  
+
+
+      
+
+        
+    
+      
+
+  
+
+      
+      
+        
+      
+    
+
+    
+
+    
+  
+        
+  
+  
+    Portfolio
+  
+  
+
+
+
+  
+    Settings
+  
+  
+
+  
+    Help
+  
+  
+
+  
+    Log out
+  
+  
+
+
+
+
+
+    
+      
+  
+  
+    Join a hackathon
+    
+    
+  
+  
+    
+      
+
+  
+    
+    
+      Devpost
+      Participate in our public hackathons
+    
+  
+    
+      Hackathons 
+    
+      Projects 
+  
+
+
+    
+
+    
+      
+
+  
+    
+    
+      Devpost for Teams
+      Access your company's private hackathons
+    
+  
+  
+    
+      Login 
+    
+  
+
+
+    
+  
+
+  
+    Host a hackathon
+    
+    
+  
+  
+    
+      
+
+  
+    
+    
+      Devpost
+      Grow your developer ecosystem and promote your platform
+    
+  
+
+  
+    
+      Host a public hackathon 
+  
+
+
+    
+
+    
+      
+
+  
+    
+    
+      Devpost for Teams
+      Drive innovation, collaboration, and retention within your organization
+    
+  
+
+  
+    
+      Host an internal hackathon 
+  
+
+
+    
+
+    
+      
+
+  
+    By use case
+
+
+      
+        AI hackathons 
+      
+        Customer hackathons 
+      
+        Employee hackathons 
+      
+        Public hackathons 
+  
+
+    
+  
+
+  
+    Resources
+    
+    
+  
+  
+    
+      
+        
+          
+  
+    
+      
+        Blog
+      
+      
+        Insights into hackathon planning and participation
+      
+  
+  
+    
+      
+        Customer stories
+      
+      
+        Inspiration from peers and other industry leaders
+      
+  
+  
+    
+      
+        Planning guides
+      
+      
+        Best practices for planning online and in-person hackathons
+      
+  
+  
+    
+      
+        Webinars & events
+      
+      
+        Upcoming events and on-demand recordings
+      
+  
+  
+    
+      
+        Help desk
+      
+      
+        Common questions and support documentation
+      
+  
+
+        
+      
+    
+  
+
+
+
+
+    
+
+
+  
+  
+    
+      
+        
+  
+    
+    
+
+
+      
+    
+
+    
+  
+      
+  
+
+
+
+  
+    Join a hackathon
+    
+    
+
+  Back
+    
+      
+        
+          
+
+  
+    
+    
+      Devpost
+      Participate in our public hackathons
+    
+  
+    
+      Hackathons 
+    
+      Projects 
+  
+
+
+        
+
+        
+          
+
+  
+    
+    
+      Devpost for Teams
+      Access your company's private hackathons
+    
+  
+  
+    
+      Login 
+    
+  
+
+
+        
+      
+    
+  
+
+
+
+
+
+
+
+  
+    Host a hackathon
+    
+    
+
+  Back
+    
+      
+        
+          
+
+  
+    
+    
+      Devpost
+      Grow your developer ecosystem and promote your platform
+    
+  
+
+  
+    
+      Host a public hackathon 
+  
+
+
+        
+
+        
+          
+
+  
+    
+    
+      Devpost for Teams
+      Drive innovation, collaboration, and retention within your organization
+    
+  
+
+  
+    
+      Host an internal hackathon 
+  
+
+
+        
+
+        
+          
+
+  
+    By use case
+
+
+      
+        AI hackathons 
+      
+        Customer hackathons 
+      
+        Employee hackathons 
+      
+        Public hackathons 
+  
+
+        
+      
+    
+  
+
+
+
+
+
+
+
+  
+    Resources
+    
+    
+
+  Back
+    
+      
+        
+  
+    
+      
+        Blog
+      
+      
+        Insights into hackathon planning and participation
+      
+  
+  
+    
+      
+        Customer stories
+      
+      
+        Inspiration from peers and other industry leaders
+      
+  
+  
+    
+      
+        Planning guides
+      
+      
+        Best practices for planning online and in-person hackathons
+      
+  
+  
+    
+      
+        Webinars & events
+      
+      
+        Upcoming events and on-demand recordings
+      
+  
+  
+    
+      
+        Help desk
+      
+      
+        Common questions and support documentation
+      
+  
+
+      
+    
+  
+
+
+
+
+
+
+      
+        
+          
+            
+          
+
+          
+            
+              
+  
+    
+  
+
+  
+
+  
+    
+  
+
+
+          
+        
+
+          
+  
+  
+
+ 
+
+
+
+
+  
+    
+      
+
+
+    Back
+      
+
+      
+        Portfolio
+      
+      
+
+
+
+      
+        Settings
+      
+      
+
+      
+        Help
+      
+      
+
+      
+        Log out
+      
+      
+
+
+
+    
+  
+
+
+
+      
+    
+
+
+
+
+
+    
+  
+    Notifications
+  
+  
+    Loading...
+  
+  
+  
+
+
+
+
+
+    
+      
+      
+  
+
+
+    #challenge-header h1 a {
+      color: #ffffff;
+    }
+
+  #challenge-header h1.header-image {
+    text-align: center;
+  }
+
+  #challenge-header {
+    background: #003e54 url(https://d112y698adiu2z.cloudfront.net/photos/production/challenge_background_images/003/517/399/datas/original.png) center;
+
+    background-size: cover;
+  }
+
+  ul{
+  margin-left:50px;
+}
+ ol{
+  margin-left:50px;
+}
+#prizes .prize-title {
+  word-break: break-word;
+}
+#eligibility-list:after{
+content: “- Team max size: 3 Eligible Individuals”;
+}
+#challenge-sponsors-mobile div.section-title.bold {
+    display: none;
+}
+#challenge-sponsors-mobile *{
+    display: none;
+}
+#container .panel .unregister-link-wrap::before{
+content: “You’re registered for this competition.“;
+line-height: 4;
+}
+.register-primary-cta {
+    display: none;
+}
+.button-wrapper{
+    display: none !important;
+}
+#register-bar.sticky {
+    display: none !important;
+}
+#my-projects-blank-state {
+    display: none;
+}
+#registration-form {
+ display: none;
+}
+
+
+
+
+
+
+    
+      
+          
+            
+          
+      
+    
+    
+    
+      
+        
+          
+            Descend
+          
+
+          
+        
+            
+              Overview
+
+
+                
+                  My projects
+
+              Participants (10056)
+
+              Resources
+
+              Rules
+
+              
+
+              
+                Project gallery
+
+              
+                Updates
+
+              
+                Discussions
+
+
+                          
+          
+      
+    
+  
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+        
+    
+  
+    
+  The Requirements ARE the Solution - Beast Mode Framework
+
+  
+    Draft
+  
+
+  
+    
+      
+        4/5 steps done
+      
+    
+  
+
+  
+    
+        
+          
+            about 10 hours to deadline
+          
+        
+
+      
+        
+          
+  Preview
+  
+
+
+          
+            
+  Preview
+  
+
+          
+        
+      
+    
+  
+
+
+
+    
+      
+        
+
+
+
+    Prev
+
+    
+      
+    
+
+        
+
+
+      
+        
+      
+
+    Manage team
+
+    
+      
+    
+
+
+
+      
+        
+      
+
+    Project overview
+
+    
+      
+    
+
+
+
+      
+        
+      
+
+    Project details
+
+    
+      
+    
+
+
+
+      
+        
+      
+
+    Additional info
+
+    
+      
+    
+
+
+
+      
+        
+      
+
+    Submit
+
+    
+      
+    
+
+        
+
+
+
+    Next
+
+    
+      
+    
+
+      
+    
+  
+
+
+
+
+    
+      
+        Submit project
+
+        
+          After submitting, you can still edit your project until the submission deadline.
+        
+      
+    
+
+        
+      
+    
+  
+
+
+  
+    
+      
+        
+
+          Terms & conditions
+
+          
+
+            
+              * I, and all of my team members, have read and agree to be bound by the Official Rules and the Devpost Terms of Service.
+            
+
+            
+
+
+            
+
+
+  Submit project
+  Cancel
+
+
+
+
+        
+      
+    
+    
+      
+        
+
+  
+    
+
+      
+
+
+        
+          Edit
+        
+    
+
+    
+
+    
+      
+        The Requirements ARE the Solution - Beast Mode Framework
+        
+      
+
+      
+        A revolutionary AI-powered development framework that transforms requirements into executable solutions, demonstrating 20.4% systematic superiority over ad-hoc development approaches.
+        
+      
+    
+  
+
+
+      
+
+      
+        Teammates
+
+        
+          Manage team
+        
+      
+      
+
+  
+    
+    
+      
+        Lou Springer
+        
+          @louspringer
+        
+      
+    
+  
+
+  
+    
+  
+
+  
+    
+  
+
+
+
+
+    
+  
+
+
+
+
+
+
+      
+    
+
+    
+  
+  
+    
+      
+        Devpost
+        
+          About
+          Careers
+          Contact
+          Help
+        
+      
+    
+
+    
+      
+        Hackathons
+        
+          Browse hackathons
+          Explore projects
+          Host a hackathon
+          Hackathon guides
+        
+      
+    
+
+    
+      
+        Portfolio
+        
+          Your projects
+          Your hackathons
+          Settings
+        
+      
+    
+
+    
+      
+        Connect
+        
+          
+            
+              
+                
+              
+
+              
+                Twitter
+              
+            
+          
+          
+            
+              
+                
+              
+
+              
+                Discord
+              
+            
+          
+          
+            
+              
+                
+              
+              
+                Facebook
+              
+            
+          
+          
+            
+              
+                
+              
+              
+                LinkedIn
+              
+            
+          
+        
+      
+    
+
+  
+
+  
+    
+      
+        
+          © 2025 Devpost, Inc. All rights reserved.
+
+          
+            Community guidelines
+            Security
+            CA notice
+            Privacy policy
+            Terms of service
+          
+        
+      
+    
+  
+
+
+
+
+    
+    
+
+
+
+
+
+  (function() {
+    mixpanel.identify("8930172");
+    mixpanel.register({});
+  })();
+
+
+
+
+
+
+  
+
+
+
+
+  CP.env.addRoutes({
+    follows_url: "https://devpost.com/follows",
+    search_softwares_url: "https://devpost.com/software/search",
+    new_software_url: "https://devpost.com/software/new",
+    search_hackathons_url: "https://devpost.com/api/hackathons",
+    notifications_url: "https://devpost.com/notifications",
+    api: {
+      users_url: "https://api.devpost.com/users"
+    }
+  })
+
+  new Reimagine2();
+
+  $(function onDocumentReady() {
+      CP.TabbedNavigation.setup("#challenge-navigation .top-bar");
+  CP.Challenges.ChallengeStateInfoTimeago.setup('#submission-state-info');
+
+  new CP.Challenges.TimeBasedStyles('#date-info-tag').addStyle();
+  CP.Home.SoftwareMembersApp.start("/software/the-requirements-are-the-solution-beast-mode-framework/members");
+  var eventProps = {"hackathon_name":"Code with Kiro Hackathon","challenge_id":25444,"intending_to_team_up":0};
+
+
+
+  CP.MixpanelProxy.track_forms(
+    "#submission-finalization-form",
+    "Submitted Submission Form",
+    {"hackathon_name":"Code with Kiro Hackathon","challenge_id":25444,"intending_to_team_up":0}
+  )
+  CP.SendFormOnCommandEnter.setup($("#masqueradee"));
+  (function(inputs) {
+    if (typeof inputs.cp_autocomplete === "function") inputs.cp_autocomplete();
+    inputs.on('click', function(event) { return false; });
+  })($("#masqueradee"));
+  var FollowButtonApp = new CP.FollowButtonApp({
+    user: {
+      screen_name: "louspringer",
+      follow_through_id: 8930172
+  },
+    urls: {
+      register_url: "https://secure.devpost.com/users/register",
+      user_follows_url: "https://devpost.com/louspringer/follows",
+      follow_through_url: "",
+      follow_request_url: "https://devpost.com/follow_requests"
+  },
+  follow_through_scope: ""
+  });
+
+  FollowButtonApp.start();
+  var appOptions = {};
+
+  _.extend(appOptions, {
+    user: {
+      id: 8930172,
+      display_name: "Lou Springer"
+    }
+  });
+
+  CP.Mn.app.start(appOptions);
+
+  });
+
+
+
+
+
+
+
+
+
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "url": "https://devpost.com/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://devpost.com/software/search?query={query}",
+      "query-input": "name=query"
+    }
+}
+
+
+
+    
+
+  !function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});
+  window.Beacon('init', '3bb16b8d-01cd-4179-9867-6b29bb5ce056');
+
+
+    
+
+try {mixpanel.track("Logged In Pageview", {"time":1757924684,"ip":" 172.31.61.63","distinct_id":"8930172","page_name":"participants/manage/finalizations#show","orgs":[]});} catch(err) {};
+
+
+
+var config={apiKey:"[REDACTED]",product:"PRO",initialState:"NOTIFY",position:"LEFT",excludedCountries:"all",necessaryCookies:["__zlcmid","__mp_opt_in_out_*","platform.notifications.newsletter.dismissed","AWSALB","AWSALBCORS"],onLoad:function(){CookieControl.geoInfo().withinEU&&dataLayer.push({event:"euCleanUp"})},optionalCookies:[{name:"analytics",label:"Analytical Cookies",description:"Analytical cookies help us to improve our website by collecting and reporting information on its usage.",
+cookies:["_ga","_gid","_gat_*","mp_*"],onAccept:function(){dataLayer.push({event:"acceptAnalytics"});dataLayer.push({has_accepted_analytics:!0})},onRevoke:function(){dataLayer.push({event:"revokeAnalytics"});dataLayer.push({has_accepted_analytics:!1})},recommendedState:!0},{name:"marketing",label:"Marketing Cookies",description:"We use marketing cookies to help us improve the relevancy of advertising campaigns you receive.",cookies:"_rdt_uuid _fbp _hstc __hssc __hssrc NID ANID IDE _gads _gac_ _gcl_".split(" "),
+onAccept:function(){dataLayer.push({event:"acceptMarketing"});dataLayer.push({has_accepted_marketing:!0})},onRevoke:function(){dataLayer.push({event:"revokeMarketing"});dataLayer.push({has_accepted_marketing:!1})},recommendedState:!0,thirdPartyCookies:[{name:"Google Ads",optOutLink:"https://policies.google.com/technologies/ads?hl\x3den"},{name:"Twitter Ads",optOutLink:"https://help.twitter.com/en/safety-and-security/privacy-controls-for-tailored-ads"},{name:"Facebook Ads",optOutLink:"https://www.facebook.com/policy/cookies/ "},
+{name:"LinkedIn Ads",optOutLink:"https://www.linkedin.com/psettings/guest-controls/retargeting-opt-out?trk\x3dmicrosites-frontend_legal_cookie-policy"},{name:"Reddit Ads",optOutLink:"https://www.redditinc.com/policies/privacy-policy"},{name:"Hubspot",optOutLink:"https://knowledge.hubspot.com/privacy-and-consent/what-cookies-does-hubspot-set-in-a-visitor-s-browser#analytics-cookies"}]},{name:"socialsharing",label:"Social Sharing Cookies",description:"We use some social sharing plugins, to allow you to share certain pages of our website on social media",
+cookies:["__atuvc","__atuvs"],onAccept:function(){dataLayer.push({event:"acceptSocialSharing"})},onRevoke:function(){dataLayer.push({event:"revokeSocialSharing"})},recommendedState:!0,thirdPartyCookies:[{name:"AddThis",optOutLink:"http://www.addthis.com/privacy/opt-out"}]}]};CookieControl.load(config);
+
+
+#ccc-icon { margin-bottom: 0; }
+.BeaconFabButtonFrame {
+  border: none;
+  bottom: 40px;
+  box-shadow: 0 4px 7px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  right: 40px;
+  top: auto;
+  transition:
+    box-shadow 250ms ease,
+    opacity 0.4s ease,
+    scale 0.125s ease-in-out,
+    transform 0.2s ease-in-out;
+}
+
+.BeaconFabButtonFrame:hover {
+    scale: 1.125;
+  }
+
+.BeaconFabButtonFrame:active {
+    box-shadow: none;
+  }
+
+.BeaconFabButtonFrame iframe {
+    border: none;
+    height: 100%;
+    width: 100%;
+    color-scheme: light !important;
+  }
+
+@media (max-height: 740px) {
+
+.BeaconFabButtonFrame {
+    bottom: 10px;
+    right: 20px;
+}
+  }
+
+@supports (--css: variables) {
+  .BeaconFabButtonPulse svg {
+    display: none;
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: var(--pulse-top-offset);
+    left: var(--pulse-left-offset);
+    fill: var(--pulse-background);
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .BeaconFabButtonPulse.is-visible svg {
+    display: block !important;
+    opacity: 0.2;
+    animation:
+      1.03s cubic-bezier(0.28, 0.53, 0.7, 1) pulse-scale 0.13s both,
+      0.76s cubic-bezier(0.42, 0, 0.58, 1) pulse-fade-out 0.4s both;
+  }
+
+  @keyframes pulse-scale {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(4);
+    }
+  }
+
+  @keyframes pulse-fade-out {
+    0% {
+      opacity: 0.2;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+}
+
+.BeaconFabButtonFrame--left {
+  left: 40px;
+  right: initial;
+}
+
+@media (max-height: 740px) {
+
+.BeaconFabButtonFrame--left {
+    left: 20px;
+    right: initial;
+}
+  }
+
+  
+
+"undefined"==typeof mixpanel||mixpanel.has_opted_in_tracking()||mixpanel.opt_in_tracking({track:function(){}});
+"undefined"!=typeof fbq&&fbq("consent","grant");
+
+
+"undefined"!=typeof DEVPOST_ADDTHIS&&DEVPOST_ADDTHIS.hide();
+"undefined"!=typeof twttr&&twttr.conversion.trackPid("l6ngp",{tw_sale_amount:0,tw_order_quantity:0});

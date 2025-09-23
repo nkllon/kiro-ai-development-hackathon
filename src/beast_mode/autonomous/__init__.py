@@ -1,1 +1,0 @@
-# Beast Mode Framework - Autonomous PDCA Orchestration

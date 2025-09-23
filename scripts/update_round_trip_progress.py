@@ -81,7 +81,9 @@ def update_project_model():
         if todo.get("id") == "fix_code_generation_duplication":
             todo["status"] = "completed"
             todo["completed"] = datetime.now().isoformat()
-            todo["details"]["current_state"] = "Modular round-trip system implemented with duplication cleaning"
+            todo["details"][
+                "current_state"
+            ] = "Modular round-trip system implemented with duplication cleaning"
             todo["details"]["next_steps"] = [
                 "Fix code generation to build complete model first instead of in-line generation",
                 "Validate activity models and expected behavior",
@@ -134,7 +136,9 @@ def update_project_model():
     print("✅ Added new todo for code generation approach fix")
 
     # Update the reason and description
-    domain["reason"] = "Modular round-trip engineering system with ontological vocabulary alignment, comprehensive testing, and cProfile integration"
+    domain["reason"] = (
+        "Modular round-trip engineering system with ontological vocabulary alignment, comprehensive testing, and cProfile integration"
+    )
 
     # Save the updated model
     with open(model_path, "w") as f:

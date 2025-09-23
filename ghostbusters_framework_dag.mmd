@@ -1,0 +1,62 @@
+graph TD
+    ReflectiveModule["ReflectiveModule<br/>Core"]
+    AgentLifecycleManager["AgentLifecycleManager<br/>AgentManagement"]
+    PerspectiveAnalysisCoordinator["PerspectiveAnalysisCoordinator<br/>AgentManagement"]
+    PerspectiveSelector["PerspectiveSelector<br/>AgentManagement"]
+    SecurityExpert["SecurityExpert<br/>SpecializedAgent"]
+    ArchitectureExpert["ArchitectureExpert<br/>SpecializedAgent"]
+    RequirementsExpert["RequirementsExpert<br/>SpecializedAgent"]
+    ConsensusDetector["ConsensusDetector<br/>Synthesis"]
+    UniqueInsightPreserver["UniqueInsightPreserver<br/>Synthesis"]
+    ConflictAnalysisResolver["ConflictAnalysisResolver<br/>Synthesis"]
+    DiversityValidator["DiversityValidator<br/>QualityValidation"]
+    QualityComparisonBaseline["QualityComparisonBaseline<br/>QualityValidation"]
+    HumanAnalysisPresenter["HumanAnalysisPresenter<br/>HumanCollaboration"]
+    HumanFeedbackIntegrator["HumanFeedbackIntegrator<br/>HumanCollaboration"]
+    GhostbustersConsultation["GhostbustersConsultation<br/>Ghostbusters"]
+    ReflectiveModule --> AgentLifecycleManager
+    ReflectiveModule --> PerspectiveAnalysisCoordinator
+    AgentLifecycleManager --> PerspectiveAnalysisCoordinator
+    ReflectiveModule --> PerspectiveSelector
+    ReflectiveModule --> SecurityExpert
+    ReflectiveModule --> ArchitectureExpert
+    ReflectiveModule --> RequirementsExpert
+    ReflectiveModule --> ConsensusDetector
+    SecurityExpert --> ConsensusDetector
+    ArchitectureExpert --> ConsensusDetector
+    RequirementsExpert --> ConsensusDetector
+    ReflectiveModule --> UniqueInsightPreserver
+    SecurityExpert --> UniqueInsightPreserver
+    ArchitectureExpert --> UniqueInsightPreserver
+    RequirementsExpert --> UniqueInsightPreserver
+    ReflectiveModule --> ConflictAnalysisResolver
+    SecurityExpert --> ConflictAnalysisResolver
+    ArchitectureExpert --> ConflictAnalysisResolver
+    RequirementsExpert --> ConflictAnalysisResolver
+    ReflectiveModule --> DiversityValidator
+    ConsensusDetector --> DiversityValidator
+    UniqueInsightPreserver --> DiversityValidator
+    ReflectiveModule --> QualityComparisonBaseline
+    DiversityValidator --> QualityComparisonBaseline
+    ReflectiveModule --> HumanAnalysisPresenter
+    ConsensusDetector --> HumanAnalysisPresenter
+    UniqueInsightPreserver --> HumanAnalysisPresenter
+    ConflictAnalysisResolver --> HumanAnalysisPresenter
+    ReflectiveModule --> HumanFeedbackIntegrator
+    HumanAnalysisPresenter --> HumanFeedbackIntegrator
+    ReflectiveModule --> GhostbustersConsultation
+
+    classDef core fill:#e1f5fe
+    class ReflectiveModule core
+    classDef agentmanagement fill:#f3e5f5
+    class AgentLifecycleManager,PerspectiveAnalysisCoordinator,PerspectiveSelector agentmanagement
+    classDef specializedagent fill:#e8f5e8
+    class SecurityExpert,ArchitectureExpert,RequirementsExpert specializedagent
+    classDef synthesis fill:#fff3e0
+    class ConsensusDetector,UniqueInsightPreserver,ConflictAnalysisResolver synthesis
+    classDef qualityvalidation fill:#fce4ec
+    class DiversityValidator,QualityComparisonBaseline qualityvalidation
+    classDef humancollaboration fill:#f1f8e9
+    class HumanAnalysisPresenter,HumanFeedbackIntegrator humancollaboration
+    classDef ghostbusters fill:#ffebee
+    class GhostbustersConsultation ghostbusters

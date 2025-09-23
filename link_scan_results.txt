@@ -1,0 +1,115 @@
+2025-09-16 14:00:32,052 - INFO - 🔍 Checking links in current files...
+2025-09-16 14:00:32,996 - INFO - Found 14457 current files to check
+
+============================================================
+🔍 FOCUSED REPOSITORY LINK CHECK SUMMARY
+============================================================
+Method: focused_current_files
+Files Checked: 14457
+Total Links: 20254
+Valid Links: 9453
+Broken Links: 10801
+
+❌ Broken Links:
+  File: kiro_simone_adapter/README.md
+  Link: /legacy/README.md
+  Text: → Get started with Legacy Simone
+  Error: File not found: /legacy/README.md
+
+  File: kiro_simone_adapter/README.md
+  Link: /mcp-server/README.md
+  Text: → Get started with MCP Simone
+  Error: File not found: /mcp-server/README.md
+
+  File: kiro_simone_adapter/README.md
+  Link: /legacy
+  Text: `/legacy`
+  Error: File not found: /legacy
+
+  File: kiro_simone_adapter/README.md
+  Link: /mcp-server
+  Text: `/mcp-server`
+  Error: File not found: /mcp-server
+
+  File: kiro_simone_adapter/README.md
+  Link: /hello-simone
+  Text: `/hello-simone`
+  Error: File not found: /hello-simone
+
+  File: kiro_simone_adapter/documentation/introduction.md
+  Link: /legacy-installation
+  Text: **Legacy System Installation**
+  Error: File not found: /legacy-installation
+
+  File: kiro_simone_adapter/documentation/introduction.md
+  Link: /mcp-installation
+  Text: **MCP Server Installation**
+  Error: File not found: /mcp-installation
+
+  File: kiro_simone_adapter/legacy/.claude/commands/simone/plan_milestone.md
+  Link: 02_REQUIREMENTS/M##_Milestone_Name/M##_milestone_meta.md
+  Text: M##
+  Error: File not found: /Users/lou/kiro-2/kiro-ai-development-hackathon/kiro_simone_adapter/legacy/.claude/commands/simone/02_REQUIREMENTS/M##_Milestone_Name/M##_milestone_meta.md
+
+  File: kiro_simone_adapter/legacy/.claude/commands/simone/create_general_task.md
+  Link: 04_GENERAL_TASKS/T###_Title.md
+  Text: T###
+  Error: File not found: /Users/lou/kiro-2/kiro-ai-development-hackathon/kiro_simone_adapter/legacy/.claude/commands/simone/04_GENERAL_TASKS/T###_Title.md
+
+  File: kiro_simone_adapter/legacy/.claude/commands/simone/mermaid.md
+  Link: ./context_diagram.md
+  Text: System Context
+  Error: File not found: /Users/lou/kiro-2/kiro-ai-development-hackathon/kiro_simone_adapter/legacy/.claude/commands/simone/context_diagram.md
+
+  File: kiro_simone_adapter/legacy/.claude/commands/simone/mermaid.md
+  Link: ./module_overview.md
+  Text: Module Overview
+  Error: File not found: /Users/lou/kiro-2/kiro-ai-development-hackathon/kiro_simone_adapter/legacy/.claude/commands/simone/module_overview.md
+
+  File: kiro_simone_adapter/legacy/.claude/commands/simone/mermaid.md
+  Link: ./class_diagrams/core_classes.md
+  Text: Core Classes
+  Error: File not found: /Users/lou/kiro-2/kiro-ai-development-hackathon/kiro_simone_adapter/legacy/.claude/commands/simone/class_diagrams/core_classes.md
+
+  File: kiro_simone_adapter/legacy/.claude/commands/simone/mermaid.md
+  Link: ./class_diagrams/data_models.md
+  Text: Data Models
+  Error: File not found: /Users/lou/kiro-2/kiro-ai-development-hackathon/kiro_simone_adapter/legacy/.claude/commands/simone/class_diagrams/data_models.md
+
+  File: kiro_simone_adapter/legacy/.claude/commands/simone/mermaid.md
+  Link: ./class_diagrams/service_layer.md
+  Text: Service Layer
+  Error: File not found: /Users/lou/kiro-2/kiro-ai-development-hackathon/kiro_simone_adapter/legacy/.claude/commands/simone/class_diagrams/service_layer.md
+
+  File: kiro_simone_adapter/legacy/.simone/00_PROJECT_MANIFEST.md
+  Link: ./02_REQUIREMENTS/M01_[Milestone_Name]/
+  Text: Current Milestone Requirements
+  Error: File not found: /Users/lou/kiro-2/kiro-ai-development-hackathon/kiro_simone_adapter/legacy/.simone/02_REQUIREMENTS/M01_[Milestone_Name]
+
+  File: kiro_simone_adapter/legacy/.simone/00_PROJECT_MANIFEST.md
+  Link: ./04_GENERAL_TASKS/
+  Text: General Tasks
+  Error: Path is directory, not file: /Users/lou/kiro-2/kiro-ai-development-hackathon/kiro_simone_adapter/legacy/.simone/04_GENERAL_TASKS
+
+  File: kiro_simone_adapter/legacy/.simone/00_PROJECT_MANIFEST.md
+  Link: 02_REQUIREMENTS/M02_Documentation_Enhancement/M02_milestone_meta.md
+  Text: M02
+  Error: File not found: /Users/lou/kiro-2/kiro-ai-development-hackathon/kiro_simone_adapter/legacy/.simone/02_REQUIREMENTS/M02_Documentation_Enhancement/M02_milestone_meta.md
+
+  File: kiro_simone_adapter/legacy/.simone/00_PROJECT_MANIFEST.md
+  Link: ./03_SPRINTS/S01_M01_[Sprint_Name]/
+  Text: S01 Sprint Folder
+  Error: File not found: /Users/lou/kiro-2/kiro-ai-development-hackathon/kiro_simone_adapter/legacy/.simone/03_SPRINTS/S01_M01_[Sprint_Name]
+
+  File: kiro_simone_adapter/legacy/.simone/00_PROJECT_MANIFEST.md
+  Link: ./10_STATE_OF_PROJECT/
+  Text: Latest Review
+  Error: File not found: /Users/lou/kiro-2/kiro-ai-development-hackathon/kiro_simone_adapter/legacy/.simone/10_STATE_OF_PROJECT
+
+  File: kiro_simone_adapter/legacy/.simone/02_REQUIREMENTS/M01_Backend_Setup/M01_milestone_meta.md
+  Link: ../../03_SPRINTS/S02_M01_Database_Integration/S02_sprint_meta.md
+  Text: S02_M01_Database_Integration
+  Error: File not found: /Users/lou/kiro-2/kiro-ai-development-hackathon/kiro_simone_adapter/legacy/.simone/03_SPRINTS/S02_M01_Database_Integration/S02_sprint_meta.md
+
+  ... and 10781 more
+============================================================

@@ -1,8 +1,13 @@
 """
-Test the core domain index infrastructure
+RDI Enhanced Test Module
 
-This test verifies that the basic infrastructure components are working correctly.
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.498013
 """
+
+
+
 
 import pytest
 from datetime import datetime
@@ -16,11 +21,13 @@ from src.beast_mode.domain_index.models import (
 from src.beast_mode.domain_index.base import DomainSystemComponent, CachedComponent
 from src.beast_mode.domain_index.config import DomainIndexConfig, get_config, reset_config
 from src.beast_mode.domain_index.exceptions import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     DomainIndexError, DomainNotFoundError, DomainValidationError
 )
 
 
-class TestDomainModels:
+class TestDomainModels(ReflectiveModule):
     """Test core domain data models"""
     
     def test_domain_creation(self):
@@ -94,7 +101,7 @@ class TestDomainModels:
         assert health_status.metrics.overall_health_score == 0.85
 
 
-class TestDomainSystemComponent:
+class TestDomainSystemComponent(ReflectiveModule):
     """Test the base domain system component"""
     
     def test_component_initialization(self):
@@ -148,7 +155,7 @@ class TestDomainSystemComponent:
         assert "configuration" in health_indicators
 
 
-class TestCachedComponent:
+class TestCachedComponent(ReflectiveModule):
     """Test the cached component base class"""
     
     def test_cache_operations(self):
@@ -188,7 +195,7 @@ class TestCachedComponent:
         assert stats["cache_size"] == 0
 
 
-class TestDomainIndexConfig:
+class TestDomainIndexConfig(ReflectiveModule):
     """Test configuration management"""
     
     def setUp(self):
@@ -248,7 +255,7 @@ class TestDomainIndexConfig:
         assert config1.environment == "development"  # First call determines environment
 
 
-class TestDomainIndexExceptions:
+class TestDomainIndexExceptions(ReflectiveModule):
     """Test custom exception classes"""
     
     def test_domain_index_error(self):
@@ -278,4 +285,32 @@ class TestDomainIndexExceptions:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__])

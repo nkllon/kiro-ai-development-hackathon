@@ -1,0 +1,1529 @@
+"""
+Collaboration Scheduler Core
+
+This module was extracted from collaboration_scheduler.py
+as part of RM-DDD compliance refactoring.
+"""
+
+import asyncio
+import json
+import logging
+from datetime import datetime, timedelta, time
+from enum import Enum
+from typing import Any, Dict, List, Optional, Set, Tuple, Callable
+from dataclasses import dataclass, field
+from pydantic import BaseModel, Field
+import uuid
+from .models import BeastModeMessage, MessageType, AgentCapabilities
+
+
+class CollaborationStatus(str, Enum):
+    """Status of collaboration sessions"""
+
+    SCHEDULED = "scheduled"
+    ACTIVE = "active"
+    COMPLETED = "completed"
+    CANCELLED = "cancelled"
+    EXPIRED = "expired"
+
+
+class CollaborationType(str, Enum):
+    """Types of collaboration sessions"""
+
+    OFFICE_HOURS = "office_hours"
+    SCHEDULED_SESSION = "scheduled_session"
+    AD_HOC = "ad_hoc"
+    KNOWLEDGE_EXCHANGE = "knowledge_exchange"
+    SPORE_SHARING = "spore_sharing"
+    PROBLEM_SOLVING = "problem_solving"
+
+
+class OfficeHoursPattern(str, Enum):
+    """Office hours scheduling patterns"""
+
+    DAILY = "daily"
+    WEEKLY = "weekly"
+    WEEKDAYS = "weekdays"
+    WEEKENDS = "weekends"
+    CUSTOM = "custom"
+
+
+@dataclass
+class OfficeHours:
+    """Office hours configuration for an agent"""
+
+    agent_id: str
+    pattern: OfficeHoursPattern
+    start_time: time
+    end_time: time
+    timezone: str = "UTC"
+    days_of_week: Optional[Set[int]] = None
+    description: str = ""
+    capabilities_focus: List[str] = field(default_factory=list)
+    max_concurrent_sessions: int = 3
+    session_duration_minutes: int = 30
+    created_at: datetime = field(default_factory=datetime.now)
+    is_active: bool = True
+
+
+@dataclass
+class CollaborationSession:
+    """A collaboration session between agents"""
+
+    session_id: str = field(default_factory=lambda: str(uuid.uuid4()))
+    session_type: CollaborationType = CollaborationType.AD_HOC
+    organizer_id: str = ""
+    participants: List[str] = field(default_factory=list)
+    scheduled_start: Optional[datetime] = None
+    scheduled_end: Optional[datetime] = None
+    actual_start: Optional[datetime] = None
+    actual_end: Optional[datetime] = None
+    status: CollaborationStatus = CollaborationStatus.SCHEDULED
+    topic: str = ""
+    description: str = ""
+    required_capabilities: List[str] = field(default_factory=list)
+    collaboration_data: Dict[str, Any] = field(default_factory=dict)
+    success_metrics: Dict[str, Any] = field(default_factory=dict)
+    created_at: datetime = field(default_factory=datetime.now)
+    updated_at: datetime = field(default_factory=datetime.now)
+
+
+@dataclass
+class CollaborationPattern:
+    """Recognized collaboration pattern"""
+
+    pattern_id: str = field(default_factory=lambda: str(uuid.uuid4()))
+    pattern_type: str = ""
+    participants: List[str] = field(default_factory=list)
+    frequency: int = 0
+    success_rate: float = 0.0
+    avg_duration_minutes: float = 0.0
+    common_topics: List[str] = field(default_factory=list)
+    optimal_time_slots: List[Tuple[time, time]] = field(default_factory=list)
+    capabilities_involved: List[str] = field(default_factory=list)
+    last_occurrence: Optional[datetime] = None
+    confidence_score: float = 0.0
+
+
+class CollaborationScheduler:
+    """Manages collaboration scheduling and session coordination"""
+
+    def __init__(self, agent_id: str):
+        self.agent_id = agent_id
+        self.office_hours: Dict[str, OfficeHours] = {}
+        self.sessions: Dict[str, CollaborationSession] = {}
+        self.active_sessions: Set[str] = set()
+        self.collaboration_patterns: Dict[str, CollaborationPattern] = {}
+        self.pattern_analysis_enabled = True
+        self.offline_collaboration_queue: List[Dict[str, Any]] = []
+        self.collaboration_callbacks: Dict[str, Callable] = {}
+        self.collaboration_stats = {
+            "total_sessions": 0,
+            "successful_sessions": 0,
+            "average_duration": 0.0,
+            "most_active_hours": {},
+            "capability_usage": {},
+            "pattern_matches": 0,
+        }
+        self._cleanup_task: Optional[asyncio.Task] = None
+        self._pattern_analysis_task: Optional[asyncio.Task] = None
+        self._running = False
+
+    def start_background_tasks(self) -> None:
+        """Start background tasks for cleanup and pattern analysis"""
+        if not self._running:
+            self._running = True
+            self._cleanup_task = asyncio.create_task(self._cleanup_loop())
+            if self.pattern_analysis_enabled:
+                self._pattern_analysis_task = asyncio.create_task(
+                    self._pattern_analysis_loop()
+                )
+            logger.info("Started collaboration scheduler background tasks")
+
+    def stop_background_tasks(self) -> None:
+        """Stop background tasks"""
+        self._running = False
+        if self._cleanup_task:
+            self._cleanup_task.cancel()
+            self._cleanup_task = None
+        if self._pattern_analysis_task:
+            self._pattern_analysis_task.cancel()
+            self._pattern_analysis_task = None
+        logger.info("Stopped collaboration scheduler background tasks")
+
+    async def _cleanup_loop(self) -> None:
+        """Background cleanup of expired sessions and old data"""
+        while self._running:
+            try:
+                await asyncio.sleep(300)
+                self._cleanup_expired_sessions()
+                self._cleanup_old_patterns()
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                logger.error(f"Error in cleanup loop: {e}")
+
+    async def _pattern_analysis_loop(self) -> None:
+        """Background pattern analysis and optimization"""
+        while self._running:
+            try:
+                await asyncio.sleep(3600)
+                self._analyze_collaboration_patterns()
+                self._optimize_scheduling()
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                logger.error(f"Error in pattern analysis loop: {e}")
+
+    def set_office_hours(
+        self,
+        pattern: OfficeHoursPattern,
+        start_time: time,
+        end_time: time,
+        timezone: str = "UTC",
+        days_of_week: Optional[Set[int]] = None,
+        description: str = "",
+        capabilities_focus: Optional[List[str]] = None,
+        max_concurrent_sessions: int = 3,
+        session_duration_minutes: int = 30,
+    ) -> OfficeHours:
+        """
+        Set office hours for the agent.
+
+        Args:
+            pattern: Scheduling pattern (daily, weekly, etc.)
+            start_time: Start time for office hours
+            end_time: End time for office hours
+            timezone: Timezone for the schedule
+            days_of_week: Days of week (0=Monday, 6=Sunday) for custom patterns
+            description: Description of office hours focus
+            capabilities_focus: Specific capabilities to focus on
+            max_concurrent_sessions: Maximum concurrent collaboration sessions
+            session_duration_minutes: Default session duration
+
+        Returns:
+            OfficeHours: Created office hours configuration
+        """
+        office_hours = OfficeHours(
+            agent_id=self.agent_id,
+            pattern=pattern,
+            start_time=start_time,
+            end_time=end_time,
+            timezone=timezone,
+            days_of_week=days_of_week or set(),
+            description=description,
+            capabilities_focus=capabilities_focus or [],
+            max_concurrent_sessions=max_concurrent_sessions,
+            session_duration_minutes=session_duration_minutes,
+        )
+        self.office_hours[self.agent_id] = office_hours
+        logger.info(
+            f"Set office hours for {self.agent_id}: {pattern} {start_time}-{end_time}"
+        )
+        return office_hours
+
+    def get_office_hours(self, agent_id: Optional[str] = None) -> Optional[OfficeHours]:
+        """Get office hours for an agent"""
+        target_id = agent_id or self.agent_id
+        return self.office_hours.get(target_id)
+
+    def update_office_hours_from_message(self, message: BeastModeMessage) -> bool:
+        """
+        Update office hours from an office hours announcement message.
+
+        Args:
+            message: Office hours announcement message
+
+        Returns:
+            bool: True if office hours were updated successfully
+        """
+        try:
+            payload = message.payload
+            office_hours_data = payload.get("office_hours", {})
+            if not office_hours_data:
+                return False
+            pattern = OfficeHoursPattern(office_hours_data.get("pattern", "daily"))
+            start_time = time.fromisoformat(
+                office_hours_data.get("start_time", "09:00:00")
+            )
+            end_time = time.fromisoformat(office_hours_data.get("end_time", "17:00:00"))
+            office_hours = OfficeHours(
+                agent_id=message.source,
+                pattern=pattern,
+                start_time=start_time,
+                end_time=end_time,
+                timezone=office_hours_data.get("timezone", "UTC"),
+                days_of_week=set(office_hours_data.get("days_of_week", [])),
+                description=office_hours_data.get("description", ""),
+                capabilities_focus=office_hours_data.get("capabilities_focus", []),
+                max_concurrent_sessions=office_hours_data.get(
+                    "max_concurrent_sessions", 3
+                ),
+                session_duration_minutes=office_hours_data.get(
+                    "session_duration_minutes", 30
+                ),
+            )
+            self.office_hours[message.source] = office_hours
+            logger.info(f"Updated office hours for {message.source}")
+            return True
+        except Exception as e:
+            logger.error(f"Error updating office hours from message: {e}")
+            return False
+
+    def is_agent_available(
+        self, agent_id: str, at_time: Optional[datetime] = None
+    ) -> bool:
+        """
+        Check if an agent is available for collaboration at a given time.
+
+        Args:
+            agent_id: Agent to check
+            at_time: Time to check (defaults to now)
+
+        Returns:
+            bool: True if agent is available
+        """
+        if agent_id not in self.office_hours:
+            return False
+        office_hours = self.office_hours[agent_id]
+        if not office_hours.is_active:
+            return False
+        check_time = at_time or datetime.now()
+        current_time = check_time.time()
+        if not office_hours.start_time <= current_time <= office_hours.end_time:
+            return False
+        if office_hours.pattern == OfficeHoursPattern.WEEKDAYS:
+            if check_time.weekday() >= 5:
+                return False
+        elif office_hours.pattern == OfficeHoursPattern.WEEKENDS:
+            if check_time.weekday() < 5:
+                return False
+        elif office_hours.pattern == OfficeHoursPattern.CUSTOM:
+            if check_time.weekday() not in office_hours.days_of_week:
+                return False
+        active_count = len(
+            [
+                s
+                for s in self.active_sessions
+                if agent_id in self.sessions[s].participants
+            ]
+        )
+        return active_count < office_hours.max_concurrent_sessions
+
+    def get_next_available_slot(
+        self,
+        agent_id: str,
+        duration_minutes: int = 30,
+        after_time: Optional[datetime] = None,
+    ) -> Optional[datetime]:
+        """
+        Find the next available collaboration slot for an agent.
+
+        Args:
+            agent_id: Agent to find slot for
+            duration_minutes: Required duration
+            after_time: Find slot after this time (defaults to now)
+
+        Returns:
+            Optional[datetime]: Next available slot start time
+        """
+        if agent_id not in self.office_hours:
+            return None
+        office_hours = self.office_hours[agent_id]
+        start_search = after_time or datetime.now()
+        for day_offset in range(7):
+            check_date = start_search.date() + timedelta(days=day_offset)
+            check_datetime = datetime.combine(check_date, office_hours.start_time)
+            if day_offset == 0 and check_datetime < start_search:
+                check_datetime = start_search
+            while check_datetime.time() <= office_hours.end_time:
+                slot_end = check_datetime + timedelta(minutes=duration_minutes)
+                if slot_end.time() > office_hours.end_time:
+                    break
+                if self.is_agent_available(agent_id, check_datetime):
+                    has_conflict = False
+                    for session_id in self.active_sessions:
+                        session = self.sessions[session_id]
+                        if (
+                            agent_id in session.participants
+                            and session.scheduled_start
+                            and session.scheduled_end
+                        ):
+                            if (
+                                check_datetime < session.scheduled_end
+                                and slot_end > session.scheduled_start
+                            ):
+                                has_conflict = True
+                                break
+                    if not has_conflict:
+                        return check_datetime
+                check_datetime += timedelta(
+                    minutes=office_hours.session_duration_minutes
+                )
+        return None
+
+    def schedule_collaboration(
+        self,
+        participants: List[str],
+        topic: str,
+        session_type: CollaborationType = CollaborationType.SCHEDULED_SESSION,
+        scheduled_start: Optional[datetime] = None,
+        duration_minutes: int = 30,
+        description: str = "",
+        required_capabilities: Optional[List[str]] = None,
+    ) -> Optional[CollaborationSession]:
+        """
+        Schedule a collaboration session.
+
+        Args:
+            participants: List of participant agent IDs
+            topic: Session topic
+            session_type: Type of collaboration
+            scheduled_start: When to start (None for immediate)
+            duration_minutes: Session duration
+            description: Session description
+            required_capabilities: Required capabilities
+
+        Returns:
+            Optional[CollaborationSession]: Created session or None if scheduling failed
+        """
+        try:
+            if scheduled_start is None:
+                scheduled_start = datetime.now()
+            scheduled_end = scheduled_start + timedelta(minutes=duration_minutes)
+            for participant in participants:
+                if (
+                    participant != self.agent_id
+                    and participant in self.office_hours
+                    and (not self.is_agent_available(participant, scheduled_start))
+                ):
+                    logger.warning(
+                        f"Participant {participant} not available at {scheduled_start}"
+                    )
+                    return None
+            session = CollaborationSession(
+                session_type=session_type,
+                organizer_id=self.agent_id,
+                participants=participants,
+                scheduled_start=scheduled_start,
+                scheduled_end=scheduled_end,
+                topic=topic,
+                description=description,
+                required_capabilities=required_capabilities or [],
+            )
+            self.sessions[session.session_id] = session
+            logger.info(
+                f"Scheduled collaboration session {session.session_id} for {len(participants)} participants"
+            )
+            return session
+        except Exception as e:
+            logger.error(f"Error scheduling collaboration: {e}")
+            return None
+
+    def start_collaboration_session(self, session_id: str) -> bool:
+        """
+        Start a collaboration session.
+
+        Args:
+            session_id: Session to start
+
+        Returns:
+            bool: True if session was started successfully
+        """
+        if session_id not in self.sessions:
+            return False
+        session = self.sessions[session_id]
+        if session.status != CollaborationStatus.SCHEDULED:
+            logger.warning(
+                f"Cannot start session {session_id} with status {session.status}"
+            )
+            return False
+        session.status = CollaborationStatus.ACTIVE
+        session.actual_start = datetime.now()
+        session.updated_at = datetime.now()
+        self.active_sessions.add(session_id)
+        self.collaboration_stats["total_sessions"] += 1
+        logger.info(f"Started collaboration session {session_id}")
+        return True
+
+    def end_collaboration_session(
+        self,
+        session_id: str,
+        success: bool = True,
+        success_metrics: Optional[Dict[str, Any]] = None,
+    ) -> bool:
+        """
+        End a collaboration session.
+
+        Args:
+            session_id: Session to end
+            success: Whether the session was successful
+            success_metrics: Success metrics and outcomes
+
+        Returns:
+            bool: True if session was ended successfully
+        """
+        if session_id not in self.sessions:
+            return False
+        session = self.sessions[session_id]
+        if session.status != CollaborationStatus.ACTIVE:
+            logger.warning(
+                f"Cannot end session {session_id} with status {session.status}"
+            )
+            return False
+        session.status = CollaborationStatus.COMPLETED
+        session.actual_end = datetime.now()
+        session.success_metrics = success_metrics or {}
+        session.updated_at = datetime.now()
+        self.active_sessions.discard(session_id)
+        if success:
+            self.collaboration_stats["successful_sessions"] += 1
+        if session.actual_start and session.actual_end:
+            duration = (session.actual_end - session.actual_start).total_seconds() / 60
+            current_avg = self.collaboration_stats["average_duration"]
+            total_sessions = self.collaboration_stats["total_sessions"]
+            if total_sessions > 0:
+                self.collaboration_stats["average_duration"] = (
+                    current_avg * (total_sessions - 1) + duration
+                ) / total_sessions
+            else:
+                self.collaboration_stats["average_duration"] = duration
+        logger.info(f"Ended collaboration session {session_id} (success: {success})")
+        return True
+
+    def cancel_collaboration_session(self, session_id: str, reason: str = "") -> bool:
+        """
+        Cancel a collaboration session.
+
+        Args:
+            session_id: Session to cancel
+            reason: Cancellation reason
+
+        Returns:
+            bool: True if session was cancelled successfully
+        """
+        if session_id not in self.sessions:
+            return False
+        session = self.sessions[session_id]
+        if session.status in [
+            CollaborationStatus.COMPLETED,
+            CollaborationStatus.CANCELLED,
+        ]:
+            return False
+        session.status = CollaborationStatus.CANCELLED
+        session.updated_at = datetime.now()
+        session.collaboration_data["cancellation_reason"] = reason
+        self.active_sessions.discard(session_id)
+        logger.info(f"Cancelled collaboration session {session_id}: {reason}")
+        return True
+
+    def get_session(self, session_id: str) -> Optional[CollaborationSession]:
+        """Get a collaboration session by ID"""
+        return self.sessions.get(session_id)
+
+    def get_active_sessions(self) -> List[CollaborationSession]:
+        """Get all active collaboration sessions"""
+        return [
+            self.sessions[sid] for sid in self.active_sessions if sid in self.sessions
+        ]
+
+    def get_sessions_for_agent(self, agent_id: str) -> List[CollaborationSession]:
+        """Get all sessions involving a specific agent"""
+        return [
+            session
+            for session in self.sessions.values()
+            if agent_id in session.participants or session.organizer_id == agent_id
+        ]
+
+    def queue_offline_collaboration(
+        self,
+        target_agent: str,
+        collaboration_type: str,
+        data: Dict[str, Any],
+        priority: int = 5,
+    ) -> str:
+        """
+        Queue a collaboration request for an offline agent.
+
+        Args:
+            target_agent: Agent to collaborate with when online
+            collaboration_type: Type of collaboration
+            data: Collaboration data
+            priority: Priority level (1=highest, 10=lowest)
+
+        Returns:
+            str: Queue item ID
+        """
+        queue_item = {
+            "id": str(uuid.uuid4()),
+            "target_agent": target_agent,
+            "collaboration_type": collaboration_type,
+            "data": data,
+            "priority": priority,
+            "queued_at": datetime.now(),
+            "requester": self.agent_id,
+        }
+        self.offline_collaboration_queue.append(queue_item)
+        self.offline_collaboration_queue.sort(key=lambda x: x["priority"])
+        logger.info(
+            f"Queued offline collaboration for {target_agent}: {collaboration_type}"
+        )
+        return queue_item["id"]
+
+    def process_offline_collaboration_queue(
+        self, agent_id: str
+    ) -> List[Dict[str, Any]]:
+        """
+        Process queued collaboration requests for an agent that came online.
+
+        Args:
+            agent_id: Agent that came online
+
+        Returns:
+            List of collaboration requests for the agent
+        """
+        agent_requests = []
+        remaining_queue = []
+        for item in self.offline_collaboration_queue:
+            if item["target_agent"] == agent_id:
+                agent_requests.append(item)
+            else:
+                remaining_queue.append(item)
+        self.offline_collaboration_queue = remaining_queue
+        if agent_requests:
+            logger.info(
+                f"Processing {len(agent_requests)} queued collaborations for {agent_id}"
+            )
+        return agent_requests
+
+    def set_collaboration_callback(
+        self, callback_name: str, callback: Callable
+    ) -> None:
+        """
+        Set a callback for collaboration events.
+
+        Args:
+            callback_name: Name of the callback
+            callback: Callback function
+        """
+        self.collaboration_callbacks[callback_name] = callback
+        logger.info(f"Set collaboration callback: {callback_name}")
+
+    def trigger_collaboration_callback(
+        self, callback_name: str, *args, **kwargs
+    ) -> None:
+        """Trigger a collaboration callback if it exists"""
+        if callback_name in self.collaboration_callbacks:
+            try:
+                self.collaboration_callbacks[callback_name](*args, **kwargs)
+            except Exception as e:
+                logger.error(f"Error in collaboration callback {callback_name}: {e}")
+
+    def _analyze_collaboration_patterns(self) -> None:
+        """Analyze collaboration patterns for optimization"""
+        if not self.pattern_analysis_enabled:
+            return
+        try:
+            completed_sessions = [
+                s
+                for s in self.sessions.values()
+                if s.status == CollaborationStatus.COMPLETED
+            ]
+            if len(completed_sessions) < 3:
+                return
+            participant_groups = {}
+            for session in completed_sessions:
+                participants_key = tuple(sorted(session.participants))
+                if participants_key not in participant_groups:
+                    participant_groups[participants_key] = []
+                participant_groups[participants_key].append(session)
+            for participants, sessions in participant_groups.items():
+                if len(sessions) >= 2:
+                    self._create_collaboration_pattern(participants, sessions)
+            logger.debug(
+                f"Analyzed {len(completed_sessions)} sessions, found {len(self.collaboration_patterns)} patterns"
+            )
+        except Exception as e:
+            logger.error(f"Error analyzing collaboration patterns: {e}")
+
+    def _create_collaboration_pattern(
+        self, participants: Tuple[str, ...], sessions: List[CollaborationSession]
+    ) -> None:
+        """Create or update a collaboration pattern"""
+        try:
+            pattern_key = f"pattern_{hash(participants)}"
+            successful_sessions = [
+                s for s in sessions if s.success_metrics.get("success", True)
+            ]
+            success_rate = len(successful_sessions) / len(sessions) if sessions else 0.0
+            durations = []
+            for session in sessions:
+                if session.actual_start and session.actual_end:
+                    duration = (
+                        session.actual_end - session.actual_start
+                    ).total_seconds() / 60
+                    durations.append(duration)
+            avg_duration = sum(durations) / len(durations) if durations else 0.0
+            topics = [s.topic for s in sessions if s.topic]
+            capabilities = []
+            for session in sessions:
+                capabilities.extend(session.required_capabilities)
+            common_topics = list(set(topics))
+            capabilities_involved = list(set(capabilities))
+            time_slots = []
+            for session in sessions:
+                if session.scheduled_start:
+                    start_time = session.scheduled_start.time()
+                    end_time = (session.scheduled_end or session.scheduled_start).time()
+                    time_slots.append((start_time, end_time))
+            pattern = CollaborationPattern(
+                pattern_id=pattern_key,
+                pattern_type="recurring_collaboration",
+                participants=list(participants),
+                frequency=len(sessions),
+                success_rate=success_rate,
+                avg_duration_minutes=avg_duration,
+                common_topics=common_topics,
+                optimal_time_slots=time_slots,
+                capabilities_involved=capabilities_involved,
+                last_occurrence=max((s.created_at for s in sessions)),
+                confidence_score=min(success_rate + len(sessions) * 0.1, 1.0),
+            )
+            self.collaboration_patterns[pattern_key] = pattern
+            self.collaboration_stats["pattern_matches"] += 1
+        except Exception as e:
+            logger.error(f"Error creating collaboration pattern: {e}")
+
+    def _optimize_scheduling(self) -> None:
+        """Optimize scheduling based on recognized patterns"""
+        try:
+            active_hours = {}
+            for session in self.sessions.values():
+                if session.actual_start:
+                    hour = session.actual_start.hour
+                    active_hours[hour] = active_hours.get(hour, 0) + 1
+            self.collaboration_stats["most_active_hours"] = active_hours
+            capability_usage = {}
+            for session in self.sessions.values():
+                for capability in session.required_capabilities:
+                    capability_usage[capability] = (
+                        capability_usage.get(capability, 0) + 1
+                    )
+            self.collaboration_stats["capability_usage"] = capability_usage
+        except Exception as e:
+            logger.error(f"Error optimizing scheduling: {e}")
+
+    def get_collaboration_recommendations(self, agent_id: str) -> List[Dict[str, Any]]:
+        """
+        Get collaboration recommendations for an agent based on patterns.
+
+        Args:
+            agent_id: Agent to get recommendations for
+
+        Returns:
+            List of collaboration recommendations
+        """
+        recommendations = []
+        try:
+            relevant_patterns = [
+                pattern
+                for pattern in self.collaboration_patterns.values()
+                if agent_id in pattern.participants and pattern.confidence_score > 0.5
+            ]
+            for pattern in relevant_patterns:
+                other_participants = [p for p in pattern.participants if p != agent_id]
+                optimal_time = None
+                if pattern.optimal_time_slots:
+                    time_slot = pattern.optimal_time_slots[0]
+                    now = datetime.now()
+                    optimal_time = datetime.combine(now.date(), time_slot[0])
+                    if optimal_time < now:
+                        optimal_time += timedelta(days=1)
+                recommendation = {
+                    "type": "pattern_based",
+                    "participants": other_participants,
+                    "suggested_time": (
+                        optimal_time.isoformat() if optimal_time else None
+                    ),
+                    "suggested_duration": pattern.avg_duration_minutes,
+                    "success_probability": pattern.success_rate,
+                    "common_topics": pattern.common_topics,
+                    "capabilities": pattern.capabilities_involved,
+                    "pattern_frequency": pattern.frequency,
+                    "confidence": pattern.confidence_score,
+                }
+                recommendations.append(recommendation)
+        except Exception as e:
+            logger.error(f"Error generating collaboration recommendations: {e}")
+        return recommendations
+
+    def _cleanup_expired_sessions(self) -> int:
+        """Clean up expired sessions"""
+        expired_count = 0
+        current_time = datetime.now()
+        for session_id, session in list(self.sessions.items()):
+            if (
+                session.status == CollaborationStatus.SCHEDULED
+                and session.scheduled_end
+                and (current_time > session.scheduled_end + timedelta(hours=1))
+            ):
+                session.status = CollaborationStatus.EXPIRED
+                session.updated_at = current_time
+                self.active_sessions.discard(session_id)
+                expired_count += 1
+        if expired_count > 0:
+            logger.info(f"Marked {expired_count} sessions as expired")
+        return expired_count
+
+    def _cleanup_old_patterns(self) -> int:
+        """Clean up old collaboration patterns"""
+        cleaned_count = 0
+        cutoff_date = datetime.now() - timedelta(days=30)
+        for pattern_id, pattern in list(self.collaboration_patterns.items()):
+            if (
+                pattern.last_occurrence
+                and pattern.last_occurrence < cutoff_date
+                and (pattern.confidence_score < 0.3)
+            ):
+                del self.collaboration_patterns[pattern_id]
+                cleaned_count += 1
+        if cleaned_count > 0:
+            logger.info(f"Cleaned up {cleaned_count} old collaboration patterns")
+        return cleaned_count
+
+    def cleanup_old_sessions(self, days_old: int = 30) -> int:
+        """
+        Clean up old completed sessions.
+
+        Args:
+            days_old: Remove sessions older than this many days
+
+        Returns:
+            int: Number of sessions cleaned up
+        """
+        cutoff_date = datetime.now() - timedelta(days=days_old)
+        cleaned_count = 0
+        for session_id, session in list(self.sessions.items()):
+            if (
+                session.status
+                in [
+                    CollaborationStatus.COMPLETED,
+                    CollaborationStatus.CANCELLED,
+                    CollaborationStatus.EXPIRED,
+                ]
+                and session.updated_at < cutoff_date
+            ):
+                del self.sessions[session_id]
+                cleaned_count += 1
+        if cleaned_count > 0:
+            logger.info(f"Cleaned up {cleaned_count} old sessions")
+        return cleaned_count
+
+    def get_collaboration_stats(self) -> Dict[str, Any]:
+        """Get collaboration statistics"""
+        return {
+            **self.collaboration_stats,
+            "active_sessions": len(self.active_sessions),
+            "total_patterns": len(self.collaboration_patterns),
+            "office_hours_set": len(self.office_hours),
+            "queued_collaborations": len(self.offline_collaboration_queue),
+        }
+
+    def get_scheduler_info(self) -> Dict[str, Any]:
+        """Get scheduler information"""
+        return {
+            "agent_id": self.agent_id,
+            "running": self._running,
+            "pattern_analysis_enabled": self.pattern_analysis_enabled,
+            "office_hours_count": len(self.office_hours),
+            "total_sessions": len(self.sessions),
+            "active_sessions": len(self.active_sessions),
+            "collaboration_patterns": len(self.collaboration_patterns),
+            "offline_queue_size": len(self.offline_collaboration_queue),
+            "callbacks_registered": len(self.collaboration_callbacks),
+        }
+
+
+def __init__(self, agent_id: str):
+    self.agent_id = agent_id
+    self.office_hours: Dict[str, OfficeHours] = {}
+    self.sessions: Dict[str, CollaborationSession] = {}
+    self.active_sessions: Set[str] = set()
+    self.collaboration_patterns: Dict[str, CollaborationPattern] = {}
+    self.pattern_analysis_enabled = True
+    self.offline_collaboration_queue: List[Dict[str, Any]] = []
+    self.collaboration_callbacks: Dict[str, Callable] = {}
+    self.collaboration_stats = {
+        "total_sessions": 0,
+        "successful_sessions": 0,
+        "average_duration": 0.0,
+        "most_active_hours": {},
+        "capability_usage": {},
+        "pattern_matches": 0,
+    }
+    self._cleanup_task: Optional[asyncio.Task] = None
+    self._pattern_analysis_task: Optional[asyncio.Task] = None
+    self._running = False
+
+
+def start_background_tasks(self) -> None:
+    """Start background tasks for cleanup and pattern analysis"""
+    if not self._running:
+        self._running = True
+        self._cleanup_task = asyncio.create_task(self._cleanup_loop())
+        if self.pattern_analysis_enabled:
+            self._pattern_analysis_task = asyncio.create_task(
+                self._pattern_analysis_loop()
+            )
+        logger.info("Started collaboration scheduler background tasks")
+
+
+def stop_background_tasks(self) -> None:
+    """Stop background tasks"""
+    self._running = False
+    if self._cleanup_task:
+        self._cleanup_task.cancel()
+        self._cleanup_task = None
+    if self._pattern_analysis_task:
+        self._pattern_analysis_task.cancel()
+        self._pattern_analysis_task = None
+    logger.info("Stopped collaboration scheduler background tasks")
+
+
+def set_office_hours(
+    self,
+    pattern: OfficeHoursPattern,
+    start_time: time,
+    end_time: time,
+    timezone: str = "UTC",
+    days_of_week: Optional[Set[int]] = None,
+    description: str = "",
+    capabilities_focus: Optional[List[str]] = None,
+    max_concurrent_sessions: int = 3,
+    session_duration_minutes: int = 30,
+) -> OfficeHours:
+    """
+    Set office hours for the agent.
+
+    Args:
+        pattern: Scheduling pattern (daily, weekly, etc.)
+        start_time: Start time for office hours
+        end_time: End time for office hours
+        timezone: Timezone for the schedule
+        days_of_week: Days of week (0=Monday, 6=Sunday) for custom patterns
+        description: Description of office hours focus
+        capabilities_focus: Specific capabilities to focus on
+        max_concurrent_sessions: Maximum concurrent collaboration sessions
+        session_duration_minutes: Default session duration
+
+    Returns:
+        OfficeHours: Created office hours configuration
+    """
+    office_hours = OfficeHours(
+        agent_id=self.agent_id,
+        pattern=pattern,
+        start_time=start_time,
+        end_time=end_time,
+        timezone=timezone,
+        days_of_week=days_of_week or set(),
+        description=description,
+        capabilities_focus=capabilities_focus or [],
+        max_concurrent_sessions=max_concurrent_sessions,
+        session_duration_minutes=session_duration_minutes,
+    )
+    self.office_hours[self.agent_id] = office_hours
+    logger.info(
+        f"Set office hours for {self.agent_id}: {pattern} {start_time}-{end_time}"
+    )
+    return office_hours
+
+
+def get_office_hours(self, agent_id: Optional[str] = None) -> Optional[OfficeHours]:
+    """Get office hours for an agent"""
+    target_id = agent_id or self.agent_id
+    return self.office_hours.get(target_id)
+
+
+def update_office_hours_from_message(self, message: BeastModeMessage) -> bool:
+    """
+    Update office hours from an office hours announcement message.
+
+    Args:
+        message: Office hours announcement message
+
+    Returns:
+        bool: True if office hours were updated successfully
+    """
+    try:
+        payload = message.payload
+        office_hours_data = payload.get("office_hours", {})
+        if not office_hours_data:
+            return False
+        pattern = OfficeHoursPattern(office_hours_data.get("pattern", "daily"))
+        start_time = time.fromisoformat(office_hours_data.get("start_time", "09:00:00"))
+        end_time = time.fromisoformat(office_hours_data.get("end_time", "17:00:00"))
+        office_hours = OfficeHours(
+            agent_id=message.source,
+            pattern=pattern,
+            start_time=start_time,
+            end_time=end_time,
+            timezone=office_hours_data.get("timezone", "UTC"),
+            days_of_week=set(office_hours_data.get("days_of_week", [])),
+            description=office_hours_data.get("description", ""),
+            capabilities_focus=office_hours_data.get("capabilities_focus", []),
+            max_concurrent_sessions=office_hours_data.get("max_concurrent_sessions", 3),
+            session_duration_minutes=office_hours_data.get(
+                "session_duration_minutes", 30
+            ),
+        )
+        self.office_hours[message.source] = office_hours
+        logger.info(f"Updated office hours for {message.source}")
+        return True
+    except Exception as e:
+        logger.error(f"Error updating office hours from message: {e}")
+        return False
+
+
+def is_agent_available(self, agent_id: str, at_time: Optional[datetime] = None) -> bool:
+    """
+    Check if an agent is available for collaboration at a given time.
+
+    Args:
+        agent_id: Agent to check
+        at_time: Time to check (defaults to now)
+
+    Returns:
+        bool: True if agent is available
+    """
+    if agent_id not in self.office_hours:
+        return False
+    office_hours = self.office_hours[agent_id]
+    if not office_hours.is_active:
+        return False
+    check_time = at_time or datetime.now()
+    current_time = check_time.time()
+    if not office_hours.start_time <= current_time <= office_hours.end_time:
+        return False
+    if office_hours.pattern == OfficeHoursPattern.WEEKDAYS:
+        if check_time.weekday() >= 5:
+            return False
+    elif office_hours.pattern == OfficeHoursPattern.WEEKENDS:
+        if check_time.weekday() < 5:
+            return False
+    elif office_hours.pattern == OfficeHoursPattern.CUSTOM:
+        if check_time.weekday() not in office_hours.days_of_week:
+            return False
+    active_count = len(
+        [s for s in self.active_sessions if agent_id in self.sessions[s].participants]
+    )
+    return active_count < office_hours.max_concurrent_sessions
+
+
+def get_next_available_slot(
+    self,
+    agent_id: str,
+    duration_minutes: int = 30,
+    after_time: Optional[datetime] = None,
+) -> Optional[datetime]:
+    """
+    Find the next available collaboration slot for an agent.
+
+    Args:
+        agent_id: Agent to find slot for
+        duration_minutes: Required duration
+        after_time: Find slot after this time (defaults to now)
+
+    Returns:
+        Optional[datetime]: Next available slot start time
+    """
+    if agent_id not in self.office_hours:
+        return None
+    office_hours = self.office_hours[agent_id]
+    start_search = after_time or datetime.now()
+    for day_offset in range(7):
+        check_date = start_search.date() + timedelta(days=day_offset)
+        check_datetime = datetime.combine(check_date, office_hours.start_time)
+        if day_offset == 0 and check_datetime < start_search:
+            check_datetime = start_search
+        while check_datetime.time() <= office_hours.end_time:
+            slot_end = check_datetime + timedelta(minutes=duration_minutes)
+            if slot_end.time() > office_hours.end_time:
+                break
+            if self.is_agent_available(agent_id, check_datetime):
+                has_conflict = False
+                for session_id in self.active_sessions:
+                    session = self.sessions[session_id]
+                    if (
+                        agent_id in session.participants
+                        and session.scheduled_start
+                        and session.scheduled_end
+                    ):
+                        if (
+                            check_datetime < session.scheduled_end
+                            and slot_end > session.scheduled_start
+                        ):
+                            has_conflict = True
+                            break
+                if not has_conflict:
+                    return check_datetime
+            check_datetime += timedelta(minutes=office_hours.session_duration_minutes)
+    return None
+
+
+def schedule_collaboration(
+    self,
+    participants: List[str],
+    topic: str,
+    session_type: CollaborationType = CollaborationType.SCHEDULED_SESSION,
+    scheduled_start: Optional[datetime] = None,
+    duration_minutes: int = 30,
+    description: str = "",
+    required_capabilities: Optional[List[str]] = None,
+) -> Optional[CollaborationSession]:
+    """
+    Schedule a collaboration session.
+
+    Args:
+        participants: List of participant agent IDs
+        topic: Session topic
+        session_type: Type of collaboration
+        scheduled_start: When to start (None for immediate)
+        duration_minutes: Session duration
+        description: Session description
+        required_capabilities: Required capabilities
+
+    Returns:
+        Optional[CollaborationSession]: Created session or None if scheduling failed
+    """
+    try:
+        if scheduled_start is None:
+            scheduled_start = datetime.now()
+        scheduled_end = scheduled_start + timedelta(minutes=duration_minutes)
+        for participant in participants:
+            if (
+                participant != self.agent_id
+                and participant in self.office_hours
+                and (not self.is_agent_available(participant, scheduled_start))
+            ):
+                logger.warning(
+                    f"Participant {participant} not available at {scheduled_start}"
+                )
+                return None
+        session = CollaborationSession(
+            session_type=session_type,
+            organizer_id=self.agent_id,
+            participants=participants,
+            scheduled_start=scheduled_start,
+            scheduled_end=scheduled_end,
+            topic=topic,
+            description=description,
+            required_capabilities=required_capabilities or [],
+        )
+        self.sessions[session.session_id] = session
+        logger.info(
+            f"Scheduled collaboration session {session.session_id} for {len(participants)} participants"
+        )
+        return session
+    except Exception as e:
+        logger.error(f"Error scheduling collaboration: {e}")
+        return None
+
+
+def start_collaboration_session(self, session_id: str) -> bool:
+    """
+    Start a collaboration session.
+
+    Args:
+        session_id: Session to start
+
+    Returns:
+        bool: True if session was started successfully
+    """
+    if session_id not in self.sessions:
+        return False
+    session = self.sessions[session_id]
+    if session.status != CollaborationStatus.SCHEDULED:
+        logger.warning(
+            f"Cannot start session {session_id} with status {session.status}"
+        )
+        return False
+    session.status = CollaborationStatus.ACTIVE
+    session.actual_start = datetime.now()
+    session.updated_at = datetime.now()
+    self.active_sessions.add(session_id)
+    self.collaboration_stats["total_sessions"] += 1
+    logger.info(f"Started collaboration session {session_id}")
+    return True
+
+
+def end_collaboration_session(
+    self,
+    session_id: str,
+    success: bool = True,
+    success_metrics: Optional[Dict[str, Any]] = None,
+) -> bool:
+    """
+    End a collaboration session.
+
+    Args:
+        session_id: Session to end
+        success: Whether the session was successful
+        success_metrics: Success metrics and outcomes
+
+    Returns:
+        bool: True if session was ended successfully
+    """
+    if session_id not in self.sessions:
+        return False
+    session = self.sessions[session_id]
+    if session.status != CollaborationStatus.ACTIVE:
+        logger.warning(f"Cannot end session {session_id} with status {session.status}")
+        return False
+    session.status = CollaborationStatus.COMPLETED
+    session.actual_end = datetime.now()
+    session.success_metrics = success_metrics or {}
+    session.updated_at = datetime.now()
+    self.active_sessions.discard(session_id)
+    if success:
+        self.collaboration_stats["successful_sessions"] += 1
+    if session.actual_start and session.actual_end:
+        duration = (session.actual_end - session.actual_start).total_seconds() / 60
+        current_avg = self.collaboration_stats["average_duration"]
+        total_sessions = self.collaboration_stats["total_sessions"]
+        if total_sessions > 0:
+            self.collaboration_stats["average_duration"] = (
+                current_avg * (total_sessions - 1) + duration
+            ) / total_sessions
+        else:
+            self.collaboration_stats["average_duration"] = duration
+    logger.info(f"Ended collaboration session {session_id} (success: {success})")
+    return True
+
+
+def cancel_collaboration_session(self, session_id: str, reason: str = "") -> bool:
+    """
+    Cancel a collaboration session.
+
+    Args:
+        session_id: Session to cancel
+        reason: Cancellation reason
+
+    Returns:
+        bool: True if session was cancelled successfully
+    """
+    if session_id not in self.sessions:
+        return False
+    session = self.sessions[session_id]
+    if session.status in [CollaborationStatus.COMPLETED, CollaborationStatus.CANCELLED]:
+        return False
+    session.status = CollaborationStatus.CANCELLED
+    session.updated_at = datetime.now()
+    session.collaboration_data["cancellation_reason"] = reason
+    self.active_sessions.discard(session_id)
+    logger.info(f"Cancelled collaboration session {session_id}: {reason}")
+    return True
+
+
+def get_session(self, session_id: str) -> Optional[CollaborationSession]:
+    """Get a collaboration session by ID"""
+    return self.sessions.get(session_id)
+
+
+def get_active_sessions(self) -> List[CollaborationSession]:
+    """Get all active collaboration sessions"""
+    return [self.sessions[sid] for sid in self.active_sessions if sid in self.sessions]
+
+
+def get_sessions_for_agent(self, agent_id: str) -> List[CollaborationSession]:
+    """Get all sessions involving a specific agent"""
+    return [
+        session
+        for session in self.sessions.values()
+        if agent_id in session.participants or session.organizer_id == agent_id
+    ]
+
+
+def queue_offline_collaboration(
+    self,
+    target_agent: str,
+    collaboration_type: str,
+    data: Dict[str, Any],
+    priority: int = 5,
+) -> str:
+    """
+    Queue a collaboration request for an offline agent.
+
+    Args:
+        target_agent: Agent to collaborate with when online
+        collaboration_type: Type of collaboration
+        data: Collaboration data
+        priority: Priority level (1=highest, 10=lowest)
+
+    Returns:
+        str: Queue item ID
+    """
+    queue_item = {
+        "id": str(uuid.uuid4()),
+        "target_agent": target_agent,
+        "collaboration_type": collaboration_type,
+        "data": data,
+        "priority": priority,
+        "queued_at": datetime.now(),
+        "requester": self.agent_id,
+    }
+    self.offline_collaboration_queue.append(queue_item)
+    self.offline_collaboration_queue.sort(key=lambda x: x["priority"])
+    logger.info(
+        f"Queued offline collaboration for {target_agent}: {collaboration_type}"
+    )
+    return queue_item["id"]
+
+
+def set_collaboration_callback(self, callback_name: str, callback: Callable) -> None:
+    """
+    Set a callback for collaboration events.
+
+    Args:
+        callback_name: Name of the callback
+        callback: Callback function
+    """
+    self.collaboration_callbacks[callback_name] = callback
+    logger.info(f"Set collaboration callback: {callback_name}")
+
+
+def trigger_collaboration_callback(self, callback_name: str, *args, **kwargs) -> None:
+    """Trigger a collaboration callback if it exists"""
+    if callback_name in self.collaboration_callbacks:
+        try:
+            self.collaboration_callbacks[callback_name](*args, **kwargs)
+        except Exception as e:
+            logger.error(f"Error in collaboration callback {callback_name}: {e}")
+
+
+def _analyze_collaboration_patterns(self) -> None:
+    """Analyze collaboration patterns for optimization"""
+    if not self.pattern_analysis_enabled:
+        return
+    try:
+        completed_sessions = [
+            s
+            for s in self.sessions.values()
+            if s.status == CollaborationStatus.COMPLETED
+        ]
+        if len(completed_sessions) < 3:
+            return
+        participant_groups = {}
+        for session in completed_sessions:
+            participants_key = tuple(sorted(session.participants))
+            if participants_key not in participant_groups:
+                participant_groups[participants_key] = []
+            participant_groups[participants_key].append(session)
+        for participants, sessions in participant_groups.items():
+            if len(sessions) >= 2:
+                self._create_collaboration_pattern(participants, sessions)
+        logger.debug(
+            f"Analyzed {len(completed_sessions)} sessions, found {len(self.collaboration_patterns)} patterns"
+        )
+    except Exception as e:
+        logger.error(f"Error analyzing collaboration patterns: {e}")
+
+
+def _create_collaboration_pattern(
+    self, participants: Tuple[str, ...], sessions: List[CollaborationSession]
+) -> None:
+    """Create or update a collaboration pattern"""
+    try:
+        pattern_key = f"pattern_{hash(participants)}"
+        successful_sessions = [
+            s for s in sessions if s.success_metrics.get("success", True)
+        ]
+        success_rate = len(successful_sessions) / len(sessions) if sessions else 0.0
+        durations = []
+        for session in sessions:
+            if session.actual_start and session.actual_end:
+                duration = (
+                    session.actual_end - session.actual_start
+                ).total_seconds() / 60
+                durations.append(duration)
+        avg_duration = sum(durations) / len(durations) if durations else 0.0
+        topics = [s.topic for s in sessions if s.topic]
+        capabilities = []
+        for session in sessions:
+            capabilities.extend(session.required_capabilities)
+        common_topics = list(set(topics))
+        capabilities_involved = list(set(capabilities))
+        time_slots = []
+        for session in sessions:
+            if session.scheduled_start:
+                start_time = session.scheduled_start.time()
+                end_time = (session.scheduled_end or session.scheduled_start).time()
+                time_slots.append((start_time, end_time))
+        pattern = CollaborationPattern(
+            pattern_id=pattern_key,
+            pattern_type="recurring_collaboration",
+            participants=list(participants),
+            frequency=len(sessions),
+            success_rate=success_rate,
+            avg_duration_minutes=avg_duration,
+            common_topics=common_topics,
+            optimal_time_slots=time_slots,
+            capabilities_involved=capabilities_involved,
+            last_occurrence=max((s.created_at for s in sessions)),
+            confidence_score=min(success_rate + len(sessions) * 0.1, 1.0),
+        )
+        self.collaboration_patterns[pattern_key] = pattern
+        self.collaboration_stats["pattern_matches"] += 1
+    except Exception as e:
+        logger.error(f"Error creating collaboration pattern: {e}")
+
+
+def _optimize_scheduling(self) -> None:
+    """Optimize scheduling based on recognized patterns"""
+    try:
+        active_hours = {}
+        for session in self.sessions.values():
+            if session.actual_start:
+                hour = session.actual_start.hour
+                active_hours[hour] = active_hours.get(hour, 0) + 1
+        self.collaboration_stats["most_active_hours"] = active_hours
+        capability_usage = {}
+        for session in self.sessions.values():
+            for capability in session.required_capabilities:
+                capability_usage[capability] = capability_usage.get(capability, 0) + 1
+        self.collaboration_stats["capability_usage"] = capability_usage
+    except Exception as e:
+        logger.error(f"Error optimizing scheduling: {e}")
+
+
+def get_collaboration_recommendations(self, agent_id: str) -> List[Dict[str, Any]]:
+    """
+    Get collaboration recommendations for an agent based on patterns.
+
+    Args:
+        agent_id: Agent to get recommendations for
+
+    Returns:
+        List of collaboration recommendations
+    """
+    recommendations = []
+    try:
+        relevant_patterns = [
+            pattern
+            for pattern in self.collaboration_patterns.values()
+            if agent_id in pattern.participants and pattern.confidence_score > 0.5
+        ]
+        for pattern in relevant_patterns:
+            other_participants = [p for p in pattern.participants if p != agent_id]
+            optimal_time = None
+            if pattern.optimal_time_slots:
+                time_slot = pattern.optimal_time_slots[0]
+                now = datetime.now()
+                optimal_time = datetime.combine(now.date(), time_slot[0])
+                if optimal_time < now:
+                    optimal_time += timedelta(days=1)
+            recommendation = {
+                "type": "pattern_based",
+                "participants": other_participants,
+                "suggested_time": optimal_time.isoformat() if optimal_time else None,
+                "suggested_duration": pattern.avg_duration_minutes,
+                "success_probability": pattern.success_rate,
+                "common_topics": pattern.common_topics,
+                "capabilities": pattern.capabilities_involved,
+                "pattern_frequency": pattern.frequency,
+                "confidence": pattern.confidence_score,
+            }
+            recommendations.append(recommendation)
+    except Exception as e:
+        logger.error(f"Error generating collaboration recommendations: {e}")
+    return recommendations
+
+
+def _cleanup_expired_sessions(self) -> int:
+    """Clean up expired sessions"""
+    expired_count = 0
+    current_time = datetime.now()
+    for session_id, session in list(self.sessions.items()):
+        if (
+            session.status == CollaborationStatus.SCHEDULED
+            and session.scheduled_end
+            and (current_time > session.scheduled_end + timedelta(hours=1))
+        ):
+            session.status = CollaborationStatus.EXPIRED
+            session.updated_at = current_time
+            self.active_sessions.discard(session_id)
+            expired_count += 1
+    if expired_count > 0:
+        logger.info(f"Marked {expired_count} sessions as expired")
+    return expired_count
+
+
+def _cleanup_old_patterns(self) -> int:
+    """Clean up old collaboration patterns"""
+    cleaned_count = 0
+    cutoff_date = datetime.now() - timedelta(days=30)
+    for pattern_id, pattern in list(self.collaboration_patterns.items()):
+        if (
+            pattern.last_occurrence
+            and pattern.last_occurrence < cutoff_date
+            and (pattern.confidence_score < 0.3)
+        ):
+            del self.collaboration_patterns[pattern_id]
+            cleaned_count += 1
+    if cleaned_count > 0:
+        logger.info(f"Cleaned up {cleaned_count} old collaboration patterns")
+    return cleaned_count
+
+
+def cleanup_old_sessions(self, days_old: int = 30) -> int:
+    """
+    Clean up old completed sessions.
+
+    Args:
+        days_old: Remove sessions older than this many days
+
+    Returns:
+        int: Number of sessions cleaned up
+    """
+    cutoff_date = datetime.now() - timedelta(days=days_old)
+    cleaned_count = 0
+    for session_id, session in list(self.sessions.items()):
+        if (
+            session.status
+            in [
+                CollaborationStatus.COMPLETED,
+                CollaborationStatus.CANCELLED,
+                CollaborationStatus.EXPIRED,
+            ]
+            and session.updated_at < cutoff_date
+        ):
+            del self.sessions[session_id]
+            cleaned_count += 1
+    if cleaned_count > 0:
+        logger.info(f"Cleaned up {cleaned_count} old sessions")
+    return cleaned_count
+
+
+def get_collaboration_stats(self) -> Dict[str, Any]:
+    """Get collaboration statistics"""
+    return {
+        **self.collaboration_stats,
+        "active_sessions": len(self.active_sessions),
+        "total_patterns": len(self.collaboration_patterns),
+        "office_hours_set": len(self.office_hours),
+        "queued_collaborations": len(self.offline_collaboration_queue),
+    }
+
+
+def get_scheduler_info(self) -> Dict[str, Any]:
+    """Get scheduler information"""
+    return {
+        "agent_id": self.agent_id,
+        "running": self._running,
+        "pattern_analysis_enabled": self.pattern_analysis_enabled,
+        "office_hours_count": len(self.office_hours),
+        "total_sessions": len(self.sessions),
+        "active_sessions": len(self.active_sessions),
+        "collaboration_patterns": len(self.collaboration_patterns),
+        "offline_queue_size": len(self.offline_collaboration_queue),
+        "callbacks_registered": len(self.collaboration_callbacks),
+    }

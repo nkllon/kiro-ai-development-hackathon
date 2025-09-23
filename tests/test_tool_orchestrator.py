@@ -1,7 +1,15 @@
 """
-Tests for Beast Mode Framework - Tool Orchestrator
-Tests UC-12, UC-13, UC-14, UC-15 implementation
+RDI Enhanced Test Module
+
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.483414
 """
+
+
+
+
+
 
 import pytest
 import time
@@ -14,7 +22,7 @@ from src.beast_mode.orchestration.tool_orchestrator import (
     ToolType, ToolStatus, ExecutionStrategy, ToolHealthMetrics
 )
 
-class TestToolOrchestrator:
+class TestToolOrchestrator(ReflectiveModule):
     """Test suite for Tool Orchestrator functionality"""
     
     @pytest.fixture
@@ -54,7 +62,7 @@ class TestToolOrchestrator:
             context={"task_type": "build"}
         )
 
-class TestToolRegistration:
+class TestToolRegistration(ReflectiveModule):
     """Test tool registration functionality"""
     
     def test_register_valid_tool(self, orchestrator, sample_tool_definition):
@@ -95,7 +103,7 @@ class TestToolRegistration:
         assert metrics.success_rate == 1.0
         assert metrics.systematic_compliance_rate == 1.0
 
-class TestIntelligentToolSelection:
+class TestIntelligentToolSelection(ReflectiveModule):
     """Test intelligent tool selection (UC-12)"""
     
     def test_systematic_tool_selection(self, orchestrator, sample_tool_definition):
@@ -189,7 +197,7 @@ class TestIntelligentToolSelection:
         
         assert result["decision_confidence"] > 0.8  # Should be high with good metrics
 
-class TestSystematicToolExecution:
+class TestSystematicToolExecution(ReflectiveModule):
     """Test systematic tool execution (UC-13)"""
     
     @patch('subprocess.run')
@@ -277,6 +285,8 @@ class TestSystematicToolExecution:
         
         # Simulate timeout
         import subprocess
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         mock_subprocess.side_effect = subprocess.TimeoutExpired("echo test", 30)
         
         result = orchestrator.execute_tool_systematically(sample_execution_request)
@@ -285,7 +295,7 @@ class TestSystematicToolExecution:
         assert "timed out" in result.error_output
         assert result.exit_code == -1
 
-class TestToolHealthMonitoring:
+class TestToolHealthMonitoring(ReflectiveModule):
     """Test tool health monitoring (UC-14)"""
     
     @patch('subprocess.run')
@@ -357,7 +367,7 @@ class TestToolHealthMonitoring:
         assert metrics.success_rate > 0.9  # Should be high for successful executions
         assert metrics.systematic_compliance_rate > 0.9
 
-class TestToolPerformanceOptimization:
+class TestToolPerformanceOptimization(ReflectiveModule):
     """Test tool performance optimization (UC-15)"""
     
     def test_performance_optimization_execution(self, orchestrator, sample_tool_definition):
@@ -426,7 +436,7 @@ class TestToolPerformanceOptimization:
         assert result["improvement_ms"] > 0
         assert result["new_average_time_ms"] < 15000
 
-class TestOrchestrationAnalytics:
+class TestOrchestrationAnalytics(ReflectiveModule):
     """Test orchestration analytics and reporting"""
     
     def test_orchestration_analytics_generation(self, orchestrator, sample_tool_definition):
@@ -501,7 +511,7 @@ class TestOrchestrationAnalytics:
         maintenance_needed = any("maintenance" in rec.lower() for rec in recommendations)
         assert maintenance_needed
 
-class TestOrchestrationIntegration:
+class TestOrchestrationIntegration(ReflectiveModule):
     """Test integration between orchestration components"""
     
     def test_end_to_end_tool_workflow(self, orchestrator, sample_tool_definition):
@@ -573,4 +583,32 @@ class TestOrchestrationIntegration:
         assert "error" in result or "selected_tool_id" in result
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__])

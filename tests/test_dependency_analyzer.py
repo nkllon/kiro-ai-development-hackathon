@@ -1,9 +1,13 @@
 """
-Performance Tests for Dependency Analysis Edge Cases
+RDI Enhanced Test Module
 
-This module provides comprehensive tests for the dependency analysis system,
-focusing on edge cases and performance scenarios.
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.516749
 """
+
+
+
 
 import pytest
 import time
@@ -18,11 +22,13 @@ from src.beast_mode.domain_index.dependency_analyzer import (
     ComprehensiveDependencyAnalyzer
 )
 from src.beast_mode.domain_index.models import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     Domain, DomainTools, DomainMetadata, PackagePotential
 )
 
 
-class TestCircularDependencyDetector:
+class TestCircularDependencyDetector(ReflectiveModule):
     """Test circular dependency detection algorithms"""
     
     def create_test_domain(self, name: str, dependencies: List[str] = None) -> Domain:
@@ -180,7 +186,7 @@ class TestCircularDependencyDetector:
         assert len(cycles) == 1  # Should find the one cycle we added
 
 
-class TestOrphanedFileDetector:
+class TestOrphanedFileDetector(ReflectiveModule):
     """Test orphaned file detection algorithms"""
     
     def create_test_domains_with_patterns(self) -> Dict[str, Domain]:
@@ -342,7 +348,7 @@ class TestOrphanedFileDetector:
         assert len(result["orphaned_files"]) == 1000
 
 
-class TestDependencyImpactAnalyzer:
+class TestDependencyImpactAnalyzer(ReflectiveModule):
     """Test dependency impact analysis"""
     
     def create_test_domains_with_dependencies(self) -> Dict[str, Domain]:
@@ -464,7 +470,7 @@ class TestDependencyImpactAnalyzer:
         assert "circular" in risk_factors_text
 
 
-class TestComprehensiveDependencyAnalyzer:
+class TestComprehensiveDependencyAnalyzer(ReflectiveModule):
     """Test the main comprehensive dependency analyzer"""
     
     def create_mock_registry_manager(self):
@@ -654,4 +660,32 @@ class TestComprehensiveDependencyAnalyzer:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v"])

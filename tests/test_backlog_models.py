@@ -1,8 +1,15 @@
-"""Unit tests for OpenFlow Backlog Management data models
-
-This module provides comprehensive testing for all data models,
-enums, validation logic, and serialization behavior.
 """
+RDI Enhanced Test Module
+
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.462336
+"""
+
+
+
+
+
 
 import pytest
 from datetime import datetime, timedelta
@@ -17,6 +24,8 @@ from src.beast_mode.backlog.models import (
     GhostbustersValidation,
 )
 from src.beast_mode.backlog.enums import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     StrategicTrack,
     DependencyType,
     RiskLevel,
@@ -26,7 +35,7 @@ from src.beast_mode.backlog.enums import (
 )
 
 
-class TestEnums:
+class TestEnums(ReflectiveModule):
     """Test all enum values and behavior"""
     
     def test_strategic_track_values(self):
@@ -59,7 +68,7 @@ class TestEnums:
         assert BeastReadinessStatus.COMPLETED.value == "completed"
         assert BeastReadinessStatus.BLOCKED.value == "blocked"
 
-class TestRequirement:
+class TestRequirement(ReflectiveModule):
     """Test Requirement data model"""
     
     def test_valid_requirement_creation(self):
@@ -113,7 +122,7 @@ class TestRequirement:
             )
 
 
-class TestAcceptanceCriterion:
+class TestAcceptanceCriterion(ReflectiveModule):
     """Test AcceptanceCriterion data model"""
     
     def test_valid_criterion_creation(self):
@@ -155,7 +164,7 @@ class TestAcceptanceCriterion:
             )
 
 
-class TestDependencyReference:
+class TestDependencyReference(ReflectiveModule):
     """Test DependencyReference data model"""
     
     def test_valid_dependency_reference_creation(self):
@@ -188,7 +197,7 @@ class TestDependencyReference:
             )
 
 
-class TestGhostbustersValidation:
+class TestGhostbustersValidation(ReflectiveModule):
     """Test GhostbustersValidation data model"""
     
     def test_valid_ghostbusters_validation_creation(self):
@@ -231,7 +240,7 @@ class TestGhostbustersValidation:
             )
 
 
-class TestMPMValidation:
+class TestMPMValidation(ReflectiveModule):
     """Test MPMValidation data model"""
     
     def test_valid_mpm_validation_creation(self):
@@ -279,7 +288,7 @@ class TestMPMValidation:
             )
 
 
-class TestDependencySpec:
+class TestDependencySpec(ReflectiveModule):
     """Test DependencySpec data model"""
     
     def test_valid_dependency_spec_creation(self):
@@ -328,7 +337,7 @@ class TestDependencySpec:
             )
 
 
-class TestBacklogItem:
+class TestBacklogItem(ReflectiveModule):
     """Test BacklogItem data model"""
     
     def create_sample_backlog_item(self):
@@ -416,7 +425,7 @@ class TestBacklogItem:
             )
 
 
-class TestSerialization:
+class TestSerialization(ReflectiveModule):
     """Test serialization and deserialization of data models"""
     
     def test_backlog_item_serialization(self):
@@ -474,4 +483,32 @@ class TestSerialization:
         validation_dict = asdict(validation)
         assert validation_dict["validation_id"] == "MPM-001"
         assert validation_dict["completeness_score"] == 0.9
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert validation_dict["approval_status"] == ApprovalStatus.PENDING

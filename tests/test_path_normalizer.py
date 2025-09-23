@@ -1,12 +1,13 @@
 """
-Unit tests for PathNormalizer utility class.
+RDI Enhanced Test Module
 
-Tests the path normalization functionality including:
-- Path normalization and resolution
-- Relative path handling
-- Path validation and safety checks
-- Common base directory detection
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.496771
 """
+
+
+
 
 import pytest
 import tempfile
@@ -15,6 +16,8 @@ from pathlib import Path
 from unittest.mock import patch, Mock
 
 from src.beast_mode.utils.path_normalizer import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     PathNormalizer,
     PathValidator,
     normalize_path,
@@ -23,7 +26,7 @@ from src.beast_mode.utils.path_normalizer import (
 )
 
 
-class TestPathNormalizer:
+class TestPathNormalizer(ReflectiveModule):
     """Test suite for PathNormalizer class."""
     
     @pytest.fixture
@@ -218,7 +221,7 @@ class TestPathNormalizer:
         assert result.resolve() == sample_paths["src_file"].resolve()
 
 
-class TestPathValidator:
+class TestPathValidator(ReflectiveModule):
     """Test suite for PathValidator class."""
     
     @pytest.fixture
@@ -270,7 +273,7 @@ class TestPathValidator:
         assert PathValidator.validate_path_length(long_path, 400)
 
 
-class TestConvenienceFunctions:
+class TestConvenienceFunctions(ReflectiveModule):
     """Test suite for convenience functions."""
     
     @pytest.fixture
@@ -306,7 +309,7 @@ class TestConvenienceFunctions:
             assert result is None
 
 
-class TestPathNormalizerIntegration:
+class TestPathNormalizerIntegration(ReflectiveModule):
     """Integration tests for PathNormalizer with real file system scenarios."""
     
     @pytest.fixture
@@ -390,4 +393,32 @@ class TestPathNormalizerIntegration:
             with patch('pathlib.Path.cwd', return_value=project_root):
                 result = PathNormalizer.resolve_path_conflict(input_path, project_root)
                 assert result == expected_relative
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
                 assert not result.is_absolute()

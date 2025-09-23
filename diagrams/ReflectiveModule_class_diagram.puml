@@ -1,0 +1,1481 @@
+@startuml
+!theme plain
+skinparam classAttributeIconSize 0
+
+class ReflectiveModule {
+  +__init__()
+  +_discover_capabilities()
+  +get_interface_metadata()
+  +register_module()
+  +health_check()
+  +get_health_status()
+  +add_capability()
+  +remove_capability()
+  +get_capability()
+  +list_capabilities()
+}
+
+class RCAEngine {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +perform_systematic_rca()
+  +analyze_comprehensive_factors()
+  +implement_systematic_fixes()
+  +validate_root_cause_addressed()
+  +document_prevention_patterns()
+}
+
+class CoreInfrastructureValidator {
+  +__init__()
+  +_setup_validator_logging()
+  +validate_complete_infrastructure()
+  +_validate_logging_infrastructure()
+  +_validate_profiling_infrastructure()
+  +_validate_monitoring_infrastructure()
+  +_validate_testing_infrastructure()
+  +_validate_documentation_infrastructure()
+  +_calculate_infrastructure_assessment()
+  +generate_remediation_plan()
+}
+
+class ProjectMetadata {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +_calculate_health_score()
+  +_identify_health_issues()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+}
+
+class SystematicMetricsEngine {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_health_status()
+  +graceful_degradation()
+  +collect_metric()
+  +compare_approaches()
+  +generate_report()
+}
+
+class SCABeastModeRandomAttack {
+  +__init__()
+  +log_loop()
+  +git_sync()
+  +run_tests()
+  +discover_random_subset()
+  +get_subset_metrics()
+  +calculate_loop_efficiency()
+  +analyze_diminishing_returns()
+  +surgical_rdi_implementation()
+  +surgical_health_implementation()
+}
+
+class LinkValidationRule {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+  +reset_metrics()
+}
+
+class TeamValidationRule {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+  +reset_metrics()
+}
+
+class SystematicValidationEngine {
+  +__init__()
+  +_serialize_validation_result()
+  +_serialize_system_validation_result()
+  +_generate_validation_evidence_package()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+}
+
+class ComponentBoundaryResolver {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +define_component_boundaries()
+  +create_interface_contracts()
+  +implement_dependency_management()
+  +validate_component_boundaries()
+  +resolve_component_boundaries()
+}
+
+class EnhancedSCAProcedureV2 {
+  +__init__()
+  +execute_enhanced_loop()
+  +_discover_random_subset()
+  +_execute_phase()
+  +run_enhanced_sca()
+}
+
+class RCAPatternAnalyzer {
+  +__init__()
+  +_setup_analyzer_logging()
+  +analyze_failure_pattern()
+  +_analyze_logging_deficiencies()
+  +_analyze_profiling_deficiencies()
+  +_analyze_error_patterns()
+  +_analyze_context_patterns()
+  +_convert_logging_to_pattern_result()
+  +_convert_profiling_to_pattern_result()
+  +_analyze_import_error()
+}
+
+class GKEServiceProvider {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +request_service()
+  +_handle_pdca_cycle_service()
+  +_handle_model_driven_building_service()
+  +_handle_tool_health_service()
+  +_handle_quality_assurance_service()
+}
+
+class SCALPELDevPostBrowserAutomationAttack {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_health_status()
+  +graceful_degradation()
+  +log_phase()
+  +git_sync()
+  +phase_1_scalpel_browser_automation_integration()
+  +phase_2_scalpel_test_updates()
+  +phase_3_scalpel_configuration_update()
+}
+
+class SyntaxFixedObservabilityModule {
+  +__init__()
+  +perform_core_operation()
+  +check_health()
+  +get_capabilities()
+  +get_dependencies()
+  +get_module_info()
+  +start()
+  +stop()
+}
+
+class BeastModeConstraintResolver {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +resolve_systematic_vs_speed_conflict()
+  +resolve_uptime_vs_throughput_conflict()
+  +_parallel_systematic_processing()
+  +_execute_systematic_task()
+  +_distributed_measurement_processing()
+}
+
+class ContentQualityRule {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+  +reset_metrics()
+}
+
+class ContentBasedChangeDetector {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+  +reset_metrics()
+}
+
+class GovernanceFramework {
+  +__init__()
+  +_load_configuration()
+  +_initialize_default_configuration()
+  +_create_default_roles()
+  +_create_default_training_programs()
+  +_create_default_maintenance_schedules()
+  +_create_default_improvement_processes()
+  +_save_configuration()
+  +create_governance_documentation()
+  +_create_governance_overview()
+}
+
+class MockActionResult {
+  +__init__()
+}
+
+class RDIChainOrchestrator {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +_discover_test_files()
+  +_convert_pdca_to_rdi_result()
+  +_calculate_mathematical_consistency()
+}
+
+class GKEServiceInterface {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +generate_5_minute_integration_guide()
+  +_calculate_beast_mode_improvement()
+  +simulate_5_minute_integration_test()
+  +get_gke_service_catalog()
+  +provide_pdca_services()
+}
+
+class BeastModeSecurityManager {
+  +__init__()
+  +_initialize_security_systems()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +_generate_master_key()
+  +_setup_audit_logging()
+  +_setup_access_control()
+  +_generate_api_key()
+}
+
+class ValidationCategory {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+  +reset_metrics()
+}
+
+class TaskExecutionEngine {
+  +__init__()
+  +_initialize_tasks()
+  +_initialize_agents()
+  +get_ready_tasks()
+  +_dependencies_met()
+  +_run_git_command()
+  +_get_current_branch()
+  +_generate_session_branch_name()
+  +_create_session_branch()
+  +_commit_changes()
+}
+
+class SystematicPDCAOrchestrator {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_health_status()
+  +graceful_degradation()
+  +execute_pdca_cycle()
+  +_plan_phase()
+  +_do_phase()
+  +_check_phase()
+  +_act_phase()
+}
+
+class AutomatedQualityGates {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +execute_quality_assessment()
+  +_execute_quality_gate()
+  +_execute_linting_gate()
+  +_execute_formatting_gate()
+  +_execute_security_gate()
+}
+
+class CLIGeneratorCore {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_health_status()
+  +graceful_degradation()
+}
+
+class DevPostBrowserAutomation {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_health_status()
+  +graceful_degradation()
+  +initialize_sync()
+  +extract_hackathon_data_sync()
+  +extract_project_data_sync()
+  +close_sync()
+  +__enter__()
+}
+
+class CLIGeneratorEngine {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_health_status()
+  +graceful_degradation()
+  +analyze_module()
+  +generate_cli_code()
+  +generate_cli_entry_point()
+}
+
+class TextProtocolHandler {
+  +__init__()
+  +_register_default_patterns()
+  +register_pattern()
+  +register_handler()
+  +parse_command()
+  +_normalize_command_text()
+  +_parse_natural_language()
+  +validate_command()
+  +execute_action()
+  +format_response()
+}
+
+class TeamMember {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +_calculate_health_score()
+  +_identify_health_issues()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+}
+
+class HackathonDemoController {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_health_status()
+  +graceful_degradation()
+  +validate_technical_completeness()
+  +generate_demo_script()
+  +optimize_judge_engagement()
+  +assess_demo_readiness()
+  +get_demo_framework_summary()
+}
+
+class EnhancedMultiPerspectiveValidator {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +analyze_low_confidence_decision()
+  +_determine_confidence_level()
+  +_select_stakeholders_for_analysis()
+  +_analyze_stakeholder_perspective()
+  +_beast_mode_perspective_analysis()
+}
+
+class MediaFileDetector {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+  +reset_metrics()
+}
+
+class TagValidationRule {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+  +reset_metrics()
+}
+
+class NotificationMessage {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +_calculate_health_score()
+  +_identify_health_issues()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+}
+
+class MultiPerspectiveValidator {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +validate_c7_multi_stakeholder_perspectives()
+  +_minimal_validation()
+  +_basic_multi_perspective_check()
+  +_full_ghostbusters_analysis()
+  +get_basic_perspective_analysis()
+}
+
+class TaskDAGRM {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +load_tasks_from_spec()
+  +_parse_tasks_markdown()
+  +_extract_dependencies()
+  +_resolve_parent_dependencies()
+  +_calculate_task_tiers()
+}
+
+class GitAnalyzer {
+  +__init__()
+  +get_commits_ahead_of_main()
+  +analyze_file_changes()
+  +map_changes_to_tasks()
+  +analyze()
+  +get_analyzer_name()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+}
+
+class FileChangeDetector {
+  +__init__()
+  +analyze_file_changes()
+  +map_changes_to_task_completions()
+  +detect_completion_evidence()
+  +calculate_change_impact()
+  +perform_comprehensive_file_change_analysis()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+}
+
+class ConstraintComplianceValidator {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +validate_all_constraints()
+  +_validate_constraint()
+  +_validate_reflective_module_constraint()
+  +_validate_model_driven_constraint()
+  +_validate_no_workarounds_constraint()
+}
+
+class GlobalSettings {
+  +__init__()
+  +_get_default_settings()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +_calculate_health_score()
+  +_identify_health_issues()
+  +get_configuration()
+  +update_configuration()
+}
+
+class DevPostWebScraping {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_health_status()
+  +graceful_degradation()
+  +_make_request()
+  +extract_hackathon_data()
+  +extract_project_data()
+  +search_hackathons()
+  +close()
+}
+
+class SCAEfficiencyAnalysisSystem {
+  +__init__()
+  +log_loop()
+  +git_sync()
+  +run_tests()
+  +discover_random_subset()
+  +get_subset_metrics()
+  +calculate_advanced_efficiency()
+  +analyze_efficiency_curves()
+  +calculate_correlations()
+  +pearson_correlation()
+}
+
+class MockStructuredAction {
+  +__init__()
+}
+
+class SelfConsistencyValidatorCoreCoreValidation {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_health_status()
+  +graceful_degradation()
+  +check_consistency()
+  +validate_interface_consistency()
+  +validate_dependency_consistency()
+  +generate_consistency_report()
+}
+
+class SyntaxFixedModule {
+  +__init__()
+  +perform_core_operation()
+  +check_health()
+  +get_capabilities()
+  +get_dependencies()
+  +get_module_info()
+  +start()
+  +stop()
+}
+
+class EvidencePackageGenerator {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +generate_comprehensive_evidence_package()
+  +_generate_gke_impact_evidence()
+  +_generate_superiority_evidence()
+  +_collect_concrete_superiority_metrics()
+  +_generate_constraint_compliance_evidence()
+}
+
+class DocumentManagementRM {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +register_rm_documentation()
+  +enforce_rm_documentation_constraint()
+  +create_rdi_document_template()
+  +validate_cross_references()
+  +generate_rm_documentation_report()
+}
+
+class SCALPELSystem {
+  +__init__()
+  +log_phase()
+  +git_sync()
+  +run_tests()
+  +get_subset_metrics()
+  +surgical_rdi_implementation()
+  +surgical_health_implementation()
+  +surgical_registry_implementation()
+  +fix_size_compliance()
+  +create_subset_tests()
+}
+
+class ContinuousMonitor {
+  +__init__()
+  +monitor_spec_drift()
+  +detect_terminology_inconsistencies()
+  +validate_architectural_decisions()
+  +trigger_automatic_correction()
+  +start_continuous_monitoring()
+  +stop_continuous_monitoring()
+  +get_monitoring_status()
+  +_load_baseline_metrics()
+  +_setup_monitoring_schedule()
+}
+
+class RCAErrorHandler {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +handle_rca_operation()
+  +handle_rca_engine_failure()
+  +generate_fallback_report()
+  +monitor_component_health()
+  +apply_graceful_degradation()
+}
+
+class BeastModeSCA20Loops {
+  +__init__()
+  +log_loop()
+  +git_sync()
+  +run_tests()
+  +discover_random_subset()
+  +get_subset_metrics()
+  +calculate_advanced_efficiency()
+  +detect_diminishing_returns_advanced()
+  +surgical_rdi_implementation()
+  +surgical_health_implementation()
+}
+
+class CLIProcessing {
+  +__init__()
+  +process_input()
+  +process_json_input()
+  +process_text_input()
+  +process_binary_input()
+  +detect_format()
+  +get_module_info()
+  +get_capabilities()
+  +get_health_status()
+  +graceful_degradation()
+}
+
+class GKEServiceImpactMeasurer {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +record_service_request()
+  +record_velocity_measurement()
+  +_persist_service_request()
+  +_persist_velocity_measurement()
+  +generate_impact_report()
+}
+
+class ASTValidatedModule {
+  +__init__()
+  +perform_core_operation()
+  +check_health()
+  +get_capabilities()
+  +get_dependencies()
+  +get_module_info()
+  +start()
+  +stop()
+}
+
+class HealthMonitoringSystem {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +register_component()
+  +_monitoring_loop()
+  +_check_component_health()
+  +_handle_component_degradation()
+  +_handle_component_recovery()
+}
+
+class RCAPerformanceMonitor {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +start_monitoring()
+  +stop_monitoring()
+  +monitor_operation()
+  +implement_graceful_degradation()
+  +get_performance_report()
+}
+
+class BeastModeSystemOrchestrator {
+  +__init__()
+  +_complete_initialization()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +_handle_system_alert()
+  +_handle_critical_alert()
+  +_handle_emergency_alert()
+  +_recover_metrics_engine()
+}
+
+class SpecConsolidator {
+  +__init__()
+  +analyze_overlap()
+  +_parse_spec_comprehensively()
+  +_extract_requirements()
+  +_extract_interfaces_detailed()
+  +_extract_terminology_detailed()
+  +_extract_functionality_keywords_enhanced()
+  +_extract_meaningful_words()
+  +_extract_stakeholder_personas()
+  +_extract_dependencies()
+}
+
+class SimplifiedSystematicSuperiorityModel {
+  +__init__()
+  +get_module_status()
+  +_get_primary_responsibility()
+  +is_healthy()
+  +get_health_indicators()
+  +compare_approaches()
+}
+
+class ProjectFileMonitor {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+  +reset_metrics()
+}
+
+class ParallelExecutionCoordinator {
+  +__init__()
+  +_build_agent_command()
+  +_calculate_parallel_efficiency()
+  +_calculate_timeline_reduction()
+  +_calculate_task_complexity()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+}
+
+class LiveGCPBillingMonitor {
+  +__init__()
+  +get_health_status()
+  +get_metrics()
+  +get_configuration()
+}
+
+class PreviewData {
+  +__init__()
+  +_get_default_preview_data()
+  +_generate_preview_id()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +_calculate_health_score()
+  +_identify_health_issues()
+  +get_configuration()
+}
+
+class ProductionReadinessAssessor {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +_initialize_assessment_criteria()
+  +conduct_comprehensive_assessment()
+  +_assess_category()
+  +_assess_criterion()
+  +_get_criterion_score()
+}
+
+class SystematicCleanupEngine {
+  +__init__()
+  +_setup_cleanup_logging()
+  +analyze_organizational_entropy()
+  +create_systematic_cleanup_plan()
+  +execute_systematic_cleanup()
+  +_analyze_file_systematic_placement()
+  +_categorize_file()
+  +_determine_systematic_location()
+  +_assess_cleanup_priority()
+  +_generate_placement_rationale()
+}
+
+class LiveMigrationManager {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+}
+
+class ValidationContext {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+  +reset_metrics()
+}
+
+class DevPostFormInterrogation {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_health_status()
+  +graceful_degradation()
+  +initialize_sync()
+  +interrogate_submission_form_sync()
+  +extract_hackathon_title_sync()
+  +extract_hackathon_id_sync()
+  +extract_form_sections_sync()
+}
+
+class WhiskeyModeDisplay {
+  +__init__()
+  +_setup_layout()
+  +_create_header()
+  +_create_test_matrix()
+  +_create_sparkline()
+  +_create_mini_sparkline()
+  +_create_system_health()
+  +_create_hubris_panel()
+  +_create_mama_panel()
+  +_create_footer()
+}
+
+class NotificationSettings {
+  +__init__()
+  +_get_default_settings()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +_calculate_health_score()
+  +_identify_health_issues()
+  +get_configuration()
+  +update_configuration()
+}
+
+class OrchestrationController {
+  +__init__()
+  +launch_swarm()
+  +distribute_tasks()
+  +monitor_swarm()
+  +handle_failure()
+  +integrate_results()
+  +_validate_swarm_config()
+  +_build_dependency_graph()
+  +_calculate_parallel_groups()
+  +_calculate_optimal_instances()
+}
+
+class ToolOrchestrationEngine {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +register_tool()
+  +orchestrate_tool_execution()
+  +_assess_decision_confidence()
+  +_route_decision_by_confidence()
+  +_make_high_confidence_decision()
+}
+
+class GKEServiceProviderSimple {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +request_service()
+  +_handle_pdca_cycle_service()
+  +_handle_model_driven_building_service()
+  +_handle_tool_health_service()
+  +_handle_quality_assurance_service()
+}
+
+class DomainIndexCore {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_health_status()
+  +graceful_degradation()
+  +query_domain()
+  +search_domains_by_capability()
+  +get_domain_relationships()
+  +analyze_cross_domain_patterns()
+  +perform_health_check()
+}
+
+class SimplifiedMultiAgentModel {
+  +__init__()
+  +get_module_status()
+  +_get_primary_responsibility()
+  +is_healthy()
+  +get_health_indicators()
+  +coordinate_agents()
+}
+
+class SimplifiedSpecToCodeModel {
+  +__init__()
+  +get_module_status()
+  +_get_primary_responsibility()
+  +is_healthy()
+  +get_health_indicators()
+  +transform_spec_to_code()
+}
+
+class ADRSystem {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +create_adr()
+  +add_decision_option()
+  +make_decision()
+  +supersede_adr()
+  +search_adrs()
+}
+
+class GKEServiceConsumer {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +register_gke_team()
+  +request_pdca_cycle_service()
+  +request_model_driven_building_service()
+  +request_tool_health_management_service()
+  +request_quality_assurance_service()
+}
+
+class DevpostAuthService {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+  +reset_metrics()
+}
+
+class RCATimeoutHandler {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +manage_operation_timeout()
+  +apply_graceful_degradation()
+  +get_timeout_recommendations()
+  +optimize_timeout_configuration()
+  +_setup_timeout_handlers()
+}
+
+class PDCALangGraphOrchestrator {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +_build_pdca_graph()
+  +_should_continue()
+  +get_learning_intelligence()
+  +_calculate_systematic_effectiveness()
+}
+
+class TestRCAIntegrationEngine {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +analyze_test_failures()
+  +group_related_failures()
+  +prioritize_failures()
+  +convert_to_rca_failure()
+  +generate_comprehensive_report()
+}
+
+class DevpostConfig {
+  +__init__()
+  +_get_default_config()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +_calculate_health_score()
+  +_identify_health_issues()
+  +get_configuration()
+  +update_configuration()
+}
+
+class SimpleBeastAgent {
+  +__init__()
+  +_get_primary_responsibility()
+  +get_health_indicators()
+  +get_module_status()
+  +is_healthy()
+}
+
+class ConsistencyValidator {
+  +__init__()
+  +validate_terminology()
+  +check_interface_compliance()
+  +validate_pattern_consistency()
+  +generate_consistency_score()
+  +_load_terminology_registry()
+  +_load_interface_patterns()
+  +_load_design_patterns()
+  +_extract_terminology_from_content()
+  +_find_term_variations()
+}
+
+class FileChangeEvent {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +_calculate_health_score()
+  +_identify_health_issues()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+}
+
+class ComprehensiveMonitoringSystem {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +emit_metric()
+  +register_health_endpoint()
+  +add_alert_rule()
+  +get_comprehensive_health_status()
+  +emit_structured_log()
+}
+
+class DevPostCLI {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_health_status()
+  +graceful_degradation()
+  +create_parser()
+  +extract_command()
+  +search_command()
+  +interrogate_command()
+  +status_command()
+}
+
+class GCPBillingMonitor {
+  +__init__()
+  +_init_openflow_bridge()
+  +_init_gcp_sdk_fallback()
+  +_get_mock_metrics()
+  +_is_cache_valid()
+  +get_health_status()
+  +get_metrics()
+  +get_configuration()
+  +get_configuration_schema()
+  +get_cost_optimization_recommendations()
+}
+
+class BeastModeCLI {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +execute_command()
+  +_execute_status_command()
+  +_execute_health_command()
+  +_execute_validate_command()
+  +_execute_pdca_command()
+}
+
+class MockTextProtocolHandler {
+  +__init__()
+}
+
+class RCAReportGenerator {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +generate_report()
+  +format_for_console()
+  +generate_json_report()
+  +generate_markdown_report()
+  +display_console_report()
+}
+
+class ProjectConnection {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+  +reset_metrics()
+}
+
+class RequiredFieldRule {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+  +reset_metrics()
+}
+
+class GovernanceController {
+  +__init__()
+  +validate_new_spec()
+  +check_overlap_conflicts()
+  +get_module_status()
+}
+
+class BacklogDependencyManager {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +_check_boundary_violations()
+  +declare_dependency()
+  +validate_dependency_graph()
+  +detect_circular_dependencies()
+  +calculate_critical_path()
+}
+
+class SimplifiedInfrastructureModel {
+  +__init__()
+  +get_module_status()
+  +_get_primary_responsibility()
+  +is_healthy()
+  +get_health_indicators()
+  +deploy_infrastructure()
+}
+
+class ProjectFileEventHandler {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+  +reset_metrics()
+}
+
+class SystematicComparisonFramework {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +record_systematic_measurement()
+  +record_adhoc_measurement()
+  +_persist_measurement()
+  +generate_superiority_analysis()
+  +_generate_analysis_with_baseline()
+}
+
+class BeastModeAgent {
+  +__init__()
+  +get_specializations()
+  +get_max_concurrent_tasks()
+  +_can_handle_request()
+  +_update_average_response_time()
+  +get_health_status()
+}
+
+class DevPostHybridIntegration {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_health_status()
+  +graceful_degradation()
+  +extract_hackathon_data_sync()
+  +extract_project_data_sync()
+  +search_hackathons()
+  +close_sync()
+  +__enter__()
+}
+
+class DevpostProject {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +_calculate_health_score()
+  +_identify_health_issues()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+}
+
+class ComprehensiveLoggingSystem {
+  +__init__()
+  +get_module_status()
+  +is_healthy()
+  +get_health_indicators()
+  +_get_primary_responsibility()
+  +log()
+  +audit()
+  +performance_log()
+  +error_log()
+  +security_log()
+}
+
+class SyncResult {
+  +__init__()
+  +get_module_info()
+  +get_capabilities()
+  +get_dependencies()
+  +check_health()
+  +_calculate_health_score()
+  +_identify_health_issues()
+  +get_configuration()
+  +update_configuration()
+  +get_metrics()
+}
+
+EnhancedSCAProcedureV2 --|> ReflectiveModule
+SCABeastModeRandomAttack --|> ReflectiveModule
+TaskExecutionEngine --|> ReflectiveModule
+ExecutionAnalyzer --|> VerificationModule
+ResultCombiner --|> VerificationModule
+VerificationReporter --|> VerificationModule
+DevPostNavigationSession --|> SiteNavigationSession
+BeastModeSCA20Loops --|> ReflectiveModule
+SCALPELSystem --|> ReflectiveModule
+GitRegistryChecker --|> RegistryAvailabilityChecker
+MemoryRegistryChecker --|> RegistryAvailabilityChecker
+FileSystemRegistryChecker --|> RegistryAvailabilityChecker
+LiveGCPBillingMonitor --|> ReflectiveModule
+PlaygroundHandler --|> MessageHandler
+LangGraphNodeRMDDDInterface --|> RMDDDInterface
+SCAEfficiencyAnalysisSystem --|> ReflectiveModule
+PageStructureAnalyzer --|> InvestigationModule
+NavigationAnalyzer --|> InvestigationModule
+DiagnosticTester --|> InvestigationModule
+SimplifiedSpecToCodeModel --|> ReflectiveModule
+SimplifiedSystematicSuperiorityModel --|> ReflectiveModule
+SimplifiedMultiAgentModel --|> ReflectiveModule
+SimplifiedInfrastructureModel --|> ReflectiveModule
+SCALPELDevPostBrowserAutomationAttack --|> ReflectiveModule
+MockTextProtocolHandler --|> ReflectiveModule
+MockStructuredAction --|> ReflectiveModule
+MockActionResult --|> ReflectiveModule
+BeastModeAgent --|> ReflectiveModule
+CostOptimizationAgent --|> BeastModeAgent
+DeploymentSpecialistAgent --|> BeastModeAgent
+CodeQualityMentorAgent --|> BeastModeAgent
+SimpleBeastAgent --|> ReflectiveModule
+BookingId --|> ValueObject
+BookingService --|> DomainService
+PythonParser --|> FileTypeParser
+JSONParser --|> FileTypeParser
+YAMLParser --|> FileTypeParser
+INIParser --|> FileTypeParser
+TOMLParser --|> FileTypeParser
+RCAPatternAnalyzer --|> ReflectiveModule
+RCAEngine --|> ReflectiveModule
+MultiPerspectiveValidator --|> ReflectiveModule
+CodeQualityExpert --|> GhostbustersExpertAgent
+WhiskeyModeDisplay --|> ReflectiveModule
+GitAnalyzer --|> ReflectiveModule
+BuildExpert --|> GhostbustersExpertAgent
+DefaultSharedKernelGovernance --|> SharedKernelGovernance
+SharedKernel --|> DomainReflectiveModule
+SharedKernelRegistry --|> DomainReflectiveModule
+AnalysisError --|> GhostbustersError
+RecoveryError --|> GhostbustersError
+ConsensusError --|> GhostbustersError
+ValidationError --|> GhostbustersError
+ExtensionError --|> GhostbustersError
+AutomatedQualityGates --|> ReflectiveModule
+PerformanceExpert --|> GhostbustersExpertAgent
+HealthMonitoringSystem --|> ReflectiveModule
+ValidationContext --|> ReflectiveModule
+ValidationCategory --|> ReflectiveModule
+RequiredFieldRule --|> ReflectiveModule
+ContentQualityRule --|> ReflectiveModule
+LinkValidationRule --|> ReflectiveModule
+TeamValidationRule --|> ReflectiveModule
+TagValidationRule --|> ReflectiveModule
+GKEServiceProvider --|> ReflectiveModule
+EventSourcingRepository --|> DomainReflectiveModule
+InMemoryEventStore --|> EventStore
+InMemorySnapshotStore --|> SnapshotStore
+SystematicComparisonFramework --|> ReflectiveModule
+SpecConsolidator --|> ReflectiveModule
+BeastModeSystemOrchestrator --|> ReflectiveModule
+ProjectConnection --|> ReflectiveModule
+DevpostAuthService --|> ReflectiveModule
+GKEServiceImpactMeasurer --|> ReflectiveModule
+ADRSystem --|> ReflectiveModule
+DependencyValidator --|> DomainReflectiveModule
+ProductionReadinessAssessor --|> ReflectiveModule
+DomainContextInitializer --|> DomainReflectiveModule
+DevpostProject --|> ReflectiveModule
+TeamMember --|> ReflectiveModule
+DomainReflectiveModule --|> ReflectiveModuleBase
+FileChangeDetector --|> ReflectiveModule
+ApplicationService --|> DomainService
+InfrastructureService --|> DomainService
+RCATimeoutHandler --|> ReflectiveModule
+DomainEventPublisher --|> DomainReflectiveModule
+AggregateCreatedEvent --|> DomainEvent
+AggregateUpdatedEvent --|> DomainEvent
+AggregateDeletedEvent --|> DomainEvent
+RepositoryRM --|> DomainReflectiveModule
+ToolOrchestrationEngine --|> ReflectiveModule
+NotificationSettings --|> ReflectiveModule
+NotificationMessage --|> ReflectiveModule
+OrchestrationController --|> ReflectiveModule
+ProjectFileMonitor --|> ReflectiveModule
+ContentBasedChangeDetector --|> ReflectiveModule
+MediaFileDetector --|> ReflectiveModule
+ProjectFileEventHandler --|> ReflectiveModule
+BeastModeCLI --|> ReflectiveModule
+PDCALangGraphOrchestrator --|> ReflectiveModule
+DesignValidator --|> ComplianceValidator
+TaskDAGRM --|> ReflectiveModule
+TextProtocolHandler --|> ReflectiveModule
+ComprehensiveLoggingSystem --|> ReflectiveModule
+ComprehensiveMonitoringSystem --|> ReflectiveModule
+ProjectGenerator --|> DomainReflectiveModule
+SystematicValidationEngine --|> ReflectiveModule
+BacklogDependencyManager --|> ReflectiveModule
+DDDComplianceValidator --|> ComplianceValidator
+MamaDiscovererImpl --|> MamaDiscoverer
+SecurityExpert --|> GhostbustersExpertAgent
+SimpleMessageHandler --|> BaseMessageHandler
+PromptRequestHandler --|> BaseMessageHandler
+PromptResponseHandler --|> BaseMessageHandler
+AgentDiscoveryHandler --|> BaseMessageHandler
+AgentResponseHandler --|> BaseMessageHandler
+HelpWantedHandler --|> BaseMessageHandler
+HelpResponseHandler --|> BaseMessageHandler
+SporeDeliveryHandler --|> BaseMessageHandler
+SporeRequestHandler --|> BaseMessageHandler
+TechnicalExchangeHandler --|> BaseMessageHandler
+SporeSpawnHandler --|> BaseMessageHandler
+SystemHealthHandler --|> BaseMessageHandler
+EvidencePackageGenerator --|> ReflectiveModule
+SystematicCleanupEngine --|> ReflectiveModule
+ConstraintComplianceValidator --|> ReflectiveModule
+ParallelExecutionCoordinator --|> ReflectiveModule
+StandardMessageRouter --|> MessageRouter
+HumilityEnforcerImpl --|> HumilityEnforcer
+SyncResult --|> ReflectiveModule
+FileChangeEvent --|> ReflectiveModule
+TestRCAIntegrationEngine --|> ReflectiveModule
+CyclomaticComplexityAnalyzer --|> ComplexityAnalyzer
+CognitiveComplexityAnalyzer --|> ComplexityAnalyzer
+ComplexityMonitor --|> DomainReflectiveModule
+AggregateRootTemplate --|> CodeTemplate
+CustomizableCodeTemplate --|> CodeTemplate
+RMDDDCodeGenerator --|> DomainReflectiveModule
+RCAReportGenerator --|> ReflectiveModule
+ContinuousMonitor --|> ReflectiveModule
+HubrisDetectorImpl --|> HubrisDetector
+ContextMapper --|> DomainReflectiveModule
+GCPBillingMonitor --|> ReflectiveModule
+HackathonDemoController --|> ReflectiveModule
+ComponentBoundaryResolver --|> ReflectiveModule
+GKEServiceConsumer --|> ReflectiveModule
+CoreInfrastructureValidator --|> ReflectiveModule
+ConsistencyValidator --|> ReflectiveModule
+ProjectMetadata --|> ReflectiveModule
+RCAPerformanceMonitor --|> ReflectiveModule
+EnhancedMultiPerspectiveValidator --|> ReflectiveModule
+BeastModeSecurityManager --|> ReflectiveModule
+ImmutableValueObject --|> ValueObject
+Money --|> ImmutableValueObject
+EmailAddress --|> ImmutableValueObject
+PhoneNumber --|> ImmutableValueObject
+Address --|> ImmutableValueObject
+DateRange --|> ImmutableValueObject
+Percentage --|> ImmutableValueObject
+AntiCorruptionLayer --|> DomainReflectiveModule
+BeastModeConstraintResolver --|> ReflectiveModule
+GKEServiceProviderSimple --|> ReflectiveModule
+RealityCheckerImpl --|> RealityChecker
+DevpostConfig --|> ReflectiveModule
+GlobalSettings --|> ReflectiveModule
+EntityTemplate --|> CodeTemplate
+EnhancedEntityTemplate --|> CustomizableCodeTemplate
+CLIGeneratorEngine --|> ReflectiveModule
+RDIChainOrchestrator --|> ReflectiveModule
+DocumentManagementRM --|> ReflectiveModule
+RCAErrorHandler --|> ReflectiveModule
+SystematicPDCAOrchestrator --|> ReflectiveModule
+GKEServiceInterface --|> ReflectiveModule
+GovernanceFramework --|> ReflectiveModule
+ArchitectureExpert --|> GhostbustersExpertAgent
+RequirementTracer --|> ComplianceValidator
+SystematicMetricsEngine --|> ReflectiveModule
+Entity --|> DomainReflectiveModule
+PreviewData --|> ReflectiveModule
+DomainAdapter --|> DomainReflectiveModule
+LiveMigrationManager --|> ReflectiveModule
+GovernanceController --|> ReflectiveModule
+DomainIndexCore --|> ReflectiveModule
+ASTValidatedModule --|> ReflectiveModule
+SyntaxFixedModule --|> ReflectiveModule
+SyntaxFixedObservabilityModule --|> ReflectiveModule
+SelfConsistencyValidatorCoreCoreValidation --|> ReflectiveModule
+CLIGeneratorCore --|> ReflectiveModule
+DevPostHybridIntegration --|> ReflectiveModule
+CLIProcessing --|> ReflectiveModule
+DevPostCLI --|> ReflectiveModule
+DevPostWebScraping --|> ReflectiveModule
+DevPostBrowserAutomation --|> ReflectiveModule
+DevPostFormInterrogation --|> ReflectiveModule
+@enduml

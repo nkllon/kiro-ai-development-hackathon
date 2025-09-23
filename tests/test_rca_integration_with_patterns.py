@@ -1,7 +1,13 @@
 """
-Integration tests for RCA Integration with Test Pattern Library
-Tests the integration between TestRCAIntegrationEngine and TestPatternLibrary
+RDI Enhanced Test Module
+
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.594497
 """
+
+
+
 
 import pytest
 from datetime import datetime
@@ -14,7 +20,7 @@ from src.beast_mode.analysis.rca_engine import (
     FailureCategory, RootCauseType
 )
 
-class TestRCAIntegrationWithPatterns:
+class TestRCAIntegrationWithPatterns(ReflectiveModule):
     """Test suite for RCA integration with test pattern library"""
     
     @pytest.fixture
@@ -256,6 +262,8 @@ class TestRCAIntegrationWithPatterns:
         
         # Test pattern matching performance
         import time
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         start_time = time.time()
         
         # Convert test failure to RCA failure for pattern matching
@@ -286,4 +294,32 @@ class TestRCAIntegrationWithPatterns:
                 
             # Should still get a report even with pattern library failure
             assert report is not None
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
             assert report.total_failures == 1

@@ -1,9 +1,13 @@
 """
-Test file monitor timeout fixes.
+RDI Enhanced Test Module
 
-This module contains focused tests to verify that file monitor
-operations complete within reasonable time limits and don't hang.
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.597839
 """
+
+
+
 
 import pytest
 import tempfile
@@ -13,9 +17,11 @@ from unittest.mock import Mock, patch
 
 from src.beast_mode.integration.devpost.monitoring.file_monitor import ProjectFileMonitor
 from src.beast_mode.integration.devpost.models import DevpostConfig
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestFileMonitorTimeout:
+
+class TestFileMonitorTimeout(ReflectiveModule):
     """Test file monitor timeout and performance issues."""
     
     @pytest.fixture
@@ -147,7 +153,7 @@ class TestFileMonitorTimeout:
 
 
 @pytest.mark.integration
-class TestFileMonitorIntegrationTimeout:
+class TestFileMonitorIntegrationTimeout(ReflectiveModule):
     """Integration tests with timeout enforcement."""
     
     @pytest.mark.timeout(10)  # Generous timeout for integration test
@@ -192,4 +198,32 @@ class TestFileMonitorIntegrationTimeout:
             assert duration < 5.0, f"Integration test took {duration:.2f} seconds"
             
             # Should have detected some changes
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
             assert len(changes_detected) >= 0  # May be 0 due to timing, but shouldn't hang

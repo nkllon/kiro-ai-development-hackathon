@@ -1,0 +1,20 @@
+version: 2
+verbose: false
+ignore_default: false
+ignored_paths:
+  - kiro_simone_adapter/mcp-server/node_modules/**
+  - '**/*.png'
+  - '**/*.jpg'
+  - '**/*.jpeg'
+  - '**/*.gif'
+  - '**/*.mov'
+  - '**/*.mp4'
+  - patterns/*.json
+  - chrome_cookies.db
+  - '**/*.zip'
+  - '**/*.tar'
+  - '**/*.gz'
+
+
+
+

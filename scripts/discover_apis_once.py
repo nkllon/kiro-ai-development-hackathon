@@ -68,7 +68,10 @@ def discover_all_apis() -> list:
             item_id = item.get("id")
 
             # Skip system items
-            if any(skip in item_title for skip in ["login", "password", "secure note", "software license"]):
+            if any(
+                skip in item_title
+                for skip in ["login", "password", "secure note", "software license"]
+            ):
                 continue
 
             # Check if this item looks like an API key
@@ -123,22 +126,34 @@ def extract_generic_key_info(item_details: dict) -> Optional[dict]:
             field_value = field.get("value", "")
 
             # Look for API key in various field types
-            if any(keyword in field_label for keyword in ["api key", "key", "token", "secret", "credential"]):
+            if any(
+                keyword in field_label
+                for keyword in ["api key", "key", "token", "secret", "credential"]
+            ):
                 if field_value and len(field_value) > 20:  # Likely an API key
                     api_key = field_value
 
             # Look for endpoint/URL
-            elif any(keyword in field_label for keyword in ["url", "endpoint", "base url", "host", "server"]):
+            elif any(
+                keyword in field_label
+                for keyword in ["url", "endpoint", "base url", "host", "server"]
+            ):
                 if field_value and field_value.startswith(("http://", "https://")):
                     endpoint = field_value
 
             # Look for username
-            elif any(keyword in field_label for keyword in ["username", "user", "login", "email"]):
+            elif any(
+                keyword in field_label
+                for keyword in ["username", "user", "login", "email"]
+            ):
                 if field_value:
                     username = field_value
 
             # Look for organization
-            elif any(keyword in field_label for keyword in ["org", "organization", "company", "team", "account"]):
+            elif any(
+                keyword in field_label
+                for keyword in ["org", "organization", "company", "team", "account"]
+            ):
                 if field_value:
                     organization = field_value
 

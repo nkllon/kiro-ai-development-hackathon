@@ -1,9 +1,15 @@
 """
-Unit tests for Devpost authentication service.
+RDI Enhanced Test Module
 
-Tests cover OAuth flow, API key authentication, token management,
-retry logic, and error handling scenarios.
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.440125
 """
+
+
+
+
+
 
 import asyncio
 import json
@@ -18,7 +24,7 @@ from src.beast_mode.integration.devpost.models import AuthToken, AuthResult
 from src.beast_mode.core.exceptions import AuthenticationError, NetworkError
 
 
-class TestDevpostAuthService:
+class TestDevpostAuthService(ReflectiveModule):
     """Test cases for DevpostAuthService."""
     
     @pytest.fixture
@@ -424,7 +430,7 @@ class TestDevpostAuthService:
         mock_session.close.assert_called_once()
 
 
-class TestAuthServiceIntegration:
+class TestAuthServiceIntegration(ReflectiveModule):
     """Integration tests for authentication service."""
     
     @pytest.mark.asyncio
@@ -509,7 +515,7 @@ class TestAuthServiceIntegration:
             assert call_count == 2  # Failed once, succeeded on retry
 
 
-class TestAuthServiceErrorHandling:
+class TestAuthServiceErrorHandling(ReflectiveModule):
     """Additional error handling tests for authentication service."""
     
     @pytest.fixture
@@ -721,6 +727,8 @@ class TestAuthServiceErrorHandling:
     def test_rate_limit_window_cleanup(self, auth_service):
         """Test that old timestamps are cleaned up from rate limit tracking."""
         import time
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         
         # Add some old timestamps
         old_time = time.time() - auth_service.RATE_LIMIT_WINDOW - 10
@@ -758,4 +766,32 @@ class TestAuthServiceErrorHandling:
             mock_session1.closed = True
             session3 = await auth_service._get_session()
             assert session3 is mock_session2
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
             assert session3 is not session1

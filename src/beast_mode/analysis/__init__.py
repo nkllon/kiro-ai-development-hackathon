@@ -1,1 +1,0 @@
-# Beast Mode Framework - Analysis Module

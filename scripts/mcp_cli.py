@@ -31,7 +31,9 @@ class MCPManager:
 
         for server in servers:
             try:
-                result = subprocess.run([server, "--version"], capture_output=True, text=True, timeout=5)
+                result = subprocess.run(
+                    [server, "--version"], capture_output=True, text=True, timeout=5
+                )
                 servers[server] = result.returncode == 0
             except (subprocess.TimeoutExpired, FileNotFoundError):
                 servers[server] = False
@@ -128,7 +130,9 @@ class MCPManager:
         }
 
         status["total_servers"] = len(status["servers_available"])
-        status["available_servers"] = sum(1 for available in status["servers_available"].values() if available)
+        status["available_servers"] = sum(
+            1 for available in status["servers_available"].values() if available
+        )
 
         return status
 
@@ -158,7 +162,9 @@ class MCPManager:
         print("\n📊 MCP Setup Summary:")
         print(f"  📁 Config file: {'✅' if status['mcp_config_exists'] else '❌'}")
         print(f"  📁 MCP directory: {'✅' if status['mcp_directory_exists'] else '❌'}")
-        print(f"  🔧 Servers available: {status['available_servers']}/{status['total_servers']}")
+        print(
+            f"  🔧 Servers available: {status['available_servers']}/{status['total_servers']}"
+        )
 
         for server, available in status["servers_available"].items():
             status_icon = "✅" if available else "❌"
@@ -215,7 +221,9 @@ def main():
         print("\n📊 MCP Configuration Status:")
         print(f"  📁 Config file: {'✅' if status['mcp_config_exists'] else '❌'}")
         print(f"  📁 MCP directory: {'✅' if status['mcp_directory_exists'] else '❌'}")
-        print(f"  🔧 Servers: {status['available_servers']}/{status['total_servers']} available")
+        print(
+            f"  🔧 Servers: {status['available_servers']}/{status['total_servers']} available"
+        )
 
         if status["available_servers"] == 0:
             print("\n⚠️ No MCP servers are available. Run 'install' or 'setup' first.")

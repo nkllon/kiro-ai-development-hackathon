@@ -1,0 +1,545 @@
+"""
+Infrastructure layer separation enforcement utilities.
+
+This module provides systematic validation of dependency directions and
+prevention of infrastructure coupling in domain logic, ensuring clean
+architecture principles are maintained.
+"""
+
+import ast
+import inspect
+import logging
+from dataclasses import dataclass, field
+from enum import Enum
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Set, Type, Union
+from datetime import datetime
+
+from ..core.base import DomainReflectiveModule
+from ..core.compliance import ValidationResult
+from ..models import DomainException
+
+
+logger = logging.getLogger(__name__)
+
+
+class LayerType(Enum):
+    """Types of architectural layers."""
+
+    DOMAIN = "domain"
+    APPLICATION = "application"
+    INFRASTRUCTURE = "infrastructure"
+    PRESENTATION = "presentation"
+
+
+@dataclass
+class LayerViolation:
+    """Represents a layer separation violation."""
+
+    violating_class: str
+    violating_method: Optional[str]
+    dependency_class: str
+    violation_type: str
+    layer_from: LayerType
+    layer_to: LayerType
+    severity: str = "error"
+    message: str = ""
+    file_path: Optional[str] = None
+    line_number: Optional[int] = None
+    timestamp: datetime = field(default_factory=datetime.now)
+
+
+class DependencyValidator(DomainReflectiveModule):
+    """
+    Validates dependency directions between architectural layers.
+
+    Ensures that dependencies flow in the correct direction:
+    - Domain layer should not depend on infrastructure
+    - Application layer can depend on domain but not infrastructure details
+    - Infrastructure layer can depend on domain interfaces
+    """
+
+    def __init__(self):
+        super().__init__("dependency_validation")
+        self._allowed_dependencies = self._initialize_allowed_dependencies()
+        self._violations: List[LayerViolation] = []
+        self._scanned_modules: Set[str] = set()
+
+    def _initialize_allowed_dependencies(self) -> Dict[LayerType, Set[LayerType]]:
+        """Initialize allowed dependency directions."""
+        return {
+            LayerType.DOMAIN: set(),  # Domain depends on nothing
+            LayerType.APPLICATION: {LayerType.DOMAIN},
+            LayerType.INFRASTRUCTURE: {LayerType.DOMAIN, LayerType.APPLICATION},
+            LayerType.PRESENTATION: {LayerType.APPLICATION, LayerType.DOMAIN},
+        }
+
+    def validate_class_dependencies(self, cls: Type) -> ValidationResult:
+        """
+        Validate dependencies for a specific class.
+
+        Args:
+            cls: Class to validate
+
+        Returns:
+            ValidationResult: Validation results with any violations found
+        """
+        result = ValidationResult(is_valid=True)
+
+        try:
+            # Determine layer of the class
+            class_layer = self._determine_class_layer(cls)
+            if class_layer is None:
+                result.add_warning(
+                    f"Could not determine layer for class {cls.__name__}"
+                )
+                return result
+
+            # Get class dependencies
+            dependencies = self._extract_class_dependencies(cls)
+
+            # Validate each dependency
+            for dep_class, dep_info in dependencies.items():
+                dep_layer = self._determine_class_layer_by_name(dep_class)
+                if dep_layer is None:
+                    continue
+
+                if not self._is_dependency_allowed(class_layer, dep_layer):
+                    violation = LayerViolation(
+                        violating_class=cls.__name__,
+                        violating_method=dep_info.get("method"),
+                        dependency_class=dep_class,
+                        violation_type="invalid_layer_dependency",
+                        layer_from=class_layer,
+                        layer_to=dep_layer,
+                        message=f"{class_layer.value} layer class {cls.__name__} "
+                        f"cannot depend on {dep_layer.value} layer class {dep_class}",
+                        file_path=dep_info.get("file_path"),
+                        line_number=dep_info.get("line_number"),
+                    )
+
+                    self._violations.append(violation)
+                    result.add_error(violation.message)
+
+        except Exception as e:
+            logger.error(f"Error validating dependencies for {cls.__name__}: {e}")
+            result.add_error(f"Validation error: {str(e)}")
+
+        return result
+
+    def validate_module_dependencies(
+        self, module_path: Union[str, Path]
+    ) -> ValidationResult:
+        """
+        Validate dependencies for an entire module.
+
+        Args:
+            module_path: Path to the module to validate
+
+        Returns:
+            ValidationResult: Validation results for the module
+        """
+        result = ValidationResult(is_valid=True)
+        module_path = Path(module_path)
+
+        if not module_path.exists():
+            result.add_error(f"Module path does not exist: {module_path}")
+            return result
+
+        try:
+            # Parse the module AST
+            with open(module_path, "r", encoding="utf-8") as f:
+                source_code = f.read()
+
+            tree = ast.parse(source_code, filename=str(module_path))
+
+            # Extract imports and class definitions
+            module_analysis = self._analyze_module_ast(tree, str(module_path))
+
+            # Validate dependencies
+            for violation in module_analysis["violations"]:
+                self._violations.append(violation)
+                result.add_error(violation.message)
+
+            self._scanned_modules.add(str(module_path))
+
+        except Exception as e:
+            logger.error(f"Error validating module {module_path}: {e}")
+            result.add_error(f"Module validation error: {str(e)}")
+
+        return result
+
+    def _determine_class_layer(self, cls: Type) -> Optional[LayerType]:
+        """Determine which architectural layer a class belongs to."""
+        module_name = cls.__module__
+
+        # Check module path patterns
+        if "domain" in module_name and "infrastructure" not in module_name:
+            return LayerType.DOMAIN
+        elif "infrastructure" in module_name:
+            return LayerType.INFRASTRUCTURE
+        elif "application" in module_name or "service" in module_name:
+            return LayerType.APPLICATION
+        elif (
+            "presentation" in module_name
+            or "api" in module_name
+            or "web" in module_name
+        ):
+            return LayerType.PRESENTATION
+
+        # Check class annotations or base classes
+        if hasattr(cls, "_layer_type"):
+            return cls._layer_type
+
+        # Check for domain-specific base classes
+        from ..domain.entities import Entity, AggregateRoot
+        from ..domain.services import DomainService
+        from ..domain.value_objects import ValueObject
+
+        if issubclass(cls, (Entity, AggregateRoot, DomainService, ValueObject)):
+            return LayerType.DOMAIN
+
+        return None
+
+    def _determine_class_layer_by_name(self, class_name: str) -> Optional[LayerType]:
+        """Determine layer by class name patterns."""
+        class_name_lower = class_name.lower()
+
+        # Infrastructure patterns
+        if any(
+            pattern in class_name_lower
+            for pattern in ["repository", "adapter", "client", "gateway", "dao", "orm"]
+        ):
+            return LayerType.INFRASTRUCTURE
+
+        # Domain patterns
+        if any(
+            pattern in class_name_lower
+            for pattern in ["entity", "aggregate", "valueobject", "domainservice"]
+        ):
+            return LayerType.DOMAIN
+
+        # Application patterns
+        if any(
+            pattern in class_name_lower
+            for pattern in ["applicationservice", "usecase", "command", "query"]
+        ):
+            return LayerType.APPLICATION
+
+        return None
+
+    def _extract_class_dependencies(self, cls: Type) -> Dict[str, Dict[str, Any]]:
+        """Extract dependencies from a class."""
+        dependencies = {}
+
+        try:
+            # Get source file
+            source_file = inspect.getfile(cls)
+
+            # Parse the source
+            with open(source_file, "r", encoding="utf-8") as f:
+                source_code = f.read()
+
+            tree = ast.parse(source_code)
+
+            # Find the class definition
+            for node in ast.walk(tree):
+                if isinstance(node, ast.ClassDef) and node.name == cls.__name__:
+                    # Extract imports and type annotations
+                    class_deps = self._extract_dependencies_from_class_node(
+                        node, source_file
+                    )
+                    dependencies.update(class_deps)
+                    break
+
+        except Exception as e:
+            logger.warning(f"Could not extract dependencies for {cls.__name__}: {e}")
+
+        return dependencies
+
+    def _extract_dependencies_from_class_node(
+        self, class_node: ast.ClassDef, file_path: str
+    ) -> Dict[str, Dict[str, Any]]:
+        """Extract dependencies from a class AST node."""
+        dependencies = {}
+
+        # Check base classes
+        for base in class_node.bases:
+            if isinstance(base, ast.Name):
+                dependencies[base.id] = {
+                    "type": "inheritance",
+                    "file_path": file_path,
+                    "line_number": base.lineno,
+                }
+
+        # Check method signatures and bodies
+        for node in ast.walk(class_node):
+            if isinstance(node, ast.Name):
+                # Skip built-in types
+                if node.id not in [
+                    "str",
+                    "int",
+                    "float",
+                    "bool",
+                    "list",
+                    "dict",
+                    "set",
+                    "tuple",
+                ]:
+                    dependencies[node.id] = {
+                        "type": "reference",
+                        "file_path": file_path,
+                        "line_number": getattr(node, "lineno", 0),
+                    }
+
+        return dependencies
+
+    def _analyze_module_ast(self, tree: ast.AST, file_path: str) -> Dict[str, Any]:
+        """Analyze module AST for dependency violations."""
+        violations = []
+        imports = {}
+
+        # Extract imports
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    imports[alias.name] = {"type": "import", "line_number": node.lineno}
+            elif isinstance(node, ast.ImportFrom):
+                if node.module:
+                    for alias in node.names:
+                        full_name = f"{node.module}.{alias.name}"
+                        imports[full_name] = {
+                            "type": "from_import",
+                            "line_number": node.lineno,
+                        }
+
+        # Check for infrastructure imports in domain modules
+        if "domain" in file_path and "infrastructure" not in file_path:
+            for import_name, import_info in imports.items():
+                if any(
+                    infra_pattern in import_name.lower()
+                    for infra_pattern in [
+                        "sqlalchemy",
+                        "django",
+                        "flask",
+                        "requests",
+                        "boto3",
+                        "redis",
+                    ]
+                ):
+                    violation = LayerViolation(
+                        violating_class=Path(file_path).stem,
+                        violating_method=None,
+                        dependency_class=import_name,
+                        violation_type="infrastructure_import_in_domain",
+                        layer_from=LayerType.DOMAIN,
+                        layer_to=LayerType.INFRASTRUCTURE,
+                        message=f"Domain module {file_path} imports infrastructure dependency {import_name}",
+                        file_path=file_path,
+                        line_number=import_info["line_number"],
+                    )
+                    violations.append(violation)
+
+        return {"imports": imports, "violations": violations}
+
+    def _is_dependency_allowed(
+        self, from_layer: LayerType, to_layer: LayerType
+    ) -> bool:
+        """Check if dependency from one layer to another is allowed."""
+        return to_layer in self._allowed_dependencies.get(from_layer, set())
+
+    def get_violations(self) -> List[LayerViolation]:
+        """Get all detected violations."""
+        return self._violations.copy()
+
+    def clear_violations(self):
+        """Clear all detected violations."""
+        self._violations.clear()
+
+    async def get_module_status(self):
+        """Get module status."""
+        from ..core.health import ModuleHealth
+        from ..models import ModuleStatus
+
+        return ModuleHealth(
+            status=ModuleStatus.AVAILABLE,
+            message=f"Dependency validator with {len(self._violations)} violations detected",
+            capabilities=await self.get_module_capabilities(),
+            health_indicators={
+                "violations_count": len(self._violations),
+                "scanned_modules": len(self._scanned_modules),
+                "last_scan": datetime.now().isoformat(),
+            },
+        )
+
+    async def get_module_capabilities(self):
+        """Get module capabilities."""
+        from ..models import ModuleCapability
+
+        return [
+            ModuleCapability(
+                name="dependency_validation",
+                description="Validates architectural layer dependencies",
+                available=True,
+                version="1.0.0",
+            )
+        ]
+
+    async def is_healthy(self) -> bool:
+        """Check if module is healthy."""
+        return True
+
+    async def get_health_indicators(self):
+        """Get health indicators."""
+        return {
+            "violations_count": len(self._violations),
+            "scanned_modules_count": len(self._scanned_modules),
+            "allowed_dependencies": {
+                layer.value: [dep.value for dep in deps]
+                for layer, deps in self._allowed_dependencies.items()
+            },
+        }
+
+    def get_domain_boundaries(self):
+        """Get domain boundaries."""
+        from ..models import DomainBoundaries
+
+        return DomainBoundaries(
+            context=self.domain_context,
+            invariants=[
+                "Domain layer must not depend on infrastructure",
+                "Dependencies must flow inward toward domain",
+                "Infrastructure can depend on domain interfaces only",
+            ],
+        )
+
+    def validate_domain_invariants(self):
+        """Validate domain invariants."""
+        result = ValidationResult(is_valid=True)
+
+        # Check if any domain violations exist
+        domain_violations = [
+            v for v in self._violations if v.layer_from == LayerType.DOMAIN
+        ]
+        if domain_violations:
+            result.add_error(f"Found {len(domain_violations)} domain layer violations")
+
+        return result
+
+
+class LayerSeparationEnforcer:
+    """
+    Enforces layer separation at runtime and build time.
+
+    Provides decorators and utilities to prevent layer violations
+    and enforce clean architecture principles.
+    """
+
+    def __init__(self):
+        self.validator = DependencyValidator()
+        self._enforcement_enabled = True
+
+    def domain_layer(self, cls: Type) -> Type:
+        """
+        Decorator to mark a class as belonging to the domain layer.
+
+        Args:
+            cls: Class to mark as domain layer
+
+        Returns:
+            Type: Decorated class with layer enforcement
+        """
+        cls._layer_type = LayerType.DOMAIN
+
+        if self._enforcement_enabled:
+            # Validate at class definition time
+            validation_result = self.validator.validate_class_dependencies(cls)
+            if not validation_result.is_valid:
+                raise DomainException(
+                    f"Domain layer violation in {cls.__name__}: {validation_result.errors}",
+                    error_code="DOMAIN_LAYER_VIOLATION",
+                )
+
+        return cls
+
+    def infrastructure_layer(self, cls: Type) -> Type:
+        """
+        Decorator to mark a class as belonging to the infrastructure layer.
+
+        Args:
+            cls: Class to mark as infrastructure layer
+
+        Returns:
+            Type: Decorated class with layer enforcement
+        """
+        cls._layer_type = LayerType.INFRASTRUCTURE
+        return cls
+
+    def application_layer(self, cls: Type) -> Type:
+        """
+        Decorator to mark a class as belonging to the application layer.
+
+        Args:
+            cls: Class to mark as application layer
+
+        Returns:
+            Type: Decorated class with layer enforcement
+        """
+        cls._layer_type = LayerType.APPLICATION
+        return cls
+
+    def validate_project(self, project_path: Union[str, Path]) -> ValidationResult:
+        """
+        Validate layer separation for an entire project.
+
+        Args:
+            project_path: Path to the project root
+
+        Returns:
+            ValidationResult: Comprehensive validation results
+        """
+        result = ValidationResult(is_valid=True)
+        project_path = Path(project_path)
+
+        # Find all Python files
+        python_files = list(project_path.rglob("*.py"))
+
+        for py_file in python_files:
+            if py_file.name.startswith("__"):
+                continue
+
+            module_result = self.validator.validate_module_dependencies(py_file)
+            result.merge(module_result)
+
+        return result
+
+    def enable_enforcement(self):
+        """Enable runtime layer enforcement."""
+        self._enforcement_enabled = True
+
+    def disable_enforcement(self):
+        """Disable runtime layer enforcement."""
+        self._enforcement_enabled = False
+
+
+# Convenience function for validation
+def validate_dependency_direction(from_class: Type, to_class: Type) -> bool:
+    """
+    Validate if dependency from one class to another is allowed.
+
+    Args:
+        from_class: Class that has the dependency
+        to_class: Class being depended upon
+
+    Returns:
+        bool: True if dependency is allowed, False otherwise
+    """
+    validator = DependencyValidator()
+
+    from_layer = validator._determine_class_layer(from_class)
+    to_layer = validator._determine_class_layer(to_class)
+
+    if from_layer is None or to_layer is None:
+        return True  # Cannot validate unknown layers
+
+    return validator._is_dependency_allowed(from_layer, to_layer)

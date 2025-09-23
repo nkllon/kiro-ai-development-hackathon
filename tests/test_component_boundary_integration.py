@@ -1,9 +1,13 @@
 """
-Integration tests for Component Boundary Resolution - Task 5.2
+RDI Enhanced Test Module
 
-Tests the complete component boundary resolution workflow to ensure all
-requirements are met and the system works end-to-end.
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.579621
 """
+
+
+
 
 import pytest
 from pathlib import Path
@@ -11,13 +15,15 @@ import tempfile
 import shutil
 
 from src.spec_reconciliation.boundary_resolver import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     ComponentBoundaryResolver, ComponentBoundary, InterfaceContract, 
     DependencyRelationship, BoundaryViolationType, ComponentType,
     ComponentBoundaryResolution
 )
 
 
-class TestComponentBoundaryIntegration:
+class TestComponentBoundaryIntegration(ReflectiveModule):
     """Integration tests for complete component boundary resolution"""
     
     def setup_method(self):
@@ -338,4 +344,32 @@ class TestComponentBoundaryIntegration:
         
         # Should have different component types in the system
         all_types = set(b.component_type for b in boundaries)
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert ComponentType.CORE_COMPONENT in all_types

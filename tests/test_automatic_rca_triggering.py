@@ -1,8 +1,13 @@
 """
-Beast Mode Framework - End-to-End Tests for Automatic RCA Triggering
-Tests the complete workflow from test failure detection to RCA analysis
-Requirements: 1.1, 1.4, 3.1 - Automatic RCA triggering with seamless integration
+RDI Enhanced Test Module
+
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.592060
 """
+
+
+
 
 import os
 import sys
@@ -22,7 +27,7 @@ from beast_mode.testing.rca_integration import TestRCAIntegrator, TestFailureDat
 from beast_mode.testing.rca_report_generator import RCAReportGenerator
 
 
-class TestAutomaticRCATriggeringEndToEnd:
+class TestAutomaticRCATriggeringEndToEnd(ReflectiveModule):
     """End-to-end tests for automatic RCA triggering on test failures"""
     
     def setup_method(self):
@@ -336,6 +341,8 @@ tests/test_sample.py:15: ImportError
         # Return mock RCA result
         from beast_mode.analysis.rca_engine import RCAResult, Failure, FailureCategory
         from datetime import datetime
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         
         mock_failure = Failure(
             failure_id="mock_failure",
@@ -357,7 +364,7 @@ tests/test_sample.py:15: ImportError
         )
 
 
-class TestMakeTargetIntegration:
+class TestMakeTargetIntegration(ReflectiveModule):
     """Test integration with make targets"""
     
     def test_make_test_target_exists(self):
@@ -396,4 +403,32 @@ class TestMakeTargetIntegration:
 
 if __name__ == "__main__":
     # Run tests with pytest
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v"])

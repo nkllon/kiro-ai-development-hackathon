@@ -38,7 +38,9 @@ class SubprojectScrubber:
 
     def _deploy_ruff_config(self, subproject_path: Path) -> None:
         """Deploy universal Ruff config to subproject"""
-        template_path = self.workspace_root / "scripts" / "subproject_ruff_template.toml"
+        template_path = (
+            self.workspace_root / "scripts" / "subproject_ruff_template.toml"
+        )
         target_path = subproject_path / ".ruff.toml"
 
         if template_path.exists():
@@ -72,7 +74,9 @@ class SubprojectScrubber:
             pyproject_toml = subproject_path / "pyproject.toml"
             if not pyproject_toml.exists():
                 result["status"] = "skipped"
-                result["errors"].append("No pyproject.toml found - not a Python project")
+                result["errors"].append(
+                    "No pyproject.toml found - not a Python project"
+                )
                 return result
 
             # Deploy universal Ruff config to subproject
@@ -91,22 +95,30 @@ class SubprojectScrubber:
                 result["black_formatted"] = True
                 print("   ✅ Black formatting completed")
             else:
-                result["errors"].append(f"Black formatting failed: {black_result['error']}")
+                result["errors"].append(
+                    f"Black formatting failed: {black_result['error']}"
+                )
 
             # Run ruff with auto-fix
             ruff_fix_result = self._run_ruff_fix(subproject_path)
             if ruff_fix_result["success"]:
                 print("   ✅ Ruff auto-fix completed")
             else:
-                result["errors"].append(f"Ruff auto-fix failed: {ruff_fix_result['error']}")
+                result["errors"].append(
+                    f"Ruff auto-fix failed: {ruff_fix_result['error']}"
+                )
 
             # Check final ruff status
             final_ruff_result = self._run_ruff_check(subproject_path)
             if final_ruff_result["success"]:
                 result["ruff_issues_after"] = final_ruff_result["issue_count"]
-                print(f"   📊 Issues: {result['ruff_issues_before']} → {result['ruff_issues_after']}")
+                print(
+                    f"   📊 Issues: {result['ruff_issues_before']} → {result['ruff_issues_after']}"
+                )
             else:
-                result["errors"].append(f"Final ruff check failed: {final_ruff_result['error']}")
+                result["errors"].append(
+                    f"Final ruff check failed: {final_ruff_result['error']}"
+                )
 
             # Check git status
             git_result = self._check_git_status(subproject_path)
@@ -141,7 +153,13 @@ class SubprojectScrubber:
                 return {"success": True, "issue_count": 0}
             # Parse issue count from output
             lines = result.stdout.strip().split("\n")
-            issue_count = len([line for line in lines if ":" in line and not line.startswith("warning:")])
+            issue_count = len(
+                [
+                    line
+                    for line in lines
+                    if ":" in line and not line.startswith("warning:")
+                ]
+            )
             return {"success": True, "issue_count": issue_count}
 
         except subprocess.TimeoutExpired:
@@ -233,7 +251,9 @@ class SubprojectScrubber:
         print(f"📊 SUBPROJECT SCRUBBING SUMMARY")
         print(f"{'=' * 60}")
 
-        total_issues_before = sum(r["ruff_issues_before"] for r in self.results.values())
+        total_issues_before = sum(
+            r["ruff_issues_before"] for r in self.results.values()
+        )
         total_issues_after = sum(r["ruff_issues_after"] for r in self.results.values())
         total_improvement = total_issues_before - total_issues_after
 
@@ -263,7 +283,9 @@ class SubprojectScrubber:
                 "error": "❌",
             }.get(result["status"], "❓")
 
-            print(f"   {status_emoji} {name}: {result['ruff_issues_before']} → {result['ruff_issues_after']} issues")
+            print(
+                f"   {status_emoji} {name}: {result['ruff_issues_before']} → {result['ruff_issues_after']} issues"
+            )
 
             if result["errors"]:
                 for error in result["errors"]:

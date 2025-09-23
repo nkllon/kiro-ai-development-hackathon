@@ -1,11 +1,15 @@
 """
-Comprehensive Unit Test Coverage for Consolidated Functionality
+RDI Enhanced Test Module
 
-This test suite provides comprehensive unit test coverage for all consolidated
-system components to ensure >90% code coverage and validate all merged requirements.
+Requirements Traceability:
 
-Requirements: R10.1, R10.2
+Enhanced: 2025-09-14T06:30:15.421500
 """
+
+
+
+
+
 
 import pytest
 import tempfile
@@ -32,7 +36,7 @@ from src.spec_reconciliation.boundary_resolver import (
 )
 
 
-class TestGovernanceControllerUnitCoverage:
+class TestGovernanceControllerUnitCoverage(ModuleHealth):
     """Comprehensive unit tests for GovernanceController (R10.1)"""
     
     def setup_method(self):
@@ -216,7 +220,7 @@ class TestGovernanceControllerUnitCoverage:
         assert low_workflow['status'] in ['monitoring', 'deferred']
 
 
-class TestConsistencyValidatorUnitCoverage:
+class TestConsistencyValidatorUnitCoverage(ModuleHealth):
     """Comprehensive unit tests for ConsistencyValidator (R10.1)"""
     
     def setup_method(self):
@@ -274,7 +278,7 @@ class TestConsistencyValidatorUnitCoverage:
         interface_cases = [
             {
                 'interface': '''
-                class GoodReflectiveModule(ReflectiveModule):
+                class GoodReflectiveModule(ReflectiveModule, ModuleHealth):
                     def get_module_status(self) -> Dict[str, Any]:
                         return {'status': 'healthy'}
                     
@@ -289,7 +293,7 @@ class TestConsistencyValidatorUnitCoverage:
             },
             {
                 'interface': '''
-                class PartialReflectiveModule(ReflectiveModule):
+                class PartialReflectiveModule(ReflectiveModule, ModuleHealth):
                     def get_module_status(self) -> Dict[str, Any]:
                         return {'status': 'healthy'}
                 ''',
@@ -298,7 +302,7 @@ class TestConsistencyValidatorUnitCoverage:
             },
             {
                 'interface': '''
-                class NonReflectiveModule:
+                class NonReflectiveModule(ModuleHealth):
                     def some_method(self):
                         pass
                 ''',
@@ -366,7 +370,7 @@ class TestConsistencyValidatorUnitCoverage:
         assert isinstance(metrics.improvement_priority, list)
 
 
-class TestSpecConsolidatorUnitCoverage:
+class TestSpecConsolidatorUnitCoverage(ModuleHealth):
     """Comprehensive unit tests for SpecConsolidator (R10.1)"""
     
     def setup_method(self):
@@ -503,7 +507,7 @@ class TestSpecConsolidatorUnitCoverage:
         assert hasattr(traceability_map, 'interface_mappings')
 
 
-class TestContinuousMonitorUnitCoverage:
+class TestContinuousMonitorUnitCoverage(ModuleHealth):
     """Comprehensive unit tests for ContinuousMonitor (R10.1)"""
     
     def setup_method(self):
@@ -575,6 +579,8 @@ It also mentions PDCA and Plan-Do-Check-Act cycles.
         """Test automatic correction workflow triggering (R10.1)"""
         # Mock drift detection
         from src.spec_reconciliation.monitoring import DriftReport
+from src.rm_ddd.core.health import ModuleHealth
+
         
         drift_report = DriftReport(
             report_id="test_drift",
@@ -594,7 +600,7 @@ It also mentions PDCA and Plan-Do-Check-Act cycles.
         assert hasattr(correction_workflow, 'status')
 
 
-class TestComponentBoundaryResolverUnitCoverage:
+class TestComponentBoundaryResolverUnitCoverage(ModuleHealth):
     """Comprehensive unit tests for ComponentBoundaryResolver (R10.1)"""
     
     def setup_method(self):
@@ -695,4 +701,21 @@ class TestComponentBoundaryResolverUnitCoverage:
 
 
 if __name__ == "__main__":
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
     pytest.main([__file__, "-v"])

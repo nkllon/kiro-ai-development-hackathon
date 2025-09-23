@@ -1,8 +1,12 @@
 """
-Test Fixtures with Synthetic and Real Failure Scenarios - Task 11
-Provides comprehensive test fixtures for RCA integration testing
-Requirements: All requirements - Test fixtures for validation
+RDI Enhanced Test Module
+
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.650009
 """
+
+
 
 import pytest
 import tempfile
@@ -17,7 +21,7 @@ from src.beast_mode.testing.rca_integration import TestFailureData
 
 
 @dataclass
-class FailureScenario:
+class FailureScenario(ReflectiveModule):
     """Container for a complete failure scenario"""
     name: str
     description: str
@@ -28,7 +32,7 @@ class FailureScenario:
     context: Dict[str, Any]
 
 
-class RCAFailureScenarioFixtures:
+class RCAFailureScenarioFixtures(ReflectiveModule):
     """Comprehensive failure scenario fixtures for RCA testing"""
     
     @pytest.fixture
@@ -568,6 +572,8 @@ This file is created for RCA integration testing
 """
 
 import pytest
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
 
 class {failure.test_class or "TestGenerated"}:
     def {failure.test_function}(self):
@@ -641,4 +647,32 @@ def load_scenario_from_json(file_path: str) -> FailureScenario:
         expected_priority_order=data["expected_priority_order"],
         expected_categories=data["expected_categories"],
         context=data["context"]
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     )

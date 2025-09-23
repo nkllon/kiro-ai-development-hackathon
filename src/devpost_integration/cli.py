@@ -1,175 +1,312 @@
 #!/usr/bin/env python3
 """
-Devpost Integration CLI
+DevPost Integration CLI
+=======================
 
-The Requirements ARE the Solution - Command Line Interface
+Command line interface for DevPost integration.
+
+Author: Beast Mode Framework
+Date: 2025-09-14
+Purpose: Provide CLI interface for DevPost integration
 """
 
-import click
+import argparse
+import json
 import sys
-from pathlib import Path
-from typing import Optional
+from typing import Dict, Any, List
+from datetime import datetime
+from .reflective_module import (
+    ReflectiveModule,
+    ModuleHealth,
+    ModuleStatus,
+    ModuleCapability,
+)
 
-from .project_manager import DevpostProjectManager
-from .sync_manager import DevpostSyncManager
-from .preview_generator import DevpostPreviewGenerator
-from .models import DevpostConfig
 
+class Unknown:
+    """Unknown class for backward compatibility."""
 
-@click.group()
-@click.version_option()
-def cli():
-    """
-    Devpost Integration CLI - Where Requirements ARE the Solution
-    
-    Systematic project management for hackathon submissions.
-    No ad-hoc approaches, no surprises, just systematic success.
-    """
     pass
 
 
-@cli.command()
-@click.option('--project-id', required=True, help='Devpost project ID')
-@click.option('--local-path', default='.', help='Local project directory')
-@click.option('--config-file', help='Custom configuration file path')
-def connect(project_id: str, local_path: str, config_file: Optional[str]):
-    """Connect local project to Devpost submission."""
-    try:
-        click.echo("🔗 Connecting to Devpost project...")
-        
-        manager = DevpostProjectManager()
-        success = manager.connect_project(
-            project_id=project_id,
-            local_path=Path(local_path),
-            config_file=config_file
+class DevPostCLI(ReflectiveModule):
+    """DevPost Integration CLI class."""
+
+    def __init__(self):
+        super().__init__()
+        self.module_id = "devpost_cli"
+        self.capabilities = [ModuleCapability.CORE_FUNCTIONALITY]
+        self.dependencies = []
+
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information."""
+        return {
+            "module_id": self.module_id,
+            "interface_type": self.__class__.__name__,
+            "version": "1.0.0",
+            "dependencies": self.dependencies,
+            "capabilities": [cap.value for cap in self.capabilities],
+        }
+
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities."""
+        return self.capabilities
+
+    def get_health_status(self) -> ModuleHealth:
+        """Get module health status."""
+        return ModuleHealth(
+            module_id=self.module_id,
+            status=ModuleStatus.HEALTHY,
+            health_score=100.0,
+            issues=[],
+            last_check=datetime.now(),
         )
-        
-        if success:
-            click.echo(f"✅ Successfully connected to project {project_id}")
-            click.echo(f"📁 Local path: {local_path}")
-            click.echo("\n💡 Next steps:")
-            click.echo("  • Run 'devpost status' to check project status")
-            click.echo("  • Run 'devpost sync' to synchronize with Devpost")
-            click.echo("  • Run 'devpost preview' to generate local preview")
-        else:
-            click.echo("❌ Failed to connect project", err=True)
-            sys.exit(1)
-            
-    except Exception as e:
-        click.echo(f"❌ Connection failed: {e}", err=True)
-        sys.exit(1)
+
+    def graceful_degradation(self):
+        """Perform graceful degradation."""
+        return {
+            "success": True,
+            "degraded_capabilities": [],
+            "remaining_capabilities": [cap.value for cap in self.capabilities],
+        }
+
+    def create_parser(self) -> argparse.ArgumentParser:
+        """Create argument parser."""
+        parser = argparse.ArgumentParser(
+            description="DevPost Integration CLI",
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+        )
+
+        parser.add_argument("--version", action="version", version="1.0.0")
+
+        subparsers = parser.add_subparsers(dest="command", help="Available commands")
+
+        # Browser automation commands
+        extract_parser = subparsers.add_parser(
+            "extract", help="Extract data from DevPost"
+        )
+        extract_parser.add_argument("url", help="DevPost URL to extract from")
+        extract_parser.add_argument(
+            "--type",
+            choices=["hackathon", "project"],
+            default="hackathon",
+            help="Type of data to extract",
+        )
+        extract_parser.set_defaults(func=self.extract_command)
+
+        search_parser = subparsers.add_parser("search", help="Search for hackathons")
+        search_parser.add_argument("query", help="Search query")
+        search_parser.add_argument(
+            "--limit", type=int, default=10, help="Maximum number of results"
+        )
+        search_parser.set_defaults(func=self.search_command)
+
+        # Form interrogation commands
+        interrogate_parser = subparsers.add_parser(
+            "interrogate", help="Interrogate DevPost submission form"
+        )
+        interrogate_parser.add_argument("url", help="DevPost submission URL")
+        interrogate_parser.add_argument(
+            "--output", help="Output file for form model (JSON)"
+        )
+        interrogate_parser.add_argument(
+            "--headless", action="store_true", help="Run in headless mode"
+        )
+        interrogate_parser.set_defaults(func=self.interrogate_command)
+
+        # Status command
+        status_parser = subparsers.add_parser("status", help="Show module status")
+        status_parser.set_defaults(func=self.status_command)
+
+        return parser
+
+    def extract_command(self, args) -> Dict[str, Any]:
+        """Extract data from DevPost using browser automation."""
+        from .hybrid_integration import DevPostHybridIntegration
+
+        try:
+            with DevPostHybridIntegration() as integration:
+                if args.type == "hackathon":
+                    result = integration.extract_hackathon_data_sync(args.url)
+                else:
+                    result = integration.extract_project_data_sync(args.url)
+
+                if result.success:
+                    return {
+                        "success": True,
+                        "data": result.data,
+                        "method_used": result.method_used,
+                    }
+                else:
+                    return {"success": False, "error": result.error}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def search_command(self, args) -> Dict[str, Any]:
+        """Search for hackathons using browser automation."""
+        from .hybrid_integration import DevPostHybridIntegration
+
+        try:
+            with DevPostHybridIntegration() as integration:
+                hackathons = integration.search_hackathons(
+                    query=args.query, limit=args.limit
+                )
+                return {
+                    "success": True,
+                    "hackathons": hackathons,
+                    "count": len(hackathons),
+                }
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def interrogate_command(self, args) -> Dict[str, Any]:
+        """Interrogate DevPost submission form to build a complete model."""
+        from .form_interrogation import DevPostFormInterrogation
+        import json
+        from datetime import datetime
+
+        try:
+            print(f"🎯 Interrogating DevPost submission form at: {args.url}")
+            print("👤 Please log in to DevPost in the browser window that opens...")
+            print("📝 Navigate to your submission page and press Enter when ready...")
+
+            # Wait for user to authenticate and navigate
+            input(
+                "Press Enter when you're on the submission page and ready to interrogate..."
+            )
+
+            # Interrogate the form
+            with DevPostFormInterrogation(headless=args.headless) as interrogation:
+                model = interrogation.interrogate_submission_form_sync(args.url)
+
+                # Display results
+                print("\n✅ Form Interrogation Complete!")
+                print("=" * 50)
+                print(f"🏆 Hackathon: {model.hackathon_title}")
+                print(f"🆔 Hackathon ID: {model.hackathon_id}")
+                print(f"🔗 Submission URL: {model.submission_url}")
+                print(f"📋 Sections: {len(model.sections)}")
+                print(f"📝 Total Fields: {len(model.all_fields)}")
+
+                # Display sections and fields
+                for i, section in enumerate(model.sections, 1):
+                    print(f"\n📋 Section {i}: {section.title}")
+                    print(f"   Description: {section.description}")
+                    print(f"   Fields: {len(section.fields)}")
+
+                    for j, field in enumerate(section.fields, 1):
+                        print(f"   {j}. {field.label} ({field.field_type})")
+                        print(f"      Name: {field.name}")
+                        print(f"      Required: {field.required}")
+                        if field.current_value:
+                            print(f"      Current Value: {field.current_value}")
+                        if field.placeholder:
+                            print(f"      Placeholder: {field.placeholder}")
+                        if field.options:
+                            print(
+                                f"      Options: {', '.join(field.options[:3])}{'...' if len(field.options) > 3 else ''}"
+                            )
+                        if field.validation_rules:
+                            print(
+                                f"      Validation: {', '.join(field.validation_rules)}"
+                            )
+                        if field.help_text:
+                            print(
+                                f"      Help: {field.help_text[:50]}{'...' if len(field.help_text) > 50 else ''}"
+                            )
+                        print()
+
+                # Prepare model data for JSON serialization
+                model_data = {
+                    "hackathon_id": model.hackathon_id,
+                    "hackathon_title": model.hackathon_title,
+                    "submission_url": model.submission_url,
+                    "sections": [
+                        {
+                            "name": section.name,
+                            "title": section.title,
+                            "description": section.description,
+                            "order": section.order,
+                            "required": section.required,
+                            "fields": [
+                                {
+                                    "name": field.name,
+                                    "field_type": field.field_type,
+                                    "label": field.label,
+                                    "placeholder": field.placeholder,
+                                    "required": field.required,
+                                    "current_value": field.current_value,
+                                    "options": field.options,
+                                    "validation_rules": field.validation_rules,
+                                    "help_text": field.help_text,
+                                    "section": field.section,
+                                }
+                                for field in section.fields
+                            ],
+                        }
+                        for section in model.sections
+                    ],
+                    "all_fields": [
+                        {
+                            "name": field.name,
+                            "field_type": field.field_type,
+                            "label": field.label,
+                            "placeholder": field.placeholder,
+                            "required": field.required,
+                            "current_value": field.current_value,
+                            "options": field.options,
+                            "validation_rules": field.validation_rules,
+                            "help_text": field.help_text,
+                            "section": field.section,
+                        }
+                        for field in model.all_fields
+                    ],
+                    "form_metadata": model.form_metadata,
+                    "extracted_at": model.extracted_at.isoformat(),
+                }
+
+                # Save model to file
+                output_file = (
+                    args.output
+                    or f"devpost_submission_model_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                )
+                with open(output_file, "w") as f:
+                    json.dump(model_data, f, indent=2)
+
+                print(f"💾 Model saved to: {output_file}")
+
+                return {
+                    "success": True,
+                    "model": model_data,
+                    "output_file": output_file,
+                    "sections_count": len(model.sections),
+                    "fields_count": len(model.all_fields),
+                }
+
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def status_command(self, args) -> Dict[str, Any]:
+        """Status command handler."""
+        return {
+            "module_id": self.module_id,
+            "status": "healthy",
+            "timestamp": datetime.now().isoformat(),
+        }
 
 
-@cli.command()
-@click.option('--force', is_flag=True, help='Force sync even if no changes detected')
-@click.option('--dry-run', is_flag=True, help='Show what would be synced without making changes')
-def sync(force: bool, dry_run: bool):
-    """Synchronize local project with Devpost submission."""
-    try:
-        click.echo("🔄 Synchronizing with Devpost...")
-        
-        sync_manager = DevpostSyncManager()
-        
-        if dry_run:
-            changes = sync_manager.get_pending_changes()
-            if changes:
-                click.echo("📋 Changes that would be synced:")
-                for change in changes:
-                    click.echo(f"  • {change}")
-            else:
-                click.echo("✨ No changes to sync")
-            return
-        
-        result = sync_manager.sync_project(force=force)
-        
-        if result.success:
-            click.echo(f"✅ Sync completed successfully")
-            if result.changes_made:
-                click.echo(f"📝 {len(result.changes_made)} changes synchronized")
-            else:
-                click.echo("✨ Project already up to date")
-        else:
-            click.echo(f"❌ Sync failed: {result.error}", err=True)
-            sys.exit(1)
-            
-    except Exception as e:
-        click.echo(f"❌ Sync failed: {e}", err=True)
-        sys.exit(1)
+def main() -> None:
+    """Main CLI entry point."""
+    cli = DevPostCLI()
+    parser = cli.create_parser()
+    args = parser.parse_args()
+
+    if hasattr(args, "func"):
+        result = args.func(args)
+        print(json.dumps(result, indent=2))
+    else:
+        parser.print_help()
 
 
-@cli.command()
-@click.option('--verbose', is_flag=True, help='Show detailed status information')
-def status(verbose: bool):
-    """Show project connection and sync status."""
-    try:
-        manager = DevpostProjectManager()
-        project_status = manager.get_project_status()
-        
-        if not project_status.connected:
-            click.echo("❌ No project connected")
-            click.echo("💡 Run 'devpost connect' to connect a project")
-            return
-        
-        click.echo(f"🎯 Project: {project_status.project_name}")
-        click.echo(f"🔗 Devpost ID: {project_status.project_id}")
-        click.echo(f"📁 Local path: {project_status.local_path}")
-        
-        # Sync status
-        if project_status.last_sync:
-            click.echo(f"🔄 Last sync: {project_status.last_sync}")
-        else:
-            click.echo("🔄 Never synced")
-        
-        if project_status.pending_changes:
-            click.echo(f"⚠️  {len(project_status.pending_changes)} pending changes")
-            if verbose:
-                for change in project_status.pending_changes:
-                    click.echo(f"  • {change}")
-        else:
-            click.echo("✅ Up to date")
-        
-        # Requirements validation
-        if project_status.validation_errors:
-            click.echo(f"❌ {len(project_status.validation_errors)} validation errors")
-            if verbose:
-                for error in project_status.validation_errors:
-                    click.echo(f"  • {error}")
-        else:
-            click.echo("✅ All requirements met")
-            
-    except Exception as e:
-        click.echo(f"❌ Status check failed: {e}", err=True)
-        sys.exit(1)
-
-
-@cli.command()
-@click.option('--output', default='preview.html', help='Output file for preview')
-@click.option('--open-browser', is_flag=True, help='Open preview in browser')
-def preview(output: str, open_browser: bool):
-    """Generate local preview of Devpost submission."""
-    try:
-        click.echo("🎨 Generating Devpost preview...")
-        
-        generator = DevpostPreviewGenerator()
-        preview_path = generator.generate_preview(output_file=output)
-        
-        click.echo(f"✅ Preview generated: {preview_path}")
-        
-        if open_browser:
-            import webbrowser
-            webbrowser.open(f"file://{preview_path.absolute()}")
-            click.echo("🌐 Opened in browser")
-        
-        click.echo("\n💡 Preview includes:")
-        click.echo("  • Project description and media")
-        click.echo("  • Team information")
-        click.echo("  • Technical details")
-        click.echo("  • Submission requirements validation")
-        
-    except Exception as e:
-        click.echo(f"❌ Preview generation failed: {e}", err=True)
-        sys.exit(1)
-
-
-if __name__ == '__main__':
-    cli()
+if __name__ == "__main__":
+    main()

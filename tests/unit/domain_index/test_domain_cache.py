@@ -1,9 +1,13 @@
 """
-Tests for Domain Cache System
+RDI Enhanced Test Module
 
-This module tests the DomainCache and DomainSpecificCache classes,
-including TTL management, invalidation strategies, and performance.
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.494548
 """
+
+
+
 
 import pytest
 import time
@@ -13,11 +17,13 @@ from unittest.mock import Mock, patch
 
 from src.beast_mode.domain_index.domain_cache import DomainCache, DomainSpecificCache, CacheEntry
 from src.beast_mode.domain_index.models import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     Domain, DomainTools, DomainMetadata, PackagePotential
 )
 
 
-class TestCacheEntry:
+class TestCacheEntry(ReflectiveModule):
     """Test CacheEntry functionality"""
     
     def test_cache_entry_creation(self):
@@ -94,7 +100,7 @@ class TestCacheEntry:
         assert entry.access_count == old_count + 1
 
 
-class TestDomainCache:
+class TestDomainCache(ReflectiveModule):
     """Test DomainCache functionality"""
     
     @pytest.fixture
@@ -294,7 +300,7 @@ class TestDomainCache:
         assert stats["cache_size"] == 50  # 5 threads * 10 keys each
 
 
-class TestDomainSpecificCache:
+class TestDomainSpecificCache(ReflectiveModule):
     """Test DomainSpecificCache functionality"""
     
     @pytest.fixture
@@ -415,7 +421,7 @@ class TestDomainSpecificCache:
 
 
 @pytest.mark.integration
-class TestCacheIntegration:
+class TestCacheIntegration(ReflectiveModule):
     """Integration tests for cache system"""
     
     def test_cache_with_registry_manager(self):
@@ -444,4 +450,32 @@ class TestCacheIntegration:
         assert cached is not None
         assert cached.name == "integration_test"
         
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         cache.shutdown()

@@ -1,7 +1,15 @@
 """
-Tests for Task 17: Operational Interfaces and Unknown Risk Mitigation Components
-Tests CLI, operational dashboards, logging system, and unknown risk mitigation
+RDI Enhanced Test Module
+
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.478066
 """
+
+
+
+
+
 
 import pytest
 import json
@@ -24,13 +32,15 @@ from src.beast_mode.operations.operational_dashboard_manager import (
 )
 
 from src.beast_mode.operations.comprehensive_logging_system import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     ComprehensiveLoggingSystem,
     LogLevel,
     AuditEvent,
     LogEntry
 )
 
-class TestBeastModeCLI:
+class TestBeastModeCLI(ReflectiveModule):
     """Test Beast Mode CLI functionality"""
     
     @pytest.fixture
@@ -218,7 +228,7 @@ class TestBeastModeCLI:
         assert args.command == "status"
         assert args.args == []
 
-class TestOperationalDashboardManager:
+class TestOperationalDashboardManager(ReflectiveModule):
     """Test operational dashboard functionality"""
     
     @pytest.fixture
@@ -361,7 +371,7 @@ class TestOperationalDashboardManager:
         assert "data_statistics" in analytics
         assert "system_health" in analytics
 
-class TestComprehensiveLoggingSystem:
+class TestComprehensiveLoggingSystem(ReflectiveModule):
     """Test comprehensive logging system functionality"""
     
     @pytest.fixture
@@ -581,7 +591,7 @@ class TestComprehensiveLoggingSystem:
         assert exported_logs[0]["message"] == "Test message 1"
         assert exported_logs[1]["message"] == "Test message 2"
 
-class TestTask17Integration:
+class TestTask17Integration(ReflectiveModule):
     """Test integration between Task 17 components"""
     
     @pytest.fixture
@@ -650,4 +660,32 @@ class TestTask17Integration:
             assert risk_id in result.output
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__])

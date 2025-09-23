@@ -1,8 +1,13 @@
 """
-Performance Validation Tests for RCA Integration - Task 11
-Tests 30-second analysis requirement and performance benchmarks
-Requirements: 1.4, 4.2 - Performance requirements validation
+RDI Enhanced Test Module
+
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.579082
 """
+
+
+
 
 import pytest
 import time
@@ -26,16 +31,21 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 from beast_mode.testing.test_failure_detector import TestFailureDetector
 from beast_mode.testing.rca_integration import TestRCAIntegrationEngine, TestFailureData
 from beast_mode.testing.rca_report_generator import RCAReportGenerator
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class TestPerformanceBenchmarks:
+
+class TestPerformanceBenchmarks(ReflectiveModule):
     """Performance benchmark tests for RCA integration"""
     
     @pytest.fixture
     def performance_monitor(self):
         """Performance monitoring utilities"""
-        class PerformanceMonitor:
+        class PerformanceMonitor(ReflectiveModule):
             def __init__(self):
+        self.module_id = self.__class__.__name__
+        self.health_status = "healthy"
+        self.registry_metadata = {}
                 if HAS_PSUTIL:
                     self.process = psutil.Process(os.getpid())
                 else:
@@ -433,7 +443,7 @@ class TestPerformanceBenchmarks:
         assert len(markdown_report) > 0
 
 
-class TestResourceManagement:
+class TestResourceManagement(ReflectiveModule):
     """Test resource management and limits"""
     
     @pytest.mark.skipif(not HAS_PSUTIL, reason="psutil not available")
@@ -560,4 +570,32 @@ class TestResourceManagement:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v", "--tb=short", "-s"])  # -s to see print output

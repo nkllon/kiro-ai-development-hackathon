@@ -67,7 +67,9 @@ def display_quick_results(result: dict):
         if isinstance(agent_group, dict) and "delusions" in agent_group:
             total_delusions += len(agent_group["delusions"])
 
-    print(f"Confidence: {confidence} | Total Delusions: {total_delusions} | Errors: {errors}")
+    print(
+        f"Confidence: {confidence} | Total Delusions: {total_delusions} | Errors: {errors}"
+    )
 
     # Show a sample of delusions
     if total_delusions > 0:
@@ -81,7 +83,9 @@ def display_quick_results(result: dict):
                         break
                     delusion_type = delusion.get("type", "Unknown")
                     description = delusion.get("description", "No description")[:80]
-                    print(f"  {shown + 1}. [{agent_name}] {delusion_type}: {description}...")
+                    print(
+                        f"  {shown + 1}. [{agent_name}] {delusion_type}: {description}..."
+                    )
                     shown += 1
                 if shown >= 3:
                     break
@@ -119,7 +123,9 @@ def display_detailed_results(result: dict):
                 print_section(f"{agent_name.upper()} FINDINGS")
                 print(f"  📋 Found {len(agent_findings)} issues:")
 
-                for i, finding in enumerate(agent_findings[:5]):  # Show first 5 per agent
+                for i, finding in enumerate(
+                    agent_findings[:5]
+                ):  # Show first 5 per agent
                     finding_type = finding.get("type", "Unknown")
                     description = finding.get("description", "No description")
                     confidence_score = finding.get("confidence", 0.0)
@@ -129,7 +135,9 @@ def display_detailed_results(result: dict):
 
                     print(f"    {i + 1}. [{finding_type}] {description[:60]}...")
                     print(f"       File: {file_path}:{line_number}")
-                    print(f"       Confidence: {confidence_score:.2f} | Severity: {severity}")
+                    print(
+                        f"       Confidence: {confidence_score:.2f} | Severity: {severity}"
+                    )
 
                 if len(agent_findings) > 5:
                     print(f"    ... and {len(agent_findings) - 5} more issues")

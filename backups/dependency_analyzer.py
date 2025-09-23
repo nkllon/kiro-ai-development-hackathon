@@ -1,0 +1,347 @@
+"""
+Main dependency analyzer that orchestrates all analysis components.
+
+Provides the primary interface for ecosystem dependency analysis,
+combining specification parsing, task detection, dependency mapping,
+critical path analysis, and layer processing.
+"""
+
+import os
+from typing import Dict, List, Optional
+from dataclasses import dataclass
+from pathlib import Path
+
+from ..models.dag_models import EcosystemDAG, SpecificationNode, TaskNode, CriticalPath
+from .spec_parser import SpecParser, ParsedSpec
+from .task_detector import TaskDetector, TaskDetectionResult
+from .dependency_mapper import DependencyMapper, ConstraintGraph
+from .critical_path_analyzer import CriticalPathAnalyzer, CriticalPathAnalysis
+from .layer_processor import LayerProcessor, LayerProcessingResult
+
+
+@dataclass
+class EcosystemAnalysisResult:
+    """Complete ecosystem analysis result."""
+
+    ecosystem_dag: EcosystemDAG
+    constraint_graph: ConstraintGraph
+    critical_path_analysis: CriticalPathAnalysis
+    layer_processing: LayerProcessingResult
+    parsed_specs: List[ParsedSpec]
+    task_detection: TaskDetectionResult
+
+
+class DependencyAnalyzer:
+    """
+    Main dependency analyzer for DAG orchestration system.
+
+    Orchestrates comprehensive ecosystem analysis including specification
+    parsing, task detection, dependency mapping, critical path analysis,
+    and layer processing for systematic orchestration.
+    """
+
+    def __init__(self):
+        self.spec_parser = SpecParser()
+        self.task_detector = TaskDetector()
+        self.dependency_mapper = DependencyMapper()
+        self.critical_path_analyzer = CriticalPathAnalyzer()
+        self.layer_processor = LayerProcessor()
+
+    async def analyze_ecosystem_dependencies(self, spec_directory: str) -> EcosystemDAG:
+        """
+        Analyze all specifications in ecosystem for comprehensive dependency mapping.
+
+        Args:
+            spec_directory: Root directory containing all specifications
+
+        Returns:
+            EcosystemDAG: Complete dependency graph with analysis
+        """
+        # Perform complete analysis
+        analysis_result = await self.analyze_complete_ecosystem(spec_directory)
+
+        return analysis_result.ecosystem_dag
+
+    async def analyze_complete_ecosystem(
+        self, spec_directory: str
+    ) -> EcosystemAnalysisResult:
+        """
+        Perform complete ecosystem analysis with all components.
+
+        Args:
+            spec_directory: Root directory containing all specifications
+
+        Returns:
+            EcosystemAnalysisResult: Complete analysis results
+        """
+        # Step 1: Parse all specifications
+        parsed_specs = self.spec_parser.parse_specification_directory(spec_directory)
+
+        if not parsed_specs:
+            raise ValueError(f"No specifications found in directory: {spec_directory}")
+
+        # Step 2: Detect tasks and dependencies
+        task_detection = self.task_detector.detect_tasks_from_specs(parsed_specs)
+
+        # Step 3: Create specification nodes
+        specification_nodes = self._create_specification_nodes(
+            parsed_specs, task_detection
+        )
+
+        # Step 4: Create constraint graph
+        constraint_graph = self.dependency_mapper.create_dependency_graph(
+            task_detection.tasks, task_detection.dependencies, specification_nodes
+        )
+
+        # Step 5: Analyze critical paths
+        critical_path_analysis = self.critical_path_analyzer.analyze_critical_paths(
+            constraint_graph
+        )
+
+        # Step 6: Process layers
+        layer_processing = self.layer_processor.process_layers(
+            specification_nodes, constraint_graph
+        )
+
+        # Step 7: Create ecosystem DAG
+        ecosystem_dag = self._create_ecosystem_dag(
+            specification_nodes,
+            task_detection,
+            constraint_graph,
+            critical_path_analysis,
+        )
+
+        return EcosystemAnalysisResult(
+            ecosystem_dag=ecosystem_dag,
+            constraint_graph=constraint_graph,
+            critical_path_analysis=critical_path_analysis,
+            layer_processing=layer_processing,
+            parsed_specs=parsed_specs,
+            task_detection=task_detection,
+        )
+
+    async def calculate_critical_paths(
+        self, ecosystem_dag: EcosystemDAG
+    ) -> List[CriticalPath]:
+        """
+        Calculate all critical paths through the dependency graph.
+
+        Args:
+            ecosystem_dag: Complete ecosystem dependency graph
+
+        Returns:
+            List[CriticalPath]: All critical dependency chains
+        """
+        # Recreate constraint graph from ecosystem DAG
+        constraint_graph = ConstraintGraph(
+            nodes={task.task_id: task for task in ecosystem_dag.tasks},
+            edges=ecosystem_dag.dependencies,
+            adjacency_list={},  # Will be rebuilt
+            reverse_adjacency={},  # Will be rebuilt
+            topological_order=[],  # Will be recalculated
+            dependency_layers={},  # Will be recalculated
+            conflicts=[],
+        )
+
+        # Rebuild adjacency lists
+        constraint_graph = self.dependency_mapper.create_dependency_graph(
+            ecosystem_dag.tasks,
+            ecosystem_dag.dependencies,
+            ecosystem_dag.specifications,
+        )
+
+        # Analyze critical paths
+        analysis = self.critical_path_analyzer.analyze_critical_paths(constraint_graph)
+
+        return analysis.all_critical_paths
+
+    async def identify_parallel_opportunities(
+        self, ecosystem_dag: EcosystemDAG
+    ) -> List[List[str]]:
+        """
+        Identify maximum parallelism opportunities within dependency constraints.
+
+        Args:
+            ecosystem_dag: Complete ecosystem dependency graph
+
+        Returns:
+            List[List[str]]: Groups of tasks that can run in parallel
+        """
+        # Recreate constraint graph
+        constraint_graph = self.dependency_mapper.create_dependency_graph(
+            ecosystem_dag.tasks,
+            ecosystem_dag.dependencies,
+            ecosystem_dag.specifications,
+        )
+
+        # Process layers to find parallel opportunities
+        layer_processing = self.layer_processor.process_layers(
+            ecosystem_dag.specifications, constraint_graph
+        )
+
+        # Extract parallel task groups
+        parallel_groups = []
+        for layer, task_ids in layer_processing.parallel_opportunities:
+            parallel_groups.append(task_ids)
+
+        return parallel_groups
+
+    def validate_ecosystem_integrity(self, ecosystem_dag: EcosystemDAG) -> List[str]:
+        """
+        Validate ecosystem integrity and return issues.
+
+        Args:
+            ecosystem_dag: Ecosystem DAG to validate
+
+        Returns:
+            List[str]: List of validation issues
+        """
+        issues = []
+
+        # Check for orphaned tasks
+        task_ids = {task.task_id for task in ecosystem_dag.tasks}
+
+        for task in ecosystem_dag.tasks:
+            # Check dependencies exist
+            for dep_id in task.dependencies:
+                if dep_id not in task_ids:
+                    issues.append(
+                        f"Task {task.task_id} has invalid dependency: {dep_id}"
+                    )
+
+            # Check dependents exist
+            for dep_id in task.dependents:
+                if dep_id not in task_ids:
+                    issues.append(
+                        f"Task {task.task_id} has invalid dependent: {dep_id}"
+                    )
+
+        # Check for circular dependencies in critical paths
+        for critical_path in ecosystem_dag.critical_paths:
+            if len(set(critical_path.task_sequence)) != len(
+                critical_path.task_sequence
+            ):
+                issues.append(
+                    f"Critical path {critical_path.path_id} contains duplicate tasks"
+                )
+
+        # Check completion percentage consistency
+        if (
+            ecosystem_dag.completion_percentage < 0
+            or ecosystem_dag.completion_percentage > 100
+        ):
+            issues.append(
+                f"Invalid completion percentage: {ecosystem_dag.completion_percentage}"
+            )
+
+        return issues
+
+    def _create_specification_nodes(
+        self, parsed_specs: List[ParsedSpec], task_detection: TaskDetectionResult
+    ) -> List[SpecificationNode]:
+        """Create specification nodes from parsed specs and task detection."""
+        specification_nodes = []
+
+        # Build task count by spec
+        task_counts = {}
+        completed_counts = {}
+
+        for task in task_detection.tasks:
+            spec_name = task.spec_name
+            task_counts[spec_name] = task_counts.get(spec_name, 0) + 1
+
+            if task.completion_status.value == "completed":
+                completed_counts[spec_name] = completed_counts.get(spec_name, 0) + 1
+
+        for parsed_spec in parsed_specs:
+            spec_name = parsed_spec.spec_name
+            task_count = task_counts.get(spec_name, 0)
+            completed_tasks = completed_counts.get(spec_name, 0)
+
+            # Calculate completion percentage
+            if task_count > 0:
+                completion_percentage = (completed_tasks / task_count) * 100.0
+            else:
+                completion_percentage = parsed_spec.completion_percentage
+
+            specification_nodes.append(
+                SpecificationNode(
+                    spec_name=spec_name,
+                    spec_path=parsed_spec.spec_path,
+                    completion_percentage=completion_percentage,
+                    task_count=task_count,
+                    completed_tasks=completed_tasks,
+                    dependencies=parsed_spec.dependencies,
+                    dependents=[],  # Will be populated by dependency mapper
+                    layer=0,  # Will be calculated by layer processor
+                )
+            )
+
+        return specification_nodes
+
+    def _create_ecosystem_dag(
+        self,
+        specification_nodes: List[SpecificationNode],
+        task_detection: TaskDetectionResult,
+        constraint_graph: ConstraintGraph,
+        critical_path_analysis: CriticalPathAnalysis,
+    ) -> EcosystemDAG:
+        """Create complete ecosystem DAG from analysis results."""
+        from datetime import datetime
+
+        # Calculate overall completion percentage
+        total_effort = sum(task.estimated_effort for task in task_detection.tasks)
+        completed_effort = sum(
+            task.estimated_effort
+            for task in task_detection.tasks
+            if task.completion_status.value == "completed"
+        )
+
+        completion_percentage = (
+            (completed_effort / total_effort * 100.0) if total_effort > 0 else 0.0
+        )
+
+        # Calculate remaining effort
+        remaining_effort = sum(
+            task.estimated_effort
+            for task in task_detection.tasks
+            if task.completion_status.value != "completed"
+        )
+
+        # Create parallel opportunities from constraint graph layers
+        parallel_opportunities = []
+        for layer, task_ids in constraint_graph.dependency_layers.items():
+            if len(task_ids) > 1:
+                # Create parallel group
+                from ..models.dag_models import ParallelGroup
+
+                parallel_tasks = [
+                    constraint_graph.nodes[task_id]
+                    for task_id in task_ids
+                    if task_id in constraint_graph.nodes
+                ]
+
+                if parallel_tasks:
+                    parallel_opportunities.append(
+                        ParallelGroup(
+                            group_id=f"layer_{layer}",
+                            tasks=parallel_tasks,
+                            estimated_duration=max(
+                                task.estimated_effort for task in parallel_tasks
+                            )
+                            // 8,  # Convert to days
+                            coordination_overhead=0.1,
+                        )
+                    )
+
+        return EcosystemDAG(
+            ecosystem_id=f"ecosystem_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+            specifications=specification_nodes,
+            tasks=task_detection.tasks,
+            dependencies=task_detection.dependencies,
+            critical_paths=critical_path_analysis.all_critical_paths,
+            parallel_opportunities=parallel_opportunities,
+            completion_percentage=completion_percentage,
+            estimated_remaining_effort=remaining_effort,
+            analysis_timestamp=datetime.now(),
+        )

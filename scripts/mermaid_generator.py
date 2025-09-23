@@ -90,7 +90,9 @@ class MermaidDiagramGenerator:
 
     def generate_workflow_diagram(self) -> str:
         """Generate workflow diagram from actual workflow code"""
-        workflow_path = self.project_root / "src" / "ghostbusters" / "ghostbusters_orchestrator.py"
+        workflow_path = (
+            self.project_root / "src" / "ghostbusters" / "ghostbusters_orchestrator.py"
+        )
         if not workflow_path.exists():
             return "stateDiagram-v2\n    Error[Workflow not found]"
 
@@ -184,7 +186,9 @@ class MermaidDiagramGenerator:
                         if node.module and hasattr(node, "names"):
                             for name in node.names:
                                 if name.name:
-                                    relationships.append(f"{py_file.stem} --> {name.name}")
+                                    relationships.append(
+                                        f"{py_file.stem} --> {name.name}"
+                                    )
             except Exception:
                 continue
 
@@ -218,7 +222,9 @@ class MermaidDiagramGenerator:
             "testing_architecture": self.generate_testing_architecture_diagram(),
         }
 
-    def update_markdown_file(self, markdown_file: Path, diagrams: dict[str, str]) -> None:
+    def update_markdown_file(
+        self, markdown_file: Path, diagrams: dict[str, str]
+    ) -> None:
         """Update markdown file with generated diagrams"""
         if not markdown_file.exists():
             print(f"❌ Markdown file not found: {markdown_file}")
@@ -242,7 +248,11 @@ class MermaidDiagramGenerator:
                         mermaid_end = sections[1].find("```", mermaid_start + 1)
                         if mermaid_end != -1:
                             # Replace the diagram content
-                            new_section = sections[1][:mermaid_start] + f"```mermaid\n{diagram_content}\n```\n" + sections[1][mermaid_end + 3 :]
+                            new_section = (
+                                sections[1][:mermaid_start]
+                                + f"```mermaid\n{diagram_content}\n```\n"
+                                + sections[1][mermaid_end + 3 :]
+                            )
                             content = sections[0] + section_pattern + new_section
 
         # Write the updated content back

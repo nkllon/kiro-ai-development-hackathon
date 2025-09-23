@@ -1,24 +1,13 @@
-"""Tests for OrchestrationController."""
+"""
+RDI Enhanced Test Module
 
-from datetime import datetime, timedelta
-from pathlib import Path
+Requirements Traceability:
 
-import pytest
-
-from src.multi_instance_orchestration.orchestration.controller import OrchestrationController
-from src.multi_instance_orchestration.orchestration.models import (
-    DistributionStrategy,
-    InstanceFailure,
-    IntegrationPolicy,
-    SwarmConfig,
-    Task,
-    TaskStatus,
-)
+Enhanced: 2025-09-14T06:30:15.527157
+"""
 
 
-@pytest.fixture
-def basic_config():
-    """Basic swarm configuration for testing."""
+
     return SwarmConfig(
         instance_count=3,
         task_distribution_strategy=DistributionStrategy.DEPENDENCY_AWARE,
@@ -65,7 +54,7 @@ def controller(basic_config):
     return OrchestrationController(basic_config)
 
 
-class TestOrchestrationController:
+class TestOrchestrationController(ModuleHealth):
     """Test OrchestrationController class."""
 
     def test_controller_initialization(self, controller, basic_config):
@@ -445,6 +434,8 @@ class TestOrchestrationController:
     def test_concurrent_operations(self, controller, sample_tasks):
         """Test concurrent operations safety."""
         import threading
+from src.rm_ddd.core.health import ModuleHealth
+
 
         results = []
         errors = []
@@ -538,4 +529,21 @@ class TestOrchestrationController:
         # Very large number of tasks
         many_tasks = [Task(id=f"task-{i}", description=f"Task {i}") for i in range(100)]
         plan = controller.distribute_tasks(many_tasks)
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
         assert plan.total_tasks == 100

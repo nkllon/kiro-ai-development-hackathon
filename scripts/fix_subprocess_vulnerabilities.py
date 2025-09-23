@@ -95,7 +95,10 @@ def fix_file(file_path: Path, dry_run: bool = True) -> bool:
                 lines[line_idx] = issue["fix"]
 
         # Add import if needed
-        if any(issue["type"] == "subprocess_run" or issue["type"] == "os_system" for issue in issues):
+        if any(
+            issue["type"] == "subprocess_run" or issue["type"] == "os_system"
+            for issue in issues
+        ):
             # Find import section
             import_section = -1
             for i, line in enumerate(lines):

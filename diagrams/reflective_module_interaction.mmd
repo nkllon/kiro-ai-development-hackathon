@@ -1,0 +1,9 @@
+sequenceDiagram
+    participant ReflectiveModule as ReflectiveModule
+    participant FileChangeDetector as FileChangeDetector
+    participant TeamValidationRule as TeamValidationRule
+    participant ContentBasedChangeDetector as ContentBasedChangeDetector
+    participant RCAEngine as RCAEngine
+    participant RCATimeoutHandler as RCATimeoutHandler
+    ReflectiveModule->>+ReflectiveModule: register_module()
+    ReflectiveModule-->>-ReflectiveModule: return

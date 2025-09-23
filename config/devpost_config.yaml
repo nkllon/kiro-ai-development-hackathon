@@ -1,0 +1,57 @@
+# DevPost Integration Configuration
+project_id: "kiro-ai-development-hackathon"
+hackathon_id: "kiro-ai-hackathon-2025"
+auth_token: null
+sync_enabled: true
+
+# File watching patterns
+watch_patterns:
+  - "*.md"
+  - "*.py"
+  - "*.js"
+  - "*.json"
+  - "*.yml"
+  - "*.yaml"
+
+# Sync settings
+sync_interval: 300  # seconds
+auto_sync_media: true
+
+# Notification preferences
+notification_preferences:
+  desktop_notifications: true
+  email_notifications: false
+  deadline_advance_times:
+    - "7_days"
+    - "3_days"
+    - "1_day"
+    - "6_hours"
+    - "1_hour"
+  sync_failure_notifications: true
+  submission_status_notifications: true
+  quiet_hours_start: null
+  quiet_hours_end: null
+
+# Deadline reminders
+deadline_reminders:
+  - "7_days"
+  - "1_day"
+  - "1_hour"
+
+# Validation rules
+validation_rules:
+  required_fields:
+    - "title"
+    - "tagline"
+    - "description"
+  min_description_length: 100
+  required_media_types: []
+  team_member_validation: true
+  link_validation: true
+  max_tags: 10
+  custom_rules: {}
+
+# Environment settings
+environment: "development"
+debug: true
+log_level: "INFO"

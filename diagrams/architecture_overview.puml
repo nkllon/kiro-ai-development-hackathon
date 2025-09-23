@@ -1,0 +1,73 @@
+@startuml
+!theme plain
+
+package "src/sca_consolidated" {
+  component EnhancedSCAProcedureV2
+  component AdaptiveIntelligenceModule
+  component OptimizationModule
+  component MetricsCalculatorModule
+  component PhaseManagerModule
+}
+package "root" {
+  component FormFieldMapping
+  component FormPage
+  component DevPostFormORM
+  component NetworkTester
+  component ThreadedConversation
+}
+package "backups" {
+  component MessageType
+  component BeastModeMessage
+  component DAGAnalysis
+  component ModuleAnalysis
+  component BeastModeBusClient
+}
+package "src/learning_mvc_consolidated" {
+  component PageType
+  component TelemetryEvent
+  component PageAnalysis
+  component LearningState
+  component TelemetryCollector
+}
+package "src/navigator_consolidated" {
+  component SmartDevPostNavigatorV2
+  component EventHandler
+  component FormProcessor
+  component StepDetector
+  component InteractiveMode
+}
+package "src/rm_ddd/core" {
+  component TaskStatus
+  component Task
+  component Agent
+  component ReflectiveModule
+  component AgentOrchestrator
+}
+package "src/beast_mode/execution" {
+  component GitSession
+  component ExecutionEngine
+  component AgentManager
+  component Commands
+}
+package "src/verification_consolidated" {
+  component VerificationResult
+  component StateMutationAnalyzer
+  component PerformanceAnalyzer
+  component IndirectVerificationAnalyzer
+  component SophisticatedVerificationSystem
+}
+package "src/devpost_integration" {
+  component FormField
+  component Config
+  component ValidationEngine
+  component GitIntegration
+  component Unknown
+}
+package ".beast_mode/emergency_backup_20250913_175435/scripts" {
+  component TaskNode
+  component RefactoringPlan
+  component TestRunner
+  component CloudFunctionDeleter
+  component DependencyStatus
+}
+@enduml

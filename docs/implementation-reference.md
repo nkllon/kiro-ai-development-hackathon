@@ -264,7 +264,7 @@ pre-commit = ">=3.4.0"
 
 ### Documentation
 - **Specifications**: `requirements.md`, `design.md`, `tasks.md`
-- **Documentation**: `README.md`, `*.md`
+- **Documentation**: `docs/readme/project/README.md`, `*.md`
 - **Reports**: `*-report.md`, `*-analysis.md`
 
 ### Configuration

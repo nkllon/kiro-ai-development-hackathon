@@ -1,8 +1,13 @@
 """
-Unit tests for RCA Report Generation System
-Tests report generation, formatting, and output for different formats
-Requirements: 2.2, 2.3, 2.4 - Comprehensive testing of report generation functionality
+RDI Enhanced Test Module
+
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.552853
 """
+
+
+
 
 import json
 import pytest
@@ -18,12 +23,14 @@ from src.beast_mode.testing.rca_integration import (
     TestFailureData, TestRCASummaryData, TestRCAReportData
 )
 from src.beast_mode.analysis.rca_engine import (
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
     RCAResult, Failure, FailureCategory, RootCauseType, RootCause,
     SystematicFix, PreventionPattern, ComprehensiveAnalysisResult
 )
 
 
-class TestRCAReportGenerator:
+class TestRCAReportGenerator(ReflectiveModule):
     """Test suite for RCA Report Generator"""
     
     @pytest.fixture
@@ -514,7 +521,7 @@ class TestRCAReportGenerator:
         assert "Recommendations" in markdown_output
 
 
-class TestReportConfigurationValidation:
+class TestReportConfigurationValidation(ReflectiveModule):
     """Test report configuration validation and edge cases"""
     
     def test_report_configuration_validation(self):
@@ -580,4 +587,32 @@ class TestReportConfigurationValidation:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__])

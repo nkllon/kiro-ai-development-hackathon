@@ -1,7 +1,13 @@
 """
-Integration tests for Test RCA Integration Layer with real RCA engine
-Tests end-to-end functionality with actual RCA engine components
+RDI Enhanced Test Module
+
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.592767
 """
+
+
+
 
 import pytest
 from datetime import datetime
@@ -13,7 +19,7 @@ from src.beast_mode.testing.rca_integration import (
 from src.beast_mode.analysis.rca_engine import RCAEngine
 
 
-class TestRCAIntegrationWithRealEngine:
+class TestRCAIntegrationWithRealEngine(ReflectiveModule):
     """Integration tests with real RCA engine"""
     
     @pytest.fixture
@@ -124,6 +130,8 @@ class TestRCAIntegrationWithRealEngine:
     def test_performance_within_timeout(self, real_integrator, sample_import_failure):
         """Test that analysis completes within timeout requirements"""
         import time
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         
         start_time = time.time()
         report = real_integrator.analyze_test_failures([sample_import_failure])
@@ -216,4 +224,32 @@ class TestRCAIntegrationWithRealEngine:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__])

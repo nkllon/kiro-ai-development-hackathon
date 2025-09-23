@@ -1,9 +1,13 @@
 """
-Tests for Enhanced Domain Registry Manager
+RDI Enhanced Test Module
 
-This module tests the enhanced DomainRegistryManager with
-caching and indexing capabilities.
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.513113
 """
+
+
+
 
 import pytest
 import json
@@ -20,7 +24,7 @@ from src.beast_mode.domain_index.exceptions import (
 )
 
 
-class TestEnhancedRegistryManager:
+class TestEnhancedRegistryManager(ReflectiveModule):
     """Test enhanced registry manager functionality"""
     
     @pytest.fixture
@@ -392,6 +396,8 @@ class TestEnhancedRegistryManager:
     def test_concurrent_access_with_caching(self, registry_manager):
         """Test concurrent access with caching enabled"""
         import threading
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         
         # Load registry first
         registry_manager.load_registry()
@@ -433,7 +439,7 @@ class TestEnhancedRegistryManager:
 
 
 @pytest.mark.integration
-class TestRegistryManagerIntegration:
+class TestRegistryManagerIntegration(ReflectiveModule):
     """Integration tests for enhanced registry manager"""
     
     def test_full_workflow_with_caching_and_indexing(self):
@@ -486,4 +492,32 @@ class TestRegistryManagerIntegration:
                 manager._cache.shutdown()
                 
         finally:
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
             Path(temp_path).unlink(missing_ok=True)

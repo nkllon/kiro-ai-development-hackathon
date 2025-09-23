@@ -1,18 +1,13 @@
-"""Tests for TextProtocolHandler."""
+"""
+RDI Enhanced Test Module
 
-from datetime import timedelta
+Requirements Traceability:
 
-import pytest
-
-from src.multi_instance_orchestration.protocol.models import (
-    ActionResult,
-    CommandPattern,
-    StructuredAction,
-)
+Enhanced: 2025-09-14T06:30:15.559737
+"""
 
 
-class TestTextProtocolHandler:
-    """Test TextProtocolHandler class."""
+
 
     def test_handler_initialization(self, protocol_handler):
         """Test handler initialization."""
@@ -389,6 +384,8 @@ class TestTextProtocolHandler:
     def test_concurrent_execution_safety(self, protocol_handler, mock_handler):
         """Test thread safety of handler execution."""
         import threading
+from src.rm_ddd.core.health import ModuleHealth
+
 
         protocol_handler.register_handler("run", "task", mock_handler)
 
@@ -422,3 +419,20 @@ class TestTextProtocolHandler:
         assert len(results) == 10
         assert all(result.success for result in results)
         assert protocol_handler.execution_stats["total_commands"] == 10
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+

@@ -1,0 +1,232 @@
+name: Syntax Validation and Code Quality
+
+on:
+  push:
+    branches: [ main, develop, release/* ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  syntax-validation:
+    runs-on: ubuntu-latest
+    name: Syntax Validation
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pre-commit
+        
+    - name: Python Syntax Check
+      run: |
+        echo "🔍 Running Python syntax validation..."
+        find src -name "*.py" -exec python -m py_compile {} \;
+        echo "✅ All Python files have valid syntax"
+        
+    - name: Code Generation Validation
+      run: |
+        echo "🔍 Running code generation validation..."
+        python scripts/code_generation_validator.py src --pattern "*.py" --output validation-report.txt
+        echo "✅ Code generation validation complete"
+        
+    - name: Indentation Validation
+      run: |
+        echo "🔍 Running indentation validation..."
+        find src -name "*.py" -exec python scripts/indentation_validator.py {} \;
+        echo "✅ Indentation validation complete"
+        
+    - name: Pre-commit Validation
+      run: |
+        echo "🔍 Running pre-commit validation..."
+        pre-commit run --all-files
+        echo "✅ Pre-commit validation complete"
+        
+    - name: RDI Test Validation
+      run: |
+        echo "🔍 Running RDI test validation..."
+        python -m pytest tests/unit/beast_mode/ --tb=no -q
+        echo "✅ RDI test validation complete"
+        
+    - name: Upload validation reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: validation-reports
+        path: |
+          validation-report.txt
+          .pre-commit-reports/
+
+  code-quality:
+    runs-on: ubuntu-latest
+    name: Code Quality Analysis
+    needs: syntax-validation
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install flake8 black isort mypy
+        
+    - name: Code formatting check (Black)
+      run: |
+        echo "🔍 Checking code formatting..."
+        black --check --diff src/ tests/
+        echo "✅ Code formatting check complete"
+        
+    - name: Import sorting check (isort)
+      run: |
+        echo "🔍 Checking import sorting..."
+        isort --check-only --diff src/ tests/
+        echo "✅ Import sorting check complete"
+        
+    - name: Linting (Flake8)
+      run: |
+        echo "🔍 Running linting..."
+        flake8 src/ tests/ --max-line-length=100 --extend-ignore=E203,W503
+        echo "✅ Linting complete"
+        
+    - name: Type checking (MyPy)
+      run: |
+        echo "🔍 Running type checking..."
+        mypy src/ --ignore-missing-imports
+        echo "✅ Type checking complete"
+
+  test-execution:
+    runs-on: ubuntu-latest
+    name: Test Execution Validation
+    needs: [syntax-validation, code-quality]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run comprehensive tests
+      run: |
+        echo "🔍 Running comprehensive test suite..."
+        python -m pytest tests/ --tb=short --cov=src --cov-report=xml
+        echo "✅ Comprehensive test execution complete"
+        
+    - name: RDI Test Success Rate Check
+      run: |
+        echo "🔍 Checking RDI test success rate..."
+        python -c "
+        import subprocess
+        result = subprocess.run(['python', '-m', 'pytest', 'tests/unit/beast_mode/', '--tb=no', '-q'], 
+                              capture_output=True, text=True)
+        if result.returncode == 0:
+            print('✅ RDI tests passing')
+        else:
+            print('❌ RDI tests failing')
+            print(result.stdout)
+            print(result.stderr)
+            exit(1)
+        "
+        
+    - name: Upload coverage reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: coverage-reports
+        path: coverage.xml
+
+  security-scan:
+    runs-on: ubuntu-latest
+    name: Security and Vulnerability Scan
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install bandit safety
+        
+    - name: Security scan (Bandit)
+      run: |
+        echo "🔍 Running security scan..."
+        bandit -r src/ -f json -o bandit-report.json || true
+        echo "✅ Security scan complete"
+        
+    - name: Vulnerability scan (Safety)
+      run: |
+        echo "🔍 Running vulnerability scan..."
+        safety check --json --output safety-report.json || true
+        echo "✅ Vulnerability scan complete"
+        
+    - name: Upload security reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          safety-report.json
+
+  integration-test:
+    runs-on: ubuntu-latest
+    name: Integration Test
+    needs: [syntax-validation, code-quality, test-execution]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Integration test
+      run: |
+        echo "🔍 Running integration tests..."
+        python scripts/integration_test_runner.py
+        echo "✅ Integration tests complete"
+        
+    - name: Performance benchmark
+      run: |
+        echo "🔍 Running performance benchmarks..."
+        python scripts/performance_benchmark.py
+        echo "✅ Performance benchmarks complete"

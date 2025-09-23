@@ -1,0 +1,602 @@
+"""
+RDI Enhanced Test Module
+
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:24:55.557121
+"""
+
+
+
+
+
+import json
+import pytest
+from datetime import datetime
+from unittest.mock import patch, MagicMock
+
+from src.beast_mode.messaging.compatibility import (
+    MessageCompatibilityLayer,
+    MessageTypeTranslator,
+    MessageVersionDetector,
+    MessageConverter,
+    MessageVersion,
+    CompatibilityMode,
+    LegacyMessageType,
+    MessageCompatibilityError,
+    MessageConversionError,
+    ConversionResult,
+    convert_message,
+    detect_message_version,
+    is_compatible_message
+)
+from src.beast_mode.messaging.models import BeastModeMessage, MessageType, AgentCapabilities
+
+
+class TestMessageTypeTranslator:
+    """Test message type translation functionality"""
+    
+    def setup_method(self):
+        self.translator = MessageTypeTranslator()
+    
+    def test_translate_legacy_to_current(self):
+        """Test translation from legacy types to current format"""
+        # Test enum-based legacy types
+        assert self.translator.translate_to_current(LegacyMessageType.MESSAGE) == MessageType.SIMPLE_MESSAGE
+        assert self.translator.translate_to_current(LegacyMessageType.REQUEST) == MessageType.PROMPT_REQUEST
+        assert self.translator.translate_to_current(LegacyMessageType.RESPONSE) == MessageType.PROMPT_RESPONSE
+        assert self.translator.translate_to_current(LegacyMessageType.DISCOVERY) == MessageType.AGENT_DISCOVERY
+        assert self.translator.translate_to_current(LegacyMessageType.HELP) == MessageType.HELP_WANTED
+        assert self.translator.translate_to_current(LegacyMessageType.SPORE) == MessageType.SPORE_DELIVERY
+    
+    def test_translate_string_to_current(self):
+        """Test translation from string types to current format"""
+        # Test direct string mappings
+        assert self.translator.translate_to_current("msg") == MessageType.SIMPLE_MESSAGE
+        assert self.translator.translate_to_current("text") == MessageType.SIMPLE_MESSAGE
+        assert self.translator.translate_to_current("prompt") == MessageType.PROMPT_REQUEST
+        assert self.translator.translate_to_current("query") == MessageType.PROMPT_REQUEST
+        assert self.translator.translate_to_current("answer") == MessageType.PROMPT_RESPONSE
+        assert self.translator.translate_to_current("ping") == MessageType.SYSTEM_HEALTH
+    
+    def test_translate_current_type_passthrough(self):
+        """Test that current types pass through unchanged"""
+        assert self.translator.translate_to_current("simple_message") == MessageType.SIMPLE_MESSAGE
+        assert self.translator.translate_to_current("prompt_request") == MessageType.PROMPT_REQUEST
+        assert self.translator.translate_to_current("spore_delivery") == MessageType.SPORE_DELIVERY
+    
+    def test_translate_unknown_type_fallback(self):
+        """Test fallback for unknown types"""
+        assert self.translator.translate_to_current("unknown_type") == MessageType.SIMPLE_MESSAGE
+        assert self.translator.translate_to_current("custom_message") == MessageType.SIMPLE_MESSAGE
+    
+    def test_translate_to_legacy(self):
+        """Test translation from current to legacy format"""
+        assert self.translator.translate_to_legacy(MessageType.SIMPLE_MESSAGE) == "message"
+        assert self.translator.translate_to_legacy(MessageType.PROMPT_REQUEST) == "request"
+        assert self.translator.translate_to_legacy(MessageType.PROMPT_RESPONSE) == "response"
+        assert self.translator.translate_to_legacy(MessageType.AGENT_DISCOVERY) == "discovery"
+        assert self.translator.translate_to_legacy(MessageType.HELP_WANTED) == "help"
+        assert self.translator.translate_to_legacy(MessageType.SPORE_DELIVERY) == "spore"
+    
+    def test_translate_newer_types_to_legacy(self):
+        """Test translation of newer types to legacy equivalents"""
+        assert self.translator.translate_to_legacy(MessageType.SPORE_REQUEST) == "request"
+        assert self.translator.translate_to_legacy(MessageType.SPORE_SPAWN) == "spore"
+        assert self.translator.translate_to_legacy(MessageType.TECHNICAL_EXCHANGE) == "message"
+        assert self.translator.translate_to_legacy(MessageType.SYSTEM_HEALTH) == "message"
+        assert self.translator.translate_to_legacy(MessageType.COLLABORATION_REQUEST) == "request"
+        assert self.translator.translate_to_legacy(MessageType.COLLABORATION_RESPONSE) == "response"
+
+
+class TestMessageVersionDetector:
+    """Test message version detection functionality"""
+    
+    def setup_method(self):
+        self.detector = MessageVersionDetector()
+    
+    def test_detect_v1_0_message(self):
+        """Test detection of V1.0 format messages"""
+        v1_0_message = {
+            "type": "message",
+            "from": "agent1",
+            "to": "agent2",
+            "content": "Hello",
+            "timestamp": "2023-01-01T12:00:00"
+        }
+        assert self.detector.detect_version(v1_0_message) == MessageVersion.V1_0
+    
+    def test_detect_v1_1_message(self):
+        """Test detection of V1.1 format messages"""
+        v1_1_message = {
+            "type": "request",
+            "source": "agent1",
+            "target": "agent2",
+            "payload": {"prompt": "Hello"},
+            "correlation_id": "123",
+            "priority": 5,
+            "timestamp": "2023-01-01T12:00:00"
+        }
+        assert self.detector.detect_version(v1_1_message) == MessageVersion.V1_1
+    
+    def test_detect_v1_2_message(self):
+        """Test detection of V1.2 format messages"""
+        v1_2_message = {
+            "type": "collaboration_request",
+            "source": "agent1",
+            "target": "agent2",
+            "payload": {"session_type": "code_review"},
+            "correlation_id": "123",
+            "priority": 3,
+            "timestamp": "2023-01-01T12:00:00"
+        }
+        assert self.detector.detect_version(v1_2_message) == MessageVersion.V1_2
+    
+    def test_detect_v2_0_message(self):
+        """Test detection of V2.0 format messages"""
+        v2_0_message = {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "type": "simple_message",
+            "source": "agent1",
+            "target": "agent2",
+            "payload": {"content": "Hello"},
+            "timestamp": "2023-01-01T12:00:00",
+            "priority": 5
+        }
+        assert self.detector.detect_version(v2_0_message) == MessageVersion.V2_0
+    
+    def test_detect_unknown_message(self):
+        """Test detection of unknown format messages"""
+        unknown_message = {
+            "msg": "hello",
+            "sender": "agent1"
+        }
+        assert self.detector.detect_version(unknown_message) == MessageVersion.UNKNOWN
+    
+    def test_detect_invalid_input(self):
+        """Test detection with invalid input"""
+        assert self.detector.detect_version("not a dict") == MessageVersion.UNKNOWN
+        assert self.detector.detect_version(None) == MessageVersion.UNKNOWN
+        assert self.detector.detect_version([]) == MessageVersion.UNKNOWN
+    
+    def test_is_compatible_version(self):
+        """Test version compatibility checking"""
+        assert self.detector.is_compatible_version(MessageVersion.V1_0, MessageVersion.V2_0)
+        assert self.detector.is_compatible_version(MessageVersion.V1_1, MessageVersion.V2_0)
+        assert self.detector.is_compatible_version(MessageVersion.V1_2, MessageVersion.V2_0)
+        assert self.detector.is_compatible_version(MessageVersion.V2_0, MessageVersion.V2_0)
+        
+        assert not self.detector.is_compatible_version(MessageVersion.UNKNOWN, MessageVersion.V2_0)
+
+
+class TestMessageConverter:
+    """Test message conversion functionality"""
+    
+    def setup_method(self):
+        self.converter = MessageConverter()
+    
+    def test_convert_v1_0_to_current(self):
+        """Test conversion from V1.0 to current format"""
+        v1_0_message = {
+            "type": "message",
+            "from": "agent1",
+            "to": "agent2",
+            "content": "Hello world"
+        }
+        
+        result = self.converter.convert_to_current(v1_0_message)
+        
+        assert result.success
+        assert result.message is not None
+        assert result.message.type == MessageType.SIMPLE_MESSAGE
+        assert result.message.source == "agent1"
+        assert result.message.target == "agent2"
+        assert result.message.payload["content"] == "Hello world"
+        assert result.original_version == MessageVersion.V1_0
+    
+    def test_convert_v1_1_to_current(self):
+        """Test conversion from V1.1 to current format"""
+        v1_1_message = {
+            "type": "request",
+            "source": "agent1",
+            "target": "agent2",
+            "payload": {"prompt": "What is 2+2?"},
+            "request_id": "req123",
+            "priority": 3
+        }
+        
+        result = self.converter.convert_to_current(v1_1_message)
+        
+        assert result.success
+        assert result.message is not None
+        assert result.message.type == MessageType.PROMPT_REQUEST
+        assert result.message.correlation_id == "req123"
+        assert result.message.priority == 3
+    
+    def test_convert_json_string(self):
+        """Test conversion from JSON string"""
+        json_message = json.dumps({
+            "type": "help",
+            "source": "agent1",
+            "payload": {"description": "Need help with Python"}
+        })
+        
+        result = self.converter.convert_to_current(json_message)
+        
+        assert result.success
+        assert result.message is not None
+        assert result.message.type == MessageType.HELP_WANTED
+    
+    def test_convert_invalid_json(self):
+        """Test conversion with invalid JSON"""
+        invalid_json = "{ invalid json }"
+        
+        result = self.converter.convert_to_current(invalid_json)
+        
+        assert not result.success
+        assert "Invalid JSON" in result.errors[0]
+    
+    def test_convert_missing_required_fields(self):
+        """Test conversion with missing required fields"""
+        incomplete_message = {
+            "type": "message"
+            # Missing source
+        }
+        
+        result = self.converter.convert_to_current(incomplete_message)
+        
+        assert result.success  # Should succeed with defaults
+        assert result.message.source == "unknown_agent"
+    
+    def test_convert_with_lenient_mode(self):
+        """Test lenient conversion for problematic messages"""
+        problematic_message = {
+            "type": "message",
+            "source": "agent1",
+            "priority": "high",  # Invalid priority type
+            "payload": "not a dict"  # Invalid payload type
+        }
+        
+        result = self.converter.convert_to_current(problematic_message)
+        
+        assert result.success
+        assert result.message.priority == 5  # Default priority
+        assert isinstance(result.message.payload, dict)
+    
+    def test_convert_to_legacy_v1_0(self):
+        """Test conversion to legacy V1.0 format"""
+        current_message = BeastModeMessage(
+            type=MessageType.SIMPLE_MESSAGE,
+            source="agent1",
+            target="agent2",
+            payload={"content": "Hello"}
+        )
+        
+        legacy_data = self.converter.convert_to_legacy(current_message, MessageVersion.V1_0)
+        
+        assert legacy_data["type"] == "message"
+        assert legacy_data["from"] == "agent1"
+        assert legacy_data["to"] == "agent2"
+        assert "id" not in legacy_data
+        assert "correlation_id" not in legacy_data
+        assert "priority" not in legacy_data
+    
+    def test_convert_to_legacy_v1_1(self):
+        """Test conversion to legacy V1.1 format"""
+        current_message = BeastModeMessage(
+            type=MessageType.PROMPT_REQUEST,
+            source="agent1",
+            target="agent2",
+            payload={"prompt": "Hello"},
+            correlation_id="corr123"
+        )
+        
+        legacy_data = self.converter.convert_to_legacy(current_message, MessageVersion.V1_1)
+        
+        assert legacy_data["type"] == "request"
+        assert legacy_data["request_id"] == "corr123"
+        assert "id" not in legacy_data
+
+
+class TestMessageCompatibilityLayer:
+    """Test the main compatibility layer"""
+    
+    def setup_method(self):
+        self.compatibility_layer = MessageCompatibilityLayer(CompatibilityMode.CONVERT)
+    
+    def test_process_current_message(self):
+        """Test processing of current format message"""
+        current_message = BeastModeMessage(
+            type=MessageType.SIMPLE_MESSAGE,
+            source="agent1",
+            payload={"content": "Hello"}
+        )
+        
+        result = self.compatibility_layer.process_message(current_message)
+        
+        assert result.success
+        assert result.message == current_message
+        assert result.original_version == MessageVersion.V2_0
+    
+    def test_process_legacy_message(self):
+        """Test processing of legacy message"""
+        legacy_message = {
+            "type": "message",
+            "from": "agent1",
+            "content": "Hello"
+        }
+        
+        result = self.compatibility_layer.process_message(legacy_message)
+        
+        assert result.success
+        assert result.message is not None
+        assert result.message.type == MessageType.SIMPLE_MESSAGE
+        assert result.original_version == MessageVersion.V1_0
+    
+    def test_register_unknown_type_handler(self):
+        """Test registration of unknown type handlers"""
+        self.compatibility_layer.register_unknown_type_handler("custom_msg", MessageType.SIMPLE_MESSAGE)
+        
+        custom_message = {
+            "type": "custom_msg",
+            "source": "agent1",
+            "payload": {"content": "Custom message"}
+        }
+        
+        result = self.compatibility_layer.process_message(custom_message)
+        
+        assert result.success
+        assert result.message.type == MessageType.SIMPLE_MESSAGE
+    
+    def test_register_custom_type(self):
+        """Test registration of custom message types"""
+        self.compatibility_layer.register_custom_type("my_custom_type")
+        
+        # This would normally fail, but should work with registered custom type
+        # Note: This test demonstrates the concept, actual implementation may vary
+        assert "my_custom_type" in self.compatibility_layer.custom_type_registry
+    
+    def test_strict_mode(self):
+        """Test strict compatibility mode"""
+        strict_layer = MessageCompatibilityLayer(CompatibilityMode.STRICT)
+        
+        invalid_message = {
+            "invalid": "structure"
+        }
+        
+        result = strict_layer.process_message(invalid_message)
+        
+        assert not result.success
+        assert len(result.errors) > 0
+    
+    def test_passthrough_mode(self):
+        """Test passthrough compatibility mode"""
+        passthrough_layer = MessageCompatibilityLayer(CompatibilityMode.PASSTHROUGH)
+        
+        # Should be more lenient than strict mode
+        assert passthrough_layer.auto_convert
+        assert not passthrough_layer.strict_validation
+    
+    def test_validate_message_compatibility(self):
+        """Test message compatibility validation"""
+        # Test newer message type
+        newer_message = BeastModeMessage(
+            type=MessageType.COLLABORATION_REQUEST,
+            source="agent1",
+            payload={"session_type": "code_review"}
+        )
+        
+        warnings = self.compatibility_layer.validate_message_compatibility(newer_message)
+        
+        assert len(warnings) > 0
+        assert "may not be supported by older agents" in warnings[0]
+    
+    def test_large_payload_warning(self):
+        """Test warning for large payloads"""
+        large_payload = {"data": "x" * 15000}  # Large payload
+        large_message = BeastModeMessage(
+            type=MessageType.SIMPLE_MESSAGE,
+            source="agent1",
+            payload=large_payload
+        )
+        
+        warnings = self.compatibility_layer.validate_message_compatibility(large_message)
+        
+        assert any("Large payload" in warning for warning in warnings)
+    
+    def test_complex_payload_warning(self):
+        """Test warning for complex nested payloads"""
+        complex_payload = {
+            "level1": {
+                "level2": {
+                    "level3": {
+                        "level4": "deep nesting"
+                    }
+                }
+            }
+        }
+        complex_message = BeastModeMessage(
+            type=MessageType.SIMPLE_MESSAGE,
+            source="agent1",
+            payload=complex_payload
+        )
+        
+        warnings = self.compatibility_layer.validate_message_compatibility(complex_message)
+        
+        assert any("Complex payload" in warning for warning in warnings)
+    
+    def test_get_compatibility_stats(self):
+        """Test compatibility statistics"""
+        # Process some messages to generate stats
+        self.compatibility_layer.process_message({"type": "message", "source": "agent1"})
+        self.compatibility_layer.process_message({"type": "request", "source": "agent2"})
+        
+        stats = self.compatibility_layer.get_compatibility_stats()
+        
+        assert stats["mode"] == CompatibilityMode.CONVERT.value
+        assert stats["stats"]["messages_processed"] == 2
+        assert stats["stats"]["conversions_successful"] >= 0
+    
+    def test_create_compatibility_report(self):
+        """Test compatibility report generation"""
+        # Process some messages
+        self.compatibility_layer.process_message({"type": "message", "source": "agent1"})
+        
+        report = self.compatibility_layer.create_compatibility_report()
+        
+        assert "summary" in report
+        assert "version_distribution" in report
+        assert "registered_handlers" in report
+        assert "configuration" in report
+        assert report["summary"]["total_messages_processed"] >= 1
+
+
+class TestConvenienceFunctions:
+    """Test convenience functions"""
+    
+    def test_convert_message_function(self):
+        """Test convert_message convenience function"""
+        legacy_message = {
+            "type": "message",
+            "from": "agent1",
+            "content": "Hello"
+        }
+        
+        result = convert_message(legacy_message)
+        
+        assert result is not None
+        assert isinstance(result, BeastModeMessage)
+        assert result.type == MessageType.SIMPLE_MESSAGE
+    
+    def test_convert_message_failure(self):
+        """Test convert_message with invalid input"""
+        invalid_message = "not a valid message"
+        
+        result = convert_message(invalid_message)
+        
+        assert result is None
+    
+    def test_detect_message_version_function(self):
+        """Test detect_message_version convenience function"""
+        v1_0_message = {
+            "type": "message",
+            "from": "agent1"
+        }
+        
+        version = detect_message_version(v1_0_message)
+        
+        assert version == MessageVersion.V1_0
+    
+    def test_is_compatible_message_function(self):
+        """Test is_compatible_message convenience function"""
+        compatible_message = {
+            "type": "simple_message",
+            "source": "agent1"
+        }
+        
+        incompatible_message = {
+            "invalid": "structure"
+        }
+        
+        assert is_compatible_message(compatible_message)
+        assert not is_compatible_message(incompatible_message)
+
+
+class TestErrorHandling:
+    """Test error handling scenarios"""
+    
+    def setup_method(self):
+        self.compatibility_layer = MessageCompatibilityLayer(CompatibilityMode.CONVERT)
+    
+    def test_malformed_json_handling(self):
+        """Test handling of malformed JSON"""
+        malformed_json = '{"type": "message", "source": "agent1"'  # Missing closing brace
+        
+        result = self.compatibility_layer.process_message(malformed_json)
+        
+        assert not result.success
+        assert any("Invalid JSON" in error for error in result.errors)
+    
+    def test_missing_critical_fields(self):
+        """Test handling of messages missing critical fields"""
+        message_no_type = {
+            "source": "agent1",
+            "payload": {"content": "Hello"}
+        }
+        
+        result = self.compatibility_layer.process_message(message_no_type)
+        
+        # Should succeed with defaults
+        assert result.success
+        assert result.message.type == MessageType.SIMPLE_MESSAGE
+    
+    def test_invalid_field_types(self):
+        """Test handling of invalid field types"""
+        message_invalid_types = {
+            "type": "message",
+            "source": "agent1",
+            "priority": "very_high",  # Should be int
+            "timestamp": "not_a_date",  # Should be datetime
+            "payload": "not_a_dict"  # Should be dict
+        }
+        
+        result = self.compatibility_layer.process_message(message_invalid_types)
+        
+        # Should succeed with lenient conversion
+        assert result.success
+        assert isinstance(result.message.priority, int)
+        assert isinstance(result.message.payload, dict)
+
+
+class TestVersionSpecificConversions:
+    """Test version-specific conversion scenarios"""
+    
+    def setup_method(self):
+        self.converter = MessageConverter()
+    
+    def test_v1_0_field_mapping(self):
+        """Test V1.0 specific field mappings"""
+        v1_0_message = {
+            "type": "message",
+            "from": "sender_agent",
+            "to": "receiver_agent",
+            "content": "Direct content field"
+        }
+        
+        result = self.converter.convert_to_current(v1_0_message)
+        
+        assert result.success
+        assert result.message.source == "sender_agent"
+        assert result.message.target == "receiver_agent"
+        assert result.message.payload["content"] == "Direct content field"
+    
+    def test_v1_1_correlation_mapping(self):
+        """Test V1.1 correlation ID mapping"""
+        v1_1_message = {
+            "type": "request",
+            "source": "agent1",
+            "request_id": "old_correlation_id",
+            "payload": {"prompt": "Test"}
+        }
+        
+        result = self.converter.convert_to_current(v1_1_message)
+        
+        assert result.success
+        assert result.message.correlation_id == "old_correlation_id"
+    
+    def test_timestamp_conversion(self):
+        """Test timestamp format conversion"""
+        message_with_string_timestamp = {
+            "type": "message",
+            "source": "agent1",
+            "timestamp": "2023-01-01T12:00:00Z"
+        }
+        
+        result = self.converter.convert_to_current(message_with_string_timestamp)
+        
+        assert result.success
+        assert isinstance(result.message.timestamp, datetime)
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])

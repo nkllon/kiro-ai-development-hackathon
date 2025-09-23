@@ -38,7 +38,12 @@ def install_uv():
     """Install UV if not present"""
     print("📦 Installing UV package manager...")
     try:
-        subprocess.run(["curl", "-LsSf", "https://astral.sh/uv/install.sh"], input="sh", text=True, check=True)
+        subprocess.run(
+            ["curl", "-LsSf", "https://astral.sh/uv/install.sh"],
+            input="sh",
+            text=True,
+            check=True,
+        )
         print("  ✅ UV installed successfully")
         return True
     except subprocess.CalledProcessError as e:
@@ -55,7 +60,9 @@ def setup_pre_commit():
         return False
 
     # Install the hooks
-    if not run_command(["uv", "run", "pre-commit", "install"], "Installing pre-commit hooks"):
+    if not run_command(
+        ["uv", "run", "pre-commit", "install"], "Installing pre-commit hooks"
+    ):
         return False
 
     return True

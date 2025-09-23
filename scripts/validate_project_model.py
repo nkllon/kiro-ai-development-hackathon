@@ -24,7 +24,9 @@ def validate_json_schema(model_path: str, schema_path: str) -> bool:
         )
         return result.returncode == 0
     except FileNotFoundError:
-        print("⚠️  jsonschema CLI tool not found. Install with: pip install jsonschema-cli")
+        print(
+            "⚠️  jsonschema CLI tool not found. Install with: pip install jsonschema-cli"
+        )
         return True  # Skip validation if tool not available
 
 

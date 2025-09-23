@@ -77,7 +77,9 @@ class ComprehensiveSecurityScanner:
                 pattern=r"sk-ant-[a-zA-Z0-9]{48}",
                 severity="CRITICAL",
                 description="Anthropic API key detected",
-                examples=["sk-ant-api03-1234567890abcdef1234567890abcdef1234567890abcdef"],
+                examples=[
+                    "sk-ant-api03-1234567890abcdef1234567890abcdef1234567890abcdef"
+                ],
                 false_positive_patterns=[
                     r"sk-ant-test",
                     r"sk-ant-demo",
@@ -153,7 +155,7 @@ class ComprehensiveSecurityScanner:
                 pattern=r"eyJ[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*",
                 severity="MEDIUM",
                 description="JWT token detected",
-                examples=["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"],
+                examples=["eyJ0ZXN0.eyJkZW1v.eyJleGFtcGxl"],  # Test examples only
                 false_positive_patterns=[r"eyJ0ZXN0", r"eyJkZW1v"],
             ),
             # Generic Secrets
@@ -260,7 +262,9 @@ class ComprehensiveSecurityScanner:
                             matched_text = match.group(0)
 
                             # Check if this is a false positive
-                            is_false_positive = self._is_false_positive(pattern, matched_text, line, file_path)
+                            is_false_positive = self._is_false_positive(
+                                pattern, matched_text, line, file_path
+                            )
 
                             # Get context around the match
                             context_start = max(0, line_num - 2)
@@ -289,7 +293,9 @@ class ComprehensiveSecurityScanner:
 
         return findings
 
-    def _is_false_positive(self, pattern: CredentialPattern, matched_text: str, line: str, file_path: Path) -> bool:
+    def _is_false_positive(
+        self, pattern: CredentialPattern, matched_text: str, line: str, file_path: Path
+    ) -> bool:
         """Check if a match is a false positive"""
 
         # Check false positive patterns
@@ -321,7 +327,12 @@ class ComprehensiveSecurityScanner:
                 return True
 
         # Check file path for test/example indicators
-        return bool(any(indicator in str(file_path).lower() for indicator in ["test", "example", "demo", "template", "sample"]))
+        return bool(
+            any(
+                indicator in str(file_path).lower()
+                for indicator in ["test", "example", "demo", "template", "sample"]
+            )
+        )
 
     def scan_project(self, project_path: str = ".") -> dict[str, Any]:
         """Scan entire project for security issues"""
@@ -345,8 +356,13 @@ class ComprehensiveSecurityScanner:
 
                         # Log critical findings immediately
                         for finding in findings:
-                            if finding.severity == "CRITICAL" and not finding.false_positive:
-                                logger.critical(f"🚨 CRITICAL: {finding.pattern_name} in {finding.file_path}:{finding.line_number}")
+                            if (
+                                finding.severity == "CRITICAL"
+                                and not finding.false_positive
+                            ):
+                                logger.critical(
+                                    f"🚨 CRITICAL: {finding.pattern_name} in {finding.file_path}:{finding.line_number}"
+                                )
 
         # Deduplicate findings by hash
         unique_findings = self._deduplicate_findings(all_findings)
@@ -354,7 +370,9 @@ class ComprehensiveSecurityScanner:
         # Generate report
         return self._generate_report(unique_findings, files_scanned, files_with_issues)
 
-    def _deduplicate_findings(self, findings: list[SecurityFinding]) -> list[SecurityFinding]:
+    def _deduplicate_findings(
+        self, findings: list[SecurityFinding]
+    ) -> list[SecurityFinding]:
         """Remove duplicate findings based on hash"""
         seen_hashes = set()
         unique_findings = []
@@ -403,7 +421,10 @@ class ComprehensiveSecurityScanner:
                 "false_positives": len(false_positives),
                 "scan_timestamp": str(Path.cwd() / "security_scan_report.json"),
             },
-            "findings_by_severity": {severity: len(finding_list) for severity, finding_list in findings_by_severity.items()},
+            "findings_by_severity": {
+                severity: len(finding_list)
+                for severity, finding_list in findings_by_severity.items()
+            },
             "findings_by_pattern": findings_by_pattern,
             "critical_findings": [f for f in real_issues if f.severity == "CRITICAL"],
             "high_findings": [f for f in real_issues if f.severity == "HIGH"],
@@ -417,14 +438,24 @@ class ComprehensiveSecurityScanner:
         """Generate actionable security recommendations"""
         recommendations = []
 
-        critical_count = len([f for f in findings if f.severity == "CRITICAL" and not f.false_positive])
-        high_count = len([f for f in findings if f.severity == "HIGH" and not f.false_positive])
+        critical_count = len(
+            [f for f in findings if f.severity == "CRITICAL" and not f.false_positive]
+        )
+        high_count = len(
+            [f for f in findings if f.severity == "HIGH" and not f.false_positive]
+        )
 
         if critical_count > 0:
-            recommendations.append(f"🚨 IMMEDIATE ACTION REQUIRED: {critical_count} critical security issues found. " "Review and fix these immediately before any deployment.")
+            recommendations.append(
+                f"🚨 IMMEDIATE ACTION REQUIRED: {critical_count} critical security issues found. "
+                "Review and fix these immediately before any deployment."
+            )
 
         if high_count > 0:
-            recommendations.append(f"⚠️ HIGH PRIORITY: {high_count} high-severity security issues found. " "Address these before production deployment.")
+            recommendations.append(
+                f"⚠️ HIGH PRIORITY: {high_count} high-severity security issues found. "
+                "Address these before production deployment."
+            )
 
         # Pattern-specific recommendations
         pattern_counts = {}
@@ -435,14 +466,21 @@ class ComprehensiveSecurityScanner:
 
         for pattern, count in pattern_counts.items():
             if count > 5:
-                recommendations.append(f"🔍 PATTERN ALERT: {count} instances of '{pattern}' found. " "Consider implementing automated detection for this pattern.")
+                recommendations.append(
+                    f"🔍 PATTERN ALERT: {count} instances of '{pattern}' found. "
+                    "Consider implementing automated detection for this pattern."
+                )
 
         if not recommendations:
-            recommendations.append("✅ No immediate security issues detected. Continue with regular security practices.")
+            recommendations.append(
+                "✅ No immediate security issues detected. Continue with regular security practices."
+            )
 
         return recommendations
 
-    def save_report(self, report: dict[str, Any], output_file: str = "security_scan_report.json"):
+    def save_report(
+        self, report: dict[str, Any], output_file: str = "security_scan_report.json"
+    ):
         """Save security report to file"""
         try:
             with open(output_file, "w") as f:
@@ -468,16 +506,24 @@ class ComprehensiveSecurityScanner:
         for severity in ["CRITICAL", "HIGH", "MEDIUM", "LOW"]:
             if severity in findings_by_severity:
                 count = findings_by_severity[severity]
-                icon = "🚨" if severity == "CRITICAL" else "⚠️" if severity == "HIGH" else "🔍"
+                icon = (
+                    "🚨"
+                    if severity == "CRITICAL"
+                    else "⚠️" if severity == "HIGH" else "🔍"
+                )
                 print(f"  {icon} {severity}: {count}")
 
         print(f"\n🎯 Critical Findings: {len(report['critical_findings'])}")
         for finding in report["critical_findings"][:3]:  # Show first 3
-            print(f"  🚨 {finding.pattern_name} in {finding.file_path}:{finding.line_number}")
+            print(
+                f"  🚨 {finding.pattern_name} in {finding.file_path}:{finding.line_number}"
+            )
             print(f"     {finding.matched_text[:50]}...")
 
         if len(report["critical_findings"]) > 3:
-            print(f"  ... and {len(report['critical_findings']) - 3} more critical findings")
+            print(
+                f"  ... and {len(report['critical_findings']) - 3} more critical findings"
+            )
 
         print(f"\n💡 Recommendations:")
         for rec in report["recommendations"]:
@@ -489,9 +535,15 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="Comprehensive Security Scanner")
-    parser.add_argument("--path", default=".", help="Path to scan (default: current directory)")
-    parser.add_argument("--output", default="security_scan_report.json", help="Output file for report")
-    parser.add_argument("--report", action="store_true", help="Print detailed report to console")
+    parser.add_argument(
+        "--path", default=".", help="Path to scan (default: current directory)"
+    )
+    parser.add_argument(
+        "--output", default="security_scan_report.json", help="Output file for report"
+    )
+    parser.add_argument(
+        "--report", action="store_true", help="Print detailed report to console"
+    )
 
     args = parser.parse_args()
 

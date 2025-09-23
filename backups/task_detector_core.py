@@ -1,0 +1,745 @@
+"""
+Task Detector Core
+
+This module was extracted from task_detector.py
+as part of RM-DDD compliance refactoring.
+"""
+
+import re
+from typing import Dict, List, Optional, Set, Tuple
+from dataclasses import dataclass
+from ..models.dag_models import TaskNode, DependencyEdge
+from ..models.enums import TaskStatus
+from .spec_parser import ParsedSpec
+
+
+@dataclass
+class TaskDetectionResult:
+    """Result of task detection analysis."""
+
+    tasks: List[TaskNode]
+    dependencies: List[DependencyEdge]
+    orphaned_tasks: List[str]
+    circular_dependencies: List[List[str]]
+    completion_stats: Dict[str, int]
+
+
+class TaskDetector:
+    """
+    Systematic task detector for specification analysis.
+
+    Identifies tasks, analyzes dependencies, detects completion status,
+    and validates task relationships for systematic orchestration.
+    """
+
+    def __init__(self):
+        self.task_id_patterns = [
+            "(\\d+(?:\\.\\d+)*)\\s*[.-]\\s*(.+)",
+            "(\\d+(?:\\.\\d+)*)\\s+(.+)",
+            "([A-Z]+-\\d+)\\s*[:-]\\s*(.+)",
+        ]
+        self.status_indicators = {
+            "completed": ["✅", "[x]", "[X]", "COMPLETE", "DONE"],
+            "in_progress": ["🔄", "[-]", "IN PROGRESS", "WORKING"],
+            "blocked": ["🚫", "[!]", "BLOCKED", "WAITING"],
+            "failed": ["❌", "[F]", "FAILED", "ERROR"],
+        }
+        self.dependency_keywords = [
+            "depends on",
+            "requires",
+            "needs",
+            "after",
+            "following",
+            "builds on",
+            "extends",
+            "based on",
+            "uses",
+        ]
+
+    def detect_tasks_from_specs(
+        self, parsed_specs: List[ParsedSpec]
+    ) -> TaskDetectionResult:
+        """
+        Detect all tasks from parsed specifications.
+
+        Args:
+            parsed_specs: List of parsed specification data
+
+        Returns:
+            TaskDetectionResult: Complete task detection analysis
+        """
+        all_tasks = []
+        all_dependencies = []
+        for spec in parsed_specs:
+            spec_tasks = self._extract_tasks_from_spec(spec)
+            all_tasks.extend(spec_tasks)
+        task_lookup = {task.task_id: task for task in all_tasks}
+        task_name_lookup = {task.task_name.lower(): task.task_id for task in all_tasks}
+        for task in all_tasks:
+            task_deps = self._resolve_task_dependencies(
+                task, task_lookup, task_name_lookup
+            )
+            all_dependencies.extend(task_deps)
+            for dep in task_deps:
+                if dep.source_id in task_lookup:
+                    source_task = task_lookup[dep.source_id]
+                    if task.task_id not in source_task.dependents:
+                        source_task.dependents.append(task.task_id)
+        orphaned_tasks = self._find_orphaned_tasks(all_tasks)
+        circular_dependencies = self._detect_circular_dependencies(
+            all_tasks, all_dependencies
+        )
+        completion_stats = self._calculate_completion_stats(all_tasks)
+        return TaskDetectionResult(
+            tasks=all_tasks,
+            dependencies=all_dependencies,
+            orphaned_tasks=orphaned_tasks,
+            circular_dependencies=circular_dependencies,
+            completion_stats=completion_stats,
+        )
+
+    def _extract_tasks_from_spec(self, spec: ParsedSpec) -> List[TaskNode]:
+        """Extract tasks from a single specification."""
+        tasks = []
+        lines = spec.raw_content.split("\n")
+        current_section = ""
+        task_counter = 0
+        for i, line in enumerate(lines):
+            if line.startswith("#"):
+                current_section = line.strip("#").strip()
+                continue
+            task_info = self._parse_task_line(line, i, lines)
+            if task_info:
+                task_counter += 1
+                task_id, task_name, status, description, requirements, dependencies = (
+                    task_info
+                )
+                if not task_id:
+                    task_id = f"{spec.spec_name}_{task_counter}"
+                else:
+                    task_id = f"{spec.spec_name}_{task_id}"
+                estimated_effort = self._estimate_effort(task_name, description)
+                task = TaskNode(
+                    task_id=task_id,
+                    spec_name=spec.spec_name,
+                    task_name=task_name,
+                    description=description or task_name,
+                    estimated_effort=estimated_effort,
+                    completion_status=status,
+                    dependencies=dependencies,
+                    dependents=[],
+                    requirements_traced=requirements,
+                )
+                tasks.append(task)
+        return tasks
+
+    def _parse_task_line(
+        self, line: str, line_index: int, lines: List[str]
+    ) -> Optional[Tuple[str, str, TaskStatus, str, List[str], List[str]]]:
+        """Parse a single line to extract task information."""
+        line = line.strip()
+        if not line:
+            return None
+        checkbox_match = re.match(
+            "^\\s*-\\s*\\[\\s*([x\\s\\-!F])\\s*\\]\\s*(.+)$", line, re.IGNORECASE
+        )
+        if checkbox_match:
+            status_char = checkbox_match.group(1).strip().lower()
+            task_text = checkbox_match.group(2).strip()
+            if status_char == "x":
+                status = TaskStatus.COMPLETED
+            elif status_char == "-":
+                status = TaskStatus.IN_PROGRESS
+            elif status_char == "!":
+                status = TaskStatus.BLOCKED
+            elif status_char == "f":
+                status = TaskStatus.FAILED
+            else:
+                status = TaskStatus.NOT_STARTED
+            task_id, task_name = self._extract_task_id_and_name(task_text)
+            description, requirements, dependencies = self._extract_task_details(
+                line_index, lines
+            )
+            return (task_id, task_name, status, description, requirements, dependencies)
+        numbered_match = re.match("^\\s*(\\d+(?:\\.\\d+)*)\\.\\s*(.+)$", line)
+        if numbered_match:
+            task_id = numbered_match.group(1)
+            task_text = numbered_match.group(2).strip()
+            status = self._determine_status_from_text(task_text)
+            task_name = self._clean_task_name(task_text)
+            description, requirements, dependencies = self._extract_task_details(
+                line_index, lines
+            )
+            return (task_id, task_name, status, description, requirements, dependencies)
+        return None
+
+    def _extract_task_id_and_name(self, task_text: str) -> Tuple[str, str]:
+        """Extract task ID and name from task text."""
+        for pattern in self.task_id_patterns:
+            match = re.match(pattern, task_text)
+            if match:
+                return (match.group(1), match.group(2).strip())
+        return ("", task_text)
+
+    def _determine_status_from_text(self, text: str) -> TaskStatus:
+        """Determine task status from text indicators."""
+        text_upper = text.upper()
+        for status, indicators in self.status_indicators.items():
+            for indicator in indicators:
+                if indicator in text_upper:
+                    return TaskStatus(status)
+        return TaskStatus.NOT_STARTED
+
+    def _clean_task_name(self, task_text: str) -> str:
+        """Clean task name by removing status indicators."""
+        cleaned = task_text
+        for indicators in self.status_indicators.values():
+            for indicator in indicators:
+                cleaned = cleaned.replace(indicator, "").strip()
+        return cleaned
+
+    def _extract_task_details(
+        self, line_index: int, lines: List[str]
+    ) -> Tuple[str, List[str], List[str]]:
+        """Extract task description, requirements, and dependencies from following lines."""
+        description_parts = []
+        requirements = []
+        dependencies = []
+        for i in range(line_index + 1, min(line_index + 10, len(lines))):
+            line = lines[i].strip()
+            if not line:
+                continue
+            if (
+                line.startswith("- [")
+                or line.startswith("#")
+                or re.match("^\\d+\\.", line)
+            ):
+                break
+            if (
+                lines[i].startswith("  ")
+                or lines[i].startswith("\t")
+                or line.startswith("-")
+            ):
+                req_match = re.search(
+                    "_Requirements?:\\s*([^_]+)_", line, re.IGNORECASE
+                )
+                if req_match:
+                    req_list = [req.strip() for req in req_match.group(1).split(",")]
+                    requirements.extend(req_list)
+                    continue
+                for keyword in self.dependency_keywords:
+                    if keyword.lower() in line.lower():
+                        dep_match = re.search(
+                            f"{keyword}\\s*:?\\s*([^,\\n]+)", line, re.IGNORECASE
+                        )
+                        if dep_match:
+                            dependencies.append(dep_match.group(1).strip())
+                        break
+                if not any(
+                    (
+                        keyword in line.lower()
+                        for keyword in ["requirements", "depends", "requires"]
+                    )
+                ):
+                    description_parts.append(line.lstrip("- \t"))
+        description = " ".join(description_parts) if description_parts else ""
+        return (description, requirements, dependencies)
+
+    def _estimate_effort(self, task_name: str, description: str) -> int:
+        """Estimate task effort in hours."""
+        base_effort = 4
+        full_text = f"{task_name} {description}".lower()
+        effort_keywords = {
+            "implement": 1.5,
+            "create": 1.3,
+            "build": 1.8,
+            "design": 1.2,
+            "integrate": 2.0,
+            "optimize": 1.7,
+            "test": 1.1,
+            "framework": 2.2,
+            "system": 1.8,
+            "engine": 2.5,
+            "comprehensive": 1.5,
+            "complete": 1.3,
+            "advanced": 1.8,
+            "complex": 2.0,
+            "setup": 0.8,
+            "configure": 0.9,
+            "update": 0.7,
+            "fix": 0.6,
+        }
+        multiplier = 1.0
+        for keyword, mult in effort_keywords.items():
+            if keyword in full_text:
+                multiplier *= mult
+        if len(full_text) > 100:
+            multiplier *= 1.2
+        elif len(full_text) < 30:
+            multiplier *= 0.8
+        return max(1, int(base_effort * multiplier))
+
+    def _resolve_task_dependencies(
+        self,
+        task: TaskNode,
+        task_lookup: Dict[str, TaskNode],
+        name_lookup: Dict[str, str],
+    ) -> List[DependencyEdge]:
+        """Resolve task dependencies to create dependency edges."""
+        dependencies = []
+        for dep_name in task.dependencies:
+            dep_name_lower = dep_name.lower().strip()
+            if dep_name in task_lookup:
+                dependencies.append(
+                    DependencyEdge(
+                        source_id=dep_name,
+                        target_id=task.task_id,
+                        dependency_type="requires",
+                    )
+                )
+                continue
+            if dep_name_lower in name_lookup:
+                dep_task_id = name_lookup[dep_name_lower]
+                dependencies.append(
+                    DependencyEdge(
+                        source_id=dep_task_id,
+                        target_id=task.task_id,
+                        dependency_type="requires",
+                    )
+                )
+                continue
+            for task_name, task_id in name_lookup.items():
+                if (
+                    dep_name_lower in task_name
+                    or task_name in dep_name_lower
+                    or self._similarity_score(dep_name_lower, task_name) > 0.8
+                ):
+                    dependencies.append(
+                        DependencyEdge(
+                            source_id=task_id,
+                            target_id=task.task_id,
+                            dependency_type="requires",
+                        )
+                    )
+                    break
+        return dependencies
+
+    def _similarity_score(self, str1: str, str2: str) -> float:
+        """Calculate similarity score between two strings."""
+        set1 = set(str1.split())
+        set2 = set(str2.split())
+        if not set1 and (not set2):
+            return 1.0
+        intersection = len(set1.intersection(set2))
+        union = len(set1.union(set2))
+        return intersection / union if union > 0 else 0.0
+
+    def _find_orphaned_tasks(self, tasks: List[TaskNode]) -> List[str]:
+        """Find tasks with no dependencies or dependents."""
+        orphaned = []
+        for task in tasks:
+            if not task.dependencies and (not task.dependents):
+                orphaned.append(task.task_id)
+        return orphaned
+
+    def _detect_circular_dependencies(
+        self, tasks: List[TaskNode], dependencies: List[DependencyEdge]
+    ) -> List[List[str]]:
+        """Detect circular dependencies in task graph."""
+        graph = {}
+        for task in tasks:
+            graph[task.task_id] = []
+        for dep in dependencies:
+            if dep.source_id in graph:
+                graph[dep.source_id].append(dep.target_id)
+        visited = set()
+        rec_stack = set()
+        cycles = []
+
+        def dfs(node: str, path: List[str]) -> None:
+            if node in rec_stack:
+                cycle_start = path.index(node)
+                cycle = path[cycle_start:] + [node]
+                cycles.append(cycle)
+                return
+            if node in visited:
+                return
+            visited.add(node)
+            rec_stack.add(node)
+            path.append(node)
+            for neighbor in graph.get(node, []):
+                dfs(neighbor, path.copy())
+            rec_stack.remove(node)
+
+        for task_id in graph:
+            if task_id not in visited:
+                dfs(task_id, [])
+        return cycles
+
+    def _calculate_completion_stats(self, tasks: List[TaskNode]) -> Dict[str, int]:
+        """Calculate completion statistics."""
+        stats = {
+            "total": len(tasks),
+            "completed": 0,
+            "in_progress": 0,
+            "not_started": 0,
+            "blocked": 0,
+            "failed": 0,
+        }
+        for task in tasks:
+            if task.completion_status == TaskStatus.COMPLETED:
+                stats["completed"] += 1
+            elif task.completion_status == TaskStatus.IN_PROGRESS:
+                stats["in_progress"] += 1
+            elif task.completion_status == TaskStatus.BLOCKED:
+                stats["blocked"] += 1
+            elif task.completion_status == TaskStatus.FAILED:
+                stats["failed"] += 1
+            else:
+                stats["not_started"] += 1
+        return stats
+
+
+def __init__(self):
+    self.task_id_patterns = [
+        "(\\d+(?:\\.\\d+)*)\\s*[.-]\\s*(.+)",
+        "(\\d+(?:\\.\\d+)*)\\s+(.+)",
+        "([A-Z]+-\\d+)\\s*[:-]\\s*(.+)",
+    ]
+    self.status_indicators = {
+        "completed": ["✅", "[x]", "[X]", "COMPLETE", "DONE"],
+        "in_progress": ["🔄", "[-]", "IN PROGRESS", "WORKING"],
+        "blocked": ["🚫", "[!]", "BLOCKED", "WAITING"],
+        "failed": ["❌", "[F]", "FAILED", "ERROR"],
+    }
+    self.dependency_keywords = [
+        "depends on",
+        "requires",
+        "needs",
+        "after",
+        "following",
+        "builds on",
+        "extends",
+        "based on",
+        "uses",
+    ]
+
+
+def detect_tasks_from_specs(
+    self, parsed_specs: List[ParsedSpec]
+) -> TaskDetectionResult:
+    """
+    Detect all tasks from parsed specifications.
+
+    Args:
+        parsed_specs: List of parsed specification data
+
+    Returns:
+        TaskDetectionResult: Complete task detection analysis
+    """
+    all_tasks = []
+    all_dependencies = []
+    for spec in parsed_specs:
+        spec_tasks = self._extract_tasks_from_spec(spec)
+        all_tasks.extend(spec_tasks)
+    task_lookup = {task.task_id: task for task in all_tasks}
+    task_name_lookup = {task.task_name.lower(): task.task_id for task in all_tasks}
+    for task in all_tasks:
+        task_deps = self._resolve_task_dependencies(task, task_lookup, task_name_lookup)
+        all_dependencies.extend(task_deps)
+        for dep in task_deps:
+            if dep.source_id in task_lookup:
+                source_task = task_lookup[dep.source_id]
+                if task.task_id not in source_task.dependents:
+                    source_task.dependents.append(task.task_id)
+    orphaned_tasks = self._find_orphaned_tasks(all_tasks)
+    circular_dependencies = self._detect_circular_dependencies(
+        all_tasks, all_dependencies
+    )
+    completion_stats = self._calculate_completion_stats(all_tasks)
+    return TaskDetectionResult(
+        tasks=all_tasks,
+        dependencies=all_dependencies,
+        orphaned_tasks=orphaned_tasks,
+        circular_dependencies=circular_dependencies,
+        completion_stats=completion_stats,
+    )
+
+
+def _extract_tasks_from_spec(self, spec: ParsedSpec) -> List[TaskNode]:
+    """Extract tasks from a single specification."""
+    tasks = []
+    lines = spec.raw_content.split("\n")
+    current_section = ""
+    task_counter = 0
+    for i, line in enumerate(lines):
+        if line.startswith("#"):
+            current_section = line.strip("#").strip()
+            continue
+        task_info = self._parse_task_line(line, i, lines)
+        if task_info:
+            task_counter += 1
+            task_id, task_name, status, description, requirements, dependencies = (
+                task_info
+            )
+            if not task_id:
+                task_id = f"{spec.spec_name}_{task_counter}"
+            else:
+                task_id = f"{spec.spec_name}_{task_id}"
+            estimated_effort = self._estimate_effort(task_name, description)
+            task = TaskNode(
+                task_id=task_id,
+                spec_name=spec.spec_name,
+                task_name=task_name,
+                description=description or task_name,
+                estimated_effort=estimated_effort,
+                completion_status=status,
+                dependencies=dependencies,
+                dependents=[],
+                requirements_traced=requirements,
+            )
+            tasks.append(task)
+    return tasks
+
+
+def _extract_task_id_and_name(self, task_text: str) -> Tuple[str, str]:
+    """Extract task ID and name from task text."""
+    for pattern in self.task_id_patterns:
+        match = re.match(pattern, task_text)
+        if match:
+            return (match.group(1), match.group(2).strip())
+    return ("", task_text)
+
+
+def _determine_status_from_text(self, text: str) -> TaskStatus:
+    """Determine task status from text indicators."""
+    text_upper = text.upper()
+    for status, indicators in self.status_indicators.items():
+        for indicator in indicators:
+            if indicator in text_upper:
+                return TaskStatus(status)
+    return TaskStatus.NOT_STARTED
+
+
+def _clean_task_name(self, task_text: str) -> str:
+    """Clean task name by removing status indicators."""
+    cleaned = task_text
+    for indicators in self.status_indicators.values():
+        for indicator in indicators:
+            cleaned = cleaned.replace(indicator, "").strip()
+    return cleaned
+
+
+def _extract_task_details(
+    self, line_index: int, lines: List[str]
+) -> Tuple[str, List[str], List[str]]:
+    """Extract task description, requirements, and dependencies from following lines."""
+    description_parts = []
+    requirements = []
+    dependencies = []
+    for i in range(line_index + 1, min(line_index + 10, len(lines))):
+        line = lines[i].strip()
+        if not line:
+            continue
+        if line.startswith("- [") or line.startswith("#") or re.match("^\\d+\\.", line):
+            break
+        if (
+            lines[i].startswith("  ")
+            or lines[i].startswith("\t")
+            or line.startswith("-")
+        ):
+            req_match = re.search("_Requirements?:\\s*([^_]+)_", line, re.IGNORECASE)
+            if req_match:
+                req_list = [req.strip() for req in req_match.group(1).split(",")]
+                requirements.extend(req_list)
+                continue
+            for keyword in self.dependency_keywords:
+                if keyword.lower() in line.lower():
+                    dep_match = re.search(
+                        f"{keyword}\\s*:?\\s*([^,\\n]+)", line, re.IGNORECASE
+                    )
+                    if dep_match:
+                        dependencies.append(dep_match.group(1).strip())
+                    break
+            if not any(
+                (
+                    keyword in line.lower()
+                    for keyword in ["requirements", "depends", "requires"]
+                )
+            ):
+                description_parts.append(line.lstrip("- \t"))
+    description = " ".join(description_parts) if description_parts else ""
+    return (description, requirements, dependencies)
+
+
+def _estimate_effort(self, task_name: str, description: str) -> int:
+    """Estimate task effort in hours."""
+    base_effort = 4
+    full_text = f"{task_name} {description}".lower()
+    effort_keywords = {
+        "implement": 1.5,
+        "create": 1.3,
+        "build": 1.8,
+        "design": 1.2,
+        "integrate": 2.0,
+        "optimize": 1.7,
+        "test": 1.1,
+        "framework": 2.2,
+        "system": 1.8,
+        "engine": 2.5,
+        "comprehensive": 1.5,
+        "complete": 1.3,
+        "advanced": 1.8,
+        "complex": 2.0,
+        "setup": 0.8,
+        "configure": 0.9,
+        "update": 0.7,
+        "fix": 0.6,
+    }
+    multiplier = 1.0
+    for keyword, mult in effort_keywords.items():
+        if keyword in full_text:
+            multiplier *= mult
+    if len(full_text) > 100:
+        multiplier *= 1.2
+    elif len(full_text) < 30:
+        multiplier *= 0.8
+    return max(1, int(base_effort * multiplier))
+
+
+def _resolve_task_dependencies(
+    self, task: TaskNode, task_lookup: Dict[str, TaskNode], name_lookup: Dict[str, str]
+) -> List[DependencyEdge]:
+    """Resolve task dependencies to create dependency edges."""
+    dependencies = []
+    for dep_name in task.dependencies:
+        dep_name_lower = dep_name.lower().strip()
+        if dep_name in task_lookup:
+            dependencies.append(
+                DependencyEdge(
+                    source_id=dep_name,
+                    target_id=task.task_id,
+                    dependency_type="requires",
+                )
+            )
+            continue
+        if dep_name_lower in name_lookup:
+            dep_task_id = name_lookup[dep_name_lower]
+            dependencies.append(
+                DependencyEdge(
+                    source_id=dep_task_id,
+                    target_id=task.task_id,
+                    dependency_type="requires",
+                )
+            )
+            continue
+        for task_name, task_id in name_lookup.items():
+            if (
+                dep_name_lower in task_name
+                or task_name in dep_name_lower
+                or self._similarity_score(dep_name_lower, task_name) > 0.8
+            ):
+                dependencies.append(
+                    DependencyEdge(
+                        source_id=task_id,
+                        target_id=task.task_id,
+                        dependency_type="requires",
+                    )
+                )
+                break
+    return dependencies
+
+
+def _similarity_score(self, str1: str, str2: str) -> float:
+    """Calculate similarity score between two strings."""
+    set1 = set(str1.split())
+    set2 = set(str2.split())
+    if not set1 and (not set2):
+        return 1.0
+    intersection = len(set1.intersection(set2))
+    union = len(set1.union(set2))
+    return intersection / union if union > 0 else 0.0
+
+
+def _find_orphaned_tasks(self, tasks: List[TaskNode]) -> List[str]:
+    """Find tasks with no dependencies or dependents."""
+    orphaned = []
+    for task in tasks:
+        if not task.dependencies and (not task.dependents):
+            orphaned.append(task.task_id)
+    return orphaned
+
+
+def _detect_circular_dependencies(
+    self, tasks: List[TaskNode], dependencies: List[DependencyEdge]
+) -> List[List[str]]:
+    """Detect circular dependencies in task graph."""
+    graph = {}
+    for task in tasks:
+        graph[task.task_id] = []
+    for dep in dependencies:
+        if dep.source_id in graph:
+            graph[dep.source_id].append(dep.target_id)
+    visited = set()
+    rec_stack = set()
+    cycles = []
+
+    def dfs(node: str, path: List[str]) -> None:
+        if node in rec_stack:
+            cycle_start = path.index(node)
+            cycle = path[cycle_start:] + [node]
+            cycles.append(cycle)
+            return
+        if node in visited:
+            return
+        visited.add(node)
+        rec_stack.add(node)
+        path.append(node)
+        for neighbor in graph.get(node, []):
+            dfs(neighbor, path.copy())
+        rec_stack.remove(node)
+
+    for task_id in graph:
+        if task_id not in visited:
+            dfs(task_id, [])
+    return cycles
+
+
+def _calculate_completion_stats(self, tasks: List[TaskNode]) -> Dict[str, int]:
+    """Calculate completion statistics."""
+    stats = {
+        "total": len(tasks),
+        "completed": 0,
+        "in_progress": 0,
+        "not_started": 0,
+        "blocked": 0,
+        "failed": 0,
+    }
+    for task in tasks:
+        if task.completion_status == TaskStatus.COMPLETED:
+            stats["completed"] += 1
+        elif task.completion_status == TaskStatus.IN_PROGRESS:
+            stats["in_progress"] += 1
+        elif task.completion_status == TaskStatus.BLOCKED:
+            stats["blocked"] += 1
+        elif task.completion_status == TaskStatus.FAILED:
+            stats["failed"] += 1
+        else:
+            stats["not_started"] += 1
+    return stats
+
+
+def dfs(node: str, path: List[str]) -> None:
+    if node in rec_stack:
+        cycle_start = path.index(node)
+        cycle = path[cycle_start:] + [node]
+        cycles.append(cycle)
+        return
+    if node in visited:
+        return
+    visited.add(node)
+    rec_stack.add(node)
+    path.append(node)
+    for neighbor in graph.get(node, []):
+        dfs(neighbor, path.copy())
+    rec_stack.remove(node)

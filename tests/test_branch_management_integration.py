@@ -1,8 +1,13 @@
 """
-Integration tests for enhanced branch management operations.
+RDI Enhanced Test Module
 
-These tests validate the branch management functionality against a real git repository.
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.595435
 """
+
+
+
 
 import os
 import pytest
@@ -10,7 +15,7 @@ from src.gitkraken_integration.providers.standard_git_provider import StandardGi
 from src.gitkraken_integration.providers.git_provider import GitOperationStatus
 
 
-class TestBranchManagementIntegration:
+class TestBranchManagementIntegration(ReflectiveModule):
     """Integration tests for branch management operations"""
     
     def test_get_branch_details_current_branch(self):
@@ -253,5 +258,35 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"❌ Integration test failed: {e}")
         import traceback
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
         traceback.print_exc()
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         raise

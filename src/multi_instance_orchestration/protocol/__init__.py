@@ -1,1 +1,0 @@
-"""Text-based communication protocol components."""

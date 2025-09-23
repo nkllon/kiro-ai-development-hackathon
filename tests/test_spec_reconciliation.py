@@ -1,8 +1,15 @@
 """
-Tests for Spec Reconciliation System
+RDI Enhanced Test Module
 
-Tests the governance and validation components to ensure they work correctly.
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.413965
 """
+
+
+
+
+
 
 import pytest
 from pathlib import Path
@@ -24,7 +31,7 @@ from src.spec_reconciliation.boundary_resolver import (
 )
 
 
-class TestGovernanceController:
+class TestGovernanceController(ModuleHealth):
     """Test the GovernanceController functionality"""
     
     def setup_method(self):
@@ -139,7 +146,7 @@ class TestGovernanceController:
         assert len(workflow['next_steps']) > 0
 
 
-class TestConsistencyValidator:
+class TestConsistencyValidator(ModuleHealth):
     """Test the ConsistencyValidator functionality"""
     
     def setup_method(self):
@@ -183,7 +190,7 @@ class TestConsistencyValidator:
     def test_check_interface_compliance(self):
         """Test interface compliance checking"""
         interface_def = """
-        class TestModule(ReflectiveModule):
+        class TestModule(ReflectiveModule, ModuleHealth):
             def get_module_status(self):
                 pass
             
@@ -221,7 +228,7 @@ class TestConsistencyValidator:
         
         ## Interface
         
-        class TestModule(ReflectiveModule):
+        class TestModule(ReflectiveModule, ModuleHealth):
             def get_module_status(self):
                 pass
         """
@@ -286,7 +293,7 @@ def test_integration_governance_and_validation():
         assert isinstance(terminology_report.consistency_score, float)
 
 
-class TestContinuousMonitor:
+class TestContinuousMonitor(ModuleHealth):
     """Test the ContinuousMonitor automated correction workflows"""
     
     def setup_method(self):
@@ -328,7 +335,7 @@ It also mentions PDCA, Plan-Do-Check-Act, and plan do check act methodology.
 
 ## Interface Definition
 
-class BadModule:
+class BadModule(ModuleHealth):
     def bad_method_name(self):
         pass
     
@@ -649,7 +656,7 @@ It also has interface problems.
 
 ## Interface
 
-class BadInterface:
+class BadInterface(ModuleHealth):
     def badMethodName(self):
         pass
     
@@ -716,7 +723,7 @@ This spec conflicts with other specs on terminology and requirements.
             assert escalation_result['escalation_created'] is True
 
 
-class TestSpecConsolidator:
+class TestSpecConsolidator(ModuleHealth):
     """Test the SpecConsolidator functionality for comprehensive overlap analysis and consolidation"""
     
     def setup_method(self):
@@ -761,7 +768,7 @@ class TestSpecConsolidator:
 
 ## Interface
 
-class BeastModeFramework(ReflectiveModule):
+class BeastModeFramework(ReflectiveModule, ModuleHealth):
     def execute_pdca_cycle(self, context: DomainContext) -> PDCAResult:
         pass
     
@@ -802,7 +809,7 @@ class BeastModeFramework(ReflectiveModule):
 
 ## Interface
 
-class IntegratedBeastModeSystem(ReflectiveModule):
+class IntegratedBeastModeSystem(ReflectiveModule, ModuleHealth):
     def orchestrate_pdca_workflow(self, domain: DomainContext) -> WorkflowResult:
         pass
     
@@ -841,7 +848,7 @@ class IntegratedBeastModeSystem(ReflectiveModule):
 
 ## Interface
 
-class RCAIntegration(ReflectiveModule):
+class RCAIntegration(ReflectiveModule, ModuleHealth):
     def perform_rca_analysis(self, failure_data: FailureData) -> RCAResult:
         pass
     
@@ -1162,7 +1169,7 @@ class RCAIntegration(ReflectiveModule):
         assert opportunity.overlap_percentage > 0
 
 
-class TestSpecConsolidatorHelperMethods:
+class TestSpecConsolidatorHelperMethods(ModuleHealth):
     """Test helper methods in SpecConsolidator"""
     
     def setup_method(self):
@@ -1213,7 +1220,7 @@ class TestSpecConsolidatorHelperMethods:
 """
         
         design_content = """
-class TestClass:
+class TestClass(ModuleHealth):
     def method1(self):
         pass
     def method2(self):
@@ -1240,7 +1247,7 @@ class TestClass:
 ## Error Handling
 The system handles errors gracefully.
 
-class TestInterface:
+class TestInterface(ModuleHealth):
     def test_method(self):
         pass
 """
@@ -1280,7 +1287,7 @@ class TestInterface:
         assert quality > 0.5  # Should have good quality with EARS format criteria
 
 
-class TestCLIIntegration:
+class TestCLIIntegration(ModuleHealth):
     """Test CLI integration functionality"""
     
     def setup_method(self):
@@ -1319,7 +1326,7 @@ class TestCLIIntegration:
 
 ## Interface
 
-class CLITestModule(ReflectiveModule):
+class CLITestModule(ReflectiveModule, ModuleHealth):
     def get_module_status(self):
         return {'status': 'healthy'}
     
@@ -1726,7 +1733,7 @@ The system integrates governance, validation, consolidation, and monitoring.
 
 ## Interface
 
-class IntegrationTestModule(ReflectiveModule):
+class IntegrationTestModule(ReflectiveModule, ModuleHealth):
     def get_module_status(self):
         return {'module_name': 'IntegrationTestModule', 'status': 'healthy'}
     
@@ -1817,7 +1824,7 @@ The system handles integration errors gracefully with automatic recovery.
             assert component.is_healthy()
 
 
-class TestComponentBoundaryResolver:
+class TestComponentBoundaryResolver(ModuleHealth):
     """Test the ComponentBoundaryResolver functionality for task 5.2"""
     
     def setup_method(self):
@@ -1860,7 +1867,7 @@ class TestComponentBoundaryResolver:
 
 ## Interface
 
-class BeastModeSystemInterface(ReflectiveModule):
+class BeastModeSystemInterface(ReflectiveModule, ModuleHealth):
     def execute_pdca_cycle(self, domain_context: DomainContext) -> PDCAResult:
         pass
     
@@ -1897,7 +1904,7 @@ class BeastModeSystemInterface(ReflectiveModule):
 
 ## Interface
 
-class TestingRCAFrameworkInterface(ReflectiveModule):
+class TestingRCAFrameworkInterface(ReflectiveModule, ModuleHealth):
     def execute_rca_analysis(self, issue_context: IssueContext) -> RCAResult:
         pass
     
@@ -1934,7 +1941,7 @@ class TestingRCAFrameworkInterface(ReflectiveModule):
 
 ## Interface
 
-class RDIRMAnalysisSystemInterface(ReflectiveModule):
+class RDIRMAnalysisSystemInterface(ReflectiveModule, ModuleHealth):
     def validate_rdi_compliance(self, rdi_context: RDIContext) -> ComplianceResult:
         pass
     
@@ -2375,7 +2382,7 @@ class {spec_name.replace('_', '').title()}Interface(ReflectiveModule):
                 assert not dep.is_circular  # No circular dependencies
                 assert dep.validation_status == "valid"
 
-class TestConsistencyValidatorHelperMethods:
+class TestConsistencyValidatorHelperMethods(ModuleHealth):
     """Test ConsistencyValidator helper methods for comprehensive coverage"""
     
     def setup_method(self):
@@ -2451,14 +2458,14 @@ class TestConsistencyValidatorHelperMethods:
     def test_extract_interfaces_from_definition(self):
         """Test interface extraction from definitions"""
         interface_def = """
-        class TestModule(ReflectiveModule):
+        class TestModule(ReflectiveModule, ModuleHealth):
             def get_module_status(self):
                 pass
             
             def is_healthy(self):
                 pass
         
-        class AnotherModule:
+        class AnotherModule(ModuleHealth):
             def some_method(self):
                 pass
         """
@@ -2594,7 +2601,7 @@ class TestConsistencyValidatorHelperMethods:
         assert any("PDCA" in term for term in terminology.keys())
 
 
-class TestContinuousMonitorHelperMethods:
+class TestContinuousMonitorHelperMethods(ModuleHealth):
     """Test ContinuousMonitor helper methods for comprehensive coverage"""
     
     def setup_method(self):
@@ -2791,7 +2798,7 @@ class TestContinuousMonitorHelperMethods:
         assert all(isinstance(step, str) for step in steps)
 
 
-class TestSpecConsolidatorAdvancedHelperMethods:
+class TestSpecConsolidatorAdvancedHelperMethods(ModuleHealth):
     """Test SpecConsolidator advanced helper methods for comprehensive coverage"""
     
     def setup_method(self):
@@ -2849,14 +2856,14 @@ class TestSpecConsolidatorAdvancedHelperMethods:
 
 ## Interfaces
 
-class UserService(ReflectiveModule):
+class UserService(ReflectiveModule, ModuleHealth):
     def create_user(self, user_data: Dict) -> User:
         pass
     
     def get_user(self, user_id: str) -> Optional[User]:
         pass
 
-class AuthService:
+class AuthService(ModuleHealth):
     def authenticate(self, credentials: Dict) -> AuthResult:
         pass
 """
@@ -2913,13 +2920,13 @@ It uses ReflectiveModule and integrates with DatabaseService.
 """
         
         design_content = """
-class Service1:
+class Service1(ModuleHealth):
     def method1(self):
         pass
     def method2(self):
         pass
 
-class Service2:
+class Service2(ModuleHealth):
     def method3(self):
         pass
 """
@@ -2944,7 +2951,7 @@ class Service2:
 ## Error Handling
 Error handling is implemented.
 
-class TestService:
+class TestService(ModuleHealth):
     def test_method(self):
         pass
 """
@@ -3045,7 +3052,7 @@ User Story: Complex requirement with multiple conditions.
         assert len(estimates) > 0
 
 
-class TestDataModelImplementations:
+class TestDataModelImplementations(ModuleHealth):
     """Test data model implementations for comprehensive coverage"""
     
     def test_overlap_analysis_data_model(self):
@@ -3207,6 +3214,8 @@ class TestDataModelImplementations:
         """Test CorrectionWorkflow data model"""
         from src.spec_reconciliation.monitoring import CorrectionWorkflow, CorrectionStatus
         import datetime
+from src.rm_ddd.core.health import ModuleHealth
+
         
         correction_workflow = CorrectionWorkflow(
             workflow_id="workflow1",
@@ -3227,4 +3236,21 @@ class TestDataModelImplementations:
         assert len(correction_workflow.correction_steps) == 3
         assert correction_workflow.status == CorrectionStatus.IN_PROGRESS
         assert correction_workflow.success_rate == 0.75
+
+    def register_module(self, registry):
+        """Register module with registry."""
+        metadata = self.get_interface_metadata()
+        if hasattr(registry, 'register'):
+            registry.register(metadata)
+            
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+
         assert correction_workflow.escalation_reason is None

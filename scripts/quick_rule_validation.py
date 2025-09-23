@@ -100,7 +100,9 @@ def test_mdc_parsing(parser):
     for file_path in mdc_files[:3]:  # Test first 3 files
         try:
             result = parser.parse_mdc(str(file_path))
-            print(f"    ✅ {file_path}: {len(result[0])} YAML fields, {len(result[1])} content chars")
+            print(
+                f"    ✅ {file_path}: {len(result[0])} YAML fields, {len(result[1])} content chars"
+            )
         except Exception as e:
             print(f"    ❌ {file_path}: {e}")
 

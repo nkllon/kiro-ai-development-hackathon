@@ -1,245 +1,155 @@
 """
-Systematic PDCA Orchestrator - Production API
-
-FastAPI service exposing systematic PDCA orchestration with model-driven intelligence.
+Simple FastAPI application for Kiro AI Development Hackathon
+This provides a basic web server for testing nginx integration
 """
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel
-from typing import Dict, List, Optional, Any
-import logging
-import sys
-from pathlib import Path
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+import os
+import time
+from datetime import datetime
+from typing import Dict, Any
 
-# Add src to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
-from beast_mode.core.model_registry import ModelRegistry
-from beast_mode.core.pdca_models import PDCATask, ValidationLevel
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-# Initialize FastAPI app
+# Create FastAPI app
 app = FastAPI(
-    title="Systematic PDCA Orchestrator",
-    description="Model-driven systematic development with PDCA orchestration",
-    version="1.0.0"
+    title="Kiro AI Development Hackathon API",
+    description="Systematic PDCA Orchestrator API",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
 )
 
-# Initialize Model Registry
-try:
-    model_registry = ModelRegistry("project_model_registry.json")
-    logger.info(f"Model Registry initialized with {len(model_registry.list_available_domains())} domains")
-except Exception as e:
-    logger.error(f"Failed to initialize Model Registry: {e}")
-    model_registry = None
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
-# Pydantic models for API
-class TaskRequest(BaseModel):
-    task_id: str
-    description: str
-    domain: str
-    estimated_complexity: int = 5
-
-
-class HealthResponse(BaseModel):
-    status: str
-    model_registry_health: Dict[str, Any]
-    available_domains: int
-    systematic_compliance: str
-
-
-class DomainIntelligenceResponse(BaseModel):
-    domain: str
-    requirements_count: int
-    patterns_count: int
-    tools_count: int
-    confidence_score: float
-    success_metrics: Dict[str, float]
-
-
-class LearningInsightsResponse(BaseModel):
-    total_patterns: int
-    avg_confidence: float
-    domain_insights: Dict[str, Any]
-    top_success_metrics: Dict[str, Any]
-    learning_trends: List[str]
-
-
-# API Routes
-
-@app.get("/")
-async def root():
-    """Root endpoint with service information"""
+# Health check endpoint
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for load balancers and monitoring"""
     return {
-        "service": "Systematic PDCA Orchestrator",
-        "status": "operational",
-        "systematic_superiority": "validated",
-        "model_registry_domains": len(model_registry.list_available_domains()) if model_registry else 0,
-        "endpoints": {
-            "health": "/health",
-            "domains": "/domains",
-            "intelligence": "/intelligence/{domain}",
-            "insights": "/insights",
-            "validate": "/validate"
-        }
+        "status": "healthy",
+        "timestamp": datetime.utcnow().isoformat(),
+        "service": "systematic-pdca-orchestrator",
+        "version": "1.0.0",
     }
 
 
-@app.get("/health", response_model=HealthResponse)
-async def health_check():
-    """Health check endpoint"""
-    if not model_registry:
-        raise HTTPException(status_code=503, detail="Model Registry not available")
-    
-    health_status = model_registry.get_health_status()
-    compliance = model_registry.validate_systematic_compliance()
-    
-    return HealthResponse(
-        status=health_status["status"],
-        model_registry_health=health_status,
-        available_domains=len(model_registry.list_available_domains()),
-        systematic_compliance=compliance.value
+# Root endpoint
+@app.get("/", response_class=HTMLResponse)
+async def root():
+    """Root endpoint with basic information"""
+    html_content = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Kiro AI Development Hackathon</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 40px; }
+            .status { color: #28a745; font-weight: bold; }
+            .container { max-width: 800px; margin: 0 auto; }
+            .endpoint { background: #f8f9fa; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Kiro AI Development Hackathon</h1>
+            <p class="status">✅ Backend API is running</p>
+            <h2>Available Endpoints:</h2>
+            <div class="endpoint">
+                <strong>GET /health</strong> - Health check endpoint
+            </div>
+            <div class="endpoint">
+                <strong>GET /api/status</strong> - API status information
+            </div>
+            <div class="endpoint">
+                <strong>GET /api/metrics</strong> - System metrics
+            </div>
+            <div class="endpoint">
+                <strong>GET /docs</strong> - API documentation (Swagger UI)
+            </div>
+            <div class="endpoint">
+                <strong>GET /redoc</strong> - API documentation (ReDoc)
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    return HTMLResponse(content=html_content)
+
+
+# API status endpoint
+@app.get("/api/status")
+async def api_status():
+    """Get API status information"""
+    return {
+        "api_status": "operational",
+        "timestamp": datetime.utcnow().isoformat(),
+        "uptime": "running",
+        "environment": os.getenv("ENVIRONMENT", "development"),
+        "python_path": os.getenv("PYTHONPATH", "/app"),
+        "port": os.getenv("PORT", "8080"),
+    }
+
+
+# Metrics endpoint
+@app.get("/api/metrics")
+async def get_metrics():
+    """Get basic system metrics"""
+    return {
+        "timestamp": datetime.utcnow().isoformat(),
+        "metrics": {
+            "requests_processed": 0,  # This would be tracked in a real implementation
+            "uptime_seconds": time.time(),
+            "memory_usage": "N/A",  # Would need psutil for real metrics
+            "cpu_usage": "N/A",
+        },
+    }
+
+
+# Test endpoint for nginx routing
+@app.get("/api/test")
+async def test_endpoint():
+    """Test endpoint to verify nginx routing"""
+    return {
+        "message": "Nginx routing is working correctly",
+        "timestamp": datetime.utcnow().isoformat(),
+        "headers": {"x-forwarded-for": "N/A", "x-real-ip": "N/A"},
+    }
+
+
+# Error handling
+@app.exception_handler(404)
+async def not_found_handler(request, exc):
+    return JSONResponse(
+        status_code=404,
+        content={
+            "error": "Not found",
+            "message": "The requested resource was not found",
+        },
     )
 
 
-@app.get("/domains")
-async def list_domains():
-    """List all available domains in the model registry"""
-    if not model_registry:
-        raise HTTPException(status_code=503, detail="Model Registry not available")
-    
-    domains = model_registry.list_available_domains()
-    stats = model_registry.get_registry_stats()
-    
-    return {
-        "domains": domains,
-        "total_count": len(domains),
-        "registry_stats": stats
-    }
-
-
-@app.get("/intelligence/{domain}", response_model=DomainIntelligenceResponse)
-async def get_domain_intelligence(domain: str):
-    """Get intelligence for a specific domain"""
-    if not model_registry:
-        raise HTTPException(status_code=503, detail="Model Registry not available")
-    
-    try:
-        intelligence = model_registry.get_domain_intelligence(domain)
-        
-        return DomainIntelligenceResponse(
-            domain=domain,
-            requirements_count=len(intelligence.requirements),
-            patterns_count=len(intelligence.patterns),
-            tools_count=len(intelligence.tools),
-            confidence_score=intelligence.confidence_score,
-            success_metrics=intelligence.success_metrics
-        )
-    except Exception as e:
-        raise HTTPException(status_code=404, detail=f"Domain intelligence not found: {e}")
-
-
-@app.get("/insights", response_model=LearningInsightsResponse)
-async def get_learning_insights(domain: Optional[str] = None):
-    """Get learning insights from accumulated patterns"""
-    if not model_registry:
-        raise HTTPException(status_code=503, detail="Model Registry not available")
-    
-    try:
-        insights = model_registry.get_learning_insights(domain)
-        
-        return LearningInsightsResponse(
-            total_patterns=insights["total_patterns"],
-            avg_confidence=insights["avg_confidence"],
-            domain_insights=insights["domain_insights"],
-            top_success_metrics=insights["top_success_metrics"],
-            learning_trends=insights["learning_trends"]
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to get insights: {e}")
-
-
-@app.post("/validate")
-async def validate_systematic_approach(task: TaskRequest):
-    """Validate systematic approach for a task using model registry intelligence"""
-    if not model_registry:
-        raise HTTPException(status_code=503, detail="Model Registry not available")
-    
-    try:
-        # Get domain intelligence
-        intelligence = model_registry.get_domain_intelligence(task.domain)
-        
-        # Create systematic recommendations
-        recommendations = {
-            "task_id": task.task_id,
-            "domain": task.domain,
-            "systematic_approach": f"Model-driven systematic approach for {task.domain}",
-            "requirements": [
-                {
-                    "req_id": req.req_id,
-                    "description": req.description,
-                    "priority": req.priority
-                } for req in intelligence.requirements[:3]  # Top 3 requirements
-            ],
-            "patterns": [
-                {
-                    "pattern_id": pattern.pattern_id,
-                    "name": pattern.name,
-                    "confidence": pattern.confidence_score,
-                    "steps": pattern.implementation_steps[:3]  # First 3 steps
-                } for pattern in intelligence.patterns[:2]  # Top 2 patterns
-            ],
-            "tools": [
-                {
-                    "name": tool.name,
-                    "purpose": tool.purpose,
-                    "command": tool.command_template
-                } for tool in intelligence.tools.values()
-            ],
-            "confidence_score": intelligence.confidence_score,
-            "estimated_success_rate": min(1.0, intelligence.confidence_score + 0.1),
-            "systematic_advantage": f"{(intelligence.confidence_score - 0.7) * 100:.1f}% improvement over ad-hoc"
-        }
-        
-        return recommendations
-        
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Validation failed: {e}")
-
-
-@app.get("/performance")
-async def get_performance_metrics():
-    """Get performance metrics for the model registry"""
-    if not model_registry:
-        raise HTTPException(status_code=503, detail="Model Registry not available")
-    
-    try:
-        metrics = model_registry.get_performance_metrics()
-        return {
-            "performance_metrics": metrics,
-            "systematic_compliance": model_registry.validate_systematic_compliance().value,
-            "cache_efficiency": f"{metrics['cache_hit_rate']:.2%}",
-            "query_performance": f"{metrics['avg_query_time']}s average"
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to get performance metrics: {e}")
-
-
-# Error handlers
-@app.exception_handler(Exception)
-async def general_exception_handler(request, exc):
-    logger.error(f"Unhandled exception: {exc}")
+@app.exception_handler(500)
+async def internal_error_handler(request, exc):
     return JSONResponse(
         status_code=500,
-        content={"detail": "Internal server error", "systematic_approach": "Error handled systematically"}
+        content={
+            "error": "Internal server error",
+            "message": "An unexpected error occurred",
+        },
     )
 
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    # This allows running the app directly with python
+    port = int(os.getenv("PORT", 8080))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False, log_level="info")

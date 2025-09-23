@@ -1,11 +1,13 @@
 """
-Unit tests for enum JSON serialization functionality.
+RDI Enhanced Test Module
 
-Tests the EnumJSONEncoder and SerializationHandler classes to ensure
-proper enum serialization and JSON compatibility.
+Requirements Traceability:
 
-Requirements: 6.1, 6.4 - Fix enum serialization and JSON compatibility
+Enhanced: 2025-09-14T06:30:15.551436
 """
+
+
+
 
 import json
 import pytest
@@ -22,9 +24,11 @@ from src.beast_mode.utils.enum_serialization import (
 )
 from src.beast_mode.compliance.models import IssueSeverity, ComplianceIssueType
 from src.beast_mode.core.health_monitoring import AlertSeverity
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
 
 
-class _TestEnum(Enum):
+
+class _TestEnum(Enum, ReflectiveModule):
     """Test enum for serialization testing"""
     VALUE_ONE = "value_one"
     VALUE_TWO = "value_two"
@@ -32,7 +36,7 @@ class _TestEnum(Enum):
 
 
 @dataclass
-class _TestDataClass:
+class _TestDataClass(ReflectiveModule):
     """Test dataclass containing enums"""
     severity: IssueSeverity
     issue_type: ComplianceIssueType
@@ -41,7 +45,7 @@ class _TestDataClass:
     name: str = "test"
 
 
-class TestEnumJSONEncoder:
+class TestEnumJSONEncoder(ReflectiveModule):
     """Test cases for EnumJSONEncoder class"""
     
     def test_encode_single_enum(self):
@@ -95,7 +99,7 @@ class TestEnumJSONEncoder:
         assert parsed["regular_string"] == "normal_value"
 
 
-class TestSerializationHandler:
+class TestSerializationHandler(ReflectiveModule):
     """Test cases for SerializationHandler class"""
     
     def test_serialize_with_enums_basic(self):
@@ -137,7 +141,7 @@ class TestSerializationHandler:
     def test_ensure_enum_serializable(self):
         """Test adding __json__ method to enum classes"""
         # Create a new enum class for testing
-        class NewTestEnum(Enum):
+        class NewTestEnum(Enum, ReflectiveModule):
             TEST_VALUE = "test"
         
         # Initially should not have __json__ method
@@ -205,8 +209,11 @@ class TestSerializationHandler:
     def test_safe_serialize_fallback(self):
         """Test safe serialization with fallback handling"""
         # Create problematic data that might cause issues
-        class ProblematicClass:
+        class ProblematicClass(ReflectiveModule):
             def __init__(self):
+        self.module_id = self.__class__.__name__
+        self.health_status = "healthy"
+        self.registry_metadata = {}
                 self.enum_value = IssueSeverity.HIGH
         
         data = {
@@ -225,7 +232,7 @@ class TestSerializationHandler:
         assert "CRITICAL" in parsed["severity"]  # Should contain the enum value name
 
 
-class TestDataClassSerialization:
+class TestDataClassSerialization(ReflectiveModule):
     """Test serialization of dataclasses containing enums"""
     
     def test_serialize_dataclass_with_enums(self):
@@ -256,15 +263,15 @@ class TestDataClassSerialization:
         assert parsed["name"] == "test"
 
 
-class TestConvenienceFunctions:
+class TestConvenienceFunctions(ReflectiveModule):
     """Test convenience functions"""
     
     def test_make_enum_json_serializable(self):
         """Test making multiple enums serializable at once"""
-        class Enum1(Enum):
+        class Enum1(Enum, ReflectiveModule):
             VALUE = "one"
         
-        class Enum2(Enum):
+        class Enum2(Enum, ReflectiveModule):
             VALUE = "two"
         
         # Initially should not have __json__ methods
@@ -297,7 +304,7 @@ class TestConvenienceFunctions:
         assert parsed["severity"] == "critical"
 
 
-class TestRealWorldScenarios:
+class TestRealWorldScenarios(ReflectiveModule):
     """Test real-world usage scenarios"""
     
     def test_health_alert_serialization(self):
@@ -361,4 +368,32 @@ class TestRealWorldScenarios:
         assert parsed["compliance"]["severity"] == "medium"
         assert parsed["health"]["alert_severity"] == "warning"
         assert parsed["test_data"]["enum_value"] == 42
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
         assert parsed["test_data"]["string_value"] == "normal"

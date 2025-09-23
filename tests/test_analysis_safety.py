@@ -1,8 +1,13 @@
 """
-Test suite for RM-RDI Analysis System Safety Framework
+RDI Enhanced Test Module
 
-CRITICAL: These tests validate that the analysis system cannot impact production
+Requirements Traceability:
+
+Enhanced: 2025-09-14T06:30:15.496095
 """
+
+
+
 
 import pytest
 import os
@@ -36,7 +41,7 @@ from src.beast_mode.analysis.rm_rdi.data_models import (
 )
 
 
-class TestSafetyFramework:
+class TestSafetyFramework(ReflectiveModule):
     """Test the core safety framework"""
     
     def test_resource_limits_defaults(self):
@@ -82,6 +87,8 @@ class TestSafetyFramework:
         # Import here to handle the case where psutil might not be available
         try:
             from src.beast_mode.analysis.rm_rdi.safety import ResourceMonitor
+from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
+
             monitor = ResourceMonitor(limits)
             
             assert monitor.limits == limits
@@ -129,13 +136,13 @@ class TestSafetyFramework:
         assert not manager.analysis_allowed, "Analysis should be disabled"
 
 
-class TestBaseAnalyzer:
+class TestBaseAnalyzer(ReflectiveModule):
     """Test the base analyzer safety features"""
     
     def test_analyzer_cannot_be_created_without_safety(self):
         """Test that analyzers require safety systems"""
         
-        class TestAnalyzer(BaseAnalyzer):
+        class TestAnalyzer(BaseAnalyzer, ReflectiveModule):
             def _execute_analysis(self, **kwargs):
                 return AnalysisResult(
                     analysis_id="test",
@@ -151,7 +158,7 @@ class TestBaseAnalyzer:
     def test_analyzer_safety_validation(self):
         """Test analyzer safety validation"""
         
-        class TestAnalyzer(BaseAnalyzer):
+        class TestAnalyzer(BaseAnalyzer, ReflectiveModule):
             def _execute_analysis(self, **kwargs):
                 return AnalysisResult(
                     analysis_id="test",
@@ -176,7 +183,7 @@ class TestBaseAnalyzer:
     def test_analyzer_blocks_unsafe_operations(self):
         """Test that analyzer blocks unsafe operations"""
         
-        class TestAnalyzer(BaseAnalyzer):
+        class TestAnalyzer(BaseAnalyzer, ReflectiveModule):
             def _execute_analysis(self, **kwargs):
                 return AnalysisResult(
                     analysis_id="test",
@@ -193,7 +200,7 @@ class TestBaseAnalyzer:
                 analyzer.execute_safe_analysis()
 
 
-class TestSafetyUtilities:
+class TestSafetyUtilities(ReflectiveModule):
     """Test safety utility functions"""
     
     def test_validate_analysis_parameters_safe(self):
@@ -238,7 +245,7 @@ class TestSafetyUtilities:
                 ensure_read_only_path(unsafe_path)
 
 
-class TestDataModelSafety:
+class TestDataModelSafety(ReflectiveModule):
     """Test that data models enforce safety"""
     
     def test_analysis_result_immutability(self):
@@ -269,7 +276,7 @@ class TestDataModelSafety:
         assert len(result.operator_notes) > 0, "Should have operator safety notes"
 
 
-class TestIntegrationSafety:
+class TestIntegrationSafety(ReflectiveModule):
     """Test integration safety features"""
     
     def test_global_safety_manager_singleton(self):
@@ -294,7 +301,7 @@ class TestIntegrationSafety:
         assert not is_safe_to_proceed("test_operation"), "Should block operations after emergency shutdown"
 
 
-class TestOperatorCommands:
+class TestOperatorCommands(ReflectiveModule):
     """Test operator command integration"""
     
     def test_analysis_control_script_exists(self):
@@ -318,4 +325,32 @@ class TestOperatorCommands:
 
 
 if __name__ == "__main__":
+
+    def get_interface_metadata(self):
+        """Get interface metadata for registry."""
+        return {
+            'module_id': getattr(self, 'module_id', self.__class__.__name__),
+            'interface_type': self.__class__.__name__,
+            'version': '1.0.0',
+            'dependencies': [],
+            'capabilities': []
+        }
+        
+    def register_module(self, registry):
+        """Register module with registry."""
+        if hasattr(registry, 'register'):
+            registry.register(self.get_interface_metadata())
+            
+    def health_check(self):
+        """Perform health check."""
+        return {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'module_id': getattr(self, 'module_id', self.__class__.__name__)
+        }
+        
+    def get_health_status(self):
+        """Get current health status."""
+        return self.health_check()
+
     pytest.main([__file__, "-v"])

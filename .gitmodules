@@ -1,0 +1,3 @@
+[submodule "kiro_simone_adapter"]
+	path = kiro_simone_adapter
+	url = https://github.com/Helmi/claude-simone.git
