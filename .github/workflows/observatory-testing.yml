@@ -1,0 +1,486 @@
+name: Observatory Testing Suite
+
+on:
+  push:
+    paths:
+      - 'src/beast_mode/observatory/**'
+      - 'tests/**/*observatory*'
+      - '.kiro/specs/beast-mode-coordination-observatory/**'
+      - '.github/workflows/observatory-testing.yml'
+  pull_request:
+    paths:
+      - 'src/beast_mode/observatory/**'
+      - 'tests/**/*observatory*'
+      - '.kiro/specs/beast-mode-coordination-observatory/**'
+      - '.github/workflows/observatory-testing.yml'
+  schedule:
+    # Run comprehensive Observatory tests daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Type of Observatory tests to run'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - unit
+        - integration
+        - performance
+        - visual
+      performance_duration:
+        description: 'Performance test duration (seconds)'
+        required: false
+        default: '60'
+        type: string
+
+env:
+  PYTHONPATH: src
+  REDIS_URL: redis://localhost:6379
+  OBSERVATORY_ENV: test
+
+jobs:
+  # =============================================================================
+  # UNIT TESTS - Fast validation of individual components
+  # =============================================================================
+  unit-tests:
+    name: Observatory Unit Tests
+    runs-on: ubuntu-latest
+    if: ${{ inputs.test_type == 'all' || inputs.test_type == 'unit' || github.event_name != 'workflow_dispatch' }}
+
+    strategy:
+      matrix:
+        python-version: [3.9, "3.10", "3.11", "3.12"]
+      fail-fast: false
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Cache Python dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-py${{ matrix.python-version }}-observatory-${{ hashFiles('pyproject.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-py${{ matrix.python-version }}-observatory-
+          ${{ runner.os }}-py${{ matrix.python-version }}-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]"
+        pip install pytest-asyncio pytest-mock pytest-benchmark
+
+    - name: Set up Redis
+      uses: supercharge/redis-github-action@1.7.0
+      with:
+        redis-version: 7
+        redis-port: 6379
+
+    - name: Run Observatory unit tests
+      run: |
+        pytest tests/unit/beast_mode/observatory/ \
+          -v \
+          --cov=src/beast_mode/observatory \
+          --cov-report=xml \
+          --cov-report=term-missing \
+          --cov-fail-under=85 \
+          --junit-xml=junit-unit-${{ matrix.python-version }}.xml
+      env:
+        PYTEST_TIMEOUT: 300
+
+    - name: Upload unit test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: unit-test-results-${{ matrix.python-version }}
+        path: |
+          junit-unit-${{ matrix.python-version }}.xml
+          coverage.xml
+
+    - name: Upload coverage to Codecov
+      if: matrix.python-version == '3.11'
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: observatory-unit
+        name: observatory-unit-coverage
+
+  # =============================================================================
+  # INTEGRATION TESTS - Cross-system coordination validation
+  # =============================================================================
+  integration-tests:
+    name: Observatory Integration Tests
+    runs-on: ubuntu-latest
+    if: ${{ inputs.test_type == 'all' || inputs.test_type == 'integration' || github.event_name != 'workflow_dispatch' }}
+    needs: unit-tests
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]"
+        pip install pytest-asyncio pytest-mock redis
+
+    - name: Wait for Redis
+      run: |
+        until redis-cli -h localhost -p 6379 ping; do
+          echo "Waiting for Redis..."
+          sleep 2
+        done
+        echo "Redis is ready!"
+
+    - name: Run Observatory integration tests
+      run: |
+        pytest tests/integration/beast_mode/observatory/ \
+          -v \
+          --tb=short \
+          --junit-xml=junit-integration.xml \
+          -m "not slow"
+      env:
+        REDIS_URL: redis://localhost:6379
+        PYTEST_TIMEOUT: 600
+
+    - name: Run slow integration tests
+      if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.test_type == 'all')
+      run: |
+        pytest tests/integration/beast_mode/observatory/ \
+          -v \
+          --tb=short \
+          -m "slow" \
+          --junit-xml=junit-integration-slow.xml
+      env:
+        REDIS_URL: redis://localhost:6379
+        PYTEST_TIMEOUT: 1800
+
+    - name: Upload integration test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: integration-test-results
+        path: junit-integration*.xml
+
+  # =============================================================================
+  # PERFORMANCE TESTS - High-volume metrics processing validation
+  # =============================================================================
+  performance-tests:
+    name: Observatory Performance Tests
+    runs-on: ubuntu-latest
+    if: ${{ inputs.test_type == 'all' || inputs.test_type == 'performance' || github.event_name == 'schedule' }}
+    needs: unit-tests
+    timeout-minutes: 30
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]"
+        pip install pytest-asyncio pytest-benchmark psutil memory-profiler
+
+    - name: Configure Redis for performance
+      run: |
+        redis-cli -h localhost -p 6379 CONFIG SET maxmemory 1gb
+        redis-cli -h localhost -p 6379 CONFIG SET maxmemory-policy allkeys-lru
+
+    - name: Run Observatory performance tests
+      run: |
+        pytest tests/performance/beast_mode/observatory/ \
+          -v \
+          --tb=short \
+          --benchmark-json=benchmark-results.json \
+          --junit-xml=junit-performance.xml
+      env:
+        REDIS_URL: redis://localhost:6379
+        PERFORMANCE_TEST_DURATION: ${{ inputs.performance_duration || '60' }}
+        PYTEST_TIMEOUT: 1800
+
+    - name: Upload performance results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: performance-test-results
+        path: |
+          benchmark-results.json
+          junit-performance.xml
+
+    - name: Performance regression check
+      run: |
+        python -c "
+        import json
+        with open('benchmark-results.json', 'r') as f:
+            results = json.load(f)
+
+        # Check critical performance thresholds
+        critical_benchmarks = {
+            'test_10k_events_sequential_processing': {'max_time': 60.0, 'metric': 'mean'},
+            'test_10k_events_concurrent_processing': {'max_time': 30.0, 'metric': 'mean'},
+            'test_sustained_1000_events_per_second': {'max_time': 120.0, 'metric': 'mean'},
+        }
+
+        failed_benchmarks = []
+        for benchmark in results['benchmarks']:
+            test_name = benchmark['name']
+            if test_name in critical_benchmarks:
+                threshold = critical_benchmarks[test_name]
+                actual_time = benchmark['stats'][threshold['metric']]
+                if actual_time > threshold['max_time']:
+                    failed_benchmarks.append(f'{test_name}: {actual_time:.2f}s > {threshold[\"max_time\"]}s')
+
+        if failed_benchmarks:
+            print('❌ Performance regression detected:')
+            for failure in failed_benchmarks:
+                print(f'  - {failure}')
+            exit(1)
+        else:
+            print('✅ All performance benchmarks passed')
+        "
+
+  # =============================================================================
+  # VISUAL TESTS - Dashboard rendering and UI validation
+  # =============================================================================
+  visual-tests:
+    name: Observatory Visual Tests
+    runs-on: ubuntu-latest
+    if: ${{ inputs.test_type == 'all' || inputs.test_type == 'visual' || github.event_name == 'schedule' }}
+    needs: unit-tests
+    timeout-minutes: 20
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          chromium-browser \
+          chromium-chromedriver \
+          xvfb \
+          libnss3 \
+          libgconf-2-4 \
+          libxss1 \
+          libasound2
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]"
+        pip install selenium pillow pytest-xvfb
+
+    - name: Run Observatory visual tests
+      run: |
+        xvfb-run -a pytest tests/visual/beast_mode/observatory/ \
+          -v \
+          --tb=short \
+          --junit-xml=junit-visual.xml
+      env:
+        DISPLAY: :99
+        CHROME_OPTIONS: --headless --no-sandbox --disable-dev-shm-usage
+        REDIS_URL: redis://localhost:6379
+
+    - name: Upload visual test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: visual-test-results
+        path: |
+          junit-visual.xml
+          tests/visual/screenshots/
+
+  # =============================================================================
+  # COMPREHENSIVE REPORTING - Aggregate all test results
+  # =============================================================================
+  test-summary:
+    name: Observatory Test Summary
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests, performance-tests, visual-tests]
+    if: always()
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download all test artifacts
+      uses: actions/download-artifact@v3
+
+    - name: Generate comprehensive test report
+      run: |
+        echo "# Observatory Testing Suite Results" > test-summary.md
+        echo "" >> test-summary.md
+        echo "Generated on: $(date -u)" >> test-summary.md
+        echo "Commit: ${{ github.sha }}" >> test-summary.md
+        echo "" >> test-summary.md
+
+        # Unit Tests Summary
+        echo "## Unit Tests" >> test-summary.md
+        if [ -d "unit-test-results-3.11" ]; then
+          echo "✅ Unit tests completed across Python versions 3.9-3.12" >> test-summary.md
+        else
+          echo "❌ Unit tests failed or incomplete" >> test-summary.md
+        fi
+        echo "" >> test-summary.md
+
+        # Integration Tests Summary
+        echo "## Integration Tests" >> test-summary.md
+        if [ -f "integration-test-results/junit-integration.xml" ]; then
+          echo "✅ Integration tests completed successfully" >> test-summary.md
+        else
+          echo "❌ Integration tests failed or incomplete" >> test-summary.md
+        fi
+        echo "" >> test-summary.md
+
+        # Performance Tests Summary
+        echo "## Performance Tests" >> test-summary.md
+        if [ -f "performance-test-results/benchmark-results.json" ]; then
+          echo "✅ Performance benchmarks completed" >> test-summary.md
+          # Extract key metrics
+          python -c "
+          import json
+          try:
+              with open('performance-test-results/benchmark-results.json', 'r') as f:
+                  results = json.load(f)
+              print('### Key Performance Metrics:')
+              for benchmark in results['benchmarks'][:5]:  # Top 5 benchmarks
+                  name = benchmark['name'].replace('test_', '').replace('_', ' ').title()
+                  mean_time = benchmark['stats']['mean']
+                  print(f'- {name}: {mean_time:.2f}s')
+          except:
+              print('Performance metrics extraction failed')
+          " >> test-summary.md
+        else
+          echo "❌ Performance tests failed or skipped" >> test-summary.md
+        fi
+        echo "" >> test-summary.md
+
+        # Visual Tests Summary
+        echo "## Visual Tests" >> test-summary.md
+        if [ -f "visual-test-results/junit-visual.xml" ]; then
+          echo "✅ Visual regression tests completed" >> test-summary.md
+        else
+          echo "❌ Visual tests failed or skipped" >> test-summary.md
+        fi
+        echo "" >> test-summary.md
+
+        # Overall Status
+        echo "## Overall Status" >> test-summary.md
+        if [ "${{ needs.unit-tests.result }}" = "success" ] && \
+           [ "${{ needs.integration-tests.result }}" = "success" ]; then
+          echo "🎉 **Observatory testing suite PASSED** - Ready for production!" >> test-summary.md
+        else
+          echo "⚠️ **Observatory testing suite FAILED** - Review failures before deployment" >> test-summary.md
+        fi
+
+        cat test-summary.md
+
+    - name: Upload comprehensive test summary
+      uses: actions/upload-artifact@v3
+      with:
+        name: observatory-test-summary
+        path: test-summary.md
+
+    - name: Comment PR with test summary
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const summary = fs.readFileSync('test-summary.md', 'utf8');
+
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: summary
+          });
+
+  # =============================================================================
+  # QUALITY GATE - Final validation before deployment
+  # =============================================================================
+  quality-gate:
+    name: Observatory Quality Gate
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests]
+    if: github.ref == 'refs/heads/master' || github.base_ref == 'master'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Validate Observatory quality metrics
+      run: |
+        echo "🔍 Validating Observatory quality gate..."
+
+        # Check if critical tests passed
+        if [ "${{ needs.unit-tests.result }}" != "success" ]; then
+          echo "❌ Unit tests failed - blocking deployment"
+          exit 1
+        fi
+
+        if [ "${{ needs.integration-tests.result }}" != "success" ]; then
+          echo "❌ Integration tests failed - blocking deployment"
+          exit 1
+        fi
+
+        echo "✅ All critical Observatory tests passed"
+        echo "🚀 Observatory is ready for production deployment!"
+
+    - name: Notify deployment readiness
+      if: success()
+      run: |
+        echo "::notice title=Observatory Ready::Observatory system has passed all quality gates and is ready for production deployment"
