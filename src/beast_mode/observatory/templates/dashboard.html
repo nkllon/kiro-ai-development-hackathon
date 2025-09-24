@@ -7,6 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/2.29.3/index.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-date-fns/2.0.0/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="/static/chart_architecture.js"></script>
     <style>
         * {
             margin: 0;
@@ -1726,22 +1727,11 @@
             }
         }
 
-        // Advanced Charting System
-        class ObservatoryCharts {
+        // Clean Chart Architecture - Single Source of Truth
+        class CleanObservatoryCharts {
             constructor() {
                 this.charts = {};
-                this.dataHistory = {
-                    health: [],
-                    costs: [],
-                    performance: [],
-                    activity: []
-                };
-                this.maxDataPoints = 50; // Keep last 50 data points
-                
-                // REQUIREMENT: Global mutex to prevent concurrent chart updates
-                // ISSUE: Multiple chart update functions calling each other causing recursion
-                // SOLUTION: Single global flag to prevent any chart updates during update cycle
-                this._updatingCharts = false;
+                this.coordinator = null;
                 this.colors = {
                     primary: '#3498db',
                     success: '#2ecc71',
@@ -1757,884 +1747,290 @@
                     }
                 };
 
-                this.initializeCharts();
+                this.initializeCleanArchitecture();
             }
 
-            initializeCharts() {
-                // Set default Chart.js configurations
+            async initializeCleanArchitecture() {
+                console.log('🚀 Initializing Clean Chart Architecture...');
+
+                // Check if Chart.js is loaded
+                if (typeof Chart === 'undefined') {
+                    console.error('❌ Chart.js is not loaded!');
+                    return;
+                }
+
+                // Set Chart.js defaults
                 Chart.defaults.color = '#ecf0f1';
                 Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
                 Chart.defaults.backgroundColor = 'rgba(255, 255, 255, 0.05)';
 
-                // REQUIREMENT: Temporarily disable chart creation to isolate recursion source
-                // ISSUE: Recursion error persists even with all updates disabled
-                // SOLUTION: Disable chart initialization to test if error is in Chart.js creation
-                console.log('📊 Chart initialization temporarily disabled due to recursion issue');
-                
-                // Initialize all charts
-                // this.createHealthTrendChart();
-                // this.createCostTrackingChart();
-                // this.createPerformanceChart();
-                // this.createAgentActivityChart();
-                // this.createProviderCostChart();
-                // this.createModelUsageChart();
+                // Create all Chart.js instances
+                this.createAllCharts();
 
-                // REQUIREMENT: Charts must display data immediately on load
-                // ISSUE: Empty charts show "Loading..." indefinitely without real data
-                // SOLUTION: Generate mock data and populate charts with delay for proper initialization
-                console.log('📊 Charts initialized, generating initial data...');
-                this.generateMockData();
-                
-                // REQUIREMENT: Prevent chart update errors during initialization
-                // ISSUE: Chart.js needs time to fully initialize DOM elements
-                // SOLUTION: 100ms delay ensures charts are ready for data updates
-                setTimeout(() => {
-                    try {
-                        this.updateAllChartsWithMockData();
-                    } catch (error) {
-                        console.error('❌ Error updating charts with mock data:', error);
+                // Initialize clean architecture with API client
+                try {
+                    if (window.ChartArchitecture) {
+                        const apiClient = window.ChartArchitecture.ErrorHandler.createSafeApiClient();
+                        this.coordinator = new window.ChartArchitecture.ChartUpdateCoordinator(
+                            this.charts,
+                            apiClient,
+                            { debounceMs: 500 }
+                        );
+
+                        console.log('✅ Clean architecture initialized successfully');
+
+                        // Request initial data update
+                        await this.coordinator.requestUpdate('initialization');
+                    } else {
+                        console.warn('⚠️ ChartArchitecture not loaded, using fallback');
+                        throw new Error('ChartArchitecture not available');
                     }
-                }, 100);
-            }
-
-            createHealthTrendChart() {
-                // REQUIREMENT: Eliminate all scriptable options to prevent circular references
-                // ISSUE: Chart.js "Recursion detected: _scriptable->_scriptable" error
-                // SOLUTION: Use completely static configuration with no functions or references
-                const ctx = document.getElementById('healthTrendChart').getContext('2d');
-                this.charts.health = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: 'Health Score',
-                            data: [],
-                            borderColor: '#2ecc71',
-                            backgroundColor: 'rgba(46, 204, 113, 0.2)',
-                            borderWidth: 2,
-                            fill: true,
-                            tension: 0.4
-                        }, {
-                            label: 'Component Count',
-                            data: [],
-                            borderColor: '#17a2b8',
-                            backgroundColor: 'rgba(23, 162, 184, 0.1)',
-                            borderWidth: 2,
-                            fill: false,
-                            yAxisID: 'y1'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        animation: false, // Disable animations to prevent scriptable issues
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: { 
-                                    color: '#ecf0f1', 
-                                    usePointStyle: true 
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                                ticks: { 
-                                    color: '#bdc3c7',
-                                    maxTicksLimit: 8
-                                }
-                            },
-                            y: {
-                                beginAtZero: true,
-                                max: 1,
-                                grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                                ticks: { color: '#bdc3c7' },
-                                title: { display: true, text: 'Health Score', color: '#ecf0f1' }
-                            },
-                            y1: {
-                                type: 'linear',
-                                display: true,
-                                position: 'right',
-                                grid: { drawOnChartArea: false },
-                                ticks: { color: '#bdc3c7' },
-                                title: { display: true, text: 'Components', color: '#ecf0f1' }
-                            }
-                        },
-                        interaction: { mode: 'index', intersect: false },
-                        animation: { duration: 1000, easing: 'easeInOutQuart' }
-                    }
-                });
-            }
-
-            createCostTrackingChart() {
-                const ctx = document.getElementById('costTrackingChart').getContext('2d');
-                this.charts.cost = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: 'Total Cost ($)',
-                            data: [],
-                            borderColor: this.colors.danger,
-                            backgroundColor: 'rgba(231, 76, 60, 0.2)', // Static color instead of gradient
-                            borderWidth: 2,
-                            fill: true,
-                            tension: 0.4
-                        }, {
-                            label: 'LLM Calls',
-                            data: [],
-                            borderColor: this.colors.warning,
-                            backgroundColor: 'rgba(243, 156, 18, 0.1)',
-                            borderWidth: 2,
-                            fill: false,
-                            yAxisID: 'y1'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: { color: '#ecf0f1', usePointStyle: true }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                                ticks: { 
-                                    color: '#bdc3c7',
-                                    maxTicksLimit: 8
-                                }
-                            },
-                            y: {
-                                beginAtZero: true,
-                                grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                                ticks: {
-                                    color: '#bdc3c7',
-                                    callback: function(value) { return '$' + value.toFixed(2); }
-                                },
-                                title: { display: true, text: 'Cost ($)', color: '#ecf0f1' }
-                            },
-                            y1: {
-                                type: 'linear',
-                                display: true,
-                                position: 'right',
-                                beginAtZero: true,
-                                grid: { drawOnChartArea: false },
-                                ticks: { color: '#bdc3c7' },
-                                title: { display: true, text: 'API Calls', color: '#ecf0f1' }
-                            }
-                        },
-                        interaction: { mode: 'index', intersect: false },
-                        animation: { duration: 1000, easing: 'easeInOutQuart' }
-                    }
-                });
-            }
-
-            createPerformanceChart() {
-                const ctx = document.getElementById('performanceChart').getContext('2d');
-                this.charts.performance = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: 'Response Time (ms)',
-                            data: [],
-                            borderColor: this.colors.primary,
-                            backgroundColor: 'rgba(52, 152, 219, 0.2)', // Static color instead of gradient
-                            borderWidth: 2,
-                            fill: true,
-                            tension: 0.4
-                        }, {
-                            label: 'Error Rate (%)',
-                            data: [],
-                            borderColor: this.colors.danger,
-                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
-                            borderWidth: 2,
-                            fill: false,
-                            yAxisID: 'y1'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: { color: '#ecf0f1', usePointStyle: true }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                                ticks: { 
-                                    color: '#bdc3c7',
-                                    maxTicksLimit: 8
-                                }
-                            },
-                            y: {
-                                beginAtZero: true,
-                                grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                                ticks: { color: '#bdc3c7' },
-                                title: { display: true, text: 'Response Time (ms)', color: '#ecf0f1' }
-                            },
-                            y1: {
-                                type: 'linear',
-                                display: true,
-                                position: 'right',
-                                beginAtZero: true,
-                                max: 100,
-                                grid: { drawOnChartArea: false },
-                                ticks: {
-                                    color: '#bdc3c7',
-                                    callback: function(value) { return value + '%'; }
-                                },
-                                title: { display: true, text: 'Error Rate (%)', color: '#ecf0f1' }
-                            }
-                        },
-                        interaction: { mode: 'index', intersect: false },
-                        animation: { duration: 1000, easing: 'easeInOutQuart' }
-                    }
-                });
-            }
-
-            createAgentActivityChart() {
-                const ctx = document.getElementById('agentActivityChart').getContext('2d');
-                this.charts.activity = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Active Agents', 'Idle Agents', 'Processing', 'Maintenance'],
-                        datasets: [{
-                            data: [4, 1, 2, 0],
-                            backgroundColor: [
-                                this.colors.success,
-                                this.colors.warning,
-                                this.colors.primary,
-                                this.colors.danger
-                            ],
-                            borderColor: 'rgba(255, 255, 255, 0.2)',
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: { color: '#ecf0f1', usePointStyle: true }
-                            }
-                        },
-                        animation: {
-                            animateRotate: true,
-                            duration: 1500,
-                            easing: 'easeInOutQuart'
+                } catch (error) {
+                    console.error('❌ Failed to initialize clean architecture:', error);
+                    // Fallback to mock data
+                    setTimeout(() => {
+                        try {
+                            this.updateAllChartsWithMockData();
+                        } catch (mockError) {
+                            console.error('❌ Error updating charts with mock data:', mockError);
                         }
-                    }
-                });
+                    }, 100);
+                }
             }
 
-            createProviderCostChart() {
-                const ctx = document.getElementById('providerCostChart').getContext('2d');
-                this.charts.provider = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: 'Cost by Provider ($)',
-                            data: [],
-                            backgroundColor: [
-                                this.colors.primary,
-                                this.colors.success,
-                                this.colors.warning,
-                                this.colors.purple,
-                                this.colors.info
-                            ],
-                            borderColor: 'rgba(255, 255, 255, 0.2)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false }
-                        },
-                        scales: {
-                            x: {
-                                grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                                ticks: { color: '#bdc3c7' }
-                            },
-                            y: {
-                                beginAtZero: true,
-                                grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                                ticks: {
-                                    color: '#bdc3c7',
-                                    callback: function(value) { return '$' + value.toFixed(3); }
-                                },
-                                title: { display: true, text: 'Cost ($)', color: '#ecf0f1' }
-                            }
-                        },
-                        animation: { duration: 1000, easing: 'easeInOutQuart' }
-                    }
-                });
-            }
+            createAllCharts() {
+                console.log('📊 Creating clean chart instances...');
 
-            createModelUsageChart() {
-                const ctx = document.getElementById('modelUsageChart').getContext('2d');
-                this.charts.model = new Chart(ctx, {
-                    type: 'polarArea',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            data: [],
-                            backgroundColor: [
-                                'rgba(52, 152, 219, 0.8)',
-                                'rgba(46, 204, 113, 0.8)',
-                                'rgba(243, 156, 18, 0.8)',
-                                'rgba(155, 89, 182, 0.8)',
-                                'rgba(231, 76, 60, 0.8)',
-                                'rgba(23, 162, 184, 0.8)'
-                            ],
-                            borderColor: 'rgba(255, 255, 255, 0.2)',
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: { color: '#ecf0f1', usePointStyle: true }
-                            }
-                        },
-                        scales: {
-                            r: {
-                                grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                                ticks: {
-                                    color: '#bdc3c7',
-                                    callback: function(value) { return '$' + value.toFixed(3); }
-                                }
-                            }
-                        },
-                        animation: {
-                            animateRotate: true,
-                            animateScale: true,
-                            duration: 1500,
-                            easing: 'easeInOutQuart'
-                        }
-                    }
-                });
-            }
-
-            createGradient(ctx, colors) {
-                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-                gradient.addColorStop(0, colors[0] + '80');  // 50% opacity
-                gradient.addColorStop(1, colors[1] + '20');  // 12% opacity
-                return gradient;
-            }
-
-            async updateChartsWithData() {
-                // REQUIREMENT: Temporarily disable ALL chart updates to isolate recursion source
-                // ISSUE: Recursion error persists even after disabling health chart
-                // SOLUTION: Disable entire chart update system to find root cause
-                console.log('📊 BEAST MODE: Chart updates temporarily disabled due to recursion issue');
-                return;
-                
-                // REQUIREMENT: Prevent concurrent chart update cycles
-                // ISSUE: Multiple update cycles running simultaneously causing recursion
-                // SOLUTION: Global mutex to ensure only one update cycle runs at a time
-                if (this._updatingCharts) {
-                    console.warn('⚠️ Chart update cycle already in progress, skipping...');
+                // Check if Chart.js is available
+                if (typeof Chart === 'undefined') {
+                    console.error('❌ Chart.js not available in createAllCharts');
                     return;
                 }
-                this._updatingCharts = true;
-                
-                try {
-                    console.log('📊 BEAST MODE: Fetching all API data...');
-                    
-                    // Fetch all data in parallel with proper error handling
-                    const [analyticsData, costData, observatoryData] = await Promise.all([
-                        this.fetchAnalyticsData(),
-                        this.fetchCostData(),
-                        this.fetchObservatoryData()
-                    ]);
-                    
-                    console.log('📈 BEAST MODE: Updating all charts with fresh data...');
-                    
-                    // Update charts with the fetched data
-                    if (analyticsData && observatoryData) {
-                        this.updateHealthChart();
-                        this.updatePerformanceChart();
-                        this.updateActivityChart();
-                    }
-                    
-                    if (costData) {
-                        this.updateCostChart();
-                        this.updateProviderChart();
-                        this.updateModelChart();
-                    }
-                    
-                    console.log('✅ BEAST MODE: All charts updated successfully');
-                    
-                } catch (error) {
-                    console.error('❌ BEAST MODE: Chart update failed:', error);
-                } finally {
-                    this._updatingCharts = false;
+
+                // Health Trend Chart
+                if (document.getElementById('healthTrendChart')) {
+                    const healthCtx = document.getElementById('healthTrendChart').getContext('2d');
+                    this.charts.health = new Chart(healthCtx, {
+                        type: 'line',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                label: 'Health Score',
+                                data: [],
+                                borderColor: '#2ecc71',
+                                backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4
+                            }, {
+                                label: 'Component Count',
+                                data: [],
+                                borderColor: '#17a2b8',
+                                backgroundColor: 'rgba(23, 162, 184, 0.1)',
+                                borderWidth: 2,
+                                fill: false,
+                                yAxisID: 'y1'
+                            }]
+                        },
+                        options: this.getBaseChartOptions('Health Metrics', 'Health Score', 'Components')
+                    });
                 }
+
+                // Cost Tracking Chart
+                if (document.getElementById('costTrackingChart')) {
+                    const costCtx = document.getElementById('costTrackingChart').getContext('2d');
+                    this.charts.cost = new Chart(costCtx, {
+                        type: 'line',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                label: 'Total Cost ($)',
+                                data: [],
+                                borderColor: this.colors.danger,
+                                backgroundColor: 'rgba(231, 76, 60, 0.2)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: this.getBaseChartOptions('Cost Tracking', 'Cost ($)', null)
+                    });
+                }
+
+                // Performance Chart
+                if (document.getElementById('performanceChart')) {
+                    const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+                    this.charts.performance = new Chart(performanceCtx, {
+                        type: 'line',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                label: 'Response Time (ms)',
+                                data: [],
+                                borderColor: this.colors.primary,
+                                backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: this.getBaseChartOptions('Performance', 'Response Time (ms)', null)
+                    });
+                }
+
+                // Agent Activity Chart
+                if (document.getElementById('agentActivityChart')) {
+                    const activityCtx = document.getElementById('agentActivityChart').getContext('2d');
+                    this.charts.activity = new Chart(activityCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Active Agents', 'Idle Agents', 'Processing', 'Maintenance'],
+                            datasets: [{
+                                data: [],
+                                backgroundColor: [
+                                    this.colors.success,
+                                    this.colors.warning,
+                                    this.colors.primary,
+                                    this.colors.info
+                                ],
+                                borderColor: '#2c3e50',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: this.getDoughnutChartOptions('Agent Activity')
+                    });
+                }
+
+                console.log('✅ All chart instances created successfully');
             }
 
-            async fetchAnalyticsData() {
-                try {
-                    console.log('📊 BEAST MODE: Fetching analytics data...');
-                    const response = await fetch('/api/analytics/current');
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    this.analyticsData = await response.json();
-                    console.log('✅ Analytics data fetched:', this.analyticsData);
-                    return this.analyticsData;
-                } catch (error) {
-                    console.error('❌ Failed to fetch analytics data:', error);
-                    return null;
-                }
-            }
-
-            async fetchCostData() {
-                try {
-                    console.log('💰 BEAST MODE: Fetching cost data...');
-                    const response = await fetch('/api/costs/overview');
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    this.costData = await response.json();
-                    console.log('✅ Cost data fetched:', this.costData);
-                    return this.costData;
-                } catch (error) {
-                    console.error('❌ Failed to fetch cost data:', error);
-                    return null;
-                }
-            }
-
-            async fetchObservatoryData() {
-                try {
-                    console.log('🔭 BEAST MODE: Fetching observatory data...');
-                    const response = await fetch('/api/observatory/status');
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    this.observatoryData = await response.json();
-                    console.log('✅ Observatory data fetched:', this.observatoryData);
-                    return this.observatoryData;
-                } catch (error) {
-                    console.error('❌ Failed to fetch observatory data:', error);
-                    return null;
-                }
-            }
-
-            hideLoadingIndicator(chartId) {
-                const chartContainer = document.getElementById(chartId)?.closest('.chart-container');
-                if (chartContainer) {
-                    const loadingEl = chartContainer.querySelector('.chart-loading');
-                    if (loadingEl) {
-                        loadingEl.style.display = 'none';
-                        console.log(`📊 Loading indicator hidden for ${chartId}`);
-                    }
-                }
-            }
-
-            generateMockData() {
-                console.log('🎭 Generating mock data for charts...');
-                
-                // Generate mock analytics data
-                this.analyticsData = {
-                    current_window: {
-                        coordination_health_score: 0.85 + Math.random() * 0.15,
-                        component_count: 12 + Math.floor(Math.random() * 8),
-                        healthy_components: 8 + Math.floor(Math.random() * 4),
-                        warning_components: Math.floor(Math.random() * 3),
-                        error_components: Math.floor(Math.random() * 2),
-                        total_cost: Math.random() * 50 + 10,
-                        llm_calls: 150 + Math.floor(Math.random() * 100),
-                        avg_cost_per_call: 0.02 + Math.random() * 0.08,
-                        error_rate_percent: Math.random() * 5,
-                        avg_response_time_ms: 200 + Math.random() * 300
-                    }
+            getBaseChartOptions(title, yLabel, y1Label = null) {
+                const options = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#ecf0f1', usePointStyle: true }
+                        },
+                        title: {
+                            display: true,
+                            text: title,
+                            color: '#ecf0f1'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            ticks: { color: '#bdc3c7', maxTicksLimit: 8 }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            ticks: { color: '#bdc3c7' },
+                            title: { display: true, text: yLabel, color: '#ecf0f1' }
+                        }
+                    },
+                    interaction: { mode: 'index', intersect: false },
+                    animation: { duration: 500, easing: 'easeInOutQuart' }
                 };
 
-                // Generate mock observatory data
-                this.observatoryData = {
-                    health: {
-                        health_score: 0.9 + Math.random() * 0.1,
-                        uptime_seconds: 86400 + Math.random() * 86400
-                    },
-                    metrics: {
-                        events_processed_total: 1000 + Math.floor(Math.random() * 5000)
-                    }
-                };
+                if (y1Label) {
+                    options.scales.y1 = {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        grid: { drawOnChartArea: false },
+                        ticks: { color: '#bdc3c7' },
+                        title: { display: true, text: y1Label, color: '#ecf0f1' }
+                    };
+                }
 
-                // Generate mock cost data
-                this.costData = {
-                    cost_metrics: {
-                        total_cost_today: Math.random() * 100 + 20
-                    },
-                    tracking_stats: {
-                        calls_tracked: 200 + Math.floor(Math.random() * 300)
-                    },
-                    provider_breakdown: {
-                        'OpenAI': Math.random() * 40 + 10,
-                        'Anthropic': Math.random() * 30 + 5,
-                        'Google': Math.random() * 20 + 3
-                    }
-                };
+                return options;
+            }
 
-                console.log('✅ Mock data generated');
+            getDoughnutChartOptions(title) {
+                return {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#ecf0f1', usePointStyle: true }
+                        },
+                        title: {
+                            display: true,
+                            text: title,
+                            color: '#ecf0f1'
+                        }
+                    },
+                    animation: { duration: 1000, easing: 'easeInOutQuart' }
+                };
+            }
+
+            // Single update method - replaces all the complex update logic
+            async requestUpdate(source = 'manual') {
+                if (!this.coordinator) {
+                    console.warn('Clean architecture not initialized, using fallback');
+                    this.updateAllChartsWithMockData();
+                    return;
+                }
+
+                try {
+                    const result = await this.coordinator.requestUpdate(source);
+                    console.log(`✅ Chart update completed: ${result.duration}ms`);
+                    return result;
+                } catch (error) {
+                    console.error('❌ Chart update failed:', error);
+                    // Fallback to mock data
+                    this.updateAllChartsWithMockData();
+                }
             }
 
             updateAllChartsWithMockData() {
-                console.log('📊 Updating all charts with mock data...');
-                
-                // Generate some initial data points
-                const now = new Date();
-                for (let i = 9; i >= 0; i--) {
-                    const time = new Date(now.getTime() - i * 30000); // 30 seconds apart
-                    
-                    // Health data
-                    this.dataHistory.health.push({
-                        time: time,
-                        health: 0.8 + Math.random() * 0.2,
-                        components: 10 + Math.floor(Math.random() * 5)
-                    });
-                    
-                    // Cost data
-                    this.dataHistory.costs.push({
-                        time: time,
-                        cost: 20 + Math.random() * 30,
-                        calls: 100 + Math.floor(Math.random() * 50)
-                    });
-                    
-                    // Performance data
-                    this.dataHistory.performance.push({
-                        time: time,
-                        responseTime: 200 + Math.random() * 300,
-                        errorRate: Math.random() * 5
-                    });
-                }
-                
-                // Update all charts
-                this.updateHealthChart();
-                this.updateCostChart();
-                this.updatePerformanceChart();
-                this.updateProviderChart();
-                this.updateModelChart();
-                this.updateActivityChart();
-                
-                console.log('✅ All charts updated with mock data');
-            }
+                console.log('📊 Updating charts with mock data...');
+                const mockData = this.generateMockData();
 
-            updateHealthChart() {
-                console.log('📈 BEAST MODE: Updating health chart...');
-                
-                // REQUIREMENT: Temporarily disable health chart to isolate Chart.js recursion issue
-                // ISSUE: Chart.js has deep recursion problem that persists despite all fixes
-                // SOLUTION: Skip health chart updates until Chart.js issue is resolved
-                console.warn('⚠️ Health chart updates temporarily disabled due to Chart.js recursion issue');
-                this.hideLoadingIndicator('healthTrendChart');
-                return;
-                
-                // REQUIREMENT: Prevent infinite recursion in chart updates
-                // ISSUE: Chart.js update() can trigger event handlers that call update again
-                // SOLUTION: Use mutex-style flag to prevent concurrent updates
-                if (this._updatingHealthChart) {
-                    console.warn('⚠️ Health chart update already in progress, skipping...');
-                    return;
-                }
-                this._updatingHealthChart = true;
-                
-                if (!this.analyticsData || !this.observatoryData) {
-                    console.warn('⚠️ Missing data for health chart:', { 
-                        analytics: !!this.analyticsData, 
-                        observatory: !!this.observatoryData 
-                    });
-                    this._updatingHealthChart = false;
-                    return;
-                }
-                
-                try {
-                    const now = new Date();
-                    const healthScore = this.analyticsData.current_window?.coordination_health_score || 1.0;
-                    const componentCount = this.analyticsData.current_window?.component_count || 0;
+                Object.values(this.charts).forEach(chart => {
+                    if (chart && chart.data) {
+                        // Add mock data point
+                        const timestamp = new Date().toLocaleTimeString();
+                        chart.data.labels.push(timestamp);
 
-                    // Add to history
-                    this.dataHistory.health.push({
-                        time: now,
-                        health: healthScore,
-                        components: componentCount
-                    });
+                        chart.data.datasets.forEach((dataset, index) => {
+                            const value = Math.random() * 100;
+                            dataset.data.push(value);
 
-                    // Keep only last N data points
-                    if (this.dataHistory.health.length > this.maxDataPoints) {
-                        this.dataHistory.health.shift();
+                            // Keep only last 20 points
+                            if (dataset.data.length > 20) {
+                                chart.data.labels.shift();
+                                dataset.data.shift();
+                            }
+                        });
+
+                        chart.update('none');
                     }
-
-                    // Update chart with safe data validation
-                    const chart = this.charts.health;
-                    
-                    // REQUIREMENT: Ensure all data passed to Chart.js is properly formatted
-                    // ISSUE: Chart.js expects specific data types, wrong types cause recursion
-                    // SOLUTION: Validate and sanitize all data before passing to chart
-                    
-                    // Safely format labels as strings
-                    const labels = this.dataHistory.health.map(d => {
-                        try {
-                            return d.time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
-                        } catch (e) {
-                            return new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
-                        }
-                    });
-                    
-                    // Safely format data as numbers
-                    const healthData = this.dataHistory.health.map(d => {
-                        const val = parseFloat(d.health);
-                        return isNaN(val) ? 0 : val;
-                    });
-                    
-                    const componentData = this.dataHistory.health.map(d => {
-                        const val = parseInt(d.components);
-                        return isNaN(val) ? 0 : val;
-                    });
-                    
-                    // Update chart with validated data
-                    chart.data.labels = labels;
-                    chart.data.datasets[0].data = healthData;
-                    chart.data.datasets[1].data = componentData;
-                    chart.update('none'); // No animation for real-time updates
-                    
-                    // Hide loading indicator for this chart
-                    this.hideLoadingIndicator('healthTrendChart');
-                    
-                } catch (error) {
-                    console.error('❌ Error updating health chart:', error);
-                } finally {
-                    this._updatingHealthChart = false;
-                }
-            }
-
-            updateCostChart() {
-                // REQUIREMENT: Prevent recursive chart updates causing stack overflow
-                // ISSUE: Multiple chart update calls can create infinite loops
-                // SOLUTION: Mutex pattern to ensure only one update at a time
-                if (this._updatingCostChart) return;
-                this._updatingCostChart = true;
-                
-                if (!this.costData) {
-                    this._updatingCostChart = false;
-                    return;
-                }
-
-                const now = new Date();
-                const totalCost = this.costData.cost_metrics?.total_cost_today || 0;
-                const callsTracked = this.costData.tracking_stats?.calls_tracked || 0;
-
-                // Add to history
-                this.dataHistory.costs.push({
-                    time: now,
-                    cost: totalCost,
-                    calls: callsTracked
                 });
-
-                if (this.dataHistory.costs.length > this.maxDataPoints) {
-                    this.dataHistory.costs.shift();
-                }
-
-                // Update chart
-                const chart = this.charts.cost;
-                chart.data.labels = this.dataHistory.costs.map(d => d.time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }));
-                chart.data.datasets[0].data = this.dataHistory.costs.map(d => d.cost);
-                chart.data.datasets[1].data = this.dataHistory.costs.map(d => d.calls);
-                chart.update('none');
-                
-                // Hide loading indicator for this chart
-                this.hideLoadingIndicator('costTrackingChart');
             }
 
-            updatePerformanceChart() {
-                if (!this.analyticsData) return;
-
-                const now = new Date();
-                const responseTime = this.analyticsData.current_window?.avg_response_time_ms || 0;
-                const errorRate = this.analyticsData.current_window?.error_rate_percent || 0;
-
-                // Add to history
-                this.dataHistory.performance.push({
-                    time: now,
-                    responseTime: responseTime,
-                    errorRate: errorRate
-                });
-
-                if (this.dataHistory.performance.length > this.maxDataPoints) {
-                    this.dataHistory.performance.shift();
-                }
-
-                // Update chart
-                const chart = this.charts.performance;
-                chart.data.labels = this.dataHistory.performance.map(d => d.time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }));
-                chart.data.datasets[0].data = this.dataHistory.performance.map(d => d.responseTime);
-                chart.data.datasets[1].data = this.dataHistory.performance.map(d => d.errorRate);
-                chart.update('none');
-                
-                // Hide loading indicator for this chart
-                this.hideLoadingIndicator('performanceChart');
-            }
-
-            updateProviderChart() {
-                if (!this.costData || !this.costData.cost_metrics) return;
-
-                const providerCosts = this.costData.cost_metrics.cost_by_provider || {};
-                const chart = this.charts.provider;
-
-                chart.data.labels = Object.keys(providerCosts);
-                chart.data.datasets[0].data = Object.values(providerCosts);
-                chart.update('none');
-                
-                // Hide loading indicator for this chart
-                this.hideLoadingIndicator('providerCostChart');
-            }
-
-            updateModelChart() {
-                if (!this.costData || !this.costData.cost_metrics) return;
-
-                const modelCosts = this.costData.cost_metrics.cost_by_model || {};
-                const chart = this.charts.model;
-
-                chart.data.labels = Object.keys(modelCosts).map(model => {
-                    // Shorten long model names
-                    const parts = model.split(':');
-                    return parts.length > 1 ? parts[1] : model;
-                });
-                chart.data.datasets[0].data = Object.values(modelCosts);
-                chart.update('none');
-                
-                // Hide loading indicator for this chart
-                this.hideLoadingIndicator('modelUsageChart');
-            }
-
-            updateActivityChart() {
-                // Simulate agent activity data
-                const activeAgents = Math.floor(Math.random() * 3) + 3; // 3-5 active
-                const idleAgents = Math.floor(Math.random() * 2) + 1;   // 1-2 idle
-                const processing = Math.floor(Math.random() * 3) + 1;   // 1-3 processing
-                const maintenance = Math.random() > 0.8 ? 1 : 0;        // Occasionally 1 in maintenance
-
-                const chart = this.charts.activity;
-                chart.data.datasets[0].data = [activeAgents, idleAgents, processing, maintenance];
-                chart.update('none');
-                
-                // Hide loading indicator for this chart
-                this.hideLoadingIndicator('agentActivityChart');
-            }
-
-            startRealTimeUpdates() {
-                console.log('🚀 BEAST MODE: Starting enhanced real-time updates...');
-                
-                const updateCharts = async () => {
-                    try {
-                        console.log('🔄 BEAST MODE: Chart update cycle starting...');
-                        await this.updateChartsWithData();
-                        console.log('✅ BEAST MODE: Chart update cycle complete');
-                    } catch (error) {
-                        console.error('❌ BEAST MODE: Chart update error:', error);
+            generateMockData() {
+                return {
+                    analytics: {
+                        healthScore: 0.8 + Math.random() * 0.2,
+                        componentCount: Math.floor(Math.random() * 15) + 5
+                    },
+                    costs: {
+                        totalCost: Math.random() * 100 + 20
+                    },
+                    metrics: {
+                        responseTime: Math.random() * 500 + 100
+                    },
+                    agents: {
+                        active: Math.floor(Math.random() * 10) + 1
                     }
                 };
-                
-                // Initial update
-                setTimeout(updateCharts, 1000);
-                
-                // Update every 5 seconds (faster for better demo)
-                setInterval(updateCharts, 5000);
-                
-                // Add chart synchronization - hover effects across charts
-                this.setupChartSynchronization();
-                
-                console.log('⏰ BEAST MODE: Real-time updates scheduled every 5 seconds');
             }
 
-            setupChartSynchronization() {
-                // Add synchronized hover effects for time-series charts
-                const timeSeriesCharts = ['health', 'cost', 'performance'];
-
-                timeSeriesCharts.forEach(chartKey => {
-                    const chart = this.charts[chartKey];
-                    if (!chart) return;
-
-                    // Add hover synchronization
-                    chart.options.plugins = chart.options.plugins || {};
-                    chart.options.plugins.tooltip = {
-                        ...chart.options.plugins.tooltip,
-                        callbacks: {
-                            ...chart.options.plugins.tooltip?.callbacks,
-                            afterTitle: (tooltipItems) => {
-                                // Highlight corresponding points in other time-series charts
-                                const index = tooltipItems[0]?.dataIndex;
-                                if (index !== undefined) {
-                                    this.highlightDataPoint(index, chartKey);
-                                }
-                            }
-                        }
-                    };
-                });
-
-                // Add click handlers for chart containers
-                document.querySelectorAll('.chart-container').forEach((container, index) => {
-                    container.addEventListener('click', () => {
-                        this.focusChart(index);
-                    });
-                });
-            }
-
-            highlightDataPoint(index, sourceChart) {
-                // Briefly highlight the same data point in other time-series charts
-                const timeSeriesCharts = ['health', 'cost', 'performance'];
-
-                timeSeriesCharts.forEach(chartKey => {
-                    if (chartKey === sourceChart) return;
-
-                    const chart = this.charts[chartKey];
-                    if (chart && chart.data.labels[index]) {
-                        // Flash animation on corresponding data point
-                        chart.setActiveElements([{datasetIndex: 0, index: index}]);
-                        chart.update('none');
-
-                        setTimeout(() => {
-                            chart.setActiveElements([]);
-                            chart.update('none');
-                        }, 1500);
-                    }
-                });
-            }
-
-            focusChart(chartIndex) {
-                // Add focus effect to clicked chart
-                const containers = document.querySelectorAll('.chart-container');
-                containers.forEach((container, index) => {
-                    if (index === chartIndex) {
-                        container.style.transform = 'scale(1.02)';
-                        container.style.zIndex = '10';
-                        setTimeout(() => {
-                            container.style.transform = 'scale(1)';
-                            container.style.zIndex = '1';
-                        }, 300);
-                    }
-                });
-            }
-
-            // Performance optimization: batch updates
-            batchUpdateCharts() {
-                requestAnimationFrame(() => {
-                    Object.values(this.charts).forEach(chart => {
-                        if (chart && chart.data.datasets[0].data.length > 0) {
-                            chart.update('none');
-                        }
-                    });
-                });
-            }
         }
 
         // Research experiment simulation
@@ -2698,38 +2094,31 @@
                         phaseEl.textContent = this.phases[this.currentPhaseIndex];
                     }
 
-                    // Update research metrics
                     if (dataPointsEl) {
-                        this.dataPointsCollected += Math.floor(Math.random() * 150 + 50); // Add 50-200 data points
+                        this.dataPointsCollected += Math.floor(Math.random() * 1000) + 100;
                         dataPointsEl.textContent = this.dataPointsCollected.toLocaleString();
                     }
 
                     if (runtimeEl) {
-                        const currentTime = Date.now();
-                        const elapsedMs = currentTime - this.experimentStartTime;
-                        const days = Math.floor(elapsedMs / (1000 * 60 * 60 * 24));
-                        const hours = Math.floor((elapsedMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const minutes = Math.floor((elapsedMs % (1000 * 60 * 60)) / (1000 * 60));
-                        runtimeEl.textContent = `${days}d ${hours}h ${minutes}m`;
+                        const runtime = Date.now() - this.experimentStartTime;
+                        const hours = Math.floor(runtime / (1000 * 60 * 60));
+                        const minutes = Math.floor((runtime % (1000 * 60 * 60)) / (1000 * 60));
+                        runtimeEl.textContent = `${hours}h ${minutes}m`;
                     }
+
+                    console.log(`🔬 Research Update: ${this.progress.toFixed(1)}% complete, Phase: ${this.phases[this.currentPhaseIndex]}, Agents: ${this.agentCount}`);
                 } catch (error) {
-                    console.warn('🚨 ResearchSimulator.updateDisplay error:', error.message);
-                    if (window.debugPanel) {
-                        window.debugPanel.log(`🚨 ResearchSimulator error: ${error.message}`, 'error');
-                    }
+                    console.error('❌ Error updating research display:', error);
                 }
             }
 
             addProgressAnimation() {
-                // Add subtle pulsing to research header
                 const style = document.createElement('style');
                 style.textContent = `
-                    @keyframes researchPulse {
-                        0%, 100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4); }
-                        50% { box-shadow: 0 0 0 10px rgba(52, 152, 219, 0); }
-                    }
-                    .research-header {
-                        animation: researchPulse 4s infinite;
+                    @keyframes pulse {
+                        0% { opacity: 1; }
+                        50% { opacity: 0.7; }
+                        100% { opacity: 1; }
                     }
                     #researchProgress {
                         animation: pulse 2s infinite;
@@ -2781,37 +2170,17 @@
                 );
 
                 // Small delay between calls
-                if (i < callCount - 1) {
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                }
+                await new Promise(resolve => setTimeout(resolve, Math.random() * 100));
             }
 
             try {
-                const results = await Promise.all(promises);
-                const successCount = results.filter(r => r.success).length;
-                const totalCost = results.reduce((sum, r) => sum + (r.estimated_cost || 0), 0);
+                const results = await Promise.allSettled(promises);
+                console.log(`📊 Generated ${results.length} LLM calls for cost data`);
 
-                console.log(`✅ Generated ${successCount}/${callCount} successful LLM calls`);
-                console.log(`💰 Total cost: $${totalCost.toFixed(4)}`);
-
-                // Trigger celebration rain for successful data generation
-                if (window.emojiRenderer && window.emojiRenderer.websocket && window.emojiRenderer.connected) {
-                    window.emojiRenderer.websocket.send(JSON.stringify({
-                        type: 'trigger_test_rain',
-                        event_type: 'ACHIEVEMENT_UNLOCKED',
-                        data: {
-                            source: 'chart_data_generation',
-                            calls_generated: successCount,
-                            total_cost: totalCost,
-                            timestamp: new Date().toISOString()
-                        }
-                    }));
-                }
-
-                // Force chart update immediately
+                // Force chart update immediately using clean architecture
                 if (window.observatoryCharts) {
                     setTimeout(() => {
-                        window.observatoryCharts.updateChartsWithData();
+                        window.observatoryCharts.requestUpdate('demo-button');
                     }, 500);
                 }
 
@@ -2820,7 +2189,6 @@
             }
         }
 
-        // Chart export functionality
         function exportChart(chartId) {
             const canvas = document.getElementById(chartId);
             if (!canvas) {
@@ -2828,286 +2196,52 @@
                 return;
             }
 
-            // Create download link
-            const link = document.createElement('a');
-            link.download = `${chartId}_${new Date().toISOString().slice(0, 10)}.png`;
-            link.href = canvas.toDataURL('image/png');
-
-            // Trigger download
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            console.log(`📷 Exported chart: ${chartId}`);
-
-            // Trigger celebration rain
-            if (window.emojiRenderer && window.emojiRenderer.websocket && window.emojiRenderer.connected) {
-                window.emojiRenderer.websocket.send(JSON.stringify({
-                    type: 'trigger_test_rain',
-                    event_type: 'ACHIEVEMENT_UNLOCKED',
-                    data: {
-                        source: 'chart_export',
-                        chart_id: chartId,
-                        timestamp: new Date().toISOString()
-                    }
-                }));
-            }
+            const url = canvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${chartId}-${Date.now()}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            console.log(`📊 Chart exported: ${chartId}`);
         }
 
-        // Donation button analytics
-        function trackDonation(platform, amount) {
-            console.log(`🎉 Donation button clicked: ${platform} - $${amount}`);
-
-            // Trigger celebration emoji rain for donations
-            if (window.emojiRenderer && window.emojiRenderer.websocket && window.emojiRenderer.connected) {
-                window.emojiRenderer.websocket.send(JSON.stringify({
-                    type: 'trigger_test_rain',
-                    event_type: 'ACHIEVEMENT_UNLOCKED',
-                    data: {
-                        source: 'donation_button',
-                        platform: platform,
-                        amount: amount,
-                        timestamp: new Date().toISOString()
-                    }
-                }));
-            }
-
-            // Track in research metrics
-            if (window.researchSimulator) {
-                window.researchSimulator.dataPointsCollected += 100; // Bonus data points for support!
-            }
-        }
-
-        // Standard donation tracking
-        function trackDonation(platform, amount) {
-            console.log(`🎉 Donation button clicked: ${platform} - $${amount}`);
-
-            // Trigger celebration emoji rain for donations
-            if (window.emojiRenderer && window.emojiRenderer.websocket && window.emojiRenderer.connected) {
-                window.emojiRenderer.websocket.send(JSON.stringify({
-                    type: 'trigger_test_rain',
-                    event_type: 'ACHIEVEMENT_UNLOCKED',
-                    data: {
-                        source: 'donation_button',
-                        platform: platform,
-                        amount: amount,
-                        timestamp: new Date().toISOString()
-                    }
-                }));
-            }
-
-            // Track in research metrics
-            if (window.researchSimulator) {
-                window.researchSimulator.dataPointsCollected += 100;
-            }
-        }
-
-        // Parallax background scrolling effect
-        function updateBackgroundPosition() {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const scrollPercent = Math.max(0, Math.min(1, documentHeight > 0 ? scrollTop / documentHeight : 0));
-
-            // Move from -50% (left) to 0% (right) as we scroll from top to bottom
-            const translateX = -50 + (scrollPercent * 50);
-
-            console.log(`📜 Scroll Debug: scrollTop=${scrollTop}, docHeight=${documentHeight}, scrollPercent=${scrollPercent.toFixed(3)}, translateX=${translateX.toFixed(1)}%`);
-
-            const backgroundElement = document.getElementById('parallax-background');
-            if (backgroundElement) {
-                backgroundElement.style.transform = `translateX(${translateX}%)`;
-                console.log(`🎨 Applied transform: translateX(${translateX}%)`);
-            } else {
-                console.error('❌ #parallax-background element not found!');
-            }
-        }
-
-        // Throttled scroll handler for better performance
-        let scrollTimeout;
-        function handleScroll() {
-            console.log('🌊 Scroll event detected!');
-            if (scrollTimeout) {
-                clearTimeout(scrollTimeout);
-            }
-            scrollTimeout = setTimeout(() => {
-                console.log('🎬 Calling updateBackgroundPosition via requestAnimationFrame');
-                requestAnimationFrame(updateBackgroundPosition);
-            }, 10);
-        }
-
-        // BEAST MODE: Enhanced background scroll effect
-        function updateBackgroundPosition() {
-            try {
-                const scrollPercent = window.scrollY / Math.max(document.body.scrollHeight - window.innerHeight, 1);
-                const maxTranslate = -100; // Move from -50% to -150% (100% range)
-                const translateX = -50 + (scrollPercent * maxTranslate);
-                const backgroundElement = document.querySelector('.background-image');
-                if (backgroundElement) {
-                    backgroundElement.style.transform = `translateX(${translateX}%)`;
-                    console.log(`🌌 Background scroll: ${scrollPercent.toFixed(3)} -> translateX(${translateX.toFixed(1)}%)`);
-                }
-            } catch (error) {
-                console.error('❌ Background scroll error:', error);
-            }
-        }
-
-        function handleScroll() {
-            requestAnimationFrame(updateBackgroundPosition);
-        }
-
-        // BEAST MODE: Enhanced error handling and logging
-        window.addEventListener('error', (event) => {
-            console.error('🚨 Global error:', event.error);
-        });
-
-        // Debug Panel for Real-Time Diagnostics
+        // Simple DebugPanel for logging
         class DebugPanel {
-            constructor() {
-                this.createDebugPanel();
-                this.startDiagnostics();
-            }
-            
-            createDebugPanel() {
-                const panel = document.createElement('div');
-                panel.id = 'debug-panel';
-                panel.style.cssText = `
-                    position: fixed;
-                    top: 60px;
-                    right: 20px;
-                    width: 300px;
-                    max-height: 400px;
-                    background: rgba(0,0,0,0.9);
-                    color: #00ff00;
-                    font-family: monospace;
-                    font-size: 11px;
-                    padding: 10px;
-                    border-radius: 5px;
-                    z-index: 10000;
-                    overflow-y: auto;
-                    border: 1px solid #333;
-                `;
-                
-                panel.innerHTML = `
-                    <div style="color: #ff6b6b; font-weight: bold; margin-bottom: 10px;">
-                        🔍 OBSERVATORY DEBUG PANEL
-                        <button onclick="document.getElementById('debug-panel').style.display='none'" 
-                                style="float: right; background: #333; color: white; border: none; padding: 2px 6px;">×</button>
-                    </div>
-                    <div id="debug-log"></div>
-                `;
-                
-                document.body.appendChild(panel);
-                this.logElement = document.getElementById('debug-log');
-            }
-            
             log(message, type = 'info') {
                 const timestamp = new Date().toLocaleTimeString();
-                const colors = {
-                    info: '#00ff00',
-                    error: '#ff6b6b',
-                    warn: '#ffa500',
-                    success: '#4ecdc4'
-                };
-                
-                const logEntry = document.createElement('div');
-                logEntry.style.color = colors[type] || colors.info;
-                logEntry.innerHTML = `[${timestamp}] ${message}`;
-                
-                this.logElement.appendChild(logEntry);
-                this.logElement.scrollTop = this.logElement.scrollHeight;
-                
-                // Keep only last 50 entries
-                while (this.logElement.children.length > 50) {
-                    this.logElement.removeChild(this.logElement.firstChild);
-                }
-            }
-            
-            startDiagnostics() {
-                this.log('🚀 Debug panel initialized', 'success');
-                
-                // Monitor WebSocket attempts
-                const originalWebSocket = window.WebSocket;
-                window.WebSocket = function(url, protocols) {
-                    window.debugPanel.log(`🔌 WebSocket attempt: ${url}`, 'info');
-                    
-                    const ws = new originalWebSocket(url, protocols);
-                    
-                    ws.addEventListener('open', () => {
-                        window.debugPanel.log('✅ WebSocket connected', 'success');
-                    });
-                    
-                    ws.addEventListener('error', (error) => {
-                        window.debugPanel.log(`❌ WebSocket error: ${error.type}`, 'error');
-                    });
-                    
-                    ws.addEventListener('close', (event) => {
-                        window.debugPanel.log(`🔌 WebSocket closed: ${event.code} ${event.reason}`, 'warn');
-                    });
-                    
-                    return ws;
-                };
-                
-                // Monitor fetch requests
-                const originalFetch = window.fetch;
-                window.fetch = function(...args) {
-                    const url = args[0];
-                    window.debugPanel.log(`📡 Fetch: ${url}`, 'info');
-                    
-                    return originalFetch.apply(this, args)
-                        .then(response => {
-                            window.debugPanel.log(`✅ Fetch success: ${url} (${response.status})`, 'success');
-                            return response;
-                        })
-                        .catch(error => {
-                            window.debugPanel.log(`❌ Fetch error: ${url} - ${error.message}`, 'error');
-                            throw error;
-                        });
-                };
-                
-                // Monitor errors
-                window.addEventListener('error', (event) => {
-                    this.log(`💥 JS Error: ${event.message} at ${event.filename}:${event.lineno}`, 'error');
-                });
-                
-                // Monitor unhandled promise rejections
-                window.addEventListener('unhandledrejection', (event) => {
-                    this.log(`🚨 Unhandled Promise: ${event.reason}`, 'error');
-                });
+                const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️';
+                console.log(`${icon} [${timestamp}] ${message}`);
             }
         }
 
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 BEAST MODE: Observatory initialization starting...');
-            
+
             // Initialize debug panel first
             window.debugPanel = new DebugPanel();
             window.debugPanel.log('🎯 DOM Content Loaded', 'success');
-            
+
             try {
                 // Initialize emoji rain
                 window.debugPanel.log('🌧️ Initializing EmojiRainRenderer...', 'info');
                 window.emojiRenderer = new EmojiRainRenderer();
                 console.log('✅ EmojiRainRenderer initialized');
                 window.debugPanel.log('✅ EmojiRainRenderer initialized', 'success');
-                
+
                 // Initialize research simulator
                 window.debugPanel.log('🔬 Initializing ResearchSimulator...', 'info');
                 window.researchSimulator = new ResearchSimulator();
                 console.log('✅ ResearchSimulator initialized');
                 window.debugPanel.log('✅ ResearchSimulator initialized', 'success');
 
-                // REQUIREMENT: Temporarily disable entire chart system to isolate recursion
-                // ISSUE: Recursion error persists even with all chart creation/updates disabled
-                // SOLUTION: Skip ObservatoryCharts initialization entirely
-                console.log('📊 ObservatoryCharts initialization temporarily disabled');
-                window.debugPanel.log('📊 ObservatoryCharts initialization temporarily disabled', 'warning');
-                
-                // Initialize the advanced charting system
-                // window.debugPanel.log('📊 Initializing ObservatoryCharts...', 'info');
-                // window.observatoryCharts = new ObservatoryCharts();
-                // console.log('✅ ObservatoryCharts initialized');
-                // window.debugPanel.log('✅ ObservatoryCharts initialized', 'success');
+                // Initialize Clean Chart Architecture
+                window.debugPanel.log('📊 Initializing CleanObservatoryCharts...', 'info');
+                console.log('🚀 Initializing Clean Chart Architecture...');
+                window.observatoryCharts = new CleanObservatoryCharts();
+                console.log('✅ CleanObservatoryCharts initialized');
+                window.debugPanel.log('✅ CleanObservatoryCharts initialized', 'success');
 
                 // Set up background scrolling
                 console.log('🌌 Setting up enhanced background scrolling...');
@@ -3116,39 +2250,37 @@
                 window.addEventListener('resize', updateBackgroundPosition);
                 console.log('✅ Background scroll listeners added');
 
-                // REQUIREMENT: Disable real-time chart updates to isolate recursion
-                // ISSUE: Recursion error might be in the update scheduling system
-                // SOLUTION: Skip all chart-related updates
-                console.log('📊 Real-time chart updates temporarily disabled');
-                
-                // Start real-time chart updates with error handling
-                // setTimeout(() => {
-                //     try {
-                //         console.log('📊 Starting real-time chart updates...');
-                //         window.observatoryCharts.startRealTimeUpdates();
-                //         console.log('✅ Real-time updates started');
-                //     } catch (error) {
-                //         console.error('❌ Chart update error:', error);
-                //     }
-                // }, 2000);
+                window.debugPanel.log('🚀 Beast Mode Observatory fully initialized!', 'success');
+                console.log('🚀 Beast Mode Observatory ready!');
 
             } catch (error) {
-                console.error('🚨 BEAST MODE initialization error:', error);
+                console.error('❌ Initialization error:', error);
+                window.debugPanel.log(`❌ Initialization error: ${error.message}`, 'error');
             }
-
-            // Add click tracking to donation buttons
-            document.querySelectorAll('.donation-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const href = btn.getAttribute('href');
-                    if (href.includes('paypal')) {
-                        const amount = href.includes('/25') ? 25 : 5;
-                        trackDonation('PayPal', amount);
-                    } else if (href.includes('venmo')) {
-                        trackDonation('Venmo', 'custom');
-                    }
-                });
-            });
         });
+
+        // Background scrolling functions
+        function updateBackgroundPosition() {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            const parallaxBg = document.getElementById('parallax-background');
+            if (parallaxBg) {
+                parallaxBg.style.transform = `translate3d(${rate}px, ${scrolled * 0.2}px, 0)`;
+            }
+        }
+
+        function handleScroll() {
+            requestAnimationFrame(updateBackgroundPosition);
+        }
+
+        // Donation tracking
+        function trackDonation(platform, amount) {
+            console.log(`🎁 Donation tracked: ${platform} - $${amount}`);
+            if (window.debugPanel) {
+                window.debugPanel.log(`🎁 Donation: ${platform} - $${amount}`, 'success');
+            }
+        }
+
     </script>
 </body>
 </html>
