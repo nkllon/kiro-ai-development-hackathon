@@ -166,3 +166,36 @@ This specification elaborates on the reliability and performance requirements fo
 - Monitoring and alerting implemented
 - Documentation complete and accurate
 
+## Agent Architecture Quality Requirements
+
+### R6: Agent Code Generation Constraints
+**Requirement**: AI agents must operate within defined architectural boundaries to prevent over-engineering and maintain code quality
+- **Design-First Mandate**: Complex features require architectural design before agent implementation
+- **Pattern Enforcement**: Agents must follow established architectural patterns and not create novel complex solutions
+- **Separation of Concerns**: Agents must maintain clear boundaries between data, business logic, and presentation layers
+- **Synchronous Preference**: Agents should prefer synchronous operations over complex async orchestration unless explicitly required
+- **Single Responsibility**: Each agent-generated component must have a single, clear responsibility
+
+### R6.1: Recursive Pattern Prevention
+**Requirement**: Systematic prevention of recursive and circular dependency patterns in agent-generated code
+- **Cycle Detection**: All agent-generated dependency graphs must be validated for cycles
+- **Update Orchestration**: Single update coordinator pattern required for any real-time update systems
+- **Callback Chain Prevention**: Animation and event callbacks must not trigger cascading update cycles
+- **Mutex Anti-Pattern Detection**: Use of mutexes indicates architectural problems requiring design review
+- **Stack Overflow Prevention**: All recursive patterns must be validated for termination conditions
+
+### R6.2: Architectural Drift Monitoring
+**Requirement**: Continuous monitoring of agent-generated code for architectural compliance and quality drift
+- **Pattern Compliance**: All agent code must conform to established Beast Mode architectural patterns
+- **Complexity Metrics**: Monitor cyclomatic complexity and prevent agent-generated code from exceeding thresholds
+- **Dependency Analysis**: Track and validate dependency relationships in agent-generated components
+- **Code Quality Gates**: Automated quality checks must pass before agent-generated code is accepted
+- **Refactoring Triggers**: Automatic detection of when agent code requires architectural refactoring
+
+### AC6: Agent Architecture Quality
+- All agent-generated code follows established architectural patterns
+- No recursive or circular dependency patterns in agent code
+- Complex features have design specifications before agent implementation
+- Agent code maintains separation of concerns and single responsibility
+- Architectural drift is detected and corrected systematically
+

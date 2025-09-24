@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart Architecture Tests</title>
+    <style>
+        body {
+            font-family: 'Monaco', 'Consolas', monospace;
+            background: #1a1a1a;
+            color: #f0f0f0;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .test-results {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .test-pass {
+            color: #4ade80;
+        }
+        .test-fail {
+            color: #f87171;
+        }
+        .test-suite {
+            border-left: 4px solid #3b82f6;
+            padding-left: 16px;
+            margin: 16px 0;
+        }
+        .performance-metrics {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Chart Architecture Test Suite</h1>
+    <p>Testing the clean chart update architecture components</p>
+
+    <div id="test-results"></div>
+
+    <script src="chart_architecture.js"></script>
+    <script>
+        /**
+         * Comprehensive test suite for the clean chart architecture
+         * Tests each component in isolation and integration scenarios
+         */
+        class ChartArchitectureTests {
+            constructor() {
+                this.results = [];
+                this.testContainer = document.getElementById('test-results');
+            }
+
+            /**
+             * Run all tests
+             */
+            async runAllTests() {
+                console.log('🧪 Starting Chart Architecture Tests...');
+
+                await this.testUpdateScheduler();
+                await this.testDataAggregator();
+                await this.testChartRenderer();
+                await this.testChartUpdateCoordinator();
+                await this.testErrorHandling();
+                await this.testPerformance();
+
+                this.displayResults();
+            }
+
+            /**
+             * Test UpdateScheduler debouncing behavior
+             */
+            async testUpdateScheduler() {
+                console.log('Testing UpdateScheduler...');
+                const suite = 'UpdateScheduler';
+
+                const scheduler = new window.ChartArchitecture.UpdateScheduler(100); // 100ms debounce
+
+                // Test 1: Single update
+                try {
+                    let callCount = 0;
+                    const testFn = async () => {
+                        callCount++;
+                        return 'success';
+                    };
+
+                    const result = await scheduler.scheduleUpdate(testFn);
+                    this.assert(suite, 'Single update executes', result === 'success' && callCount === 1);
+                } catch (error) {
+                    this.assert(suite, 'Single update executes', false, error.message);
+                }
+
+                // Test 2: Debouncing multiple rapid updates
+                try {
+                    let callCount = 0;
+                    const testFn = async () => {
+                        callCount++;
+                        return `call-${callCount}`;
+                    };
+
+                    // Schedule multiple updates rapidly
+                    const promises = [];
+                    for (let i = 0; i < 5; i++) {
+                        promises.push(scheduler.scheduleUpdate(testFn));
+                    }
+
+                    const results = await Promise.all(promises);
+
+                    // Should execute only once due to debouncing
+                    this.assert(suite, 'Debounces rapid updates', callCount === 1);
+                    this.assert(suite, 'All promises resolve to same result',
+                        results.every(r => r === results[0]));
+                } catch (error) {
+                    this.assert(suite, 'Debounces rapid updates', false, error.message);
+                }
+
+                // Test 3: Status reporting
+                const status = scheduler.getStatus();
+                this.assert(suite, 'Provides status information',
+                    typeof status.pendingUpdates === 'number' &&
+                    typeof status.isExecuting === 'boolean');
+            }
+
+            /**
+             * Test DataAggregator data fetching and transformation
+             */
+            async testDataAggregator() {
+                console.log('Testing DataAggregator...');
+                const suite = 'DataAggregator';
+
+                // Mock API client
+                const mockApiClient = {
+                    async get(url) {
+                        if (url === '/api/dashboard/all-data') {
+                            return {
+                                ok: true,
+                                json: async () => ({
+                                    analytics: { healthScore: 0.95, componentCount: 12 },
+                                    costs: { totalCost: 45.67, apiCalls: 1234 },
+                                    metrics: { responseTime: 245, errorRate: 2.1 },
+                                    agents: { active: 4, tasks: 23 }
+                                })
+                            };
+                        }
+                        throw new Error('Unknown endpoint');
+                    }
+                };
+
+                const aggregator = new window.ChartArchitecture.DataAggregator(mockApiClient);
+
+                // Test 1: Successful data fetch and transformation
+                try {
+                    const data = await aggregator.fetchAllData();
+
+                    this.assert(suite, 'Fetches and transforms data',
+                        data && data.health && data.cost && data.performance && data.activity);
+
+                    this.assert(suite, 'Health data has correct structure',
+                        data.health.labels && data.health.datasets);
+
+                    this.assert(suite, 'Transforms health score correctly',
+                        data.health.datasets[0].data[0] === 0.95);
+                } catch (error) {
+                    this.assert(suite, 'Fetches and transforms data', false, error.message);
+                }
+
+                // Test 2: Caching behavior
+                try {
+                    const start = Date.now();
+                    await aggregator.fetchAllData(); // First call
+                    await aggregator.fetchAllData(); // Should use cache
+                    const duration = Date.now() - start;
+
+                    // Second call should be much faster due to caching
+                    this.assert(suite, 'Caches data effectively', duration < 50);
+                } catch (error) {
+                    this.assert(suite, 'Caches data effectively', false, error.message);
+                }
+
+                // Test 3: Error handling with fallback to empty data
+                const failingApiClient = {
+                    async get() {
+                        throw new Error('Network error');
+                    }
+                };
+
+                const failingAggregator = new window.ChartArchitecture.DataAggregator(failingApiClient);
+
+                try {
+                    const emptyData = await failingAggregator.fetchAllData();
+                    this.assert(suite, 'Returns empty data structure on error',
+                        emptyData && emptyData.health && emptyData.cost);
+                } catch (error) {
+                    this.assert(suite, 'Returns empty data structure on error', false, error.message);
+                }
+            }
+
+            /**
+             * Test ChartRenderer chart update operations
+             */
+            async testChartRenderer() {
+                console.log('Testing ChartRenderer...');
+                const suite = 'ChartRenderer';
+
+                // Mock Chart.js instances
+                const mockCharts = {
+                    health: {
+                        data: {
+                            labels: ['10:00', '10:01'],
+                            datasets: [{
+                                data: [0.9, 0.92]
+                            }, {
+                                data: [10, 11]
+                            }]
+                        },
+                        update: function(mode) {
+                            this._updated = true;
+                            this._updateMode = mode;
+                        },
+                        _updated: false
+                    },
+                    cost: {
+                        data: {
+                            labels: ['10:00', '10:01'],
+                            datasets: [{
+                                data: [25.5, 26.2]
+                            }]
+                        },
+                        update: function(mode) {
+                            this._updated = true;
+                        },
+                        _updated: false
+                    }
+                };
+
+                const renderer = new window.ChartArchitecture.ChartRenderer(mockCharts);
+
+                // Test 1: Single chart update
+                const healthData = {
+                    labels: ['10:02'],
+                    datasets: [{
+                        data: [0.94]
+                    }, {
+                        data: [12]
+                    }]
+                };
+
+                const result = renderer.updateChart('health', healthData);
+
+                this.assert(suite, 'Updates single chart successfully', result === true);
+                this.assert(suite, 'Triggers chart update', mockCharts.health._updated === true);
+                this.assert(suite, 'Appends new data points',
+                    mockCharts.health.data.labels.length === 3 &&
+                    mockCharts.health.data.datasets[0].data.length === 3);
+
+                // Test 2: Data validation
+                const invalidData = { invalid: 'structure' };
+                const invalidResult = renderer.updateChart('health', invalidData);
+                this.assert(suite, 'Rejects invalid data', invalidResult === false);
+
+                // Test 3: Missing chart handling
+                const missingResult = renderer.updateChart('nonexistent', healthData);
+                this.assert(suite, 'Handles missing charts gracefully', missingResult === false);
+
+                // Test 4: Batch update all charts
+                const allData = {
+                    health: healthData,
+                    cost: {
+                        labels: ['10:02'],
+                        datasets: [{
+                            data: [27.1]
+                        }]
+                    }
+                };
+
+                const batchResults = renderer.updateAllCharts(allData);
+                this.assert(suite, 'Updates all charts in batch',
+                    batchResults.health === true && batchResults.cost === true);
+
+                // Test 5: Status reporting
+                const status = renderer.getStatus();
+                this.assert(suite, 'Provides chart status',
+                    status.health && status.cost &&
+                    typeof status.health.dataPoints === 'number');
+            }
+
+            /**
+             * Test ChartUpdateCoordinator integration
+             */
+            async testChartUpdateCoordinator() {
+                console.log('Testing ChartUpdateCoordinator...');
+                const suite = 'ChartUpdateCoordinator';
+
+                // Mock charts and API client
+                const mockCharts = {
+                    health: {
+                        data: { labels: [], datasets: [{ data: [] }] },
+                        update: () => {}
+                    }
+                };
+
+                const mockApiClient = {
+                    async get() {
+                        return {
+                            ok: true,
+                            json: async () => ({
+                                analytics: { healthScore: 0.98 },
+                                costs: { totalCost: 50.0 },
+                                metrics: { responseTime: 200 },
+                                agents: { active: 5 }
+                            })
+                        };
+                    }
+                };
+
+                const coordinator = new window.ChartArchitecture.ChartUpdateCoordinator(
+                    mockCharts,
+                    mockApiClient,
+                    { debounceMs: 50 }
+                );
+
+                // Test 1: Successful update
+                try {
+                    const result = await coordinator.requestUpdate('test');
+                    this.assert(suite, 'Performs successful update',
+                        result.success === true && result.source === 'test');
+                } catch (error) {
+                    this.assert(suite, 'Performs successful update', false, error.message);
+                }
+
+                // Test 2: Status tracking
+                const status = coordinator.getStatus();
+                this.assert(suite, 'Tracks update statistics',
+                    status.updateCount > 0 && typeof status.lastUpdateTime === 'number');
+
+                // Test 3: Multiple rapid updates are debounced
+                const startCount = status.updateCount;
+                const promises = [];
+                for (let i = 0; i < 3; i++) {
+                    promises.push(coordinator.requestUpdate('rapid-test'));
+                }
+
+                await Promise.all(promises);
+                const newStatus = coordinator.getStatus();
+
+                // Should only increment by 1 due to debouncing
+                this.assert(suite, 'Debounces rapid updates',
+                    newStatus.updateCount === startCount + 1);
+
+                // Test 4: Force refresh functionality
+                try {
+                    const refreshResult = await coordinator.forceRefresh();
+                    this.assert(suite, 'Force refresh works',
+                        refreshResult.success === true && refreshResult.source === 'manual-refresh');
+                } catch (error) {
+                    this.assert(suite, 'Force refresh works', false, error.message);
+                }
+            }
+
+            /**
+             * Test error handling capabilities
+             */
+            async testErrorHandling() {
+                console.log('Testing Error Handling...');
+                const suite = 'Error Handling';
+
+                const ErrorHandler = window.ChartArchitecture.ErrorHandler;
+
+                // Test 1: withFallback utility
+                try {
+                    const result = await ErrorHandler.withFallback(
+                        async () => { throw new Error('Test error'); },
+                        async () => 'fallback-result'
+                    );
+                    this.assert(suite, 'withFallback uses fallback on error', result === 'fallback-result');
+                } catch (error) {
+                    this.assert(suite, 'withFallback uses fallback on error', false, error.message);
+                }
+
+                // Test 2: Chart data validation
+                const validData = { labels: ['test'], datasets: [{ data: [1] }] };
+                const invalidData = { invalid: 'structure' };
+
+                this.assert(suite, 'Validates correct chart data',
+                    ErrorHandler.validateChartData(validData) === true);
+                this.assert(suite, 'Rejects invalid chart data',
+                    ErrorHandler.validateChartData(invalidData) === false);
+
+                // Test 3: Safe API client
+                const safeClient = ErrorHandler.createSafeApiClient();
+                this.assert(suite, 'Creates safe API client',
+                    typeof safeClient.get === 'function');
+            }
+
+            /**
+             * Test performance characteristics
+             */
+            async testPerformance() {
+                console.log('Testing Performance...');
+                const suite = 'Performance';
+
+                // Test 1: Update speed
+                const mockCharts = {
+                    test: {
+                        data: { labels: [], datasets: [{ data: [] }] },
+                        update: () => {}
+                    }
+                };
+
+                const mockApiClient = {
+                    async get() {
+                        return {
+                            ok: true,
+                            json: async () => ({
+                                analytics: { healthScore: Math.random() },
+                                costs: { totalCost: Math.random() * 100 },
+                                metrics: { responseTime: Math.random() * 1000 },
+                                agents: { active: Math.floor(Math.random() * 10) }
+                            })
+                        };
+                    }
+                };
+
+                const coordinator = new window.ChartArchitecture.ChartUpdateCoordinator(
+                    mockCharts,
+                    mockApiClient,
+                    { debounceMs: 10 }
+                );
+
+                // Measure update performance
+                const iterations = 10;
+                const times = [];
+
+                for (let i = 0; i < iterations; i++) {
+                    const start = performance.now();
+                    await coordinator.requestUpdate(`perf-test-${i}`);
+                    const duration = performance.now() - start;
+                    times.push(duration);
+                }
+
+                const avgTime = times.reduce((sum, time) => sum + time, 0) / times.length;
+                const maxTime = Math.max(...times);
+
+                this.assert(suite, 'Average update time under 100ms', avgTime < 100);
+                this.assert(suite, 'Maximum update time under 500ms', maxTime < 500);
+
+                // Display performance metrics
+                this.displayPerformanceMetrics('Update Performance', {
+                    'Average Time': `${avgTime.toFixed(2)}ms`,
+                    'Maximum Time': `${maxTime.toFixed(2)}ms`,
+                    'Total Updates': iterations,
+                    'Updates/Second': `${(1000 / avgTime).toFixed(1)}`
+                });
+            }
+
+            /**
+             * Assert helper for test results
+             */
+            assert(suite, testName, condition, error = null) {
+                const result = {
+                    suite,
+                    test: testName,
+                    passed: condition,
+                    error
+                };
+                this.results.push(result);
+
+                const status = condition ? '✅' : '❌';
+                const errorMsg = error ? ` (${error})` : '';
+                console.log(`${status} [${suite}] ${testName}${errorMsg}`);
+            }
+
+            /**
+             * Display performance metrics
+             */
+            displayPerformanceMetrics(title, metrics) {
+                const metricsHtml = Object.entries(metrics)
+                    .map(([key, value]) => `<strong>${key}:</strong> ${value}`)
+                    .join('<br>');
+
+                const perfDiv = document.createElement('div');
+                perfDiv.className = 'performance-metrics';
+                perfDiv.innerHTML = `<h4>📊 ${title}</h4>${metricsHtml}`;
+                this.testContainer.appendChild(perfDiv);
+            }
+
+            /**
+             * Display test results
+             */
+            displayResults() {
+                const totalTests = this.results.length;
+                const passedTests = this.results.filter(r => r.passed).length;
+                const failedTests = totalTests - passedTests;
+
+                const summaryHtml = `
+                    <div class="test-results">
+                        <h2>🧪 Test Results Summary</h2>
+                        <p><strong>Total Tests:</strong> ${totalTests}</p>
+                        <p class="test-pass"><strong>Passed:</strong> ${passedTests}</p>
+                        <p class="test-fail"><strong>Failed:</strong> ${failedTests}</p>
+                        <p><strong>Success Rate:</strong> ${((passedTests / totalTests) * 100).toFixed(1)}%</p>
+                    </div>
+                `;
+
+                // Group results by suite
+                const suites = {};
+                this.results.forEach(result => {
+                    if (!suites[result.suite]) {
+                        suites[result.suite] = [];
+                    }
+                    suites[result.suite].push(result);
+                });
+
+                let suitesHtml = '';
+                Object.entries(suites).forEach(([suiteName, tests]) => {
+                    const suitePassed = tests.filter(t => t.passed).length;
+                    const suiteTotal = tests.length;
+
+                    const testsHtml = tests
+                        .map(test => {
+                            const status = test.passed ? '✅' : '❌';
+                            const errorMsg = test.error ? ` - ${test.error}` : '';
+                            const className = test.passed ? 'test-pass' : 'test-fail';
+                            return `<li class="${className}">${status} ${test.test}${errorMsg}</li>`;
+                        })
+                        .join('');
+
+                    suitesHtml += `
+                        <div class="test-suite">
+                            <h3>${suiteName} (${suitePassed}/${suiteTotal})</h3>
+                            <ul>${testsHtml}</ul>
+                        </div>
+                    `;
+                });
+
+                this.testContainer.innerHTML = summaryHtml + suitesHtml;
+            }
+        }
+
+        // Run tests when page loads
+        window.addEventListener('DOMContentLoaded', async () => {
+            const tests = new ChartArchitectureTests();
+            await tests.runAllTests();
+        });
+    </script>
+</body>
+</html>

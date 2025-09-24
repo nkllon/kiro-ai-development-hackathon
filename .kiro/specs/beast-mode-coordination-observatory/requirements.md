@@ -152,6 +152,54 @@ The Observatory serves as both operational intelligence and cultural reinforceme
 4. WHEN network connectivity issues arise THEN Network Monitor MCP servers SHALL provide detailed diagnostics and connection state analysis
 5. IF MCP servers are unavailable THEN the Observatory SHALL continue operating with reduced observability capabilities and clear status indicators
 
+### Requirement 13: Git Productivity and Development Velocity Tracking
+
+**User Story:** As a development team lead, I want real-time visibility into development productivity metrics including commit frequency, code volume, feature completion rates, and development velocity trends, so that I can identify productivity patterns and optimize development workflows.
+
+#### Acceptance Criteria
+
+1. WHEN developers make commits THEN the Observatory SHALL track and display commit frequency, lines changed, files modified, and commit message patterns
+2. WHEN features are completed THEN the system SHALL correlate Git activity with feature delivery timelines and effort estimation accuracy
+3. WHEN development velocity changes THEN the Observatory SHALL identify trends and potential bottlenecks in the development process
+4. WHEN comparing time periods THEN the system SHALL provide productivity analytics showing development acceleration or deceleration patterns
+5. IF productivity metrics indicate potential issues THEN the Observatory SHALL suggest process improvements and highlight successful productivity patterns
+
+### Requirement 14: Agent Architecture Quality Gates and Constraint Enforcement
+
+**User Story:** As a system architect, I want the Observatory to monitor and enforce architectural constraints on AI agents to prevent over-engineering, recursive patterns, and architectural drift, so that agent-generated code maintains quality and follows established patterns.
+
+#### Acceptance Criteria
+
+1. WHEN agents generate code THEN the Observatory SHALL validate adherence to established architectural patterns and design constraints
+2. WHEN recursive or circular dependencies are detected THEN the system SHALL flag these as architectural violations with suggested remediation
+3. WHEN agents create overly complex async patterns THEN the Observatory SHALL recommend simpler, synchronous alternatives where appropriate
+4. WHEN architectural drift occurs THEN the system SHALL track deviations from established patterns and suggest corrective actions
+5. IF agents consistently violate architectural constraints THEN the Observatory SHALL provide feedback to improve agent framework requirements and constraints
+
+### Requirement 15: Real-Time Access Monitoring and Intelligence
+
+**User Story:** As a system operator, I want real-time visibility into who is accessing the Observatory including IP addresses, ASN data, geographic location, and behavioral patterns, so that I can understand user engagement and detect potential security threats.
+
+#### Acceptance Criteria
+
+1. WHEN users access the Observatory THEN the system SHALL display real-time visitor information including IP address, ASN, geographic location, and user agent
+2. WHEN displaying access data THEN the system SHALL include ASN organization names and network classifications (residential, enterprise, cloud provider, etc.)
+3. WHEN monitoring access patterns THEN the system SHALL filter against public IP reputation blacklists and flag suspicious activity
+4. WHEN new visitors arrive THEN the system SHALL trigger appropriate emoji rain effects and update live visitor counts
+5. IF unusual access patterns are detected THEN the system SHALL highlight anomalies and provide contextual information about the source
+
+### Requirement 16: MSP-Grade Multi-Tenant Chaos Resilience
+
+**User Story:** As a managed service provider dealing with chaotic multi-client environments, I want the Observatory to handle real-world complexity including IP overlaps, directory conflicts, and non-standard configurations, so that it works in actual production environments rather than idealized enterprise scenarios.
+
+#### Acceptance Criteria
+
+1. WHEN monitoring multiple client environments THEN the Observatory SHALL handle IP address overlaps and network conflicts gracefully
+2. WHEN integrating with diverse systems THEN the system SHALL adapt to non-standard configurations and legacy infrastructure
+3. WHEN tracking costs across clients THEN the Observatory SHALL provide multi-tenant cost allocation and reporting
+4. WHEN detecting anomalies THEN the system SHALL account for the inherent chaos of MSP environments and avoid false positives from expected irregularities
+5. IF enterprise-style assumptions fail THEN the Observatory SHALL fall back to pragmatic approaches that work in real-world scenarios
+
 ## Lessons Learned and Anti-Patterns to Avoid
 
 ### Critical Insights from Real-World Deployment
@@ -162,6 +210,22 @@ The Observatory serves as both operational intelligence and cultural reinforceme
 4. **Configuration Scatter:** Having port and connection settings scattered across multiple files creates maintenance nightmares and deployment inconsistencies
 5. **Observability Blind Spots:** Building monitoring systems without real-time self-monitoring capabilities leads to embarrassing failures in production
 
+### Agent Architecture Anti-Patterns Discovered
+
+6. **Recursive Update Cycles:** Agents building complex async update orchestration without proper design constraints create recursive nightmare scenarios
+7. **Over-Engineering Without Constraints:** Agents given freedom to implement features without architectural boundaries create unnecessarily complex solutions
+8. **Defensive Programming Gone Wrong:** Adding mutexes and complexity to fix symptoms rather than addressing root architectural problems
+9. **Scattered Update Logic:** Multiple update methods calling each other creates unpredictable execution flows and debugging nightmares
+10. **Missing Separation of Concerns:** Mixing data fetching, transformation, and rendering logic in single components creates maintenance disasters
+
+### Chart Update Architecture Lessons
+
+11. **Chart.js Recursion Traps:** Scriptable options and animation callbacks can create circular reference chains leading to stack overflow
+12. **Update Orchestration Complexity:** Multiple async update triggers (WebSocket, timers, events) without proper coordination create race conditions
+13. **Mutex Anti-Pattern:** Using mutexes to prevent concurrent updates indicates fundamental architectural problems, not solutions
+14. **API Proliferation:** Creating separate API endpoints for each chart type instead of consolidated data endpoints increases complexity
+15. **Animation Callback Chains:** Chart animation completion callbacks triggering new updates create infinite update loops
+
 ### Systematic Prevention Measures
 
 1. **Always test through actual deployment paths** - local testing is insufficient for network-dependent features
@@ -169,3 +233,8 @@ The Observatory serves as both operational intelligence and cultural reinforceme
 3. **Centralize all configuration** in version-controlled files with environment-specific overrides
 4. **Build observability into the Observatory itself** - it must be able to monitor its own health and connectivity
 5. **Use MCP servers for comprehensive system awareness** - match the observability capabilities of advanced AI systems like Claude Desktop
+6. **Enforce architectural constraints on agents** - provide clear patterns and boundaries to prevent over-engineering
+7. **Design-first for complex features** - require architectural design before implementation for any multi-component features
+8. **Single responsibility for update systems** - one update coordinator, one data source, synchronous chart operations
+9. **Validate agent output against established patterns** - detect and prevent architectural drift in agent-generated code
+10. **Track development velocity and code quality metrics** - monitor the relationship between agent freedom and code maintainability
