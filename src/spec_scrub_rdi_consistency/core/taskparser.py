@@ -113,15 +113,15 @@ class Taskparser(ReflectiveModule):
             )
     
         def process(self, data: Any) -> Dict[str, Any]:
-        """
-        Main processing method for Taskparser
-        
-        Args:
-            data: Input data to process
-            
-        Returns:
-            Dict with processing results
-        """
+            """
+            Main processing method for Taskparser
+
+            Args:
+                data: Input data to process
+
+            Returns:
+                Dict with processing results
+            """
         with self.trace_operation("process") as trace:
             try:
                 # Implement main functionality here

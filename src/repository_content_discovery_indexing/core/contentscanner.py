@@ -113,28 +113,28 @@ class Contentscanner(ReflectiveModule):
             )
     
         def process(self, data: Any) -> Dict[str, Any]:
-        """
-        Main processing method for Contentscanner
-        
-        Args:
-            data: Input data to process
-            
-        Returns:
-            Dict with processing results
-        """
-        with self.trace_operation("process") as trace:
-            try:
-                # Implement main functionality here
-                result = {
-                    "success": True,
-                    "processed": True,
-                    "data": data
-                }
-                
-                trace.output_result = result
-                return result
-                
-            except Exception as e:
-                self._logger.error(f"Processing failed: {e}")
-                trace.output_result = {'success': False, 'error': str(e)}
-                raise
+            """
+            Main processing method for Contentscanner
+
+            Args:
+                data: Input data to process
+
+            Returns:
+                Dict with processing results
+            """
+            with self.trace_operation("process") as trace:
+                try:
+                    # Implement main functionality here
+                    result = {
+                        "success": True,
+                        "processed": True,
+                        "data": data
+                    }
+
+                    trace.output_result = result
+                    return result
+
+                except Exception as e:
+                    self._logger.error(f"Processing failed: {e}")
+                    trace.output_result = {'success': False, 'error': str(e)}
+                    raise

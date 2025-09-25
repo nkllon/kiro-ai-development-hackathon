@@ -60,7 +60,7 @@ jobs:
         echo "✅ RDI test validation complete"
         
     - name: Upload validation reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: validation-reports
@@ -154,7 +154,7 @@ jobs:
         "
         
     - name: Upload coverage reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: coverage-reports
@@ -192,7 +192,7 @@ jobs:
         echo "✅ Vulnerability scan complete"
         
     - name: Upload security reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: security-reports

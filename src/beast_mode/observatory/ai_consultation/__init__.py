@@ -66,6 +66,9 @@ from .llm_service import (
     LLMService, LLMProvider, LLMModel, LLMRequest, LLMResponse, LLMUsage, LLMCost,
     get_llm_service
 )
+from .query_queue import (
+    QueryQueue, QueuedQuery, QueueStatus, get_query_queue
+)
 
 __version__ = "0.1.0"
 __all__ = [
@@ -126,4 +129,7 @@ __all__ = [
     # LLM Service
     "LLMService", "LLMProvider", "LLMModel", "LLMRequest", "LLMResponse", "LLMUsage", "LLMCost",
     "get_llm_service",
+    
+    # Query Queue
+    "QueryQueue", "QueuedQuery", "QueueStatus", "get_query_queue",
 ]

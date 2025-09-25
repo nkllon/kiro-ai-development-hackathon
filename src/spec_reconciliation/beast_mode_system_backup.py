@@ -251,8 +251,9 @@ class BeastModeSystemInterface:
             self._update_health_indicator("performance_measurement", "degraded", 
                                         0, f"Performance measurement failed: {str(e)}")
         
-        return performance_result    
-def serve_external_hackathon(self, hackathon_config: Dict[str, Any]) -> Dict[str, Any]:
+        return performance_result
+
+    def serve_external_hackathon(self, hackathon_config: Dict[str, Any]) -> Dict[str, Any]:
         """
         Serve external hackathon teams with integrated Beast Mode services
         
@@ -502,8 +503,9 @@ def serve_external_hackathon(self, hackathon_config: Dict[str, Any]) -> Dict[str
     
     def _get_primary_responsibility(self) -> str:
         """Get primary responsibility"""
-        return "Unified Beast Mode System with domain intelligence, PDCA cycles, and backlog optimization"    def
- _update_health_indicator(self, name: str, status: str, value: Any, message: str):
+        return "Unified Beast Mode System with domain intelligence, PDCA cycles, and backlog optimization"
+
+    def _update_health_indicator(self, name: str, status: str, value: Any, message: str):
         """Update health indicator"""
         self._health_indicators[name] = {
             "status": status,

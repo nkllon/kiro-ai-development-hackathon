@@ -6,6 +6,9 @@ aiohttp>=3.8.0
 # Token counting for OpenAI models
 tiktoken>=0.5.0
 
+# Redis for queue management
+redis[hiredis]>=4.5.0
+
 # Optional: Anthropic SDK (when available)
 # anthropic>=0.7.0
 

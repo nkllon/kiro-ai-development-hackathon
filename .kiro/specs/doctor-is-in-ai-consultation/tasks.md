@@ -98,7 +98,7 @@
     - _Requirements: 2.2, 2.3, 2.4, 5.1, 5.2, 7.4, 7.5_
 
 - [ ] 7. Build Batch Query Processing System
-  - [-] 7.1 Implement Redis-based query queue management with brownfield safety
+  - [x] 7.1 Implement Redis-based query queue management with brownfield safety
     - Create QueuedQuery data model and Redis storage that doesn't conflict with existing Observatory Redis usage
     - Implement queue operations (add, remove, process) with resource limits and circuit breakers
     - Add priority-based queue management with overflow protection
@@ -106,7 +106,7 @@
     - Write unit tests for queue operations and brownfield safety
     - _Requirements: 3.1, 3.2, 3.5, 7.1, 7.4, 7.5_
 
-  - [ ] 7.2 Create BatchQueryProcessor with cost optimization and failure handling
+  - [x] 7.2 Create BatchQueryProcessor with cost optimization and failure handling
     - Implement batch processing logic for cost efficiency with timeout protection
     - Add query deduplication and optimization with resource limits
     - Create batch size optimization based on cost limits and system load
@@ -115,7 +115,7 @@
     - _Requirements: 3.3, 3.4, 5.1, 5.3, 7.4, 7.5_
 
 - [ ] 8. Implement Results Storage and Knowledge Base
-  - [ ] 8.1 Create ResultsStorageManager with database integration and migration safety
+  - [-] 8.1 Create ResultsStorageManager with database integration and migration safety
     - Implement consultation result storage with full metadata using separate database schema
     - Create searchable knowledge base functionality that doesn't affect Observatory database performance
     - Add result retrieval and history management with proper indexing
