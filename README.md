@@ -219,7 +219,7 @@ MIT License - because good ideas should be free to replicate and evolve.
 - 📖 [Documentation](https://beast-mode-framework.readthedocs.io/)
 - 🐛 [Issues](https://github.com/beast-mode-framework/beast-mode/issues)
 - 💬 [Discussions](https://github.com/beast-mode-framework/beast-mode/discussions)
-- 🎮 [Discord Community](https://discord.gg/beast-mode-framework)
+- 🎮 [Discord Community](https://discord.gg/ehpXzyRNkr)
 
 ---
 

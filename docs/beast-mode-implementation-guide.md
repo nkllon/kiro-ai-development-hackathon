@@ -606,4 +606,4 @@ make docs
 
 - GitHub Issues: https://github.com/your-org/beast-mode-framework/issues
 - Documentation: https://beast-mode-framework.readthedocs.io
-- Community: https://discord.gg/beast-mode-framework
+- Community: https://discord.gg/ehpXzyRNkr

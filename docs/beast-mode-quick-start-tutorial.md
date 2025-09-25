@@ -553,7 +553,7 @@ Congratulations! You've successfully:
 
 3. **Join the Community**
    - GitHub: [Issues and Discussions](https://github.com/your-org/kiro-ai-development-hackathon/issues)
-   - Discord: [Beast Mode Community](https://discord.gg/beast-mode)
+   - Discord: [Beast Mode Community](https://discord.gg/ehpXzyRNkr)
    - Documentation: [Full Documentation](https://docs.beast-mode.dev)
 
 4. **Contribute**
@@ -598,7 +598,7 @@ If you run into issues:
 
 1. Check the [Troubleshooting Guide](beast-mode-troubleshooting.md)
 2. Search existing [GitHub Issues](https://github.com/your-org/kiro-ai-development-hackathon/issues)
-3. Join our [Discord Community](https://discord.gg/beast-mode)
+3. Join our [Discord Community](https://discord.gg/ehpXzyRNkr)
 4. Email support: support@beast-mode.dev
 
 ---

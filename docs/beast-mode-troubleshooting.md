@@ -686,7 +686,7 @@ make diagnostic-report
 
 ### 3. Community Support
 - **GitHub Issues**: [Report bugs and ask questions](https://github.com/your-org/kiro-ai-development-hackathon/issues)
-- **Discord Community**: [Real-time help](https://discord.gg/beast-mode)
+- **Discord Community**: [Real-time help](https://discord.gg/ehpXzyRNkr)
 - **Stack Overflow**: Tag questions with `beast-mode-framework`
 
 ### 4. Professional Support

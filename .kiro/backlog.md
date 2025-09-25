@@ -50,9 +50,28 @@
 
 ## Low Priority
 
+### GitHub Spec Kit Review for Non-Kiro Projects
+**Status:** Needs Spec
+**Priority:** Low
+**Reason:** Evaluate GitHub spec kit tooling for projects where Kiro framework is not available
+
+**Requirements:**
+- Review GitHub's official spec kit tools and templates
+- Compare with Kiro spec-driven development approach
+- Identify use cases where GitHub spec kit would be preferable
+- Document integration patterns for non-Kiro environments
+- Assess compatibility with Beast Mode principles
+
+**Estimated Effort:** Small (1-2 days)
+**Dependencies:** None
+**Added:** 2025-09-25
+**Added By:** Engineering team request for alternative tooling evaluation
+
+---
+
 ### LLM Shell Research Integration
-**Status:** Research In Progress  
-**Priority:** Low  
+**Status:** Research In Progress
+**Priority:** Low
 **Reason:** Market research to understand LLM shell landscape and opportunities
 
 **Requirements:**
@@ -61,8 +80,8 @@
 - Technical architecture comparison
 - Beast Mode differentiation opportunities
 
-**Estimated Effort:** Small (1-2 days)  
-**Dependencies:** Research agent completion  
+**Estimated Effort:** Small (1-2 days)
+**Dependencies:** Research agent completion
 **Added:** 2024-12-18
 
 ---
