@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Frontend Emoji Rain</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: white;
+        }
+        
+        #emoji-rain-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1000;
+            border: 2px solid red; /* Debug border */
+        }
+        
+        .debug-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1001;
+            max-width: 300px;
+        }
+        
+        .controls {
+            margin-bottom: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        #debug-log {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="emoji-rain-canvas"></canvas>
+    
+    <div class="debug-panel">
+        <h3>🐛 Debug Panel</h3>
+        
+        <div class="controls">
+            <button onclick="triggerRain('TASK_COMPLETED')">✅ Task Completed</button>
+            <button onclick="triggerRain('ACHIEVEMENT_UNLOCKED')">🏆 Achievement</button>
+            <button onclick="testCanvas()">🎨 Test Canvas</button>
+            <button onclick="clearLog()">🧹 Clear Log</button>
+        </div>
+        
+        <div>
+            <strong>Status:</strong> <span id="status">Connecting...</span><br>
+            <strong>Particles:</strong> <span id="particle-count">0</span><br>
+            <strong>Effects:</strong> <span id="effect-count">0</span><br>
+            <strong>Messages:</strong> <span id="message-count">0</span>
+        </div>
+        
+        <div id="debug-log"></div>
+    </div>
+    
+    <script>
+        let messageCount = 0;
+        let particleCount = 0;
+        let effectCount = 0;
+        
+        function log(message) {
+            const logDiv = document.getElementById('debug-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function clearLog() {
+            document.getElementById('debug-log').innerHTML = '';
+        }
+        
+        function updateStats() {
+            document.getElementById('message-count').textContent = messageCount;
+            document.getElementById('particle-count').textContent = particleCount;
+            document.getElementById('effect-count').textContent = effectCount;
+        }
+        
+        function testCanvas() {
+            const canvas = document.getElementById('emoji-rain-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            log(`🎨 Canvas test: ${canvas.width}x${canvas.height}`);
+            
+            // Draw test emoji
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = '48px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillStyle = 'yellow';
+            ctx.fillText('🎉', canvas.width / 2, canvas.height / 2);
+            
+            log('🎨 Drew test emoji in center');
+            
+            // Clear after 2 seconds
+            setTimeout(() => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                log('🎨 Cleared test emoji');
+            }, 2000);
+        }
+        
+        class DebugEmojiRainRenderer {
+            constructor() {
+                this.canvas = document.getElementById('emoji-rain-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.websocket = null;
+                this.connected = false;
+                
+                log('🚀 Initializing debug renderer...');
+                this.setupCanvas();
+                this.connectWebSocket();
+                this.startRenderLoop();
+            }
+            
+            setupCanvas() {
+                this.resizeCanvas();
+                window.addEventListener('resize', () => this.resizeCanvas());
+                log(`📐 Canvas setup: ${this.canvas.width}x${this.canvas.height}`);
+            }
+            
+            resizeCanvas() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                log(`📐 Canvas resized: ${this.canvas.width}x${this.canvas.height}`);
+            }
+            
+            connectWebSocket() {
+                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                const wsUrl = `${protocol}//${window.location.host}/ws/emoji-rain`;
+                
+                log(`🔌 Connecting to: ${wsUrl}`);
+                this.websocket = new WebSocket(wsUrl);
+                
+                this.websocket.onopen = () => {
+                    this.connected = true;
+                    document.getElementById('status').textContent = 'Connected';
+                    log('✅ WebSocket connected');
+                };
+                
+                this.websocket.onmessage = (event) => {
+                    messageCount++;
+                    const message = JSON.parse(event.data);
+                    log(`📨 Received: ${message.type}`);
+                    
+                    if (message.type === 'emoji_rain_frame') {
+                        this.updateParticles(message.data);
+                        if (message.data.total_particles > 0) {
+                            log(`🎊 Frame with ${message.data.total_particles} particles!`);
+                        }
+                    } else if (message.type === 'test_rain_triggered') {
+                        log(`🌧️ Rain triggered: ${JSON.stringify(message.data)}`);
+                    }
+                    
+                    updateStats();
+                };
+                
+                this.websocket.onclose = () => {
+                    this.connected = false;
+                    document.getElementById('status').textContent = 'Disconnected';
+                    log('❌ WebSocket disconnected');
+                };
+                
+                this.websocket.onerror = (error) => {
+                    log(`💥 WebSocket error: ${error}`);
+                };
+            }
+            
+            updateParticles(frameData) {
+                this.particles = [];
+                effectCount = frameData.active_effects;
+                particleCount = frameData.total_particles;
+                
+                frameData.effects.forEach(effect => {
+                    effect.particles.forEach(particle => {
+                        const screenParticle = {
+                            emoji: particle.emoji,
+                            x: particle.x * this.canvas.width,
+                            y: particle.y * this.canvas.height,
+                            rotation: particle.rotation,
+                            scale: particle.scale,
+                            opacity: particle.opacity
+                        };
+                        this.particles.push(screenParticle);
+                        
+                        // Log first few particles for debugging
+                        if (this.particles.length <= 3) {
+                            log(`🎨 Particle: ${particle.emoji} at (${screenParticle.x.toFixed(0)}, ${screenParticle.y.toFixed(0)})`);
+                        }
+                    });
+                });
+                
+                updateStats();
+            }
+            
+            startRenderLoop() {
+                const render = () => {
+                    this.renderFrame();
+                    requestAnimationFrame(render);
+                };
+                render();
+                log('🎬 Render loop started');
+            }
+            
+            renderFrame() {
+                // Clear canvas with semi-transparent background for debugging
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Render particles
+                this.particles.forEach((particle, index) => {
+                    this.ctx.save();
+                    
+                    // Apply transformations
+                    this.ctx.translate(particle.x, particle.y);
+                    this.ctx.rotate(particle.rotation * Math.PI / 180);
+                    this.ctx.scale(particle.scale, particle.scale);
+                    this.ctx.globalAlpha = particle.opacity;
+                    
+                    // Draw emoji
+                    this.ctx.font = '24px Arial';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.textBaseline = 'middle';
+                    this.ctx.fillStyle = 'white';
+                    this.ctx.fillText(particle.emoji, 0, 0);
+                    
+                    this.ctx.restore();
+                    
+                    // Debug: draw red dot at particle position
+                    if (index < 5) { // Only for first 5 particles
+                        this.ctx.fillStyle = 'red';
+                        this.ctx.fillRect(particle.x - 2, particle.y - 2, 4, 4);
+                    }
+                });
+            }
+        }
+        
+        function triggerRain(eventType) {
+            if (window.emojiRenderer && window.emojiRenderer.websocket && window.emojiRenderer.connected) {
+                const message = {
+                    type: 'trigger_test_rain',
+                    event_type: eventType,
+                    data: {
+                        source: 'debug_test',
+                        timestamp: new Date().toISOString()
+                    }
+                };
+                
+                log(`📤 Sending: ${JSON.stringify(message)}`);
+                window.emojiRenderer.websocket.send(JSON.stringify(message));
+            } else {
+                log('❌ WebSocket not connected');
+            }
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.emojiRenderer = new DebugEmojiRainRenderer();
+        });
+    </script>
+</body>
+</html>

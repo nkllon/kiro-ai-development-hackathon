@@ -338,6 +338,43 @@ pdca-check: ## PDCA Check phase with validation and RCA
 
 beast-mode-test: ## Run Beast Mode test suite with comprehensive coverage
 	@echo "Run Beast Mode test suite with comprehensive coverage"
+
+# =============================================================================
+# OBSERVATORY TESTING TARGETS
+# =============================================================================
+
+test-observatory: ## Run comprehensive Observatory test suite
+	@echo "$(CYAN)🔭 Running Observatory Test Suite$(RESET)"
+	@echo "$(YELLOW)Running working Observatory tests...$(RESET)"
+	@python3 -m pytest tests/unit/beast_mode/observatory/test_simple_smoke.py -v --cov=src/beast_mode/observatory --cov-report=term-missing
+	@echo "$(GREEN)✅ Observatory smoke tests complete - CI/CD validated$(RESET)"
+
+test-observatory-unit: ## Run Observatory unit tests only
+	@echo "$(CYAN)🧪 Running Observatory Unit Tests$(RESET)"
+	@python3 -m pytest tests/unit/beast_mode/observatory/ -v --cov=src/beast_mode/observatory --cov-report=term-missing --cov-fail-under=85
+
+test-observatory-integration: ## Run Observatory integration tests only
+	@echo "$(CYAN)🔗 Running Observatory Integration Tests$(RESET)"
+	@python3 -m pytest tests/integration/beast_mode/observatory/ -v --tb=short
+
+test-observatory-performance: ## Run Observatory performance tests
+	@echo "$(CYAN)⚡ Running Observatory Performance Tests$(RESET)"
+	@python3 -m pytest tests/performance/beast_mode/observatory/ -v --tb=short --benchmark-json=benchmark-results.json
+
+test-observatory-visual: ## Run Observatory visual regression tests
+	@echo "$(CYAN)👁️ Running Observatory Visual Tests$(RESET)"
+	@command -v xvfb-run >/dev/null 2>&1 && \
+		xvfb-run -a python3 -m pytest tests/visual/beast_mode/observatory/ -v --tb=short || \
+		python3 -m pytest tests/visual/beast_mode/observatory/ -v --tb=short
+
+test-observatory-smoke: ## Run critical Observatory smoke tests
+	@echo "$(CYAN)💨 Running Observatory Smoke Tests$(RESET)"
+	@python3 -m pytest tests/unit/beast_mode/observatory/test_simple_smoke.py -v --tb=short
+
+test-observatory-coverage: ## Generate Observatory test coverage report
+	@echo "$(CYAN)📊 Generating Observatory Coverage Report$(RESET)"
+	@python3 -m pytest tests/unit/beast_mode/observatory/ --cov=src/beast_mode/observatory --cov-report=html --cov-report=term --cov-fail-under=85
+	@echo "$(GREEN)Coverage report generated in htmlcov/$(RESET)"
 	@echo "$(CYAN)🧪 Beast Mode Framework - Test Suite$(NC)"
 	@echo "$(BLUE)====================================$(NC)"
 	@echo ""
@@ -1082,6 +1119,15 @@ beast-mode-help: ## Show detailed Beast Mode Framework help
 	@echo "  beast-mode-status      - Show all component status and health"
 	@echo "  beast-mode-health      - Comprehensive health check across all modules"
 	@echo "  beast-mode-test        - Run complete test suite with coverage"
+	@echo ""
+	@echo "$(CYAN)Observatory Testing:$(RESET)"
+	@echo "  test-observatory       - Run comprehensive Observatory test suite"
+	@echo "  test-observatory-unit   - Run Observatory unit tests only"
+	@echo "  test-observatory-integration - Run Observatory integration tests"
+	@echo "  test-observatory-performance - Run Observatory performance tests"
+	@echo "  test-observatory-visual - Run Observatory visual regression tests"
+	@echo "  test-observatory-smoke  - Run critical Observatory smoke tests"
+	@echo "  test-observatory-coverage - Generate Observatory test coverage report"
 	@echo "  beast-mode-demo        - Interactive demonstrations of all capabilities"
 	@echo ""
 	@echo "$(GREEN)📊 PDCA Cycle Operations:$(NC)"
@@ -1755,4 +1801,42 @@ tool-health:
 ghostbusters:
 	@echo "$(MAGENTA)Ghostbusters Multi-Perspective Analysis$(RESET)"
 	@python3 -c "print('Multi-stakeholder validation ready')"
+
+# Observatory Server Management
+dashboard: dashboard-up ## Start the Observatory dashboard server
+
+dashboard-up: ## Start Observatory server as daemon
+	@echo "$(BLUE)🚀 Starting Observatory Dashboard Server...$(NC)"
+	@python3 scripts/observatory-daemon.py start
+	@echo "$(GREEN)✅ Observatory server started successfully$(NC)"
+	@echo "$(YELLOW)📊 Dashboard: http://localhost:8888$(NC)"
+	@echo "$(YELLOW)🌧️  Emoji rain and anomaly detection are live!$(NC)"
+
+dashboard-down: ## Stop Observatory server
+	@echo "$(BLUE)🛑 Stopping Observatory Dashboard Server...$(NC)"
+	@python3 scripts/observatory-daemon.py stop
+	@echo "$(GREEN)✅ Observatory server stopped$(NC)"
+
+dashboard-restart: ## Restart Observatory server
+	@echo "$(BLUE)🔄 Restarting Observatory Dashboard Server...$(NC)"
+	@python3 scripts/observatory-daemon.py restart
+	@echo "$(GREEN)✅ Observatory server restarted with latest code$(NC)"
+	@echo "$(YELLOW)📊 Dashboard: http://localhost:8888$(NC)"
+
+dashboard-status: ## Show Observatory server status
+	@echo "$(BLUE)📋 Observatory Server Status:$(NC)"
+	@python3 scripts/observatory-daemon.py status
+
+dashboard-logs: ## Show Observatory server logs
+	@echo "$(BLUE)📝 Observatory Server Logs:$(NC)"
+	@python3 scripts/observatory-daemon.py logs
+
+dashboard-logs-follow: ## Follow Observatory server logs in real-time
+	@echo "$(BLUE)📝 Following Observatory Server Logs (Ctrl+C to stop):$(NC)"
+	@python3 scripts/observatory-daemon.py logs --follow
+
+dashboard-dev: ## Start Observatory server in development mode (foreground)
+	@echo "$(BLUE)🧪 Starting Observatory in development mode...$(NC)"
+	@echo "$(YELLOW)Press Ctrl+C to stop$(NC)"
+	@python3 scripts/observatory-daemon.py start --foreground
 

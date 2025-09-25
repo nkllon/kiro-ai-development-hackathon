@@ -2206,6 +2206,8 @@
             console.log(`📊 Chart exported: ${chartId}`);
         }
 
+
+
         // Simple DebugPanel for logging
         class DebugPanel {
             log(message, type = 'info') {
@@ -2216,7 +2218,7 @@
         }
 
         // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             console.log('🚀 BEAST MODE: Observatory initialization starting...');
 
             // Initialize debug panel first
@@ -2236,12 +2238,27 @@
                 console.log('✅ ResearchSimulator initialized');
                 window.debugPanel.log('✅ ResearchSimulator initialized', 'success');
 
-                // Initialize Clean Chart Architecture
-                window.debugPanel.log('📊 Initializing CleanObservatoryCharts...', 'info');
-                console.log('🚀 Initializing Clean Chart Architecture...');
-                window.observatoryCharts = new CleanObservatoryCharts();
-                console.log('✅ CleanObservatoryCharts initialized');
-                window.debugPanel.log('✅ CleanObservatoryCharts initialized', 'success');
+                // Initialize Health Chart (Brownfield-safe implementation)
+                window.debugPanel.log('📊 Initializing Health Chart...', 'info');
+                try {
+                    if (window.ChartArchitecture) {
+                        window.healthChart = new HealthChartInitializer('healthTrendChart', window.ChartArchitecture);
+                        const healthInitSuccess = await window.healthChart.initialize();
+                        if (healthInitSuccess) {
+                            console.log('✅ Health Chart initialized successfully');
+                            window.debugPanel.log('✅ Health Chart initialized', 'success');
+                        } else {
+                            console.log('⚠️ Health Chart initialization failed gracefully');
+                            window.debugPanel.log('⚠️ Health Chart failed gracefully', 'warning');
+                        }
+                    } else {
+                        console.log('⚠️ ChartArchitecture not available, health chart disabled');
+                        window.debugPanel.log('⚠️ ChartArchitecture unavailable', 'warning');
+                    }
+                } catch (healthChartError) {
+                    console.warn('⚠️ Health Chart initialization error (isolated):', healthChartError);
+                    window.debugPanel.log(`⚠️ Health Chart error: ${healthChartError.message}`, 'warning');
+                }
 
                 // Set up background scrolling
                 console.log('🌌 Setting up enhanced background scrolling...');
@@ -2278,6 +2295,1045 @@
             console.log(`🎁 Donation tracked: ${platform} - $${amount}`);
             if (window.debugPanel) {
                 window.debugPanel.log(`🎁 Donation: ${platform} - $${amount}`, 'success');
+            }
+        }
+
+        // HealthChartInitializer - Brownfield-safe Chart.js initialization for Coordination Health Trend
+        class HealthChartInitializer {
+            constructor(canvasId, chartArchitecture) {
+                this.canvasId = canvasId;
+                this.chartArchitecture = chartArchitecture;
+                this.chart = null;
+                this.isInitialized = false;
+                this.updateInterval = null;
+            }
+
+            async initialize() {
+                try {
+                    console.log(`📊 HealthChartInitializer: Starting initialization for ${this.canvasId}`);
+                    
+                    // Verify Chart.js is available
+                    if (typeof Chart === 'undefined') {
+                        throw new Error('Chart.js library not available');
+                    }
+
+                    // Get canvas element
+                    const canvas = document.getElementById(this.canvasId);
+                    if (!canvas) {
+                        throw new Error(`Canvas element ${this.canvasId} not found`);
+                    }
+
+                    // Create Chart.js instance with health trend configuration
+                    const chartConfig = this.createChartConfig();
+                    this.chart = new Chart(canvas, chartConfig);
+
+                    // Hide loading message and show chart
+                    const loadingDiv = canvas.parentElement.querySelector('.chart-loading');
+                    if (loadingDiv) {
+                        loadingDiv.style.display = 'none';
+                    }
+
+                    // Request initial data and set up periodic updates
+                    await this.requestInitialData();
+                    this.setupPeriodicUpdates();
+
+                    this.isInitialized = true;
+                    console.log(`✅ HealthChartInitializer: Successfully initialized ${this.canvasId}`);
+                    
+                    return true;
+
+                } catch (error) {
+                    console.warn(`⚠️ HealthChartInitializer: Failed to initialize ${this.canvasId}:`, error.message);
+                    this.handleInitializationError(error);
+                    return false;
+                }
+            }
+
+            createChartConfig() {
+                return {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Health Score',
+                            data: [],
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#2ecc71',
+                            pointBorderColor: '#27ae60',
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            yAxisID: 'y'
+                        }, {
+                            label: 'Component Count',
+                            data: [],
+                            borderColor: '#17a2b8',
+                            backgroundColor: 'rgba(23, 162, 184, 0.1)',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4,
+                            pointBackgroundColor: '#17a2b8',
+                            pointBorderColor: '#138496',
+                            pointRadius: 3,
+                            pointHoverRadius: 5,
+                            yAxisID: 'y1'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                labels: {
+                                    color: '#ecf0f1',
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#ecf0f1',
+                                bodyColor: '#ecf0f1',
+                                borderColor: '#2ecc71',
+                                borderWidth: 1
+                            }
+                        },
+                        scales: {
+                            x: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: 'Time',
+                                    color: '#ecf0f1'
+                                },
+                                ticks: {
+                                    color: '#bdc3c7',
+                                    maxTicksLimit: 10
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            },
+                            y: {
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Health Score',
+                                    color: '#ecf0f1'
+                                },
+                                min: 0,
+                                max: 1,
+                                ticks: {
+                                    color: '#bdc3c7',
+                                    stepSize: 0.2,
+                                    callback: function(value) {
+                                        return value.toFixed(1);
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            },
+                            y1: {
+                                display: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Components',
+                                    color: '#ecf0f1'
+                                },
+                                min: 0,
+                                ticks: {
+                                    color: '#bdc3c7',
+                                    stepSize: 1
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            }
+                        },
+                        animation: {
+                            duration: 750,
+                            easing: 'easeInOutQuart'
+                        }
+                    }
+                };
+            }
+
+            async requestInitialData() {
+                try {
+                    // Fetch data directly from API for initial load
+                    const response = await fetch('/api/dashboard/all-data');
+                    if (!response.ok) {
+                        throw new Error(`API request failed: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    this.updateChartWithData(data);
+                    
+                } catch (error) {
+                    console.warn('HealthChartInitializer: Initial data request failed:', error);
+                    // Chart will show empty state, which is acceptable
+                }
+            }
+
+            updateChartWithData(apiData) {
+                try {
+                    if (!this.chart || !apiData.analytics) {
+                        return;
+                    }
+
+                    const healthScore = apiData.analytics.healthScore || 0;
+                    const componentCount = apiData.analytics.componentCount || 0;
+                    const currentTime = new Date().toLocaleTimeString('en-US', {
+                        hour12: false,
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
+
+                    // Add new data points
+                    this.chart.data.labels.push(currentTime);
+                    this.chart.data.datasets[0].data.push(healthScore);      // Health Score
+                    this.chart.data.datasets[1].data.push(componentCount);  // Component Count
+
+                    // Limit to 50 data points (Agent 1's pattern)
+                    if (this.chart.data.labels.length > 50) {
+                        this.chart.data.labels.shift();
+                        this.chart.data.datasets[0].data.shift();
+                        this.chart.data.datasets[1].data.shift();
+                    }
+
+                    // Update chart with smooth animation
+                    this.chart.update('none'); // No animation for real-time updates
+
+                    console.log(`📊 Health chart updated: Health=${healthScore.toFixed(2)}, Components=${componentCount} at ${currentTime}`);
+
+                } catch (error) {
+                    console.warn('HealthChartInitializer: Chart update failed:', error);
+                }
+            }
+
+            setupPeriodicUpdates() {
+                // Update every 5 seconds to match Observatory refresh rate
+                this.updateInterval = setInterval(async () => {
+                    if (this.isInitialized) {
+                        await this.requestInitialData();
+                    }
+                }, 5000);
+            }
+
+            handleInitializationError(error) {
+                try {
+                    // Show error message in chart container
+                    const canvas = document.getElementById(this.canvasId);
+                    if (canvas) {
+                        const loadingDiv = canvas.parentElement.querySelector('.chart-loading');
+                        if (loadingDiv) {
+                            loadingDiv.innerHTML = `
+                                <div style="color: #e74c3c; text-align: center; padding: 20px;">
+                                    <div style="font-size: 16px; margin-bottom: 10px;">⚠️ Chart Unavailable</div>
+                                    <div style="font-size: 12px; opacity: 0.8;">Health data will be available soon</div>
+                                </div>
+                            `;
+                        }
+                    }
+                } catch (fallbackError) {
+                    console.error('HealthChartInitializer: Error handling also failed:', fallbackError);
+                }
+            }
+
+            // Public method to request updates (for external use)
+            async requestUpdate() {
+                if (this.isInitialized) {
+                    try {
+                        await this.requestInitialData();
+                        return true;
+                    } catch (error) {
+                        console.warn('HealthChartInitializer: Update request failed:', error);
+                        return false;
+                    }
+                }
+                return false;
+            }
+
+            // Cleanup method for proper resource management
+            destroy() {
+                if (this.updateInterval) {
+                    clearInterval(this.updateInterval);
+                    this.updateInterval = null;
+                }
+                
+                if (this.chart) {
+                    this.chart.destroy();
+                    this.chart = null;
+                }
+                
+                this.isInitialized = false;
+                console.log(`🧹 HealthChartInitializer: Cleaned up ${this.canvasId}`);
+            }
+
+            // Get status for debugging
+            getStatus() {
+                return {
+                    canvasId: this.canvasId,
+                    isInitialized: this.isInitialized,
+                    hasChart: !!this.chart,
+                    hasUpdateInterval: !!this.updateInterval,
+                    dataPointCount: this.chart?.data?.labels?.length || 0,
+                    lastUpdate: this.chart?.data?.labels?.slice(-1)[0] || 'none',
+                    chartArchitectureAvailable: !!this.chartArchitecture
+                };
+            }
+        }
+
+        // TokenChartInitializer - Brownfield-safe Chart.js initialization for LLM Token Tracking
+        class TokenChartInitializer {
+            constructor(canvasId) {
+                this.canvasId = canvasId;
+                this.chart = null;
+                this.isInitialized = false;
+                this.updateInterval = null;
+            }
+
+            async initialize() {
+                try {
+                    console.log(`📊 TokenChartInitializer: Starting initialization for ${this.canvasId}`);
+                    
+                    // Verify Chart.js is available
+                    if (typeof Chart === 'undefined') {
+                        throw new Error('Chart.js library not available');
+                    }
+
+                    // Get canvas element
+                    const canvas = document.getElementById(this.canvasId);
+                    if (!canvas) {
+                        throw new Error(`Canvas element ${this.canvasId} not found`);
+                    }
+
+                    // Create Chart.js instance with token tracking configuration
+                    const chartConfig = this.createChartConfig();
+                    this.chart = new Chart(canvas, chartConfig);
+
+                    // Hide loading message and show chart
+                    const loadingDiv = canvas.parentElement.querySelector('.chart-loading');
+                    if (loadingDiv) {
+                        loadingDiv.style.display = 'none';
+                    }
+
+                    // Request initial windowed data and set up periodic updates
+                    await this.requestWindowedData();
+                    this.setupPeriodicUpdates();
+
+                    this.isInitialized = true;
+                    console.log(`✅ TokenChartInitializer: Successfully initialized ${this.canvasId}`);
+                    
+                    return true;
+
+                } catch (error) {
+                    console.warn(`⚠️ TokenChartInitializer: Failed to initialize ${this.canvasId}:`, error.message);
+                    this.handleInitializationError(error);
+                    return false;
+                }
+            }
+
+            createChartConfig() {
+                return {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Input Tokens',
+                            data: [],
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4,
+                            pointBackgroundColor: '#3498db',
+                            pointBorderColor: '#2980b9',
+                            pointRadius: 3,
+                            pointHoverRadius: 5
+                        }, {
+                            label: 'Output Tokens',
+                            data: [],
+                            borderColor: '#f39c12',
+                            backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4,
+                            pointBackgroundColor: '#f39c12',
+                            pointBorderColor: '#e67e22',
+                            pointRadius: 3,
+                            pointHoverRadius: 5
+                        }, {
+                            label: 'Total Tokens',
+                            data: [],
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#2ecc71',
+                            pointBorderColor: '#27ae60',
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                labels: {
+                                    color: '#ecf0f1',
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#ecf0f1',
+                                bodyColor: '#ecf0f1',
+                                borderColor: '#3498db',
+                                borderWidth: 1,
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.parsed.y;
+                                        const formattedValue = value >= 1000000 ? 
+                                            (value / 1000000).toFixed(1) + 'M' :
+                                            value >= 1000 ? 
+                                            (value / 1000).toFixed(1) + 'K' : 
+                                            value.toString();
+                                        return `${context.dataset.label}: ${formattedValue} tokens`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: 'Time',
+                                    color: '#ecf0f1'
+                                },
+                                ticks: {
+                                    color: '#bdc3c7',
+                                    maxTicksLimit: 10
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            },
+                            y: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: 'Token Count',
+                                    color: '#ecf0f1'
+                                },
+                                min: 0,
+                                ticks: {
+                                    color: '#bdc3c7',
+                                    callback: function(value) {
+                                        return value >= 1000000 ? 
+                                            (value / 1000000).toFixed(1) + 'M' :
+                                            value >= 1000 ? 
+                                            (value / 1000).toFixed(1) + 'K' : 
+                                            value;
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            }
+                        },
+                        animation: {
+                            duration: 750,
+                            easing: 'easeInOutQuart'
+                        }
+                    }
+                };
+            }
+
+            async requestWindowedData() {
+                try {
+                    // WINDOWING REQUIREMENT: This method should request a 10-minute historical window
+                    // of token data instead of just current snapshots. Backend implementation options:
+                    // - Redis Streams with time-based queries
+                    // - Snowflake SQL windowing functions  
+                    // - InfluxDB/TimescaleDB time-series queries
+                    // - Custom application-level buffering
+                    //
+                    // Expected interface: /api/dashboard/windowed-data?window=10m&metrics=tokens
+                    // For now, use existing endpoint and extract what's available
+                    
+                    const response = await fetch('/api/dashboard/all-data');
+                    if (!response.ok) {
+                        throw new Error(`API request failed: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    this.updateChartWithData(data);
+                    
+                } catch (error) {
+                    console.warn('TokenChartInitializer: Windowed data request failed:', error);
+                    // Chart will show empty state, which is acceptable
+                }
+            }
+
+            updateChartWithData(apiData) {
+                try {
+                    if (!this.chart || !apiData.costs) {
+                        return;
+                    }
+
+                    // Extract token data from API response (defensive extraction)
+                    const inputTokens = this.safeExtract(apiData.costs, 'inputTokens', 0);
+                    const outputTokens = this.safeExtract(apiData.costs, 'outputTokens', 0);
+                    const totalTokens = this.safeExtract(apiData.costs, 'totalTokens', inputTokens + outputTokens);
+                    
+                    const currentTime = new Date().toLocaleTimeString('en-US', {
+                        hour12: false,
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
+
+                    // Add new data points
+                    this.chart.data.labels.push(currentTime);
+                    this.chart.data.datasets[0].data.push(inputTokens);   // Input Tokens
+                    this.chart.data.datasets[1].data.push(outputTokens); // Output Tokens
+                    this.chart.data.datasets[2].data.push(totalTokens);  // Total Tokens
+
+                    // Limit to 50 data points for performance
+                    if (this.chart.data.labels.length > 50) {
+                        this.chart.data.labels.shift();
+                        this.chart.data.datasets[0].data.shift();
+                        this.chart.data.datasets[1].data.shift();
+                        this.chart.data.datasets[2].data.shift();
+                    }
+
+                    // Update chart with smooth animation
+                    this.chart.update('none'); // No animation for real-time updates
+
+                    console.log(`📊 Token chart updated: Input=${inputTokens}, Output=${outputTokens}, Total=${totalTokens} at ${currentTime}`);
+
+                } catch (error) {
+                    console.warn('TokenChartInitializer: Chart update failed:', error);
+                }
+            }
+
+            safeExtract(obj, key, defaultValue) {
+                try {
+                    return (obj && typeof obj[key] === 'number') ? obj[key] : defaultValue;
+                } catch (error) {
+                    return defaultValue;
+                }
+            }
+
+            setupPeriodicUpdates() {
+                // Update every 5 seconds to match Observatory refresh rate
+                this.updateInterval = setInterval(async () => {
+                    if (this.isInitialized) {
+                        await this.requestWindowedData();
+                    }
+                }, 5000);
+            }
+
+            handleInitializationError(error) {
+                try {
+                    // Show error message in chart container
+                    const canvas = document.getElementById(this.canvasId);
+                    if (canvas) {
+                        const loadingDiv = canvas.parentElement.querySelector('.chart-loading');
+                        if (loadingDiv) {
+                            loadingDiv.innerHTML = `
+                                <div style="color: #e74c3c; text-align: center; padding: 20px;">
+                                    <div style="font-size: 16px; margin-bottom: 10px;">⚠️ Token Chart Unavailable</div>
+                                    <div style="font-size: 12px; opacity: 0.8;">Token data will be available soon</div>
+                                </div>
+                            `;
+                        }
+                    }
+                } catch (fallbackError) {
+                    console.error('TokenChartInitializer: Error handling also failed:', fallbackError);
+                }
+            }
+
+            // Public method to request updates (for external use)
+            async requestUpdate() {
+                if (this.isInitialized) {
+                    try {
+                        await this.requestWindowedData();
+                        return true;
+                    } catch (error) {
+                        console.warn('TokenChartInitializer: Update request failed:', error);
+                        return false;
+                    }
+                }
+                return false;
+            }
+
+            // Cleanup method for proper resource management
+            destroy() {
+                if (this.updateInterval) {
+                    clearInterval(this.updateInterval);
+                    this.updateInterval = null;
+                }
+                
+                if (this.chart) {
+                    this.chart.destroy();
+                    this.chart = null;
+                }
+                
+                this.isInitialized = false;
+                console.log(`🧹 TokenChartInitializer: Cleaned up ${this.canvasId}`);
+            }
+
+            // Get status for debugging
+            getStatus() {
+                return {
+                    canvasId: this.canvasId,
+                    isInitialized: this.isInitialized,
+                    hasChart: !!this.chart,
+                    hasUpdateInterval: !!this.updateInterval,
+                    dataPointCount: this.chart?.data?.labels?.length || 0,
+                    lastUpdate: this.chart?.data?.labels?.slice(-1)[0] || 'none'
+                };
+            }
+        }
+
+        // Initialize health chart when page loads
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 BEAST MODE: Health Chart initialization starting...');
+
+            try {
+                // Initialize Health Chart (Brownfield-safe implementation)
+                console.log('📊 Initializing Health Chart...');
+                window.healthChart = new HealthChartInitializer('healthTrendChart', window.ChartArchitecture);
+                const healthInitSuccess = await window.healthChart.initialize();
+                
+                if (healthInitSuccess) {
+                    console.log('✅ Health Chart initialized successfully');
+                } else {
+                    console.log('⚠️ Health Chart initialization failed gracefully');
+                }
+
+                console.log('🚀 Health Chart initialization complete!');
+
+            } catch (error) {
+                console.error('❌ Health Chart initialization error (isolated):', error);
+            }
+        });
+
+        // PerformanceChartInitializer - Brownfield-safe Chart.js initialization for Performance Metrics
+        class PerformanceChartInitializer {
+            constructor(canvasId) {
+                this.canvasId = canvasId;
+                this.chart = null;
+                this.isInitialized = false;
+                this.updateInterval = null;
+            }
+
+            async initialize() {
+                try {
+                    console.log(`📊 PerformanceChartInitializer: Starting initialization for ${this.canvasId}`);
+                    
+                    // Verify Chart.js is available
+                    if (typeof Chart === 'undefined') {
+                        throw new Error('Chart.js library not available');
+                    }
+
+                    // Get canvas element
+                    const canvas = document.getElementById(this.canvasId);
+                    if (!canvas) {
+                        throw new Error(`Canvas element ${this.canvasId} not found`);
+                    }
+
+                    // Create Chart.js instance with performance metrics configuration
+                    const chartConfig = this.createChartConfig();
+                    this.chart = new Chart(canvas, chartConfig);
+
+                    // Hide loading message and show chart
+                    const loadingDiv = canvas.parentElement.querySelector('.chart-loading');
+                    if (loadingDiv) {
+                        loadingDiv.style.display = 'none';
+                    }
+
+                    // Request initial data and set up periodic updates
+                    await this.requestPerformanceData();
+                    this.setupPeriodicUpdates();
+
+                    this.isInitialized = true;
+                    console.log(`✅ PerformanceChartInitializer: Successfully initialized ${this.canvasId}`);
+                    
+                    return true;
+
+                } catch (error) {
+                    console.warn(`⚠️ PerformanceChartInitializer: Failed to initialize ${this.canvasId}:`, error.message);
+                    this.handleInitializationError(error);
+                    return false;
+                }
+            }
+
+            createChartConfig() {
+                return {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Response Time (ms)',
+                            data: [],
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#3498db',
+                            pointBorderColor: '#2980b9',
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            yAxisID: 'y'
+                        }, {
+                            label: 'Error Rate (%)',
+                            data: [],
+                            borderColor: '#e74c3c',
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4,
+                            pointBackgroundColor: '#e74c3c',
+                            pointBorderColor: '#c0392b',
+                            pointRadius: 3,
+                            pointHoverRadius: 5,
+                            yAxisID: 'y1'
+                        }, {
+                            label: 'Throughput (ops/sec)',
+                            data: [],
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4,
+                            pointBackgroundColor: '#2ecc71',
+                            pointBorderColor: '#27ae60',
+                            pointRadius: 3,
+                            pointHoverRadius: 5,
+                            yAxisID: 'y1'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                labels: {
+                                    color: '#ecf0f1',
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#ecf0f1',
+                                bodyColor: '#ecf0f1',
+                                borderColor: '#3498db',
+                                borderWidth: 1
+                            }
+                        },
+                        scales: {
+                            x: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: 'Time',
+                                    color: '#ecf0f1'
+                                },
+                                ticks: {
+                                    color: '#bdc3c7',
+                                    maxTicksLimit: 10
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            },
+                            y: {
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Response Time (ms)',
+                                    color: '#ecf0f1'
+                                },
+                                min: 0,
+                                ticks: {
+                                    color: '#bdc3c7'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            },
+                            y1: {
+                                display: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Rate (%/ops)',
+                                    color: '#ecf0f1'
+                                },
+                                min: 0,
+                                ticks: {
+                                    color: '#bdc3c7'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            }
+                        },
+                        animation: {
+                            duration: 750,
+                            easing: 'easeInOutQuart'
+                        }
+                    }
+                };
+            }
+
+            async requestPerformanceData() {
+                try {
+                    const response = await fetch('/api/dashboard/all-data');
+                    if (!response.ok) {
+                        throw new Error(`API request failed: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    this.updateChartWithData(data);
+                    
+                } catch (error) {
+                    console.warn('PerformanceChartInitializer: Performance data request failed:', error);
+                }
+            }
+
+            updateChartWithData(apiData) {
+                try {
+                    if (!this.chart || !apiData.metrics) {
+                        return;
+                    }
+
+                    const responseTime = this.safeExtract(apiData.metrics, 'responseTime', 0);
+                    const errorRate = this.safeExtract(apiData.metrics, 'errorRate', 0);
+                    const throughput = this.safeExtract(apiData.metrics, 'throughput', 0);
+                    
+                    const currentTime = new Date().toLocaleTimeString('en-US', {
+                        hour12: false,
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
+
+                    // Add new data points
+                    this.chart.data.labels.push(currentTime);
+                    this.chart.data.datasets[0].data.push(responseTime);  // Response Time
+                    this.chart.data.datasets[1].data.push(errorRate);    // Error Rate
+                    this.chart.data.datasets[2].data.push(throughput);   // Throughput
+
+                    // Limit to 50 data points for performance
+                    if (this.chart.data.labels.length > 50) {
+                        this.chart.data.labels.shift();
+                        this.chart.data.datasets[0].data.shift();
+                        this.chart.data.datasets[1].data.shift();
+                        this.chart.data.datasets[2].data.shift();
+                    }
+
+                    // Update chart
+                    this.chart.update('none');
+
+                    console.log(`📊 Performance chart updated: Response=${responseTime}ms, Error=${errorRate}%, Throughput=${throughput} at ${currentTime}`);
+
+                } catch (error) {
+                    console.warn('PerformanceChartInitializer: Chart update failed:', error);
+                }
+            }
+
+            safeExtract(obj, key, defaultValue) {
+                try {
+                    return (obj && typeof obj[key] === 'number') ? obj[key] : defaultValue;
+                } catch (error) {
+                    return defaultValue;
+                }
+            }
+
+            setupPeriodicUpdates() {
+                this.updateInterval = setInterval(async () => {
+                    if (this.isInitialized) {
+                        await this.requestPerformanceData();
+                    }
+                }, 5000);
+            }
+
+            handleInitializationError(error) {
+                try {
+                    const canvas = document.getElementById(this.canvasId);
+                    if (canvas) {
+                        const loadingDiv = canvas.parentElement.querySelector('.chart-loading');
+                        if (loadingDiv) {
+                            loadingDiv.innerHTML = `
+                                <div style="color: #e74c3c; text-align: center; padding: 20px;">
+                                    <div style="font-size: 16px; margin-bottom: 10px;">⚠️ Performance Chart Unavailable</div>
+                                    <div style="font-size: 12px; opacity: 0.8;">Performance data will be available soon</div>
+                                </div>
+                            `;
+                        }
+                    }
+                } catch (fallbackError) {
+                    console.error('PerformanceChartInitializer: Error handling also failed:', fallbackError);
+                }
+            }
+
+            async requestUpdate() {
+                if (this.isInitialized) {
+                    try {
+                        await this.requestPerformanceData();
+                        return true;
+                    } catch (error) {
+                        console.warn('PerformanceChartInitializer: Update request failed:', error);
+                        return false;
+                    }
+                }
+                return false;
+            }
+
+            destroy() {
+                if (this.updateInterval) {
+                    clearInterval(this.updateInterval);
+                    this.updateInterval = null;
+                }
+                
+                if (this.chart) {
+                    this.chart.destroy();
+                    this.chart = null;
+                }
+                
+                this.isInitialized = false;
+                console.log(`🧹 PerformanceChartInitializer: Cleaned up ${this.canvasId}`);
+            }
+
+            getStatus() {
+                return {
+                    canvasId: this.canvasId,
+                    isInitialized: this.isInitialized,
+                    hasChart: !!this.chart,
+                    hasUpdateInterval: !!this.updateInterval,
+                    dataPointCount: this.chart?.data?.labels?.length || 0,
+                    lastUpdate: this.chart?.data?.labels?.slice(-1)[0] || 'none'
+                };
+            }
+        }
+
+        // Initialize token chart when page loads (separate handler for isolation)
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 BEAST MODE: Token Chart initialization starting...');
+
+            try {
+                // Initialize Token Chart (Brownfield-safe implementation)
+                console.log('📊 Initializing Token Chart...');
+                window.tokenChart = new TokenChartInitializer('costTrackingChart');
+                const tokenInitSuccess = await window.tokenChart.initialize();
+                
+                if (tokenInitSuccess) {
+                    console.log('✅ Token Chart initialized successfully');
+                } else {
+                    console.log('⚠️ Token Chart initialization failed gracefully');
+                }
+
+                console.log('🚀 Token Chart initialization complete!');
+
+            } catch (error) {
+                console.error('❌ Token Chart initialization error (isolated):', error);
+            }
+        });
+
+        // Initialize performance chart when page loads (separate handler for isolation)
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 BEAST MODE: Performance Chart initialization starting...');
+
+            try {
+                // Initialize Performance Chart (Brownfield-safe implementation)
+                console.log('📊 Initializing Performance Chart...');
+                window.performanceChart = new PerformanceChartInitializer('performanceChart');
+                const performanceInitSuccess = await window.performanceChart.initialize();
+                
+                if (performanceInitSuccess) {
+                    console.log('✅ Performance Chart initialized successfully');
+                } else {
+                    console.log('⚠️ Performance Chart initialization failed gracefully');
+                }
+
+                console.log('🚀 Performance Chart initialization complete!');
+
+            } catch (error) {
+                console.error('❌ Performance Chart initialization error (isolated):', error);
+            }
+        });
+
+        // Chart data generation for testing
+        function generateChartData() {
+            console.log('📊 Generating test chart data...');
+            
+            // Test health chart
+            if (window.healthChart && window.healthChart.isInitialized) {
+                window.healthChart.requestUpdate();
+                console.log('✅ Health chart update requested');
+            } else {
+                console.log('⚠️ Health chart not available for update');
+            }
+            
+            // Test token chart
+            if (window.tokenChart && window.tokenChart.isInitialized) {
+                window.tokenChart.requestUpdate();
+                console.log('✅ Token chart update requested');
+            } else {
+                console.log('⚠️ Token chart not available for update');
+            }
+            
+            // Test performance chart
+            if (window.performanceChart && window.performanceChart.isInitialized) {
+                window.performanceChart.requestUpdate();
+                console.log('✅ Performance chart update requested');
+            } else {
+                console.log('⚠️ Performance chart not available for update');
+            }
+        }
+
+        // LLM call simulation for testing
+        function simulateLLMCall() {
+            console.log('🧠 Simulating LLM call...');
+            // This would trigger cost tracking and health updates
+            if (window.debugPanel) {
+                window.debugPanel.log('🧠 LLM call simulated', 'info');
             }
         }
 

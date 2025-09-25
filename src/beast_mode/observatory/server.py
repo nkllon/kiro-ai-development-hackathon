@@ -479,8 +479,17 @@ class ObservatoryServer:
 
                 async def safe_get_analytics():
                     try:
-                        if self.observatory_core._analytics_engine:
-                            return self.observatory_core._analytics_engine.get_current_analytics()
+                        # Get real Observatory health data
+                        health = self.observatory_core.get_health_status()
+                        metrics = await self.observatory_core.get_metrics()
+                        
+                        return {
+                            "healthScore": health.health_score,
+                            "componentCount": metrics.get("components_discovered", 0),
+                            "uptime": health.uptime_seconds,
+                            "errorCount": health.error_count,
+                            "warningCount": health.warning_count
+                        }
                     except Exception as e:
                         logger.warning(f"Analytics data unavailable: {e}")
                     return {"healthScore": 0.8, "componentCount": 0}
@@ -489,22 +498,58 @@ class ObservatoryServer:
                     try:
                         if self.observatory_core._cost_tracker:
                             stats = self.observatory_core._cost_tracker.get_tracking_stats()
+                            
+                            # Calculate token statistics from recent API calls
+                            input_tokens = 0
+                            output_tokens = 0
+                            total_tokens = 0
+                            
+                            # Get recent API calls for token data
+                            if hasattr(self.observatory_core._cost_tracker, '_api_calls'):
+                                recent_calls = self.observatory_core._cost_tracker._api_calls[-10:]  # Last 10 calls
+                                for call in recent_calls:
+                                    input_tokens += getattr(call, 'input_tokens', 0)
+                                    output_tokens += getattr(call, 'output_tokens', 0)
+                                    total_tokens += getattr(call, 'total_tokens', 0)
+                            
                             return {
-                                "totalCost": stats.get("total_cost", 0.0),
-                                "apiCalls": stats.get("total_api_calls", 0),
-                                "providers": stats.get("provider_costs", {})
+                                "totalCost": stats.get("total_cost_today", 0.0),
+                                "apiCalls": stats.get("calls_tracked", 0),
+                                "providers": stats.get("provider_costs", {}),
+                                # Token metrics for chart visualization
+                                "inputTokens": input_tokens,
+                                "outputTokens": output_tokens,
+                                "totalTokens": total_tokens,
+                                "tokenRate": total_tokens / 60.0 if total_tokens > 0 else 0.0  # Tokens per minute estimate
                             }
                     except Exception as e:
                         logger.warning(f"Cost data unavailable: {e}")
-                    return {"totalCost": 0.0, "apiCalls": 0, "providers": {}}
+                    return {
+                        "totalCost": 0.0, 
+                        "apiCalls": 0, 
+                        "providers": {},
+                        "inputTokens": 0,
+                        "outputTokens": 0, 
+                        "totalTokens": 0,
+                        "tokenRate": 0.0
+                    }
 
                 async def safe_get_metrics():
                     try:
+                        # Get real Observatory metrics
+                        observatory_metrics = await self.observatory_core.get_metrics()
                         health = self.observatory_core.get_health_status()
+                        
+                        # Calculate real performance metrics
+                        collection_rate = observatory_metrics.get("collection_rate_per_second", 0.0)
+                        events_processed = observatory_metrics.get("events_processed_total", 0)
+                        
                         return {
-                            "responseTime": 200.0 if health.health_score > 0.8 else 500.0,
+                            "responseTime": 200.0 if health.health_score > 0.8 else 500.0,  # Still estimated
                             "errorRate": max(0, 100 * (1 - health.health_score)),
-                            "throughput": 150.0 * health.health_score
+                            "throughput": collection_rate,  # Real collection rate
+                            "eventsProcessed": events_processed,
+                            "componentsDiscovered": observatory_metrics.get("components_discovered", 0)
                         }
                     except Exception as e:
                         logger.warning(f"Metrics data unavailable: {e}")
@@ -514,10 +559,14 @@ class ObservatoryServer:
                     try:
                         observatory_metrics = await self.observatory_core.get_metrics()
                         components = observatory_metrics.get("components_discovered", 0)
+                        events_processed = observatory_metrics.get("events_processed_total", 0)
+                        
                         return {
-                            "active": max(1, components),
-                            "tasks": components * 5,  # Estimate tasks per component
-                            "coordination": min(1.0, components / 10.0)
+                            "active": max(1, components),  # Real component count
+                            "tasks": events_processed,     # Real events processed
+                            "coordination": min(1.0, components / 10.0),  # Coordination based on components
+                            "componentsDiscovered": components,
+                            "collectionRate": observatory_metrics.get("collection_rate_per_second", 0.0)
                         }
                     except Exception as e:
                         logger.warning(f"Agent data unavailable: {e}")

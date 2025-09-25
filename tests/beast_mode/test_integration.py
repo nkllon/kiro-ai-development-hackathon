@@ -6,18 +6,24 @@ Requirements Traceability:
 Enhanced: 2025-09-14T06:30:15.548204
 """
 
-
-
-
 import unittest
 import sys
 import os
-# # from src.multi_instance_orchestration.core.reflective_module import ReflectiveModule
-
+from datetime import datetime
 
 # Add src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'src'))
 
+try:
+    from beast_mode.core.reflective_module import ReflectiveModule
+except ImportError:
+    # Create minimal ReflectiveModule for testing if not available
+    class ReflectiveModule:
+        pass
+
+
+class TestBeastModeRDI(unittest.TestCase):
+    """RDI validation tests."""
 
     def test_rdi_chain_validation(self):
         """Validate RDI chain integrity for this module."""
@@ -39,6 +45,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'src'))
         # Log RDI validation results
         print(f"RDI Validation: {rdi_validation}")
 
+
 class TestBeastModeIntegration(unittest.TestCase, ReflectiveModule):
     """beast_mode integration tests."""
 
@@ -49,9 +56,6 @@ class TestBeastModeIntegration(unittest.TestCase, ReflectiveModule):
     def test_module_interaction(self):
         """Test module interaction."""
         self.assertTrue(True)
-
-if __name__ == '__main__':
-    unittest.main()
 
     def get_interface_metadata(self):
         """Get interface metadata for registry."""
@@ -80,3 +84,6 @@ if __name__ == '__main__':
         """Get current health status."""
         return self.health_check()
 
+
+if __name__ == '__main__':
+    unittest.main()

@@ -1,0 +1,93 @@
+# Beast Mode Coordination Observatory Configuration
+# Centralized configuration for all Observatory components
+
+# Server Configuration
+server:
+  host: "0.0.0.0"
+  port: 8888
+  
+# WebSocket Configuration  
+websocket:
+  host: "0.0.0.0"
+  port: 8888  # Same as server port for FastAPI WebSocket integration
+  max_connections: 100
+  heartbeat_interval: 30
+
+# Web Interface Configuration
+web_interface:
+  title: "Beast Mode Coordination Observatory"
+  theme: "dark"
+  refresh_rate_ms: 1000
+  chart_animation_duration_ms: 750
+  enable_demo_mode: false
+
+# Redis Configuration
+redis:
+  host: "localhost"
+  port: 6379
+  password: null
+  ssl: false
+  connection_pool_size: 10
+  stream_name: "observatory_metrics"
+
+# Metrics Collection Configuration
+metrics:
+  collection_interval_seconds: 5
+  retention_days: 30
+  high_frequency_metrics: []
+  component_discovery_enabled: true
+  performance_impact_limit: 0.01
+
+# Analytics Configuration
+analytics:
+  window_size_seconds: 60
+  trend_analysis_window_minutes: 15
+  health_calculation_interval: 10
+  enable_ml_analytics: false
+
+# Anomaly Detection Configuration
+anomaly_detection:
+  enable_ml: false
+  baseline_window_days: 7
+  sensitivity_threshold: 0.8
+  auto_resolution_timeout_minutes: 30
+  detection_interval_seconds: 10
+
+# Cost Tracking Configuration
+cost_tracking:
+  projection_window_days: 30
+  anomaly_detection_sensitivity: 0.8
+  alert_thresholds:
+    daily_warning: 10.00
+    daily_critical: 25.00
+    monthly_warning: 100.00
+    monthly_critical: 500.00
+  providers:
+    openai:
+      api_key_env_var: "OPENAI_API_KEY"
+      rate_limit_rpm: 60
+      cost_per_1k_tokens:
+        gpt-4: 0.03
+        gpt-4-turbo: 0.01
+        gpt-3.5-turbo: 0.002
+    anthropic:
+      api_key_env_var: "ANTHROPIC_API_KEY"
+      rate_limit_rpm: 60
+      cost_per_1k_tokens:
+        claude-3-opus: 0.015
+        claude-3-sonnet: 0.003
+        claude-3-haiku: 0.00025
+
+# Gamification Configuration
+gamification:
+  achievements_enabled: true
+  team_metrics_enabled: true
+  celebration_effects_enabled: true
+  emoji_rain_enabled: true
+  leaderboard_enabled: false
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "var/log/observatory.log"

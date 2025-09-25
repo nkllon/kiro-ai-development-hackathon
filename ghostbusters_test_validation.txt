@@ -1,0 +1,40 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.9.6, pytest-8.4.2, pluggy-1.6.0 -- /Users/lou/kiro-2/kiro-ai-development-hackathon/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/lou/kiro-2/kiro-ai-development-hackathon
+configfile: pytest.ini
+plugins: asyncio-1.2.0, anyio-4.11.0, cov-7.0.0
+asyncio: mode=strict, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 36 items
+
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_engine_initialization PASSED [  2%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_get_module_info PASSED [  5%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_get_capabilities PASSED [  8%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_get_health_status_healthy PASSED [ 11%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_get_health_status_git_unavailable PASSED [ 13%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_graceful_degradation PASSED [ 16%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_classify_artifact_type PASSED [ 19%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_classify_domain PASSED [ 22%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_assess_completion_status_empty_file PASSED [ 25%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_assess_completion_status_todo_file PASSED [ 27%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_assess_completion_status_complete_file PASSED [ 30%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_assess_readiness_status PASSED [ 33%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_should_exclude_file PASSED [ 36%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_create_work_artifact PASSED [ 38%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_scan_workspace_with_temp_files PASSED [ 41%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_analyze_open_files PASSED [ 44%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_scan_specs_nonexistent_directory PASSED [ 47%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_scan_specs_with_temp_specs PASSED [ 50%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_analyze_git_status_not_git_repo PASSED [ 52%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_analyze_git_status_with_changes PASSED [ 55%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py::TestContentDiscoveryEngine::test_parse_git_status PASSED [ 58%]
+plugins: asyncio-1.2.0, anyio-4.11.0, cov-7.0.0
+asyncio: mode=strict, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 36 items
+
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py . [  2%]
+....................                                                     [ 58%]
+tests/unit/beast_mode/ghostbusters/productivity_triage/test_orchestrator.py . [ 61%]
+..............                                                           [100%]
+
+============================== 36 passed in 0.19s ==============================
