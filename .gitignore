@@ -169,3 +169,4 @@ secrets/
 # Local configuration
 local_config.py
 .env.local
+observatory.pid
