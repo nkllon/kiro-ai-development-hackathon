@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  observatory:
+    build: .
+    container_name: observatory-ha
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - PYTHONPATH=/app
+      - OBSERVATORY_HOST=0.0.0.0
+      - OBSERVATORY_PORT=8888
+      - OBSERVATORY_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Optional: Add a reverse proxy for SSL termination
+  nginx:
+    image: nginx:alpine
+    container_name: observatory-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - observatory
+    restart: unless-stopped
+    profiles:
+      - proxy

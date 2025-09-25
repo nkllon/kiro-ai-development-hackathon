@@ -169,6 +169,42 @@ class ObservatoryServer:
             """Get currently active emoji rain effects."""
             return self.emoji_engine.get_active_effects()
         
+        @self.app.get("/api/doctor/status")
+        async def doctor_status():
+            """Get AI consultation doctor status."""
+            try:
+                from .ai_consultation.doctor_status_indicator import get_doctor_status_indicator
+                indicator = get_doctor_status_indicator()
+                return indicator.get_status_for_ui()
+            except ImportError:
+                # AI consultation module not available
+                return {
+                    "enabled": False,
+                    "message": "AI consultation feature is not available"
+                }
+        
+        @self.app.post("/api/doctor/toggle")
+        async def toggle_doctor_status(request_data: Dict[str, Any]):
+            """Toggle doctor availability status."""
+            try:
+                from .ai_consultation.doctor_status_indicator import get_doctor_status_indicator
+                indicator = get_doctor_status_indicator()
+                
+                is_available = request_data.get("is_available", False)
+                reason = request_data.get("reason", "")
+                
+                new_status = indicator.set_status(is_available, reason)
+                
+                # Broadcast status update via WebSocket
+                await self._broadcast_doctor_status_update(indicator)
+                
+                return indicator.get_status_for_ui()
+            except ImportError:
+                raise HTTPException(
+                    status_code=503,
+                    detail="AI consultation feature is not available"
+                )
+        
         @self.app.post("/api/emoji-rain/trigger")
         async def trigger_emoji_rain(event_data: Dict[str, Any]):
             """Manually trigger emoji rain for testing."""
@@ -722,6 +758,73 @@ class ObservatoryServer:
                 pass
             except Exception as e:
                 logger.error(f"Anomaly WebSocket error: {e}")
+        
+        @self.app.websocket("/ws/doctor-status")
+        async def doctor_status_websocket(websocket: WebSocket):
+            """WebSocket endpoint for real-time doctor status updates."""
+            await websocket.accept()
+            
+            # Add to connected clients for broadcasting
+            if not hasattr(self, '_doctor_status_clients'):
+                self._doctor_status_clients = set()
+            self._doctor_status_clients.add(websocket)
+            
+            try:
+                # Send initial status
+                try:
+                    from .ai_consultation.doctor_status_indicator import get_doctor_status_indicator
+                    indicator = get_doctor_status_indicator()
+                    initial_status = indicator.get_websocket_message()
+                    await websocket.send_text(json.dumps(initial_status))
+                except ImportError:
+                    # AI consultation not available
+                    await websocket.send_text(json.dumps({
+                        "type": "doctor_status_update",
+                        "data": {
+                            "enabled": False,
+                            "message": "AI consultation feature is not available"
+                        }
+                    }))
+                
+                # Keep connection alive
+                while True:
+                    try:
+                        message = await websocket.receive_text()
+                        data = json.loads(message)
+                        await self._handle_websocket_message(websocket, data)
+                    except WebSocketDisconnect:
+                        break
+                    except Exception as e:
+                        logger.error(f"Doctor status WebSocket error: {e}")
+                        break
+                        
+            except WebSocketDisconnect:
+                pass
+            finally:
+                if hasattr(self, '_doctor_status_clients'):
+                    self._doctor_status_clients.discard(websocket)
+    
+    async def _broadcast_doctor_status_update(self, indicator):
+        """Broadcast doctor status update to all connected WebSocket clients."""
+        if not hasattr(self, '_doctor_status_clients'):
+            return
+            
+        message = indicator.get_websocket_message()
+        message_json = json.dumps(message)
+        
+        # Remove disconnected clients
+        disconnected_clients = set()
+        
+        for client in self._doctor_status_clients:
+            try:
+                await client.send_text(message_json)
+            except Exception as e:
+                logger.debug(f"Failed to send doctor status to client: {e}")
+                disconnected_clients.add(client)
+        
+        # Clean up disconnected clients
+        for client in disconnected_clients:
+            self._doctor_status_clients.discard(client)
     
     async def _handle_websocket_message(self, websocket: WebSocket, data: Dict[str, Any]):
         """Handle incoming WebSocket messages."""

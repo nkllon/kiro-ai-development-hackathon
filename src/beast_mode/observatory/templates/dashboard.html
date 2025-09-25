@@ -289,6 +289,40 @@
             50% { box-shadow: 0 0 20px rgba(46, 204, 113, 0.8); }
         }
 
+        /* Doctor Status Indicator Styles */
+        .doctor-status.available {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.9), rgba(39, 174, 96, 0.9));
+            border-color: #2ecc71;
+            color: white;
+        }
+
+        .doctor-status.unavailable {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.9), rgba(192, 57, 43, 0.9));
+            border-color: #e74c3c;
+            color: white;
+        }
+
+        .doctor-status.disabled {
+            background: linear-gradient(135deg, rgba(149, 165, 166, 0.9), rgba(127, 140, 141, 0.9));
+            border-color: #95a5a6;
+            color: white;
+        }
+
+        .doctor-status:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        @keyframes doctorPulse {
+            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+        }
+
+        .doctor-status.available {
+            animation: doctorPulse 3s infinite;
+        }
+
         /* Scrolling for long content sections */
         #anomalyAlerts {
             max-height: 400px;
@@ -510,6 +544,174 @@
     <div class="connection-status" id="connectionStatus">
         🔌 Connecting...
     </div>
+    
+    <!-- Doctor Status Indicator -->
+    <div class="doctor-status" id="doctorStatus" style="
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 600;
+        z-index: 1001;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        border: 2px solid transparent;
+        display: none;
+    " onclick="toggleDoctorStatus()">
+        <span id="doctorStatusIcon">🔴</span>
+        <span id="doctorStatusText">Doctor Is Out</span>
+        <div id="doctorStatusDetails" style="
+            font-size: 11px;
+            opacity: 0.8;
+            margin-top: 2px;
+            display: none;
+        "></div>
+    </div>
+    
+    <!-- AI Consultation Chat Interface -->
+    <div class="ai-chat-sidebar" id="aiChatSidebar" style="
+        position: fixed;
+        top: 0;
+        right: -400px;
+        width: 400px;
+        height: 100vh;
+        background: linear-gradient(135deg, rgba(52, 73, 94, 0.95), rgba(44, 62, 80, 0.95));
+        backdrop-filter: blur(15px);
+        border-left: 2px solid rgba(52, 152, 219, 0.3);
+        z-index: 1000;
+        transition: right 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        box-shadow: -5px 0 20px rgba(0,0,0,0.3);
+    ">
+        <!-- Chat Header -->
+        <div class="chat-header" style="
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        ">
+            <div>
+                <h3 style="color: #3498db; margin: 0; font-size: 18px;">🩺 AI Consultation</h3>
+                <div id="chatStatus" style="font-size: 12px; color: #95a5a6; margin-top: 4px;">
+                    Doctor Is Out
+                </div>
+            </div>
+            <button onclick="closeChatSidebar()" style="
+                background: none;
+                border: none;
+                color: #95a5a6;
+                font-size: 20px;
+                cursor: pointer;
+                padding: 5px;
+                border-radius: 4px;
+                transition: color 0.3s ease;
+            " onmouseover="this.style.color='#e74c3c'" onmouseout="this.style.color='#95a5a6'">
+                ✕
+            </button>
+        </div>
+        
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chatMessages" style="
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        ">
+            <div class="system-message" style="
+                background: rgba(52, 152, 219, 0.1);
+                border: 1px solid rgba(52, 152, 219, 0.3);
+                border-radius: 8px;
+                padding: 12px;
+                font-size: 14px;
+                color: #ecf0f1;
+                text-align: center;
+            ">
+                🤖 AI consultation is currently unavailable. Submit queries to the queue for processing.
+            </div>
+        </div>
+        
+        <!-- Chat Input -->
+        <div class="chat-input-area" style="
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        ">
+            <div class="input-group" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <input type="text" id="chatInput" placeholder="Ask about monitoring data, system health, or analysis..." style="
+                    flex: 1;
+                    padding: 12px;
+                    border: 1px solid rgba(255,255,255,0.2);
+                    border-radius: 6px;
+                    background: rgba(255,255,255,0.1);
+                    color: #ecf0f1;
+                    font-size: 14px;
+                " disabled>
+                <button id="sendButton" onclick="sendChatMessage()" style="
+                    padding: 12px 16px;
+                    background: linear-gradient(45deg, #3498db, #2980b9);
+                    border: none;
+                    border-radius: 6px;
+                    color: white;
+                    cursor: pointer;
+                    font-weight: 600;
+                    transition: all 0.3s ease;
+                " disabled>
+                    Send
+                </button>
+            </div>
+            
+            <!-- Optional Email for Queue Mode -->
+            <div id="emailInputGroup" style="display: none; margin-bottom: 10px;">
+                <input type="email" id="emailInput" placeholder="Email for notification (optional)" style="
+                    width: 100%;
+                    padding: 8px 12px;
+                    border: 1px solid rgba(255,255,255,0.2);
+                    border-radius: 4px;
+                    background: rgba(255,255,255,0.05);
+                    color: #ecf0f1;
+                    font-size: 12px;
+                ">
+            </div>
+            
+            <!-- Cost Display -->
+            <div id="costDisplay" style="
+                font-size: 11px;
+                color: #95a5a6;
+                text-align: center;
+                margin-top: 8px;
+                display: none;
+            ">
+                Session cost: $0.00 • Budget remaining: $0.00
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chat Toggle Button -->
+    <button class="chat-toggle-btn" id="chatToggleBtn" onclick="toggleChatSidebar()" style="
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #3498db, #2980b9);
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        z-index: 1001;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        display: none;
+    " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+        💬
+    </button>
     
     <!-- Debug Panel Toggle -->
     <button onclick="
@@ -3336,6 +3538,486 @@
                 window.debugPanel.log('🧠 LLM call simulated', 'info');
             }
         }
+
+        // Doctor Status Indicator JavaScript
+        class DoctorStatusManager {
+            constructor() {
+                this.websocket = null;
+                this.reconnectAttempts = 0;
+                this.maxReconnectAttempts = 5;
+                this.reconnectDelay = 1000;
+                this.isEnabled = false;
+                
+                this.initializeUI();
+                this.connectWebSocket();
+            }
+            
+            initializeUI() {
+                const statusElement = document.getElementById('doctorStatus');
+                if (statusElement) {
+                    statusElement.style.display = 'block';
+                    this.updateUI({
+                        enabled: false,
+                        message: 'Connecting to AI consultation service...'
+                    });
+                }
+            }
+            
+            connectWebSocket() {
+                try {
+                    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                    const wsUrl = `${protocol}//${window.location.host}/ws/doctor-status`;
+                    
+                    this.websocket = new WebSocket(wsUrl);
+                    
+                    this.websocket.onopen = () => {
+                        console.log('🩺 Doctor status WebSocket connected');
+                        this.reconnectAttempts = 0;
+                    };
+                    
+                    this.websocket.onmessage = (event) => {
+                        try {
+                            const message = JSON.parse(event.data);
+                            if (message.type === 'doctor_status_update') {
+                                this.updateUI(message.data);
+                            }
+                        } catch (error) {
+                            console.error('Doctor status message parse error:', error);
+                        }
+                    };
+                    
+                    this.websocket.onclose = () => {
+                        console.log('🩺 Doctor status WebSocket disconnected');
+                        this.scheduleReconnect();
+                    };
+                    
+                    this.websocket.onerror = (error) => {
+                        console.error('Doctor status WebSocket error:', error);
+                    };
+                    
+                } catch (error) {
+                    console.error('Failed to connect doctor status WebSocket:', error);
+                    this.scheduleReconnect();
+                }
+            }
+            
+            scheduleReconnect() {
+                if (this.reconnectAttempts < this.maxReconnectAttempts) {
+                    this.reconnectAttempts++;
+                    const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1);
+                    
+                    setTimeout(() => {
+                        console.log(`🩺 Reconnecting doctor status WebSocket (attempt ${this.reconnectAttempts})`);
+                        this.connectWebSocket();
+                    }, delay);
+                } else {
+                    console.error('🩺 Doctor status WebSocket max reconnection attempts reached');
+                    this.updateUI({
+                        enabled: false,
+                        message: 'AI consultation service unavailable'
+                    });
+                }
+            }
+            
+            updateUI(statusData) {
+                const statusElement = document.getElementById('doctorStatus');
+                const iconElement = document.getElementById('doctorStatusIcon');
+                const textElement = document.getElementById('doctorStatusText');
+                const detailsElement = document.getElementById('doctorStatusDetails');
+                
+                if (!statusElement || !iconElement || !textElement) {
+                    return;
+                }
+                
+                this.isEnabled = statusData.enabled;
+                
+                if (!statusData.enabled) {
+                    // Feature disabled or unavailable
+                    statusElement.className = 'doctor-status disabled';
+                    iconElement.textContent = '⚪';
+                    textElement.textContent = 'AI Consultation Disabled';
+                    if (detailsElement) {
+                        detailsElement.textContent = statusData.message || 'Feature not available';
+                        detailsElement.style.display = 'block';
+                    }
+                    return;
+                }
+                
+                // Feature enabled - show status
+                if (statusData.is_available) {
+                    statusElement.className = 'doctor-status available';
+                    iconElement.textContent = statusData.status_icon || '🟢';
+                    textElement.textContent = statusData.status_text || 'Doctor Is In';
+                } else {
+                    statusElement.className = 'doctor-status unavailable';
+                    iconElement.textContent = statusData.status_icon || '🔴';
+                    textElement.textContent = statusData.status_text || 'Doctor Is Out';
+                }
+                
+                // Update details
+                if (detailsElement && statusData.reason) {
+                    let details = statusData.reason;
+                    
+                    // Add activity info if available
+                    if (statusData.activity) {
+                        const { session_count, queue_size } = statusData.activity;
+                        if (session_count > 0 || queue_size > 0) {
+                            details += ` • Sessions: ${session_count} • Queue: ${queue_size}`;
+                        }
+                    }
+                    
+                    // Add budget info if critical
+                    if (statusData.budget && statusData.budget.status === 'critical') {
+                        details += ` • Budget: $${statusData.budget.remaining.toFixed(2)} remaining`;
+                    }
+                    
+                    detailsElement.textContent = details;
+                    detailsElement.style.display = 'block';
+                } else if (detailsElement) {
+                    detailsElement.style.display = 'none';
+                }
+            }
+            
+            async toggleStatus() {
+                if (!this.isEnabled) {
+                    return;
+                }
+                
+                try {
+                    // Get current status first
+                    const response = await fetch('/api/doctor/status');
+                    const currentStatus = await response.json();
+                    
+                    if (!currentStatus.enabled) {
+                        return;
+                    }
+                    
+                    // Toggle the status
+                    const newAvailability = !currentStatus.is_available;
+                    const reason = newAvailability ? 
+                        'Manually enabled for real-time consultation' : 
+                        'Manually disabled - queries will be queued';
+                    
+                    const toggleResponse = await fetch('/api/doctor/toggle', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            is_available: newAvailability,
+                            reason: reason
+                        })
+                    });
+                    
+                    if (!toggleResponse.ok) {
+                        throw new Error(`Toggle failed: ${toggleResponse.status}`);
+                    }
+                    
+                    const newStatus = await toggleResponse.json();
+                    console.log('🩺 Doctor status toggled:', newStatus);
+                    
+                } catch (error) {
+                    console.error('Failed to toggle doctor status:', error);
+                    // Show error feedback
+                    const statusElement = document.getElementById('doctorStatus');
+                    if (statusElement) {
+                        statusElement.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            statusElement.style.transform = '';
+                        }, 200);
+                    }
+                }
+            }
+        }
+        
+        // Global function for onclick handler
+        function toggleDoctorStatus() {
+            if (window.doctorStatusManager) {
+                window.doctorStatusManager.toggleStatus();
+            }
+        }
+        
+        // Chat Interface Management
+        class AIChatInterface {
+            constructor() {
+                this.isOpen = false;
+                this.isAvailable = false;
+                this.sessionId = null;
+                this.websocket = null;
+                
+                this.initializeEventListeners();
+            }
+            
+            initializeEventListeners() {
+                // Enter key to send message
+                const chatInput = document.getElementById('chatInput');
+                if (chatInput) {
+                    chatInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            this.sendMessage();
+                        }
+                    });
+                }
+            }
+            
+            updateAvailability(statusData) {
+                this.isAvailable = statusData.enabled && statusData.is_available;
+                
+                const chatStatus = document.getElementById('chatStatus');
+                const chatInput = document.getElementById('chatInput');
+                const sendButton = document.getElementById('sendButton');
+                const emailInputGroup = document.getElementById('emailInputGroup');
+                const chatToggleBtn = document.getElementById('chatToggleBtn');
+                const costDisplay = document.getElementById('costDisplay');
+                
+                if (!statusData.enabled) {
+                    // Feature disabled
+                    if (chatStatus) chatStatus.textContent = 'AI Consultation Disabled';
+                    if (chatInput) {
+                        chatInput.disabled = true;
+                        chatInput.placeholder = 'AI consultation feature is not available';
+                    }
+                    if (sendButton) sendButton.disabled = true;
+                    if (chatToggleBtn) chatToggleBtn.style.display = 'none';
+                    if (emailInputGroup) emailInputGroup.style.display = 'none';
+                    if (costDisplay) costDisplay.style.display = 'none';
+                    return;
+                }
+                
+                // Feature enabled - show chat toggle
+                if (chatToggleBtn) chatToggleBtn.style.display = 'block';
+                
+                if (this.isAvailable) {
+                    // Real-time mode
+                    if (chatStatus) chatStatus.textContent = '🟢 Doctor Is In - Real-time consultation';
+                    if (chatInput) {
+                        chatInput.disabled = false;
+                        chatInput.placeholder = 'Ask about monitoring data, system health, or analysis...';
+                    }
+                    if (sendButton) sendButton.disabled = false;
+                    if (emailInputGroup) emailInputGroup.style.display = 'none';
+                    if (costDisplay && statusData.budget) {
+                        costDisplay.textContent = `Budget remaining: $${statusData.budget.remaining.toFixed(2)}`;
+                        costDisplay.style.display = 'block';
+                    }
+                } else {
+                    // Queue mode
+                    if (chatStatus) chatStatus.textContent = '🔴 Doctor Is Out - Queries will be queued';
+                    if (chatInput) {
+                        chatInput.disabled = false;
+                        chatInput.placeholder = 'Submit query for processing (will be answered later)...';
+                    }
+                    if (sendButton) sendButton.disabled = false;
+                    if (emailInputGroup) emailInputGroup.style.display = 'block';
+                    if (costDisplay) costDisplay.style.display = 'none';
+                }
+                
+                this.updateSystemMessage(statusData);
+            }
+            
+            updateSystemMessage(statusData) {
+                const messagesContainer = document.getElementById('chatMessages');
+                if (!messagesContainer) return;
+                
+                // Update or create system message
+                let systemMessage = messagesContainer.querySelector('.system-message');
+                if (!systemMessage) {
+                    systemMessage = document.createElement('div');
+                    systemMessage.className = 'system-message';
+                    systemMessage.style.cssText = `
+                        background: rgba(52, 152, 219, 0.1);
+                        border: 1px solid rgba(52, 152, 219, 0.3);
+                        border-radius: 8px;
+                        padding: 12px;
+                        font-size: 14px;
+                        color: #ecf0f1;
+                        text-align: center;
+                    `;
+                    messagesContainer.insertBefore(systemMessage, messagesContainer.firstChild);
+                }
+                
+                if (!statusData.enabled) {
+                    systemMessage.innerHTML = '🚫 AI consultation feature is currently disabled.';
+                } else if (this.isAvailable) {
+                    systemMessage.innerHTML = '🤖 Doctor is in! Ask questions about your monitoring data and get real-time AI analysis.';
+                } else {
+                    systemMessage.innerHTML = '📝 Doctor is out. Submit queries to the queue - they\'ll be processed and you can optionally get email notifications.';
+                }
+            }
+            
+            toggle() {
+                if (this.isOpen) {
+                    this.close();
+                } else {
+                    this.open();
+                }
+            }
+            
+            open() {
+                const sidebar = document.getElementById('aiChatSidebar');
+                if (sidebar) {
+                    sidebar.style.right = '0px';
+                    this.isOpen = true;
+                    
+                    // Focus input if available
+                    setTimeout(() => {
+                        const chatInput = document.getElementById('chatInput');
+                        if (chatInput && !chatInput.disabled) {
+                            chatInput.focus();
+                        }
+                    }, 300);
+                }
+            }
+            
+            close() {
+                const sidebar = document.getElementById('aiChatSidebar');
+                if (sidebar) {
+                    sidebar.style.right = '-400px';
+                    this.isOpen = false;
+                }
+            }
+            
+            sendMessage() {
+                const chatInput = document.getElementById('chatInput');
+                const emailInput = document.getElementById('emailInput');
+                
+                if (!chatInput || !chatInput.value.trim()) {
+                    return;
+                }
+                
+                const message = chatInput.value.trim();
+                const email = emailInput && emailInput.value.trim() ? emailInput.value.trim() : null;
+                
+                // Add user message to chat
+                this.addMessage('user', message);
+                
+                // Clear input
+                chatInput.value = '';
+                
+                if (this.isAvailable) {
+                    // Real-time mode - send to AI
+                    this.sendRealTimeMessage(message);
+                } else {
+                    // Queue mode - submit to queue
+                    this.submitToQueue(message, email);
+                }
+            }
+            
+            addMessage(sender, content, isSystem = false) {
+                const messagesContainer = document.getElementById('chatMessages');
+                if (!messagesContainer) return;
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}-message`;
+                
+                if (sender === 'user') {
+                    messageDiv.style.cssText = `
+                        background: linear-gradient(45deg, #3498db, #2980b9);
+                        color: white;
+                        padding: 10px 15px;
+                        border-radius: 15px 15px 5px 15px;
+                        margin-left: 50px;
+                        font-size: 14px;
+                        word-wrap: break-word;
+                    `;
+                } else if (sender === 'ai') {
+                    messageDiv.style.cssText = `
+                        background: rgba(46, 204, 113, 0.1);
+                        border: 1px solid rgba(46, 204, 113, 0.3);
+                        color: #ecf0f1;
+                        padding: 10px 15px;
+                        border-radius: 15px 15px 15px 5px;
+                        margin-right: 50px;
+                        font-size: 14px;
+                        word-wrap: break-word;
+                    `;
+                } else {
+                    messageDiv.style.cssText = `
+                        background: rgba(243, 156, 18, 0.1);
+                        border: 1px solid rgba(243, 156, 18, 0.3);
+                        color: #ecf0f1;
+                        padding: 10px 15px;
+                        border-radius: 8px;
+                        font-size: 13px;
+                        text-align: center;
+                        font-style: italic;
+                    `;
+                }
+                
+                messageDiv.textContent = content;
+                messagesContainer.appendChild(messageDiv);
+                
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+            
+            async sendRealTimeMessage(message) {
+                try {
+                    // Add typing indicator
+                    this.addMessage('ai', '🤔 Analyzing your query...', true);
+                    
+                    // TODO: Implement real-time AI chat
+                    // For now, show placeholder response
+                    setTimeout(() => {
+                        // Remove typing indicator
+                        const messages = document.getElementById('chatMessages');
+                        const lastMessage = messages.lastElementChild;
+                        if (lastMessage && lastMessage.textContent.includes('Analyzing')) {
+                            lastMessage.remove();
+                        }
+                        
+                        this.addMessage('ai', `I received your query: "${message}". Real-time AI consultation is not fully implemented yet, but I would analyze your monitoring data and provide insights about system health, metrics, and recommendations.`);
+                    }, 1500);
+                    
+                } catch (error) {
+                    console.error('Real-time message error:', error);
+                    this.addMessage('system', 'Error sending message. Please try again.');
+                }
+            }
+            
+            async submitToQueue(message, email) {
+                try {
+                    this.addMessage('system', '📝 Submitting query to processing queue...');
+                    
+                    // TODO: Implement queue submission
+                    // For now, show placeholder response
+                    setTimeout(() => {
+                        const emailText = email ? ` Email notification will be sent to ${email} when ready.` : ' Check back later for results.';
+                        this.addMessage('system', `✅ Query queued for processing.${emailText} Queue position: #3 (estimated processing time: 15 minutes)`);
+                    }, 1000);
+                    
+                } catch (error) {
+                    console.error('Queue submission error:', error);
+                    this.addMessage('system', 'Error submitting to queue. Please try again.');
+                }
+            }
+        }
+        
+        // Global functions for onclick handlers
+        function toggleChatSidebar() {
+            if (window.aiChatInterface) {
+                window.aiChatInterface.toggle();
+            }
+        }
+        
+        function closeChatSidebar() {
+            if (window.aiChatInterface) {
+                window.aiChatInterface.close();
+            }
+        }
+        
+        function sendChatMessage() {
+            if (window.aiChatInterface) {
+                window.aiChatInterface.sendMessage();
+            }
+        }
+        
+        // Initialize doctor status manager when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🩺 Initializing Doctor Status Manager...');
+            window.doctorStatusManager = new DoctorStatusManager();
+        });
 
     </script>
 </body>

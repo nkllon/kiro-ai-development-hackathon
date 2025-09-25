@@ -13,7 +13,7 @@ The "Doctor Is In/Out" system provides:
 """
 
 from .models import (
-    ProcessingMode, QueryPriority, DoctorStatusReason, RegressionSeverity,
+    ProcessingMode, QueryPriority, DoctorStatusReason,
     ConsultationQuery, ConsultationResult, DoctorStatus, QueuedQuery, 
     BudgetStatus, CostAnalytics, ObservatoryContext
 )
@@ -28,7 +28,7 @@ from .interfaces import (
 from .feature_flags import feature_flags, FeatureFlag
 from .circuit_breaker import CircuitBreaker, with_circuit_breaker
 from .health_checker import HealthChecker, ComponentHealth, SystemHealth
-from .visual_regression import VisualRegressionTester, RegressionResult
+from .visual_regression import VisualRegressionTester, RegressionResult, RegressionSeverity
 from .doctor_status_manager import (
     DoctorStatusManager, StatusTransition, StatusChangeEvent,
     status_manager, get_doctor_status, initialize_status_manager, cleanup_status_manager

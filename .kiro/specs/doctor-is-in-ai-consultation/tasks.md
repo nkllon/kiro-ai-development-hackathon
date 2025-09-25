@@ -149,7 +149,7 @@
     - _Requirements: 3.1.3, 3.1.6, 7.4, 7.5_
 
 - [ ] 9. Create Dashboard UI Integration with Zero-Downtime Deployment
-  - [ ] 9.1 Implement doctor status indicator with feature flag control
+  - [x] 9.1 Implement doctor status indicator with feature flag control
     - Create status display component that can be toggled on/off without deployment
     - Add visual indicators for "Doctor Is In/Out" status with graceful fallback
     - Implement WebSocket integration that doesn't interfere with existing Observatory WebSocket usage
@@ -157,7 +157,7 @@
     - Write frontend tests for status display and feature flag behavior
     - _Requirements: 1.1, 1.2, 7.1, 7.2, 7.4_
 
-  - [ ] 9.2 Build real-time chat interface with incremental rollout
+  - [x] 9.2 Build real-time chat interface with incremental rollout
     - Create chat UI component as optional overlay that doesn't affect existing dashboard layout
     - Implement real-time message streaming with fallback to existing Observatory infrastructure
     - Add cost display and session management controls with feature flag protection
