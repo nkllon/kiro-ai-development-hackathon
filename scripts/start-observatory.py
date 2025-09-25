@@ -11,12 +11,12 @@ import argparse
 from pathlib import Path
 
 # Add project root to Python path
-project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root / "src"))
-
 # Set working directory to project root
+project_root = Path(__file__).parent.parent
 os.chdir(str(project_root))
 
+# Add project root to Python path
+sys.path.insert(0, str(project_root))
 # Import and run the server
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Beast Mode Coordination Observatory Server")
