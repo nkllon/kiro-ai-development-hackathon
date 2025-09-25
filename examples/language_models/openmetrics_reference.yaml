@@ -1,0 +1,148 @@
+domain: devops
+name: OpenMetrics Reference Implementation
+description: Reference language model based on OpenMetrics specification for demonstration
+version: 1.0.0
+created_at: '2024-09-24T17:45:00'
+updated_at: '2024-09-24T17:45:00'
+
+terminology:
+  counter_total:
+    technical_name: counter_total
+    business_name: Event Counter
+    description: Monotonically increasing counter of events or operations
+    context: OpenMetrics standard metric type for counting occurrences
+    domain: devops
+    synonyms:
+      - Total Count
+      - Cumulative Counter
+    related_terms:
+      - rate
+      - increase
+    examples:
+      - http_requests_total counts total HTTP requests
+      - errors_total counts total error occurrences
+    created_at: '2024-09-24T17:45:00'
+    updated_at: '2024-09-24T17:45:00'
+  
+  gauge_value:
+    technical_name: gauge_value
+    business_name: Current Value
+    description: Metric that can go up and down representing current state
+    context: OpenMetrics standard metric type for instantaneous measurements
+    domain: devops
+    synonyms:
+      - Current Measurement
+      - Instantaneous Value
+    related_terms:
+      - current
+      - level
+    examples:
+      - memory_usage_bytes shows current memory consumption
+      - temperature_celsius shows current temperature
+    created_at: '2024-09-24T17:45:00'
+    updated_at: '2024-09-24T17:45:00'
+  
+  histogram_bucket:
+    technical_name: histogram_bucket
+    business_name: Distribution Bucket
+    description: Cumulative counters for observation buckets in a histogram
+    context: OpenMetrics standard for measuring distributions
+    domain: devops
+    synonyms:
+      - Bucket Count
+      - Distribution Bin
+    related_terms:
+      - quantile
+      - percentile
+      - distribution
+    examples:
+      - http_request_duration_seconds_bucket measures request latency distribution
+    created_at: '2024-09-24T17:45:00'
+    updated_at: '2024-09-24T17:45:00'
+
+concepts:
+  openmetrics_exposition:
+    name: openmetrics_exposition
+    definition: Standard format for exposing metrics in OpenMetrics text format
+    domain: devops
+    properties:
+      content_type: application/openmetrics-text
+      version: '1.0.0'
+    business_rules:
+      - Must include HELP and TYPE metadata for each metric family
+      - Metric names must follow naming conventions
+      - Labels must be consistently ordered
+      - Timestamps are optional but recommended
+    calculation_logic: null
+    metric_type: derived
+    unit: text_format
+    normal_range: null
+    alert_thresholds: null
+    relationships: []
+    created_at: '2024-09-24T17:45:00'
+    updated_at: '2024-09-24T17:45:00'
+
+aggregation_rules:
+  rate_calculation:
+    rule_id: openmetrics-rate-001
+    metric_name: request_rate
+    source_metrics:
+      - http_requests_total
+    aggregation_function: calculated
+    window_size_seconds: 300
+    calculation_logic: rate(http_requests_total[5m])
+    business_context: Calculate per-second rate of HTTP requests over 5-minute window
+    domain: devops
+    created_at: '2024-09-24T17:45:00'
+  
+  error_ratio:
+    rule_id: openmetrics-error-ratio-001
+    metric_name: error_ratio
+    source_metrics:
+      - http_requests_total
+      - http_errors_total
+    aggregation_function: calculated
+    window_size_seconds: 300
+    calculation_logic: http_errors_total / http_requests_total
+    business_context: Calculate error ratio as percentage of failed requests
+    domain: devops
+    created_at: '2024-09-24T17:45:00'
+
+display_preferences:
+  chart_colors:
+    counter_total: '#1f77b4'
+    gauge_value: '#ff7f0e'
+    histogram_bucket: '#2ca02c'
+  label_formats:
+    counter_total: '{metric_name}_total'
+    gauge_value: '{metric_name}'
+    histogram_bucket: '{metric_name}_bucket'
+  unit_displays:
+    counter_total: 'total'
+    gauge_value: 'current'
+    histogram_bucket: 'le'
+  dashboard_layout:
+    standard_metrics:
+      - counter_total
+      - gauge_value
+    advanced_metrics:
+      - histogram_bucket
+  alert_formats:
+    counter_total: 'Counter {metric_name}: {value} total'
+    gauge_value: 'Gauge {metric_name}: {value} {unit}'
+
+metadata:
+  specification: OpenMetrics 1.0.0
+  standard_url: https://openmetrics.io/
+  use_case: prometheus_integration
+  compliance_requirements:
+    - OpenMetrics Specification
+    - Prometheus Compatibility
+  stakeholders:
+    - DevOps Engineers
+    - Site Reliability Engineers
+    - Platform Teams
+  integration_targets:
+    - Prometheus
+    - Grafana
+    - AlertManager
