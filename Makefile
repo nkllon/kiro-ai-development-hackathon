@@ -1840,3 +1840,10 @@ dashboard-dev: ## Start Observatory server in development mode (foreground)
 	@echo "$(YELLOW)Press Ctrl+C to stop$(NC)"
 	@python3 scripts/observatory-daemon.py start --foreground
 
+
+# DNS Cache Management
+dns-flush:
+	@echo "Flushing DNS cache..."
+	sudo dscacheutil -flushcache
+	sudo killall -HUP mDNSResponder
+	@echo "✅ DNS cache flushed successfully"
