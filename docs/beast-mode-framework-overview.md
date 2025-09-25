@@ -74,10 +74,10 @@ Just like miners on the volcanic planet Nkllon must use autonomous systems to ex
 
 | Component | Purpose | Key Features |
 |-----------|---------|-------------|
-| **[PDCA Engine](pdca-cycle/)** | Autonomous improvement cycles | Plan → Do → Check → Act automation |
+| **[PDCA Engine](other/misc/pdca.mdc)** | Autonomous improvement cycles | Plan → Do → Check → Act automation |
 | **[Observatory](observatory-testing-guide.md)** | Real-time monitoring & visualization | Cost tracking, anomaly detection, dashboards |
 | **[Backlog System](task/)** | Task & dependency management | Intelligent prioritization, dependency resolution |
-| **[MCP Integrations](.kiro/settings/)** | External service connections | Google Calendar, Workspace, etc. |
+| **[MCP Integrations](../.kiro/settings/)** | External service connections | Google Calendar, Workspace, etc. |
 | **[CLI Interface](cli-help-documentation.md)** | Command-line operations | `beast-mode` commands for all operations |
 | **[API Layer](beast-mode-api-reference.md)** | RESTful service interface | Programmatic access to all features |
 
@@ -232,8 +232,8 @@ We believe the future belongs to organizations that can:
 - [Quality Assurance](launch-control-checklist.md)
 
 **🔌 Integrations & Extensions**
-- [MCP Services](.kiro/settings/)
-- [Google Calendar Integration](docker/google-calendar-mcp/)
+- [MCP Services](../.kiro/settings/)
+- [Google Calendar Integration](../docker/google-calendar-mcp/)
 - [DevPost Integration](devpost_integration_guide.md)
 
 ## Contributing & Community
