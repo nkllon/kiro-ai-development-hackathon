@@ -59,6 +59,7 @@ try:
                 print(f"      ⚠️  Cascade Effects: {len(problem.cascade_effects)}")
         
         # Get solution recommendations
+        solutions = []
         if problem_uris:
             print(f"\n🔧 Finding solutions for identified problems...")
             solutions = analyzer.get_solution_recommendations(problem_uris)
@@ -75,6 +76,8 @@ try:
                     print(f"      ⚠️  Risks Introduced: {len(solution.risks_introduced)}")
                 if solution.risks_mitigated:
                     print(f"      ✅ Risks Mitigated: {len(solution.risks_mitigated)}")
+        else:
+            print(f"\n🔧 No specific problems identified, checking general solutions...")
         
         # Get immediate fixes
         print(f"\n⚡ Immediate fixes (< 2 hours):")
