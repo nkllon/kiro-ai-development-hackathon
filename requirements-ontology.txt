@@ -1,0 +1,14 @@
+# RDF/OWL Ontology Analysis Dependencies
+rdflib>=7.0.0
+rdflib-jsonld>=0.6.1
+owlrl>=6.0.2
+SPARQLWrapper>=2.0.0
+
+# Optional: Enhanced RDF processing
+pyshacl>=0.25.0
+rdflib-sqlalchemy>=0.5.0
+
+# For visualization (optional)
+networkx>=3.0
+matplotlib>=3.7.0
+graphviz>=0.20.0
