@@ -20,7 +20,7 @@ except ImportError:
     HAS_RDFLIB = False
     logging.warning("rdflib not available - install with: pip install rdflib")
 
-from ..core import ReflectiveModule
+from src.beast_mode.core.reflective_module import ReflectiveModule, ModuleCapability, ModuleHealth, ModuleStatus
 
 # Ontology namespaces
 OBS = Namespace("http://observatory.nkllon.com/ontology#")
@@ -96,15 +96,39 @@ class WebSocketOntologyAnalyzer(ReflectiveModule):
     
     def _load_ontology(self) -> None:
         """Load the WebSocket ontology from Turtle file"""
+        self.logger.info(f"🔄 Starting ontology load from: {self.ontology_path}")
+        
         try:
             if self.ontology_path.exists():
+                self.logger.info(f"📁 Ontology file exists, size: {self.ontology_path.stat().st_size} bytes")
+                
+                # Parse the ontology
+                start_time = datetime.now()
                 self.graph.parse(str(self.ontology_path), format="turtle")
-                self.logger.info(f"Loaded ontology with {len(self.graph)} triples")
+                load_time = (datetime.now() - start_time).total_seconds()
+                
+                triple_count = len(self.graph)
+                namespace_count = len(list(self.graph.namespaces()))
+                
+                self.logger.info(f"✅ Ontology loaded successfully!")
+                self.logger.info(f"   📊 Triples: {triple_count:,}")
+                self.logger.info(f"   🏷️  Namespaces: {namespace_count}")
+                self.logger.info(f"   ⏱️  Load time: {load_time:.2f}s")
+                
+                # Log some sample triples for verification
+                sample_triples = list(self.graph)[:3]
+                self.logger.debug(f"📝 Sample triples: {sample_triples}")
+                
             else:
-                self.logger.error(f"Ontology file not found: {self.ontology_path}")
+                self.logger.error(f"❌ Ontology file not found: {self.ontology_path}")
+                self.logger.error(f"   Current working directory: {Path.cwd()}")
+                self.logger.error(f"   Absolute path: {self.ontology_path.absolute()}")
                 raise FileNotFoundError(f"Ontology file not found: {self.ontology_path}")
+                
         except Exception as e:
-            self.logger.error(f"Failed to load ontology: {e}")
+            self.logger.error(f"❌ Failed to load ontology: {e}")
+            self.logger.error(f"   Exception type: {type(e).__name__}")
+            self.logger.error(f"   Ontology path: {self.ontology_path}")
             raise
     
     def analyze_symptoms(self, symptoms: List[str]) -> List[ProblemAnalysis]:
@@ -117,6 +141,7 @@ class WebSocketOntologyAnalyzer(ReflectiveModule):
         Returns:
             List of potential problems matching the symptoms
         """
+        self.logger.info(f"🔍 Analyzing {len(symptoms)} symptoms: {symptoms}")
         problems = []
         
         # SPARQL query to find problems matching symptoms
@@ -134,8 +159,13 @@ class WebSocketOntologyAnalyzer(ReflectiveModule):
         """, initNs={"ws": WS, "rdfs": rdflib.RDFS})
         
         for symptom in symptoms:
+            self.logger.debug(f"🔎 Searching for symptom: '{symptom}'")
             results = self.graph.query(query, initBindings={"searchTerm": Literal(symptom)})
+            result_count = len(list(results))
+            self.logger.debug(f"   Found {result_count} matches for '{symptom}'")
             
+            # Re-run query since we consumed the iterator
+            results = self.graph.query(query, initBindings={"searchTerm": Literal(symptom)})
             for row in results:
                 problem_analysis = ProblemAnalysis(
                     problem_uri=str(row.problem),
@@ -147,6 +177,11 @@ class WebSocketOntologyAnalyzer(ReflectiveModule):
                     confidence=0.8  # Base confidence for symptom match
                 )
                 problems.append(problem_analysis)
+                self.logger.debug(f"   ✅ Added problem: {problem_analysis.problem_type}")
+        
+        self.logger.info(f"📋 Analysis complete: Found {len(problems)} potential problems")
+        for problem in problems:
+            self.logger.info(f"   • {problem.problem_type} (confidence: {problem.confidence:.2f})")
         
         return problems
     
@@ -384,4 +419,54 @@ class WebSocketOntologyAnalyzer(ReflectiveModule):
             "triple_count": len(self.graph),
             "namespaces": len(list(self.graph.namespaces())),
             "rdflib_available": HAS_RDFLIB
+        }
+    
+    # ReflectiveModule abstract method implementations
+    def get_health_status(self) -> ModuleHealth:
+        """Get health status for ReflectiveModule"""
+        health_data = self.health_check()
+        uptime = (datetime.now() - self._start_time).total_seconds()
+        
+        return ModuleHealth(
+            module_id="websocket_ontology_analyzer",
+            status=ModuleStatus.HEALTHY if health_data["status"] == "healthy" else ModuleStatus.ERROR,
+            health_score=1.0 if health_data["ontology_loaded"] else 0.0,
+            issues=[] if health_data["ontology_loaded"] else ["Ontology not loaded"],
+            last_check=datetime.now(),
+            uptime_seconds=uptime,
+            error_count=self._error_count,
+            warning_count=self._warning_count
+        )
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities"""
+        return [
+            ModuleCapability.CORE_FUNCTIONALITY,
+            ModuleCapability.DATA_PROCESSING,
+            ModuleCapability.VALIDATION,
+            ModuleCapability.MONITORING
+        ]
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information"""
+        return {
+            "module_id": "websocket_ontology_analyzer",
+            "module": "beast_mode.observatory.ontology.websocket_analyzer",
+            "class": "WebSocketOntologyAnalyzer",
+            "version": "1.0.0",
+            "description": "Systematic WebSocket problem analysis using formal ontology",
+            "ontology_path": str(self.ontology_path),
+            "loaded_triples": len(self.graph) if hasattr(self, 'graph') else 0,
+            "ontology_dimensions": 22,
+            "sparql_queries": True,
+            "rdf_reasoning": True
+        }
+    
+    def graceful_degradation(self) -> Dict[str, Any]:
+        """Handle graceful degradation on errors"""
+        return {
+            "success": True,
+            "degraded_capabilities": [ModuleCapability.DATA_PROCESSING],
+            "remaining_capabilities": [ModuleCapability.CORE_FUNCTIONALITY, ModuleCapability.MONITORING],
+            "error_message": None
         }

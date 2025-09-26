@@ -22,8 +22,10 @@ try:
         print("🔍 Observatory WebSocket Issue Analysis")
         print("=" * 60)
         
-        # Initialize analyzer
+        # Initialize analyzer with logging
+        print("🔄 Initializing WebSocket Ontology Analyzer...")
         analyzer = WebSocketOntologyAnalyzer()
+        print(f"✅ Analyzer initialized with {analyzer.health_check()['triple_count']:,} triples")
         
         # Symptoms observed in your system
         observed_symptoms = [
@@ -40,7 +42,9 @@ try:
             print(f"   • {symptom}")
         
         # Analyze symptoms
+        print(f"\n🔬 Running symptom analysis...")
         problems = analyzer.analyze_symptoms(observed_symptoms)
+        print(f"📊 Symptom analysis complete")
         
         print(f"\n🎯 Identified {len(problems)} potential problems:")
         problem_uris = []
