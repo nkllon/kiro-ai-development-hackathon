@@ -11,12 +11,12 @@ import argparse
 from pathlib import Path
 
 # Add project root to Python path
-# Set working directory to project root
 project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root / "src"))
+
+# Set working directory to project root
 os.chdir(str(project_root))
 
-# Add project root to Python path
-sys.path.insert(0, str(project_root))
 # Import and run the server
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Beast Mode Coordination Observatory Server")
@@ -30,9 +30,6 @@ if __name__ == "__main__":
     if args.config and os.path.exists(args.config):
         os.environ['OBSERVATORY_CONFIG_PATH'] = args.config
     
-    import sys
-    import os
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-    from src.beast_mode.observatory.server import main
+    from beast_mode.observatory.server import main
     import asyncio
     asyncio.run(main())

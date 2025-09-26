@@ -5,7 +5,7 @@ services:
     build: .
     container_name: observatory-ha
     ports:
-      - "8888:8888"
+      - "8889:8888"  # Map container port 8888 to host port 8889
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs

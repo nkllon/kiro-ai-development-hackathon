@@ -1847,3 +1847,15 @@ dns-flush:
 	sudo dscacheutil -flushcache
 	sudo killall -HUP mDNSResponder
 	@echo "✅ DNS cache flushed successfully"
+
+# Tunnel Management
+tunnel-start:
+	@echo "Starting Cloudflare tunnel..."
+	python3 scripts/stable_tunnel.py
+tunnel-stop:
+	@echo "Stopping Cloudflare tunnel..."
+	pkill cloudflared || true
+tunnel-status:
+	@echo "Tunnel Status:"
+	@if pgrep cloudflared >/dev/null; then echo "✅ Running (PID: $(shell pgrep cloudflared))"; else echo "❌ Not running"; fi
+	@curl -s -I https://d1e53e43-033f-4994-8f46-c83962ae3785.trycloudflare.com/health 2>/dev/null | head -1 || echo "❌ External access not available"

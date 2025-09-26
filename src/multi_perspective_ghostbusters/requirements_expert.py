@@ -25,7 +25,7 @@ from src.multi_perspective_ghostbusters.security_expert import (
     SpecializedAgent, AnalysisContent, AnalysisContext, PerspectiveResult, 
     PerspectiveProfile, AuthenticityValidation
 )
-from src.rm_ddd.core.reflective_module import ReflectiveModule
+from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
 
 
 @dataclass

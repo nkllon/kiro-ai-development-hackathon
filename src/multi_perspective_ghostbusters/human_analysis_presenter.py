@@ -26,7 +26,7 @@ from src.multi_perspective_ghostbusters.security_expert import PerspectiveResult
 from src.multi_perspective_ghostbusters.consensus_detector import ConsensusArea
 from src.multi_perspective_ghostbusters.unique_insight_preserver import UniqueInsight
 from src.multi_perspective_ghostbusters.conflict_analysis_resolver import PerspectiveConflict
-from src.rm_ddd.core.reflective_module import ReflectiveModule
+from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
 
 
 @dataclass

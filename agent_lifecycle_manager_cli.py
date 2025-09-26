@@ -242,7 +242,10 @@ def main():
     args = parser.parse_args()
     
     # Import and instantiate the module
-    from __main__ import AgentLifecycleManager
+    import sys
+    import os
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+    from multi_perspective_ghostbusters.agent_lifecycle_manager import AgentLifecycleManager
     module = AgentLifecycleManager()
     
     if args.module_info:
@@ -260,7 +263,8 @@ def main():
         print(f"Available capabilities in {module.bounded_context.name if module.bounded_context else 'Unknown'} context:")
         for cap in capabilities:
             capability = module.get_capability(cap)
-            print(f"  - {cap} ({capability.ddd_pattern if capability else 'Unknown pattern'})")
+            pattern = capability.get('ddd_pattern', 'Unknown pattern') if capability else 'Unknown pattern'
+            print(f"  - {cap} ({pattern})")
         return
     
     if args.domain_vocabulary:

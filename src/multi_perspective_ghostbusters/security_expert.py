@@ -22,7 +22,7 @@ import os
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from src.rm_ddd.core.reflective_module import ReflectiveModule
+from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
 
 
 @dataclass

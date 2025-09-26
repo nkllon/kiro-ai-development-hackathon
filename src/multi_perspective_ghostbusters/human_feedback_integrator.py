@@ -22,7 +22,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
 
 from src.multi_perspective_ghostbusters.security_expert import PerspectiveResult
-from src.rm_ddd.core.reflective_module import ReflectiveModule
+from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
 
 
 @dataclass

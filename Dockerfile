@@ -19,6 +19,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY src/ ./src/
+COPY scripts/ ./scripts/
+COPY config/ ./config/
 COPY data/ ./data/
 COPY .kiro/ ./.kiro/
 
@@ -33,4 +35,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8888/health || exit 1
 
 # Run the Observatory server
-CMD ["python", "-m", "src.beast_mode.observatory.server", "--host", "0.0.0.0", "--port", "8888"]
+CMD ["python", "scripts/start-observatory.py", "--host", "0.0.0.0", "--port", "8888", "--config", "config/observatory.yaml"]

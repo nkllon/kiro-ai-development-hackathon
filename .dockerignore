@@ -51,10 +51,10 @@ Thumbs.db
 
 # Project specific
 logs/
-data/
+# data/
 *.log
-.kiro/
-scripts/
+# .kiro/
+# scripts/
 docs/
 tests/
 assessment_results/
