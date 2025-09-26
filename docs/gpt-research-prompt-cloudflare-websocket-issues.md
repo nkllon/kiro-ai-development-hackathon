@@ -56,6 +56,15 @@ ingress:
 - Manual tunnel restarts temporarily fix issue until WebSocket failures recur
 - Service works fine until WebSocket connections fail and trigger polling fallback
 
+### 7. Traffic Volume Correlation Evidence
+**CONFIRMED via Cloudflare analytics:**
+- Cloudflare traffic charts show correlation between traffic spikes and tunnel stability
+- Peak traffic periods correlate with Error 1033 incidents
+- Lower traffic periods (like today) correlate with tunnel stability
+- Notable traffic spike at midnight (11k requests) - unknown if this caused issues
+- Traffic data resets with new tunnel instances, making historical analysis difficult
+- **ATTACHED**: Cloudflare analytics PDF showing current traffic patterns
+
 ## Additional Evidence to Gather
 
 ### Technical Validation Tests
@@ -71,6 +80,8 @@ ingress:
 3. **Observatory Bot Defense Logs**: Analyze internal bot detection during polling periods
 4. **Tunnel Process Monitoring**: Monitor cloudflared process behavior during WebSocket failures
 5. **DNS and CDN Cache Analysis**: Verify DNS propagation and CDN caching don't interfere with WebSocket upgrades
+6. **Historical Traffic Data Recovery**: Investigate how to access historical Cloudflare analytics beyond current tunnel instance
+7. **Traffic Pattern Analysis**: Correlate specific traffic volumes/patterns with tunnel failure incidents
 
 ## Research Questions for GPT
 
@@ -137,6 +148,12 @@ ingress:
     - Alternative CDN providers with better WebSocket support
     - Hybrid approaches combining multiple services
     - Cost-benefit analysis of different infrastructure approaches
+
+11. **How do you access and preserve historical Cloudflare analytics data?**
+    - Methods to export/backup Cloudflare traffic analytics before tunnel changes
+    - API access to historical traffic data beyond dashboard limitations
+    - Tools for correlating traffic patterns with infrastructure incidents
+    - Best practices for maintaining traffic analytics across tunnel reconfigurations
 
 ## Broader Cloudflare Infrastructure Concerns
 
