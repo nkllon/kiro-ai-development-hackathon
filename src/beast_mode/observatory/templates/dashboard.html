@@ -4020,5 +4020,21 @@
         });
 
     </script>
+    
+    <!-- Observatory HTTP Polling Fallback with Bot Protection -->
+    <script src="/static/js/observatory_polling_fallback.js"></script>
+    <script>
+        // Initialize polling fallback when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔧 Observatory polling fallback loaded');
+            
+            // Initialize polling fallback system
+            if (typeof initializePollingFallback === 'function') {
+                initializePollingFallback();
+            } else {
+                console.warn('⚠️ Polling fallback function not available');
+            }
+        });
+    </script>
 </body>
 </html>
