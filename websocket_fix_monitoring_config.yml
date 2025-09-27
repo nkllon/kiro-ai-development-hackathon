@@ -1,0 +1,66 @@
+# WebSocket Fix Monitoring Agent Configuration
+# Configuration for monitoring WebSocket fix deployment phases
+
+agents:
+  phase_1:
+    phase: "phase_1"
+    script_path: "scripts/deploy_websocket_fix.py"
+    timeout_minutes: 30
+    health_check_interval: 60
+    stuck_threshold_minutes: 10
+    max_restart_attempts: 3
+    dependencies: []
+    auto_remediation: true
+    critical: true
+    
+  phase_2:
+    phase: "phase_2"
+    script_path: "scripts/ssl_tls_full_strict_deployment.sh"
+    timeout_minutes: 45
+    health_check_interval: 90
+    stuck_threshold_minutes: 15
+    max_restart_attempts: 3
+    dependencies: ["phase_1"]
+    auto_remediation: true
+    critical: true
+    
+  phase_3:
+    phase: "phase_3"
+    script_path: "scripts/production_websocket_tester.py"
+    timeout_minutes: 60
+    health_check_interval: 120
+    stuck_threshold_minutes: 20
+    max_restart_attempts: 2
+    dependencies: ["phase_1", "phase_2"]
+    auto_remediation: true
+    critical: true
+
+# Monitoring settings
+monitoring:
+  report_interval_minutes: 5
+  health_check_timeout_seconds: 30
+  process_check_interval_seconds: 10
+  log_level: "INFO"
+  
+# Health check thresholds
+health_thresholds:
+  cpu_usage_percent: 90
+  memory_usage_mb: 1000
+  health_score_minimum: 0.5
+  stuck_detection_count: 3
+  
+# Auto-remediation settings
+remediation:
+  enable_auto_restart: true
+  enable_auto_escalation: true
+  escalation_threshold_restarts: 3
+  escalation_threshold_health_score: 0.3
+  
+# Notification settings (optional)
+notifications:
+  enable_discord: false
+  enable_email: false
+  enable_webhook: false
+  discord_webhook_url: ""
+  email_recipients: []
+  webhook_url: ""

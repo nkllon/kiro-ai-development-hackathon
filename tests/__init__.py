@@ -1,1 +1,1 @@
-"""Test suite for Multi-Instance Kiro Orchestration System."""
+# Tests package

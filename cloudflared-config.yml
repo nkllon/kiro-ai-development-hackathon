@@ -1,0 +1,27 @@
+tunnel: d1e53e43-033f-4994-8f46-c83962ae3785
+credentials-file: /Users/lou/.cloudflared/d1e53e43-033f-4994-8f46-c83962ae3785.json
+
+ingress:
+  - hostname: observatory.nkllon.com
+    service: http://localhost:8888
+    originRequest:
+      httpHostHeader: localhost:8888
+      # WebSocket support configuration
+      noTLSVerify: false
+      connectTimeout: 30s
+      tlsTimeout: 10s
+      tcpKeepAlive: 30s
+      keepAliveConnections: 100
+      keepAliveTimeout: 90s
+  - hostname: observatory-container.nkllon.com  
+    service: http://localhost:8889
+    originRequest:
+      httpHostHeader: localhost:8889
+      # WebSocket support configuration
+      noTLSVerify: false
+      connectTimeout: 30s
+      tlsTimeout: 10s
+      tcpKeepAlive: 30s
+      keepAliveConnections: 100
+      keepAliveTimeout: 90s
+  - service: http_status:404

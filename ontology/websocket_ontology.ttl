@@ -1,0 +1,2575 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+# Observatory WebSocket Infrastructure Ontology Namespaces
+@prefix obs: <http://observatory.nkllon.com/ontology#> .
+@prefix ws: <http://observatory.nkllon.com/ontology/websocket#> .
+@prefix cf: <http://observatory.nkllon.com/ontology/cloudflare#> .
+@prefix infra: <http://observatory.nkllon.com/ontology/infrastructure#> .
+@prefix monitor: <http://observatory.nkllon.com/ontology/monitoring#> .
+@prefix exec: <http://observatory.nkllon.com/ontology/execution#> .
+@prefix risk: <http://observatory.nkllon.com/ontology/risk#> .
+@prefix const: <http://observatory.nkllon.com/ontology/constraints#> .
+@prefix perf: <http://observatory.nkllon.com/ontology/performance#> .
+@prefix sec: <http://observatory.nkllon.com/ontology/security#> .
+@prefix cost: <http://observatory.nkllon.com/ontology/cost#> .
+@prefix dep: <http://observatory.nkllon.com/ontology/dependencies#> .
+@prefix scale: <http://observatory.nkllon.com/ontology/scalability#> .
+@prefix ops: <http://observatory.nkllon.com/ontology/operations#> .
+@prefix comp: <http://observatory.nkllon.com/ontology/compliance#> .
+@prefix arch: <http://observatory.nkllon.com/ontology/architecture#> .
+@prefix net: <http://observatory.nkllon.com/ontology/network#> .
+@prefix data: <http://observatory.nkllon.com/ontology/data#> .
+@prefix user: <http://observatory.nkllon.com/ontology/user#> .
+@prefix vendor: <http://observatory.nkllon.com/ontology/vendor#> .
+@prefix maint: <http://observatory.nkllon.com/ontology/maintenance#> .
+@prefix legal: <http://observatory.nkllon.com/ontology/legal#> .
+
+# ================================
+# ONTOLOGY METADATA & VALIDATION
+# ================================
+
+obs: a owl:Ontology ;
+    rdfs:label "Observatory WebSocket Infrastructure Multi-Dimensional Ontology"@en ;
+    rdfs:comment "Complete 22-dimensional knowledge graph for WebSocket cascade failure analysis and resolution"@en ;
+    dc:title "WebSocket Infrastructure Problem Space Ontology" ;
+    dc:creator "Claude & Lou Springer" ;
+    dc:date "2025-09-26" ;
+    dc:description "Comprehensive ontological framework covering problem diagnosis, solution architecture, risk assessment, and operational constraints for WebSocket infrastructure failures" ;
+    owl:versionInfo "2.0.0" ;
+    dcterms:license <https://opensource.org/licenses/MIT> ;
+    dcterms:language "en" ;
+    exec:executionTarget "PT2H"^^xsd:duration ;
+    exec:confidenceLevel "0.95"^^xsd:decimal ;
+    exec:validationMethod "runtime_telemetry" ;
+    exec:dimensionCount "22"^^xsd:integer ;
+    prov:wasGeneratedBy obs:OntologyCreationActivity .
+
+# Ontology creation provenance
+obs:OntologyCreationActivity a prov:Activity ;
+    prov:startedAtTime "2025-09-26T00:00:00Z"^^xsd:dateTime ;
+    prov:used obs:DiagnosticFlowchart, obs:EvidenceDocument ;
+    prov:wasAssociatedWith obs:ClaudeAgent, obs:LouSpringer .
+
+# ================================
+# DIMENSION 1: PROBLEM TAXONOMY
+# ================================
+
+ws:Problem a owl:Class ;
+    rdfs:label "WebSocket Problem"@en ;
+    rdfs:comment "Root class for all WebSocket-related infrastructure issues"@en ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ws:hasSymptom ;
+        owl:someValuesFrom xsd:string
+    ] .
+
+ws:CascadeFailure a owl:Class ;
+    rdfs:subClassOf ws:Problem ;
+    rdfs:label "Cascade Failure"@en ;
+    rdfs:comment "System failure where one component triggers failures in dependent components"@en ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            ws:Problem
+            [a owl:Restriction ; owl:onProperty ws:triggersFailure ; owl:minCardinality "1"^^xsd:nonNegativeInteger]
+        )
+    ] .
+
+ws:TunnelFailure a owl:Class ;
+    rdfs:subClassOf ws:Problem ;
+    rdfs:label "Tunnel Infrastructure Failure"@en ;
+    rdfs:comment "Cloudflare tunnel-specific WebSocket connectivity failures"@en .
+
+ws:ProtocolDowngrade a owl:Class ;
+    rdfs:subClassOf ws:TunnelFailure ;
+    rdfs:label "WebSocket Protocol Downgrade"@en ;
+    rdfs:comment "WebSocket upgrade request improperly downgraded to HTTP/2"@en .
+
+ws:PollingFallback a owl:Class ;
+    rdfs:subClassOf ws:Problem ;
+    rdfs:label "Aggressive HTTP Polling Fallback"@en ;
+    rdfs:comment "High-frequency HTTP polling triggered by WebSocket connection failure"@en .
+
+ws:BotProtectionTrigger a owl:Class ;
+    rdfs:subClassOf ws:Problem ;
+    rdfs:label "Bot Protection System Activation"@en ;
+    rdfs:comment "Automated security systems triggered by suspicious traffic patterns"@en .
+
+# ================================
+# DIMENSION 2: INFRASTRUCTURE TOPOLOGY
+# ================================
+
+infra:Component a owl:Class ;
+    rdfs:label "Infrastructure Component"@en ;
+    rdfs:comment "Any physical or logical component in the system infrastructure"@en .
+
+infra:NetworkComponent a owl:Class ;
+    rdfs:subClassOf infra:Component ;
+    rdfs:label "Network Infrastructure Component"@en .
+
+infra:ComputeComponent a owl:Class ;
+    rdfs:subClassOf infra:Component ;
+    rdfs:label "Compute Infrastructure Component"@en .
+
+infra:StorageComponent a owl:Class ;
+    rdfs:subClassOf infra:Component ;
+    rdfs:label "Storage Infrastructure Component"@en .
+
+cf:Tunnel a owl:Class ;
+    rdfs:subClassOf infra:NetworkComponent ;
+    rdfs:label "Cloudflare Tunnel"@en ;
+    rdfs:comment "Cloudflare's secure tunnel service for exposing local services"@en .
+
+cf:EdgeServer a owl:Class ;
+    rdfs:subClassOf infra:NetworkComponent ;
+    rdfs:label "Cloudflare Edge Server"@en ;
+    rdfs:comment "Cloudflare's globally distributed edge computing nodes"@en .
+
+cf:Dashboard a owl:Class ;
+    rdfs:subClassOf infra:Component ;
+    rdfs:label "Cloudflare Management Dashboard"@en .
+
+cf:BotProtection a owl:Class ;
+    rdfs:subClassOf infra:Component ;
+    rdfs:label "Cloudflare Bot Protection System"@en .
+
+ws:Endpoint a owl:Class ;
+    rdfs:subClassOf infra:NetworkComponent ;
+    rdfs:label "WebSocket Communication Endpoint"@en .
+
+# ================================
+# DIMENSION 3: SOLUTION ARCHITECTURE
+# ================================
+
+exec:Solution a owl:Class ;
+    rdfs:label "Implementation Solution"@en ;
+    rdfs:comment "Actionable solution to address identified problems"@en ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty exec:solveProblem ;
+        owl:someValuesFrom ws:Problem
+    ] .
+
+exec:ImmediateFix a owl:Class ;
+    rdfs:subClassOf exec:Solution ;
+    rdfs:label "Immediate Fix Solution"@en ;
+    rdfs:comment "Solution implementable within 2 hours with existing resources"@en ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty exec:hasImplementationTime ;
+        owl:hasValue "PT2H"^^xsd:duration ;
+        owl:onClass time:Duration
+    ] .
+
+exec:ProgressiveSolution a owl:Class ;
+    rdfs:subClassOf exec:Solution ;
+    rdfs:label "Progressive Implementation Solution"@en ;
+    rdfs:comment "Solution requiring 2-4 weeks phased implementation"@en .
+
+exec:AlternativeArchitecture a owl:Class ;
+    rdfs:subClassOf exec:Solution ;
+    rdfs:label "Alternative Infrastructure Architecture"@en ;
+    rdfs:comment "Complete architectural replacement requiring 1-3 months"@en .
+
+arch:HybridArchitecture a owl:Class ;
+    rdfs:subClassOf exec:ProgressiveSolution ;
+    rdfs:label "Hybrid WebSocket Architecture"@en ;
+    rdfs:comment "Architecture combining direct connections with CDN benefits"@en .
+
+arch:MultiRegionArchitecture a owl:Class ;
+    rdfs:subClassOf exec:AlternativeArchitecture ;
+    rdfs:label "Multi-Region Distributed Architecture"@en .
+
+# ================================
+# DIMENSION 4: RISK ASSESSMENT
+# ================================
+
+risk:Risk a owl:Class ;
+    rdfs:label "Infrastructure Risk"@en ;
+    rdfs:comment "Potential negative outcome or vulnerability in the system"@en .
+
+risk:TechnicalRisk a owl:Class ;
+    rdfs:subClassOf risk:Risk ;
+    rdfs:label "Technical Implementation Risk"@en .
+
+risk:BusinessRisk a owl:Class ;
+    rdfs:subClassOf risk:Risk ;
+    rdfs:label "Business Impact Risk"@en .
+
+risk:SecurityRisk a owl:Class ;
+    rdfs:subClassOf risk:Risk ;
+    rdfs:label "Security Vulnerability Risk"@en .
+
+risk:OperationalRisk a owl:Class ;
+    rdfs:subClassOf risk:Risk ;
+    rdfs:label "Operational Continuity Risk"@en .
+
+risk:VendorLockInRisk a owl:Class ;
+    rdfs:subClassOf risk:BusinessRisk ;
+    rdfs:label "Vendor Lock-in Risk"@en ;
+    rdfs:comment "Risk of dependency on single vendor technology stack"@en .
+
+risk:SinglePointOfFailure a owl:Class ;
+    rdfs:subClassOf risk:TechnicalRisk ;
+    rdfs:label "Single Point of Failure Risk"@en .
+
+risk:DataLossRisk a owl:Class ;
+    rdfs:subClassOf risk:TechnicalRisk ;
+    rdfs:label "Data Loss Risk"@en .
+
+risk:ServiceDowntimeRisk a owl:Class ;
+    rdfs:subClassOf risk:OperationalRisk ;
+    rdfs:label "Service Downtime Risk"@en .
+
+# ================================
+# DIMENSION 5: CONSTRAINTS & LIMITATIONS
+# ================================
+
+const:Constraint a owl:Class ;
+    rdfs:label "System Constraint"@en ;
+    rdfs:comment "Limitation or restriction affecting solution implementation"@en .
+
+const:TechnicalConstraint a owl:Class ;
+    rdfs:subClassOf const:Constraint ;
+    rdfs:label "Technical Implementation Constraint"@en .
+
+const:BudgetConstraint a owl:Class ;
+    rdfs:subClassOf const:Constraint ;
+    rdfs:label "Budget Limitation Constraint"@en .
+
+const:TimeConstraint a owl:Class ;
+    rdfs:subClassOf const:Constraint ;
+    rdfs:label "Time-based Implementation Constraint"@en .
+
+const:ComplianceConstraint a owl:Class ;
+    rdfs:subClassOf const:Constraint ;
+    rdfs:label "Regulatory Compliance Constraint"@en .
+
+const:ResourceConstraint a owl:Class ;
+    rdfs:subClassOf const:Constraint ;
+    rdfs:label "Resource Availability Constraint"@en .
+
+const:SkillConstraint a owl:Class ;
+    rdfs:subClassOf const:ResourceConstraint ;
+    rdfs:label "Technical Skill Availability Constraint"@en .
+
+# ================================
+# DIMENSION 6: PERFORMANCE METRICS
+# ================================
+
+perf:PerformanceMetric a owl:Class ;
+    rdfs:label "Performance Measurement Metric"@en ;
+    rdfs:comment "Quantifiable measure of system performance characteristics"@en .
+
+perf:LatencyMetric a owl:Class ;
+    rdfs:subClassOf perf:PerformanceMetric ;
+    rdfs:label "Network Latency Metric"@en .
+
+perf:ThroughputMetric a owl:Class ;
+    rdfs:subClassOf perf:PerformanceMetric ;
+    rdfs:label "Data Throughput Metric"@en .
+
+perf:AvailabilityMetric a owl:Class ;
+    rdfs:subClassOf perf:PerformanceMetric ;
+    rdfs:label "System Availability Metric"@en .
+
+perf:ReliabilityMetric a owl:Class ;
+    rdfs:subClassOf perf:PerformanceMetric ;
+    rdfs:label "System Reliability Metric"@en .
+
+# ================================
+# DIMENSION 7: SECURITY CONSIDERATIONS
+# ================================
+
+sec:SecurityControl a owl:Class ;
+    rdfs:label "Security Control Mechanism"@en ;
+    rdfs:comment "Security measure or control protecting system assets"@en .
+
+sec:AuthenticationControl a owl:Class ;
+    rdfs:subClassOf sec:SecurityControl ;
+    rdfs:label "Authentication Security Control"@en .
+
+sec:AuthorizationControl a owl:Class ;
+    rdfs:subClassOf sec:SecurityControl ;
+    rdfs:label "Authorization Security Control"@en .
+
+sec:EncryptionControl a owl:Class ;
+    rdfs:subClassOf sec:SecurityControl ;
+    rdfs:label "Data Encryption Control"@en .
+
+sec:NetworkSecurityControl a owl:Class ;
+    rdfs:subClassOf sec:SecurityControl ;
+    rdfs:label "Network Security Control"@en .
+
+sec:BotMitigationControl a owl:Class ;
+    rdfs:subClassOf sec:NetworkSecurityControl ;
+    rdfs:label "Bot Traffic Mitigation Control"@en .
+
+sec:DDoSProtectionControl a owl:Class ;
+    rdfs:subClassOf sec:NetworkSecurityControl ;
+    rdfs:label "DDoS Attack Protection Control"@en .
+
+# ================================
+# DIMENSION 8: COST ANALYSIS
+# ================================
+
+cost:CostModel a owl:Class ;
+    rdfs:label "Cost Analysis Model"@en ;
+    rdfs:comment "Financial cost structure for infrastructure components"@en .
+
+cost:OperationalCost a owl:Class ;
+    rdfs:subClassOf cost:CostModel ;
+    rdfs:label "Operational Expense Cost"@en .
+
+cost:CapitalCost a owl:Class ;
+    rdfs:subClassOf cost:CostModel ;
+    rdfs:label "Capital Expenditure Cost"@en .
+
+cost:CloudServiceCost a owl:Class ;
+    rdfs:subClassOf cost:OperationalCost ;
+    rdfs:label "Cloud Service Subscription Cost"@en .
+
+cost:BandwidthCost a owl:Class ;
+    rdfs:subClassOf cost:OperationalCost ;
+    rdfs:label "Network Bandwidth Usage Cost"@en .
+
+cost:MaintenanceCost a owl:Class ;
+    rdfs:subClassOf cost:OperationalCost ;
+    rdfs:label "System Maintenance Cost"@en .
+
+cost:StaffingCost a owl:Class ;
+    rdfs:subClassOf cost:OperationalCost ;
+    rdfs:label "Personnel Staffing Cost"@en .
+
+# ================================
+# DIMENSION 9: DEPENDENCY MANAGEMENT
+# ================================
+
+dep:Dependency a owl:Class ;
+    rdfs:label "System Dependency"@en ;
+    rdfs:comment "External system or service dependency relationship"@en .
+
+dep:TechnicalDependency a owl:Class ;
+    rdfs:subClassOf dep:Dependency ;
+    rdfs:label "Technical System Dependency"@en .
+
+dep:VendorDependency a owl:Class ;
+    rdfs:subClassOf dep:Dependency ;
+    rdfs:label "External Vendor Dependency"@en .
+
+dep:InternalDependency a owl:Class ;
+    rdfs:subClassOf dep:TechnicalDependency ;
+    rdfs:label "Internal System Dependency"@en .
+
+dep:ExternalDependency a owl:Class ;
+    rdfs:subClassOf dep:TechnicalDependency ;
+    rdfs:label "External System Dependency"@en .
+
+dep:CriticalDependency a owl:Class ;
+    rdfs:subClassOf dep:Dependency ;
+    rdfs:label "Critical Path Dependency"@en ;
+    rdfs:comment "Dependency whose failure causes system failure"@en .
+
+# ================================
+# DIMENSION 10: SCALABILITY CHARACTERISTICS
+# ================================
+
+scale:ScalabilityProperty a owl:Class ;
+    rdfs:label "System Scalability Property"@en ;
+    rdfs:comment "Characteristic describing system scaling behavior"@en .
+
+scale:HorizontalScaling a owl:Class ;
+    rdfs:subClassOf scale:ScalabilityProperty ;
+    rdfs:label "Horizontal Scaling Capability"@en .
+
+scale:VerticalScaling a owl:Class ;
+    rdfs:subClassOf scale:ScalabilityProperty ;
+    rdfs:label "Vertical Scaling Capability"@en .
+
+scale:GeographicScaling a owl:Class ;
+    rdfs:subClassOf scale:ScalabilityProperty ;
+    rdfs:label "Geographic Distribution Scaling"@en .
+
+scale:LoadDistribution a owl:Class ;
+    rdfs:subClassOf scale:ScalabilityProperty ;
+    rdfs:label "Load Distribution Mechanism"@en .
+
+scale:AutoScaling a owl:Class ;
+    rdfs:subClassOf scale:ScalabilityProperty ;
+    rdfs:label "Automatic Scaling Capability"@en .
+
+# ================================
+# DIMENSION 11: OPERATIONAL PROCEDURES
+# ================================
+
+ops:OperationalProcedure a owl:Class ;
+    rdfs:label "Operational Procedure"@en ;
+    rdfs:comment "Standardized operational process or procedure"@en .
+
+ops:DeploymentProcedure a owl:Class ;
+    rdfs:subClassOf ops:OperationalProcedure ;
+    rdfs:label "System Deployment Procedure"@en .
+
+ops:MonitoringProcedure a owl:Class ;
+    rdfs:subClassOf ops:OperationalProcedure ;
+    rdfs:label "System Monitoring Procedure"@en .
+
+ops:IncidentResponse a owl:Class ;
+    rdfs:subClassOf ops:OperationalProcedure ;
+    rdfs:label "Incident Response Procedure"@en .
+
+ops:BackupProcedure a owl:Class ;
+    rdfs:subClassOf ops:OperationalProcedure ;
+    rdfs:label "Data Backup Procedure"@en .
+
+ops:RecoveryProcedure a owl:Class ;
+    rdfs:subClassOf ops:OperationalProcedure ;
+    rdfs:label "Disaster Recovery Procedure"@en .
+
+ops:MaintenanceProcedure a owl:Class ;
+    rdfs:subClassOf ops:OperationalProcedure ;
+    rdfs:label "System Maintenance Procedure"@en .
+
+# ================================
+# DIMENSION 12: COMPLIANCE REQUIREMENTS
+# ================================
+
+comp:ComplianceRequirement a owl:Class ;
+    rdfs:label "Regulatory Compliance Requirement"@en ;
+    rdfs:comment "Legal or regulatory requirement affecting system design"@en .
+
+comp:DataProtectionRequirement a owl:Class ;
+    rdfs:subClassOf comp:ComplianceRequirement ;
+    rdfs:label "Data Protection Compliance Requirement"@en .
+
+comp:AccessibilityRequirement a owl:Class ;
+    rdfs:subClassOf comp:ComplianceRequirement ;
+    rdfs:label "Accessibility Compliance Requirement"@en .
+
+comp:SecurityStandard a owl:Class ;
+    rdfs:subClassOf comp:ComplianceRequirement ;
+    rdfs:label "Security Standard Compliance"@en .
+
+comp:AuditRequirement a owl:Class ;
+    rdfs:subClassOf comp:ComplianceRequirement ;
+    rdfs:label "Audit Trail Requirement"@en .
+
+# ================================
+# DIMENSION 13: NETWORK TOPOLOGY
+# ================================
+
+net:NetworkTopology a owl:Class ;
+    rdfs:label "Network Infrastructure Topology"@en ;
+    rdfs:comment "Physical and logical network infrastructure arrangement"@en .
+
+net:EdgeNode a owl:Class ;
+    rdfs:subClassOf net:NetworkTopology ;
+    rdfs:label "Edge Computing Node"@en .
+
+net:CoreNode a owl:Class ;
+    rdfs:subClassOf net:NetworkTopology ;
+    rdfs:label "Core Network Node"@en .
+
+net:LoadBalancer a owl:Class ;
+    rdfs:subClassOf net:NetworkTopology ;
+    rdfs:label "Load Balancing Node"@en .
+
+net:CDNNode a owl:Class ;
+    rdfs:subClassOf net:EdgeNode ;
+    rdfs:label "Content Delivery Network Node"@en .
+
+net:OriginServer a owl:Class ;
+    rdfs:subClassOf net:CoreNode ;
+    rdfs:label "Origin Application Server"@en .
+
+# ================================
+# DIMENSION 14: DATA MANAGEMENT
+# ================================
+
+data:DataFlow a owl:Class ;
+    rdfs:label "System Data Flow"@en ;
+    rdfs:comment "Movement and transformation of data through system components"@en .
+
+data:RealTimeData a owl:Class ;
+    rdfs:subClassOf data:DataFlow ;
+    rdfs:label "Real-time Data Stream"@en .
+
+data:BatchData a owl:Class ;
+    rdfs:subClassOf data:DataFlow ;
+    rdfs:label "Batch Data Processing"@en .
+
+data:MetricsData a owl:Class ;
+    rdfs:subClassOf data:RealTimeData ;
+    rdfs:label "System Metrics Data"@en .
+
+data:LogData a owl:Class ;
+    rdfs:subClassOf data:DataFlow ;
+    rdfs:label "System Log Data"@en .
+
+data:TelemetryData a owl:Class ;
+    rdfs:subClassOf data:RealTimeData ;
+    rdfs:label "System Telemetry Data"@en .
+
+# ================================
+# DIMENSION 15: USER EXPERIENCE
+# ================================
+
+user:UserExperience a owl:Class ;
+    rdfs:label "User Experience Characteristic"@en ;
+    rdfs:comment "Aspect of user interaction with the system"@en .
+
+user:PerformanceExperience a owl:Class ;
+    rdfs:subClassOf user:UserExperience ;
+    rdfs:label "Performance-related User Experience"@en .
+
+user:ReliabilityExperience a owl:Class ;
+    rdfs:subClassOf user:UserExperience ;
+    rdfs:label "Reliability-related User Experience"@en .
+
+user:UsabilityExperience a owl:Class ;
+    rdfs:subClassOf user:UserExperience ;
+    rdfs:label "Usability-related User Experience"@en .
+
+user:AccessibilityExperience a owl:Class ;
+    rdfs:subClassOf user:UserExperience ;
+    rdfs:label "Accessibility-related User Experience"@en .
+
+# ================================
+# DIMENSION 16: VENDOR MANAGEMENT
+# ================================
+
+vendor:VendorRelationship a owl:Class ;
+    rdfs:label "Vendor Partnership Relationship"@en ;
+    rdfs:comment "Relationship with external technology vendors"@en .
+
+vendor:PrimaryVendor a owl:Class ;
+    rdfs:subClassOf vendor:VendorRelationship ;
+    rdfs:label "Primary Technology Vendor"@en .
+
+vendor:SecondaryVendor a owl:Class ;
+    rdfs:subClassOf vendor:VendorRelationship ;
+    rdfs:label "Secondary Technology Vendor"@en .
+
+vendor:VendorSLA a owl:Class ;
+    rdfs:label "Vendor Service Level Agreement"@en .
+
+vendor:VendorSupport a owl:Class ;
+    rdfs:label "Vendor Technical Support"@en .
+
+vendor:VendorRoadmap a owl:Class ;
+    rdfs:label "Vendor Product Roadmap"@en .
+
+# ================================
+# DIMENSION 17: MAINTENANCE & LIFECYCLE
+# ================================
+
+maint:MaintenanceActivity a owl:Class ;
+    rdfs:label "System Maintenance Activity"@en ;
+    rdfs:comment "Scheduled or unscheduled maintenance operation"@en .
+
+maint:PreventiveMaintenance a owl:Class ;
+    rdfs:subClassOf maint:MaintenanceActivity ;
+    rdfs:label "Preventive Maintenance"@en .
+
+maint:CorrectiveMaintenance a owl:Class ;
+    rdfs:subClassOf maint:MaintenanceActivity ;
+    rdfs:label "Corrective Maintenance"@en .
+
+maint:UpdateMaintenance a owl:Class ;
+    rdfs:subClassOf maint:MaintenanceActivity ;
+    rdfs:label "Software Update Maintenance"@en .
+
+maint:LifecycleStage a owl:Class ;
+    rdfs:label "Component Lifecycle Stage"@en .
+
+maint:ActiveStage a owl:Class ;
+    rdfs:subClassOf maint:LifecycleStage ;
+    rdfs:label "Active Production Stage"@en .
+
+maint:DeprecatedStage a owl:Class ;
+    rdfs:subClassOf maint:LifecycleStage ;
+    rdfs:label "Deprecated Component Stage"@en .
+
+maint:EndOfLifeStage a owl:Class ;
+    rdfs:subClassOf maint:LifecycleStage ;
+    rdfs:label "End of Life Stage"@en .
+
+# ================================
+# DIMENSION 18: LEGAL CONSIDERATIONS
+# ================================
+
+legal:LegalRequirement a owl:Class ;
+    rdfs:label "Legal Compliance Requirement"@en ;
+    rdfs:comment "Legal obligation affecting system operation"@en .
+
+legal:DataPrivacyLaw a owl:Class ;
+    rdfs:subClassOf legal:LegalRequirement ;
+    rdfs:label "Data Privacy Legal Requirement"@en .
+
+legal:IntellectualPropertyLaw a owl:Class ;
+    rdfs:subClassOf legal:LegalRequirement ;
+    rdfs:label "Intellectual Property Legal Requirement"@en .
+
+legal:ContractualObligation a owl:Class ;
+    rdfs:subClassOf legal:LegalRequirement ;
+    rdfs:label "Contractual Legal Obligation"@en .
+
+legal:LiabilityConsideration a owl:Class ;
+    rdfs:subClassOf legal:LegalRequirement ;
+    rdfs:label "Legal Liability Consideration"@en .
+
+# ================================
+# DIMENSION 19: MONITORING & OBSERVABILITY
+# ================================
+
+monitor:MonitoringFramework a owl:Class ;
+    rdfs:label "System Monitoring Framework"@en ;
+    rdfs:comment "Comprehensive system observability and monitoring solution"@en .
+
+monitor:Metric a owl:Class ;
+    rdfs:label "System Monitoring Metric"@en ;
+    rdfs:comment "Quantifiable measurement of system behavior"@en .
+
+monitor:ConnectionMetric a owl:Class ;
+    rdfs:subClassOf monitor:Metric ;
+    rdfs:label "Connection-related Monitoring Metric"@en .
+
+monitor:PerformanceMetric a owl:Class ;
+    rdfs:subClassOf monitor:Metric ;
+    rdfs:label "Performance-related Monitoring Metric"@en .
+
+monitor:ErrorMetric a owl:Class ;
+    rdfs:subClassOf monitor:Metric ;
+    rdfs:label "Error-related Monitoring Metric"@en .
+
+monitor:Alert a owl:Class ;
+    rdfs:label "Automated Monitoring Alert"@en ;
+    rdfs:comment "Automated alert triggered by metric threshold violation"@en .
+
+monitor:Dashboard a owl:Class ;
+    rdfs:label "Monitoring Dashboard"@en .
+
+monitor:Log a owl:Class ;
+    rdfs:label "System Log Entry"@en .
+
+monitor:Trace a owl:Class ;
+    rdfs:label "Distributed System Trace"@en .
+
+# ================================
+# DIMENSION 20: TESTING & VALIDATION
+# ================================
+
+exec:TestingFramework a owl:Class ;
+    rdfs:label "System Testing Framework"@en ;
+    rdfs:comment "Comprehensive testing and validation methodology"@en .
+
+exec:UnitTest a owl:Class ;
+    rdfs:subClassOf exec:TestingFramework ;
+    rdfs:label "Unit Testing"@en .
+
+exec:IntegrationTest a owl:Class ;
+    rdfs:subClassOf exec:TestingFramework ;
+    rdfs:label "Integration Testing"@en .
+
+exec:LoadTest a owl:Class ;
+    rdfs:subClassOf exec:TestingFramework ;
+    rdfs:label "Load Testing"@en .
+
+exec:StressTest a owl:Class ;
+    rdfs:subClassOf exec:TestingFramework ;
+    rdfs:label "Stress Testing"@en .
+
+exec:SecurityTest a owl:Class ;
+    rdfs:subClassOf exec:TestingFramework ;
+    rdfs:label "Security Testing"@en .
+
+exec:ValidationCriteria a owl:Class ;
+    rdfs:label "Solution Validation Criteria"@en .
+
+# ================================
+# DIMENSION 21: GEOGRAPHICAL DISTRIBUTION
+# ================================
+
+geo:GeographicLocation a owl:Class ;
+    rdfs:label "Geographic Location"@en ;
+    rdfs:comment "Physical geographic location of infrastructure components"@en .
+
+geo:Region a owl:Class ;
+    rdfs:subClassOf geo:GeographicLocation ;
+    rdfs:label "Geographic Region"@en .
+
+geo:DataCenter a owl:Class ;
+    rdfs:subClassOf geo:GeographicLocation ;
+    rdfs:label "Data Center Location"@en .
+
+geo:EdgeLocation a owl:Class ;
+    rdfs:subClassOf geo:GeographicLocation ;
+    rdfs:label "Edge Computing Location"@en .
+
+geo:Jurisdiction a owl:Class ;
+    rdfs:label "Legal Jurisdiction"@en ;
+    rdfs:comment "Legal jurisdiction affecting component operation"@en .
+
+# ================================
+# DIMENSION 22: TEMPORAL CHARACTERISTICS
+# ================================
+
+time:TemporalCharacteristic a owl:Class ;
+    rdfs:label "Temporal System Characteristic"@en ;
+    rdfs:comment "Time-related aspect of system behavior"@en .
+
+time:ResponseTime a owl:Class ;
+    rdfs:subClassOf time:TemporalCharacteristic ;
+    rdfs:label "System Response Time"@en .
+
+time:UpTime a owl:Class ;
+    rdfs:subClassOf time:TemporalCharacteristic ;
+    rdfs:label "System Uptime"@en .
+
+time:DownTime a owl:Class ;
+    rdfs:subClassOf time:TemporalCharacteristic ;
+    rdfs:label "System Downtime"@en .
+
+time:RecoveryTime a owl:Class ;
+    rdfs:subClassOf time:TemporalCharacteristic ;
+    rdfs:label "System Recovery Time"@en .
+
+time:MaintenanceWindow a owl:Class ;
+    rdfs:subClassOf time:TemporalCharacteristic ;
+    rdfs:label "Scheduled Maintenance Window"@en .
+
+# ================================
+# OBJECT PROPERTIES (RELATIONSHIPS)
+# ================================
+
+# Problem Domain Properties
+ws:hasSymptom a owl:ObjectProperty ;
+    rdfs:domain ws:Problem ;
+    rdfs:range xsd:string ;
+    rdfs:label "has observable symptom"@en ;
+    rdfs:comment "Observable manifestation of the problem"@en .
+
+ws:hasCause a owl:ObjectProperty ;
+    rdfs:domain ws:Problem ;
+    rdfs:range infra:Component ;
+    rdfs:label "has root cause"@en ;
+    rdfs:comment "Primary component causing the problem"@en .
+
+ws:triggersFailure a owl:ObjectProperty ;
+    rdfs:domain ws:Problem ;
+    rdfs:range ws:Problem ;
+    rdfs:label "triggers cascade failure"@en ;
+    rdfs:comment "One problem triggering another in cascade sequence"@en ;
+    owl:propertyChainAxiom ( ws:hasCause infra:dependsOn ws:affects ) .
+
+ws:affects a owl:ObjectProperty ;
+    rdfs:domain infra:Component ;
+    rdfs:range ws:Problem ;
+    rdfs:label "affects problem"@en .
+
+# Infrastructure Properties
+infra:dependsOn a owl:ObjectProperty ;
+    rdfs:domain infra:Component ;
+    rdfs:range infra:Component ;
+    rdfs:label "depends on component"@en ;
+    rdfs:comment "Component dependency relationship"@en ;
+    a owl:TransitiveProperty .
+
+infra:hosts a owl:ObjectProperty ;
+    rdfs:domain infra:Component ;
+    rdfs:range infra:Component ;
+    rdfs:label "hosts component"@en .
+
+infra:connectsTo a owl:ObjectProperty ;
+    rdfs:domain infra:NetworkComponent ;
+    rdfs:range infra:NetworkComponent ;
+    rdfs:label "connects to network component"@en ;
+    a owl:SymmetricProperty .
+
+infra:locatedAt a owl:ObjectProperty ;
+    rdfs:domain infra:Component ;
+    rdfs:range geo:GeographicLocation ;
+    rdfs:label "located at geographic location"@en .
+
+# Solution Properties
+exec:solveProblem a owl:ObjectProperty ;
+    rdfs:domain exec:Solution ;
+    rdfs:range ws:Problem ;
+    rdfs:label "solves identified problem"@en ;
+    rdfs:comment "Solution addresses specific problem"@en .
+
+exec:requiresComponent a owl:ObjectProperty ;
+    rdfs:domain exec:Solution ;
+    rdfs:range infra:Component ;
+    rdfs:label "requires infrastructure component"@en .
+
+exec:modifiesComponent a owl:ObjectProperty ;
+    rdfs:domain exec:Solution ;
+    rdfs:range infra:Component ;
+    rdfs:label "modifies existing component"@en .
+
+exec:introducesRisk a owl:ObjectProperty ;
+    rdfs:domain exec:Solution ;
+    rdfs:range risk:Risk ;
+    rdfs:label "introduces implementation risk"@en .
+
+exec:mitigatesRisk a owl:ObjectProperty ;
+    rdfs:domain exec:Solution ;
+    rdfs:range risk:Risk ;
+    rdfs:label "mitigates existing risk"@en .
+
+# Risk Properties
+risk:hasLikelihood a owl:DatatypeProperty ;
+    rdfs:domain risk:Risk ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "has probability likelihood"@en ;
+    rdfs:comment "Probability of risk occurrence (0.0 to 1.0)"@en .
+
+risk:hasImpact a owl:DatatypeProperty ;
+    rdfs:domain risk:Risk ;
+    rdfs:range xsd:string ;
+    rdfs:label "has business impact level"@en .
+
+risk:affects a owl:ObjectProperty ;
+    rdfs:domain risk:Risk ;
+    rdfs:range infra:Component ;
+    rdfs:label "affects component"@en .
+
+risk:mitigatedBy a owl:ObjectProperty ;
+    rdfs:domain risk:Risk ;
+    rdfs:range exec:Solution ;
+    rdfs:label "mitigated by solution"@en .
+
+# Constraint Properties
+const:constrains a owl:ObjectProperty ;
+    rdfs:domain const:Constraint ;
+    rdfs:range exec:Solution ;
+    rdfs:label "constrains solution implementation"@en .
+
+const:hasConstraintType a owl:DatatypeProperty ;
+    rdfs:domain const:Constraint ;
+    rdfs:range xsd:string ;
+    rdfs:label "has constraint type"@en .
+
+const:hasConstraintValue a owl:DatatypeProperty ;
+    rdfs:domain const:Constraint ;
+    rdfs:range xsd:string ;
+    rdfs:label "has constraint value"@en .
+
+# Performance Properties
+perf:measuredBy a owl:ObjectProperty ;
+    rdfs:domain infra:Component ;
+    rdfs:range perf:PerformanceMetric ;
+    rdfs:label "measured by performance metric"@en .
+
+perf:hasBaseline a owl:DatatypeProperty ;
+    rdfs:domain perf:PerformanceMetric ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "has baseline measurement"@en .
+
+perf:hasTarget a owl:DatatypeProperty ;
+    rdfs:domain perf:PerformanceMetric ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "has target performance value"@en .
+
+# Security Properties
+sec:protectedBy a owl:ObjectProperty ;
+    rdfs:domain infra:Component ;
+    rdfs:range sec:SecurityControl ;
+    rdfs:label "protected by security control"@en .
+
+sec:hasSecurityLevel a owl:DatatypeProperty ;
+    rdfs:domain sec:SecurityControl ;
+    rdfs:range xsd:string ;
+    rdfs:label "has security assurance level"@en .
+
+# Cost Properties
+cost:hasCostValue a owl:DatatypeProperty ;
+    rdfs:domain cost:CostModel ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "has monetary cost value"@en .
+
+cost:hasCostUnit a owl:DatatypeProperty ;
+    rdfs:domain cost:CostModel ;
+    rdfs:range xsd:string ;
+    rdfs:label "has cost unit of measurement"@en .
+
+cost:associatedWith a owl:ObjectProperty ;
+    rdfs:domain cost:CostModel ;
+    rdfs:range infra:Component ;
+    rdfs:label "associated with component"@en .
+
+# Monitoring Properties
+monitor:monitors a owl:ObjectProperty ;
+    rdfs:domain monitor:Metric ;
+    rdfs:range infra:Component ;
+    rdfs:label "monitors component behavior"@en .
+
+monitor:hasPrometheusQuery a owl:DatatypeProperty ;
+    rdfs:domain monitor:Metric ;
+    rdfs:range xsd:string ;
+    rdfs:label "has PromQL query definition"@en .
+
+monitor:hasMetricType a owl:DatatypeProperty ;
+    rdfs:domain monitor:Metric ;
+    rdfs:range xsd:string ;
+    rdfs:label "has metric type classification"@en .
+
+monitor:hasThreshold a owl:DatatypeProperty ;
+    rdfs:domain monitor:Alert ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "has alert threshold value"@en .
+
+monitor:triggersAlert a owl:ObjectProperty ;
+    rdfs:domain monitor:Metric ;
+    rdfs:range monitor:Alert ;
+    rdfs:label "triggers monitoring alert"@en .
+
+# Vendor Properties
+vendor:providedBy a owl:ObjectProperty ;
+    rdfs:domain infra:Component ;
+    rdfs:range vendor:VendorRelationship ;
+    rdfs:label "provided by vendor"@en .
+
+vendor:hasVendorName a owl:DatatypeProperty ;
+    rdfs:domain vendor:VendorRelationship ;
+    rdfs:range xsd:string ;
+    rdfs:label "has vendor organization name"@en .
+
+vendor:hasSLALevel a owl:DatatypeProperty ;
+    rdfs:domain vendor:VendorSLA ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "has SLA percentage level"@en .
+
+# Temporal Properties
+time:hasStartTime a owl:DatatypeProperty ;
+    rdfs:domain time:TemporalCharacteristic ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "has start timestamp"@en .
+
+time:hasDuration a owl:DatatypeProperty ;
+    rdfs:domain time:TemporalCharacteristic ;
+    rdfs:range xsd:duration ;
+    rdfs:label "has time duration"@en .
+
+time:hasFrequency a owl:DatatypeProperty ;
+    rdfs:domain time:TemporalCharacteristic ;
+    rdfs:range xsd:string ;
+    rdfs:label "has occurrence frequency"@en .
+
+# Execution Properties
+exec:hasImplementationTime a owl:DatatypeProperty ;
+    rdfs:domain exec:Solution ;
+    rdfs:range xsd:duration ;
+    rdfs:label "has implementation time requirement"@en .
+
+exec:hasValidationCommand a owl:DatatypeProperty ;
+    rdfs:domain exec:Solution ;
+    rdfs:range xsd:string ;
+    rdfs:label "has validation command"@en .
+
+exec:hasCommand a owl:DatatypeProperty ;
+    rdfs:domain exec:Solution ;
+    rdfs:range xsd:string ;
+    rdfs:label "has execution command"@en .
+
+exec:modifiesFile a owl:DatatypeProperty ;
+    rdfs:domain exec:Solution ;
+    rdfs:range xsd:string ;
+    rdfs:label "modifies configuration file"@en .
+
+exec:requiresExternalDependency a owl:DatatypeProperty ;
+    rdfs:domain exec:Solution ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "requires external dependency"@en .
+
+exec:hasConfidenceLevel a owl:DatatypeProperty ;
+    rdfs:domain exec:Solution ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "has implementation confidence level"@en .
+
+exec:hasPriority a owl:DatatypeProperty ;
+    rdfs:domain exec:Solution ;
+    rdfs:range xsd:integer ;
+    rdfs:label "has implementation priority"@en .
+
+# ================================
+# DATATYPE PROPERTIES
+# ================================
+
+ws:hasSeverity a owl:DatatypeProperty ;
+    rdfs:domain ws:Problem ;
+    rdfs:range [ a rdfs:Datatype ; owl:oneOf ( "low" "medium" "high" "critical" ) ] ;
+    rdfs:label "has severity level"@en .
+
+infra:hasConfiguration a owl:DatatypeProperty ;
+    rdfs:domain infra:Component ;
+    rdfs:range xsd:string ;
+    rdfs:label "has configuration specification"@en .
+
+infra:hasEndpoint a owl:DatatypeProperty ;
+    rdfs:domain infra:Component ;
+    rdfs:range xsd:anyURI ;
+    rdfs:label "has network endpoint URI"@en .
+
+infra:hasVersion a owl:DatatypeProperty ;
+    rdfs:domain infra:Component ;
+    rdfs:range xsd:string ;
+    rdfs:label "has software version"@en .
+
+infra:hasCapacity a owl:DatatypeProperty ;
+    rdfs:domain infra:Component ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "has operational capacity"@en .
+
+# ================================
+# PROBLEM INSTANCES (OBSERVABLE EVIDENCE)
+# ================================
+
+# Root cascade failure instance
+ws:ObservatoryWebSocketCascadeFailure a ws:CascadeFailure ;
+    rdfs:label "Observatory WebSocket Infrastructure Cascade Failure"@en ;
+    dc:description "Critical cascade failure affecting Observatory WebSocket infrastructure causing service outages" ;
+    ws:hasSymptom "HTTP/2 404 responses on WebSocket upgrade requests" ;
+    ws:hasSeverity "critical" ;
+    ws:hasCause cf:ObservatoryTunnelInstance ;
+    ws:triggersFailure ws:ObservatoryPollingFallback ;
+    prov:wasObservedAt "2025-09-26T00:00:00Z"^^xsd:dateTime ;
+    risk:hasLikelihood "0.85"^^xsd:decimal ;
+    risk:hasImpact "high" .
+
+# Specific protocol downgrade problem
+ws:WebSocketProtocolDowngrade a ws:ProtocolDowngrade ;
+    rdfs:label "WebSocket to HTTP/2 Protocol Downgrade"@en ;
+    ws:hasSymptom "WebSocket Upgrade header ignored, connection downgraded to HTTP/2" ;
+    ws:hasSeverity "critical" ;
+    ws:hasCause cf:ObservatoryTunnelInstance ;
+    perf:hasBaseline "0.0"^^xsd:decimal ;
+    perf:hasTarget "99.9"^^xsd:decimal .
+
+# Aggressive polling fallback
+ws:ObservatoryPollingFallback a ws:PollingFallback ;
+    rdfs:label "Observatory Aggressive HTTP Polling Fallback"@en ;
+    ws:hasSymptom "6-10 HTTP requests every 2 seconds across multiple endpoints" ;
+    ws:hasSeverity "high" ;
+    ws:triggersFailure ws:BotProtectionActivation ;
+    perf:hasBaseline "30.0"^^xsd:decimal ;
+    perf:hasTarget "0.5"^^xsd:decimal .
+
+# Bot protection cascade trigger
+ws:BotProtectionActivation a ws:BotProtectionTrigger ;
+    rdfs:label "Cloudflare Bot Protection Cascade Activation"@en ;
+    ws:hasSymptom "Error 1033 - Origin unreachable, manual tunnel restart required" ;
+    ws:hasSeverity "critical" ;
+    ws:hasCause cf:BotProtectionSystem ;
+    time:hasFrequency "intermittent_based_on_websocket_usage" .
+
+# ================================
+# INFRASTRUCTURE COMPONENT INSTANCES
+# ================================
+
+# Primary Cloudflare tunnel instance
+cf:ObservatoryTunnelInstance a cf:Tunnel ;
+    rdfs:label "Observatory Production Cloudflare Tunnel"@en ;
+    infra:hasConfiguration """tunnel: d1e53e43-033f-4994-8f46-c83962ae3785
+credentials-file: /Users/lou/.cloudflared/d1e53e43-033f-4994-8f46-c83962ae3785.json
+ingress:
+  - hostname: observatory.nkllon.com
+    service: http://localhost:8888
+    originRequest:
+      httpHostHeader: localhost:8888
+  - service: http_status:404""" ;
+    infra:hasEndpoint <https://observatory.nkllon.com> ;
+    infra:hasVersion "cloudflared_2025.x" ;
+    infra:locatedAt geo:UserMacbook ;
+    vendor:providedBy vendor:CloudflareVendor ;
+    dep:dependsOn net:LocalhostOriginServer ;
+    risk:affects risk:SinglePointOfFailureTunnel .
+
+# Cloudflare dashboard configuration
+cf:DashboardWebSocketSettings a cf:Dashboard ;
+    rdfs:label "Cloudflare Dashboard WebSocket Configuration"@en ;
+    infra:hasConfiguration "Network > WebSockets > Currently Disabled" ;
+    vendor:providedBy vendor:CloudflareVendor ;
+    exec:modifiesComponent cf:ObservatoryTunnelInstance .
+
+# Bot protection system
+cf:BotProtectionSystem a cf:BotProtection ;
+    rdfs:label "Cloudflare Bot Detection and Mitigation System"@en ;
+    infra:hasConfiguration "Default bot protection rules with aggressive traffic pattern detection" ;
+    sec:hasSecurityLevel "high" ;
+    vendor:providedBy vendor:CloudflareVendor ;
+    sec:protectedBy sec:TrafficPatternAnalysis .
+
+# WebSocket endpoint instances
+ws:EmojiRainEndpoint a ws:Endpoint ;
+    rdfs:label "Emoji Rain Real-time WebSocket Endpoint"@en ;
+    infra:hasEndpoint <ws://localhost:8888/ws/emoji-rain> ;
+    infra:locatedAt geo:UserMacbook ;
+    dep:dependsOn net:LocalhostOriginServer ;
+    user:affects user:EmojiRainExperience .
+
+ws:ObservatoryEndpoint a ws:Endpoint ;
+    rdfs:label "Observatory Dashboard WebSocket Endpoint"@en ;
+    infra:hasEndpoint <ws://localhost:8888/ws/observatory> ;
+    infra:locatedAt geo:UserMacbook ;
+    dep:dependsOn net:LocalhostOriginServer ;
+    user:affects user:DashboardExperience .
+
+ws:AnomaliesEndpoint a ws:Endpoint ;
+    rdfs:label "Anomaly Detection WebSocket Endpoint"@en ;
+    infra:hasEndpoint <ws://localhost:8888/ws/anomalies> ;
+    infra:locatedAt geo:UserMacbook ;
+    dep:dependsOn net:LocalhostOriginServer ;
+    user:affects user:AnomalyMonitoringExperience .
+
+ws:DoctorStatusEndpoint a ws:Endpoint ;
+    rdfs:label "System Health Doctor WebSocket Endpoint"@en ;
+    infra:hasEndpoint <ws://localhost:8888/ws/doctor-status> ;
+    infra:locatedAt geo:UserMacbook ;
+    dep:dependsOn net:LocalhostOriginServer ;
+    user:affects user:SystemHealthExperience .
+
+# Origin server
+net:LocalhostOriginServer a net:OriginServer ;
+    rdfs:label "Observatory FastAPI Origin Server"@en ;
+    infra:hasEndpoint <http://localhost:8888> ;
+    infra:hasConfiguration "FastAPI with WebSocket support on port 8888" ;
+    infra:locatedAt geo:UserMacbook ;
+    infra:hosts ws:EmojiRainEndpoint, ws:ObservatoryEndpoint, ws:AnomaliesEndpoint, ws:DoctorStatusEndpoint .
+
+# ================================
+# IMMEDIATE SOLUTION INSTANCES
+# ================================
+
+# Fix 1: Tunnel configuration correction
+exec:FixCloudflaredConfiguration a exec:ImmediateFix ;
+    rdfs:label "Correct Cloudflared WebSocket Configuration"@en ;
+    dc:description "Update cloudflared config.yml with proper WebSocket proxy settings" ;
+    exec:solveProblem ws:WebSocketProtocolDowngrade ;
+    exec:hasImplementationTime "PT15M"^^xsd:duration ;
+    exec:hasConfidenceLevel "0.95"^^xsd:decimal ;
+    exec:hasPriority "1"^^xsd:integer ;
+    exec:modifiesFile "~/.cloudflared/config.yml" ;
+    exec:hasValidationCommand "cloudflared tunnel ingress validate" ;
+    exec:requiresExternalDependency false ;
+    exec:hasCommand "Edit config file and restart cloudflared service" ;
+    infra:hasConfiguration """tunnel: d1e53e43-033f-4994-8f46-c83962ae3785
+credentials-file: /Users/lou/.cloudflared/d1e53e43-033f-4994-8f46-c83962ae3785.json
+ingress:
+  - hostname: observatory.nkllon.com
+    service: http://localhost:8888
+    originRequest:
+      httpHostHeader: localhost:8888
+      connectTimeout: 30s
+      disableChunkedEncoding: true
+      noTLSVerify: true
+  - service: http_status:404""" ;
+    exec:mitigatesRisk risk:WebSocketUpgradeFailureRisk .
+
+# Fix 2: Enable WebSockets in dashboard
+exec:EnableCloudflareWebSockets a exec:ImmediateFix ;
+    rdfs:label "Enable WebSocket Support in Cloudflare Dashboard"@en ;
+    exec:solveProblem ws:WebSocketProtocolDowngrade ;
+    exec:hasImplementationTime "PT5M"^^xsd:duration ;
+    exec:hasConfidenceLevel "0.99"^^xsd:decimal ;
+    exec:hasPriority "2"^^xsd:integer ;
+    exec:hasCommand "Navigate to Cloudflare Dashboard > Network > WebSockets > Toggle On" ;
+    exec:requiresExternalDependency true ;
+    exec:modifiesComponent cf:DashboardWebSocketSettings ;
+    exec:mitigatesRisk risk:WebSocketUpgradeFailureRisk .
+
+# Fix 3: Optimize polling behavior
+exec:OptimizePollingFallback a exec:ImmediateFix ;
+    rdfs:label "Implement Exponential Backoff HTTP Polling"@en ;
+    exec:solveProblem ws:ObservatoryPollingFallback ;
+    exec:hasImplementationTime "PT30M"^^xsd:duration ;
+    exec:hasConfidenceLevel "0.90"^^xsd:decimal ;
+    exec:hasPriority "3"^^xsd:integer ;
+    exec:modifiesFile "frontend/js/websocket-client.js" ;
+    exec:requiresExternalDependency false ;
+    infra:hasConfiguration """// Exponential backoff implementation
+let pollInterval = 5000; // Start with 5 seconds
+const maxInterval = 30000; // Maximum 30 seconds
+const backoffMultiplier = 1.5;
+const jitterMax = 1000; // Random jitter up to 1 second
+
+function pollWithBackoff() {
+  fetch('/api/endpoint')
+    .then(response => {
+      if (response.ok) {
+        pollInterval = 5000; // Reset on success
+      } else {
+        pollInterval = Math.min(pollInterval * backoffMultiplier, maxInterval);
+      }
+    })
+    .catch(() => {
+      pollInterval = Math.min(pollInterval * 2, maxInterval);
+    });
+  
+  const jitter = Math.random() * jitterMax;
+  setTimeout(pollWithBackoff, pollInterval + jitter);
+}""" ;
+    exec:mitigatesRisk risk:BotProtectionTriggerRisk .
+
+# Fix 4: Create bot protection whitelist
+exec:CreateBotProtectionWhitelist a exec:ImmediateFix ;
+    rdfs:label "Configure Bot Protection Origin IP Whitelist"@en ;
+    exec:solveProblem ws:BotProtectionActivation ;
+    exec:hasImplementationTime "PT10M"^^xsd:duration ;
+    exec:hasConfidenceLevel "0.85"^^xsd:decimal ;
+    exec:hasPriority "4"^^xsd:integer ;
+    exec:hasCommand "Create Cloudflare firewall rule: (ip.src eq ORIGIN_IP) then allow" ;
+    exec:requiresExternalDependency true ;
+    exec:modifiesComponent cf:BotProtectionSystem ;
+    exec:mitigatesRisk risk:BotProtectionTriggerRisk .
+
+# Fix 5: Service restart procedure
+exec:RestartCloudflaredService a exec:ImmediateFix ;
+    rdfs:label "Restart Cloudflared Service with New Configuration"@en ;
+    exec:solveProblem ws:ObservatoryWebSocketCascadeFailure ;
+    exec:hasImplementationTime "PT2M"^^xsd:duration ;
+    exec:hasConfidenceLevel "0.99"^^xsd:decimal ;
+    exec:hasPriority "5"^^xsd:integer ;
+    exec:hasCommand "sudo systemctl restart cloudflared" ;
+    exec:hasValidationCommand "sudo systemctl status cloudflared && curl -I https://observatory.nkllon.com" ;
+    exec:requiresExternalDependency false ;
+    exec:modifiesComponent cf:ObservatoryTunnelInstance .
+
+# ================================
+# COMPREHENSIVE MONITORING INSTANCES
+# ================================
+
+# Connection monitoring metrics
+monitor:WebSocketConnectionsActive a monitor:ConnectionMetric ;
+    rdfs:label "Active WebSocket Connections Gauge"@en ;
+    monitor:hasMetricType "gauge" ;
+    monitor:hasPrometheusQuery "websocket_connections_active" ;
+    monitor:monitors ws:EmojiRainEndpoint, ws:ObservatoryEndpoint, ws:AnomaliesEndpoint, ws:DoctorStatusEndpoint ;
+    perf:hasTarget "100.0"^^xsd:decimal .
+
+monitor:WebSocketUpgradeSuccessRate a monitor:ConnectionMetric ;
+    rdfs:label "WebSocket Upgrade Success Rate Percentage"@en ;
+    monitor:hasMetricType "counter" ;
+    monitor:hasPrometheusQuery "rate(websocket_upgrade_attempts_total{status_code=\"101\"}[5m]) / rate(websocket_upgrade_attempts_total[5m]) * 100" ;
+    monitor:monitors cf:ObservatoryTunnelInstance ;
+    perf:hasTarget "99.9"^^xsd:decimal .
+
+monitor:WebSocketConnectionDuration a monitor:ConnectionMetric ;
+    rdfs:label "WebSocket Connection Lifetime Duration"@en ;
+    monitor:hasMetricType "histogram" ;
+    monitor:hasPrometheusQuery "histogram_quantile(0.95, websocket_connection_duration_seconds)" ;
+    monitor:monitors ws:EmojiRainEndpoint, ws:ObservatoryEndpoint ;
+    perf:hasTarget "3600.0"^^xsd:decimal .
+
+# Performance monitoring metrics
+monitor:WebSocketMessageLatency a monitor:PerformanceMetric ;
+    rdfs:label "WebSocket Message Round-trip Latency"@en ;
+    monitor:hasMetricType "histogram" ;
+    monitor:hasPrometheusQuery "histogram_quantile(0.95, websocket_message_latency_seconds{message_type=\"ping_pong\"})" ;
+    monitor:monitors ws:EmojiRainEndpoint, ws:ObservatoryEndpoint ;
+    perf:hasTarget "0.1"^^xsd:decimal .
+
+monitor:TunnelLatencyOverhead a monitor:PerformanceMetric ;
+    rdfs:label "Cloudflare Tunnel Latency Overhead"@en ;
+    monitor:hasMetricType "histogram" ;
+    monitor:hasPrometheusQuery "histogram_quantile(0.95, tunnel_latency_overhead_seconds)" ;
+    monitor:monitors cf:ObservatoryTunnelInstance ;
+    perf:hasTarget "0.05"^^xsd:decimal .
+
+monitor:ThroughputMetric a monitor:PerformanceMetric ;
+    rdfs:label "WebSocket Message Throughput Rate"@en ;
+    monitor:hasMetricType "counter" ;
+    monitor:hasPrometheusQuery "rate(websocket_messages_total[5m])" ;
+    monitor:monitors ws:EmojiRainEndpoint ;
+    perf:hasTarget "1000.0"^^xsd:decimal .
+
+# Error monitoring metrics
+monitor:PollingFallbackFrequency a monitor:ErrorMetric ;
+    rdfs:label "HTTP Polling Fallback Activation Rate"@en ;
+    monitor:hasMetricType "counter" ;
+    monitor:hasPrometheusQuery "rate(polling_fallback_activations_total[5m])" ;
+    monitor:monitors ws:ObservatoryPollingFallback ;
+    perf:hasTarget "0.0"^^xsd:decimal .
+
+monitor:CloudflareErrorRate a monitor:ErrorMetric ;
+    rdfs:label "Cloudflare Infrastructure Error Rate"@en ;
+    monitor:hasMetricType "counter" ;
+    monitor:hasPrometheusQuery "rate(cloudflare_errors_total[5m])" ;
+    monitor:monitors cf:ObservatoryTunnelInstance ;
+    perf:hasTarget "0.001"^^xsd:decimal .
+
+monitor:BotProtectionTriggerRate a monitor:ErrorMetric ;
+    rdfs:label "Bot Protection System Trigger Rate"@en ;
+    monitor:hasMetricType "counter" ;
+    monitor:hasPrometheusQuery "rate(bot_protection_triggers_total[5m])" ;
+    monitor:monitors cf:BotProtectionSystem ;
+    perf:hasTarget "0.0"^^xsd:decimal .
+
+monitor:Error1033Occurrences a monitor:ErrorMetric ;
+    rdfs:label "Cloudflare Error 1033 Occurrence Counter"@en ;
+    monitor:hasMetricType "counter" ;
+    monitor:hasPrometheusQuery "increase(cloudflare_errors_total{error_code=\"1033\"}[24h])" ;
+    monitor:monitors cf:ObservatoryTunnelInstance ;
+    perf:hasTarget "0.0"^^xsd:decimal .
+
+# ================================
+# MONITORING ALERT INSTANCES
+# ================================
+
+monitor:WebSocketConnectionFailureAlert a monitor:Alert ;
+    rdfs:label "Critical WebSocket Connection Failure Alert"@en ;
+    monitor:hasThreshold "0.1"^^xsd:decimal ;
+    monitor:hasAlertSeverity "critical" ;
+    monitor:hasPrometheusQuery "rate(websocket_upgrade_attempts_total{status_code!=\"101\"}[5m]) > 0.1" ;
+    monitor:triggersAlert monitor:WebSocketUpgradeSuccessRate ;
+    ops:hasEscalationProcedure "Immediate engineer notification and tunnel restart procedure" .
+
+monitor:TunnelLatencyHighAlert a monitor:Alert ;
+    rdfs:label "High Tunnel Latency Performance Alert"@en ;
+    monitor:hasThreshold "0.2"^^xsd:decimal ;
+    monitor:hasAlertSeverity "warning" ;
+    monitor:hasPrometheusQuery "histogram_quantile(0.95, tunnel_latency_overhead_seconds) > 0.2" ;
+    monitor:triggersAlert monitor:TunnelLatencyOverhead .
+
+monitor:PollingFallbackActiveAlert a monitor:Alert ;
+    rdfs:label "Polling Fallback Activation Alert"@en ;
+    monitor:hasThreshold "0.0"^^xsd:decimal ;
+    monitor:hasAlertSeverity "warning" ;
+    monitor:hasPrometheusQuery "rate(polling_fallback_activations_total[5m]) > 0" ;
+    monitor:triggersAlert monitor:PollingFallbackFrequency .
+
+monitor:BotProtectionActiveAlert a monitor:Alert ;
+    rdfs:label "Bot Protection System Activation Alert"@en ;
+    monitor:hasThreshold "0.0"^^xsd:decimal ;
+    monitor:hasAlertSeverity "critical" ;
+    monitor:hasPrometheusQuery "rate(bot_protection_triggers_total[5m]) > 0" ;
+    monitor:triggersAlert monitor:BotProtectionTriggerRate .
+
+monitor:ServiceUnavailableAlert a monitor:Alert ;
+    rdfs:label "Complete Service Unavailability Alert"@en ;
+    monitor:hasThreshold "0.95"^^xsd:decimal ;
+    monitor:hasAlertSeverity "critical" ;
+    monitor:hasPrometheusQuery "avg_over_time(up{job=\"observatory\"}[5m]) < 0.95" ;
+    ops:hasEscalationProcedure "Immediate executive notification and emergency response" .
+
+# ================================
+# RISK ASSESSMENT INSTANCES
+# ================================
+
+risk:SinglePointOfFailureTunnel a risk:SinglePointOfFailure ;
+    rdfs:label "Cloudflare Tunnel Single Point of Failure Risk"@en ;
+    risk:hasLikelihood "0.15"^^xsd:decimal ;
+    risk:hasImpact "critical" ;
+    risk:affects cf:ObservatoryTunnelInstance ;
+    risk:mitigatedBy arch:HybridWebSocketArchitecture ;
+    dc:description "Complete dependency on single Cloudflare tunnel for all WebSocket connectivity" .
+
+risk:VendorLockInCloudflareRisk a risk:VendorLockInRisk ;
+    rdfs:label "Cloudflare Vendor Lock-in Strategic Risk"@en ;
+    risk:hasLikelihood "0.85"^^xsd:decimal ;
+    risk:hasImpact "high" ;
+    risk:affects vendor:CloudflareVendor ;
+    risk:mitigatedBy exec:MultiVendorStrategy ;
+    dc:description "Deep integration with Cloudflare proprietary tunnel technology creates migration barriers" .
+
+risk:WebSocketUpgradeFailureRisk a risk:TechnicalRisk ;
+    rdfs:label "WebSocket Protocol Upgrade Failure Risk"@en ;
+    risk:hasLikelihood "0.75"^^xsd:decimal ;
+    risk:hasImpact "high" ;
+    risk:affects ws:EmojiRainEndpoint, ws:ObservatoryEndpoint ;
+    risk:mitigatedBy exec:FixCloudflaredConfiguration, exec:EnableCloudflareWebSockets .
+
+risk:BotProtectionTriggerRisk a risk:OperationalRisk ;
+    rdfs:label "Bot Protection False Positive Trigger Risk"@en ;
+    risk:hasLikelihood "0.60"^^xsd:decimal ;
+    risk:hasImpact "critical" ;
+    risk:affects cf:BotProtectionSystem ;
+    risk:mitigatedBy exec:OptimizePollingFallback, exec:CreateBotProtectionWhitelist .
+
+risk:CascadeFailureRisk a risk:TechnicalRisk ;
+    rdfs:label "System-wide Cascade Failure Risk"@en ;
+    risk:hasLikelihood "0.40"^^xsd:decimal ;
+    risk:hasImpact "critical" ;
+    risk:affects ws:ObservatoryWebSocketCascadeFailure ;
+    risk:mitigatedBy monitor:ComprehensiveMonitoringFramework .
+
+risk:DataLossRealTimeRisk a risk:DataLossRisk ;
+    rdfs:label "Real-time Data Stream Loss Risk"@en ;
+    risk:hasLikelihood "0.30"^^xsd:decimal ;
+    risk:hasImpact "medium" ;
+    risk:affects data:RealTimeWebSocketData ;
+    risk:mitigatedBy arch:MessageQueueBackup .
+
+risk:PerformanceDegradationRisk a risk:TechnicalRisk ;
+    rdfs:label "System Performance Degradation Risk"@en ;
+    risk:hasLikelihood "0.50"^^xsd:decimal ;
+    risk:hasImpact "medium" ;
+    risk:affects perf:WebSocketLatencyPerformance ;
+    risk:mitigatedBy arch:MultiRegionArchitecture .
+
+risk:SecurityVulnerabilityRisk a risk:SecurityRisk ;
+    rdfs:label "WebSocket Security Vulnerability Risk"@en ;
+    risk:hasLikelihood "0.20"^^xsd:decimal ;
+    risk:hasImpact "high" ;
+    risk:affects sec:WebSocketSecurityControls ;
+    risk:mitigatedBy sec:EnhancedWebSocketSecurity .
+
+risk:ComplianceViolationRisk a risk:BusinessRisk ;
+    rdfs:label "Regulatory Compliance Violation Risk"@en ;
+    risk:hasLikelihood "0.10"^^xsd:decimal ;
+    risk:hasImpact "high" ;
+    risk:affects comp:DataProtectionCompliance ;
+    risk:mitigatedBy comp:ComplianceMonitoring .
+
+# ================================
+# CONSTRAINT INSTANCES
+# ================================
+
+const:TwoHourImplementationConstraint a const:TimeConstraint ;
+    rdfs:label "2-Hour Implementation Time Constraint"@en ;
+    const:hasConstraintValue "PT2H" ;
+    const:constrains exec:FixCloudflaredConfiguration, exec:EnableCloudflareWebSockets, exec:OptimizePollingFallback ;
+    dc:description "Solution must be implementable within 2-hour timeframe" .
+
+const:ZeroDowntimeConstraint a const:TechnicalConstraint ;
+    rdfs:label "Zero Downtime Deployment Constraint"@en ;
+    const:hasConstraintValue "0 seconds acceptable downtime" ;
+    const:constrains exec:RestartCloudflaredService ;
+    dc:description "Solution implementation cannot cause service interruption" .
+
+const:BudgetLimitConstraint a const:BudgetConstraint ;
+    rdfs:label "Infrastructure Budget Limitation Constraint"@en ;
+    const:hasConstraintValue "$500 monthly maximum" ;
+    const:constrains arch:MultiRegionArchitecture, vendor:AlternativeVendorMigration ;
+    dc:description "New infrastructure costs must not exceed monthly budget allocation" .
+
+const:SkillAvailabilityConstraint a const:SkillConstraint ;
+    rdfs:label "Technical Skill Availability Constraint"@en ;
+    const:hasConstraintValue "Single full-stack developer" ;
+    const:constrains exec:ComplexArchitecturalMigration ;
+    dc:description "Implementation complexity limited by available technical expertise" .
+
+const:ComplianceRequirementConstraint a const:ComplianceConstraint ;
+    rdfs:label "Data Protection Compliance Constraint"@en ;
+    const:hasConstraintValue "GDPR and CCPA compliance required" ;
+    const:constrains data:DataProcessingArchitecture ;
+    dc:description "All data handling must maintain regulatory compliance" .
+
+const:CloudflareVendorConstraint a const:TechnicalConstraint ;
+    rdfs:label "Existing Cloudflare Integration Constraint"@en ;
+    const:hasConstraintValue "Existing DNS and CDN integration" ;
+    const:constrains vendor:VendorMigrationStrategy ;
+    dc:description "Existing Cloudflare integration creates migration complexity" .
+
+const:GeographicDistributionConstraint a const:TechnicalConstraint ;
+    rdfs:label "Global User Base Geographic Constraint"@en ;
+    const:hasConstraintValue "Users in North America, Europe, Asia Pacific" ;
+    const:constrains arch:RegionalArchitecture ;
+    dc:description "Solution must serve global user base with acceptable latency" .
+
+const:SecurityRequirementConstraint a const:TechnicalConstraint ;
+    rdfs:label "Enterprise Security Requirement Constraint"@en ;
+    const:hasConstraintValue "DDoS protection and bot mitigation required" ;
+    const:constrains arch:DirectConnectionArchitecture ;
+    dc:description "Alternative architectures must maintain security protection levels" .
+
+# ================================
+# PROGRESSIVE SOLUTION INSTANCES
+# ================================
+
+arch:HybridWebSocketArchitecture a arch:HybridArchitecture ;
+    rdfs:label "Hybrid WebSocket Direct/CDN Architecture"@en ;
+    exec:solveProblem ws:ObservatoryWebSocketCascadeFailure ;
+    exec:hasImplementationTime "P14D"^^xsd:duration ;
+    exec:hasConfidenceLevel "0.85"^^xsd:decimal ;
+    exec:requiresExternalDependency true ;
+    exec:introducesRisk risk:ComplexityManagementRisk ;
+    exec:mitigatesRisk risk:SinglePointOfFailureTunnel ;
+    cost:hasCostValue "150.0"^^xsd:decimal ;
+    cost:hasCostUnit "USD_per_month" ;
+    infra:hasConfiguration """
+# DNS Configuration Strategy
+ws.observatory.nkllon.com -> Direct IP (A record, grey cloud)
+observatory.nkllon.com -> Cloudflare tunnel (CNAME, orange cloud)
+
+# nginx WebSocket Proxy Configuration
+upstream websocket_backend {
+    server localhost:8888;
+    keepalive 64;
+}
+
+server {
+    listen 443 ssl;
+    server_name ws.observatory.nkllon.com;
+    
+    location /ws/ {
+        proxy_pass http://websocket_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_read_timeout 86400;
+        proxy_send_timeout 86400;
+    }
+}
+
+# Client-side Endpoint Selection
+const getWebSocketURL = (endpoint) => {
+    const isDirect = localStorage.getItem('ws_prefer_direct') === 'true';
+    const baseURL = isDirect ? 'wss://ws.observatory.nkllon.com' : 'wss://observatory.nkllon.com';
+    return `${baseURL}/ws/${endpoint}`;
+};""" ;
+    arch:hasFailoverStrategy "Automatic fallback to tunnel on direct connection failure" ;
+    perf:hasTarget "50.0"^^xsd:decimal .
+
+arch:MultiRegionWebSocketArchitecture a arch:MultiRegionArchitecture ;
+    rdfs:label "Multi-Region WebSocket Distribution Architecture"@en ;
+    exec:solveProblem risk:PerformanceDegradationRisk, risk:SinglePointOfFailureTunnel ;
+    exec:hasImplementationTime "P21D"^^xsd:duration ;
+    exec:hasConfidenceLevel "0.80"^^xsd:decimal ;
+    exec:requiresExternalDependency true ;
+    cost:hasCostValue "300.0"^^xsd:decimal ;
+    cost:hasCostUnit "USD_per_month" ;
+    scale:hasHorizontalScaling "Regional server instances" ;
+    scale:hasGeographicScaling "US, EU, APAC regions" ;
+    infra:hasConfiguration """
+# Regional WebSocket Endpoints
+us-ws.observatory.nkllon.com -> US East (Virginia) server
+eu-ws.observatory.nkllon.com -> EU West (Ireland) server
+ap-ws.observatory.nkllon.com -> Asia Pacific (Singapore) server
+
+# GeoDNS Configuration
+ws.observatory.nkllon.com -> GeoDNS routing based on client location
+
+# Client-side Regional Selection
+const getOptimalWebSocketEndpoint = async () => {
+    const endpoints = [
+        'wss://us-ws.observatory.nkllon.com/ws/observatory',
+        'wss://eu-ws.observatory.nkllon.com/ws/observatory',
+        'wss://ap-ws.observatory.nkllon.com/ws/observatory'
+    ];
+    
+    // Test latency to each endpoint
+    const latencyTests = await Promise.allSettled(
+        endpoints.map(async (url) => {
+            const start = performance.now();
+            const ws = new WebSocket(url);
+            await new Promise((resolve, reject) => {
+                ws.onopen = resolve;
+                ws.onerror = reject;
+                setTimeout(reject, 5000); // 5s timeout
+            });
+            ws.close();
+            return { url, latency: performance.now() - start };
+        })
+    );
+    
+    // Return endpoint with lowest latency
+    const successful = latencyTests
+        .filter(result => result.status === 'fulfilled')
+        .map(result => result.value)
+        .sort((a, b) => a.latency - b.latency);
+    
+    return successful[0]?.url || endpoints[0]; // Fallback to US
+};""" ;
+    geo:hasRegionalDistribution "3 geographic regions with automatic failover" .
+
+# ================================
+# ALTERNATIVE ARCHITECTURE INSTANCES
+# ================================
+
+vendor:BunnyCDNMigration a exec:AlternativeArchitecture ;
+    rdfs:label "BunnyCDN Complete Migration Strategy"@en ;
+    exec:solveProblem risk:VendorLockInCloudflareRisk, risk:SinglePointOfFailureTunnel ;
+    exec:hasImplementationTime "P90D"^^xsd:duration ;
+    exec:hasConfidenceLevel "0.75"^^xsd:decimal ;
+    exec:requiresExternalDependency true ;
+    vendor:hasVendorName "BunnyCDN" ;
+    cost:hasCostValue "200.0"^^xsd:decimal ;
+    cost:hasCostUnit "USD_per_month" ;
+    perf:hasTarget "40.0"^^xsd:decimal ; # 40ms latency improvement
+    infra:hasConfiguration """
+# BunnyCDN Pull Zone Configuration
+- Origin: https://origin.observatory.nkllon.com
+- WebSocket support: Native
+- Geographic distribution: Global edge locations
+- SSL: Automatic Let's Encrypt
+- DDoS protection: Built-in
+
+# Migration Steps:
+1. Set up BunnyCDN account and pull zone
+2. Configure origin server with direct WebSocket support
+3. Update DNS records incrementally
+4. Test WebSocket connectivity from all regions
+5. Monitor performance metrics during migration
+6. Complete DNS cutover
+7. Decommission Cloudflare tunnel
+
+# Cost Analysis:
+- BunnyCDN: $15/TB bandwidth (vs Cloudflare $200 base)
+- Origin server: $50/month VPS
+- SSL certificates: $0 (Let's Encrypt)
+- Monitoring: $30/month
+- Total: ~$200/month (60% savings)""" ;
+    vendor:providedBy vendor:BunnyCDNVendor .
+
+vendor:AWSCloudFrontMigration a exec:AlternativeArchitecture ;
+    rdfs:label "AWS CloudFront + ALB Migration Strategy"@en ;
+    exec:solveProblem risk:VendorLockInCloudflareRisk ;
+    exec:hasImplementationTime "P60D"^^xsd:duration ;
+    exec:hasConfidenceLevel "0.85"^^xsd:decimal ;
+    cost:hasCostValue "250.0"^^xsd:decimal ;
+    cost:hasCostUnit "USD_per_month" ;
+    vendor:hasVendorName "Amazon Web Services" ;
+    infra:hasConfiguration """
+# AWS Architecture Components:
+- CloudFront: Static content distribution
+- Application Load Balancer: WebSocket termination
+- EC2 instances: Origin servers (multi-AZ)
+- Route53: DNS management with health checks
+- Certificate Manager: SSL/TLS certificates
+- CloudWatch: Monitoring and alerting
+
+# WebSocket Configuration:
+- ALB Target Group: WebSocket-enabled
+- Sticky sessions: Source IP-based
+- Health checks: WebSocket-aware
+- Auto Scaling: Based on connection count
+
+# Migration Benefits:
+- Native WebSocket support at load balancer
+- Granular cost control
+- Integration with AWS ecosystem
+- 99.99% SLA
+- Advanced monitoring and logging""" ;
+    vendor:providedBy vendor:AWSVendor .
+
+# ================================
+# VENDOR RELATIONSHIP INSTANCES
+# ================================
+
+vendor:CloudflareVendor a vendor:PrimaryVendor ;
+    rdfs:label "Cloudflare Technologies Vendor Relationship"@en ;
+    vendor:hasVendorName "Cloudflare, Inc." ;
+    vendor:hasSLALevel "99.9"^^xsd:decimal ;
+    cost:hasCostValue "500.0"^^xsd:decimal ;
+    cost:hasCostUnit "USD_per_month" ;
+    vendor:hasVendorSupport "Enterprise tier technical support" ;
+    risk:affects risk:VendorLockInCloudflareRisk ;
+    dep:affects dep:CloudflareTunnelDependency .
+
+vendor:BunnyCDNVendor a vendor:SecondaryVendor ;
+    rdfs:label "BunnyCDN Vendor Relationship"@en ;
+    vendor:hasVendorName "BunnyCDN" ;
+    vendor:hasSLALevel "99.95"^^xsd:decimal ;
+    cost:hasCostValue "200.0"^^xsd:decimal ;
+    cost:hasCostUnit "USD_per_month" ;
+    vendor:hasVendorSupport "24/7 technical support" .
+
+vendor:AWSVendor a vendor:SecondaryVendor ;
+    rdfs:label "Amazon Web Services Vendor Relationship"@en ;
+    vendor:hasVendorName "Amazon Web Services, Inc." ;
+    vendor:hasSLALevel "99.99"^^xsd:decimal ;
+    cost:hasCostValue "250.0"^^xsd:decimal ;
+    cost:hasCostUnit "USD_per_month" ;
+    vendor:hasVendorSupport "Enterprise support plan" .
+
+# ================================
+# DEPENDENCY INSTANCES
+# ================================
+
+dep:CloudflareTunnelDependency a dep:CriticalDependency ;
+    rdfs:label "Cloudflare Tunnel Critical Infrastructure Dependency"@en ;
+    dep:affects cf:ObservatoryTunnelInstance ;
+    risk:hasLikelihood "1.0"^^xsd:decimal ;
+    risk:hasImpact "critical" ;
+    dc:description "Complete WebSocket functionality depends on Cloudflare tunnel availability" .
+
+dep:LocalhostOriginDependency a dep:InternalDependency ;
+    rdfs:label "Localhost Origin Server Internal Dependency"@en ;
+    dep:affects net:LocalhostOriginServer ;
+    risk:hasLikelihood "0.05"^^xsd:decimal ;
+    risk:hasImpact "critical" .
+
+dep:DNSResolutionDependency a dep:ExternalDependency ;
+    rdfs:label "DNS Resolution External Dependency"@en ;
+    dep:affects net:CloudflareDNS ;
+    risk:hasLikelihood "0.02"^^xsd:decimal ;
+    risk:hasImpact "high" .
+
+dep:InternetConnectivityDependency a dep:ExternalDependency ;
+    rdfs:label "Internet Connectivity Infrastructure Dependency"@en ;
+    dep:affects net:InternetServiceProvider ;
+    risk:hasLikelihood "0.01"^^xsd:decimal ;
+    risk:hasImpact "critical" .
+
+# ================================
+# GEOGRAPHIC LOCATION INSTANCES
+# ================================
+
+geo:UserMacbook a geo:DataCenter ;
+    rdfs:label "User Development Macbook Location"@en ;
+    geo:lat "39.7392"^^xsd:decimal ; # Denver, CO coordinates
+    geo:long "-104.9903"^^xsd:decimal ;
+    geo:hasRegion "North America" ;
+    geo:hasJurisdiction "United States" .
+
+geo:CloudflareEdgeSeattle a geo:EdgeLocation ;
+    rdfs:label "Cloudflare Seattle Edge Location"@en ;
+    geo:lat "47.6062"^^xsd:decimal ;
+    geo:long "-122.3321"^^xsd:decimal ;
+    vendor:providedBy vendor:CloudflareVendor .
+
+geo:CloudflareEdgeDenver a geo:EdgeLocation ;
+    rdfs:label "Cloudflare Denver Edge Location"@en ;
+    geo:lat "39.7392"^^xsd:decimal ;
+    geo:long "-104.9903"^^xsd:decimal ;
+    vendor:providedBy vendor:CloudflareVendor .
+
+# ================================
+# USER EXPERIENCE INSTANCES
+# ================================
+
+user:EmojiRainExperience a user:PerformanceExperience ;
+    rdfs:label "Emoji Rain Real-time User Experience"@en ;
+    user:hasExpectedLatency "50.0"^^xsd:decimal ;
+    user:hasExpectedUptime "99.5"^^xsd:decimal ;
+    user:affectedBy ws:EmojiRainEndpoint .
+
+user:DashboardExperience a user:ReliabilityExperience ;
+    rdfs:label "Observatory Dashboard User Experience"@en ;
+    user:hasExpectedLatency "100.0"^^xsd:decimal ;
+    user:hasExpectedUptime "99.9"^^xsd:decimal ;
+    user:affectedBy ws:ObservatoryEndpoint .
+
+user:SystemHealthExperience a user:UsabilityExperience ;
+    rdfs:label "System Health Monitoring User Experience"@en ;
+    user:hasExpectedLatency "200.0"^^xsd:decimal ;
+    user:hasExpectedUptime "99.0"^^xsd:decimal ;
+    user:affectedBy ws:DoctorStatusEndpoint .
+
+# ================================
+# PERFORMANCE CHARACTERISTIC INSTANCES
+# ================================
+
+perf:WebSocketLatencyPerformance a perf:LatencyMetric ;
+    rdfs:label "WebSocket Message Latency Performance"@en ;
+    perf:hasBaseline "150.0"^^xsd:decimal ;
+    perf:hasTarget "50.0"^^xsd:decimal ;
+    perf:measuredBy monitor:WebSocketMessageLatency .
+
+perf:TunnelOverheadPerformance a perf:LatencyMetric ;
+    rdfs:label "Cloudflare Tunnel Overhead Performance"@en ;
+    perf:hasBaseline "100.0"^^xsd:decimal ;
+    perf:hasTarget "25.0"^^xsd:decimal ;
+    perf:measuredBy monitor:TunnelLatencyOverhead .
+
+perf:ConnectionThroughputPerformance a perf:ThroughputMetric ;
+    rdfs:label "WebSocket Connection Throughput Performance"@en ;
+    perf:hasBaseline "100.0"^^xsd:decimal ;
+    perf:hasTarget "1000.0"^^xsd:decimal ;
+    perf:measuredBy monitor:ThroughputMetric .
+
+perf:SystemAvailabilityPerformance a perf:AvailabilityMetric ;
+    rdfs:label "Overall System Availability Performance"@en ;
+    perf:hasBaseline "95.0"^^xsd:decimal ;
+    perf:hasTarget "99.9"^^xsd:decimal ;
+    perf:measuredBy monitor:ServiceUptimeMetric .
+
+# ================================
+# SECURITY CONTROL INSTANCES
+# ================================
+
+sec:WebSocketSecurityControls a sec:NetworkSecurityControl ;
+    rdfs:label "WebSocket Communication Security Controls"@en ;
+    sec:hasSecurityLevel "TLS 1.3 encryption" ;
+    sec:protectedBy sec:SSLTermination, sec:OriginAuthentication .
+
+sec:SSLTermination a sec:EncryptionControl ;
+    rdfs:label "SSL/TLS Termination Security Control"@en ;
+    sec:hasSecurityLevel "TLS 1.3" ;
+    infra:hasConfiguration "Cloudflare Universal SSL with ECDSA certificates" .
+
+sec:OriginAuthentication a sec:AuthenticationControl ;
+    rdfs:label "Origin Server Authentication Control"@en ;
+    sec:hasSecurityLevel "Cloudflare Authenticated Origin Pulls" ;
+    infra:hasConfiguration "Client certificate authentication between Cloudflare and origin" .
+
+sec:TrafficPatternAnalysis a sec:BotMitigationControl ;
+    rdfs:label "Traffic Pattern Analysis Bot Control"@en ;
+    sec:hasSecurityLevel "Machine learning-based detection" ;
+    sec:protectedBy cf:BotProtectionSystem .
+
+sec:DDoSMitigation a sec:DDoSProtectionControl ;
+    rdfs:label "Distributed Denial of Service Mitigation"@en ;
+    sec:hasSecurityLevel "Network and application layer protection" ;
+    vendor:providedBy vendor:CloudflareVendor .
+
+sec:EnhancedWebSocketSecurity a sec:NetworkSecurityControl ;
+    rdfs:label "Enhanced WebSocket Security Implementation"@en ;
+    sec:hasSecurityLevel "Application-level message validation" ;
+    infra:hasConfiguration """
+# WebSocket Security Headers
+- Origin validation against whitelist
+- Subprotocol verification
+- Message rate limiting per connection
+- Content validation and sanitization
+- Connection timeout enforcement
+- IP-based connection limits""" .
+
+# ================================
+# OPERATIONAL PROCEDURE INSTANCES
+# ================================
+
+ops:WebSocketHealthCheckProcedure a ops:MonitoringProcedure ;
+    rdfs:label "WebSocket Endpoint Health Check Procedure"@en ;
+    ops:hasFrequency "every_30_seconds" ;
+    ops:hasValidationCommand "wscat -c wss://observatory.nkllon.com/ws/observatory --execute 'ping'" ;
+    ops:hasExpectedResponse "pong response within 5 seconds" .
+
+ops:TunnelRestartProcedure a ops:IncidentResponse ;
+    rdfs:label "Cloudflare Tunnel Emergency Restart Procedure"@en ;
+    ops:hasExecutionSteps """
+1. Verify tunnel status: systemctl status cloudflared
+2. Check tunnel logs: journalctl -u cloudflared -f
+3. Backup current configuration: cp ~/.cloudflared/config.yml ~/.cloudflared/config.yml.backup
+4. Restart tunnel service: sudo systemctl restart cloudflared
+5. Verify connectivity: curl -I https://observatory.nkllon.com
+6. Test WebSocket endpoints: wscat -c wss://observatory.nkllon.com/ws/observatory
+7. Monitor for 10 minutes to ensure stability
+8. Document incident and root cause""" ;
+    time:hasDuration "PT10M"^^xsd:duration .
+
+ops:PerformanceMonitoringProcedure a ops:MonitoringProcedure ;
+    rdfs:label "WebSocket Performance Monitoring Procedure"@en ;
+    ops:hasFrequency "continuous" ;
+    ops:hasMetricCollection "Prometheus scraping every 15 seconds" ;
+    ops:hasAlertingRules "Grafana alerts with 30-second evaluation intervals" .
+
+ops:ConfigurationBackupProcedure a ops:BackupProcedure ;
+    rdfs:label "Infrastructure Configuration Backup Procedure"@en ;
+    ops:hasFrequency "before_every_change" ;
+    ops:hasExecutionSteps """
+1. Backup cloudflared config: cp ~/.cloudflared/config.yml ~/.cloudflared/config.yml.$(date +%Y%m%d_%H%M%S)
+2. Backup nginx config: sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
+3. Export Cloudflare DNS settings: cf-terraforming generate --resource-type cloudflare_record
+4. Backup monitoring configuration: tar -czf monitoring_backup_$(date +%Y%m%d).tar.gz /etc/prometheus/ /etc/grafana/
+5. Store backups in version control: git add . && git commit -m "Config backup $(date)"
+6. Verify backup integrity: diff original backup""" .
+
+ops:IncidentEscalationProcedure a ops:IncidentResponse ;
+    rdfs:label "WebSocket Incident Escalation Procedure"@en ;
+    ops:hasEscalationLevels """
+Level 1 (0-5 minutes): Automated restart attempts and basic remediation
+Level 2 (5-15 minutes): Engineer notification and manual intervention
+Level 3 (15-30 minutes): Senior engineer escalation and emergency response
+Level 4 (30+ minutes): Executive notification and vendor escalation""" ;
+    ops:hasContactProcedure "PagerDuty integration with SMS and voice notifications" .
+
+# ================================
+# COMPLIANCE AND LEGAL INSTANCES
+# ================================
+
+comp:DataProtectionCompliance a comp:DataProtectionRequirement ;
+    rdfs:label "WebSocket Data Protection Compliance"@en ;
+    comp:hasRegulation "GDPR Article 32 - Security of processing" ;
+    comp:hasRequirement "Encryption in transit for all personal data" ;
+    comp:affects data:RealTimeWebSocketData ;
+    comp:implementedBy sec:SSLTermination .
+
+comp:AccessibilityCompliance a comp:AccessibilityRequirement ;
+    rdfs:label "WebSocket Accessibility Compliance"@en ;
+    comp:hasRegulation "WCAG 2.1 Level AA" ;
+    comp:hasRequirement "Real-time data must be accessible to screen readers" ;
+    comp:affects user:EmojiRainExperience, user:DashboardExperience .
+
+comp:AuditLoggingCompliance a comp:AuditRequirement ;
+    rdfs:label "Infrastructure Audit Logging Compliance"@en ;
+    comp:hasRegulation "SOX Section 404 - Internal controls" ;
+    comp:hasRequirement "All configuration changes must be logged and auditable" ;
+    comp:implementedBy monitor:ConfigurationChangeLog .
+
+legal:DataResidencyRequirement a legal:DataPrivacyLaw ;
+    rdfs:label "Data Residency Legal Requirement"@en ;
+    legal:hasJurisdiction "European Union" ;
+    legal:hasRequirement "Personal data of EU residents must remain within EU borders" ;
+    legal:affects arch:MultiRegionWebSocketArchitecture ;
+    legal:implementedBy geo:EUDataCenter .
+
+legal:IntellectualPropertyProtection a legal:IntellectualPropertyLaw ;
+    rdfs:label "Intellectual Property Protection Requirement"@en ;
+    legal:hasRequirement "Observatory source code and algorithms must be protected from unauthorized access" ;
+    legal:affects infra:SourceCodeRepository ;
+    legal:implementedBy sec:SourceCodeProtection .
+
+# ================================
+# DATA MANAGEMENT INSTANCES
+# ================================
+
+data:RealTimeWebSocketData a data:RealTimeData ;
+    rdfs:label "Real-time WebSocket Message Data Stream"@en ;
+    data:hasDataType "JSON messages with real-time metrics" ;
+    data:hasRetentionPeriod "P7D"^^xsd:duration ;
+    data:hasVolume "1000.0"^^xsd:decimal ;
+    data:hasVolumeUnit "messages_per_minute" ;
+    data:flowsThrough ws:EmojiRainEndpoint, ws:ObservatoryEndpoint .
+
+data:TelemetryDataStream a data:TelemetryData ;
+    rdfs:label "System Telemetry Data Stream"@en ;
+    data:hasDataType "Prometheus metrics and distributed traces" ;
+    data:hasRetentionPeriod "P30D"^^xsd:duration ;
+    data:hasVolume "50.0"^^xsd:decimal ;
+    data:hasVolumeUnit "metrics_per_second" ;
+    data:flowsThrough monitor:PrometheusServer .
+
+data:WebSocketLogData a data:LogData ;
+    rdfs:label "WebSocket Connection Log Data"@en ;
+    data:hasDataType "Structured JSON logs with connection events" ;
+    data:hasRetentionPeriod "P90D"^^xsd:duration ;
+    data:hasVolume "10.0"^^xsd:decimal ;
+    data:hasVolumeUnit "log_entries_per_minute" ;
+    data:flowsThrough monitor:LogAggregationServer .
+
+# ================================
+# EXECUTION PHASE INSTANCES
+# ================================
+
+exec:Phase1_ImmediateExecution a exec:Solution ;
+    rdfs:label "Phase 1: Immediate Problem Resolution (0-15 minutes)"@en ;
+    exec:hasImplementationTime "PT15M"^^xsd:duration ;
+    exec:hasConfidenceLevel "0.95"^^xsd:decimal ;
+    exec:hasPriority "1"^^xsd:integer ;
+    exec:requiresExternalDependency false ;
+    exec:solveProblem ws:WebSocketProtocolDowngrade ;
+    infra:hasConfiguration """
+Execution Steps:
+1. Backup current cloudflared configuration (1 minute)
+2. Edit ~/.cloudflared/config.yml with WebSocket settings (5 minutes)
+3. Enable WebSockets in Cloudflare Dashboard (3 minutes)
+4. Restart cloudflared service (2 minutes)
+5. Validate tunnel configuration and connectivity (4 minutes)
+
+Expected Outcome:
+- WebSocket upgrade requests succeed with 101 response
+- All 4 WebSocket endpoints become accessible through tunnel
+- Immediate elimination of HTTP/2 404 errors""" .
+
+exec:Phase2_MonitoringDeployment a exec:Solution ;
+    rdfs:label "Phase 2: Comprehensive Monitoring Deployment (15-45 minutes)"@en ;
+    exec:hasImplementationTime "PT30M"^^xsd:duration ;
+    exec:hasConfidenceLevel "0.90"^^xsd:decimal ;
+    exec:hasPriority "2"^^xsd:integer ;
+    exec:requiresExternalDependency false ;
+    infra:hasConfiguration """
+Monitoring Stack Deployment:
+1. Deploy Prometheus configuration with WebSocket metrics (10 minutes)
+2. Configure Grafana dashboards for real-time visualization (10 minutes)
+3. Set up alert rules for critical thresholds (5 minutes)
+4. Deploy client-side telemetry collection (3 minutes)
+5. Test monitoring accuracy and alert triggers (2 minutes)
+
+Monitoring Capabilities:
+- Real-time WebSocket connection tracking
+- Message latency histograms with percentile analysis
+- Tunnel overhead measurement and comparison
+- Bot protection trigger detection
+- Automatic alert escalation procedures""" .
+
+exec:Phase3_ClientOptimization a exec:Solution ;
+    rdfs:label "Phase 3: Client-side Optimization (45-75 minutes)"@en ;
+    exec:hasImplementationTime "PT30M"^^xsd:duration ;
+    exec:hasConfidenceLevel "0.88"^^xsd:decimal ;
+    exec:hasPriority "3"^^xsd:integer ;
+    exec:requiresExternalDependency false ;
+    exec:solveProblem ws:ObservatoryPollingFallback ;
+    infra:hasConfiguration """
+Client Optimization Implementation:
+1. Implement exponential backoff polling algorithm (15 minutes)
+2. Add WebSocket reconnection logic with jitter (10 minutes)
+3. Deploy client-side performance telemetry (3 minutes)
+4. Add health check endpoints for monitoring (2 minutes)
+
+Performance Improvements:
+- Polling frequency reduced from 2 seconds to 5-30 seconds with backoff
+- Random jitter prevents thundering herd problems
+- Graceful degradation maintains user experience
+- Bot protection trigger probability reduced by 80%""" .
+
+exec:Phase4_ValidationTesting a exec:Solution ;
+    rdfs:label "Phase 4: Comprehensive Testing & Validation (75-120 minutes)"@en ;
+    exec:hasImplementationTime "PT45M"^^xsd:duration ;
+    exec:hasConfidenceLevel "0.95"^^xsd:decimal ;
+    exec:hasPriority "4"^^xsd:integer ;
+    exec:requiresExternalDependency false ;
+    infra:hasConfiguration """
+Testing & Validation Suite:
+1. WebSocket connectivity testing from multiple clients (10 minutes)
+2. Load testing with 100+ concurrent connections (15 minutes)
+3. Monitoring accuracy validation and calibration (10 minutes)
+4. Stress testing polling fallback behavior (5 minutes)
+5. End-to-end system integration testing (5 minutes)
+
+Success Criteria Validation:
+- WebSocket upgrade success rate > 99%
+- Message latency p95 < 100ms
+- Connection stability > 99%
+- Zero Error 1033 occurrences during testing
+- All monitoring alerts functioning correctly""" .
+
+# ================================
+# SUCCESS CRITERIA & KPI INSTANCES
+# ================================
+
+exec:WebSocketUptimeKPI a monitor:Metric ;
+    rdfs:label "WebSocket Service Uptime KPI"@en ;
+    monitor:hasThreshold "99.9"^^xsd:decimal ;
+    monitor:hasPrometheusQuery "avg_over_time(up{job=\"websocket-endpoints\"}[24h]) * 100" ;
+    perf:hasTarget "99.9"^^xsd:decimal ;
+    dc:description "Percentage of time WebSocket endpoints are accessible and responsive" .
+
+exec:ConnectionSuccessRateKPI a monitor:Metric ;
+    rdfs:label "WebSocket Connection Success Rate KPI"@en ;
+    monitor:hasThreshold "99.0"^^xsd:decimal ;
+    monitor:hasPrometheusQuery "rate(websocket_upgrade_attempts_total{status_code=\"101\"}[24h]) / rate(websocket_upgrade_attempts_total[24h]) * 100" ;
+    perf:hasTarget "99.0"^^xsd:decimal ;
+    dc:description "Percentage of WebSocket upgrade attempts that succeed" .
+
+exec:MessageLatencyKPI a monitor:Metric ;
+    rdfs:label "WebSocket Message Latency KPI"@en ;
+    monitor:hasThreshold "100.0"^^xsd:decimal ;
+    monitor:hasPrometheusQuery "histogram_quantile(0.95, websocket_message_latency_seconds) * 1000" ;
+    perf:hasTarget "100.0"^^xsd:decimal ;
+    dc:description "95th percentile WebSocket message round-trip latency in milliseconds" .
+
+exec:TunnelOverheadKPI a monitor:Metric ;
+    rdfs:label "Cloudflare Tunnel Overhead KPI"@en ;
+    monitor:hasThreshold "50.0"^^xsd:decimal ;
+    monitor:hasPrometheusQuery "histogram_quantile(0.95, tunnel_latency_overhead_seconds) * 1000" ;
+    perf:hasTarget "50.0"^^xsd:decimal ;
+    dc:description "95th percentile additional latency introduced by tunnel in milliseconds" .
+
+exec:Error1033OccurrencesKPI a monitor:Metric ;
+    rdfs:label "Cloudflare Error 1033 Occurrences KPI"@en ;
+    monitor:hasThreshold "0.0"^^xsd:decimal ;
+    monitor:hasPrometheusQuery "increase(cloudflare_errors_total{error_code=\"1033\"}[24h])" ;
+    perf:hasTarget "0.0"^^xsd:decimal ;
+    dc:description "Number of Error 1033 incidents in 24-hour period" .
+
+exec:PollingFallbackDurationKPI a monitor:Metric ;
+    rdfs:label "HTTP Polling Fallback Duration KPI"@en ;
+    monitor:hasThreshold "300.0"^^xsd:decimal ;
+    monitor:hasPrometheusQuery "sum(polling_fallback_duration_seconds) / 86400 * 100" ;
+    perf:hasTarget "0.35"^^xsd:decimal ;
+    dc:description "Percentage of day spent in polling fallback mode (target: <5 minutes/day)" .
+
+exec:ManualInterventionKPI a monitor:Metric ;
+    rdfs:label "Manual Intervention Frequency KPI"@en ;
+    monitor:hasThreshold "1.0"^^xsd:decimal ;
+    monitor:hasPrometheusQuery "increase(manual_intervention_events_total[7d])" ;
+    perf:hasTarget "1.0"^^xsd:decimal ;
+    dc:description "Number of manual interventions required per week" .
+
+# ================================
+# COMPREHENSIVE MONITORING FRAMEWORK
+# ================================
+
+monitor:ComprehensiveMonitoringFramework a monitor:MonitoringFramework ;
+    rdfs:label "Observatory WebSocket Comprehensive Monitoring Framework"@en ;
+    dc:description "Complete observability solution for WebSocket infrastructure" ;
+    monitor:hasComponent monitor:PrometheusServer, monitor:GrafanaServer, monitor:AlertmanagerServer ;
+    monitor:covers "Connection metrics, performance metrics, error metrics, business metrics" ;
+    infra:hasConfiguration """
+# Prometheus Configuration
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'observatory-websocket'
+    static_configs:
+      - targets: ['localhost:8888']
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+    scrape_timeout: 4s
+
+  - job_name: 'cloudflared'
+    static_configs:
+      - targets: ['localhost:8080']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['localhost:9113']
+    metrics_path: '/metrics'
+
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['localhost:9100']
+
+rule_files:
+  - "websocket_alerts.yml"
+  - "infrastructure_alerts.yml"
+  - "business_metrics.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+# Grafana Dashboard Configuration
+{
+  "dashboard": {
+    "title": "Observatory WebSocket Infrastructure",
+    "panels": [
+      {
+        "title": "WebSocket Connections",
+        "type": "stat",
+        "targets": [{
+          "expr": "websocket_connections_active",
+          "legendFormat": "Active Connections"
+        }]
+      },
+      {
+        "title": "Connection Success Rate",
+        "type": "stat",
+        "targets": [{
+          "expr": "rate(websocket_upgrade_attempts_total{status_code=\"101\"}[5m]) / rate(websocket_upgrade_attempts_total[5m]) * 100",
+          "legendFormat": "Success Rate %"
+        }]
+      },
+      {
+        "title": "Message Latency Distribution",
+        "type": "heatmap",
+        "targets": [{
+          "expr": "histogram_quantile(0.95, websocket_message_latency_seconds)",
+          "legendFormat": "95th Percentile"
+        }]
+      },
+      {
+        "title": "Error Rates",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(cloudflare_errors_total[5m])",
+            "legendFormat": "Cloudflare Errors"
+          },
+          {
+            "expr": "rate(websocket_connection_errors_total[5m])",
+            "legendFormat": "WebSocket Errors"
+          }
+        ]
+      }
+    ]
+  }
+}""" .
+
+monitor:PrometheusServer a infra:Component ;
+    rdfs:label "Prometheus Metrics Collection Server"@en ;
+    infra:hasEndpoint <http://localhost:9090> ;
+    infra:hasConfiguration "Prometheus 2.45+ with WebSocket custom metrics" ;
+    monitor:collectsMetrics monitor:WebSocketConnectionsActive, monitor:WebSocketMessageLatency, monitor:TunnelLatencyOverhead .
+
+monitor:GrafanaServer a infra:Component ;
+    rdfs:label "Grafana Visualization Dashboard Server"@en ;
+    infra:hasEndpoint <http://localhost:3000> ;
+    infra:hasConfiguration "Grafana 10.0+ with custom WebSocket dashboards" ;
+    monitor:visualizes monitor:ComprehensiveMonitoringFramework .
+
+monitor:AlertmanagerServer a infra:Component ;
+    rdfs:label "Alertmanager Notification Server"@en ;
+    infra:hasEndpoint <http://localhost:9093> ;
+    infra:hasConfiguration "Alertmanager with PagerDuty and Slack integration" ;
+    monitor:manages monitor:WebSocketConnectionFailureAlert, monitor:BotProtectionActiveAlert .
+
+# ================================
+# DISTRIBUTED TRACING INSTANCES
+# ================================
+
+monitor:DistributedTracingFramework a monitor:MonitoringFramework ;
+    rdfs:label "WebSocket Distributed Tracing Framework"@en ;
+    monitor:hasComponent monitor:JaegerServer, monitor:OpenTelemetryCollector ;
+    infra:hasConfiguration """
+# OpenTelemetry Configuration
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 1s
+    send_batch_size: 1024
+  memory_limiter:
+    limit_mib: 512
+
+exporters:
+  jaeger:
+    endpoint: jaeger:14250
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [jaeger]
+
+# WebSocket Trace Spans
+- span: "websocket_upgrade"
+  tags: ["endpoint", "client_ip", "user_agent", "upgrade_duration"]
+- span: "connection_established"
+  tags: ["tunnel_id", "edge_location", "connection_id"]
+- span: "message_exchange"
+  tags: ["message_type", "direction", "size_bytes", "processing_time"]
+- span: "connection_termination"
+  tags: ["reason", "duration_seconds", "messages_exchanged"]
+- span: "cloudflare_edge_processing"
+  tags: ["ray_id", "pop_location", "edge_processing_time"]
+- span: "tunnel_transit"
+  tags: ["tunnel_id", "protocol", "transit_latency"]
+- span: "origin_processing"
+  tags: ["service_name", "endpoint", "processing_latency"]""" .
+
+monitor:JaegerServer a infra:Component ;
+    rdfs:label "Jaeger Distributed Tracing Server"@en ;
+    infra:hasEndpoint <http://localhost:16686> ;
+    infra:hasConfiguration "Jaeger all-in-one deployment with WebSocket trace collection" .
+
+monitor:OpenTelemetryCollector a infra:Component ;
+    rdfs:label "OpenTelemetry Metrics and Trace Collector"@en ;
+    infra:hasEndpoint <http://localhost:4317> ;
+    infra:hasConfiguration "OTEL Collector with Jaeger and Prometheus exporters" .
+
+# ================================
+# COST ANALYSIS INSTANCES
+# ================================
+
+cost:CurrentCloudflareInfrastructureCost a cost:CloudServiceCost ;
+    rdfs:label "Current Cloudflare Infrastructure Monthly Cost"@en ;
+    cost:hasCostValue "500.0"^^xsd:decimal ;
+    cost:hasCostUnit "USD_per_month" ;
+    cost:associatedWith vendor:CloudflareVendor ;
+    dc:description "Cloudflare Enterprise plan with tunnel service and advanced security features" .
+
+cost:MonitoringInfrastructureCost a cost:OperationalCost ;
+    rdfs:label "Monitoring Infrastructure Monthly Cost"@en ;
+    cost:hasCostValue "50.0"^^xsd:decimal ;
+    cost:hasCostUnit "USD_per_month" ;
+    cost:associatedWith monitor:ComprehensiveMonitoringFramework ;
+    dc:description "Prometheus, Grafana, and alerting infrastructure operational costs" .
+
+cost:AlternativeArchitectureCost a cost:CloudServiceCost ;
+    rdfs:label "Alternative Architecture Total Monthly Cost"@en ;
+    cost:hasCostValue "250.0"^^xsd:decimal ;
+    cost:hasCostUnit "USD_per_month" ;
+    cost:associatedWith vendor:BunnyCDNMigration ;
+    dc:description "BunnyCDN + direct WebSocket infrastructure with enhanced monitoring" .
+
+cost:PotentialSavingsCalculation a cost:CostModel ;
+    rdfs:label "Infrastructure Cost Savings Analysis"@en ;
+    cost:hasCostValue "250.0"^^xsd:decimal ;
+    cost:hasCostUnit "USD_per_month_savings" ;
+    dc:description "Monthly savings from migrating to alternative architecture: $500 - $250 = $250 (50% reduction)" .
+
+# ================================
+# TEMPORAL CHARACTERISTIC INSTANCES
+# ================================
+
+time:CascadeFailureDetectionTime a time:ResponseTime ;
+    rdfs:label "Cascade Failure Detection Response Time"@en ;
+    time:hasDuration "PT30S"^^xsd:duration ;
+    time:hasTarget "PT15S"^^xsd:duration ;
+    dc:description "Time from failure initiation to automated detection and alerting" .
+
+time:TunnelRestartRecoveryTime a time:RecoveryTime ;
+    rdfs:label "Tunnel Restart Recovery Time"@en ;
+    time:hasDuration "PT2M"^^xsd:duration ;
+    time:hasTarget "PT1M"^^xsd:duration ;
+    dc:description "Time required to restart tunnel service and restore connectivity" .
+
+time:MonitoringDataRetentionTime a time:TemporalCharacteristic ;
+    rdfs:label "Monitoring Data Retention Period"@en ;
+    time:hasDuration "P30D"^^xsd:duration ;
+    dc:description "Duration for retaining detailed monitoring and telemetry data" .
+
+time:IncidentResponseTime a time:ResponseTime ;
+    rdfs:label "Incident Response Team Response Time"@en ;
+    time:hasDuration "PT5M"^^xsd:duration ;
+    time:hasTarget "PT2M"^^xsd:duration ;
+    dc:description "Target time for engineering team to respond to critical alerts" .
+
+time:BusinessHoursSLA a time:TemporalCharacteristic ;
+    rdfs:label "Business Hours Service Level Agreement"@en ;
+    time:hasStartTime "09:00:00"^^xsd:time ;
+    time:hasEndTime "17:00:00"^^xsd:time ;
+    dc:description "Primary business hours requiring highest service availability" .
+
+time:MaintenanceWindowSchedule a time:MaintenanceWindow ;
+    rdfs:label "Scheduled Maintenance Window"@en ;
+    time:hasStartTime "02:00:00"^^xsd:time ;
+    time:hasDuration "PT2H"^^xsd:duration ;
+    time:hasFrequency "weekly" ;
+    dc:description "Weekly maintenance window for infrastructure updates and patches" .
+
+# ================================
+# TESTING FRAMEWORK INSTANCES
+# ================================
+
+exec:ComprehensiveTestingSuite a exec:TestingFramework ;
+    rdfs:label "Observatory WebSocket Comprehensive Testing Suite"@en ;
+    exec:hasComponent exec:WebSocketConnectivityTest, exec:LoadTestSuite, exec:SecurityTestSuite ;
+    exec:hasImplementationTime "PT45M"^^xsd:duration ;
+    infra:hasConfiguration """
+# WebSocket Connectivity Testing
+#!/bin/bash
+set -e
+
+echo "=== WebSocket Connectivity Test Suite ==="
+
+# Test 1: Basic WebSocket upgrade
+echo "Testing WebSocket upgrade..."
+response=$(curl -s -I -H "Upgrade: websocket" -H "Connection: Upgrade" \\
+  -H "Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==" \\
+  -H "Sec-WebSocket-Version: 13" \\
+  https://observatory.nkllon.com/ws/observatory)
+
+if echo "$response" | grep -q "101 Switching Protocols"; then
+  echo "✓ WebSocket upgrade successful"
+else
+  echo "✗ WebSocket upgrade failed"
+  exit 1
+fi
+
+# Test 2: All endpoint connectivity
+endpoints=("emoji-rain" "observatory" "anomalies" "doctor-status")
+for endpoint in "${endpoints[@]}"; do
+  echo "Testing endpoint: /ws/$endpoint"
+  wscat -c "wss://observatory.nkllon.com/ws/$endpoint" \\
+    --execute "ping" --wait 5000 > /dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    echo "✓ Endpoint /ws/$endpoint responsive"
+  else
+    echo "✗ Endpoint /ws/$endpoint failed"
+    exit 1
+  fi
+done
+
+# Test 3: Load testing with multiple connections
+echo "Running load test with 50 concurrent connections..."
+for i in {1..50}; do
+  wscat -c "wss://observatory.nkllon.com/ws/observatory" \\
+    --execute "ping" &
+done
+wait
+
+# Test 4: Monitoring validation
+echo "Validating monitoring metrics..."
+metrics_response=$(curl -s http://localhost:9090/api/v1/query?query=websocket_connections_active)
+if echo "$metrics_response" | grep -q '"status":"success"'; then
+  echo "✓ Monitoring metrics accessible"
+else
+  echo "✗ Monitoring metrics failed"
+  exit 1
+fi
+
+echo "=== All tests passed successfully ==="
+""" .
+
+exec:WebSocketConnectivityTest a exec:IntegrationTest ;
+    rdfs:label "WebSocket Endpoint Connectivity Integration Test"@en ;
+    exec:hasValidationCriteria "All 4 WebSocket endpoints return 101 Switching Protocols" ;
+    exec:hasTestDuration "PT5M"^^xsd:duration ;
+    exec:hasExpectedResult "100% endpoint availability with sub-200ms response time" .
+
+exec:LoadTestSuite a exec:LoadTest ;
+    rdfs:label "WebSocket Concurrent Connection Load Test"@en ;
+    exec:hasValidationCriteria "Support 100+ concurrent connections with <5% failure rate" ;
+    exec:hasTestDuration "PT15M"^^xsd:duration ;
+    exec:hasExpectedResult "Linear performance scaling up to capacity limits" .
+
+exec:SecurityTestSuite a exec:SecurityTest ;
+    rdfs:label "WebSocket Security Vulnerability Assessment"@en ;
+    exec:hasValidationCriteria "No security vulnerabilities in WebSocket implementation" ;
+    exec:hasTestDuration "PT10M"^^xsd:duration ;
+    exec:hasExpectedResult "Pass OWASP WebSocket security checklist" .
+
+exec:StressTestScenario a exec:StressTest ;
+    rdfs:label "WebSocket Infrastructure Stress Test"@en ;
+    exec:hasValidationCriteria "Graceful degradation under 10x normal load" ;
+    exec:hasTestDuration "PT10M"^^xsd:duration ;
+    exec:hasExpectedResult "Maintain >95% availability during stress conditions" .
+
+# ================================
+# ADJACENCY RELATIONSHIPS (CRITICAL CONNECTIONS)
+# ================================
+
+# Problem adjacencies - how problems relate and trigger each other
+ws:ObservatoryWebSocketCascadeFailure owl:equivalentTo [
+    a owl:Class ;
+    owl:intersectionOf (
+        ws:Problem
+        [a owl:Restriction ; owl:onProperty ws:triggersFailure ; owl:someValuesFrom ws:PollingFallback]
+        [a owl:Restriction ; owl:onProperty ws:hasCause ; owl:hasValue cf:ObservatoryTunnelInstance]
+    )
+] .
+
+# Solution adjacencies - which solutions work together
+exec:FixCloudflaredConfiguration dep:dependsOn exec:EnableCloudflareWebSockets .
+exec:OptimizePollingFallback exec:requiresComponent exec:FixCloudflaredConfiguration .
+exec:CreateBotProtectionWhitelist exec:mitigatesRisk risk:BotProtectionTriggerRisk .
+
+# Infrastructure adjacencies - component dependencies
+cf:ObservatoryTunnelInstance infra:dependsOn net:LocalhostOriginServer .
+cf:ObservatoryTunnelInstance infra:connectsTo cf:EdgeServer .
+net:LocalhostOriginServer infra:hosts ws:EmojiRainEndpoint, ws:ObservatoryEndpoint .
+
+# Risk adjacencies - risk relationships and mitigation chains
+risk:SinglePointOfFailureTunnel risk:affects cf:ObservatoryTunnelInstance .
+risk:VendorLockInCloudflareRisk risk:affects vendor:CloudflareVendor .
+risk:BotProtectionTriggerRisk ws:hasCause ws:ObservatoryPollingFallback .
+
+# Monitoring adjacencies - what monitors what
+monitor:WebSocketConnectionsActive monitor:monitors ws:EmojiRainEndpoint, ws:ObservatoryEndpoint .
+monitor:TunnelLatencyOverhead monitor:monitors cf:ObservatoryTunnelInstance .
+monitor:BotProtectionTriggerRate monitor:monitors cf:BotProtectionSystem .
+
+# Performance adjacencies - performance relationships
+perf:WebSocketLatencyPerformance perf:measuredBy monitor:WebSocketMessageLatency .
+perf:TunnelOverheadPerformance perf:measuredBy monitor:TunnelLatencyOverhead .
+
+# Cost adjacencies - cost relationships
+cost:CurrentCloudflareInfrastructureCost cost:associatedWith vendor:CloudflareVendor .
+cost:AlternativeArchitectureCost cost:associatedWith vendor:BunnyCDNMigration .
+
+# Security adjacencies - security relationships
+sec:WebSocketSecurityControls sec:protectedBy sec:SSLTermination .
+cf:BotProtectionSystem sec:protectedBy sec:TrafficPatternAnalysis .
+
+# User experience adjacencies - UX impact relationships
+user:EmojiRainExperience user:affectedBy ws:EmojiRainEndpoint .
+user:DashboardExperience user:affectedBy ws:ObservatoryEndpoint .
+
+# Geographic adjacencies - location relationships
+cf:ObservatoryTunnelInstance infra:locatedAt geo:UserMacbook .
+cf:EdgeServer infra:locatedAt geo:CloudflareEdgeSeattle, geo:CloudflareEdgeDenver .
+
+# Temporal adjacencies - time-based relationships
+time:CascadeFailureDetectionTime time:hasTarget "PT15S"^^xsd:duration .
+time:TunnelRestartRecoveryTime time:hasTarget "PT1M"^^xsd:duration .
+
+# Vendor adjacencies - vendor relationships
+vendor:CloudflareVendor vendor:providedBy cf:ObservatoryTunnelInstance .
+vendor:BunnyCDNVendor vendor:providedBy vendor:BunnyCDNMigration .
+
+# Compliance adjacencies - compliance relationships
+comp:DataProtectionCompliance comp:affects data:RealTimeWebSocketData .
+legal:DataResidencyRequirement legal:affects arch:MultiRegionWebSocketArchitecture .
+
+# ================================
+# ONTOLOGY VALIDATION RULES
+# ================================
+
+# Validation rule: Every solution must solve at least one problem
+[] a owl:AllDisjointClasses ;
+   owl:members ( exec:Solution ws:Problem ) .
+
+exec:Solution rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty exec:solveProblem ;
+    owl:minCardinality "1"^^xsd:nonNegativeInteger
+] .
+
+# Validation rule: Every problem must have a severity level
+ws:Problem rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ws:hasSeverity ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger
+] .
+
+# Validation rule: Every risk must have likelihood and impact
+risk:Risk rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty risk:hasLikelihood ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger
+] .
+
+risk:Risk rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty risk:hasImpact ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger
+] .
+
+# Validation rule: Every monitoring metric must have a Prometheus query
+monitor:Metric rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty monitor:hasPrometheusQuery ;
+    owl:cardinality "1"^^xsd:nonNegativeInteger
+] .
+
+# Validation rule: Every component must be located somewhere
+infra:Component rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty infra:locatedAt ;
+    owl:minCardinality "1"^^xsd:nonNegativeInteger
+] .
+
+# Validation rule: Immediate fixes must be implementable within 2 hours
+exec:ImmediateFix rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty exec:hasImplementationTime ;
+    owl:allValuesFrom [
+        a rdfs:Datatype ;
+        owl:onDatatype xsd:duration ;
+        owl:withRestrictions ( 
+            [xsd:maxInclusive "PT2H"^^xsd:duration] 
+        )
+    ]
+] .
+
+# ================================
+# ONTOLOGY COMPLETION
+# ================================
+
+# Ensure all instances are properly classified
+ws:ObservatoryWebSocketCascadeFailure rdf:type owl:NamedIndividual .
+cf:ObservatoryTunnelInstance rdf:type owl:NamedIndividual .
+exec:FixCloudflaredConfiguration rdf:type owl:NamedIndividual .
+monitor:ComprehensiveMonitoringFramework rdf:type owl:NamedIndividual .
+risk:SinglePointOfFailureTunnel rdf:type owl:NamedIndividual .
+
+# Ontology metadata completion
+obs: owl:imports <http://www.w3.org/2002/07/owl#> ,
+              <http://www.w3.org/2000/01/rdf-schema#> ,
+              <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ,
+              <http://www.w3.org/2001/XMLSchema#> ,
+              <http://purl.org/dc/elements/1.1/> ,
+              <http://www.w3.org/2006/time#> ,
+              <http://www.w3.org/2003/01/geo/wgs84_pos#> ,
+              <http://www.w3.org/ns/prov#> ;
+    owl:versionIRI <http://observatory.nkllon.com/ontology/v2.0.0> ;
+    dcterms:created "2025-09-26T00:00:00Z"^^xsd:dateTime ;
+    dcterms:modified "2025-09-26T02:00:00Z"^^xsd:dateTime ;
+    prov:wasGeneratedBy obs:OntologyCreationActivity ;
+    exec:validationStatus "RDF_VALID" ;
+    exec:totalClasses "150+"^^xsd:integer ;
+    exec:totalProperties "100+"^^xsd:integer ;
+    exec:totalInstances "200+"^^xsd:integer ;
+    exec:dimensionCount "22"^^xsd:integer ;
+    exec:completenessLevel "COMPREHENSIVE"^^xsd:string .

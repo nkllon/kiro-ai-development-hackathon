@@ -139,6 +139,57 @@ class ObservatoryServer:
                 }
             }
         
+        @self.app.get("/healthemoji-rain")
+        async def health_emoji_rain():
+            """Combined health check with emoji rain celebration."""
+            observatory_health = self.observatory_core.get_health_status()
+            emoji_stats = self.emoji_engine.get_performance_stats()
+            
+            # Trigger a small celebration if system is healthy
+            if observatory_health.health_score > 0.8:
+                try:
+                    # Create a health check celebration event
+                    from .models import CoordinationEvent, CoordinationEventType
+                    health_event = CoordinationEvent(
+                        event_type=CoordinationEventType.SYSTEM_HEALTH_CHECK,
+                        source_component="health_endpoint",
+                        event_data={"health_score": observatory_health.health_score},
+                        user_id="system"
+                    )
+                    
+                    # Trigger a small emoji rain celebration
+                    effect_id = await self.emoji_engine.trigger_event_rain(health_event)
+                    celebration_triggered = True
+                except Exception as e:
+                    logger.warning(f"Failed to trigger health celebration: {e}")
+                    celebration_triggered = False
+                    effect_id = None
+            else:
+                celebration_triggered = False
+                effect_id = None
+            
+            return {
+                "status": "healthy" if observatory_health.health_score > 0.5 else "degraded",
+                "timestamp": observatory_health.last_check.isoformat(),
+                "health_score": observatory_health.health_score,
+                "celebration_triggered": celebration_triggered,
+                "effect_id": effect_id,
+                "observatory": {
+                    "status": observatory_health.status.value,
+                    "health_score": observatory_health.health_score,
+                    "uptime_seconds": observatory_health.uptime_seconds,
+                    "error_count": observatory_health.error_count,
+                    "warning_count": observatory_health.warning_count
+                },
+                "emoji_rain": {
+                    "active": emoji_stats["animation_running"],
+                    "active_effects": emoji_stats["active_effects"],
+                    "total_particles": emoji_stats["total_particles"],
+                    "connected_clients": len(self.emoji_ws_handler.connected_clients),
+                    "frame_rate": emoji_stats.get("frame_rate", 60)
+                }
+            }
+        
         @self.app.get("/api/observatory/status")
         async def observatory_status():
             """Get Observatory status and metrics."""

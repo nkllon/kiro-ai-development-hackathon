@@ -1,0 +1,26 @@
+=== Worker Status Fri Sep 26 23:04:23 MDT 2025 ===
+Active PIDs:
+
+Log sizes:
+  logs/workers/diagnostic-1.log: 1481 bytes
+  logs/workers/diagnostic-2.1.log: 14148 bytes
+  logs/workers/task-1-claude.log: 983 bytes
+  logs/workers/task-1-worker.log: 0 bytes
+  logs/workers/task-2.1-claude.log: 974 bytes
+  logs/workers/task-2.1-worker.log: 0 bytes
+  logs/workers/task-2.2-claude.log: 969 bytes
+  logs/workers/task-2.2-cursor.log: 4803 bytes
+  logs/workers/task-2.3-cursor.log: 6944 bytes
+  logs/workers/task-3.1-claude.log: 985 bytes
+  logs/workers/task-3.2-cursor.log: 16605 bytes
+  logs/workers/task-4.1-claude.log: 982 bytes
+  logs/workers/task-4.1-cursor.log: 5235 bytes
+  logs/workers/task-5.1-claude.log: 978 bytes
+  logs/workers/task-5.1-cursor.log: 5799 bytes
+  logs/workers/task-6.1-claude.log: 980 bytes
+  logs/workers/task-6.2-cursor.log: 4979 bytes
+  logs/workers/task-7.1-claude.log: 974 bytes
+  logs/workers/task-7.2-cursor.log: 4661 bytes
+  logs/workers/task-8.1-cursor.log: 5324 bytes
+  logs/workers/test-probe-cursor.log: 3927 bytes
+
