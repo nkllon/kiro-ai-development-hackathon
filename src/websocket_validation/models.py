@@ -317,3 +317,139 @@ class ValidationReport:
     def passed_tests(self) -> List[TestResult]:
         """List of passed tests."""
         return [test for test in self.test_results if test.status == TestStatus.PASSED]
+
+
+@dataclass
+class DependencyAnalysis:
+    """Analysis of code dependencies and imports."""
+    total_imports: int
+    websocket_imports: List[str]
+    fastapi_imports: List[str]
+    missing_imports: List[str]
+    unused_imports: List[str]
+    import_errors: List[str]
+    analysis_timestamp: datetime
+
+
+@dataclass
+class TunnelAnalysis:
+    """Analysis of Cloudflare tunnel configuration."""
+    tunnel_id: str
+    ingress_rules: List[Dict[str, Any]]
+    websocket_support: bool
+    proxy_settings: Dict[str, Any]
+    ssl_settings: Dict[str, Any]
+    routing_rules: List[Dict[str, Any]]
+    configuration_issues: List[str]
+    analysis_timestamp: datetime
+
+
+@dataclass
+class DNSAnalysis:
+    """Analysis of DNS configuration for a domain."""
+    domain: str
+    dns_records: Dict[str, List[str]]
+    cloudflare_detected: bool
+    dns_issues: List[str]
+    analysis_timestamp: datetime
+
+
+@dataclass
+class SSLAnalysis:
+    """Analysis of SSL/TLS configuration for a domain."""
+    domain: str
+    ssl_info: Dict[str, Any]
+    websocket_support: bool
+    ssl_issues: List[str]
+    analysis_timestamp: datetime
+
+
+@dataclass
+class ConfigurationAnalysis:
+    """Overall configuration analysis results."""
+    tunnel_analysis: Optional[TunnelAnalysis]
+    dns_analysis: List[DNSAnalysis]
+    ssl_analysis: List[SSLAnalysis]
+    configuration_score: float
+    critical_issues: List[str]
+    recommendations: List[str]
+    analysis_timestamp: datetime
+
+@dataclass
+class ConnectionAnalysis:
+    """Analysis of WebSocket connection testing."""
+    endpoint: str
+    connection_successful: bool
+    connection_time: float
+    messages_sent: int
+    messages_received: int
+    message_delivery_success: bool
+    connection_errors: List[str]
+    graceful_closure: bool
+    test_timestamp: datetime
+
+
+@dataclass
+class MessageAnalysis:
+    """Analysis of WebSocket message delivery."""
+    message_type: str
+    message_content: str
+    send_timestamp: datetime
+    receive_timestamp: Optional[datetime]
+    delivery_successful: bool
+    delivery_time: float
+    message_errors: List[str]
+
+
+@dataclass
+class PerformanceAnalysis:
+    """Analysis of WebSocket performance metrics."""
+    endpoint: str
+    connection_time: float
+    total_messages: int
+    successful_messages: int
+    average_latency: float
+    message_throughput: float
+    concurrent_connections: int
+    performance_errors: List[str]
+    test_duration: float
+    analysis_timestamp: datetime
+@
+dataclass
+class DocumentationAnalysis:
+    """Analysis of documentation-reality correlation."""
+    total_documents: int
+    analyzed_documents: int
+    procedure_accuracy: float
+    script_accuracy: float
+    overall_accuracy: float
+    critical_gaps: List[str]
+    recommendations: List[str]
+    analysis_timestamp: datetime
+
+
+@dataclass
+class ProcedureAnalysis:
+    """Analysis of documented procedures."""
+    document_file: str
+    total_procedures: int
+    executable_procedures: int
+    successful_executions: int
+    failed_executions: int
+    execution_errors: List[Dict[str, Any]]
+    accuracy_score: float
+    analysis_timestamp: datetime
+
+
+@dataclass
+class ScriptAnalysis:
+    """Analysis of script functionality."""
+    script_file: str
+    script_type: str
+    executable: bool
+    syntax_valid: bool
+    dependencies_available: bool
+    safe_to_execute: bool
+    execution_result: Optional[Dict[str, Any]]
+    analysis_errors: List[str]
+    analysis_timestamp: datetime

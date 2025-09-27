@@ -11,7 +11,6 @@ import logging
 import signal
 import sys
 from contextlib import asynccontextmanager
-from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 
@@ -563,6 +562,7 @@ class ObservatoryServer:
                     }
                 # Gather all data in parallel to minimize latency
                 import asyncio
+                from datetime import datetime
 
                 async def safe_get_analytics():
                     try:
@@ -702,8 +702,7 @@ class ObservatoryServer:
                 }
 
     def _setup_websockets(self):
-        """Setup WebSocket endpoints with explicit registration."""
-        logger.info("🔌 Setting up WebSocket endpoints...")
+        """Setup WebSocket endpoints."""
         
         @self.app.websocket("/ws/emoji-rain")
         async def emoji_rain_websocket(websocket: WebSocket):
@@ -731,46 +730,7 @@ class ObservatoryServer:
                     try:
                         message = await websocket.receive_text()
                         data = json.loads(message)
-                        # Handle WebSocket message
-                        if data.get("type") == "trigger_emoji_rain":
-                            await self.emoji_engine.trigger_effect(data.get("effect_type", "celebration"))
-                        elif data.get("type") == "trigger_test_rain":
-                            # Trigger test emoji rain
-                            event_type_name = data.get("event_type", "TASK_COMPLETED")
-                            try:
-                                from .models import CoordinationEventType, CoordinationEvent
-                                event_type = CoordinationEventType[event_type_name]
-                                
-                                event = CoordinationEvent(
-                                    event_type=event_type,
-                                    source_component="websocket_test",
-                                    event_data=data.get("data", {})
-                                )
-                                
-                                effect_id = await self.emoji_engine.trigger_event_rain(event)
-                                
-                                response = {
-                                    "type": "test_rain_triggered",
-                                    "data": {
-                                        "success": True,
-                                        "effect_id": effect_id,
-                                        "event_type": event_type_name
-                                    }
-                                }
-                                await websocket.send_text(json.dumps(response))
-                                
-                            except Exception as e:
-                                logger.error(f"Failed to trigger test rain: {e}")
-                                response = {
-                                    "type": "test_rain_triggered",
-                                    "data": {
-                                        "success": False,
-                                        "error": str(e)
-                                    }
-                                }
-                                await websocket.send_text(json.dumps(response))
-                        elif data.get("type") == "ping":
-                            await websocket.send_text(json.dumps({"type": "pong", "timestamp": datetime.now().isoformat()}))
+                        await self._handle_websocket_message(websocket, data)
                     except WebSocketDisconnect:
                         break
                     except Exception as e:
@@ -842,45 +802,128 @@ class ObservatoryServer:
                         }
 
                         await websocket.send_text(json.dumps(anomaly_data))
-                    
+
                     await asyncio.sleep(10)
-                    
+
             except WebSocketDisconnect:
                 pass
             except Exception as e:
-                logger.error(f"Anomalies WebSocket error: {e}")
-
+                logger.error(f"Anomaly WebSocket error: {e}")
+        
         @self.app.websocket("/ws/doctor-status")
         async def doctor_status_websocket(websocket: WebSocket):
-            """WebSocket endpoint for doctor status updates."""
+            """WebSocket endpoint for real-time doctor status updates."""
             await websocket.accept()
-
+            
+            # Add to connected clients for broadcasting
+            if not hasattr(self, '_doctor_status_clients'):
+                self._doctor_status_clients = set()
+            self._doctor_status_clients.add(websocket)
+            
             try:
-                while True:
-                    # Send doctor status every 3 seconds
-                    doctor_data = {
-                        "type": "doctor_status",
+                # Send initial status
+                try:
+                    from .ai_consultation.doctor_status_indicator import get_doctor_status_indicator
+                    indicator = get_doctor_status_indicator()
+                    initial_status = indicator.get_websocket_message()
+                    await websocket.send_text(json.dumps(initial_status))
+                except ImportError:
+                    # AI consultation not available
+                    await websocket.send_text(json.dumps({
+                        "type": "doctor_status_update",
                         "data": {
-                            "status": "healthy",
-                            "checks_performed": 42,
-                            "last_check": datetime.now().isoformat(),
-                            "system_health": self.observatory_core.get_health_status().health_score
+                            "enabled": False,
+                            "message": "AI consultation feature is not available"
                         }
-                    }
-                    
-                    await websocket.send_text(json.dumps(doctor_data))
-                    await asyncio.sleep(3)
-                    
+                    }))
+                
+                # Keep connection alive
+                while True:
+                    try:
+                        message = await websocket.receive_text()
+                        data = json.loads(message)
+                        await self._handle_websocket_message(websocket, data)
+                    except WebSocketDisconnect:
+                        break
+                    except Exception as e:
+                        logger.error(f"Doctor status WebSocket error: {e}")
+                        break
+                        
             except WebSocketDisconnect:
                 pass
+            finally:
+                if hasattr(self, '_doctor_status_clients'):
+                    self._doctor_status_clients.discard(websocket)
+    
+    async def _broadcast_doctor_status_update(self, indicator):
+        """Broadcast doctor status update to all connected WebSocket clients."""
+        if not hasattr(self, '_doctor_status_clients'):
+            return
+            
+        message = indicator.get_websocket_message()
+        message_json = json.dumps(message)
+        
+        # Remove disconnected clients
+        disconnected_clients = set()
+        
+        for client in self._doctor_status_clients:
+            try:
+                await client.send_text(message_json)
             except Exception as e:
-                logger.error(f"Doctor status WebSocket error: {e}")
+                logger.debug(f"Failed to send doctor status to client: {e}")
+                disconnected_clients.add(client)
         
-        # WebSocket endpoints are now registered using decorators above
+        # Clean up disconnected clients
+        for client in disconnected_clients:
+            self._doctor_status_clients.discard(client)
+    
+    async def _handle_websocket_message(self, websocket: WebSocket, data: Dict[str, Any]):
+        """Handle incoming WebSocket messages."""
+        message_type = data.get("type")
         
-        logger.info("✅ WebSocket endpoints registered successfully")
-        logger.info(f"📊 Registered {len(['/ws/emoji-rain', '/ws/observatory', '/ws/anomalies', '/ws/doctor-status'])} WebSocket endpoints")
+        if message_type == "ping":
+            await websocket.send_text(json.dumps({"type": "pong"}))
+            
+        elif message_type == "trigger_test_rain":
+            try:
+                event_type_name = data.get("event_type", "TASK_COMPLETED")
+                event_type = CoordinationEventType[event_type_name]
 
+                event = CoordinationEvent(
+                    event_type=event_type,
+                    source_component="websocket_test",
+                    event_data=data.get("data", {})
+                )
+
+                effect_id = await self.emoji_engine.trigger_event_rain(event)
+                await self.observatory_core.process_coordination_event(event)
+
+                response = {
+                    "type": "test_rain_triggered",
+                    "data": {
+                        "success": True,
+                        "effect_id": effect_id,
+                        "event_type": event_type_name
+                    }
+                }
+                await websocket.send_text(json.dumps(response))
+                
+            except Exception as e:
+                logger.error(f"Failed to trigger test rain: {e}")
+                response = {
+                    "type": "test_rain_triggered",
+                    "data": {"success": False, "error": str(e)}
+                }
+                await websocket.send_text(json.dumps(response))
+        
+        elif message_type == "set_canvas_size":
+            width = data.get("width", 1920)
+            height = data.get("height", 1080)
+            self.emoji_engine.set_canvas_size(width, height)
+            
+        else:
+            logger.warning(f"Unknown WebSocket message type: {message_type}")
+    
     def _setup_static_files(self):
         """Setup static file serving."""
         static_dir = Path(__file__).parent / "static"

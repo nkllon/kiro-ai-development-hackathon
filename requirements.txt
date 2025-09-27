@@ -46,4 +46,6 @@ plotly>=5.16.1
 black>=23.7.0
 flake8>=6.0.0
 mypy>=1.5.1
-pre-commit>=3.4.0
+pre-commit>=3.4.0# DNS resolu
+tion
+dnspython>=2.4.2
