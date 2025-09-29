@@ -1,0 +1,138 @@
+# AI Memory Palace Configuration
+# This file contains the default configuration for the AI Memory Palace system
+
+# Storage Configuration
+storage:
+  # Directory for context storage (supports ~ for home directory)
+  directory: "~/.kiro/context_storage"
+  
+  # Directory for context backups
+  backup_directory: "~/.kiro/context_backups"
+  
+  # Maximum context size in MB before compression/summarization
+  max_context_size_mb: 100
+  
+  # Enable compression for storage efficiency
+  compression_enabled: true
+
+# Performance Configuration
+performance:
+  # Session timeout in minutes (0 = no timeout)
+  session_timeout_minutes: 60
+  
+  # Automatic backup interval in seconds
+  auto_backup_interval_seconds: 300
+  
+  # Context cleanup after N days of inactivity
+  context_cleanup_days: 30
+  
+  # Maximum concurrent sessions
+  max_concurrent_sessions: 10
+
+# Security Configuration
+security:
+  # Enable encryption at rest for context data
+  encryption_enabled: true
+  
+  # Enable automatic sensitive data redaction
+  sensitive_data_redaction: true
+  
+  # Enable access logging for audit trails
+  access_logging_enabled: true
+  
+  # Data retention policy in days
+  retention_policy_days: 90
+
+# Multi-Project Configuration
+multi_project:
+  # Enable automatic project detection
+  auto_project_detection: true
+  
+  # Enable project context isolation
+  project_isolation_enabled: true
+  
+  # Enable shared context between projects
+  shared_context_enabled: true
+  
+  # Maximum projects per workspace
+  max_projects_per_workspace: 50
+
+# Monitoring Configuration
+monitoring:
+  # Health check interval in seconds
+  health_check_interval_seconds: 30
+  
+  # Enable metrics collection
+  metrics_collection_enabled: true
+  
+  # Alert thresholds
+  alert_thresholds:
+    # Context size threshold in MB
+    context_size_mb: 80
+    
+    # Active session count threshold
+    session_count: 8
+    
+    # Error rate threshold in percent
+    error_rate_percent: 5
+    
+    # Backup failure count threshold
+    backup_failure_count: 3
+
+# Observatory Integration
+observatory:
+  # Enable Observatory integration
+  enabled: true
+  
+  # Enable WebSocket broadcasts for real-time updates
+  websocket_broadcasts: true
+  
+  # Enable distributed tracing
+  tracing_enabled: true
+
+# Environment-Specific Overrides
+# These settings will be applied based on the detected environment
+
+# Development Environment
+development:
+  storage:
+    max_context_size_mb: 50
+  performance:
+    session_timeout_minutes: 30
+  security:
+    encryption_enabled: false
+  monitoring:
+    health_check_interval_seconds: 60
+
+# Testing Environment
+testing:
+  storage:
+    max_context_size_mb: 25
+  performance:
+    session_timeout_minutes: 15
+  security:
+    encryption_enabled: false
+  monitoring:
+    health_check_interval_seconds: 10
+
+# Staging Environment
+staging:
+  storage:
+    max_context_size_mb: 75
+  performance:
+    session_timeout_minutes: 45
+  security:
+    encryption_enabled: true
+  monitoring:
+    health_check_interval_seconds: 30
+
+# Production Environment
+production:
+  storage:
+    max_context_size_mb: 100
+  performance:
+    session_timeout_minutes: 60
+  security:
+    encryption_enabled: true
+  monitoring:
+    health_check_interval_seconds: 15
