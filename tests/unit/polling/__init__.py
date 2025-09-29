@@ -1,3 +1,3 @@
 """
-Unit tests for the intelligent polling system.
+Unit tests for the Intelligent HTTP Polling Fallback System
 """

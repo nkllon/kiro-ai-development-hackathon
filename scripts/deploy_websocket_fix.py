@@ -1,17 +1,14 @@
 #!/usr/bin/env python3
 """
-WebSocket Fix Deployment Automation Script
+Deployment Automation Script for WebSocket Fix
+Task 7.2: Deployment Automation and Validation
 
-This script implements staged rollout deployment with zero-downtime capability,
-health checks, and automatic rollback triggers for the WebSocket infrastructure fix.
-
-Features:
+This script provides comprehensive deployment automation with:
 - Staged rollout (dev → staging → production)
 - Health checks at each stage
 - Automatic rollback on failure
 - Zero-downtime deployment
 - Configuration validation
-- Comprehensive logging and monitoring
 """
 
 import asyncio
@@ -21,39 +18,35 @@ import os
 import subprocess
 import sys
 import time
-from dataclasses import dataclass, field
-from datetime import datetime, timedelta
-from enum import Enum
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
 import yaml
-import requests
-from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Dict, List, Optional, Any, Tuple
+from dataclasses import dataclass, asdict
+from enum import Enum
 
-# Add src to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+import aiohttp
+import websockets
+from websockets.exceptions import ConnectionClosed, InvalidStatusCode
 
-from beast_mode.observatory.websocket import (
-    WebSocketHealthValidator,
-    HealthStatus,
-    EndpointMonitor,
-    FailureDetector
-)
-from beast_mode.observatory.monitoring.health_monitor import WebSocketHealthMonitor
+# Add project root to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from src.beast_mode.observatory.tunnel.tunnel_config_manager import TunnelConfigManager
+from src.beast_mode.observatory.websocket.manager import WebSocketManager, WebSocketManagerConfig
 
 
 class DeploymentStage(Enum):
-    """Deployment stages for staged rollout"""
+    """Deployment stages for staged rollout."""
     DEV = "dev"
     STAGING = "staging"
     PRODUCTION = "production"
 
 
 class DeploymentStatus(Enum):
-    """Deployment status tracking"""
+    """Deployment status tracking."""
     PENDING = "pending"
     IN_PROGRESS = "in_progress"
-    HEALTH_CHECKING = "health_checking"
     COMPLETED = "completed"
     FAILED = "failed"
     ROLLED_BACK = "rolled_back"
@@ -61,651 +54,775 @@ class DeploymentStatus(Enum):
 
 @dataclass
 class DeploymentConfig:
-    """Configuration for deployment process"""
-    # Environment configurations
-    environments: Dict[str, Dict[str, Any]] = field(default_factory=dict)
-    
-    # Health check settings
-    health_check_timeout: int = 300  # 5 minutes
-    health_check_interval: int = 10  # 10 seconds
+    """Configuration for deployment automation."""
+    environments: Dict[str, Dict[str, Any]]
+    health_check_timeout: int = 300
+    health_check_interval: int = 10
     max_health_check_retries: int = 30
-    
-    # Rollback settings
-    rollback_timeout: int = 180  # 3 minutes
-    auto_rollback_threshold: float = 0.8  # 80% health threshold
-    
-    # Deployment settings
+    rollback_timeout: int = 180
+    auto_rollback_threshold: float = 0.8
     zero_downtime: bool = True
     max_parallel_deployments: int = 1
-    deployment_timeout: int = 600  # 10 minutes
-    
-    # Monitoring settings
-    metrics_collection_interval: int = 5
-    alert_thresholds: Dict[str, float] = field(default_factory=lambda: {
-        "error_rate": 0.05,
-        "latency_ms": 1000,
-        "connection_failure_rate": 0.1
-    })
+    deployment_timeout: int = 600
+    validation_thresholds: Dict[str, Any] = None
+    rollback_triggers: Dict[str, Any] = None
+    backup_retention_days: int = 7
+    generate_report: bool = True
+    alert_on_failure: bool = True
 
 
 @dataclass
 class DeploymentResult:
-    """Result of a deployment operation"""
-    stage: DeploymentStage
+    """Result of a deployment operation."""
+    stage: str
     status: DeploymentStatus
     start_time: datetime
     end_time: Optional[datetime] = None
-    health_score: float = 0.0
+    success: bool = False
     error_message: Optional[str] = None
-    metrics: Dict[str, Any] = field(default_factory=dict)
+    health_score: float = 0.0
+    validation_results: Dict[str, Any] = None
     rollback_triggered: bool = False
+    rollback_reason: Optional[str] = None
 
 
-class WebSocketDeploymentManager:
-    """
-    Comprehensive deployment manager for WebSocket infrastructure fixes.
+class DeploymentAutomation:
+    """Main deployment automation class."""
     
-    Implements staged rollout with health monitoring, automatic rollback,
-    and zero-downtime deployment capabilities.
-    """
-    
-    def __init__(self, config_path: Optional[str] = None):
-        """Initialize deployment manager with configuration"""
-        self.config = self._load_config(config_path)
+    def __init__(self, config_path: str = "deployment-config.yml"):
+        """Initialize deployment automation."""
+        self.config_path = Path(config_path)
+        self.config = self._load_config()
+        self.tunnel_manager = TunnelConfigManager()
+        self.deployment_results: List[DeploymentResult] = []
+        self.current_deployment_id = None
         self.logger = self._setup_logging()
         
-        # Initialize monitoring components
-        self.health_validator = WebSocketHealthValidator()
-        self.endpoint_monitor = EndpointMonitor()
-        self.failure_detector = FailureDetector()
-        self.health_monitor = WebSocketHealthMonitor()
-        
-        # Deployment tracking
-        self.deployment_results: List[DeploymentResult] = []
-        self.current_deployment: Optional[DeploymentResult] = None
-        self.rollback_history: List[DeploymentResult] = []
-        
-        # Health check cache
-        self._health_cache: Dict[str, Dict[str, Any]] = {}
-        self._last_health_check: Dict[str, datetime] = {}
-        
-        self.logger.info("WebSocket Deployment Manager initialized")
+        self.log_action("deployment_automation_init", "completed", {
+            "config_path": str(self.config_path),
+            "environments": list(self.config.environments.keys()),
+            "zero_downtime": self.config.zero_downtime
+        })
     
-    def _load_config(self, config_path: Optional[str]) -> DeploymentConfig:
-        """Load deployment configuration from file or use defaults"""
-        if config_path and Path(config_path).exists():
-            with open(config_path, 'r') as f:
-                config_data = yaml.safe_load(f)
-                return DeploymentConfig(**config_data)
+    def _load_config(self) -> DeploymentConfig:
+        """Load deployment configuration."""
+        if not self.config_path.exists():
+            raise FileNotFoundError(f"Configuration file not found: {self.config_path}")
         
-        # Default configuration
-        return DeploymentConfig(
-            environments={
-                "dev": {
-                    "url": "http://localhost:8888",
-                    "websocket_url": "ws://localhost:8888/ws",
-                    "health_endpoint": "/health",
-                    "tunnel_config": "cloudflare-tunnel-config-websocket.yml",
-                    "replicas": 1
-                },
-                "staging": {
-                    "url": "https://staging-observatory.nkllon.com",
-                    "websocket_url": "wss://staging-observatory.nkllon.com/ws",
-                    "health_endpoint": "/health",
-                    "tunnel_config": "cloudflare-tunnel-config-websocket-staging.yml",
-                    "replicas": 2
-                },
-                "production": {
-                    "url": "https://observatory.nkllon.com",
-                    "websocket_url": "wss://observatory.nkllon.com/ws",
-                    "health_endpoint": "/health",
-                    "tunnel_config": "cloudflare-tunnel-config-websocket.yml",
-                    "replicas": 3
-                }
-            }
-        )
+        with open(self.config_path, 'r') as f:
+            config_data = yaml.safe_load(f)
+        
+        return DeploymentConfig(**config_data)
     
     def _setup_logging(self) -> logging.Logger:
-        """Setup structured logging for deployment operations"""
-        logger = logging.getLogger("websocket_deployment")
+        """Setup logging configuration."""
+        logger = logging.getLogger("deployment_automation")
         logger.setLevel(logging.INFO)
         
-        # Create logs directory if it doesn't exist
-        logs_dir = Path("logs")
-        logs_dir.mkdir(exist_ok=True)
-        
-        # File handler for deployment logs
-        file_handler = logging.FileHandler(
-            logs_dir / f"deployment_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-        )
-        file_handler.setLevel(logging.INFO)
-        
-        # Console handler for real-time output
-        console_handler = logging.StreamHandler()
-        console_handler.setLevel(logging.INFO)
-        
-        # JSON formatter for structured logs
-        json_formatter = logging.Formatter(
-            '{"timestamp": "%(asctime)s", "level": "%(levelname)s", '
-            '"component": "deployment", "message": "%(message)s"}'
-        )
-        file_handler.setFormatter(json_formatter)
-        console_handler.setFormatter(logging.Formatter(
-            '%(asctime)s - %(levelname)s - %(message)s'
-        ))
-        
-        logger.addHandler(file_handler)
-        logger.addHandler(console_handler)
+        if not logger.handlers:
+            handler = logging.StreamHandler()
+            formatter = logging.Formatter(
+                '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            )
+            handler.setFormatter(formatter)
+            logger.addHandler(handler)
         
         return logger
     
-    async def deploy_websocket_fix(
-        self,
-        stages: List[DeploymentStage] = None,
-        test_mode: bool = False,
-        force_deploy: bool = False
-    ) -> Dict[str, Any]:
-        """
-        Execute staged deployment of WebSocket fix across environments.
+    def log_action(self, action: str, status: str, details: Dict[str, Any] = None):
+        """Log action in JSON format as required."""
+        log_entry = {
+            "timestamp": datetime.now().isoformat(),
+            "task": "7.2",
+            "action": f"DeploymentAutomation.{action}",
+            "status": status,
+            "details": details or {}
+        }
+        print(json.dumps(log_entry))
+    
+    async def deploy_websocket_fix(self, 
+                                 target_stage: str = "production",
+                                 force_deploy: bool = False,
+                                 skip_validation: bool = False) -> Dict[str, Any]:
+        """Deploy WebSocket fix with staged rollout."""
+        self.current_deployment_id = f"deploy_{int(time.time())}"
         
-        Args:
-            stages: List of stages to deploy to (default: all stages)
-            test_mode: Run in test mode without actual deployment
-            force_deploy: Skip pre-deployment checks
-            
-        Returns:
-            Dict containing deployment results and metrics
-        """
-        if stages is None:
-            stages = [DeploymentStage.DEV, DeploymentStage.STAGING, DeploymentStage.PRODUCTION]
-        
-        self.logger.info(f"Starting WebSocket fix deployment to stages: {[s.value for s in stages]}")
-        
-        deployment_start = datetime.now()
-        overall_status = "success"
-        stage_results = {}
+        self.log_action("deploy_websocket_fix_start", "in_progress", {
+            "deployment_id": self.current_deployment_id,
+            "target_stage": target_stage,
+            "force_deploy": force_deploy,
+            "skip_validation": skip_validation
+        })
         
         try:
+            # Determine deployment stages
+            stages = self._get_deployment_stages(target_stage)
+            
             # Pre-deployment validation
-            if not test_mode and not force_deploy:
-                await self._pre_deployment_validation(stages)
+            if not skip_validation:
+                validation_result = await self._pre_deployment_validation()
+                if not validation_result["success"]:
+                    raise Exception(f"Pre-deployment validation failed: {validation_result['errors']}")
+            
+            # Backup current configuration
+            backup_result = await self._backup_current_config()
+            if not backup_result["success"]:
+                raise Exception(f"Backup failed: {backup_result['error']}")
             
             # Execute staged deployment
+            deployment_results = []
             for stage in stages:
-                self.logger.info(f"Deploying to {stage.value} environment")
+                stage_result = await self._deploy_to_stage(stage, force_deploy)
+                deployment_results.append(stage_result)
                 
-                stage_result = await self._deploy_to_stage(stage, test_mode)
-                stage_results[stage.value] = stage_result
-                
-                # Check if deployment failed
-                if stage_result.status == DeploymentStatus.FAILED:
-                    self.logger.error(f"Deployment failed at {stage.value} stage")
-                    overall_status = "failed"
+                # Check if deployment failed and rollback is needed
+                if not stage_result.success:
+                    self.log_action("deployment_stage_failed", "error", {
+                        "stage": stage,
+                        "error": stage_result.error_message,
+                        "triggering_rollback": True
+                    })
                     
-                    # Trigger automatic rollback if configured
-                    if not test_mode:
-                        await self._trigger_rollback(stage, stage_result.error_message)
-                    
+                    # Rollback previous stages
+                    await self._rollback_deployment(deployment_results)
                     break
-                
-                # Wait between stages for stability
-                if stage != stages[-1]:
-                    self.logger.info("Waiting 30 seconds between stages for stability")
-                    await asyncio.sleep(30)
             
             # Post-deployment validation
-            if overall_status == "success" and not test_mode:
-                await self._post_deployment_validation(stages)
+            if all(result.success for result in deployment_results):
+                final_validation = await self._post_deployment_validation(target_stage)
+                if not final_validation["success"]:
+                    self.log_action("post_deployment_validation_failed", "error", {
+                        "errors": final_validation["errors"],
+                        "triggering_rollback": True
+                    })
+                    await self._rollback_deployment(deployment_results)
+            
+            # Generate deployment report
+            report = await self._generate_deployment_report(deployment_results)
+            
+            self.log_action("deploy_websocket_fix_complete", "completed", {
+                "deployment_id": self.current_deployment_id,
+                "success": all(result.success for result in deployment_results),
+                "stages_deployed": len([r for r in deployment_results if r.success]),
+                "total_stages": len(stages)
+            })
+            
+            return report
             
         except Exception as e:
-            self.logger.error(f"Deployment failed with exception: {e}")
-            overall_status = "failed"
-            await self._emergency_rollback()
+            self.log_action("deploy_websocket_fix_error", "error", {
+                "deployment_id": self.current_deployment_id,
+                "error": str(e),
+                "error_type": type(e).__name__
+            })
+            raise
+    
+    def _get_deployment_stages(self, target_stage: str) -> List[str]:
+        """Get deployment stages based on target."""
+        stage_order = ["dev", "staging", "production"]
+        target_index = stage_order.index(target_stage)
+        return stage_order[:target_index + 1]
+    
+    async def _pre_deployment_validation(self) -> Dict[str, Any]:
+        """Perform pre-deployment validation."""
+        self.log_action("pre_deployment_validation", "in_progress")
         
-        deployment_end = datetime.now()
-        deployment_duration = (deployment_end - deployment_start).total_seconds()
+        validation_results = {
+            "success": True,
+            "errors": [],
+            "warnings": [],
+            "checks": {}
+        }
         
-        # Generate deployment report
+        try:
+            # Check if observatory server is running
+            server_check = await self._check_observatory_server()
+            validation_results["checks"]["observatory_server"] = server_check
+            if not server_check["running"]:
+                validation_results["errors"].append("Observatory server is not running")
+                validation_results["success"] = False
+            
+            # Validate tunnel configuration
+            tunnel_check = await self._validate_tunnel_config()
+            validation_results["checks"]["tunnel_config"] = tunnel_check
+            if not tunnel_check["valid"]:
+                validation_results["errors"].extend(tunnel_check["errors"])
+                validation_results["success"] = False
+            
+            # Check WebSocket endpoints
+            websocket_check = await self._check_websocket_endpoints()
+            validation_results["checks"]["websocket_endpoints"] = websocket_check
+            if not websocket_check["all_healthy"]:
+                validation_results["warnings"].append("Some WebSocket endpoints are not healthy")
+            
+            # Validate deployment configuration
+            config_check = self._validate_deployment_config()
+            validation_results["checks"]["deployment_config"] = config_check
+            if not config_check["valid"]:
+                validation_results["errors"].extend(config_check["errors"])
+                validation_results["success"] = False
+            
+            self.log_action("pre_deployment_validation", "completed", {
+                "success": validation_results["success"],
+                "error_count": len(validation_results["errors"]),
+                "warning_count": len(validation_results["warnings"])
+            })
+            
+        except Exception as e:
+            validation_results["success"] = False
+            validation_results["errors"].append(f"Validation error: {str(e)}")
+            self.log_action("pre_deployment_validation", "error", {"error": str(e)})
+        
+        return validation_results
+    
+    async def _deploy_to_stage(self, stage: str, force_deploy: bool = False) -> DeploymentResult:
+        """Deploy to a specific stage."""
+        start_time = datetime.now()
+        
+        self.log_action("deploy_to_stage_start", "in_progress", {
+            "stage": stage,
+            "force_deploy": force_deploy
+        })
+        
+        result = DeploymentResult(
+            stage=stage,
+            status=DeploymentStatus.IN_PROGRESS,
+            start_time=start_time
+        )
+        
+        try:
+            # Get stage configuration
+            stage_config = self.config.environments.get(stage)
+            if not stage_config:
+                raise Exception(f"Configuration not found for stage: {stage}")
+            
+            # Apply tunnel configuration for stage
+            tunnel_config_result = await self._apply_tunnel_config(stage, stage_config)
+            if not tunnel_config_result["success"]:
+                raise Exception(f"Tunnel configuration failed: {tunnel_config_result['error']}")
+            
+            # Wait for configuration to propagate
+            await asyncio.sleep(5)
+            
+            # Perform health checks
+            health_result = await self._perform_health_checks(stage, stage_config)
+            result.health_score = health_result["health_score"]
+            
+            if health_result["health_score"] < self.config.auto_rollback_threshold:
+                raise Exception(f"Health score too low: {health_result['health_score']}")
+            
+            # Validate WebSocket functionality
+            websocket_validation = await self._validate_websocket_functionality(stage, stage_config)
+            result.validation_results = websocket_validation
+            
+            if not websocket_validation["success"]:
+                raise Exception(f"WebSocket validation failed: {websocket_validation['errors']}")
+            
+            # Mark deployment as successful
+            result.status = DeploymentStatus.COMPLETED
+            result.success = True
+            result.end_time = datetime.now()
+            
+            self.log_action("deploy_to_stage_complete", "completed", {
+                "stage": stage,
+                "health_score": result.health_score,
+                "duration_seconds": (result.end_time - result.start_time).total_seconds()
+            })
+            
+        except Exception as e:
+            result.status = DeploymentStatus.FAILED
+            result.success = False
+            result.error_message = str(e)
+            result.end_time = datetime.now()
+            
+            self.log_action("deploy_to_stage_failed", "error", {
+                "stage": stage,
+                "error": str(e),
+                "duration_seconds": (result.end_time - result.start_time).total_seconds()
+            })
+        
+        self.deployment_results.append(result)
+        return result
+    
+    async def _apply_tunnel_config(self, stage: str, stage_config: Dict[str, Any]) -> Dict[str, Any]:
+        """Apply tunnel configuration for stage."""
+        self.log_action("apply_tunnel_config", "in_progress", {"stage": stage})
+        
+        try:
+            # Generate WebSocket-enabled configuration
+            tunnel_config = self.tunnel_manager.generate_websocket_config(
+                tunnel_name=f"observatory-{stage}",
+                hostname=stage_config["url"].replace("https://", "").replace("http://", ""),
+                local_port=8888,
+                credentials_file="/Users/lou/.cloudflared/d1e53e43-033f-4994-8f46-c83962ae3785.json",
+                config_type="websocket"
+            )
+            
+            # Validate configuration
+            validation_result = self.tunnel_manager.validate_config(tunnel_config)
+            if not validation_result.is_valid:
+                return {
+                    "success": False,
+                    "error": f"Configuration validation failed: {validation_result.errors}"
+                }
+            
+            # Apply configuration
+            success = self.tunnel_manager.apply_config(tunnel_config, create_version=True)
+            if not success:
+                return {
+                    "success": False,
+                    "error": "Failed to apply tunnel configuration"
+                }
+            
+            self.log_action("apply_tunnel_config", "completed", {"stage": stage})
+            return {"success": True}
+            
+        except Exception as e:
+            self.log_action("apply_tunnel_config", "error", {"stage": stage, "error": str(e)})
+            return {"success": False, "error": str(e)}
+    
+    async def _perform_health_checks(self, stage: str, stage_config: Dict[str, Any]) -> Dict[str, Any]:
+        """Perform comprehensive health checks for stage."""
+        self.log_action("perform_health_checks", "in_progress", {"stage": stage})
+        
+        health_results = {
+            "health_score": 0.0,
+            "checks": {},
+            "overall_status": "unhealthy"
+        }
+        
+        try:
+            base_url = stage_config["url"]
+            health_endpoint = f"{base_url}{stage_config['health_endpoint']}"
+            
+            # HTTP health check
+            http_check = await self._check_http_health(health_endpoint)
+            health_results["checks"]["http"] = http_check
+            
+            # WebSocket health check
+            websocket_check = await self._check_websocket_health(stage_config["websocket_url"])
+            health_results["checks"]["websocket"] = websocket_check
+            
+            # Response time check
+            response_time_check = await self._check_response_time(base_url)
+            health_results["checks"]["response_time"] = response_time_check
+            
+            # Calculate overall health score
+            health_score = self._calculate_health_score(health_results["checks"])
+            health_results["health_score"] = health_score
+            health_results["overall_status"] = "healthy" if health_score >= 0.8 else "unhealthy"
+            
+            self.log_action("perform_health_checks", "completed", {
+                "stage": stage,
+                "health_score": health_score,
+                "overall_status": health_results["overall_status"]
+            })
+            
+        except Exception as e:
+            self.log_action("perform_health_checks", "error", {"stage": stage, "error": str(e)})
+            health_results["error"] = str(e)
+        
+        return health_results
+    
+    async def _check_http_health(self, health_url: str) -> Dict[str, Any]:
+        """Check HTTP health endpoint."""
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(health_url, timeout=10) as response:
+                    return {
+                        "status": "healthy" if response.status == 200 else "unhealthy",
+                        "status_code": response.status,
+                        "response_time_ms": response.headers.get("X-Response-Time", "unknown")
+                    }
+        except Exception as e:
+            return {
+                "status": "unhealthy",
+                "error": str(e)
+            }
+    
+    async def _check_websocket_health(self, websocket_url: str) -> Dict[str, Any]:
+        """Check WebSocket health."""
+        try:
+            async with websockets.connect(websocket_url, timeout=10) as websocket:
+                # Send ping and wait for pong
+                await websocket.ping()
+                return {
+                    "status": "healthy",
+                    "connection_time_ms": "unknown"
+                }
+        except Exception as e:
+            return {
+                "status": "unhealthy",
+                "error": str(e)
+            }
+    
+    async def _check_response_time(self, base_url: str) -> Dict[str, Any]:
+        """Check response time for base URL."""
+        try:
+            start_time = time.time()
+            async with aiohttp.ClientSession() as session:
+                async with session.get(base_url, timeout=10) as response:
+                    response_time = (time.time() - start_time) * 1000
+                    return {
+                        "status": "healthy" if response_time < 2000 else "slow",
+                        "response_time_ms": response_time,
+                        "status_code": response.status
+                    }
+        except Exception as e:
+            return {
+                "status": "unhealthy",
+                "error": str(e)
+            }
+    
+    def _calculate_health_score(self, checks: Dict[str, Any]) -> float:
+        """Calculate overall health score from individual checks."""
+        if not checks:
+            return 0.0
+        
+        scores = []
+        for check_name, check_result in checks.items():
+            if check_result.get("status") == "healthy":
+                scores.append(1.0)
+            elif check_result.get("status") == "slow":
+                scores.append(0.5)
+            else:
+                scores.append(0.0)
+        
+        return sum(scores) / len(scores) if scores else 0.0
+    
+    async def _validate_websocket_functionality(self, stage: str, stage_config: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate WebSocket functionality for stage."""
+        self.log_action("validate_websocket_functionality", "in_progress", {"stage": stage})
+        
+        validation_results = {
+            "success": True,
+            "errors": [],
+            "endpoints": {}
+        }
+        
+        try:
+            websocket_url = stage_config["websocket_url"]
+            endpoints = ["/ws/emoji-rain", "/ws/observatory", "/ws/anomalies", "/ws/doctor-status"]
+            
+            for endpoint in endpoints:
+                full_url = f"{websocket_url}{endpoint}"
+                try:
+                    async with websockets.connect(full_url, timeout=10) as websocket:
+                        # Test basic connectivity
+                        await websocket.ping()
+                        
+                        # Test message sending/receiving
+                        test_message = {"type": "test", "timestamp": datetime.now().isoformat()}
+                        await websocket.send(json.dumps(test_message))
+                        
+                        validation_results["endpoints"][endpoint] = {
+                            "status": "healthy",
+                            "connectivity": True,
+                            "message_test": True
+                        }
+                        
+                except Exception as e:
+                    validation_results["endpoints"][endpoint] = {
+                        "status": "unhealthy",
+                        "error": str(e)
+                    }
+                    validation_results["errors"].append(f"Endpoint {endpoint} failed: {str(e)}")
+                    validation_results["success"] = False
+            
+            self.log_action("validate_websocket_functionality", "completed", {
+                "stage": stage,
+                "success": validation_results["success"],
+                "healthy_endpoints": len([ep for ep in validation_results["endpoints"].values() if ep["status"] == "healthy"])
+            })
+            
+        except Exception as e:
+            validation_results["success"] = False
+            validation_results["errors"].append(f"Validation error: {str(e)}")
+            self.log_action("validate_websocket_functionality", "error", {"stage": stage, "error": str(e)})
+        
+        return validation_results
+    
+    async def _rollback_deployment(self, deployment_results: List[DeploymentResult]) -> Dict[str, Any]:
+        """Rollback deployment to previous version."""
+        self.log_action("rollback_deployment", "in_progress", {
+            "deployment_results_count": len(deployment_results)
+        })
+        
+        rollback_results = {
+            "success": True,
+            "stages_rolled_back": [],
+            "errors": []
+        }
+        
+        try:
+            # Get the latest version before deployment
+            version_history = self.tunnel_manager.get_version_history(limit=5)
+            if not version_history:
+                raise Exception("No version history found for rollback")
+            
+            # Find the version before the current deployment
+            rollback_version = None
+            for version in version_history:
+                if version.description and "Backup before configuration change" in version.description:
+                    rollback_version = version.version_id
+                    break
+            
+            if not rollback_version:
+                raise Exception("No suitable rollback version found")
+            
+            # Perform rollback
+            success, message = self.tunnel_manager.rollback_config(rollback_version)
+            if not success:
+                raise Exception(f"Rollback failed: {message}")
+            
+            # Update deployment results
+            for result in deployment_results:
+                if result.success:
+                    result.rollback_triggered = True
+                    result.rollback_reason = "Deployment failure"
+                    result.status = DeploymentStatus.ROLLED_BACK
+            
+            rollback_results["success"] = True
+            rollback_results["stages_rolled_back"] = [r.stage for r in deployment_results if r.success]
+            
+            self.log_action("rollback_deployment", "completed", {
+                "rollback_version": rollback_version,
+                "stages_rolled_back": rollback_results["stages_rolled_back"]
+            })
+            
+        except Exception as e:
+            rollback_results["success"] = False
+            rollback_results["errors"].append(str(e))
+            self.log_action("rollback_deployment", "error", {"error": str(e)})
+        
+        return rollback_results
+    
+    async def _backup_current_config(self) -> Dict[str, Any]:
+        """Backup current configuration."""
+        self.log_action("backup_current_config", "in_progress")
+        
+        try:
+            backup_id = self.tunnel_manager.backup_current_config()
+            if backup_id.startswith("Failed"):
+                return {"success": False, "error": backup_id}
+            
+            self.log_action("backup_current_config", "completed", {"backup_id": backup_id})
+            return {"success": True, "backup_id": backup_id}
+            
+        except Exception as e:
+            self.log_action("backup_current_config", "error", {"error": str(e)})
+            return {"success": False, "error": str(e)}
+    
+    async def _check_observatory_server(self) -> Dict[str, Any]:
+        """Check if observatory server is running."""
+        try:
+            # Check if observatory server is running on localhost:8888
+            async with aiohttp.ClientSession() as session:
+                async with session.get("http://localhost:8888/health", timeout=5) as response:
+                    return {
+                        "running": response.status == 200,
+                        "status_code": response.status,
+                        "url": "http://localhost:8888"
+                    }
+        except Exception:
+            return {
+                "running": False,
+                "error": "Server not responding"
+            }
+    
+    async def _validate_tunnel_config(self) -> Dict[str, Any]:
+        """Validate tunnel configuration."""
+        try:
+            config_info = self.tunnel_manager.get_config_info()
+            return {
+                "valid": config_info.get("validation_status") == "valid",
+                "errors": config_info.get("validation_errors", []),
+                "websocket_enabled": config_info.get("websocket_enabled", False)
+            }
+        except Exception as e:
+            return {
+                "valid": False,
+                "errors": [str(e)]
+            }
+    
+    async def _check_websocket_endpoints(self) -> Dict[str, Any]:
+        """Check WebSocket endpoints health."""
+        try:
+            # Create WebSocket manager for health checks
+            config = WebSocketManagerConfig(base_url="ws://localhost:8888")
+            manager = WebSocketManager(config)
+            
+            health_status = await manager.get_health_status()
+            
+            all_healthy = all(
+                result.get("status") == "healthy" 
+                for result in health_status.values()
+            )
+            
+            return {
+                "all_healthy": all_healthy,
+                "endpoints": health_status
+            }
+            
+        except Exception as e:
+            return {
+                "all_healthy": False,
+                "error": str(e)
+            }
+    
+    def _validate_deployment_config(self) -> Dict[str, Any]:
+        """Validate deployment configuration."""
+        errors = []
+        
+        # Check required environments
+        required_envs = ["dev", "staging", "production"]
+        for env in required_envs:
+            if env not in self.config.environments:
+                errors.append(f"Missing environment configuration: {env}")
+        
+        # Check environment configurations
+        for env_name, env_config in self.config.environments.items():
+            required_fields = ["url", "websocket_url", "health_endpoint"]
+            for field in required_fields:
+                if field not in env_config:
+                    errors.append(f"Missing {field} in {env_name} environment")
+        
+        return {
+            "valid": len(errors) == 0,
+            "errors": errors
+        }
+    
+    async def _post_deployment_validation(self, target_stage: str) -> Dict[str, Any]:
+        """Perform post-deployment validation."""
+        self.log_action("post_deployment_validation", "in_progress", {"target_stage": target_stage})
+        
+        validation_results = {
+            "success": True,
+            "errors": [],
+            "checks": {}
+        }
+        
+        try:
+            stage_config = self.config.environments[target_stage]
+            
+            # Final health check
+            health_result = await self._perform_health_checks(target_stage, stage_config)
+            validation_results["checks"]["final_health"] = health_result
+            
+            if health_result["health_score"] < self.config.auto_rollback_threshold:
+                validation_results["errors"].append(f"Final health score too low: {health_result['health_score']}")
+                validation_results["success"] = False
+            
+            # WebSocket functionality validation
+            websocket_validation = await self._validate_websocket_functionality(target_stage, stage_config)
+            validation_results["checks"]["websocket_validation"] = websocket_validation
+            
+            if not websocket_validation["success"]:
+                validation_results["errors"].extend(websocket_validation["errors"])
+                validation_results["success"] = False
+            
+            self.log_action("post_deployment_validation", "completed", {
+                "target_stage": target_stage,
+                "success": validation_results["success"],
+                "error_count": len(validation_results["errors"])
+            })
+            
+        except Exception as e:
+            validation_results["success"] = False
+            validation_results["errors"].append(f"Validation error: {str(e)}")
+            self.log_action("post_deployment_validation", "error", {"error": str(e)})
+        
+        return validation_results
+    
+    async def _generate_deployment_report(self, deployment_results: List[DeploymentResult]) -> Dict[str, Any]:
+        """Generate comprehensive deployment report."""
+        self.log_action("generate_deployment_report", "in_progress")
+        
         report = {
-            "overall_status": overall_status,
-            "deployment_duration_seconds": deployment_duration,
-            "stages_deployed": [s.value for s in stages],
-            "stage_results": stage_results,
-            "total_deployments": len(self.deployment_results),
-            "rollbacks_triggered": len(self.rollback_history),
-            "health_scores": {
-                stage.value: result.health_score 
-                for stage, result in zip(stages, self.deployment_results)
-                if result.status == DeploymentStatus.COMPLETED
+            "deployment_id": self.current_deployment_id,
+            "timestamp": datetime.now().isoformat(),
+            "overall_success": all(result.success for result in deployment_results),
+            "stages": [],
+            "summary": {
+                "total_stages": len(deployment_results),
+                "successful_stages": len([r for r in deployment_results if r.success]),
+                "failed_stages": len([r for r in deployment_results if not r.success]),
+                "rolled_back_stages": len([r for r in deployment_results if r.rollback_triggered])
+            },
+            "configuration": {
+                "zero_downtime": self.config.zero_downtime,
+                "auto_rollback_threshold": self.config.auto_rollback_threshold,
+                "deployment_timeout": self.config.deployment_timeout
             }
         }
         
-        self.logger.info(f"Deployment completed with status: {overall_status}")
+        # Add stage details
+        for result in deployment_results:
+            stage_report = {
+                "stage": result.stage,
+                "status": result.status.value,
+                "success": result.success,
+                "start_time": result.start_time.isoformat(),
+                "end_time": result.end_time.isoformat() if result.end_time else None,
+                "duration_seconds": (result.end_time - result.start_time).total_seconds() if result.end_time else None,
+                "health_score": result.health_score,
+                "error_message": result.error_message,
+                "rollback_triggered": result.rollback_triggered,
+                "rollback_reason": result.rollback_reason,
+                "validation_results": result.validation_results
+            }
+            report["stages"].append(stage_report)
+        
+        self.log_action("generate_deployment_report", "completed", {
+            "overall_success": report["overall_success"],
+            "total_stages": report["summary"]["total_stages"]
+        })
+        
         return report
-    
-    async def _deploy_to_stage(
-        self, 
-        stage: DeploymentStage, 
-        test_mode: bool = False
-    ) -> DeploymentResult:
-        """Deploy to a specific stage with health monitoring"""
-        stage_config = self.config.environments[stage.value]
-        
-        # Create deployment result tracker
-        deployment_result = DeploymentResult(
-            stage=stage,
-            status=DeploymentStatus.IN_PROGRESS,
-            start_time=datetime.now()
-        )
-        self.current_deployment = deployment_result
-        
-        try:
-            self.logger.info(f"Starting deployment to {stage.value}")
-            
-            # Step 1: Backup current configuration
-            if not test_mode:
-                await self._backup_configuration(stage)
-            
-            # Step 2: Deploy new configuration
-            if not test_mode:
-                await self._deploy_configuration(stage)
-            else:
-                self.logger.info(f"Test mode: Simulating deployment to {stage.value}")
-                await asyncio.sleep(2)  # Simulate deployment time
-            
-            # Step 3: Health checks
-            deployment_result.status = DeploymentStatus.HEALTH_CHECKING
-            health_score = await self._comprehensive_health_check(stage)
-            deployment_result.health_score = health_score
-            
-            # Step 4: Validate deployment success
-            if health_score >= self.config.auto_rollback_threshold:
-                deployment_result.status = DeploymentStatus.COMPLETED
-                self.logger.info(f"Deployment to {stage.value} completed successfully (health: {health_score:.2f})")
-            else:
-                deployment_result.status = DeploymentStatus.FAILED
-                deployment_result.error_message = f"Health score {health_score:.2f} below threshold {self.config.auto_rollback_threshold}"
-                self.logger.error(f"Deployment to {stage.value} failed health check")
-            
-        except Exception as e:
-            deployment_result.status = DeploymentStatus.FAILED
-            deployment_result.error_message = str(e)
-            self.logger.error(f"Deployment to {stage.value} failed: {e}")
-        
-        finally:
-            deployment_result.end_time = datetime.now()
-            self.deployment_results.append(deployment_result)
-            self.current_deployment = None
-        
-        return deployment_result
-    
-    async def _pre_deployment_validation(self, stages: List[DeploymentStage]) -> None:
-        """Validate system state before deployment"""
-        self.logger.info("Running pre-deployment validation")
-        
-        validation_checks = [
-            self._validate_configuration_files(),
-            self._validate_environment_connectivity(stages),
-            self._validate_resource_availability(),
-            self._validate_backup_systems()
-        ]
-        
-        results = await asyncio.gather(*validation_checks, return_exceptions=True)
-        
-        for i, result in enumerate(results):
-            if isinstance(result, Exception):
-                raise Exception(f"Pre-deployment validation check {i+1} failed: {result}")
-        
-        self.logger.info("Pre-deployment validation completed successfully")
-    
-    async def _post_deployment_validation(self, stages: List[DeploymentStage]) -> None:
-        """Validate system state after deployment"""
-        self.logger.info("Running post-deployment validation")
-        
-        # Wait for system to stabilize
-        await asyncio.sleep(60)
-        
-        validation_checks = [
-            self._validate_end_to_end_connectivity(stages),
-            self._validate_performance_metrics(),
-            self._validate_monitoring_systems()
-        ]
-        
-        results = await asyncio.gather(*validation_checks, return_exceptions=True)
-        
-        for i, result in enumerate(results):
-            if isinstance(result, Exception):
-                self.logger.warning(f"Post-deployment validation check {i+1} failed: {result}")
-        
-        self.logger.info("Post-deployment validation completed")
-    
-    async def _comprehensive_health_check(self, stage: DeploymentStage) -> float:
-        """Perform comprehensive health check for a deployment stage"""
-        stage_config = self.config.environments[stage.value]
-        
-        self.logger.info(f"Running comprehensive health check for {stage.value}")
-        
-        health_checks = [
-            self._check_http_health(stage_config),
-            self._check_websocket_health(stage_config),
-            self._check_tunnel_health(stage_config),
-            self._check_performance_metrics(stage_config)
-        ]
-        
-        results = await asyncio.gather(*health_checks, return_exceptions=True)
-        
-        # Calculate overall health score
-        health_scores = []
-        for i, result in enumerate(results):
-            if isinstance(result, Exception):
-                self.logger.warning(f"Health check {i+1} failed: {result}")
-                health_scores.append(0.0)
-            else:
-                health_scores.append(result)
-        
-        overall_health = sum(health_scores) / len(health_scores)
-        
-        self.logger.info(f"Health check completed for {stage.value}: {overall_health:.2f}")
-        return overall_health
-    
-    async def _check_http_health(self, config: Dict[str, Any]) -> float:
-        """Check HTTP endpoint health"""
-        try:
-            url = f"{config['url']}{config['health_endpoint']}"
-            response = requests.get(url, timeout=10)
-            
-            if response.status_code == 200:
-                return 1.0
-            else:
-                return 0.5
-        except Exception as e:
-            self.logger.warning(f"HTTP health check failed: {e}")
-            return 0.0
-    
-    async def _check_websocket_health(self, config: Dict[str, Any]) -> float:
-        """Check WebSocket endpoint health"""
-        try:
-            # Use the health validator from the websocket module
-            health_result = await self.health_validator.validate_websocket_health(
-                config['websocket_url']
-            )
-            
-            if health_result.status == HealthStatus.HEALTHY:
-                return 1.0
-            elif health_result.status == HealthStatus.DEGRADED:
-                return 0.7
-            else:
-                return 0.3
-        except Exception as e:
-            self.logger.warning(f"WebSocket health check failed: {e}")
-            return 0.0
-    
-    async def _check_tunnel_health(self, config: Dict[str, Any]) -> float:
-        """Check Cloudflare tunnel health"""
-        try:
-            # Check if tunnel process is running
-            result = subprocess.run(
-                ["pgrep", "-f", "cloudflared"],
-                capture_output=True,
-                text=True
-            )
-            
-            if result.returncode == 0:
-                return 1.0
-            else:
-                return 0.0
-        except Exception as e:
-            self.logger.warning(f"Tunnel health check failed: {e}")
-            return 0.0
-    
-    async def _check_performance_metrics(self, config: Dict[str, Any]) -> float:
-        """Check performance metrics against thresholds"""
-        try:
-            # Get current metrics from health monitor
-            metrics = self.health_monitor.get_performance_metrics()
-            
-            score = 1.0
-            
-            # Check error rate
-            error_rate = metrics.get('websocket_error_rate', 0)
-            if error_rate > self.config.alert_thresholds['error_rate']:
-                score -= 0.3
-            
-            # Check latency
-            latency_stats = metrics.get('latency_stats', {})
-            avg_latency = latency_stats.get('avg', 0)
-            if avg_latency > self.config.alert_thresholds['latency_ms']:
-                score -= 0.3
-            
-            # Check connection failures
-            failures = metrics.get('websocket_connection_failures', 0)
-            active_connections = metrics.get('websocket_connections_active', 1)
-            failure_rate = failures / max(active_connections, 1)
-            if failure_rate > self.config.alert_thresholds['connection_failure_rate']:
-                score -= 0.4
-            
-            return max(0.0, score)
-        except Exception as e:
-            self.logger.warning(f"Performance metrics check failed: {e}")
-            return 0.0
-    
-    async def _backup_configuration(self, stage: DeploymentStage) -> None:
-        """Backup current configuration before deployment"""
-        stage_config = self.config.environments[stage.value]
-        backup_dir = Path("backups") / stage.value
-        backup_dir.mkdir(parents=True, exist_ok=True)
-        
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        
-        # Backup tunnel configuration
-        tunnel_config = stage_config.get('tunnel_config')
-        if tunnel_config and Path(tunnel_config).exists():
-            backup_path = backup_dir / f"{tunnel_config}.{timestamp}.backup"
-            subprocess.run(["cp", tunnel_config, str(backup_path)])
-            self.logger.info(f"Backed up tunnel config to {backup_path}")
-    
-    async def _deploy_configuration(self, stage: DeploymentStage) -> None:
-        """Deploy new configuration to the stage"""
-        stage_config = self.config.environments[stage.value]
-        
-        # Deploy tunnel configuration
-        tunnel_config = stage_config.get('tunnel_config')
-        if tunnel_config and Path(tunnel_config).exists():
-            # Restart cloudflared with new configuration
-            subprocess.run(["pkill", "-f", "cloudflared"])
-            await asyncio.sleep(2)
-            
-            # Start cloudflared with new config
-            subprocess.Popen([
-                "cloudflared", "tunnel", "--config", tunnel_config, "run"
-            ])
-            
-            # Wait for tunnel to establish
-            await asyncio.sleep(10)
-            self.logger.info(f"Deployed tunnel configuration for {stage.value}")
-    
-    async def _trigger_rollback(self, stage: DeploymentStage, error_message: str) -> None:
-        """Trigger automatic rollback for failed deployment"""
-        self.logger.warning(f"Triggering rollback for {stage.value}: {error_message}")
-        
-        rollback_result = DeploymentResult(
-            stage=stage,
-            status=DeploymentStatus.ROLLED_BACK,
-            start_time=datetime.now(),
-            error_message=f"Rollback triggered: {error_message}"
-        )
-        
-        try:
-            # Restore previous configuration
-            await self._restore_configuration(stage)
-            
-            # Verify rollback success
-            health_score = await self._comprehensive_health_check(stage)
-            rollback_result.health_score = health_score
-            
-            if health_score >= 0.7:  # Rollback success threshold
-                rollback_result.status = DeploymentStatus.COMPLETED
-                self.logger.info(f"Rollback successful for {stage.value}")
-            else:
-                rollback_result.status = DeploymentStatus.FAILED
-                self.logger.error(f"Rollback failed for {stage.value}")
-            
-        except Exception as e:
-            rollback_result.status = DeploymentStatus.FAILED
-            rollback_result.error_message = f"Rollback error: {e}"
-            self.logger.error(f"Rollback failed for {stage.value}: {e}")
-        
-        finally:
-            rollback_result.end_time = datetime.now()
-            self.rollback_history.append(rollback_result)
-    
-    async def _restore_configuration(self, stage: DeploymentStage) -> None:
-        """Restore previous configuration from backup"""
-        stage_config = self.config.environments[stage.value]
-        backup_dir = Path("backups") / stage.value
-        
-        # Find latest backup
-        backup_files = list(backup_dir.glob("*.backup"))
-        if not backup_files:
-            raise Exception(f"No backup found for {stage.value}")
-        
-        latest_backup = max(backup_files, key=lambda p: p.stat().st_mtime)
-        
-        # Restore configuration
-        tunnel_config = stage_config.get('tunnel_config')
-        if tunnel_config:
-            subprocess.run(["cp", str(latest_backup), tunnel_config])
-            self.logger.info(f"Restored configuration from {latest_backup}")
-    
-    async def _emergency_rollback(self) -> None:
-        """Emergency rollback for critical failures"""
-        self.logger.critical("Executing emergency rollback")
-        
-        # Rollback all stages that were deployed
-        for result in self.deployment_results:
-            if result.status == DeploymentStatus.COMPLETED:
-                await self._trigger_rollback(result.stage, "Emergency rollback")
-    
-    # Validation methods
-    async def _validate_configuration_files(self) -> None:
-        """Validate that all required configuration files exist"""
-        required_files = [
-            "cloudflare-tunnel-config-websocket.yml",
-            "src/beast_mode/observatory/websocket/",
-            "src/beast_mode/observatory/monitoring/"
-        ]
-        
-        for file_path in required_files:
-            if not Path(file_path).exists():
-                raise Exception(f"Required file/directory not found: {file_path}")
-    
-    async def _validate_environment_connectivity(self, stages: List[DeploymentStage]) -> None:
-        """Validate connectivity to target environments"""
-        for stage in stages:
-            config = self.config.environments[stage.value]
-            try:
-                response = requests.get(config['url'], timeout=5)
-                if response.status_code not in [200, 404]:  # 404 is ok for root
-                    raise Exception(f"Environment {stage.value} not accessible")
-            except Exception as e:
-                raise Exception(f"Cannot connect to {stage.value}: {e}")
-    
-    async def _validate_resource_availability(self) -> None:
-        """Validate system resources are available"""
-        # Check disk space
-        import shutil
-        free_space = shutil.disk_usage('.').free
-        if free_space < 1024 * 1024 * 1024:  # 1GB
-            raise Exception("Insufficient disk space for deployment")
-    
-    async def _validate_backup_systems(self) -> None:
-        """Validate backup systems are functional"""
-        backup_dir = Path("backups")
-        backup_dir.mkdir(exist_ok=True)
-        
-        # Test backup write
-        test_file = backup_dir / "test_backup.txt"
-        test_file.write_text("test")
-        test_file.unlink()
-    
-    async def _validate_end_to_end_connectivity(self, stages: List[DeploymentStage]) -> None:
-        """Validate end-to-end connectivity after deployment"""
-        for stage in stages:
-            config = self.config.environments[stage.value]
-            
-            # Test HTTP endpoint
-            try:
-                response = requests.get(f"{config['url']}{config['health_endpoint']}", timeout=10)
-                if response.status_code != 200:
-                    raise Exception(f"Health endpoint not responding for {stage.value}")
-            except Exception as e:
-                raise Exception(f"End-to-end validation failed for {stage.value}: {e}")
-    
-    async def _validate_performance_metrics(self) -> None:
-        """Validate performance metrics are within acceptable ranges"""
-        metrics = self.health_monitor.get_performance_metrics()
-        
-        # Check key performance indicators
-        error_rate = metrics.get('websocket_error_rate', 0)
-        if error_rate > 0.1:  # 10% error rate threshold
-            raise Exception(f"Error rate too high: {error_rate:.2%}")
-    
-    async def _validate_monitoring_systems(self) -> None:
-        """Validate monitoring systems are operational"""
-        # Check if health monitor is running
-        health_status = self.health_monitor.get_all_health_status()
-        if not health_status:
-            self.logger.warning("No health status data available")
 
 
 async def main():
-    """Main entry point for deployment script"""
+    """Main entry point for deployment script."""
     import argparse
     
     parser = argparse.ArgumentParser(description="Deploy WebSocket fix with staged rollout")
-    parser.add_argument("--stages", nargs="+", choices=["dev", "staging", "production"],
-                       default=["dev", "staging", "production"],
-                       help="Deployment stages to execute")
-    parser.add_argument("--test-mode", action="store_true",
-                       help="Run in test mode without actual deployment")
-    parser.add_argument("--force", action="store_true",
+    parser.add_argument("--stage", choices=["dev", "staging", "production"], 
+                       default="production", help="Target deployment stage")
+    parser.add_argument("--force", action="store_true", 
+                       help="Force deployment even if validation fails")
+    parser.add_argument("--skip-validation", action="store_true",
                        help="Skip pre-deployment validation")
-    parser.add_argument("--config", type=str,
+    parser.add_argument("--config", default="deployment-config.yml",
                        help="Path to deployment configuration file")
     
     args = parser.parse_args()
     
-    # Convert stage strings to enums
-    stages = [DeploymentStage(stage) for stage in args.stages]
-    
-    # Initialize deployment manager
-    deployment_manager = WebSocketDeploymentManager(args.config)
-    
     try:
+        # Initialize deployment automation
+        deployment = DeploymentAutomation(args.config)
+        
         # Execute deployment
-        result = await deployment_manager.deploy_websocket_fix(
-            stages=stages,
-            test_mode=args.test_mode,
-            force_deploy=args.force
+        result = await deployment.deploy_websocket_fix(
+            target_stage=args.stage,
+            force_deploy=args.force,
+            skip_validation=args.skip_validation
         )
         
         # Print results
-        print("\n" + "="*60)
-        print("DEPLOYMENT RESULTS")
-        print("="*60)
+        print("\n" + "="*80)
+        print("DEPLOYMENT REPORT")
+        print("="*80)
         print(json.dumps(result, indent=2, default=str))
         
-        # Exit with appropriate code
-        if result["overall_status"] == "success":
+        if result["overall_success"]:
+            print("\n✅ Deployment completed successfully!")
             sys.exit(0)
         else:
+            print("\n❌ Deployment failed!")
             sys.exit(1)
             
-    except KeyboardInterrupt:
-        print("\nDeployment interrupted by user")
-        sys.exit(130)
     except Exception as e:
-        print(f"Deployment failed: {e}")
+        print(f"\n❌ Deployment error: {e}")
         sys.exit(1)
 
 

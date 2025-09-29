@@ -4023,6 +4023,15 @@
     
     <!-- Observatory HTTP Polling Fallback with Bot Protection -->
     <script src="/static/js/observatory_polling_fallback.js"></script>
+    
+    <!-- Living Observatory Dashboard - Observation Stream Handler -->
+    <script src="/static/js/observation_stream_handler.js?v=20250928"></script>
+    
+    <!-- Activity Feed Renderer for beautiful live observations -->
+    <script src="/static/js/activity_feed_renderer.js?v=20250928"></script>
+    
+    <!-- Correlation Engine for event-metric linking -->
+    <script src="/static/js/correlation_engine.js?v=20250928"></script>
     <script>
         // Initialize polling fallback when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
@@ -4034,6 +4043,30 @@
             } else {
                 console.warn('⚠️ Polling fallback function not available');
             }
+            
+            // Initialize metrics polling for correlation engine
+            function startMetricsPolling() {
+                setInterval(async () => {
+                    try {
+                        const response = await fetch('/api/dashboard/all-data');
+                        if (response.ok) {
+                            const data = await response.json();
+                            
+                            // Feed metrics to correlation engine
+                            if (window.correlationEngine && data.metrics) {
+                                window.correlationEngine.addMetrics(data.metrics);
+                            }
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Metrics polling error:', error);
+                    }
+                }, 5000); // Poll every 5 seconds
+            }
+            
+            // Start metrics polling after components are initialized
+            setTimeout(startMetricsPolling, 3000);
+            
+            console.log('🔗 CorrelationEngine integration initialized');
         });
     </script>
 </body>

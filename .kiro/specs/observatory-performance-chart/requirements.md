@@ -58,3 +58,41 @@ This specification builds on the successful Health and Token Chart implementatio
 - Observatory metrics collection (already implemented)
 - `/api/dashboard/all-data` endpoint (already implemented)
 - Established brownfield safety patterns
+
+## Deployment Governance Requirements (Lessons Learned)
+
+### Requirement 4: Systematic Deployment Management
+
+**User Story:** As a system administrator deploying Observatory features, I want systematic deployment governance, so that changes are reliably deployed without service conflicts or caching issues.
+
+#### Acceptance Criteria
+
+1. WHEN deploying Observatory changes THEN the system SHALL kill all existing Observatory and Cloudflare tunnel processes before starting new ones
+2. WHEN static JavaScript files are updated THEN the system SHALL implement cache busting with version parameters
+3. WHEN deployment completes THEN the system SHALL validate that new endpoints and features are accessible
+4. WHEN multiple deployment methods exist THEN the system SHALL use only one consistent method (host-based OR container-based)
+5. IF deployment validation fails THEN the system SHALL provide clear error messages and rollback procedures
+
+### Requirement 5: Service Architecture Consistency
+
+**User Story:** As a developer maintaining Observatory infrastructure, I want consistent service architecture, so that deployments are predictable and reliable.
+
+#### Acceptance Criteria
+
+1. WHEN services require external dependencies THEN the system SHALL validate connectivity before starting
+2. WHEN using host-based deployment THEN all services SHALL run on the host (not mixed with containers)
+3. WHEN port conflicts exist THEN the system SHALL detect and resolve them automatically
+4. WHEN service startup fails THEN the system SHALL provide diagnostic information
+5. IF architecture changes are needed THEN the system SHALL update all related configurations consistently
+
+### Requirement 6: Distributed Tracing Integration (Opportunistic Enhancement)
+
+**User Story:** As a developer debugging complex system interactions, I want distributed tracing integrated with the Living Observatory Dashboard, so that I can see the complete story of requests flowing through the system and correlate traces with observations and metrics.
+
+#### Acceptance Criteria
+
+1. WHEN the Observatory starts THEN Jaeger tracing SHALL be automatically configured and available
+2. WHEN HTTP requests are made THEN trace spans SHALL be created showing the complete request flow
+3. WHEN Beastly Modules emit observations THEN they SHALL include trace correlation IDs
+4. WHEN viewing the Activity Feed THEN users SHALL be able to click observations to see related trace spans
+5. IF deployment issues occur THEN trace data SHALL provide systematic debugging information with clear request flow visibility

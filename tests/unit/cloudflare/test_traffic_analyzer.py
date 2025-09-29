@@ -1,403 +1,521 @@
 """
-Unit tests for TrafficAnalyzer.
+Unit tests for TrafficAnalyzer
+
+Tests traffic pattern analysis, Observatory traffic detection,
+and suspicious activity monitoring functionality.
 """
 
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, Mock, patch
 from datetime import datetime, timedelta
 
 from src.beast_mode.observatory.cloudflare.traffic_analyzer import (
-    TrafficAnalyzer, TrafficPattern
+    TrafficAnalyzer,
+    TrafficEvent,
+    TrafficAnalysis,
+    TrafficPattern
 )
 from src.beast_mode.observatory.cloudflare.api_client import CloudflareAPIError
 
 
-class TestTrafficPattern:
-    """Test cases for TrafficPattern."""
+class TestTrafficEvent:
+    """Test TrafficEvent dataclass"""
     
-    def test_traffic_pattern_init(self):
-        """Test TrafficPattern initialization."""
-        pattern = TrafficPattern(
-            pattern_type="user_agent",
-            expression='(http.user_agent contains "Observatory-Internal")',
-            description="Test pattern",
-            confidence=0.9,
-            metadata={"source": "test"}
+    def test_traffic_event_creation(self):
+        """Test basic traffic event creation"""
+        event = TrafficEvent(
+            timestamp=datetime.utcnow(),
+            ip_address="192.168.1.1",
+            user_agent="Mozilla/5.0",
+            uri_path="/test",
+            method="GET",
+            status_code=200,
+            country="US",
+            action_taken="allow",
+            rule_id="rule1",
+            pattern_type=TrafficPattern.API_REQUEST
         )
         
-        assert pattern.pattern_type == "user_agent"
-        assert pattern.expression == '(http.user_agent contains "Observatory-Internal")'
-        assert pattern.description == "Test pattern"
-        assert pattern.confidence == 0.9
-        assert pattern.metadata == {"source": "test"}
-        
-    def test_traffic_pattern_to_dict(self):
-        """Test TrafficPattern to_dict method."""
-        pattern = TrafficPattern(
-            pattern_type="websocket",
-            expression='(http.request.uri.path matches "^/ws/")',
-            description="WebSocket pattern",
-            confidence=0.95
+        assert event.ip_address == "192.168.1.1"
+        assert event.user_agent == "Mozilla/5.0"
+        assert event.uri_path == "/test"
+        assert event.method == "GET"
+        assert event.status_code == 200
+        assert event.country == "US"
+        assert event.action_taken == "allow"
+        assert event.rule_id == "rule1"
+        assert event.pattern_type == TrafficPattern.API_REQUEST
+    
+    def test_traffic_event_minimal(self):
+        """Test traffic event with minimal data"""
+        event = TrafficEvent(
+            timestamp=datetime.utcnow(),
+            ip_address="192.168.1.1",
+            user_agent="",
+            uri_path="",
+            method="GET",
+            status_code=200,
+            country="US",
+            action_taken="block"
         )
         
-        result = pattern.to_dict()
-        
-        assert result["pattern_type"] == "websocket"
-        assert result["expression"] == '(http.request.uri.path matches "^/ws/")'
-        assert result["description"] == "WebSocket pattern"
-        assert result["confidence"] == 0.95
-        assert "metadata" in result
+        assert event.ip_address == "192.168.1.1"
+        assert event.user_agent == ""
+        assert event.uri_path == ""
+        assert event.pattern_type is None
 
 
 class TestTrafficAnalyzer:
-    """Test cases for TrafficAnalyzer."""
+    """Test TrafficAnalyzer functionality"""
     
     @pytest.fixture
-    def traffic_analyzer(self):
-        """Create a TrafficAnalyzer instance for testing."""
-        mock_api_client = AsyncMock()
-        return TrafficAnalyzer(mock_api_client)
-        
-    @pytest.fixture
     def mock_api_client(self):
-        """Mock API client."""
+        """Create mock API client"""
         return AsyncMock()
-        
-    def test_observatory_patterns_configured(self, traffic_analyzer):
-        """Test that Observatory patterns are properly configured."""
+    
+    @pytest.fixture
+    def traffic_analyzer(self, mock_api_client):
+        """Create traffic analyzer with mock client"""
+        return TrafficAnalyzer(mock_api_client)
+    
+    def test_traffic_analyzer_initialization(self, traffic_analyzer):
+        """Test traffic analyzer initialization"""
+        assert traffic_analyzer.api_client is not None
+        assert len(traffic_analyzer.OBSERVATORY_PATTERNS) == 5
+    
+    def test_observatory_patterns(self, traffic_analyzer):
+        """Test Observatory patterns are properly defined"""
         patterns = traffic_analyzer.OBSERVATORY_PATTERNS
         
-        assert len(patterns) == 5
+        assert TrafficPattern.INTERNAL_POLLING in patterns
+        assert TrafficPattern.WEBSOCKET_CONNECTION in patterns
+        assert TrafficPattern.HEALTH_CHECK in patterns
+        assert TrafficPattern.METRICS_COLLECTION in patterns
+        assert TrafficPattern.API_REQUEST in patterns
         
-        # Check pattern types
-        pattern_types = [p.pattern_type for p in patterns]
-        assert "user_agent" in pattern_types
-        assert "websocket" in pattern_types
-        assert "custom_header" in pattern_types
-        assert "health_check" in pattern_types
-        assert "api_endpoint" in pattern_types
+        # Check that patterns contain regex patterns
+        for pattern_type, regex_patterns in patterns.items():
+            assert len(regex_patterns) > 0
+            for pattern in regex_patterns:
+                assert isinstance(pattern, str)
+                assert len(pattern) > 0
+    
+    def test_parse_event_timestamp_valid(self, traffic_analyzer):
+        """Test parsing valid timestamp"""
+        event = {"occurred_at": "2023-12-01T10:00:00Z"}
+        timestamp = traffic_analyzer._parse_event_timestamp(event)
         
-        # Check expressions contain Observatory-specific elements
-        expressions = [p.expression for p in patterns]
-        assert any("Observatory-Internal" in expr for expr in expressions)
-        assert any("/ws/" in expr for expr in expressions)
-        assert any("x-observatory-client" in expr for expr in expressions)
-        assert any("/health" in expr for expr in expressions)
-        assert any("/api/observatory/" in expr for expr in expressions)
+        assert isinstance(timestamp, datetime)
+        assert timestamp.year == 2023
+        assert timestamp.month == 12
+        assert timestamp.day == 1
+    
+    def test_parse_event_timestamp_invalid(self, traffic_analyzer):
+        """Test parsing invalid timestamp"""
+        event = {"occurred_at": "invalid-timestamp"}
+        timestamp = traffic_analyzer._parse_event_timestamp(event)
         
+        # Should return a default timestamp (1 day ago)
+        assert isinstance(timestamp, datetime)
+        assert timestamp < datetime.utcnow()
+    
+    def test_parse_event_timestamp_missing(self, traffic_analyzer):
+        """Test parsing missing timestamp"""
+        event = {}
+        timestamp = traffic_analyzer._parse_event_timestamp(event)
+        
+        # Should return a default timestamp (1 day ago)
+        assert isinstance(timestamp, datetime)
+        assert timestamp < datetime.utcnow()
+    
+    def test_classify_traffic_pattern_internal_polling(self, traffic_analyzer):
+        """Test classifying internal polling traffic"""
+        user_agent = "Observatory-Internal-Polling/1.0"
+        uri_path = "/api/data"
+        
+        pattern = traffic_analyzer._classify_traffic_pattern(user_agent, uri_path)
+        
+        assert pattern == TrafficPattern.INTERNAL_POLLING
+    
+    def test_classify_traffic_pattern_websocket(self, traffic_analyzer):
+        """Test classifying WebSocket traffic"""
+        user_agent = "Mozilla/5.0"
+        uri_path = "/ws/observatory"
+        
+        pattern = traffic_analyzer._classify_traffic_pattern(user_agent, uri_path)
+        
+        assert pattern == TrafficPattern.WEBSOCKET_CONNECTION
+    
+    def test_classify_traffic_pattern_health_check(self, traffic_analyzer):
+        """Test classifying health check traffic"""
+        user_agent = "Observatory-Health-Check"
+        uri_path = "/health"
+        
+        pattern = traffic_analyzer._classify_traffic_pattern(user_agent, uri_path)
+        
+        assert pattern == TrafficPattern.HEALTH_CHECK
+    
+    def test_classify_traffic_pattern_metrics(self, traffic_analyzer):
+        """Test classifying metrics traffic"""
+        user_agent = "Prometheus"
+        uri_path = "/metrics"
+        
+        pattern = traffic_analyzer._classify_traffic_pattern(user_agent, uri_path)
+        
+        assert pattern == TrafficPattern.METRICS_COLLECTION
+    
+    def test_classify_traffic_pattern_api(self, traffic_analyzer):
+        """Test classifying API traffic"""
+        user_agent = "Observatory-Client"
+        uri_path = "/api/observatory/data"
+        
+        pattern = traffic_analyzer._classify_traffic_pattern(user_agent, uri_path)
+        
+        assert pattern == TrafficPattern.API_REQUEST
+    
+    def test_classify_traffic_pattern_unknown(self, traffic_analyzer):
+        """Test classifying unknown traffic"""
+        user_agent = "Regular-Browser"
+        uri_path = "/regular-page"
+        
+        pattern = traffic_analyzer._classify_traffic_pattern(user_agent, uri_path)
+        
+        assert pattern == TrafficPattern.UNKNOWN
+    
+    def test_parse_traffic_event(self, traffic_analyzer):
+        """Test parsing Cloudflare event into TrafficEvent"""
+        event = {
+            "occurred_at": "2023-12-01T10:00:00Z",
+            "source": {
+                "ip": "192.168.1.1",
+                "user_agent": "Observatory-Internal",
+                "uri": "/ws/test",
+                "method": "GET",
+                "status_code": 200,
+                "country": "US"
+            },
+            "action": "allow",
+            "rule_id": "rule1"
+        }
+        
+        traffic_event = traffic_analyzer._parse_traffic_event(event)
+        
+        assert isinstance(traffic_event, TrafficEvent)
+        assert traffic_event.ip_address == "192.168.1.1"
+        assert traffic_event.user_agent == "Observatory-Internal"
+        assert traffic_event.uri_path == "/ws/test"
+        assert traffic_event.method == "GET"
+        assert traffic_event.status_code == 200
+        assert traffic_event.country == "US"
+        assert traffic_event.action_taken == "allow"
+        assert traffic_event.rule_id == "rule1"
+        assert traffic_event.pattern_type == TrafficPattern.WEBSOCKET_CONNECTION
+    
+    def test_parse_traffic_event_missing_fields(self, traffic_analyzer):
+        """Test parsing event with missing fields"""
+        event = {
+            "occurred_at": "2023-12-01T10:00:00Z",
+            "source": {},
+            "action": "block"
+        }
+        
+        traffic_event = traffic_analyzer._parse_traffic_event(event)
+        
+        assert traffic_event.ip_address == "unknown"
+        assert traffic_event.user_agent == ""
+        assert traffic_event.uri_path == ""
+        assert traffic_event.method == "GET"
+        assert traffic_event.status_code == 200
+        assert traffic_event.country == "unknown"
+        assert traffic_event.action_taken == "block"
+        assert traffic_event.rule_id is None
+        assert traffic_event.pattern_type == TrafficPattern.UNKNOWN
+    
+    def test_analyze_traffic_patterns(self, traffic_analyzer):
+        """Test traffic pattern analysis"""
+        events = [
+            TrafficEvent(
+                timestamp=datetime.utcnow(),
+                ip_address="192.168.1.1",
+                user_agent="Observatory-Internal",
+                uri_path="/api/data",
+                method="GET",
+                status_code=200,
+                country="US",
+                action_taken="allow",
+                pattern_type=TrafficPattern.INTERNAL_POLLING
+            ),
+            TrafficEvent(
+                timestamp=datetime.utcnow(),
+                ip_address="192.168.1.2",
+                user_agent="Mozilla/5.0",
+                uri_path="/ws/test",
+                method="GET",
+                status_code=200,
+                country="US",
+                action_taken="allow",
+                pattern_type=TrafficPattern.WEBSOCKET_CONNECTION
+            ),
+            TrafficEvent(
+                timestamp=datetime.utcnow(),
+                ip_address="192.168.1.3",
+                user_agent="Bad-Bot",
+                uri_path="/malicious",
+                method="GET",
+                status_code=403,
+                country="RU",
+                action_taken="block",
+                pattern_type=TrafficPattern.UNKNOWN
+            )
+        ]
+        
+        analysis = traffic_analyzer._analyze_traffic_patterns(events)
+        
+        assert isinstance(analysis, TrafficAnalysis)
+        assert analysis.total_requests == 3
+        assert analysis.observatory_requests == 2
+        assert analysis.blocked_requests == 1
+        assert analysis.pattern_breakdown[TrafficPattern.INTERNAL_POLLING] == 1
+        assert analysis.pattern_breakdown[TrafficPattern.WEBSOCKET_CONNECTION] == 1
+        assert analysis.pattern_breakdown[TrafficPattern.UNKNOWN] == 1
+    
+    def test_detect_suspicious_activity_high_frequency(self, traffic_analyzer):
+        """Test detection of high-frequency suspicious activity"""
+        # Create events with high frequency from single IP
+        events = []
+        for i in range(150):  # Above threshold of 100
+            events.append(TrafficEvent(
+                timestamp=datetime.utcnow(),
+                ip_address="192.168.1.1",  # Same IP
+                user_agent="Observatory-Internal",
+                uri_path="/api/data",
+                method="GET",
+                status_code=200,
+                country="US",
+                action_taken="allow",
+                pattern_type=TrafficPattern.INTERNAL_POLLING
+            ))
+        
+        suspicious = traffic_analyzer._detect_suspicious_activity(events)
+        
+        assert len(suspicious) > 0
+        assert any(activity["type"] == "high_frequency_observatory_traffic" for activity in suspicious)
+    
+    def test_detect_suspicious_activity_suspicious_ua(self, traffic_analyzer):
+        """Test detection of suspicious user agents"""
+        events = []
+        for i in range(25):  # Above threshold of 20
+            events.append(TrafficEvent(
+                timestamp=datetime.utcnow(),
+                ip_address="192.168.1.1",
+                user_agent="Fake-Observatory-Bot",  # Suspicious UA
+                uri_path="/api/data",
+                method="GET",
+                status_code=200,
+                country="US",
+                action_taken="allow",
+                pattern_type=TrafficPattern.INTERNAL_POLLING
+            ))
+        
+        suspicious = traffic_analyzer._detect_suspicious_activity(events)
+        
+        assert len(suspicious) > 0
+        assert any(activity["type"] == "suspicious_user_agent" for activity in suspicious)
+    
+    def test_is_legitimate_observatory_ua(self, traffic_analyzer):
+        """Test legitimate Observatory user agent detection"""
+        legitimate_uas = [
+            "Observatory-Internal/1.0",
+            "Observatory-Polling/2.0",
+            "Observatory-Monitoring/1.5",
+            "Observatory-Health-Check/1.0"
+        ]
+        
+        for ua in legitimate_uas:
+            assert traffic_analyzer._is_legitimate_observatory_ua(ua)
+    
+    def test_is_legitimate_observatory_ua_illegitimate(self, traffic_analyzer):
+        """Test illegitimate Observatory user agent detection"""
+        illegitimate_uas = [
+            "Fake-Observatory-Bot",
+            "Observatory-Spam",
+            "Regular-Browser",
+            "Malicious-Bot-Observatory"
+        ]
+        
+        for ua in illegitimate_uas:
+            assert not traffic_analyzer._is_legitimate_observatory_ua(ua)
+    
+    def test_generate_recommendations_low_ratio(self, traffic_analyzer):
+        """Test recommendation generation for low Observatory ratio"""
+        events = [
+            TrafficEvent(
+                timestamp=datetime.utcnow(),
+                ip_address="192.168.1.1",
+                user_agent="Observatory-Internal",
+                uri_path="/api/data",
+                method="GET",
+                status_code=200,
+                country="US",
+                action_taken="allow",
+                pattern_type=TrafficPattern.INTERNAL_POLLING
+            )
+        ]
+        
+        # Add many non-Observatory events
+        for i in range(20):
+            events.append(TrafficEvent(
+                timestamp=datetime.utcnow(),
+                ip_address=f"192.168.1.{i}",
+                user_agent="Regular-Browser",
+                uri_path="/regular",
+                method="GET",
+                status_code=200,
+                country="US",
+                action_taken="allow",
+                pattern_type=TrafficPattern.UNKNOWN
+            ))
+        
+        pattern_breakdown = {TrafficPattern.INTERNAL_POLLING: 1, TrafficPattern.UNKNOWN: 20}
+        recommendations = traffic_analyzer._generate_recommendations(events, pattern_breakdown)
+        
+        assert any("Low Observatory traffic ratio" in rec for rec in recommendations)
+    
+    def test_generate_recommendations_high_ratio(self, traffic_analyzer):
+        """Test recommendation generation for high Observatory ratio"""
+        events = []
+        # Add many Observatory events
+        for i in range(20):
+            events.append(TrafficEvent(
+                timestamp=datetime.utcnow(),
+                ip_address=f"192.168.1.{i}",
+                user_agent="Observatory-Internal",
+                uri_path="/api/data",
+                method="GET",
+                status_code=200,
+                country="US",
+                action_taken="allow",
+                pattern_type=TrafficPattern.INTERNAL_POLLING
+            ))
+        
+        # Add few non-Observatory events
+        events.append(TrafficEvent(
+            timestamp=datetime.utcnow(),
+            ip_address="192.168.1.100",
+            user_agent="Regular-Browser",
+            uri_path="/regular",
+            method="GET",
+            status_code=200,
+            country="US",
+            action_taken="allow",
+            pattern_type=TrafficPattern.UNKNOWN
+        ))
+        
+        pattern_breakdown = {TrafficPattern.INTERNAL_POLLING: 20, TrafficPattern.UNKNOWN: 1}
+        recommendations = traffic_analyzer._generate_recommendations(events, pattern_breakdown)
+        
+        assert any("High Observatory traffic ratio" in rec for rec in recommendations)
+    
     @pytest.mark.asyncio
-    async def test_analyze_recent_traffic_success(self, traffic_analyzer):
-        """Test successful traffic analysis."""
-        # Mock API client response
+    async def test_analyze_recent_traffic(self, traffic_analyzer, mock_api_client):
+        """Test analyzing recent traffic"""
+        # Mock security events
         mock_events = [
             {
-                "action": "block",
-                "user_agent": "Observatory-Internal/1.0",
-                "uri": "/ws/status",
-                "request_headers": {"x-observatory-client": "internal-polling"}
-            },
-            {
-                "action": "allow",
-                "user_agent": "Mozilla/5.0",
-                "uri": "/",
-                "request_headers": {}
-            },
-            {
-                "action": "challenge",
-                "user_agent": "Observatory-Internal/1.0",
-                "uri": "/health",
-                "request_headers": {}
+                "occurred_at": "2023-12-01T10:00:00Z",
+                "source": {
+                    "ip": "192.168.1.1",
+                    "user_agent": "Observatory-Internal",
+                    "uri": "/api/data",
+                    "method": "GET",
+                    "status_code": 200,
+                    "country": "US"
+                },
+                "action": "allow"
             }
         ]
         
-        traffic_analyzer.api_client.get_security_events.return_value = {"result": mock_events}
+        mock_api_client.get_security_events.return_value = mock_events
         
-        # Test the method
-        result = await traffic_analyzer.analyze_recent_traffic("zone_123", hours_back=24)
+        analysis = await traffic_analyzer.analyze_recent_traffic(hours=24)
         
-        # Verify results
-        assert "patterns" in result
-        assert "summary" in result
-        assert result["summary"]["total_events"] == 3
-        assert result["summary"]["observatory_requests"] == 2  # Two Observatory requests
-        assert result["summary"]["blocked_observatory_requests"] == 1  # One blocked
-        
-        # Should have patterns for blocked Observatory requests
-        assert len(result["patterns"]) >= 1
-        
+        assert isinstance(analysis, TrafficAnalysis)
+        assert analysis.total_requests == 1
+        assert analysis.observatory_requests == 1
+        mock_api_client.get_security_events.assert_called_once_with(limit=1000)
+    
     @pytest.mark.asyncio
-    async def test_analyze_recent_traffic_no_events(self, traffic_analyzer):
-        """Test traffic analysis with no events."""
-        # Mock empty API response
-        traffic_analyzer.api_client.get_security_events.return_value = {"result": []}
+    async def test_analyze_recent_traffic_api_error(self, traffic_analyzer, mock_api_client):
+        """Test API error handling in traffic analysis"""
+        mock_api_client.get_security_events.side_effect = CloudflareAPIError("API Error")
         
-        # Test the method
-        result = await traffic_analyzer.analyze_recent_traffic("zone_123")
-        
-        # Verify results
-        assert result["patterns"] == []
-        assert result["summary"]["total_events"] == 0
-        
-    @pytest.mark.asyncio
-    async def test_analyze_recent_traffic_large_sample(self, traffic_analyzer):
-        """Test traffic analysis with large event sample."""
-        # Create large event list
-        large_events = [
-            {"action": "block", "user_agent": f"bot_{i}", "uri": f"/test{i}"}
-            for i in range(1500)  # More than default sample_size
-        ]
-        
-        traffic_analyzer.api_client.get_security_events.return_value = {"result": large_events}
-        
-        # Test the method
-        result = await traffic_analyzer.analyze_recent_traffic("zone_123", sample_size=1000)
-        
-        # Verify results - should be limited to sample_size
-        assert result["summary"]["total_events"] == 1000
-        
-    @pytest.mark.asyncio
-    async def test_analyze_recent_traffic_api_error(self, traffic_analyzer):
-        """Test traffic analysis with API error."""
-        # Mock API client error
-        traffic_analyzer.api_client.get_security_events.side_effect = CloudflareAPIError("API Error")
-        
-        # Test the method - should raise CloudflareAPIError
         with pytest.raises(CloudflareAPIError):
-            await traffic_analyzer.analyze_recent_traffic("zone_123")
-            
-    def test_is_observatory_request_user_agent(self, traffic_analyzer):
-        """Test Observatory request detection by user agent."""
-        event = {
-            "user_agent": "Observatory-Internal/1.0",
-            "uri": "/test",
-            "request_headers": {}
-        }
-        
-        assert traffic_analyzer._is_observatory_request(event) is True
-        
-    def test_is_observatory_request_uri_path(self, traffic_analyzer):
-        """Test Observatory request detection by URI path."""
-        event = {
-            "user_agent": "Mozilla/5.0",
-            "uri": "/ws/status",
-            "request_headers": {}
-        }
-        
-        assert traffic_analyzer._is_observatory_request(event) is True
-        
-        event["uri"] = "/health"
-        assert traffic_analyzer._is_observatory_request(event) is True
-        
-        event["uri"] = "/api/observatory/status"
-        assert traffic_analyzer._is_observatory_request(event) is True
-        
-    def test_is_observatory_request_headers(self, traffic_analyzer):
-        """Test Observatory request detection by headers."""
-        event = {
-            "user_agent": "Mozilla/5.0",
-            "uri": "/test",
-            "request_headers": {"x-observatory-client": "internal-polling"}
-        }
-        
-        assert traffic_analyzer._is_observatory_request(event) is True
-        
-    def test_is_observatory_request_not_observatory(self, traffic_analyzer):
-        """Test Observatory request detection with non-Observatory request."""
-        event = {
-            "user_agent": "Mozilla/5.0",
-            "uri": "/regular-page",
-            "request_headers": {}
-        }
-        
-        assert traffic_analyzer._is_observatory_request(event) is False
-        
-    def test_find_matching_pattern_user_agent(self, traffic_analyzer):
-        """Test pattern matching for user agent."""
-        event = {
-            "user_agent": "Observatory-Internal/1.0",
-            "uri": "/test",
-            "request_headers": {}
-        }
-        
-        pattern = traffic_analyzer._find_matching_pattern(event)
-        
-        assert pattern is not None
-        assert pattern.pattern_type == "user_agent"
-        
-    def test_find_matching_pattern_websocket(self, traffic_analyzer):
-        """Test pattern matching for WebSocket."""
-        event = {
-            "user_agent": "Mozilla/5.0",
-            "uri": "/ws/status",
-            "request_headers": {}
-        }
-        
-        pattern = traffic_analyzer._find_matching_pattern(event)
-        
-        assert pattern is not None
-        assert pattern.pattern_type == "websocket"
-        
-    def test_find_matching_pattern_custom_header(self, traffic_analyzer):
-        """Test pattern matching for custom header."""
-        event = {
-            "user_agent": "Mozilla/5.0",
-            "uri": "/test",
-            "request_headers": {"x-observatory-client": "internal-polling"}
-        }
-        
-        pattern = traffic_analyzer._find_matching_pattern(event)
-        
-        assert pattern is not None
-        assert pattern.pattern_type == "custom_header"
-        
-    def test_find_matching_pattern_no_match(self, traffic_analyzer):
-        """Test pattern matching with no match."""
-        event = {
-            "user_agent": "Mozilla/5.0",
-            "uri": "/regular-page",
-            "request_headers": {}
-        }
-        
-        pattern = traffic_analyzer._find_matching_pattern(event)
-        
-        assert pattern is None
-        
-    def test_calculate_pattern_match_score_user_agent(self, traffic_analyzer):
-        """Test pattern match score calculation for user agent."""
-        pattern = TrafficPattern(
-            pattern_type="user_agent",
-            expression='(http.user_agent contains "Observatory-Internal")',
-            description="Test pattern",
-            confidence=1.0
-        )
-        
-        event = {
-            "user_agent": "Observatory-Internal/1.0",
-            "uri": "/test",
-            "request_headers": {}
-        }
-        
-        score = traffic_analyzer._calculate_pattern_match_score(event, pattern)
-        
-        assert score > 0.5  # Should be a good match
-        
-    def test_calculate_pattern_match_score_websocket(self, traffic_analyzer):
-        """Test pattern match score calculation for WebSocket."""
-        pattern = TrafficPattern(
-            pattern_type="websocket",
-            expression='(http.request.uri.path matches "^/ws/")',
-            description="WebSocket pattern",
-            confidence=0.9
-        )
-        
-        event = {
-            "user_agent": "Mozilla/5.0",
-            "uri": "/ws/status",
-            "request_headers": {}
-        }
-        
-        score = traffic_analyzer._calculate_pattern_match_score(event, pattern)
-        
-        assert score > 0.5  # Should be a good match
-        
-    def test_calculate_pattern_match_score_no_match(self, traffic_analyzer):
-        """Test pattern match score calculation with no match."""
-        pattern = TrafficPattern(
-            pattern_type="user_agent",
-            expression='(http.user_agent contains "Observatory-Internal")',
-            description="Test pattern",
-            confidence=1.0
-        )
-        
-        event = {
-            "user_agent": "Mozilla/5.0",
-            "uri": "/test",
-            "request_headers": {}
-        }
-        
-        score = traffic_analyzer._calculate_pattern_match_score(event, pattern)
-        
-        assert score == 0.0  # Should be no match
-        
-    def test_get_recommended_whitelist_rules(self, traffic_analyzer):
-        """Test getting recommended whitelist rules."""
-        rules = traffic_analyzer.get_recommended_whitelist_rules()
-        
-        assert len(rules) == 5
-        assert all(isinstance(rule, TrafficPattern) for rule in rules)
-        
-        # Check that all patterns are Observatory-specific
-        for rule in rules:
-            assert "observatory" in rule.description.lower() or "/ws/" in rule.expression or "/health" in rule.expression
-            
-    def test_create_custom_pattern(self, traffic_analyzer):
-        """Test creating custom traffic pattern."""
-        pattern = traffic_analyzer.create_custom_pattern(
-            pattern_type="custom",
-            expression='(http.request.uri.path matches "^/custom/")',
-            description="Custom Observatory pattern",
-            confidence=0.8
-        )
-        
-        assert pattern.pattern_type == "custom"
-        assert pattern.expression == '(http.request.uri.path matches "^/custom/")'
-        assert pattern.description == "Custom Observatory pattern"
-        assert pattern.confidence == 0.8
-        assert pattern.metadata["source"] == "custom"
-        assert "created_at" in pattern.metadata
-        
+            await traffic_analyzer.analyze_recent_traffic(hours=24)
+    
     @pytest.mark.asyncio
-    async def test_validate_pattern_effectiveness_success(self, traffic_analyzer):
-        """Test pattern effectiveness validation."""
-        pattern = TrafficPattern(
-            pattern_type="user_agent",
-            expression='(http.user_agent contains "Observatory-Internal")',
-            description="Test pattern",
-            confidence=1.0
+    async def test_get_observatory_traffic_summary(self, traffic_analyzer, mock_api_client):
+        """Test getting Observatory traffic summary"""
+        # Mock traffic analysis
+        mock_analysis = TrafficAnalysis(
+            total_requests=100,
+            observatory_requests=20,
+            blocked_requests=5,
+            pattern_breakdown={TrafficPattern.INTERNAL_POLLING: 10, TrafficPattern.WEBSOCKET_CONNECTION: 10},
+            suspicious_activity=[],
+            recommendations=["Test recommendation"]
         )
         
-        # Mock events
-        mock_events = [
-            {
-                "user_agent": "Observatory-Internal/1.0",
-                "uri": "/test",
-                "request_headers": {}
-            },
-            {
-                "user_agent": "Mozilla/5.0",
-                "uri": "/test",
-                "request_headers": {}
-            }
-        ]
-        
-        traffic_analyzer.api_client.get_security_events.return_value = {"result": mock_events}
-        
-        # Test the method
-        result = await traffic_analyzer.validate_pattern_effectiveness("zone_123", pattern, 1)
-        
-        # Verify results
-        assert "pattern" in result
-        assert "total_matches" in result
-        assert "false_positives" in result
-        assert "precision" in result
-        assert "test_duration_hours" in result
-        
-        assert result["test_duration_hours"] == 1
-        assert result["total_matches"] >= 1  # At least one Observatory request
-        
+        with patch.object(traffic_analyzer, 'analyze_recent_traffic', new_callable=AsyncMock) as mock_analyze:
+            mock_analyze.return_value = mock_analysis
+            
+            summary = await traffic_analyzer.get_observatory_traffic_summary()
+            
+            assert summary["total_requests_24h"] == 100
+            assert summary["observatory_requests_24h"] == 20
+            assert summary["blocked_requests_24h"] == 5
+            assert summary["pattern_distribution"]["internal_polling"] == 10
+            assert summary["pattern_distribution"]["websocket_connection"] == 10
+            assert summary["suspicious_activity_count"] == 0
+            assert summary["recommendations"] == ["Test recommendation"]
+            assert "analysis_timestamp" in summary
+    
     @pytest.mark.asyncio
-    async def test_validate_pattern_effectiveness_api_error(self, traffic_analyzer):
-        """Test pattern effectiveness validation with API error."""
-        pattern = TrafficPattern(
-            pattern_type="user_agent",
-            expression='(http.user_agent contains "Observatory-Internal")',
-            description="Test pattern",
-            confidence=1.0
+    async def test_monitor_whitelist_effectiveness(self, traffic_analyzer, mock_api_client):
+        """Test monitoring whitelist effectiveness"""
+        # Mock traffic analysis
+        mock_analysis = TrafficAnalysis(
+            total_requests=100,
+            observatory_requests=50,
+            blocked_requests=2,
+            pattern_breakdown={TrafficPattern.INTERNAL_POLLING: 25, TrafficPattern.WEBSOCKET_CONNECTION: 25},
+            suspicious_activity=[],
+            recommendations=[]
         )
         
-        # Mock API client error
-        traffic_analyzer.api_client.get_security_events.side_effect = CloudflareAPIError("API Error")
-        
-        # Test the method - should raise CloudflareAPIError
-        with pytest.raises(CloudflareAPIError):
-            await traffic_analyzer.validate_pattern_effectiveness("zone_123", pattern, 1)
+        with patch.object(traffic_analyzer, 'analyze_recent_traffic', new_callable=AsyncMock) as mock_analyze:
+            mock_analyze.return_value = mock_analysis
+            
+            effectiveness = await traffic_analyzer.monitor_whitelist_effectiveness()
+            
+            assert effectiveness["total_observatory_requests"] == 50
+            assert effectiveness["blocked_observatory_requests"] == 0  # No blocked Observatory traffic
+            assert effectiveness["whitelist_success_rate"] == 100.0
+            assert effectiveness["false_positive_rate"] == 0.0
+            assert effectiveness["monitoring_period"] == "1 hour"
+            assert "timestamp" in effectiveness
+    
+    def test_log_action(self, traffic_analyzer):
+        """Test logging functionality"""
+        with patch('builtins.print') as mock_print:
+            traffic_analyzer._log_action("test_action", "completed", {"test": "data"})
+            
+            mock_print.assert_called_once()
+            # Verify JSON format
+            call_args = mock_print.call_args[0][0]
+            import json
+            log_data = json.loads(call_args)
+            
+            assert log_data["task"] == "5.1"
+            assert log_data["action"] == "test_action"
+            assert log_data["status"] == "completed"
+            assert log_data["details"] == {"test": "data"}

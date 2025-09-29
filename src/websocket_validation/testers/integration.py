@@ -409,7 +409,7 @@ class IntegrationTester:
             
             return test_result    
     
-async def _async_test_emoji_rain_feature(self, endpoint: str) -> Dict[str, Any]:
+    async def _async_test_emoji_rain_feature(self, endpoint: str) -> Dict[str, Any]:
         """Async method to test emoji rain feature."""
         feature_analysis = {
             "connection_successful": False,
@@ -751,7 +751,7 @@ async def _async_test_emoji_rain_feature(self, endpoint: str) -> Dict[str, Any]:
             
             return test_result    
  
-   async def _async_test_websocket_performance(self, endpoint: str) -> Dict[str, Any]:
+    async def _async_test_websocket_performance(self, endpoint: str) -> Dict[str, Any]:
         """Async method to test WebSocket performance."""
         performance_analysis = {
             "connection_time": 0.0,

@@ -1,288 +1,318 @@
 """
 Request Deduplicator for Intelligent Polling
 
-Implements request caching and batching to reduce redundant requests
-and share responses across multiple clients.
+This module provides request deduplication and batching capabilities
+to reduce redundant requests and improve efficiency.
 """
 
-import json
-import hashlib
 import asyncio
-from typing import Dict, List, Optional, Any, Tuple
-from datetime import datetime, timedelta
-from dataclasses import dataclass
+import hashlib
+import json
+import time
+from typing import Dict, Set, List, Optional, Any, Tuple
+from dataclasses import dataclass, field
+from collections import defaultdict, deque
+import uuid
 
 
 @dataclass
 class CachedRequest:
-    """Represents a cached request and its response."""
+    """Represents a cached request"""
+    request_id: str
     endpoint: str
-    params_hash: str
-    timestamp: datetime
-    response_data: Any
-    response_status: int
-    ttl_seconds: int = 30  # Default 30 second TTL
+    params: Dict[str, Any]
+    headers: Dict[str, str]
+    timestamp: float
+    response_data: Optional[Any] = None
+    response_headers: Optional[Dict[str, str]] = None
+    status_code: Optional[int] = None
+    error: Optional[str] = None
+    clients_waiting: Set[str] = field(default_factory=set)
 
 
 @dataclass
-class PendingRequest:
-    """Represents a pending request waiting for response."""
-    endpoint: str
-    params_hash: str
-    future: asyncio.Future
-    timestamp: datetime
+class BatchRequest:
+    """Represents a batch of requests"""
+    batch_id: str
+    requests: List[CachedRequest]
+    created_at: float
+    max_wait_time: float = 5.0  # Maximum time to wait for batching
 
 
 class RequestDeduplicator:
-    """Manages request deduplication and response caching."""
+    """Handles request deduplication and batching"""
     
-    def __init__(self, cache_ttl: int = 30, max_cache_size: int = 1000):
+    def __init__(self, cache_ttl: float = 30.0, batch_window: float = 2.0):
         self.cache_ttl = cache_ttl
-        self.max_cache_size = max_cache_size
+        self.batch_window = batch_window
         
-        # Cache storage
-        self.cache: Dict[str, CachedRequest] = {}
+        # Request cache
+        self.request_cache: Dict[str, CachedRequest] = {}
+        self.cache_timestamps: Dict[str, float] = {}
         
-        # Pending requests (for batching)
-        self.pending_requests: Dict[str, List[PendingRequest]] = {}
+        # Pending requests for batching
+        self.pending_requests: Dict[str, List[CachedRequest]] = defaultdict(list)
+        self.batch_timers: Dict[str, asyncio.Task] = {}
         
-        # Request tracking
-        self.request_counts: Dict[str, int] = {}
+        # Active requests (in progress)
+        self.active_requests: Dict[str, CachedRequest] = {}
         
-        self._log_action("init", "RequestDeduplicator initialized", {
-            "cache_ttl": cache_ttl,
-            "max_cache_size": max_cache_size
-        })
+        # Statistics
+        self.stats = {
+            "total_requests": 0,
+            "cache_hits": 0,
+            "cache_misses": 0,
+            "batched_requests": 0,
+            "deduplicated_requests": 0
+        }
+        
+        self._lock = asyncio.Lock()
+        
+    def _generate_request_key(self, endpoint: str, params: Dict[str, Any], headers: Dict[str, str]) -> str:
+        """Generate a unique key for request deduplication"""
+        # Create a normalized representation of the request
+        normalized_data = {
+            "endpoint": endpoint,
+            "params": sorted(params.items()) if params else [],
+            "headers": {k: v for k, v in headers.items() if k.lower() not in ["x-timestamp", "x-request-id"]}
+        }
+        
+        # Create hash of normalized data
+        data_str = json.dumps(normalized_data, sort_keys=True)
+        return hashlib.md5(data_str.encode()).hexdigest()
     
-    def _generate_params_hash(self, endpoint: str, params: Dict[str, Any] = None) -> str:
-        """
-        Generate a hash for request parameters.
-        
-        Args:
-            endpoint: The endpoint URL
-            params: Request parameters
-            
-        Returns:
-            Hash string for the request
-        """
-        if params is None:
-            params = {}
-        
-        # Sort parameters for consistent hashing
-        sorted_params = sorted(params.items())
-        param_string = f"{endpoint}:{sorted_params}"
-        
-        return hashlib.md5(param_string.encode()).hexdigest()
-    
-    async def get_or_request(
+    async def get_or_create_request(
         self, 
         endpoint: str, 
-        params: Dict[str, Any] = None,
-        request_func: callable = None
-    ) -> Tuple[Any, int]:
+        params: Dict[str, Any], 
+        headers: Dict[str, str],
+        client_id: str
+    ) -> Tuple[CachedRequest, bool]:
         """
-        Get cached response or make new request with deduplication.
+        Get existing request or create new one
         
         Args:
             endpoint: The endpoint to request
             params: Request parameters
-            request_func: Function to make the actual request
+            headers: Request headers
+            client_id: ID of the client making the request
             
         Returns:
-            Tuple of (response_data, status_code)
+            Tuple of (CachedRequest, is_new_request)
         """
-        params_hash = self._generate_params_hash(endpoint, params)
-        cache_key = f"{endpoint}:{params_hash}"
-        
-        # Check cache first
-        cached_response = self._get_cached_response(cache_key)
-        if cached_response:
-            self._log_action("cache_hit", "Cached response returned", {
-                "endpoint": endpoint,
-                "cache_key": cache_key
-            })
-            return cached_response.response_data, cached_response.response_status
-        
-        # Check if there's already a pending request for this
-        if cache_key in self.pending_requests:
-            self._log_action("request_batch", "Joining pending request", {
-                "endpoint": endpoint,
-                "cache_key": cache_key
-            })
+        async with self._lock:
+            request_key = self._generate_request_key(endpoint, params, headers)
+            current_time = time.time()
             
-            # Create a future for this request
-            future = asyncio.Future()
-            pending_request = PendingRequest(
+            # Clean expired cache entries
+            self._cleanup_expired_cache(current_time)
+            
+            # Check if request is already cached
+            if request_key in self.request_cache:
+                cached_request = self.request_cache[request_key]
+                
+                # Check if cache is still valid
+                if current_time - cached_request.timestamp < self.cache_ttl:
+                    self.stats["cache_hits"] += 1
+                    self._log_deduplication(endpoint, request_key, "cache_hit", client_id)
+                    return cached_request, False
+            
+            # Check if request is already in progress
+            if request_key in self.active_requests:
+                active_request = self.active_requests[request_key]
+                active_request.clients_waiting.add(client_id)
+                self.stats["deduplicated_requests"] += 1
+                self._log_deduplication(endpoint, request_key, "deduplicated", client_id)
+                return active_request, False
+            
+            # Create new request
+            request_id = str(uuid.uuid4())
+            new_request = CachedRequest(
+                request_id=request_id,
                 endpoint=endpoint,
-                params_hash=params_hash,
-                future=future,
-                timestamp=datetime.utcnow()
+                params=params,
+                headers=headers,
+                timestamp=current_time,
+                clients_waiting={client_id}
             )
             
-            self.pending_requests[cache_key].append(pending_request)
+            # Add to active requests
+            self.active_requests[request_key] = new_request
             
-            # Wait for the original request to complete
-            response_data, status_code = await future
-            return response_data, status_code
-        
-        # Make new request
-        if request_func is None:
-            raise ValueError("request_func is required for new requests")
-        
-        self._log_action("new_request", "Making new request", {
-            "endpoint": endpoint,
-            "cache_key": cache_key
-        })
-        
-        # Initialize pending requests list
-        self.pending_requests[cache_key] = []
-        
-        try:
-            # Make the actual request
-            response_data, status_code = await request_func(endpoint, params)
+            # Check if we should batch this request
+            if self._should_batch_request(endpoint):
+                await self._add_to_batch(endpoint, new_request, request_key)
+                self.stats["batched_requests"] += 1
+                self._log_deduplication(endpoint, request_key, "batched", client_id)
+            else:
+                self.stats["cache_misses"] += 1
+                self._log_deduplication(endpoint, request_key, "new_request", client_id)
             
-            # Cache the response
-            self._cache_response(cache_key, endpoint, params_hash, response_data, status_code)
-            
-            # Resolve all pending requests
-            for pending_request in self.pending_requests[cache_key]:
-                if not pending_request.future.done():
-                    pending_request.future.set_result((response_data, status_code))
-            
-            # Clean up pending requests
-            del self.pending_requests[cache_key]
-            
-            self._log_action("request_complete", "Request completed and cached", {
-                "endpoint": endpoint,
-                "cache_key": cache_key,
-                "status_code": status_code,
-                "pending_resolved": len(self.pending_requests.get(cache_key, []))
-            })
-            
-            return response_data, status_code
-            
-        except Exception as e:
-            # Reject all pending requests
-            for pending_request in self.pending_requests[cache_key]:
-                if not pending_request.future.done():
-                    pending_request.future.set_exception(e)
-            
-            # Clean up pending requests
-            del self.pending_requests[cache_key]
-            
-            self._log_action("request_error", "Request failed", {
-                "endpoint": endpoint,
-                "cache_key": cache_key,
-                "error": str(e)
-            })
-            
-            raise
+            self.stats["total_requests"] += 1
+            return new_request, True
     
-    def _get_cached_response(self, cache_key: str) -> Optional[CachedRequest]:
-        """Get cached response if valid."""
-        if cache_key not in self.cache:
-            return None
-        
-        cached_request = self.cache[cache_key]
-        now = datetime.utcnow()
-        
-        # Check if cache entry is expired
-        if now - cached_request.timestamp > timedelta(seconds=cached_request.ttl_seconds):
-            del self.cache[cache_key]
-            self._log_action("cache_expired", "Cache entry expired", {
-                "cache_key": cache_key
-            })
-            return None
-        
-        return cached_request
-    
-    def _cache_response(
+    async def complete_request(
         self, 
-        cache_key: str, 
-        endpoint: str, 
-        params_hash: str, 
-        response_data: Any, 
-        status_code: int
+        request_key: str, 
+        response_data: Any = None,
+        response_headers: Dict[str, str] = None,
+        status_code: int = None,
+        error: str = None
     ) -> None:
-        """Cache a response."""
-        # Clean up old cache entries if we're at the limit
-        if len(self.cache) >= self.max_cache_size:
-            self._cleanup_cache()
+        """
+        Mark a request as completed
         
-        cached_request = CachedRequest(
-            endpoint=endpoint,
-            params_hash=params_hash,
-            timestamp=datetime.utcnow(),
-            response_data=response_data,
-            response_status=status_code,
-            ttl_seconds=self.cache_ttl
-        )
-        
-        self.cache[cache_key] = cached_request
-        
-        # Update request count
-        if endpoint not in self.request_counts:
-            self.request_counts[endpoint] = 0
-        self.request_counts[endpoint] += 1
+        Args:
+            request_key: The request key
+            response_data: Response data
+            response_headers: Response headers
+            status_code: HTTP status code
+            error: Error message if any
+        """
+        async with self._lock:
+            if request_key not in self.active_requests:
+                return
+            
+            request = self.active_requests[request_key]
+            
+            # Update request with response data
+            request.response_data = response_data
+            request.response_headers = response_headers
+            request.status_code = status_code
+            request.error = error
+            
+            # Move to cache
+            self.request_cache[request_key] = request
+            self.cache_timestamps[request_key] = time.time()
+            
+            # Remove from active requests
+            del self.active_requests[request_key]
+            
+            # Log completion
+            self._log_deduplication(
+                request.endpoint, 
+                request_key, 
+                "completed", 
+                f"{len(request.clients_waiting)} clients"
+            )
     
-    def _cleanup_cache(self) -> None:
-        """Clean up expired cache entries."""
-        now = datetime.utcnow()
+    def _should_batch_request(self, endpoint: str) -> bool:
+        """Determine if request should be batched"""
+        # Don't batch if there are already pending requests for this endpoint
+        return len(self.pending_requests[endpoint]) > 0
+    
+    async def _add_to_batch(self, endpoint: str, request: CachedRequest, request_key: str) -> None:
+        """Add request to batch"""
+        self.pending_requests[endpoint].append(request)
+        
+        # Start batch timer if not already running
+        if endpoint not in self.batch_timers:
+            self.batch_timers[endpoint] = asyncio.create_task(
+                self._process_batch(endpoint)
+            )
+    
+    async def _process_batch(self, endpoint: str) -> None:
+        """Process batched requests"""
+        await asyncio.sleep(self.batch_window)
+        
+        async with self._lock:
+            if endpoint not in self.pending_requests:
+                return
+            
+            requests = self.pending_requests[endpoint]
+            if not requests:
+                return
+            
+            # Create batch
+            batch_id = str(uuid.uuid4())
+            batch = BatchRequest(
+                batch_id=batch_id,
+                requests=requests.copy(),
+                created_at=time.time()
+            )
+            
+            # Clear pending requests
+            self.pending_requests[endpoint] = []
+            
+            # Clean up timer
+            if endpoint in self.batch_timers:
+                del self.batch_timers[endpoint]
+            
+            # Log batch creation
+            self._log_batch(endpoint, batch_id, len(requests))
+            
+            # Process batch (this would be handled by the poller)
+            return batch
+    
+    def _cleanup_expired_cache(self, current_time: float) -> None:
+        """Clean up expired cache entries"""
         expired_keys = []
         
-        for cache_key, cached_request in self.cache.items():
-            if now - cached_request.timestamp > timedelta(seconds=cached_request.ttl_seconds):
-                expired_keys.append(cache_key)
+        for request_key, timestamp in self.cache_timestamps.items():
+            if current_time - timestamp > self.cache_ttl:
+                expired_keys.append(request_key)
         
         for key in expired_keys:
-            del self.cache[key]
-        
-        self._log_action("cache_cleanup", "Cache cleaned up", {
-            "expired_entries": len(expired_keys),
-            "remaining_entries": len(self.cache)
-        })
+            if key in self.request_cache:
+                del self.request_cache[key]
+            if key in self.cache_timestamps:
+                del self.cache_timestamps[key]
     
-    def get_cache_stats(self) -> Dict[str, Any]:
-        """Get cache statistics."""
-        now = datetime.utcnow()
-        valid_entries = 0
-        expired_entries = 0
-        
-        for cached_request in self.cache.values():
-            if now - cached_request.timestamp <= timedelta(seconds=cached_request.ttl_seconds):
-                valid_entries += 1
-            else:
-                expired_entries += 1
-        
-        return {
-            "total_entries": len(self.cache),
-            "valid_entries": valid_entries,
-            "expired_entries": expired_entries,
-            "pending_requests": sum(len(requests) for requests in self.pending_requests.values()),
-            "request_counts": self.request_counts.copy()
-        }
-    
-    def clear_cache(self) -> None:
-        """Clear all cached responses."""
-        cache_size = len(self.cache)
-        self.cache.clear()
-        
-        self._log_action("cache_clear", "Cache cleared", {
-            "cleared_entries": cache_size
-        })
-    
-    def _log_action(self, action: str, description: str, details: Dict = None):
-        """Log action in JSON format."""
+    def _log_deduplication(self, endpoint: str, request_key: str, action: str, client_id: str) -> None:
+        """Log deduplication activity"""
         log_entry = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S.%fZ", time.gmtime()),
             "task": "2.2",
-            "component": "RequestDeduplicator",
-            "action": action,
-            "status": "completed",
-            "description": description
+            "action": f"deduplication_{action}",
+            "status": "in_progress",
+            "details": {
+                "endpoint": endpoint,
+                "request_key": request_key[:8],  # Truncate for readability
+                "client_id": client_id,
+                "cache_size": len(self.request_cache),
+                "active_requests": len(self.active_requests),
+                "pending_batches": len(self.pending_requests)
+            }
         }
-        
-        if details:
-            log_entry["details"] = details
-            
         print(json.dumps(log_entry))
+    
+    def _log_batch(self, endpoint: str, batch_id: str, request_count: int) -> None:
+        """Log batch creation"""
+        log_entry = {
+            "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S.%fZ", time.gmtime()),
+            "task": "2.2",
+            "action": "batch_created",
+            "status": "in_progress",
+            "details": {
+                "endpoint": endpoint,
+                "batch_id": batch_id[:8],
+                "request_count": request_count,
+                "batch_window": self.batch_window
+            }
+        }
+        print(json.dumps(log_entry))
+    
+    def get_stats(self) -> Dict:
+        """Get deduplicator statistics"""
+        return {
+            "stats": self.stats.copy(),
+            "cache_size": len(self.request_cache),
+            "active_requests": len(self.active_requests),
+            "pending_batches": len(self.pending_requests),
+            "batch_timers": len(self.batch_timers)
+        }
+    
+    async def clear_cache(self) -> None:
+        """Clear all cached requests"""
+        async with self._lock:
+            self.request_cache.clear()
+            self.cache_timestamps.clear()
+            self.active_requests.clear()
+            self.pending_requests.clear()
+            
+            # Cancel any running batch timers
+            for timer in self.batch_timers.values():
+                timer.cancel()
+            self.batch_timers.clear()
+            
+            self._log_deduplication("", "", "cache_cleared", "system")

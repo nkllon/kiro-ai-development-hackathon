@@ -1,273 +1,416 @@
 """
-Traffic Analyzer for Observatory Pattern Detection.
+Traffic Analyzer for Observatory Patterns
 
-Analyzes traffic patterns to identify Observatory-specific requests and behaviors.
+Analyzes traffic patterns to identify Observatory-specific requests
+and detect potential abuse of whitelisted patterns.
 """
 
 import json
 import logging
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Set
+from typing import Dict, List, Optional, Any, Tuple
+from dataclasses import dataclass
+from enum import Enum
+import re
 
 from .api_client import CloudflareAPIClient, CloudflareAPIError
 
+logger = logging.getLogger(__name__)
 
-class TrafficPattern:
-    """Represents a traffic pattern for Observatory."""
-    
-    def __init__(
-        self,
-        pattern_type: str,
-        expression: str,
-        description: str,
-        confidence: float = 1.0,
-        metadata: Optional[Dict[str, Any]] = None
-    ):
-        self.pattern_type = pattern_type
-        self.expression = expression
-        self.description = description
-        self.confidence = confidence
-        self.metadata = metadata or {}
-        
-    def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary."""
-        return {
-            "pattern_type": self.pattern_type,
-            "expression": self.expression,
-            "description": self.description,
-            "confidence": self.confidence,
-            "metadata": self.metadata
-        }
+
+class TrafficPattern(Enum):
+    """Types of Observatory traffic patterns"""
+    INTERNAL_POLLING = "internal_polling"
+    WEBSOCKET_CONNECTION = "websocket_connection"
+    HEALTH_CHECK = "health_check"
+    METRICS_COLLECTION = "metrics_collection"
+    API_REQUEST = "api_request"
+    UNKNOWN = "unknown"
+
+
+@dataclass
+class TrafficEvent:
+    """Individual traffic event from Cloudflare"""
+    timestamp: datetime
+    ip_address: str
+    user_agent: str
+    uri_path: str
+    method: str
+    status_code: int
+    country: str
+    action_taken: str
+    rule_id: Optional[str] = None
+    pattern_type: Optional[TrafficPattern] = None
+
+
+@dataclass
+class TrafficAnalysis:
+    """Analysis results for traffic patterns"""
+    total_requests: int
+    observatory_requests: int
+    blocked_requests: int
+    pattern_breakdown: Dict[TrafficPattern, int]
+    suspicious_activity: List[Dict[str, Any]]
+    recommendations: List[str]
 
 
 class TrafficAnalyzer:
-    """Analyzes traffic patterns to identify Observatory requests."""
+    """
+    Analyzes Observatory traffic patterns and detects abuse
     
-    # Predefined Observatory patterns
-    OBSERVATORY_PATTERNS = [
-        TrafficPattern(
-            pattern_type="user_agent",
-            expression='(http.user_agent contains "Observatory-Internal")',
-            description="Observatory internal polling traffic",
-            confidence=1.0,
-            metadata={"source": "user_agent_header"}
-        ),
-        TrafficPattern(
-            pattern_type="websocket",
-            expression='(http.request.uri.path matches "^/ws/")',
-            description="Observatory WebSocket endpoints",
-            confidence=0.9,
-            metadata={"source": "uri_path", "protocol": "websocket"}
-        ),
-        TrafficPattern(
-            pattern_type="custom_header",
-            expression='(http.request.headers["x-observatory-client"][0] eq "internal-polling")',
-            description="Observatory polling fallback",
-            confidence=0.95,
-            metadata={"source": "custom_header", "header_name": "x-observatory-client"}
-        ),
-        TrafficPattern(
-            pattern_type="health_check",
-            expression='(http.request.uri.path matches "^/health")',
-            description="Observatory health check endpoints",
-            confidence=0.8,
-            metadata={"source": "uri_path", "endpoint_type": "health"}
-        ),
-        TrafficPattern(
-            pattern_type="api_endpoint",
-            expression='(http.request.uri.path matches "^/api/observatory/")',
-            description="Observatory API endpoints",
-            confidence=0.85,
-            metadata={"source": "uri_path", "endpoint_type": "api"}
-        )
-    ]
+    Monitors Cloudflare security events to identify legitimate
+    Observatory traffic and detect potential abuse of whitelist rules.
+    """
+    
+    # Observatory-specific patterns for identification
+    OBSERVATORY_PATTERNS = {
+        TrafficPattern.INTERNAL_POLLING: [
+            r"Observatory-Internal",
+            r"x-observatory-client.*internal-polling",
+            r"observatory-polling"
+        ],
+        TrafficPattern.WEBSOCKET_CONNECTION: [
+            r"/ws/",
+            r"websocket",
+            r"upgrade.*websocket"
+        ],
+        TrafficPattern.HEALTH_CHECK: [
+            r"/health",
+            r"/healthcheck",
+            r"health.*endpoint"
+        ],
+        TrafficPattern.METRICS_COLLECTION: [
+            r"/metrics",
+            r"/observatory/metrics",
+            r"prometheus"
+        ],
+        TrafficPattern.API_REQUEST: [
+            r"/api/observatory",
+            r"/observatory/api",
+            r"observatory.*api"
+        ]
+    }
     
     def __init__(self, api_client: CloudflareAPIClient):
         self.api_client = api_client
-        self.logger = logging.getLogger(__name__)
+        self._log_action("traffic_analyzer_init", "in_progress", {
+            "pattern_types": len(self.OBSERVATORY_PATTERNS)
+        })
+    
+    def _log_action(self, action: str, status: str, details: Dict[str, Any]):
+        """Log action in JSON format as required"""
+        log_entry = {
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "task": "5.1",
+            "action": action,
+            "status": status,
+            "details": details
+        }
+        print(json.dumps(log_entry))
+        logger.info(f"Traffic Analyzer action: {action} - {status}")
+    
+    async def analyze_recent_traffic(self, hours: int = 24) -> TrafficAnalysis:
+        """
+        Analyze recent traffic patterns for Observatory activity
         
-    async def analyze_recent_traffic(
-        self,
-        zone_id: str,
-        hours_back: int = 24,
-        sample_size: int = 1000
-    ) -> Dict[str, Any]:
-        """Analyze recent traffic to identify Observatory patterns."""
+        Args:
+            hours: Number of hours to analyze (default: 24)
+            
+        Returns:
+            TrafficAnalysis with pattern breakdown and recommendations
+        """
+        self._log_action("analyze_recent_traffic", "in_progress", {
+            "hours": hours
+        })
+        
         try:
-            end_time = datetime.utcnow()
-            start_time = end_time - timedelta(hours=hours_back)
+            # Get security events from Cloudflare
+            events = await self.api_client.get_security_events(limit=1000)
             
-            self.logger.info(f"Analyzing traffic from {start_time} to {end_time}")
+            # Filter events from the specified time period
+            cutoff_time = datetime.utcnow() - timedelta(hours=hours)
+            recent_events = [
+                event for event in events
+                if self._parse_event_timestamp(event) >= cutoff_time
+            ]
             
-            # Get security events
-            events = await self.api_client.get_security_events(zone_id, start_time, end_time)
+            # Convert to TrafficEvent objects
+            traffic_events = [self._parse_traffic_event(event) for event in recent_events]
             
-            # Analyze events for Observatory patterns
-            analysis_result = self._analyze_events(events.get("result", []), sample_size)
+            # Analyze patterns
+            analysis = self._analyze_traffic_patterns(traffic_events)
             
-            self.logger.info(f"Traffic analysis completed: {len(analysis_result.get('patterns', []))} patterns found")
-            return analysis_result
+            self._log_action("analyze_recent_traffic", "completed", {
+                "total_events": len(traffic_events),
+                "observatory_events": analysis.observatory_requests,
+                "blocked_events": analysis.blocked_requests
+            })
+            
+            return analysis
             
         except CloudflareAPIError as e:
-            self.logger.error(f"Failed to analyze traffic: {e}")
+            self._log_action("analyze_recent_traffic", "error", {
+                "error": str(e)
+            })
             raise
-            
-    def _analyze_events(self, events: List[Dict[str, Any]], sample_size: int) -> Dict[str, Any]:
-        """Analyze security events for Observatory patterns."""
-        if not events:
-            return {"patterns": [], "summary": {"total_events": 0}}
-            
-        # Sample events if too many
-        if len(events) > sample_size:
-            events = events[:sample_size]
-            
-        patterns_found = []
-        observatory_requests = 0
-        blocked_requests = 0
+    
+    def _parse_event_timestamp(self, event: Dict[str, Any]) -> datetime:
+        """Parse timestamp from Cloudflare event"""
+        timestamp_str = event.get("occurred_at", "")
+        try:
+            return datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
+        except ValueError:
+            return datetime.utcnow() - timedelta(days=1)  # Default to 1 day ago
+    
+    def _parse_traffic_event(self, event: Dict[str, Any]) -> TrafficEvent:
+        """Parse Cloudflare security event into TrafficEvent"""
+        # Extract relevant fields from the event
+        ip_address = event.get("source", {}).get("ip", "unknown")
+        user_agent = event.get("source", {}).get("user_agent", "")
+        uri_path = event.get("source", {}).get("uri", "")
+        method = event.get("source", {}).get("method", "GET")
+        status_code = event.get("source", {}).get("status_code", 200)
+        country = event.get("source", {}).get("country", "unknown")
+        action_taken = event.get("action", "unknown")
+        rule_id = event.get("rule_id")
         
+        # Determine traffic pattern type
+        pattern_type = self._classify_traffic_pattern(user_agent, uri_path)
+        
+        return TrafficEvent(
+            timestamp=self._parse_event_timestamp(event),
+            ip_address=ip_address,
+            user_agent=user_agent,
+            uri_path=uri_path,
+            method=method,
+            status_code=status_code,
+            country=country,
+            action_taken=action_taken,
+            rule_id=rule_id,
+            pattern_type=pattern_type
+        )
+    
+    def _classify_traffic_pattern(self, user_agent: str, uri_path: str) -> TrafficPattern:
+        """Classify traffic pattern based on user agent and URI"""
+        combined_text = f"{user_agent} {uri_path}".lower()
+        
+        for pattern_type, patterns in self.OBSERVATORY_PATTERNS.items():
+            for pattern in patterns:
+                if re.search(pattern.lower(), combined_text):
+                    return pattern_type
+        
+        return TrafficPattern.UNKNOWN
+    
+    def _analyze_traffic_patterns(self, events: List[TrafficEvent]) -> TrafficAnalysis:
+        """Analyze traffic patterns and generate insights"""
+        total_requests = len(events)
+        observatory_requests = sum(1 for event in events if event.pattern_type != TrafficPattern.UNKNOWN)
+        blocked_requests = sum(1 for event in events if event.action_taken in ["block", "challenge"])
+        
+        # Count pattern types
+        pattern_breakdown = {pattern: 0 for pattern in TrafficPattern}
         for event in events:
-            # Check if this looks like Observatory traffic
-            if self._is_observatory_request(event):
-                observatory_requests += 1
-                
-                # Check if it was blocked
-                if event.get("action") in ["block", "challenge"]:
-                    blocked_requests += 1
-                    
-                    # Find matching pattern
-                    pattern = self._find_matching_pattern(event)
-                    if pattern:
-                        patterns_found.append({
-                            "pattern": pattern.to_dict(),
-                            "event": event,
-                            "blocked": True
-                        })
-                        
-        return {
-            "patterns": patterns_found,
-            "summary": {
-                "total_events": len(events),
-                "observatory_requests": observatory_requests,
-                "blocked_observatory_requests": blocked_requests,
-                "block_rate": blocked_requests / max(observatory_requests, 1)
-            }
-        }
+            if event.pattern_type:
+                pattern_breakdown[event.pattern_type] += 1
         
-    def _is_observatory_request(self, event: Dict[str, Any]) -> bool:
-        """Check if an event represents Observatory traffic."""
-        # Check user agent
-        user_agent = event.get("user_agent", "").lower()
-        if "observatory" in user_agent:
-            return True
-            
-        # Check URI path
-        uri_path = event.get("uri", "").lower()
-        if any(path in uri_path for path in ["/ws/", "/health", "/api/observatory/"]):
-            return True
-            
-        # Check headers
-        headers = event.get("request_headers", {})
-        if "x-observatory-client" in headers:
-            return True
-            
-        return False
+        # Detect suspicious activity
+        suspicious_activity = self._detect_suspicious_activity(events)
         
-    def _find_matching_pattern(self, event: Dict[str, Any]) -> Optional[TrafficPattern]:
-        """Find the best matching pattern for an event."""
-        best_pattern = None
-        best_score = 0.0
+        # Generate recommendations
+        recommendations = self._generate_recommendations(events, pattern_breakdown)
         
-        for pattern in self.OBSERVATORY_PATTERNS:
-            score = self._calculate_pattern_match_score(event, pattern)
-            if score > best_score:
-                best_score = score
-                best_pattern = pattern
-                
-        return best_pattern if best_score > 0.5 else None
+        return TrafficAnalysis(
+            total_requests=total_requests,
+            observatory_requests=observatory_requests,
+            blocked_requests=blocked_requests,
+            pattern_breakdown=pattern_breakdown,
+            suspicious_activity=suspicious_activity,
+            recommendations=recommendations
+        )
+    
+    def _detect_suspicious_activity(self, events: List[TrafficEvent]) -> List[Dict[str, Any]]:
+        """Detect potentially suspicious activity patterns"""
+        suspicious = []
         
-    def _calculate_pattern_match_score(self, event: Dict[str, Any], pattern: TrafficPattern) -> float:
-        """Calculate how well an event matches a pattern."""
-        score = 0.0
+        # Group events by IP address
+        ip_groups = {}
+        for event in events:
+            if event.ip_address not in ip_groups:
+                ip_groups[event.ip_address] = []
+            ip_groups[event.ip_address].append(event)
         
-        if pattern.pattern_type == "user_agent":
-            user_agent = event.get("user_agent", "").lower()
-            if "observatory" in user_agent:
-                score += 0.8
-                
-        elif pattern.pattern_type == "websocket":
-            uri_path = event.get("uri", "").lower()
-            if "/ws/" in uri_path:
-                score += 0.9
-                
-        elif pattern.pattern_type == "custom_header":
-            headers = event.get("request_headers", {})
-            if "x-observatory-client" in headers:
-                score += 0.95
-                
-        elif pattern.pattern_type == "health_check":
-            uri_path = event.get("uri", "").lower()
-            if "/health" in uri_path:
-                score += 0.8
-                
-        elif pattern.pattern_type == "api_endpoint":
-            uri_path = event.get("uri", "").lower()
-            if "/api/observatory/" in uri_path:
-                score += 0.85
-                
-        return score * pattern.confidence
+        # Check for high-frequency requests from single IPs
+        for ip, ip_events in ip_groups.items():
+            if len(ip_events) > 100:  # Threshold for suspicious activity
+                observatory_events = [e for e in ip_events if e.pattern_type != TrafficPattern.UNKNOWN]
+                if len(observatory_events) > 50:
+                    suspicious.append({
+                        "type": "high_frequency_observatory_traffic",
+                        "ip_address": ip,
+                        "total_requests": len(ip_events),
+                        "observatory_requests": len(observatory_events),
+                        "severity": "medium"
+                    })
         
-    def get_recommended_whitelist_rules(self) -> List[TrafficPattern]:
-        """Get recommended whitelist rules for Observatory."""
-        return self.OBSERVATORY_PATTERNS.copy()
+        # Check for unusual user agents claiming to be Observatory
+        observatory_events = [e for e in events if e.pattern_type != TrafficPattern.UNKNOWN]
+        user_agents = {}
+        for event in observatory_events:
+            if event.user_agent not in user_agents:
+                user_agents[event.user_agent] = []
+            user_agents[event.user_agent].append(event)
         
-    def create_custom_pattern(
-        self,
-        pattern_type: str,
-        expression: str,
-        description: str,
-        confidence: float = 0.8
-    ) -> TrafficPattern:
-        """Create a custom traffic pattern."""
-        return TrafficPattern(
-            pattern_type=pattern_type,
-            expression=expression,
-            description=description,
-            confidence=confidence,
-            metadata={"source": "custom", "created_at": datetime.utcnow().isoformat()}
+        for ua, ua_events in user_agents.items():
+            if len(ua_events) > 20 and not self._is_legitimate_observatory_ua(ua):
+                suspicious.append({
+                    "type": "suspicious_user_agent",
+                    "user_agent": ua,
+                    "request_count": len(ua_events),
+                    "severity": "high"
+                })
+        
+        return suspicious
+    
+    def _is_legitimate_observatory_ua(self, user_agent: str) -> bool:
+        """Check if user agent appears to be legitimate Observatory traffic"""
+        legitimate_patterns = [
+            r"observatory-internal",
+            r"observatory-polling",
+            r"observatory-monitoring",
+            r"observatory-health-check"
+        ]
+        
+        ua_lower = user_agent.lower()
+        return any(re.search(pattern, ua_lower) for pattern in legitimate_patterns)
+    
+    def _generate_recommendations(self, events: List[TrafficEvent], 
+                                pattern_breakdown: Dict[TrafficPattern, int]) -> List[str]:
+        """Generate recommendations based on traffic analysis"""
+        recommendations = []
+        
+        # Check Observatory traffic ratio
+        total_observatory = sum(pattern_breakdown.values()) - pattern_breakdown[TrafficPattern.UNKNOWN]
+        total_traffic = len(events)
+        
+        if total_traffic > 0:
+            observatory_ratio = total_observatory / total_traffic
+            if observatory_ratio < 0.1:
+                recommendations.append(
+                    "Low Observatory traffic ratio detected. Consider reviewing whitelist rules."
+                )
+            elif observatory_ratio > 0.8:
+                recommendations.append(
+                    "High Observatory traffic ratio. Monitor for potential abuse."
+                )
+        
+        # Check for blocked Observatory traffic
+        blocked_observatory = sum(
+            1 for event in events 
+            if event.pattern_type != TrafficPattern.UNKNOWN and 
+               event.action_taken in ["block", "challenge"]
         )
         
-    async def validate_pattern_effectiveness(
-        self,
-        zone_id: str,
-        pattern: TrafficPattern,
-        test_duration_hours: int = 1
-    ) -> Dict[str, Any]:
-        """Validate how effective a pattern is at identifying Observatory traffic."""
+        if blocked_observatory > 0:
+            recommendations.append(
+                f"Found {blocked_observatory} blocked Observatory requests. "
+                "Review and update whitelist rules."
+            )
+        
+        # Check pattern distribution
+        if pattern_breakdown[TrafficPattern.WEBSOCKET_CONNECTION] == 0:
+            recommendations.append(
+                "No WebSocket connections detected. Verify Observatory WebSocket endpoints."
+            )
+        
+        if pattern_breakdown[TrafficPattern.HEALTH_CHECK] == 0:
+            recommendations.append(
+                "No health check requests detected. Verify Observatory health endpoints."
+            )
+        
+        return recommendations
+    
+    async def get_observatory_traffic_summary(self) -> Dict[str, Any]:
+        """
+        Get summary of Observatory traffic patterns
+        
+        Returns:
+            Dictionary with traffic summary statistics
+        """
+        self._log_action("get_traffic_summary", "in_progress", {})
+        
         try:
-            end_time = datetime.utcnow()
-            start_time = end_time - timedelta(hours=test_duration_hours)
+            analysis = await self.analyze_recent_traffic(hours=24)
             
-            events = await self.api_client.get_security_events(zone_id, start_time, end_time)
-            
-            total_matches = 0
-            false_positives = 0
-            
-            for event in events.get("result", []):
-                if self._calculate_pattern_match_score(event, pattern) > 0.5:
-                    total_matches += 1
-                    if not self._is_observatory_request(event):
-                        false_positives += 1
-                        
-            precision = (total_matches - false_positives) / max(total_matches, 1)
-            
-            return {
-                "pattern": pattern.to_dict(),
-                "total_matches": total_matches,
-                "false_positives": false_positives,
-                "precision": precision,
-                "test_duration_hours": test_duration_hours
+            summary = {
+                "total_requests_24h": analysis.total_requests,
+                "observatory_requests_24h": analysis.observatory_requests,
+                "blocked_requests_24h": analysis.blocked_requests,
+                "pattern_distribution": {
+                    pattern.value: count 
+                    for pattern, count in analysis.pattern_breakdown.items()
+                },
+                "suspicious_activity_count": len(analysis.suspicious_activity),
+                "recommendations": analysis.recommendations,
+                "analysis_timestamp": datetime.utcnow().isoformat() + "Z"
             }
             
+            self._log_action("get_traffic_summary", "completed", {
+                "total_requests": analysis.total_requests,
+                "observatory_requests": analysis.observatory_requests
+            })
+            
+            return summary
+            
         except CloudflareAPIError as e:
-            self.logger.error(f"Failed to validate pattern effectiveness: {e}")
+            self._log_action("get_traffic_summary", "error", {
+                "error": str(e)
+            })
+            raise
+    
+    async def monitor_whitelist_effectiveness(self) -> Dict[str, Any]:
+        """
+        Monitor effectiveness of Observatory whitelist rules
+        
+        Returns:
+            Dictionary with effectiveness metrics
+        """
+        self._log_action("monitor_whitelist_effectiveness", "in_progress", {})
+        
+        try:
+            analysis = await self.analyze_recent_traffic(hours=1)  # Last hour
+            
+            # Calculate effectiveness metrics
+            total_observatory = analysis.observatory_requests
+            blocked_observatory = sum(
+                1 for event in analysis.suspicious_activity
+                if event.get("type") == "blocked_observatory_traffic"
+            )
+            
+            effectiveness = {
+                "total_observatory_requests": total_observatory,
+                "blocked_observatory_requests": blocked_observatory,
+                "whitelist_success_rate": (
+                    (total_observatory - blocked_observatory) / total_observatory * 100
+                    if total_observatory > 0 else 100
+                ),
+                "false_positive_rate": (
+                    blocked_observatory / total_observatory * 100
+                    if total_observatory > 0 else 0
+                ),
+                "suspicious_activity_detected": len(analysis.suspicious_activity),
+                "monitoring_period": "1 hour",
+                "timestamp": datetime.utcnow().isoformat() + "Z"
+            }
+            
+            self._log_action("monitor_whitelist_effectiveness", "completed", {
+                "success_rate": effectiveness["whitelist_success_rate"],
+                "false_positive_rate": effectiveness["false_positive_rate"]
+            })
+            
+            return effectiveness
+            
+        except CloudflareAPIError as e:
+            self._log_action("monitor_whitelist_effectiveness", "error", {
+                "error": str(e)
+            })
             raise

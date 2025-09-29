@@ -1,18 +1,36 @@
 """
-WebSocket Tunnel Configuration and Validation Framework
+Cloudflare Tunnel Configuration Management
 
-This module provides comprehensive tunnel configuration management for cloudflared
-with WebSocket support, including validation, backup/restore, and version compatibility.
+Comprehensive tunnel configuration management with WebSocket support,
+versioning, validation, and rollback capabilities.
 """
 
-from .config_manager import ConfigManager
-from .validator import ConfigValidator
-from .backup_manager import BackupManager
-from .version_checker import VersionChecker
+from .config_generator import TunnelConfigGenerator, TunnelConfig
+from .websocket_ingress import WebSocketIngressManager, WebSocketConfig
+from .config_validator import ConfigValidator, ValidationResult, ValidationLevel
+from .version_manager import VersionManager, VersionMetadata, VersionStatus
+from .rollback_manager import RollbackManager, RollbackStatus, RollbackReason
 
 __all__ = [
-    "ConfigManager",
-    "ConfigValidator", 
-    "BackupManager",
-    "VersionChecker"
+    # Main manager class
+    "TunnelConfigManager",
+    
+    # Core components
+    "TunnelConfigGenerator",
+    "WebSocketIngressManager", 
+    "ConfigValidator",
+    "VersionManager",
+    "RollbackManager",
+    
+    # Data structures
+    "TunnelConfig",
+    "WebSocketConfig",
+    "ValidationResult",
+    "VersionMetadata",
+    
+    # Enums
+    "ValidationLevel",
+    "VersionStatus",
+    "RollbackStatus",
+    "RollbackReason"
 ]

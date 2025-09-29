@@ -1,0 +1,122 @@
+# MSP SSL Chaos Tamer - Prometheus Configuration
+# Comprehensive monitoring setup for certificate management operations
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'msp-ssl-tamer'
+    environment: 'production'
+
+rule_files:
+  - "alert_rules.yml"
+  - "recording_rules.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+scrape_configs:
+  # MSP SSL Chaos Tamer main application metrics
+  - job_name: 'msp-ssl-tamer'
+    static_configs:
+      - targets: ['msp-ssl-tamer:9090']
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    metrics_path: '/metrics'
+    honor_labels: true
+    params:
+      format: ['prometheus']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'msp-ssl-tamer'
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'msp_ssl_.*'
+        target_label: service
+        replacement: 'msp-ssl-tamer'
+
+  # Node exporter for system metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    metrics_path: '/metrics'
+
+  # PostgreSQL metrics (if using PostgreSQL)
+  - job_name: 'postgres-exporter'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    metrics_path: '/metrics'
+
+  # Redis metrics
+  - job_name: 'redis-exporter'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    metrics_path: '/metrics'
+
+  # Nginx metrics
+  - job_name: 'nginx-exporter'
+    static_configs:
+      - targets: ['nginx-exporter:9113']
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    metrics_path: '/metrics'
+
+  # Certificate Authority health checks
+  - job_name: 'ca-health-checks'
+    static_configs:
+      - targets: ['msp-ssl-tamer:9090']
+    scrape_interval: 60s
+    scrape_timeout: 30s
+    metrics_path: '/metrics/ca-health'
+    params:
+      module: ['ca_health_check']
+
+  # MSP client-specific metrics
+  - job_name: 'msp-client-metrics'
+    static_configs:
+      - targets: ['msp-ssl-tamer:9090']
+    scrape_interval: 60s
+    scrape_timeout: 15s
+    metrics_path: '/metrics/clients'
+    honor_labels: true
+    relabel_configs:
+      - source_labels: [client_id]
+        target_label: msp_client
+      - source_labels: [domain]
+        target_label: certificate_domain
+
+# Storage configuration
+storage:
+  tsdb:
+    path: /prometheus
+    retention.time: 30d
+    retention.size: 10GB
+    wal-compression: true
+
+# Remote write configuration (optional - for long-term storage)
+# remote_write:
+#   - url: "https://your-remote-storage/api/v1/write"
+#     basic_auth:
+#       username: "prometheus"
+#       password: "your-password"
+#     write_relabel_configs:
+#       - source_labels: [__name__]
+#         regex: 'msp_ssl_.*'
+#         action: keep
+
+# Remote read configuration (optional)
+# remote_read:
+#   - url: "https://your-remote-storage/api/v1/read"
+#     basic_auth:
+#       username: "prometheus"
+#       password: "your-password"

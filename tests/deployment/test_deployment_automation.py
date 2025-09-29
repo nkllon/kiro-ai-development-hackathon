@@ -1,421 +1,97 @@
 #!/usr/bin/env python3
 """
-Comprehensive Test Suite for Deployment Automation
+Comprehensive Tests for Deployment Automation
+Task 7.2: Deployment Automation and Validation
 
-This test suite validates all aspects of the deployment automation system
-including staged rollout, health checks, validation, and rollback functionality.
-
-Test Coverage:
-- Deployment manager functionality
-- Health validation system
-- Rollback mechanisms
-- Configuration management
-- Error handling and recovery
-- Performance and reliability
+This test suite covers:
+- Deployment automation functionality
+- Validation system testing
+- Rollback system testing
+- Integration testing
+- Error handling and edge cases
 """
 
 import asyncio
 import json
 import pytest
 import tempfile
-import time
+import yaml
 from datetime import datetime, timedelta
 from pathlib import Path
-from unittest.mock import AsyncMock, MagicMock, patch, mock_open
-import yaml
+from unittest.mock import AsyncMock, MagicMock, patch, Mock
+from typing import Dict, List, Any
 
-# Add src to path for imports
+import aiohttp
+import websockets
+
+# Add project root to path
 import sys
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from scripts.deploy_websocket_fix import (
-    WebSocketDeploymentManager,
-    DeploymentStage,
-    DeploymentStatus,
-    DeploymentConfig,
-    DeploymentResult
+    DeploymentAutomation, DeploymentConfig, DeploymentResult, 
+    DeploymentStage, DeploymentStatus
 )
 from scripts.validate_deployment import (
-    DeploymentValidator,
-    ValidationStatus,
-    ValidationSeverity,
-    ValidationConfig,
-    ValidationResult
+    DeploymentValidator, ValidationResult, ValidationStatus, 
+    ValidationSeverity, ValidationSuite
 )
 from scripts.rollback_deployment import (
-    RollbackManager,
-    RollbackTrigger,
-    RollbackStatus,
-    RollbackConfig,
-    RollbackResult
+    RollbackAutomation, RollbackPlan, RollbackStatus, 
+    RollbackTrigger, RollbackMetrics, RollbackTriggerConfig
 )
 
 
-class TestDeploymentManager:
-    """Test suite for WebSocketDeploymentManager"""
+class TestDeploymentAutomation:
+    """Test suite for deployment automation."""
     
     @pytest.fixture
-    def deployment_config(self):
-        """Create test deployment configuration"""
-        return DeploymentConfig(
-            environments={
+    def temp_config_file(self):
+        """Create temporary configuration file for testing."""
+        config_data = {
+            "environments": {
                 "dev": {
                     "url": "http://localhost:8888",
                     "websocket_url": "ws://localhost:8888/ws",
                     "health_endpoint": "/health",
-                    "tunnel_config": "test-tunnel-config.yml",
-                    "replicas": 1
+                    "tunnel_config": "test-config.yml",
+                    "replicas": 1,
+                    "expected_response_time_ms": 500
                 },
                 "staging": {
-                    "url": "https://staging-test.example.com",
-                    "websocket_url": "wss://staging-test.example.com/ws",
+                    "url": "https://staging-test.nkllon.com",
+                    "websocket_url": "wss://staging-test.nkllon.com/ws",
                     "health_endpoint": "/health",
-                    "tunnel_config": "test-tunnel-config-staging.yml",
-                    "replicas": 2
+                    "tunnel_config": "test-config-staging.yml",
+                    "replicas": 2,
+                    "expected_response_time_ms": 1000
+                },
+                "production": {
+                    "url": "https://test.nkllon.com",
+                    "websocket_url": "wss://test.nkllon.com/ws",
+                    "health_endpoint": "/health",
+                    "tunnel_config": "test-config.yml",
+                    "replicas": 3,
+                    "expected_response_time_ms": 1500
                 }
             },
-            health_check_timeout=60,
-            health_check_interval=5,
-            max_health_check_retries=10,
-            rollback_timeout=120,
-            auto_rollback_threshold=0.8
-        )
-    
-    @pytest.fixture
-    def deployment_manager(self, deployment_config):
-        """Create deployment manager with test configuration"""
-        with patch('scripts.deploy_websocket_fix.WebSocketHealthValidator'), \
-             patch('scripts.deploy_websocket_fix.EndpointMonitor'), \
-             patch('scripts.deploy_websocket_fix.FailureDetector'), \
-             patch('scripts.deploy_websocket_fix.WebSocketHealthMonitor'):
-            
-            manager = WebSocketDeploymentManager()
-            manager.config = deployment_config
-            return manager
-    
-    @pytest.mark.asyncio
-    async def test_deployment_manager_initialization(self, deployment_manager):
-        """Test deployment manager initialization"""
-        assert deployment_manager.config is not None
-        assert len(deployment_manager.config.environments) == 2
-        assert deployment_manager.deployment_results == []
-        assert deployment_manager.current_deployment is None
-        assert deployment_manager.rollback_history == []
-    
-    @pytest.mark.asyncio
-    async def test_deploy_websocket_fix_success(self, deployment_manager):
-        """Test successful deployment across stages"""
-        # Mock successful health checks
-        deployment_manager._comprehensive_health_check = AsyncMock(return_value=0.9)
-        deployment_manager._pre_deployment_validation = AsyncMock()
-        deployment_manager._post_deployment_validation = AsyncMock()
-        deployment_manager._backup_configuration = AsyncMock()
-        deployment_manager._deploy_configuration = AsyncMock()
-        
-        # Execute deployment
-        result = await deployment_manager.deploy_websocket_fix(
-            stages=[DeploymentStage.DEV, DeploymentStage.STAGING],
-            test_mode=True
-        )
-        
-        # Verify results
-        assert result["overall_status"] == "success"
-        assert len(result["stage_results"]) == 2
-        assert "dev" in result["stage_results"]
-        assert "staging" in result["stage_results"]
-        assert len(deployment_manager.deployment_results) == 2
-        
-        # Verify all deployments completed successfully
-        for deployment_result in deployment_manager.deployment_results:
-            assert deployment_result.status == DeploymentStatus.COMPLETED
-            assert deployment_result.health_score >= 0.8
-    
-    @pytest.mark.asyncio
-    async def test_deploy_websocket_fix_failure(self, deployment_manager):
-        """Test deployment failure and rollback"""
-        # Mock health check failure
-        deployment_manager._comprehensive_health_check = AsyncMock(return_value=0.5)
-        deployment_manager._pre_deployment_validation = AsyncMock()
-        deployment_manager._backup_configuration = AsyncMock()
-        deployment_manager._deploy_configuration = AsyncMock()
-        deployment_manager._trigger_rollback = AsyncMock()
-        
-        # Execute deployment
-        result = await deployment_manager.deploy_websocket_fix(
-            stages=[DeploymentStage.DEV],
-            test_mode=True
-        )
-        
-        # Verify failure handling
-        assert result["overall_status"] == "failed"
-        assert len(deployment_manager.deployment_results) == 1
-        
-        deployment_result = deployment_manager.deployment_results[0]
-        assert deployment_result.status == DeploymentStatus.FAILED
-        assert deployment_result.health_score < 0.8
-    
-    @pytest.mark.asyncio
-    async def test_health_check_validation(self, deployment_manager):
-        """Test comprehensive health check functionality"""
-        # Mock individual health check methods
-        deployment_manager._check_http_health = AsyncMock(return_value=1.0)
-        deployment_manager._check_websocket_health = AsyncMock(return_value=0.8)
-        deployment_manager._check_tunnel_health = AsyncMock(return_value=1.0)
-        deployment_manager._check_performance_metrics = AsyncMock(return_value=0.9)
-        
-        # Test health check
-        health_score = await deployment_manager._comprehensive_health_check(DeploymentStage.DEV)
-        
-        # Verify health score calculation
-        assert health_score > 0.8
-        assert health_score <= 1.0
-    
-    @pytest.mark.asyncio
-    async def test_pre_deployment_validation(self, deployment_manager):
-        """Test pre-deployment validation"""
-        # Mock validation methods
-        deployment_manager._validate_configuration_files = AsyncMock()
-        deployment_manager._validate_environment_connectivity = AsyncMock()
-        deployment_manager._validate_resource_availability = AsyncMock()
-        deployment_manager._validate_backup_systems = AsyncMock()
-        
-        # Test validation
-        await deployment_manager._pre_deployment_validation([DeploymentStage.DEV])
-        
-        # Verify all validation methods were called
-        deployment_manager._validate_configuration_files.assert_called_once()
-        deployment_manager._validate_environment_connectivity.assert_called_once()
-        deployment_manager._validate_resource_availability.assert_called_once()
-        deployment_manager._validate_backup_systems.assert_called_once()
-    
-    @pytest.mark.asyncio
-    async def test_configuration_backup_and_restore(self, deployment_manager):
-        """Test configuration backup and restore functionality"""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            # Set up test environment
-            backup_dir = Path(temp_dir) / "backups" / "dev"
-            backup_dir.mkdir(parents=True)
-            
-            test_config_file = Path(temp_dir) / "test-config.yml"
-            test_config_file.write_text("test: configuration")
-            
-            # Mock environment config
-            deployment_manager.config.environments["dev"]["tunnel_config"] = str(test_config_file)
-            
-            # Test backup
-            await deployment_manager._backup_configuration(DeploymentStage.DEV)
-            
-            # Verify backup was created
-            backup_files = list(backup_dir.glob("*.backup"))
-            assert len(backup_files) == 1
-            
-            # Test restore
-            await deployment_manager._restore_configuration(DeploymentStage.DEV)
-            
-            # Verify configuration was restored
-            assert test_config_file.exists()
-
-
-class TestDeploymentValidator:
-    """Test suite for DeploymentValidator"""
-    
-    @pytest.fixture
-    def validation_config(self):
-        """Create test validation configuration"""
-        return ValidationConfig(
-            environments={
-                "dev": {
-                    "url": "http://localhost:8888",
-                    "websocket_url": "ws://localhost:8888/ws",
-                    "health_endpoint": "/health",
-                    "expected_response_time_ms": 500
-                }
-            },
-            thresholds={
+            "health_check_timeout": 300,
+            "health_check_interval": 10,
+            "max_health_check_retries": 30,
+            "rollback_timeout": 180,
+            "auto_rollback_threshold": 0.8,
+            "zero_downtime": True,
+            "max_parallel_deployments": 1,
+            "deployment_timeout": 600,
+            "validation_thresholds": {
                 "max_latency_ms": 1000,
                 "max_error_rate": 0.05,
                 "min_throughput_msgs_per_sec": 1.0,
                 "max_connection_failure_rate": 0.1,
                 "min_health_score": 0.8,
                 "max_response_time_ms": 2000
-            }
-        )
-    
-    @pytest.fixture
-    def validator(self, validation_config):
-        """Create validator with test configuration"""
-        with patch('scripts.validate_deployment.WebSocketHealthValidator'), \
-             patch('scripts.validate_deployment.EndpointMonitor'), \
-             patch('scripts.validate_deployment.FailureDetector'), \
-             patch('scripts.validate_deployment.WebSocketHealthMonitor'), \
-             patch('scripts.validate_deployment.QualityMetricsCollector'):
-            
-            validator = DeploymentValidator()
-            validator.config = validation_config
-            return validator
-    
-    @pytest.mark.asyncio
-    async def test_validator_initialization(self, validator):
-        """Test validator initialization"""
-        assert validator.config is not None
-        assert len(validator.config.environments) == 1
-        assert validator.validation_results == []
-        assert validator.test_metrics == {}
-    
-    @pytest.mark.asyncio
-    async def test_validate_deployment_success(self, validator):
-        """Test successful deployment validation"""
-        # Mock successful validation methods
-        validator._validate_health_endpoints = AsyncMock(return_value=[
-            ValidationResult("health_endpoint", ValidationStatus.PASSED, ValidationSeverity.LOW, "OK")
-        ])
-        validator._validate_performance_metrics = AsyncMock(return_value=[
-            ValidationResult("performance", ValidationStatus.PASSED, ValidationSeverity.LOW, "OK")
-        ])
-        validator._validate_connectivity = AsyncMock(return_value=[
-            ValidationResult("connectivity", ValidationStatus.PASSED, ValidationSeverity.LOW, "OK")
-        ])
-        validator._validate_websocket_functionality = AsyncMock(return_value=[
-            ValidationResult("websocket", ValidationStatus.PASSED, ValidationSeverity.LOW, "OK")
-        ])
-        validator._validate_tunnel_health = AsyncMock(return_value=[
-            ValidationResult("tunnel", ValidationStatus.PASSED, ValidationSeverity.LOW, "OK")
-        ])
-        validator._validate_monitoring_systems = AsyncMock(return_value=[
-            ValidationResult("monitoring", ValidationStatus.PASSED, ValidationSeverity.LOW, "OK")
-        ])
-        validator._validate_quality_assurance = AsyncMock(return_value=[
-            ValidationResult("quality", ValidationStatus.PASSED, ValidationSeverity.LOW, "OK")
-        ])
-        
-        # Execute validation
-        result = await validator.validate_deployment(
-            environments=["dev"],
-            validation_types=["health_check", "performance", "connectivity"]
-        )
-        
-        # Verify results
-        assert result["overall_status"] == "passed"
-        assert len(result["environment_results"]) == 1
-        assert "dev" in result["environment_results"]
-        assert result["total_checks"] > 0
-        assert result["passed_checks"] > 0
-        assert result["failed_checks"] == 0
-    
-    @pytest.mark.asyncio
-    async def test_validate_deployment_failure(self, validator):
-        """Test deployment validation with failures"""
-        # Mock validation methods with failures
-        validator._validate_health_endpoints = AsyncMock(return_value=[
-            ValidationResult("health_endpoint", ValidationStatus.FAILED, ValidationSeverity.CRITICAL, "Failed")
-        ])
-        validator._validate_performance_metrics = AsyncMock(return_value=[
-            ValidationResult("performance", ValidationStatus.PASSED, ValidationSeverity.LOW, "OK")
-        ])
-        validator._validate_connectivity = AsyncMock(return_value=[
-            ValidationResult("connectivity", ValidationStatus.PASSED, ValidationSeverity.LOW, "OK")
-        ])
-        
-        # Execute validation
-        result = await validator.validate_deployment(
-            environments=["dev"],
-            validation_types=["health_check", "performance", "connectivity"]
-        )
-        
-        # Verify failure handling
-        assert result["overall_status"] == "failed"
-        assert result["failed_checks"] > 0
-        assert len(result["critical_issues"]) > 0
-    
-    @pytest.mark.asyncio
-    async def test_health_endpoint_validation(self, validator):
-        """Test health endpoint validation"""
-        with patch('requests.get') as mock_get:
-            # Mock successful response
-            mock_response = MagicMock()
-            mock_response.status_code = 200
-            mock_response.content = b"OK"
-            mock_response.elapsed.total_seconds.return_value = 0.1
-            mock_get.return_value = mock_response
-            
-            # Test validation
-            results = await validator._validate_health_endpoints("dev", validator.config.environments["dev"])
-            
-            # Verify results
-            assert len(results) == 1
-            result = results[0]
-            assert result.check_name == "health_endpoint"
-            assert result.status == ValidationStatus.PASSED
-            assert result.details["status_code"] == 200
-    
-    @pytest.mark.asyncio
-    async def test_performance_metrics_validation(self, validator):
-        """Test performance metrics validation"""
-        # Mock health monitor metrics
-        validator.health_monitor.get_performance_metrics.return_value = {
-            'latency_stats': {'avg': 500},
-            'websocket_error_rate': 0.02,
-            'websocket_throughput_msgs_per_sec': 2.0
-        }
-        
-        # Test validation
-        results = await validator._validate_performance_metrics("dev", validator.config.environments["dev"])
-        
-        # Verify results
-        assert len(results) == 3  # latency, error_rate, throughput
-        
-        # Check latency validation
-        latency_result = next(r for r in results if r.check_name == "latency_check")
-        assert latency_result.status == ValidationStatus.PASSED
-        
-        # Check error rate validation
-        error_result = next(r for r in results if r.check_name == "error_rate_check")
-        assert error_result.status == ValidationStatus.PASSED
-        
-        # Check throughput validation
-        throughput_result = next(r for r in results if r.check_name == "throughput_check")
-        assert throughput_result.status == ValidationStatus.PASSED
-    
-    @pytest.mark.asyncio
-    async def test_report_generation(self, validator):
-        """Test validation report generation"""
-        # Add some test results
-        validator.validation_results = [
-            ValidationResult("test_check", ValidationStatus.PASSED, ValidationSeverity.LOW, "Test passed"),
-            ValidationResult("test_check2", ValidationStatus.FAILED, ValidationSeverity.CRITICAL, "Test failed")
-        ]
-        
-        with tempfile.TemporaryDirectory() as temp_dir:
-            # Set report directory
-            validator.config.generate_report = True
-            validator.config.report_format = "json"
-            
-            # Mock report directory creation
-            with patch('pathlib.Path.mkdir'):
-                with patch('builtins.open', mock_open()) as mock_file:
-                    await validator._generate_validation_report({"dev": {"overall_status": "passed"}})
-                    
-                    # Verify report was generated
-                    mock_file.assert_called()
-
-
-class TestRollbackManager:
-    """Test suite for RollbackManager"""
-    
-    @pytest.fixture
-    def rollback_config(self):
-        """Create test rollback configuration"""
-        return RollbackConfig(
-            environments={
-                "dev": {
-                    "url": "http://localhost:8888",
-                    "websocket_url": "ws://localhost:8888/ws",
-                    "health_endpoint": "/health",
-                    "backup_dir": "backups/dev",
-                    "config_files": ["test-config.yml"]
-                }
             },
-            triggers={
+            "rollback_triggers": {
                 "health_threshold": {
                     "enabled": True,
                     "threshold": 0.7,
@@ -427,324 +103,867 @@ class TestRollbackManager:
                     "check_interval": 60
                 }
             },
-            rollback_timeout=120,
-            validation_timeout=60,
-            max_rollback_attempts=3
-        )
+            "backup_retention_days": 7,
+            "generate_report": True,
+            "alert_on_failure": True
+        }
+        
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.yml', delete=False) as f:
+            yaml.dump(config_data, f)
+            yield f.name
+        
+        # Cleanup
+        Path(f.name).unlink(missing_ok=True)
     
     @pytest.fixture
-    def rollback_manager(self, rollback_config):
-        """Create rollback manager with test configuration"""
-        with patch('scripts.rollback_deployment.WebSocketHealthValidator'), \
-             patch('scripts.rollback_deployment.EndpointMonitor'), \
-             patch('scripts.rollback_deployment.FailureDetector'), \
-             patch('scripts.rollback_deployment.WebSocketHealthMonitor'):
+    def deployment_automation(self, temp_config_file):
+        """Create deployment automation instance for testing."""
+        with patch('scripts.deploy_websocket_fix.TunnelConfigManager'):
+            return DeploymentAutomation(temp_config_file)
+    
+    def test_deployment_automation_init(self, temp_config_file):
+        """Test deployment automation initialization."""
+        with patch('scripts.deploy_websocket_fix.TunnelConfigManager'):
+            deployment = DeploymentAutomation(temp_config_file)
             
-            manager = RollbackManager()
-            manager.config = rollback_config
-            return manager
+            assert deployment.config_path == Path(temp_config_file)
+            assert "dev" in deployment.config.environments
+            assert "staging" in deployment.config.environments
+            assert "production" in deployment.config.environments
+            assert deployment.config.zero_downtime is True
+            assert deployment.config.auto_rollback_threshold == 0.8
+    
+    def test_get_deployment_stages(self, deployment_automation):
+        """Test deployment stage determination."""
+        # Test dev stage
+        stages = deployment_automation._get_deployment_stages("dev")
+        assert stages == ["dev"]
+        
+        # Test staging stage
+        stages = deployment_automation._get_deployment_stages("staging")
+        assert stages == ["dev", "staging"]
+        
+        # Test production stage
+        stages = deployment_automation._get_deployment_stages("production")
+        assert stages == ["dev", "staging", "production"]
     
     @pytest.mark.asyncio
-    async def test_rollback_manager_initialization(self, rollback_manager):
-        """Test rollback manager initialization"""
-        assert rollback_manager.config is not None
-        assert len(rollback_manager.config.environments) == 1
-        assert rollback_manager.rollback_history == []
-        assert rollback_manager.active_rollbacks == {}
-        assert rollback_manager.monitoring_active is False
+    async def test_pre_deployment_validation(self, deployment_automation):
+        """Test pre-deployment validation."""
+        with patch.object(deployment_automation, '_check_observatory_server') as mock_server, \
+             patch.object(deployment_automation, '_validate_tunnel_config') as mock_tunnel, \
+             patch.object(deployment_automation, '_check_websocket_endpoints') as mock_websocket, \
+             patch.object(deployment_automation, '_validate_deployment_config') as mock_config:
+            
+            # Mock successful checks
+            mock_server.return_value = {"running": True}
+            mock_tunnel.return_value = {"valid": True, "errors": []}
+            mock_websocket.return_value = {"all_healthy": True}
+            mock_config.return_value = {"valid": True, "errors": []}
+            
+            result = await deployment_automation._pre_deployment_validation()
+            
+            assert result["success"] is True
+            assert len(result["errors"]) == 0
+            assert "observatory_server" in result["checks"]
+            assert "tunnel_config" in result["checks"]
+            assert "websocket_endpoints" in result["checks"]
+            assert "deployment_config" in result["checks"]
     
     @pytest.mark.asyncio
-    async def test_execute_rollback_success(self, rollback_manager):
-        """Test successful rollback execution"""
-        # Mock successful rollback methods
-        rollback_manager._get_environment_health_score = AsyncMock(return_value=0.9)
-        rollback_manager._validate_backup_availability = AsyncMock()
-        rollback_manager._stop_services = AsyncMock()
-        rollback_manager._restore_configuration = AsyncMock(return_value=["test-config.yml"])
-        rollback_manager._restart_services = AsyncMock()
-        rollback_manager._validate_rollback = AsyncMock(return_value={"status": "passed"})
-        
-        # Execute rollback
-        result = await rollback_manager.execute_rollback(
-            environment="dev",
-            trigger=RollbackTrigger.MANUAL
-        )
-        
-        # Verify results
-        assert result.environment == "dev"
-        assert result.trigger == RollbackTrigger.MANUAL
-        assert result.status == RollbackStatus.COMPLETED
-        assert result.health_score_after > result.health_score_before
-        assert "test-config.yml" in result.restored_files
-        assert len(rollback_manager.rollback_history) == 1
+    async def test_pre_deployment_validation_failure(self, deployment_automation):
+        """Test pre-deployment validation with failures."""
+        with patch.object(deployment_automation, '_check_observatory_server') as mock_server, \
+             patch.object(deployment_automation, '_validate_tunnel_config') as mock_tunnel, \
+             patch.object(deployment_automation, '_check_websocket_endpoints') as mock_websocket, \
+             patch.object(deployment_automation, '_validate_deployment_config') as mock_config:
+            
+            # Mock failed checks
+            mock_server.return_value = {"running": False}
+            mock_tunnel.return_value = {"valid": False, "errors": ["Invalid config"]}
+            mock_websocket.return_value = {"all_healthy": True}
+            mock_config.return_value = {"valid": True, "errors": []}
+            
+            result = await deployment_automation._pre_deployment_validation()
+            
+            assert result["success"] is False
+            assert len(result["errors"]) > 0
+            assert "Observatory server is not running" in result["errors"]
+            assert "Invalid config" in result["errors"]
     
     @pytest.mark.asyncio
-    async def test_execute_rollback_failure(self, rollback_manager):
-        """Test rollback execution with failure"""
-        # Mock rollback failure
-        rollback_manager._get_environment_health_score = AsyncMock(return_value=0.5)
-        rollback_manager._validate_backup_availability = AsyncMock(side_effect=Exception("Backup not found"))
-        
-        # Execute rollback
-        result = await rollback_manager.execute_rollback(
-            environment="dev",
-            trigger=RollbackTrigger.MANUAL
-        )
-        
-        # Verify failure handling
-        assert result.status == RollbackStatus.FAILED
-        assert "Backup not found" in result.error_message
-        assert len(rollback_manager.rollback_history) == 1
+    async def test_deploy_to_stage_success(self, deployment_automation):
+        """Test successful deployment to stage."""
+        with patch.object(deployment_automation, '_apply_tunnel_config') as mock_apply, \
+             patch.object(deployment_automation, '_perform_health_checks') as mock_health, \
+             patch.object(deployment_automation, '_validate_websocket_functionality') as mock_websocket:
+            
+            # Mock successful operations
+            mock_apply.return_value = {"success": True}
+            mock_health.return_value = {"health_score": 0.9}
+            mock_websocket.return_value = {"success": True, "errors": []}
+            
+            result = await deployment_automation._deploy_to_stage("dev")
+            
+            assert result.success is True
+            assert result.status == DeploymentStatus.COMPLETED
+            assert result.health_score == 0.9
+            assert result.error_message is None
     
     @pytest.mark.asyncio
-    async def test_rollback_trigger_checks(self, rollback_manager):
-        """Test rollback trigger condition checks"""
-        # Mock health score below threshold
-        rollback_manager._get_environment_health_score = AsyncMock(return_value=0.5)
-        
-        # Test health threshold trigger
-        should_rollback = await rollback_manager._check_rollback_trigger(
-            "dev", "health_threshold", {"threshold": 0.7}
-        )
-        assert should_rollback is True
-        
-        # Mock health score above threshold
-        rollback_manager._get_environment_health_score = AsyncMock(return_value=0.9)
-        
-        should_rollback = await rollback_manager._check_rollback_trigger(
-            "dev", "health_threshold", {"threshold": 0.7}
-        )
-        assert should_rollback is False
+    async def test_deploy_to_stage_failure(self, deployment_automation):
+        """Test failed deployment to stage."""
+        with patch.object(deployment_automation, '_apply_tunnel_config') as mock_apply:
+            
+            # Mock failed tunnel configuration
+            mock_apply.return_value = {"success": False, "error": "Config failed"}
+            
+            result = await deployment_automation._deploy_to_stage("dev")
+            
+            assert result.success is False
+            assert result.status == DeploymentStatus.FAILED
+            assert "Config failed" in result.error_message
     
     @pytest.mark.asyncio
-    async def test_emergency_rollback(self, rollback_manager):
-        """Test emergency rollback functionality"""
-        # Mock rollback execution
-        rollback_manager.execute_rollback = AsyncMock(return_value=RollbackResult(
-            environment="dev",
-            trigger=RollbackTrigger.EMERGENCY,
-            status=RollbackStatus.COMPLETED,
-            start_time=datetime.now(),
-            end_time=datetime.now()
-        ))
-        
-        # Execute emergency rollback
-        results = await rollback_manager.emergency_rollback(["dev"])
-        
-        # Verify results
-        assert len(results) == 1
-        assert "dev" in results
-        assert results["dev"].status == RollbackStatus.COMPLETED
-        assert results["dev"].trigger == RollbackTrigger.EMERGENCY
+    async def test_perform_health_checks(self, deployment_automation):
+        """Test health check performance."""
+        with patch.object(deployment_automation, '_check_http_health') as mock_http, \
+             patch.object(deployment_automation, '_check_websocket_health') as mock_ws, \
+             patch.object(deployment_automation, '_check_response_time') as mock_response:
+            
+            # Mock successful health checks
+            mock_http.return_value = {"status": "healthy", "status_code": 200}
+            mock_ws.return_value = {"status": "healthy"}
+            mock_response.return_value = {"status": "healthy", "response_time_ms": 500}
+            
+            env_config = deployment_automation.config.environments["dev"]
+            result = await deployment_automation._perform_health_checks("dev", env_config)
+            
+            assert result["health_score"] > 0
+            assert result["overall_status"] == "healthy"
+            assert "http" in result["checks"]
+            assert "websocket" in result["checks"]
+            assert "response_time" in result["checks"]
     
     @pytest.mark.asyncio
-    async def test_backup_validation(self, rollback_manager):
-        """Test backup validation functionality"""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            # Set up test backup directory
-            backup_dir = Path(temp_dir) / "backups" / "dev"
-            backup_dir.mkdir(parents=True)
-            
-            # Create test backup file
-            backup_file = backup_dir / "test-config.yml.backup"
-            backup_file.write_text("test configuration")
-            
-            # Update config
-            rollback_manager.config.environments["dev"]["backup_dir"] = str(backup_dir)
-            
-            # Test backup validation
-            await rollback_manager._validate_backup_availability("dev")
-            
-            # Should not raise exception
-    
-    @pytest.mark.asyncio
-    async def test_configuration_restore(self, rollback_manager):
-        """Test configuration restore functionality"""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            # Set up test environment
-            backup_dir = Path(temp_dir) / "backups" / "dev"
-            backup_dir.mkdir(parents=True)
-            
-            # Create test backup file
-            backup_file = backup_dir / "test-config.yml.backup"
-            backup_file.write_text("restored configuration")
-            
-            # Create current config file
-            current_config = Path(temp_dir) / "test-config.yml"
-            current_config.write_text("current configuration")
-            
-            # Update config
-            rollback_manager.config.environments["dev"]["backup_dir"] = str(backup_dir)
-            rollback_manager.config.environments["dev"]["config_files"] = [str(current_config)]
-            
-            # Test configuration restore
-            restored_files = await rollback_manager._restore_configuration("dev")
-            
-            # Verify restoration
-            assert len(restored_files) == 1
-            assert str(current_config) in restored_files
-            assert current_config.read_text() == "restored configuration"
-
-
-class TestIntegrationScenarios:
-    """Integration test scenarios for deployment automation"""
-    
-    @pytest.mark.asyncio
-    async def test_full_deployment_workflow(self):
-        """Test complete deployment workflow from start to finish"""
-        # This test would integrate all components together
-        # For now, we'll test the basic flow
+    async def test_calculate_health_score(self, deployment_automation):
+        """Test health score calculation."""
+        # Test all healthy
+        checks = {
+            "http": {"status": "healthy"},
+            "websocket": {"status": "healthy"},
+            "response_time": {"status": "healthy"}
+        }
+        score = deployment_automation._calculate_health_score(checks)
+        assert score == 1.0
         
-        with patch('scripts.deploy_websocket_fix.WebSocketDeploymentManager') as mock_deploy, \
-             patch('scripts.validate_deployment.DeploymentValidator') as mock_validate, \
-             patch('scripts.rollback_deployment.RollbackManager') as mock_rollback:
+        # Test mixed results
+        checks = {
+            "http": {"status": "healthy"},
+            "websocket": {"status": "slow"},
+            "response_time": {"status": "unhealthy"}
+        }
+        score = deployment_automation._calculate_health_score(checks)
+        assert score == 0.5  # (1.0 + 0.5 + 0.0) / 3
+        
+        # Test empty checks
+        score = deployment_automation._calculate_health_score({})
+        assert score == 0.0
+    
+    @pytest.mark.asyncio
+    async def test_validate_websocket_functionality(self, deployment_automation):
+        """Test WebSocket functionality validation."""
+        with patch('websockets.connect') as mock_connect:
+            # Mock successful WebSocket connection
+            mock_websocket = AsyncMock()
+            mock_websocket.ping = AsyncMock()
+            mock_websocket.send = AsyncMock()
+            mock_connect.return_value.__aenter__.return_value = mock_websocket
             
-            # Mock successful deployment
-            mock_deploy.return_value.deploy_websocket_fix.return_value = {
-                "overall_status": "success",
-                "stage_results": {"dev": {"status": "completed"}}
-            }
+            env_config = deployment_automation.config.environments["dev"]
+            result = await deployment_automation._validate_websocket_functionality("dev", env_config)
             
-            # Mock successful validation
-            mock_validate.return_value.validate_deployment.return_value = {
-                "overall_status": "passed",
-                "total_checks": 10,
-                "passed_checks": 10,
-                "failed_checks": 0
-            }
-            
-            # Test deployment
-            deploy_manager = mock_deploy.return_value
-            deploy_result = await deploy_manager.deploy_websocket_fix(
-                stages=[DeploymentStage.DEV],
-                test_mode=True
+            assert result["success"] is True
+            assert len(result["errors"]) == 0
+            assert len(result["endpoints"]) == 4  # All WebSocket endpoints
+    
+    @pytest.mark.asyncio
+    async def test_rollback_deployment(self, deployment_automation):
+        """Test deployment rollback."""
+        # Create mock deployment results
+        mock_results = [
+            DeploymentResult(
+                stage="dev",
+                status=DeploymentStatus.COMPLETED,
+                start_time=datetime.now(),
+                end_time=datetime.now(),
+                success=True
             )
+        ]
+        
+        with patch.object(deployment_automation.tunnel_manager, 'get_version_history') as mock_history, \
+             patch.object(deployment_automation.tunnel_manager, 'rollback_config') as mock_rollback:
             
-            # Test validation
-            validator = mock_validate.return_value
-            validation_result = await validator.validate_deployment(["dev"])
-            
-            # Verify results
-            assert deploy_result["overall_status"] == "success"
-            assert validation_result["overall_status"] == "passed"
-    
-    @pytest.mark.asyncio
-    async def test_deployment_failure_and_rollback(self):
-        """Test deployment failure followed by automatic rollback"""
-        with patch('scripts.deploy_websocket_fix.WebSocketDeploymentManager') as mock_deploy, \
-             patch('scripts.rollback_deployment.RollbackManager') as mock_rollback:
-            
-            # Mock deployment failure
-            mock_deploy.return_value.deploy_websocket_fix.return_value = {
-                "overall_status": "failed",
-                "stage_results": {"dev": {"status": "failed", "error": "Health check failed"}}
-            }
+            # Mock version history
+            mock_version = Mock()
+            mock_version.version_id = "test-version"
+            mock_version.description = "Backup before configuration change"
+            mock_history.return_value = [mock_version]
             
             # Mock successful rollback
-            mock_rollback.return_value.execute_rollback.return_value = RollbackResult(
-                environment="dev",
-                trigger=RollbackTrigger.MANUAL,
-                status=RollbackStatus.COMPLETED,
+            mock_rollback.return_value = True, "Rollback successful"
+            
+            result = await deployment_automation._rollback_deployment(mock_results)
+            
+            assert result["success"] is True
+            assert len(result["stages_rolled_back"]) == 1
+            assert "dev" in result["stages_rolled_back"]
+    
+    @pytest.mark.asyncio
+    async def test_backup_current_config(self, deployment_automation):
+        """Test configuration backup."""
+        with patch.object(deployment_automation.tunnel_manager, 'backup_current_config') as mock_backup:
+            mock_backup.return_value = "backup-123"
+            
+            result = await deployment_automation._backup_current_config()
+            
+            assert result["success"] is True
+            assert result["backup_id"] == "backup-123"
+    
+    @pytest.mark.asyncio
+    async def test_check_observatory_server(self, deployment_automation):
+        """Test observatory server check."""
+        with patch('aiohttp.ClientSession') as mock_session:
+            # Mock successful response
+            mock_response = AsyncMock()
+            mock_response.status = 200
+            mock_session.return_value.__aenter__.return_value.get.return_value.__aenter__.return_value = mock_response
+            
+            result = await deployment_automation._check_observatory_server()
+            
+            assert result["running"] is True
+            assert result["status_code"] == 200
+    
+    def test_validate_deployment_config(self, deployment_automation):
+        """Test deployment configuration validation."""
+        result = deployment_automation._validate_deployment_config()
+        
+        assert result["valid"] is True
+        assert len(result["errors"]) == 0
+    
+    @pytest.mark.asyncio
+    async def test_generate_deployment_report(self, deployment_automation):
+        """Test deployment report generation."""
+        # Create mock deployment results
+        mock_results = [
+            DeploymentResult(
+                stage="dev",
+                status=DeploymentStatus.COMPLETED,
                 start_time=datetime.now(),
-                end_time=datetime.now()
+                end_time=datetime.now(),
+                success=True,
+                health_score=0.9
+            ),
+            DeploymentResult(
+                stage="staging",
+                status=DeploymentStatus.COMPLETED,
+                start_time=datetime.now(),
+                end_time=datetime.now(),
+                success=True,
+                health_score=0.85
             )
-            
-            # Test deployment failure
-            deploy_manager = mock_deploy.return_value
-            deploy_result = await deploy_manager.deploy_websocket_fix(
-                stages=[DeploymentStage.DEV],
-                test_mode=True
-            )
-            
-            # Test rollback
-            rollback_manager = mock_rollback.return_value
-            rollback_result = await rollback_manager.execute_rollback("dev")
-            
-            # Verify results
-            assert deploy_result["overall_status"] == "failed"
-            assert rollback_result.status == RollbackStatus.COMPLETED
-    
-    @pytest.mark.asyncio
-    async def test_health_monitoring_and_auto_rollback(self):
-        """Test continuous health monitoring with automatic rollback"""
-        with patch('scripts.rollback_deployment.RollbackManager') as mock_rollback:
-            
-            # Mock rollback manager
-            rollback_manager = mock_rollback.return_value
-            rollback_manager.monitoring_active = True
-            rollback_manager._check_rollback_trigger = AsyncMock(return_value=True)
-            rollback_manager._execute_rollback = AsyncMock()
-            
-            # Test monitoring
-            await rollback_manager._monitor_environment("dev")
-            
-            # Verify rollback trigger was checked
-            rollback_manager._check_rollback_trigger.assert_called()
-    
-    @pytest.mark.asyncio
-    async def test_configuration_management(self):
-        """Test configuration backup, deployment, and restore"""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            # Create test configuration files
-            config_file = Path(temp_dir) / "test-config.yml"
-            config_file.write_text("original configuration")
-            
-            backup_dir = Path(temp_dir) / "backups"
-            backup_dir.mkdir()
-            
-            # Test backup
-            backup_file = backup_dir / f"{config_file.name}.backup"
-            backup_file.write_text("original configuration")
-            
-            # Modify configuration
-            config_file.write_text("modified configuration")
-            
-            # Test restore
-            config_file.write_text("original configuration")
-            
-            # Verify restoration
-            assert config_file.read_text() == "original configuration"
+        ]
+        
+        report = await deployment_automation._generate_deployment_report(mock_results)
+        
+        assert report["overall_success"] is True
+        assert report["summary"]["total_stages"] == 2
+        assert report["summary"]["successful_stages"] == 2
+        assert report["summary"]["failed_stages"] == 0
+        assert len(report["stages"]) == 2
 
 
-class TestErrorHandling:
-    """Test error handling and edge cases"""
+class TestDeploymentValidator:
+    """Test suite for deployment validator."""
     
-    @pytest.mark.asyncio
-    async def test_network_timeout_handling(self):
-        """Test handling of network timeouts during deployment"""
-        with patch('requests.get') as mock_get:
-            # Mock timeout
-            mock_get.side_effect = requests.exceptions.Timeout("Request timed out")
-            
-            # Test that timeout is handled gracefully
-            # This would be tested in the actual deployment manager
-            assert True  # Placeholder for timeout handling test
-    
-    @pytest.mark.asyncio
-    async def test_invalid_configuration_handling(self):
-        """Test handling of invalid configuration files"""
+    @pytest.fixture
+    def temp_config_file(self):
+        """Create temporary configuration file for testing."""
+        config_data = {
+            "environments": {
+                "dev": {
+                    "url": "http://localhost:8888",
+                    "websocket_url": "ws://localhost:8888/ws",
+                    "health_endpoint": "/health",
+                    "expected_response_time_ms": 500
+                }
+            },
+            "validation_thresholds": {
+                "max_latency_ms": 1000,
+                "max_error_rate": 0.05,
+                "min_throughput_msgs_per_sec": 1.0,
+                "max_connection_failure_rate": 0.1
+            }
+        }
+        
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yml', delete=False) as f:
-            # Write invalid YAML
-            f.write("invalid: yaml: content: [")
-            f.flush()
+            yaml.dump(config_data, f)
+            yield f.name
+        
+        Path(f.name).unlink(missing_ok=True)
+    
+    @pytest.fixture
+    def deployment_validator(self, temp_config_file):
+        """Create deployment validator instance for testing."""
+        with patch('scripts.validate_deployment.TunnelConfigManager'):
+            return DeploymentValidator(temp_config_file)
+    
+    @pytest.mark.asyncio
+    async def test_validate_deployment(self, deployment_validator):
+        """Test complete deployment validation."""
+        with patch.object(deployment_validator, '_validate_environment') as mock_env, \
+             patch.object(deployment_validator, '_validate_cross_environment') as mock_cross, \
+             patch.object(deployment_validator, '_validate_configuration') as mock_config, \
+             patch.object(deployment_validator, '_validate_performance') as mock_perf, \
+             patch.object(deployment_validator, '_validate_security') as mock_security:
             
-            # Test that invalid config is handled
-            # This would be tested in the actual configuration loading
-            assert True  # Placeholder for invalid config handling test
+            # Mock validation results
+            mock_env.return_value = [
+                ValidationResult("test_check", ValidationStatus.PASSED, ValidationSeverity.HIGH, "Test passed")
+            ]
+            mock_cross.return_value = []
+            mock_config.return_value = []
+            mock_perf.return_value = []
+            mock_security.return_value = []
+            
+            suite = await deployment_validator.validate_deployment("dev")
+            
+            assert suite.suite_name == "deployment_validation_dev"
+            assert suite.overall_status == ValidationStatus.PASSED
+            assert len(suite.results) == 1
     
     @pytest.mark.asyncio
-    async def test_concurrent_deployment_prevention(self):
-        """Test prevention of concurrent deployments"""
-        # This test would verify that only one deployment can run at a time
-        assert True  # Placeholder for concurrent deployment prevention test
+    async def test_validate_environment(self, deployment_validator):
+        """Test environment validation."""
+        with patch.object(deployment_validator, '_validate_http_health') as mock_http, \
+             patch.object(deployment_validator, '_validate_websocket_health') as mock_ws, \
+             patch.object(deployment_validator, '_validate_response_time') as mock_response, \
+             patch.object(deployment_validator, '_validate_websocket_endpoints') as mock_endpoints, \
+             patch.object(deployment_validator, '_validate_tunnel_configuration') as mock_tunnel:
+            
+            # Mock successful validations
+            mock_http.return_value = ValidationResult("http_health", ValidationStatus.PASSED, ValidationSeverity.HIGH, "HTTP healthy")
+            mock_ws.return_value = ValidationResult("websocket_health", ValidationStatus.PASSED, ValidationSeverity.HIGH, "WebSocket healthy")
+            mock_response.return_value = ValidationResult("response_time", ValidationStatus.PASSED, ValidationSeverity.MEDIUM, "Response time OK")
+            mock_endpoints.return_value = ValidationResult("websocket_endpoints", ValidationStatus.PASSED, ValidationSeverity.HIGH, "All endpoints healthy")
+            mock_tunnel.return_value = ValidationResult("tunnel_config", ValidationStatus.PASSED, ValidationSeverity.HIGH, "Tunnel config valid")
+            
+            results = await deployment_validator._validate_environment("dev")
+            
+            assert len(results) == 5
+            assert all(r.status == ValidationStatus.PASSED for r in results)
     
     @pytest.mark.asyncio
-    async def test_resource_exhaustion_handling(self):
-        """Test handling of resource exhaustion scenarios"""
-        # This test would verify graceful handling of resource issues
-        assert True  # Placeholder for resource exhaustion handling test
+    async def test_validate_http_health(self, deployment_validator):
+        """Test HTTP health validation."""
+        with patch('aiohttp.ClientSession') as mock_session:
+            # Mock successful response
+            mock_response = AsyncMock()
+            mock_response.status = 200
+            mock_session.return_value.__aenter__.return_value.get.return_value.__aenter__.return_value = mock_response
+            
+            env_config = deployment_validator.config["environments"]["dev"]
+            result = await deployment_validator._validate_http_health("dev", env_config)
+            
+            assert result.status == ValidationStatus.PASSED
+            assert result.severity == ValidationSeverity.HIGH
+            assert "HTTP health check passed" in result.message
+    
+    @pytest.mark.asyncio
+    async def test_validate_websocket_health(self, deployment_validator):
+        """Test WebSocket health validation."""
+        with patch('websockets.connect') as mock_connect:
+            # Mock successful WebSocket connection
+            mock_websocket = AsyncMock()
+            mock_websocket.ping = AsyncMock()
+            mock_websocket.send = AsyncMock()
+            mock_connect.return_value.__aenter__.return_value = mock_websocket
+            
+            env_config = deployment_validator.config["environments"]["dev"]
+            result = await deployment_validator._validate_websocket_health("dev", env_config)
+            
+            assert result.status == ValidationStatus.PASSED
+            assert result.severity == ValidationSeverity.HIGH
+            assert "WebSocket health check passed" in result.message
+    
+    @pytest.mark.asyncio
+    async def test_validate_response_time(self, deployment_validator):
+        """Test response time validation."""
+        with patch('aiohttp.ClientSession') as mock_session:
+            # Mock response with good timing
+            mock_response = AsyncMock()
+            mock_response.status = 200
+            
+            async def mock_get(*args, **kwargs):
+                await asyncio.sleep(0.1)  # Simulate 100ms response
+                return mock_response
+            
+            mock_session.return_value.__aenter__.return_value.get = mock_get
+            
+            env_config = deployment_validator.config["environments"]["dev"]
+            result = await deployment_validator._validate_response_time("dev", env_config)
+            
+            assert result.status == ValidationStatus.PASSED
+            assert result.severity == ValidationSeverity.MEDIUM
+    
+    @pytest.mark.asyncio
+    async def test_validate_websocket_endpoints(self, deployment_validator):
+        """Test WebSocket endpoints validation."""
+        with patch('websockets.connect') as mock_connect:
+            # Mock successful WebSocket connections
+            mock_websocket = AsyncMock()
+            mock_websocket.ping = AsyncMock()
+            mock_websocket.send = AsyncMock()
+            mock_connect.return_value.__aenter__.return_value = mock_websocket
+            
+            env_config = deployment_validator.config["environments"]["dev"]
+            result = await deployment_validator._validate_websocket_endpoints("dev", env_config)
+            
+            assert result.status == ValidationStatus.PASSED
+            assert result.severity == ValidationSeverity.HIGH
+            assert "All WebSocket endpoints healthy" in result.message
+    
+    def test_calculate_overall_status(self, deployment_validator):
+        """Test overall status calculation."""
+        # Test all passed
+        results = [
+            ValidationResult("test1", ValidationStatus.PASSED, ValidationSeverity.HIGH, "Test 1"),
+            ValidationResult("test2", ValidationStatus.PASSED, ValidationSeverity.MEDIUM, "Test 2")
+        ]
+        status = deployment_validator._calculate_overall_status(results)
+        assert status == ValidationStatus.PASSED
+        
+        # Test with failures
+        results = [
+            ValidationResult("test1", ValidationStatus.PASSED, ValidationSeverity.HIGH, "Test 1"),
+            ValidationResult("test2", ValidationStatus.FAILED, ValidationSeverity.CRITICAL, "Test 2")
+        ]
+        status = deployment_validator._calculate_overall_status(results)
+        assert status == ValidationStatus.FAILED
+        
+        # Test with warnings
+        results = [
+            ValidationResult("test1", ValidationStatus.PASSED, ValidationSeverity.HIGH, "Test 1"),
+            ValidationResult("test2", ValidationStatus.WARNING, ValidationSeverity.MEDIUM, "Test 2")
+        ]
+        status = deployment_validator._calculate_overall_status(results)
+        assert status == ValidationStatus.WARNING
+    
+    def test_generate_summary(self, deployment_validator):
+        """Test summary generation."""
+        results = [
+            ValidationResult("test1", ValidationStatus.PASSED, ValidationSeverity.HIGH, "Test 1", execution_time_ms=100),
+            ValidationResult("test2", ValidationStatus.FAILED, ValidationSeverity.CRITICAL, "Test 2", execution_time_ms=200),
+            ValidationResult("test3", ValidationStatus.WARNING, ValidationSeverity.MEDIUM, "Test 3", execution_time_ms=150)
+        ]
+        
+        summary = deployment_validator._generate_summary(results)
+        
+        assert summary["total_checks"] == 3
+        assert summary["passed_checks"] == 1
+        assert summary["failed_checks"] == 1
+        assert summary["warning_checks"] == 1
+        assert summary["critical_checks"] == 1
+        assert summary["high_checks"] == 1
+        assert summary["medium_checks"] == 1
+        assert summary["average_execution_time_ms"] == 150.0
+        assert summary["success_rate"] == 33.3
+
+
+class TestRollbackAutomation:
+    """Test suite for rollback automation."""
+    
+    @pytest.fixture
+    def temp_config_file(self):
+        """Create temporary configuration file for testing."""
+        config_data = {
+            "environments": {
+                "dev": {
+                    "url": "http://localhost:8888",
+                    "websocket_url": "ws://localhost:8888/ws",
+                    "health_endpoint": "/health"
+                }
+            },
+            "rollback_triggers": {
+                "health_threshold": {
+                    "enabled": True,
+                    "threshold": 0.7,
+                    "check_interval": 30,
+                    "cooldown_period": 300
+                },
+                "error_rate": {
+                    "enabled": True,
+                    "threshold": 0.1,
+                    "check_interval": 60,
+                    "cooldown_period": 300
+                }
+            }
+        }
+        
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.yml', delete=False) as f:
+            yaml.dump(config_data, f)
+            yield f.name
+        
+        Path(f.name).unlink(missing_ok=True)
+    
+    @pytest.fixture
+    def rollback_automation(self, temp_config_file):
+        """Create rollback automation instance for testing."""
+        with patch('scripts.rollback_deployment.TunnelConfigManager'):
+            return RollbackAutomation(temp_config_file)
+    
+    def test_rollback_automation_init(self, temp_config_file):
+        """Test rollback automation initialization."""
+        with patch('scripts.rollback_deployment.TunnelConfigManager'):
+            rollback = RollbackAutomation(temp_config_file)
+            
+            assert rollback.config_path == Path(temp_config_file)
+            assert "dev" in rollback.config["environments"]
+            assert len(rollback.trigger_configs) == 2
+            assert rollback.trigger_configs["health_threshold"].enabled is True
+            assert rollback.trigger_configs["error_rate"].enabled is True
+    
+    @pytest.mark.asyncio
+    async def test_collect_metrics(self, rollback_automation):
+        """Test metrics collection."""
+        with patch.object(rollback_automation, '_calculate_health_score') as mock_health, \
+             patch.object(rollback_automation, '_calculate_error_rate') as mock_error, \
+             patch.object(rollback_automation, '_calculate_latency') as mock_latency, \
+             patch.object(rollback_automation, '_calculate_connection_failure_rate') as mock_connection:
+            
+            # Mock metrics
+            mock_health.return_value = 0.9
+            mock_error.return_value = 0.05
+            mock_latency.return_value = 500.0
+            mock_connection.return_value = 0.02
+            
+            metrics = await rollback_automation._collect_metrics("dev")
+            
+            assert metrics.health_score == 0.9
+            assert metrics.error_rate == 0.05
+            assert metrics.latency_ms == 500.0
+            assert metrics.connection_failure_rate == 0.02
+            assert metrics.environment == "dev"
+    
+    @pytest.mark.asyncio
+    async def test_evaluate_trigger_health_threshold(self, rollback_automation):
+        """Test health threshold trigger evaluation."""
+        trigger_config = RollbackTriggerConfig(enabled=True, threshold=0.7, check_interval=30)
+        metrics = RollbackMetrics(
+            health_score=0.5,  # Below threshold
+            error_rate=0.05,
+            latency_ms=500.0,
+            connection_failure_rate=0.02,
+            timestamp=datetime.now(),
+            environment="dev"
+        )
+        
+        should_rollback, reason = await rollback_automation._evaluate_trigger(
+            "health_threshold", trigger_config, metrics
+        )
+        
+        assert should_rollback is True
+        assert "Health score 0.50 below threshold 0.7" in reason
+    
+    @pytest.mark.asyncio
+    async def test_evaluate_trigger_error_rate(self, rollback_automation):
+        """Test error rate trigger evaluation."""
+        trigger_config = RollbackTriggerConfig(enabled=True, threshold=0.1, check_interval=60)
+        metrics = RollbackMetrics(
+            health_score=0.9,
+            error_rate=0.15,  # Above threshold
+            latency_ms=500.0,
+            connection_failure_rate=0.02,
+            timestamp=datetime.now(),
+            environment="dev"
+        )
+        
+        should_rollback, reason = await rollback_automation._evaluate_trigger(
+            "error_rate", trigger_config, metrics
+        )
+        
+        assert should_rollback is True
+        assert "Error rate 0.15 above threshold 0.1" in reason
+    
+    @pytest.mark.asyncio
+    async def test_manual_rollback(self, rollback_automation):
+        """Test manual rollback."""
+        with patch.object(rollback_automation.tunnel_manager, 'get_version_history') as mock_history, \
+             patch.object(rollback_automation, '_execute_rollback') as mock_execute:
+            
+            # Mock version history
+            mock_version = Mock()
+            mock_version.version_id = "test-version"
+            mock_history.return_value = [mock_version]
+            
+            # Mock successful rollback execution
+            mock_execute.return_value = {
+                "success": True,
+                "rollback_id": "manual-123",
+                "target_version": "test-version"
+            }
+            
+            result = await rollback_automation.manual_rollback("dev", "test-version", "Test rollback")
+            
+            assert result["success"] is True
+            assert result["rollback_id"] == "manual-123"
+    
+    @pytest.mark.asyncio
+    async def test_emergency_rollback(self, rollback_automation):
+        """Test emergency rollback."""
+        with patch.object(rollback_automation.tunnel_manager, 'get_version_history') as mock_history, \
+             patch.object(rollback_automation, '_execute_rollback') as mock_execute:
+            
+            # Mock version history with stable version
+            mock_current = Mock()
+            mock_current.version_id = "current-version"
+            
+            mock_stable = Mock()
+            mock_stable.version_id = "stable-version"
+            mock_stable.description = "Backup before configuration change"
+            
+            mock_history.return_value = [mock_current, mock_stable]
+            
+            # Mock successful rollback execution
+            mock_execute.return_value = {
+                "success": True,
+                "rollback_id": "emergency-123",
+                "target_version": "stable-version"
+            }
+            
+            result = await rollback_automation.emergency_rollback("dev", "Emergency test")
+            
+            assert result["success"] is True
+            assert result["rollback_id"] == "emergency-123"
+    
+    @pytest.mark.asyncio
+    async def test_execute_rollback(self, rollback_automation):
+        """Test rollback execution."""
+        plan = RollbackPlan(
+            rollback_id="test-rollback",
+            trigger=RollbackTrigger.MANUAL,
+            target_version="target-version",
+            current_version="current-version",
+            environment="dev",
+            reason="Test rollback",
+            created_at=datetime.now()
+        )
+        
+        with patch.object(rollback_automation.tunnel_manager, 'rollback_config') as mock_rollback, \
+             patch.object(rollback_automation, '_verify_rollback') as mock_verify:
+            
+            # Mock successful rollback
+            mock_rollback.return_value = True, "Rollback successful"
+            mock_verify.return_value = {"success": True, "checks": {}}
+            
+            result = await rollback_automation._execute_rollback(plan)
+            
+            assert result["success"] is True
+            assert result["rollback_id"] == "test-rollback"
+            assert result["target_version"] == "target-version"
+    
+    @pytest.mark.asyncio
+    async def test_verify_rollback(self, rollback_automation):
+        """Test rollback verification."""
+        plan = RollbackPlan(
+            rollback_id="test-rollback",
+            trigger=RollbackTrigger.MANUAL,
+            target_version="target-version",
+            current_version="current-version",
+            environment="dev",
+            reason="Test rollback",
+            created_at=datetime.now()
+        )
+        
+        with patch.object(rollback_automation, '_verify_http_health') as mock_http, \
+             patch.object(rollback_automation, '_verify_websocket_health') as mock_ws, \
+             patch.object(rollback_automation, '_verify_tunnel_config') as mock_tunnel:
+            
+            # Mock successful verifications
+            mock_http.return_value = {"success": True, "status_code": 200}
+            mock_ws.return_value = {"success": True}
+            mock_tunnel.return_value = {"success": True, "validation_status": "valid"}
+            
+            result = await rollback_automation._verify_rollback(plan)
+            
+            assert result["success"] is True
+            assert len(result["checks"]) == 3
+            assert len(result["errors"]) == 0
+    
+    def test_get_rollback_status(self, rollback_automation):
+        """Test rollback status retrieval."""
+        # Test general status
+        status = rollback_automation.get_rollback_status()
+        
+        assert "active_rollbacks" in status
+        assert "total_rollbacks" in status
+        assert "monitoring_active" in status
+        assert "triggers_enabled" in status
+    
+    def test_get_rollback_history(self, rollback_automation):
+        """Test rollback history retrieval."""
+        # Add some mock rollbacks to history
+        mock_rollback = RollbackPlan(
+            rollback_id="test-1",
+            trigger=RollbackTrigger.MANUAL,
+            target_version="target-1",
+            current_version="current-1",
+            environment="dev",
+            reason="Test 1",
+            created_at=datetime.now(),
+            status=RollbackStatus.COMPLETED
+        )
+        rollback_automation.rollback_history.append(mock_rollback)
+        
+        history = rollback_automation.get_rollback_history()
+        
+        assert len(history) == 1
+        assert history[0]["rollback_id"] == "test-1"
+        assert history[0]["status"] == "completed"
+    
+    def test_get_available_versions(self, rollback_automation):
+        """Test available versions retrieval."""
+        with patch.object(rollback_automation.tunnel_manager, 'get_version_history') as mock_history:
+            # Mock version history
+            mock_version = Mock()
+            mock_version.version_id = "test-version"
+            mock_version.description = "Backup before configuration change"
+            mock_version.created_at = datetime.now()
+            mock_history.return_value = [mock_version]
+            
+            versions = rollback_automation.get_available_versions()
+            
+            assert len(versions) == 1
+            assert versions[0]["version_id"] == "test-version"
+            assert versions[0]["is_stable"] is True
+
+
+class TestIntegration:
+    """Integration tests for deployment automation."""
+    
+    @pytest.fixture
+    def temp_config_file(self):
+        """Create temporary configuration file for integration testing."""
+        config_data = {
+            "environments": {
+                "dev": {
+                    "url": "http://localhost:8888",
+                    "websocket_url": "ws://localhost:8888/ws",
+                    "health_endpoint": "/health",
+                    "expected_response_time_ms": 500
+                }
+            },
+            "health_check_timeout": 300,
+            "rollback_timeout": 180,
+            "auto_rollback_threshold": 0.8,
+            "validation_thresholds": {
+                "max_latency_ms": 1000,
+                "max_error_rate": 0.05
+            },
+            "rollback_triggers": {
+                "health_threshold": {
+                    "enabled": True,
+                    "threshold": 0.7,
+                    "check_interval": 30
+                }
+            }
+        }
+        
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.yml', delete=False) as f:
+            yaml.dump(config_data, f)
+            yield f.name
+        
+        Path(f.name).unlink(missing_ok=True)
+    
+    @pytest.mark.asyncio
+    async def test_full_deployment_workflow(self, temp_config_file):
+        """Test complete deployment workflow."""
+        with patch('scripts.deploy_websocket_fix.TunnelConfigManager') as mock_tunnel_manager, \
+             patch('scripts.deploy_websocket_fix.aiohttp.ClientSession') as mock_session, \
+             patch('scripts.deploy_websocket_fix.websockets.connect') as mock_websockets:
+            
+            # Mock tunnel manager
+            mock_tunnel_instance = Mock()
+            mock_tunnel_instance.generate_websocket_config.return_value = {"tunnel": "test"}
+            mock_tunnel_instance.validate_config.return_value = Mock(is_valid=True, errors=[])
+            mock_tunnel_instance.apply_config.return_value = True
+            mock_tunnel_instance.backup_current_config.return_value = "backup-123"
+            mock_tunnel_instance.get_version_history.return_value = [
+                Mock(version_id="current", description="Current"),
+                Mock(version_id="backup", description="Backup before configuration change")
+            ]
+            mock_tunnel_instance.rollback_config.return_value = True, "Rollback successful"
+            mock_tunnel_manager.return_value = mock_tunnel_instance
+            
+            # Mock HTTP responses
+            mock_response = AsyncMock()
+            mock_response.status = 200
+            mock_session.return_value.__aenter__.return_value.get.return_value.__aenter__.return_value = mock_response
+            
+            # Mock WebSocket connections
+            mock_websocket = AsyncMock()
+            mock_websocket.ping = AsyncMock()
+            mock_websocket.send = AsyncMock()
+            mock_websockets.return_value.__aenter__.return_value = mock_websocket
+            
+            # Initialize deployment automation
+            deployment = DeploymentAutomation(temp_config_file)
+            
+            # Execute deployment
+            result = await deployment.deploy_websocket_fix("dev", force_deploy=True)
+            
+            assert result["overall_success"] is True
+            assert result["summary"]["total_stages"] == 1
+            assert result["summary"]["successful_stages"] == 1
+    
+    @pytest.mark.asyncio
+    async def test_deployment_with_rollback(self, temp_config_file):
+        """Test deployment with automatic rollback."""
+        with patch('scripts.deploy_websocket_fix.TunnelConfigManager') as mock_tunnel_manager, \
+             patch('scripts.deploy_websocket_fix.aiohttp.ClientSession') as mock_session, \
+             patch('scripts.deploy_websocket_fix.websockets.connect') as mock_websockets:
+            
+            # Mock tunnel manager
+            mock_tunnel_instance = Mock()
+            mock_tunnel_instance.generate_websocket_config.return_value = {"tunnel": "test"}
+            mock_tunnel_instance.validate_config.return_value = Mock(is_valid=True, errors=[])
+            mock_tunnel_instance.apply_config.return_value = True
+            mock_tunnel_instance.backup_current_config.return_value = "backup-123"
+            mock_tunnel_instance.get_version_history.return_value = [
+                Mock(version_id="current", description="Current"),
+                Mock(version_id="backup", description="Backup before configuration change")
+            ]
+            mock_tunnel_instance.rollback_config.return_value = True, "Rollback successful"
+            mock_tunnel_manager.return_value = mock_tunnel_instance
+            
+            # Mock HTTP responses (simulate failure)
+            mock_response = AsyncMock()
+            mock_response.status = 500  # Simulate server error
+            mock_session.return_value.__aenter__.return_value.get.return_value.__aenter__.return_value = mock_response
+            
+            # Mock WebSocket connections (simulate failure)
+            mock_websockets.side_effect = Exception("Connection failed")
+            
+            # Initialize deployment automation
+            deployment = DeploymentAutomation(temp_config_file)
+            
+            # Execute deployment (should trigger rollback)
+            result = await deployment.deploy_websocket_fix("dev", force_deploy=True)
+            
+            # Should have attempted rollback due to failures
+            assert result["overall_success"] is False
+            assert result["summary"]["failed_stages"] > 0
 
 
 if __name__ == "__main__":
-    # Run tests with pytest
-    pytest.main([__file__, "-v", "--tb=short"])
+    pytest.main([__file__, "-v"])

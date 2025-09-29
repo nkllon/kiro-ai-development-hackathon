@@ -11,8 +11,19 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple, Union
-import lz4.frame
-import msgpack
+try:
+    import lz4.frame
+    LZ4_AVAILABLE = True
+except ImportError:
+    LZ4_AVAILABLE = False
+    lz4 = None
+
+try:
+    import msgpack
+    MSGPACK_AVAILABLE = True
+except ImportError:
+    MSGPACK_AVAILABLE = False
+    msgpack = None
 
 logger = logging.getLogger(__name__)
 
@@ -91,8 +102,8 @@ class CompressionMetrics:
 @dataclass
 class CompressionConfig:
     """Configuration for compression and serialization."""
-    default_algorithm: CompressionAlgorithm = CompressionAlgorithm.LZ4
-    default_format: SerializationFormat = SerializationFormat.MSGPACK
+    default_algorithm: CompressionAlgorithm = CompressionAlgorithm.LZ4 if LZ4_AVAILABLE else CompressionAlgorithm.GZIP
+    default_format: SerializationFormat = SerializationFormat.MSGPACK if MSGPACK_AVAILABLE else SerializationFormat.JSON
     compression_threshold: int = 1024  # bytes
     max_compression_level: int = 9
     enable_adaptive_compression: bool = True
@@ -227,6 +238,8 @@ class CompressionHandler:
         if format_type == SerializationFormat.JSON:
             return json.dumps(message, separators=(',', ':')).encode('utf-8')
         elif format_type == SerializationFormat.MSGPACK:
+            if not MSGPACK_AVAILABLE:
+                raise ValueError("msgpack library not available")
             return msgpack.packb(message)
         elif format_type == SerializationFormat.PICKLE:
             return pickle.dumps(message, protocol=pickle.HIGHEST_PROTOCOL)
@@ -242,6 +255,8 @@ class CompressionHandler:
         if format_type == SerializationFormat.JSON:
             return json.loads(data.decode('utf-8'))
         elif format_type == SerializationFormat.MSGPACK:
+            if not MSGPACK_AVAILABLE:
+                raise ValueError("msgpack library not available")
             return msgpack.unpackb(data)
         elif format_type == SerializationFormat.PICKLE:
             return pickle.loads(data)
@@ -255,6 +270,8 @@ class CompressionHandler:
         elif algorithm == CompressionAlgorithm.ZLIB:
             return zlib.compress(data, level=self.config.max_compression_level)
         elif algorithm == CompressionAlgorithm.LZ4:
+            if not LZ4_AVAILABLE:
+                raise ValueError("lz4 library not available")
             return lz4.frame.compress(data)
         elif algorithm == CompressionAlgorithm.BROTLI:
             # Brotli compression would require the brotli library
@@ -270,6 +287,8 @@ class CompressionHandler:
         elif algorithm == CompressionAlgorithm.ZLIB:
             return zlib.decompress(data)
         elif algorithm == CompressionAlgorithm.LZ4:
+            if not LZ4_AVAILABLE:
+                raise ValueError("lz4 library not available")
             return lz4.frame.decompress(data)
         elif algorithm == CompressionAlgorithm.BROTLI:
             # Brotli decompression would require the brotli library
@@ -301,21 +320,27 @@ class CompressionHandler:
         if data_size < 4096:
             try:
                 gzip_compressed = gzip.compress(data)
-                lz4_compressed = lz4.frame.compress(data)
                 
-                gzip_ratio = len(gzip_compressed) / data_size
-                lz4_ratio = len(lz4_compressed) / data_size
-                
-                # Choose the better compression
-                if lz4_ratio < gzip_ratio:
-                    return CompressionAlgorithm.LZ4
+                if LZ4_AVAILABLE:
+                    lz4_compressed = lz4.frame.compress(data)
+                    gzip_ratio = len(gzip_compressed) / data_size
+                    lz4_ratio = len(lz4_compressed) / data_size
+                    
+                    # Choose the better compression
+                    if lz4_ratio < gzip_ratio:
+                        return CompressionAlgorithm.LZ4
+                    else:
+                        return CompressionAlgorithm.GZIP
                 else:
                     return CompressionAlgorithm.GZIP
             except Exception:
                 return default_algorithm
         
-        # For larger data, use LZ4 by default (faster)
-        return CompressionAlgorithm.LZ4
+        # For larger data, use LZ4 by default (faster) if available
+        if LZ4_AVAILABLE:
+            return CompressionAlgorithm.LZ4
+        else:
+            return CompressionAlgorithm.GZIP
 
     def _get_cache_key(
         self, 

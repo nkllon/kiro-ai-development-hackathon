@@ -20,6 +20,13 @@ import time
 import threading
 from contextlib import contextmanager
 
+# Import tracing capabilities
+try:
+    from src.beast_mode.tracing.tracer import get_tracer
+    TRACING_AVAILABLE = True
+except ImportError:
+    TRACING_AVAILABLE = False
+
 
 class ModuleStatus(Enum):
     """Module operational status - RDI Compliant"""
@@ -113,6 +120,8 @@ class ReflectiveModule(ABC):
         # Initialize Prometheus metrics if enabled
         if self._enable_prometheus:
             self._initialize_prometheus_metrics()
+        
+        # Distributed tracing will be initialized on-demand
 
     @abstractmethod
     def get_module_info(self) -> Dict[str, Any]:
@@ -766,3 +775,141 @@ class ReflectiveModule(ABC):
             help_text += f"\nUse generate_cli_help('<command_name>') for detailed help on specific commands.\n"
             
             return help_text
+
+    def emit_observation(self, message: str, event_type: str = "info", context: Optional[Dict[str, Any]] = None, emoji: Optional[str] = None):
+        """
+        Emit an observation event for the Living Observatory Dashboard
+        
+        This method allows Beastly Modules to emit real-time observations that will
+        be displayed in the Observatory Activity Feed.
+        
+        Args:
+            message: Human-readable description of what happened
+            event_type: Type of event (info, warning, error, success, etc.)
+            context: Additional context data for the event
+            emoji: Optional emoji to display with the event
+        """
+        try:
+            # Create observation event
+            observation = {
+                "timestamp": datetime.now().isoformat(),
+                "module": getattr(self, 'module_id', self.__class__.__name__),
+                "event_type": event_type,
+                "message": message,
+                "emoji": emoji or self._get_default_emoji(event_type),
+                "severity": self._map_event_type_to_severity(event_type),
+                "context": context or {},
+                "correlation_id": self._correlation_id
+            }
+            
+            # Send to Observatory if available
+            self._send_observation_to_observatory(observation)
+            
+            # Log the observation
+            log_level = self._get_log_level_for_event_type(event_type)
+            self._logger.log(log_level, f"📰 {message} {emoji or ''}")
+            
+        except Exception as e:
+            self._logger.error(f"Failed to emit observation: {e}")
+    
+    def _get_default_emoji(self, event_type: str) -> str:
+        """Get default emoji for event type"""
+        emoji_map = {
+            'certificate_lock': '🔒',
+            'websocket_connect': '🔌',
+            'websocket_disconnect': '🔌❌',
+            'cache_invalidate': '🗑️',
+            'database_query': '🗄️',
+            'api_request': '📡',
+            'error': '❌',
+            'warning': '⚠️',
+            'info': 'ℹ️',
+            'success': '✅',
+            'performance': '⚡',
+            'security': '🛡️',
+            'deployment': '🚀',
+            'backup': '💾',
+            'maintenance': '🔧',
+            'monitoring': '👁️',
+            'default': '📊'
+        }
+        return emoji_map.get(event_type, emoji_map['default'])
+    
+    def _map_event_type_to_severity(self, event_type: str) -> str:
+        """Map event type to severity level"""
+        severity_map = {
+            'error': 'error',
+            'warning': 'warning',
+            'success': 'success',
+            'info': 'info',
+            'certificate_lock': 'info',
+            'websocket_connect': 'info',
+            'websocket_disconnect': 'info',
+            'cache_invalidate': 'info',
+            'database_query': 'info',
+            'api_request': 'info',
+            'performance': 'info',
+            'security': 'warning',
+            'deployment': 'info',
+            'backup': 'info',
+            'maintenance': 'info',
+            'monitoring': 'info'
+        }
+        return severity_map.get(event_type, 'info')
+    
+    def _get_log_level_for_event_type(self, event_type: str) -> int:
+        """Get logging level for event type"""
+        level_map = {
+            'error': logging.ERROR,
+            'warning': logging.WARNING,
+            'success': logging.INFO,
+            'info': logging.INFO
+        }
+        severity = self._map_event_type_to_severity(event_type)
+        return level_map.get(severity, logging.INFO)
+    
+    def _send_observation_to_observatory(self, observation: Dict[str, Any]):
+        """Send observation to Observatory WebSocket if available"""
+        try:
+            # Add distributed tracing if available (graceful degradation)
+            if TRACING_AVAILABLE:
+                try:
+                    tracer = get_tracer()
+                    if tracer.is_available():
+                        with tracer.trace_observation_flow(observation):
+                            self._do_send_observation(observation)
+                    else:
+                        self._do_send_observation(observation)
+                except Exception as e:
+                    # Tracing failed, continue without it
+                    self._logger.debug(f"Tracing failed, continuing without: {e}")
+                    self._do_send_observation(observation)
+            else:
+                # No tracing available, work normally
+                self._do_send_observation(observation)
+                
+        except Exception as e:
+            # Don't let observation emission break the main functionality
+            self._logger.debug(f"Could not send observation to Observatory: {e}")
+    
+    def _do_send_observation(self, observation: Dict[str, Any]):
+        """Actually send the observation"""
+        # Try to get the global Observatory observation handler
+        if hasattr(self, '_observatory_handler'):
+            self._observatory_handler.broadcast_observation(observation)
+        else:
+            # Try to import and use the global handler
+            try:
+                from src.beast_mode.observatory.observation_handler import get_global_observation_handler
+                handler = get_global_observation_handler()
+                if handler:
+                    handler.broadcast_observation(observation)
+                else:
+                    self._logger.debug("No global observation handler available")
+            except ImportError:
+                # Observatory not available, just log
+                self._logger.debug("Observatory observation handler not available")
+    
+    def set_observatory_handler(self, handler):
+        """Set the Observatory observation handler for this module"""
+        self._observatory_handler = handler

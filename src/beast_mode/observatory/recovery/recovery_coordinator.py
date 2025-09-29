@@ -1,332 +1,370 @@
 """
-Recovery Coordination System
+Recovery Coordinator
 
-This module provides coordination between different recovery components
-and manages the overall recovery process.
+Coordinates recovery strategies and manages the recovery process.
 """
 
+import asyncio
 import json
 import logging
-import asyncio
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Tuple
+from datetime import datetime
+from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
-from enum import Enum
 
-from .failure_classifier import FailureClassifier, FailureType, FailureContext
-from .recovery_strategies import RecoveryStrategyManager, RecoveryResult, RecoveryAttempt
-from .recovery_validator import RecoveryValidator, ValidationResult
-
-logger = logging.getLogger(__name__)
-
-
-class RecoveryState(Enum):
-    """States of the recovery process"""
-    IDLE = "idle"
-    DETECTING = "detecting"
-    CLASSIFYING = "classifying"
-    RECOVERING = "recovering"
-    VALIDATING = "validating"
-    COMPLETED = "completed"
-    FAILED = "failed"
+from .failure_classifier import FailureClassifier, FailureType, FailureData
+from .recovery_strategies import (
+    RecoveryStrategy,
+    WebSocketReconnectionStrategy,
+    TunnelRestartStrategy,
+    ConfigurationReloadStrategy,
+    BotProtectionClearStrategy,
+    FallbackActivationStrategy,
+    RecoveryAttempt,
+    RecoveryResult
+)
+from .recovery_validator import RecoveryValidator
 
 
 @dataclass
 class RecoverySession:
-    """Information about a recovery session"""
+    """Data structure for a recovery session."""
     session_id: str
+    failure_type: FailureType
     start_time: datetime
     end_time: Optional[datetime] = None
-    state: RecoveryState = RecoveryState.IDLE
-    failure_type: Optional[FailureType] = None
-    recovery_result: Optional[RecoveryResult] = None
-    validation_result: Optional[ValidationResult] = None
+    attempts: List[RecoveryAttempt] = None
     success: bool = False
-    error_message: Optional[str] = None
+    total_recovery_time: float = 0.0
+    final_strategy: Optional[str] = None
+    
+    def __post_init__(self):
+        if self.attempts is None:
+            self.attempts = []
 
 
 class RecoveryCoordinator:
-    """
-    Coordinates the entire recovery process from detection to validation
-    """
+    """Coordinates recovery strategies and manages the recovery process."""
     
     def __init__(self):
+        self.logger = logging.getLogger(__name__)
         self.failure_classifier = FailureClassifier()
-        self.strategy_manager = RecoveryStrategyManager()
         self.recovery_validator = RecoveryValidator()
         
-        self.active_sessions: Dict[str, RecoverySession] = {}
-        self.recovery_history: List[RecoverySession] = []
+        # Initialize recovery strategies
+        self.strategies = [
+            WebSocketReconnectionStrategy(),
+            TunnelRestartStrategy(),
+            ConfigurationReloadStrategy(),
+            BotProtectionClearStrategy(),
+            FallbackActivationStrategy()
+        ]
         
-        self._log_action("recovery_coordinator_init", "completed", {
-            "components_initialized": 3
-        })
-
-    def _log_action(self, action: str, status: str, details: Dict[str, Any] = None) -> None:
-        """Log action in JSON format"""
+        # Sort strategies by priority
+        self.strategies.sort(key=lambda s: s.get_priority())
+        
+        # Recovery configuration
+        self.max_attempts = 3
+        self.max_recovery_time = 300  # 5 minutes
+        self.recovery_timeout = 60  # 1 minute per attempt
+        
+    def _log_action(self, action: str, status: str, details: Dict[str, Any] = None):
+        """Log action in JSON format."""
         log_entry = {
             "timestamp": datetime.utcnow().isoformat(),
             "task": "4.1",
             "action": action,
-            "status": status
+            "status": status,
+            "details": details or {}
         }
-        if details:
-            log_entry["details"] = details
-        
         print(json.dumps(log_entry))
-        logger.info(f"Recovery coordinator action: {action} - {status}", extra=details)
-
-    async def initiate_recovery(self, symptoms: List[str], context: Dict[str, Any] = None) -> RecoverySession:
+        
+    async def coordinate_recovery(self, failure_data: FailureData) -> RecoverySession:
         """
-        Initiate a complete recovery process
+        Coordinate the recovery process for a failure.
         
         Args:
-            symptoms: List of failure symptoms
-            context: Additional context information
+            failure_data: Information about the failure
             
         Returns:
-            RecoverySession: Information about the recovery session
+            RecoverySession: The recovery session results
         """
-        session_id = f"recovery_{datetime.utcnow().strftime('%Y%m%d_%H%M%S_%f')}"
+        session_id = f"recovery_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
         
+        self._log_action("coordinate_recovery", "in_progress", {
+            "session_id": session_id,
+            "failure_type": failure_data.error_message or "unknown",
+            "symptoms": failure_data.symptoms
+        })
+        
+        # Create recovery session
         session = RecoverySession(
             session_id=session_id,
-            start_time=datetime.utcnow(),
-            state=RecoveryState.DETECTING
+            failure_type=FailureType.UNKNOWN,  # Will be updated after classification
+            start_time=datetime.utcnow()
         )
         
-        self.active_sessions[session_id] = session
-        
-        self._log_action("initiate_recovery", "in_progress", {
-            "session_id": session_id,
-            "symptoms_count": len(symptoms)
-        })
-        
         try:
-            # Step 1: Detect and classify failure
-            session.state = RecoveryState.CLASSIFYING
-            failure_type = await self.failure_classifier.detect_failure_symptoms(symptoms)
+            # Step 1: Classify the failure
+            failure_type = await self.failure_classifier.classify_failure(failure_data)
             session.failure_type = failure_type
             
-            # Step 2: Execute recovery strategies
-            session.state = RecoveryState.RECOVERING
-            recovery_result = await self.strategy_manager.execute_recovery(failure_type, context or {})
-            session.recovery_result = recovery_result
-            
-            # Step 3: Validate recovery
-            if recovery_result.success:
-                session.state = RecoveryState.VALIDATING
-                
-                # Create a recovery attempt for validation
-                recovery_attempt = RecoveryAttempt(
-                    strategy_type=recovery_result.strategy_used,
-                    failure_type=failure_type,
-                    attempt_number=recovery_result.attempts_made,
-                    start_time=datetime.utcnow() - timedelta(seconds=recovery_result.total_duration),
-                    end_time=datetime.utcnow(),
-                    success=True,
-                    recovery_data=recovery_result.recovery_data
-                )
-                
-                validation_result = await self.recovery_validator.validate_recovery(recovery_attempt)
-                session.validation_result = validation_result
-                
-                # Check for recurring failures
-                recent_sessions = [
-                    s for s in self.recovery_history
-                    if s.start_time > datetime.utcnow() - timedelta(hours=1)
-                ]
-                recurring_validation = await self.recovery_validator.validate_recurring_failures([])
-                
-                # Overall success if recovery succeeded and validation passed
-                session.success = recovery_result.success and validation_result.overall_success
-            else:
-                session.success = False
-                session.error_message = recovery_result.error_message
-            
-            # Step 4: Complete session
-            session.state = RecoveryState.COMPLETED
-            session.end_time = datetime.utcnow()
-            
-            # Move to history
-            self.recovery_history.append(session)
-            del self.active_sessions[session_id]
-            
-            self._log_action("initiate_recovery", "completed", {
+            self._log_action("failure_classified", "completed", {
                 "session_id": session_id,
-                "success": session.success,
                 "failure_type": failure_type.value,
-                "strategy_used": recovery_result.strategy_used.value if recovery_result else None,
-                "total_duration": (session.end_time - session.start_time).total_seconds()
+                "priority": self.failure_classifier.get_recovery_priority(failure_type)
             })
+            
+            # Step 2: Select appropriate strategies
+            applicable_strategies = await self._select_strategies(failure_type)
+            
+            self._log_action("strategies_selected", "completed", {
+                "session_id": session_id,
+                "applicable_strategies": [s.name for s in applicable_strategies],
+                "strategy_count": len(applicable_strategies)
+            })
+            
+            # Step 3: Execute recovery attempts
+            recovery_success = await self._execute_recovery_attempts(
+                session, applicable_strategies
+            )
+            
+            session.success = recovery_success
+            session.end_time = datetime.utcnow()
+            session.total_recovery_time = (session.end_time - session.start_time).total_seconds()
+            
+            if recovery_success:
+                self._log_action("coordinate_recovery", "completed", {
+                    "session_id": session_id,
+                    "success": True,
+                    "total_recovery_time": session.total_recovery_time,
+                    "attempts_made": len(session.attempts),
+                    "final_strategy": session.final_strategy
+                })
+            else:
+                self._log_action("coordinate_recovery", "failed", {
+                    "session_id": session_id,
+                    "success": False,
+                    "total_recovery_time": session.total_recovery_time,
+                    "attempts_made": len(session.attempts),
+                    "max_attempts_reached": len(session.attempts) >= self.max_attempts
+                })
             
             return session
             
         except Exception as e:
-            session.state = RecoveryState.FAILED
             session.end_time = datetime.utcnow()
-            session.success = False
-            session.error_message = str(e)
+            session.total_recovery_time = (session.end_time - session.start_time).total_seconds()
             
-            # Move to history even on failure
-            self.recovery_history.append(session)
-            if session_id in self.active_sessions:
-                del self.active_sessions[session_id]
-            
-            self._log_action("initiate_recovery", "error", {
+            self._log_action("coordinate_recovery", "error", {
                 "session_id": session_id,
                 "error": str(e),
-                "total_duration": (session.end_time - session.start_time).total_seconds()
+                "total_recovery_time": session.total_recovery_time
             })
             
             return session
-
-    async def quick_recovery(self, failure_type: FailureType, context: Dict[str, Any] = None) -> bool:
-        """
-        Perform a quick recovery without full validation
+    
+    async def _select_strategies(self, failure_type: FailureType) -> List[RecoveryStrategy]:
+        """Select applicable strategies for the failure type."""
+        applicable_strategies = []
         
-        Args:
-            failure_type: The type of failure to recover from
-            context: Additional context information
-            
-        Returns:
-            bool: True if recovery was successful
-        """
-        self._log_action("quick_recovery", "in_progress", {
-            "failure_type": failure_type.value
-        })
+        for strategy in self.strategies:
+            if await strategy.can_handle(failure_type):
+                applicable_strategies.append(strategy)
         
-        try:
-            # Execute recovery strategies
-            recovery_result = await self.strategy_manager.execute_recovery(failure_type, context or {})
-            
-            success = recovery_result.success
-            
-            self._log_action("quick_recovery", "completed", {
-                "failure_type": failure_type.value,
-                "success": success,
-                "strategy_used": recovery_result.strategy_used.value if recovery_result else None
+        return applicable_strategies
+    
+    async def _execute_recovery_attempts(
+        self, 
+        session: RecoverySession, 
+        strategies: List[RecoveryStrategy]
+    ) -> bool:
+        """Execute recovery attempts using the selected strategies."""
+        
+        for attempt_number in range(1, self.max_attempts + 1):
+            self._log_action("recovery_attempt", "in_progress", {
+                "session_id": session.session_id,
+                "attempt_number": attempt_number,
+                "max_attempts": self.max_attempts
             })
             
-            return success
+            # Try each strategy in order of priority
+            for strategy in strategies:
+                try:
+                    # Create recovery attempt
+                    attempt = RecoveryAttempt(
+                        strategy_name=strategy.name,
+                        failure_type=session.failure_type,
+                        attempt_number=attempt_number,
+                        start_time=datetime.utcnow()
+                    )
+                    
+                    # Execute strategy with timeout
+                    recovery_result = await asyncio.wait_for(
+                        strategy.execute(session.failure_type, attempt_number),
+                        timeout=self.recovery_timeout
+                    )
+                    
+                    attempt.end_time = datetime.utcnow()
+                    attempt.success = recovery_result.success
+                    attempt.error_message = recovery_result.error_message
+                    attempt.recovery_data = {
+                        "recovery_time": recovery_result.recovery_time,
+                        "fallback_activated": recovery_result.fallback_activated
+                    }
+                    
+                    session.attempts.append(attempt)
+                    
+                    if recovery_result.success:
+                        # Validate the recovery
+                        validation_success = await self.recovery_validator.verify_recovery_success(attempt)
+                        
+                        if validation_success:
+                            session.final_strategy = strategy.name
+                            
+                            self._log_action("recovery_attempt", "completed", {
+                                "session_id": session.session_id,
+                                "attempt_number": attempt_number,
+                                "strategy": strategy.name,
+                                "success": True,
+                                "recovery_time": recovery_result.recovery_time,
+                                "validation_success": True
+                            })
+                            
+                            return True
+                        else:
+                            self._log_action("recovery_attempt", "validation_failed", {
+                                "session_id": session.session_id,
+                                "attempt_number": attempt_number,
+                                "strategy": strategy.name,
+                                "recovery_success": True,
+                                "validation_success": False
+                            })
+                    else:
+                        self._log_action("recovery_attempt", "failed", {
+                            "session_id": session.session_id,
+                            "attempt_number": attempt_number,
+                            "strategy": strategy.name,
+                            "success": False,
+                            "error": recovery_result.error_message
+                        })
+                        
+                        # If fallback was activated, don't try other strategies
+                        if recovery_result.fallback_activated:
+                            session.final_strategy = strategy.name
+                            return True
+                
+                except asyncio.TimeoutError:
+                    self._log_action("recovery_attempt", "timeout", {
+                        "session_id": session.session_id,
+                        "attempt_number": attempt_number,
+                        "strategy": strategy.name,
+                        "timeout": self.recovery_timeout
+                    })
+                    
+                    # Create failed attempt record
+                    attempt = RecoveryAttempt(
+                        strategy_name=strategy.name,
+                        failure_type=session.failure_type,
+                        attempt_number=attempt_number,
+                        start_time=datetime.utcnow(),
+                        end_time=datetime.utcnow(),
+                        success=False,
+                        error_message="Recovery attempt timed out"
+                    )
+                    session.attempts.append(attempt)
+                
+                except Exception as e:
+                    self._log_action("recovery_attempt", "error", {
+                        "session_id": session.session_id,
+                        "attempt_number": attempt_number,
+                        "strategy": strategy.name,
+                        "error": str(e)
+                    })
+                    
+                    # Create failed attempt record
+                    attempt = RecoveryAttempt(
+                        strategy_name=strategy.name,
+                        failure_type=session.failure_type,
+                        attempt_number=attempt_number,
+                        start_time=datetime.utcnow(),
+                        end_time=datetime.utcnow(),
+                        success=False,
+                        error_message=str(e)
+                    )
+                    session.attempts.append(attempt)
             
-        except Exception as e:
-            self._log_action("quick_recovery", "error", {
-                "failure_type": failure_type.value,
-                "error": str(e)
-            })
-            return False
-
-    def get_recovery_statistics(self) -> Dict[str, Any]:
-        """Get statistics about recovery operations"""
-        total_sessions = len(self.recovery_history)
-        successful_sessions = len([s for s in self.recovery_history if s.success])
+            # Check if we've exceeded max recovery time
+            elapsed_time = (datetime.utcnow() - session.start_time).total_seconds()
+            if elapsed_time > self.max_recovery_time:
+                self._log_action("recovery_timeout", "reached", {
+                    "session_id": session.session_id,
+                    "elapsed_time": elapsed_time,
+                    "max_recovery_time": self.max_recovery_time
+                })
+                break
+            
+            # Wait before next attempt (exponential backoff)
+            if attempt_number < self.max_attempts:
+                wait_time = min(2 ** attempt_number, 30)  # Max 30 seconds
+                self._log_action("recovery_backoff", "waiting", {
+                    "session_id": session.session_id,
+                    "wait_time": wait_time,
+                    "next_attempt": attempt_number + 1
+                })
+                await asyncio.sleep(wait_time)
         
-        # Calculate success rate
-        success_rate = (successful_sessions / total_sessions) if total_sessions > 0 else 0.0
+        return False
+    
+    async def get_recovery_status(self, session_id: str) -> Optional[RecoverySession]:
+        """Get the status of a recovery session."""
+        # In a real implementation, this would retrieve from a persistent store
+        # For now, we'll return None as sessions are not persisted
+        return None
+    
+    async def get_recovery_statistics(self) -> Dict[str, Any]:
+        """Get recovery statistics."""
+        self._log_action("get_recovery_statistics", "in_progress")
         
-        # Get failure type distribution
-        failure_types = {}
-        for session in self.recovery_history:
-            if session.failure_type:
-                failure_types[session.failure_type.value] = failure_types.get(session.failure_type.value, 0) + 1
-        
-        # Get strategy usage distribution
-        strategies = {}
-        for session in self.recovery_history:
-            if session.recovery_result:
-                strategy = session.recovery_result.strategy_used.value
-                strategies[strategy] = strategies.get(strategy, 0) + 1
-        
-        # Calculate average recovery time
-        recovery_times = [
-            (s.end_time - s.start_time).total_seconds()
-            for s in self.recovery_history
-            if s.end_time
-        ]
-        avg_recovery_time = sum(recovery_times) / len(recovery_times) if recovery_times else 0.0
-        
-        stats = {
-            "total_sessions": total_sessions,
-            "successful_sessions": successful_sessions,
-            "success_rate": success_rate,
-            "failure_type_distribution": failure_types,
-            "strategy_usage": strategies,
-            "average_recovery_time": avg_recovery_time,
-            "active_sessions": len(self.active_sessions)
+        # In a real implementation, this would aggregate statistics from persistent storage
+        # For now, return mock statistics
+        statistics = {
+            "total_recoveries": 0,
+            "successful_recoveries": 0,
+            "failed_recoveries": 0,
+            "average_recovery_time": 0.0,
+            "strategy_success_rates": {
+                strategy.name: 0.0 for strategy in self.strategies
+            },
+            "failure_type_distribution": {
+                failure_type.value: 0 for failure_type in FailureType
+            }
         }
         
-        self._log_action("get_recovery_statistics", "completed", {
-            "total_sessions": total_sessions,
-            "success_rate": success_rate
-        })
+        self._log_action("get_recovery_statistics", "completed", statistics)
         
-        return stats
-
-    def get_active_sessions(self) -> List[RecoverySession]:
-        """Get list of active recovery sessions"""
-        return list(self.active_sessions.values())
-
-    def get_recent_sessions(self, hours: int = 24) -> List[RecoverySession]:
-        """Get recent recovery sessions within specified hours"""
-        cutoff_time = datetime.utcnow() - timedelta(hours=hours)
-        return [
-            session for session in self.recovery_history
-            if session.start_time > cutoff_time
-        ]
-
-    async def health_check(self) -> Dict[str, Any]:
-        """Perform health check on recovery system components"""
-        self._log_action("health_check", "in_progress", {})
+        return statistics
+    
+    def get_available_strategies(self) -> List[Dict[str, Any]]:
+        """Get information about available recovery strategies."""
+        strategies_info = []
         
-        health_status = {
-            "overall_health": "healthy",
-            "components": {},
-            "timestamp": datetime.utcnow().isoformat()
+        for strategy in self.strategies:
+            strategies_info.append({
+                "name": strategy.name,
+                "priority": strategy.get_priority(),
+                "description": self._get_strategy_description(strategy.name)
+            })
+        
+        return strategies_info
+    
+    def _get_strategy_description(self, strategy_name: str) -> str:
+        """Get description for a strategy."""
+        descriptions = {
+            "websocket_reconnection": "Simple WebSocket reconnection with exponential backoff",
+            "tunnel_restart": "Restart cloudflared tunnel process",
+            "configuration_reload": "Reload tunnel configuration and restart",
+            "bot_protection_clear": "Wait for Cloudflare bot protection to clear",
+            "fallback_activation": "Activate HTTP polling fallback mode"
         }
         
-        try:
-            # Check failure classifier
-            health_status["components"]["failure_classifier"] = {
-                "status": "healthy",
-                "patterns_loaded": len(self.failure_classifier.failure_patterns)
-            }
-            
-            # Check strategy manager
-            health_status["components"]["strategy_manager"] = {
-                "status": "healthy",
-                "strategies_available": len(self.strategy_manager.strategies)
-            }
-            
-            # Check recovery validator
-            health_status["components"]["recovery_validator"] = {
-                "status": "healthy",
-                "validation_timeout": self.recovery_validator.validation_timeout
-            }
-            
-            # Check for stuck sessions
-            stuck_sessions = [
-                session for session in self.active_sessions.values()
-                if (datetime.utcnow() - session.start_time).total_seconds() > 300  # 5 minutes
-            ]
-            
-            if stuck_sessions:
-                health_status["overall_health"] = "warning"
-                health_status["components"]["active_sessions"] = {
-                    "status": "warning",
-                    "stuck_sessions": len(stuck_sessions)
-                }
-            
-            self._log_action("health_check", "completed", {
-                "overall_health": health_status["overall_health"]
-            })
-            
-        except Exception as e:
-            health_status["overall_health"] = "unhealthy"
-            health_status["error"] = str(e)
-            
-            self._log_action("health_check", "error", {
-                "error": str(e)
-            })
-        
-        return health_status
+        return descriptions.get(strategy_name, "Unknown strategy")

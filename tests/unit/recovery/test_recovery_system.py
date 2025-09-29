@@ -1,253 +1,292 @@
 """
-Unit tests for AutomatedRecoverySystem
+Unit tests for AutomatedRecoverySystem.
 """
 
 import pytest
-import asyncio
-from datetime import datetime, timedelta
-from unittest.mock import AsyncMock, Mock, patch
+from datetime import datetime
+from unittest.mock import AsyncMock, patch, MagicMock
 
-from src.beast_mode.observatory.recovery.recovery_system import AutomatedRecoverySystem, RecoveryMetrics
-from src.beast_mode.observatory.recovery.failure_classifier import FailureType, FailureContext
-from src.beast_mode.observatory.recovery.recovery_strategies import RecoveryResult, RecoveryStrategyType
+from src.beast_mode.observatory.recovery.failure_classifier import FailureType, FailureData
+from src.beast_mode.observatory.recovery.recovery_strategies import RecoveryResult
+from src.beast_mode.observatory.recovery.recovery_system import (
+    AutomatedRecoverySystem,
+    SystemMetrics
+)
 
 
 class TestAutomatedRecoverySystem:
-    """Test cases for AutomatedRecoverySystem"""
+    """Test cases for AutomatedRecoverySystem."""
     
     @pytest.fixture
     def recovery_system(self):
-        """Create recovery system instance for testing"""
-        return AutomatedRecoverySystem(
-            auto_recovery_enabled=True,
-            max_consecutive_failures=3,
-            recovery_cooldown=10.0
-        )
+        """Create an AutomatedRecoverySystem instance."""
+        return AutomatedRecoverySystem()
     
     @pytest.fixture
-    def disabled_recovery_system(self):
-        """Create disabled recovery system for testing"""
-        return AutomatedRecoverySystem(auto_recovery_enabled=False)
+    def sample_failure_data(self):
+        """Create sample failure data."""
+        return {
+            "error_code": 1033,
+            "error_message": "Cloudflare bot protection triggered",
+            "http_status": 403,
+            "symptoms": ["connection refused", "timeout"]
+        }
+    
+    @pytest.mark.asyncio
+    async def test_start_system(self, recovery_system):
+        """Test starting the recovery system."""
+        await recovery_system.start()
+        
+        assert recovery_system.is_active == True
+        assert recovery_system.start_time is not None
+    
+    @pytest.mark.asyncio
+    async def test_stop_system(self, recovery_system):
+        """Test stopping the recovery system."""
+        await recovery_system.start()
+        await recovery_system.stop()
+        
+        assert recovery_system.is_active == False
+        assert recovery_system.metrics.system_uptime > 0
     
     @pytest.mark.asyncio
     async def test_detect_failure(self, recovery_system):
-        """Test failure detection from symptoms"""
-        symptoms = ["connection refused", "timeout error"]
+        """Test failure detection."""
+        symptoms = ["connection refused", "timeout"]
         
-        failure_type = await recovery_system.detect_failure(symptoms)
-        
-        assert failure_type in [FailureType.CONNECTION_REFUSED, FailureType.TIMEOUT]
+        with patch.object(recovery_system.failure_classifier, 'detect_failure_from_symptoms', return_value=FailureType.CONNECTION_REFUSED):
+            failure_type = await recovery_system.detect_failure(symptoms)
+            
+            assert failure_type == FailureType.CONNECTION_REFUSED
+            assert recovery_system.metrics.total_failures_detected == 1
+            assert recovery_system.metrics.last_failure_time is not None
     
     @pytest.mark.asyncio
-    async def test_classify_failure(self, recovery_system):
-        """Test failure classification from detailed data"""
-        failure_data = {
-            "error_message": "Connection refused",
-            "error_code": 1033,
-            "http_status": 403,
-            "retry_count": 2
-        }
-        
-        failure_type = await recovery_system.classify_failure(failure_data)
-        
-        assert failure_type == FailureType.BOT_PROTECTION_TRIGGERED
+    async def test_classify_failure(self, recovery_system, sample_failure_data):
+        """Test failure classification."""
+        with patch.object(recovery_system.failure_classifier, 'classify_failure', return_value=FailureType.BOT_PROTECTION_TRIGGERED):
+            failure_type = await recovery_system.classify_failure(sample_failure_data)
+            
+            assert failure_type == FailureType.BOT_PROTECTION_TRIGGERED
     
     @pytest.mark.asyncio
     async def test_execute_recovery_success(self, recovery_system):
-        """Test successful recovery execution"""
-        with patch.object(recovery_system.strategy_manager, 'execute_recovery') as mock_recovery:
-            mock_recovery.return_value = RecoveryResult(
-                success=True,
-                strategy_used=RecoveryStrategyType.WEBSOCKET_RECONNECTION,
-                attempts_made=1,
-                total_duration=2.0
-            )
-            
+        """Test successful recovery execution."""
+        await recovery_system.start()
+        
+        with patch.object(recovery_system.recovery_coordinator, 'coordinate_recovery', return_value=MagicMock(
+            success=True,
+            total_recovery_time=30.0,
+            final_strategy="websocket_reconnection",
+            session_id="test_session"
+        )):
             result = await recovery_system.execute_recovery(FailureType.CONNECTION_REFUSED)
             
-            assert result.success is True
-            assert result.strategy_used == RecoveryStrategyType.WEBSOCKET_RECONNECTION
-            assert recovery_system.metrics.successful_recoveries == 1
-            assert recovery_system.metrics.consecutive_failures == 0
+            assert result.success == True
+            assert result.strategy_used == "websocket_reconnection"
+            assert result.recovery_time == 30.0
+            assert recovery_system.metrics.total_recoveries_attempted == 1
+            assert recovery_system.metrics.total_recoveries_successful == 1
     
     @pytest.mark.asyncio
     async def test_execute_recovery_failure(self, recovery_system):
-        """Test failed recovery execution"""
-        with patch.object(recovery_system.strategy_manager, 'execute_recovery') as mock_recovery:
-            mock_recovery.return_value = RecoveryResult(
-                success=False,
-                strategy_used=None,
-                attempts_made=3,
-                total_duration=10.0,
-                error_message="All strategies failed"
-            )
+        """Test failed recovery execution."""
+        await recovery_system.start()
+        
+        with patch.object(recovery_system.recovery_coordinator, 'coordinate_recovery', return_value=MagicMock(
+            success=False,
+            total_recovery_time=60.0,
+            final_strategy=None,
+            session_id="test_session"
+        )):
+            result = await recovery_system.execute_recovery(FailureType.BOT_PROTECTION_TRIGGERED)
             
-            result = await recovery_system.execute_recovery(FailureType.UNKNOWN)
-            
-            assert result.success is False
-            assert recovery_system.metrics.failed_recoveries == 1
-            assert recovery_system.metrics.consecutive_failures == 1
+            assert result.success == False
+            assert result.error_message == "Recovery failed"
+            assert recovery_system.metrics.total_recoveries_attempted == 1
+            assert recovery_system.metrics.total_recoveries_successful == 0
     
     @pytest.mark.asyncio
-    async def test_execute_recovery_disabled(self, disabled_recovery_system):
-        """Test recovery execution when disabled"""
-        result = await disabled_recovery_system.execute_recovery(FailureType.CONNECTION_REFUSED)
-        
-        assert result.success is False
-        assert "disabled" in result.error_message.lower()
-    
-    @pytest.mark.asyncio
-    async def test_execute_recovery_cooldown(self, recovery_system):
-        """Test recovery cooldown mechanism"""
-        # Set last recovery attempt to recent time
-        recovery_system.last_recovery_attempt = datetime.utcnow() - timedelta(seconds=5)
-        
+    async def test_execute_recovery_system_inactive(self, recovery_system):
+        """Test recovery execution when system is inactive."""
         result = await recovery_system.execute_recovery(FailureType.CONNECTION_REFUSED)
         
-        assert result.success is False
-        assert "cooldown" in result.error_message.lower()
+        assert result.success == False
+        assert result.error_message == "Recovery system is not active"
+        assert result.strategy_used == "none"
+    
+    @pytest.mark.asyncio
+    async def test_execute_recovery_with_exception(self, recovery_system):
+        """Test recovery execution with exception."""
+        await recovery_system.start()
+        
+        with patch.object(recovery_system.recovery_coordinator, 'coordinate_recovery', side_effect=Exception("Test error")):
+            result = await recovery_system.execute_recovery(FailureType.CONNECTION_REFUSED)
+            
+            assert result.success == False
+            assert result.error_message == "Test error"
     
     @pytest.mark.asyncio
     async def test_validate_recovery(self, recovery_system):
-        """Test recovery validation"""
-        mock_attempt = Mock()
-        mock_attempt.strategy_type = RecoveryStrategyType.WEBSOCKET_RECONNECTION
-        mock_attempt.failure_type = FailureType.CONNECTION_REFUSED
-        mock_attempt.attempt_number = 1
-        mock_attempt.start_time = datetime.utcnow()
-        mock_attempt.end_time = datetime.utcnow()
-        mock_attempt.success = True
+        """Test recovery validation."""
+        from src.beast_mode.observatory.recovery.recovery_strategies import RecoveryAttempt
         
-        with patch.object(recovery_system.recovery_validator, 'validate_recovery') as mock_validate:
-            mock_validate.return_value = Mock(overall_success=True)
-            
-            result = await recovery_system.validate_recovery(mock_attempt)
-            
-            assert result is True
-            mock_validate.assert_called_once()
-    
-    @pytest.mark.asyncio
-    async def test_full_recovery_cycle(self, recovery_system):
-        """Test full recovery cycle"""
-        symptoms = ["connection refused"]
-        context = {"retry_count": 1}
-        
-        with patch.object(recovery_system.coordinator, 'initiate_recovery') as mock_coordinator:
-            mock_session = Mock()
-            mock_session.session_id = "test_session"
-            mock_session.success = True
-            mock_session.failure_type = FailureType.CONNECTION_REFUSED
-            mock_session.start_time = datetime.utcnow()
-            mock_session.end_time = datetime.utcnow()
-            mock_coordinator.return_value = mock_session
-            
-            session = await recovery_system.full_recovery_cycle(symptoms, context)
-            
-            assert session.success is True
-            assert recovery_system.metrics.successful_recoveries == 1
-    
-    def test_add_recovery_callback(self, recovery_system):
-        """Test adding recovery callbacks"""
-        callback = Mock()
-        
-        recovery_system.add_recovery_callback(callback)
-        
-        assert len(recovery_system.recovery_callbacks) == 1
-        assert callback in recovery_system.recovery_callbacks
-    
-    @pytest.mark.asyncio
-    async def test_trigger_recovery_callbacks(self, recovery_system):
-        """Test triggering recovery callbacks"""
-        callback = Mock()
-        recovery_system.add_recovery_callback(callback)
-        
-        result = RecoveryResult(
-            success=True,
-            strategy_used=RecoveryStrategyType.WEBSOCKET_RECONNECTION,
-            attempts_made=1,
-            total_duration=2.0
+        attempt = RecoveryAttempt(
+            strategy_name="websocket_reconnection",
+            failure_type=FailureType.CONNECTION_REFUSED,
+            attempt_number=1,
+            start_time=datetime.utcnow(),
+            success=True
         )
         
-        await recovery_system._trigger_recovery_callbacks(result)
+        with patch.object(recovery_system.recovery_validator, 'verify_recovery_success', return_value=True):
+            result = await recovery_system.validate_recovery(attempt)
+            assert result == True
+    
+    @pytest.mark.asyncio
+    async def test_handle_failure_with_symptoms(self, recovery_system):
+        """Test handling failure with symptoms only."""
+        await recovery_system.start()
         
-        callback.assert_called_once_with(result)
+        symptoms = ["connection refused"]
+        
+        with patch.object(recovery_system, 'detect_failure', return_value=FailureType.CONNECTION_REFUSED), \
+             patch.object(recovery_system, 'execute_recovery', return_value=RecoveryResult(
+                 success=True,
+                 strategy_used="websocket_reconnection",
+                 recovery_time=30.0
+             )):
+            
+            result = await recovery_system.handle_failure(symptoms)
+            
+            assert result.success == True
+            assert result.strategy_used == "websocket_reconnection"
+    
+    @pytest.mark.asyncio
+    async def test_handle_failure_with_data(self, recovery_system, sample_failure_data):
+        """Test handling failure with detailed data."""
+        await recovery_system.start()
+        
+        symptoms = ["connection refused"]
+        
+        with patch.object(recovery_system, 'classify_failure', return_value=FailureType.BOT_PROTECTION_TRIGGERED), \
+             patch.object(recovery_system, 'execute_recovery', return_value=RecoveryResult(
+                 success=True,
+                 strategy_used="bot_protection_clear",
+                 recovery_time=300.0
+             )):
+            
+            result = await recovery_system.handle_failure(symptoms, sample_failure_data)
+            
+            assert result.success == True
+            assert result.strategy_used == "bot_protection_clear"
+    
+    @pytest.mark.asyncio
+    async def test_handle_failure_with_exception(self, recovery_system):
+        """Test handling failure with exception."""
+        await recovery_system.start()
+        
+        symptoms = ["connection refused"]
+        
+        with patch.object(recovery_system, 'detect_failure', side_effect=Exception("Test error")):
+            result = await recovery_system.handle_failure(symptoms)
+            
+            assert result.success == False
+            assert result.error_message == "Test error"
     
     def test_get_system_status(self, recovery_system):
-        """Test getting system status"""
-        # Set some metrics
-        recovery_system.metrics.total_recoveries = 10
-        recovery_system.metrics.successful_recoveries = 8
-        recovery_system.metrics.failed_recoveries = 2
+        """Test getting system status."""
+        status = recovery_system.get_system_status()
         
-        with patch.object(recovery_system.coordinator, 'get_recovery_statistics') as mock_stats:
-            mock_stats.return_value = {"total_sessions": 10, "success_rate": 0.8}
-            
-            status = recovery_system.get_system_status()
-            
-            assert status["system_enabled"] is True
-            assert status["metrics"]["total_recoveries"] == 10
-            assert status["metrics"]["success_rate"] == 0.8
+        assert "is_active" in status
+        assert "uptime_seconds" in status
+        assert "metrics" in status
+        assert "available_strategies" in status
+        assert "configuration" in status
+        
+        metrics = status["metrics"]
+        assert "total_failures_detected" in metrics
+        assert "total_recoveries_attempted" in metrics
+        assert "total_recoveries_successful" in metrics
+        assert "success_rate" in metrics
+        assert "average_recovery_time" in metrics
     
     @pytest.mark.asyncio
-    async def test_health_check_healthy(self, recovery_system):
-        """Test health check when system is healthy"""
-        with patch.object(recovery_system.coordinator, 'health_check') as mock_health:
-            mock_health.return_value = {"overall_health": "healthy"}
+    async def test_get_recovery_statistics(self, recovery_system):
+        """Test getting recovery statistics."""
+        with patch.object(recovery_system.recovery_coordinator, 'get_recovery_statistics', return_value={
+            "total_recoveries": 10,
+            "successful_recoveries": 8,
+            "strategy_success_rates": {}
+        }):
+            stats = await recovery_system.get_recovery_statistics()
             
-            health = await recovery_system.health_check()
+            assert "system_metrics" in stats
+            assert "coordinator_statistics" in stats
+            assert "available_strategies" in stats
             
-            assert health["overall_health"] == "healthy"
-            assert health["escalation_needed"] is False
+            system_metrics = stats["system_metrics"]
+            assert "total_failures_detected" in system_metrics
+            assert "total_recoveries_attempted" in system_metrics
+            assert "success_rate" in system_metrics
     
     @pytest.mark.asyncio
-    async def test_health_check_escalation_needed(self, recovery_system):
-        """Test health check when escalation is needed"""
-        recovery_system.metrics.consecutive_failures = 5  # Exceeds max of 3
-        
-        with patch.object(recovery_system.coordinator, 'health_check') as mock_health:
-            mock_health.return_value = {"overall_health": "healthy"}
+    async def test_get_recovery_statistics_with_exception(self, recovery_system):
+        """Test getting recovery statistics with exception."""
+        with patch.object(recovery_system.recovery_coordinator, 'get_recovery_statistics', side_effect=Exception("Test error")):
+            stats = await recovery_system.get_recovery_statistics()
             
-            health = await recovery_system.health_check()
-            
-            assert health["overall_health"] == "critical"
-            assert health["escalation_needed"] is True
+            assert "system_metrics" in stats
+            assert "error" in stats
+            assert stats["error"] == "Test error"
     
-    def test_enable_auto_recovery(self, recovery_system):
-        """Test enabling auto recovery"""
-        recovery_system.auto_recovery_enabled = False
-        
-        recovery_system.enable_auto_recovery()
-        
-        assert recovery_system.auto_recovery_enabled is True
+    def test_calculate_success_rate_no_attempts(self, recovery_system):
+        """Test success rate calculation with no attempts."""
+        rate = recovery_system._calculate_success_rate()
+        assert rate == 0.0
     
-    def test_disable_auto_recovery(self, recovery_system):
-        """Test disabling auto recovery"""
-        recovery_system.disable_auto_recovery()
+    def test_calculate_success_rate_with_attempts(self, recovery_system):
+        """Test success rate calculation with attempts."""
+        recovery_system.metrics.total_recoveries_attempted = 10
+        recovery_system.metrics.total_recoveries_successful = 8
         
-        assert recovery_system.auto_recovery_enabled is False
-    
-    def test_reset_metrics(self, recovery_system):
-        """Test resetting metrics"""
-        recovery_system.metrics.total_recoveries = 10
-        recovery_system.metrics.successful_recoveries = 8
-        
-        recovery_system.reset_metrics()
-        
-        assert recovery_system.metrics.total_recoveries == 0
-        assert recovery_system.metrics.successful_recoveries == 0
+        rate = recovery_system._calculate_success_rate()
+        assert rate == 0.8
 
 
-class TestRecoveryMetrics:
-    """Test cases for RecoveryMetrics"""
+class TestSystemMetrics:
+    """Test cases for SystemMetrics."""
     
-    def test_recovery_metrics_initialization(self):
-        """Test recovery metrics initialization"""
-        metrics = RecoveryMetrics()
+    def test_system_metrics_creation(self):
+        """Test SystemMetrics creation."""
+        metrics = SystemMetrics()
         
-        assert metrics.total_recoveries == 0
-        assert metrics.successful_recoveries == 0
-        assert metrics.failed_recoveries == 0
+        assert metrics.total_failures_detected == 0
+        assert metrics.total_recoveries_attempted == 0
+        assert metrics.total_recoveries_successful == 0
         assert metrics.average_recovery_time == 0.0
+        assert metrics.last_failure_time is None
         assert metrics.last_recovery_time is None
-        assert metrics.consecutive_failures == 0
-        assert metrics.recovery_rate_24h == 0.0
+        assert metrics.system_uptime == 0.0
+    
+    def test_system_metrics_with_values(self):
+        """Test SystemMetrics with values."""
+        now = datetime.utcnow()
+        
+        metrics = SystemMetrics(
+            total_failures_detected=5,
+            total_recoveries_attempted=4,
+            total_recoveries_successful=3,
+            average_recovery_time=45.0,
+            last_failure_time=now,
+            last_recovery_time=now,
+            system_uptime=3600.0
+        )
+        
+        assert metrics.total_failures_detected == 5
+        assert metrics.total_recoveries_attempted == 4
+        assert metrics.total_recoveries_successful == 3
+        assert metrics.average_recovery_time == 45.0
+        assert metrics.last_failure_time == now
+        assert metrics.last_recovery_time == now
+        assert metrics.system_uptime == 3600.0

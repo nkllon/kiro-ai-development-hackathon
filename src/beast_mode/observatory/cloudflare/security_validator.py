@@ -1,353 +1,534 @@
 """
-Security Validator for Cloudflare Rule Validation.
+Security Validator for Observatory Cloudflare Integration
 
-Validates that whitelist rules maintain security posture and don't create vulnerabilities.
+Validates that Observatory whitelist rules maintain security posture
+and don't create vulnerabilities or bypass important protections.
 """
 
 import json
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Any, Tuple
+from dataclasses import dataclass
+from enum import Enum
 
 from .api_client import CloudflareAPIClient, CloudflareAPIError
-from .traffic_analyzer import TrafficPattern
+from .rule_manager import RuleManager, ObservatoryRule
+from .traffic_analyzer import TrafficAnalyzer, TrafficPattern
+
+logger = logging.getLogger(__name__)
 
 
-class SecurityValidationResult:
-    """Result of security validation."""
-    
-    def __init__(
-        self,
-        is_valid: bool,
-        score: float,
-        issues: List[str],
-        recommendations: List[str],
-        metadata: Optional[Dict[str, Any]] = None
-    ):
-        self.is_valid = is_valid
-        self.score = score  # 0.0 to 1.0, higher is more secure
-        self.issues = issues
-        self.recommendations = recommendations
-        self.metadata = metadata or {}
-        
-    def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary."""
-        return {
-            "is_valid": self.is_valid,
-            "score": self.score,
-            "issues": self.issues,
-            "recommendations": self.recommendations,
-            "metadata": self.metadata
-        }
+class SecurityLevel(Enum):
+    """Security validation levels"""
+    CRITICAL = "critical"
+    HIGH = "high"
+    MEDIUM = "medium"
+    LOW = "low"
+    INFO = "info"
+
+
+class ValidationResult(Enum):
+    """Validation result status"""
+    PASS = "pass"
+    FAIL = "fail"
+    WARNING = "warning"
+    SKIP = "skip"
+
+
+@dataclass
+class SecurityCheck:
+    """Individual security check result"""
+    check_name: str
+    description: str
+    result: ValidationResult
+    level: SecurityLevel
+    details: Dict[str, Any]
+    recommendations: List[str]
+
+
+@dataclass
+class SecurityValidationReport:
+    """Complete security validation report"""
+    overall_status: ValidationResult
+    checks_performed: int
+    checks_passed: int
+    checks_failed: int
+    checks_warning: int
+    security_score: float
+    checks: List[SecurityCheck]
+    summary: str
+    timestamp: datetime
 
 
 class SecurityValidator:
-    """Validates security implications of Cloudflare rules."""
+    """
+    Validates Observatory Cloudflare integration security posture
     
-    # Dangerous patterns that should be avoided
-    DANGEROUS_PATTERNS = [
-        r".*\*.*",  # Wildcards in expressions
-        r".*\.\*.*",  # Wildcards in domains
-        r".*all.*",  # Overly broad terms
-        r".*any.*",  # Overly broad terms
-    ]
+    Ensures that whitelist rules are specific, don't create vulnerabilities,
+    and maintain protection against actual threats.
+    """
     
-    # Required security checks
-    REQUIRED_SECURITY_CHECKS = [
-        "specific_user_agent",
-        "specific_path_pattern",
-        "specific_header_value",
-        "no_wildcards",
-        "limited_scope"
-    ]
-    
-    def __init__(self, api_client: CloudflareAPIClient):
+    def __init__(self, api_client: CloudflareAPIClient, 
+                 rule_manager: RuleManager,
+                 traffic_analyzer: TrafficAnalyzer):
         self.api_client = api_client
-        self.logger = logging.getLogger(__name__)
+        self.rule_manager = rule_manager
+        self.traffic_analyzer = traffic_analyzer
+        self._log_action("security_validator_init", "in_progress", {})
+    
+    def _log_action(self, action: str, status: str, details: Dict[str, Any]):
+        """Log action in JSON format as required"""
+        log_entry = {
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "task": "5.1",
+            "action": action,
+            "status": status,
+            "details": details
+        }
+        print(json.dumps(log_entry))
+        logger.info(f"Security Validator action: {action} - {status}")
+    
+    async def validate_observatory_integration(self) -> SecurityValidationReport:
+        """
+        Perform comprehensive security validation of Observatory integration
         
-    async def validate_whitelist_rule(
-        self,
-        zone_id: str,
-        pattern: TrafficPattern,
-        existing_rules: Optional[List[Dict[str, Any]]] = None
-    ) -> SecurityValidationResult:
-        """Validate a whitelist rule for security implications."""
-        issues = []
-        recommendations = []
-        score = 1.0
+        Returns:
+            SecurityValidationReport with all validation results
+        """
+        self._log_action("validate_observatory_integration", "in_progress", {})
         
         try:
-            # Check expression syntax
-            if not self._validate_expression_syntax(pattern.expression):
-                issues.append("Invalid expression syntax")
-                score -= 0.3
-                
-            # Check for dangerous patterns
-            if self._contains_dangerous_patterns(pattern.expression):
-                issues.append("Expression contains potentially dangerous patterns")
-                score -= 0.4
-                
-            # Check specificity
-            specificity_score = self._check_specificity(pattern)
-            if specificity_score < 0.7:
-                issues.append("Rule is not specific enough")
-                recommendations.append("Make the rule more specific to Observatory traffic")
-                score -= 0.2
-                
-            # Check for conflicts with existing rules
-            if existing_rules:
-                conflicts = self._check_rule_conflicts(pattern, existing_rules)
-                if conflicts:
-                    issues.extend(conflicts)
-                    score -= 0.1 * len(conflicts)
-                    
-            # Check bot protection impact
-            bot_protection_impact = await self._check_bot_protection_impact(zone_id, pattern)
-            if bot_protection_impact < 0.8:
-                issues.append("Rule may impact bot protection effectiveness")
-                recommendations.append("Review bot protection settings after rule deployment")
-                score -= 0.1
-                
-            # Validate against Observatory patterns
-            if not self._is_observatory_specific(pattern):
-                issues.append("Rule is not specific to Observatory traffic")
-                score -= 0.3
-                
-            # Final validation
-            is_valid = len(issues) == 0 and score >= 0.7
+            checks = []
             
-            if not is_valid:
-                recommendations.append("Review and refine the rule before deployment")
-                
-            return SecurityValidationResult(
-                is_valid=is_valid,
-                score=score,
-                issues=issues,
-                recommendations=recommendations,
-                metadata={
-                    "pattern_type": pattern.pattern_type,
-                    "confidence": pattern.confidence,
-                    "validated_at": datetime.utcnow().isoformat()
-                }
-            )
+            # Perform all security checks
+            checks.extend(await self._validate_whitelist_specificity())
+            checks.extend(await self._validate_rule_priorities())
+            checks.extend(await self._validate_bot_protection_maintenance())
+            checks.extend(await self._validate_rate_limiting_integrity())
+            checks.extend(await self._validate_traffic_patterns())
+            checks.extend(await self._validate_security_monitoring())
+            
+            # Calculate overall results
+            report = self._generate_validation_report(checks)
+            
+            self._log_action("validate_observatory_integration", "completed", {
+                "overall_status": report.overall_status.value,
+                "security_score": report.security_score,
+                "checks_performed": report.checks_performed
+            })
+            
+            return report
             
         except Exception as e:
-            self.logger.error(f"Security validation failed: {e}")
-            return SecurityValidationResult(
-                is_valid=False,
-                score=0.0,
-                issues=[f"Validation error: {str(e)}"],
-                recommendations=["Fix validation errors before proceeding"]
-            )
-            
-    def _validate_expression_syntax(self, expression: str) -> bool:
-        """Validate Cloudflare expression syntax."""
+            self._log_action("validate_observatory_integration", "error", {
+                "error": str(e)
+            })
+            raise
+    
+    async def _validate_whitelist_specificity(self) -> List[SecurityCheck]:
+        """Validate that whitelist rules are specific to Observatory"""
+        checks = []
+        
         try:
-            # Basic syntax checks
-            if not expression or not isinstance(expression, str):
-                return False
-                
-            # Check for balanced parentheses
-            if expression.count("(") != expression.count(")"):
-                return False
-                
-            # Check for required Cloudflare expression elements
-            if not any(element in expression for element in ["http.", "ip.", "cf."]):
-                return False
-                
-            return True
+            firewall_rules, _ = await self.rule_manager.get_existing_observatory_rules()
             
-        except Exception:
-            return False
+            # Check rule specificity
+            overly_broad_rules = []
+            for rule in firewall_rules:
+                expression = rule.get("expression", "")
+                if self._is_expression_too_broad(expression):
+                    overly_broad_rules.append(rule)
             
-    def _contains_dangerous_patterns(self, expression: str) -> bool:
-        """Check if expression contains dangerous patterns."""
-        import re
-        
-        for pattern in self.DANGEROUS_PATTERNS:
-            if re.search(pattern, expression, re.IGNORECASE):
-                return True
-                
-        return False
-        
-    def _check_specificity(self, pattern: TrafficPattern) -> float:
-        """Check how specific a pattern is (0.0 to 1.0)."""
-        score = 0.0
-        
-        # Check for specific user agent
-        if "user_agent" in pattern.expression and "Observatory" in pattern.expression:
-            score += 0.3
+            if overly_broad_rules:
+                checks.append(SecurityCheck(
+                    check_name="whitelist_specificity",
+                    description="Check Observatory whitelist rule specificity",
+                    result=ValidationResult.FAIL,
+                    level=SecurityLevel.HIGH,
+                    details={
+                        "overly_broad_rules": len(overly_broad_rules),
+                        "rule_ids": [rule.get("id") for rule in overly_broad_rules]
+                    },
+                    recommendations=[
+                        "Review and tighten overly broad whitelist expressions",
+                        "Ensure rules only match legitimate Observatory traffic",
+                        "Add additional specificity constraints where needed"
+                    ]
+                ))
+            else:
+                checks.append(SecurityCheck(
+                    check_name="whitelist_specificity",
+                    description="Check Observatory whitelist rule specificity",
+                    result=ValidationResult.PASS,
+                    level=SecurityLevel.HIGH,
+                    details={"overly_broad_rules": 0},
+                    recommendations=["Whitelist rules are appropriately specific"]
+                ))
             
-        # Check for specific path patterns
-        if "uri.path" in pattern.expression:
-            score += 0.2
-            
-        # Check for specific headers
-        if "headers" in pattern.expression and "x-observatory" in pattern.expression:
-            score += 0.3
-            
-        # Check for specific values (not wildcards)
-        if "*" not in pattern.expression and ".*" not in pattern.expression:
-            score += 0.2
-            
-        return min(score, 1.0)
+        except Exception as e:
+            checks.append(SecurityCheck(
+                check_name="whitelist_specificity",
+                description="Check Observatory whitelist rule specificity",
+                result=ValidationResult.FAIL,
+                level=SecurityLevel.CRITICAL,
+                details={"error": str(e)},
+                recommendations=["Fix API connectivity issues to perform validation"]
+            ))
         
-    def _check_rule_conflicts(
-        self,
-        pattern: TrafficPattern,
-        existing_rules: List[Dict[str, Any]]
-    ) -> List[str]:
-        """Check for conflicts with existing rules."""
-        conflicts = []
-        
-        for rule in existing_rules:
-            # Check for duplicate expressions
-            if rule.get("filter", {}).get("expression") == pattern.expression:
-                conflicts.append(f"Duplicate expression found in rule {rule.get('id')}")
-                
-            # Check for overlapping scope
-            if self._rules_overlap(pattern, rule):
-                conflicts.append(f"Potential overlap with rule {rule.get('id')}")
-                
-        return conflicts
-        
-    def _rules_overlap(self, pattern: TrafficPattern, rule: Dict[str, Any]) -> bool:
-        """Check if two rules have overlapping scope."""
-        # Simplified overlap detection
-        rule_expression = rule.get("filter", {}).get("expression", "")
-        
-        # Check for common elements
-        common_elements = ["http.user_agent", "http.request.uri.path", "http.request.headers"]
-        
-        for element in common_elements:
-            if element in pattern.expression and element in rule_expression:
-                return True
-                
-        return False
-        
-    async def _check_bot_protection_impact(
-        self,
-        zone_id: str,
-        pattern: TrafficPattern
-    ) -> float:
-        """Check impact on bot protection (0.0 to 1.0)."""
-        try:
-            # Get current bot protection config
-            config = await self.api_client.get_bot_management_config(zone_id)
-            
-            # Check if rule might bypass important bot protection
-            if "allow" in pattern.expression.lower():
-                # Allow rules should be very specific
-                if self._check_specificity(pattern) < 0.8:
-                    return 0.5
-                    
-            return 0.9  # Default to good impact
-            
-        except CloudflareAPIError:
-            # If we can't check, assume moderate impact
-            return 0.7
-            
-    def _is_observatory_specific(self, pattern: TrafficPattern) -> bool:
-        """Check if pattern is specific to Observatory."""
-        expression_lower = pattern.expression.lower()
-        
-        # Check for Observatory-specific indicators
-        observatory_indicators = [
-            "observatory",
-            "x-observatory",
-            "/ws/",
-            "/api/observatory/",
-            "/health"
+        return checks
+    
+    def _is_expression_too_broad(self, expression: str) -> bool:
+        """Check if a Cloudflare expression is too broad"""
+        # Patterns that indicate overly broad rules
+        broad_patterns = [
+            r"http\.host\.name\s*eq\s*\"\*\"",  # Any hostname
+            r"http\.request\.uri\.path\s*matches\s*\".*\"",  # Any path
+            r"ip\.src\.ip\s*eq\s*0\.0\.0\.0/0",  # Any IP
+            r"http\.user_agent\s*contains\s*\"\"",  # Empty user agent
         ]
         
-        return any(indicator in expression_lower for indicator in observatory_indicators)
+        import re
+        return any(re.search(pattern, expression, re.IGNORECASE) for pattern in broad_patterns)
+    
+    async def _validate_rule_priorities(self) -> List[SecurityCheck]:
+        """Validate that Observatory rules have appropriate priorities"""
+        checks = []
         
-    async def validate_rule_set(
-        self,
-        zone_id: str,
-        patterns: List[TrafficPattern]
-    ) -> Dict[str, Any]:
-        """Validate a complete set of rules."""
-        results = []
-        overall_score = 0.0
-        total_issues = []
-        total_recommendations = []
-        
-        # Get existing rules for conflict checking
         try:
-            existing_rules = await self.api_client.list_firewall_rules(zone_id)
-            existing_rule_list = existing_rules.get("result", [])
-        except CloudflareAPIError:
-            existing_rule_list = []
+            firewall_rules, _ = await self.rule_manager.get_existing_observatory_rules()
             
-        for pattern in patterns:
-            result = await self.validate_whitelist_rule(zone_id, pattern, existing_rule_list)
-            results.append(result.to_dict())
-            overall_score += result.score
-            total_issues.extend(result.issues)
-            total_recommendations.extend(result.recommendations)
+            # Check for priority conflicts
+            observatory_priorities = [rule.get("priority", 0) for rule in firewall_rules]
+            duplicate_priorities = len(observatory_priorities) != len(set(observatory_priorities))
             
-        overall_score = overall_score / len(patterns) if patterns else 0.0
+            # Check if Observatory rules have too high priority
+            high_priority_rules = [rule for rule in firewall_rules if rule.get("priority", 0) < 10]
+            
+            if duplicate_priorities:
+                checks.append(SecurityCheck(
+                    check_name="rule_priorities",
+                    description="Check Observatory rule priority conflicts",
+                    result=ValidationResult.FAIL,
+                    level=SecurityLevel.MEDIUM,
+                    details={"duplicate_priorities": True},
+                    recommendations=["Resolve priority conflicts between Observatory rules"]
+                ))
+            elif high_priority_rules:
+                checks.append(SecurityCheck(
+                    check_name="rule_priorities",
+                    description="Check Observatory rule priority conflicts",
+                    result=ValidationResult.WARNING,
+                    level=SecurityLevel.MEDIUM,
+                    details={"high_priority_rules": len(high_priority_rules)},
+                    recommendations=["Consider lowering priority of Observatory rules"]
+                ))
+            else:
+                checks.append(SecurityCheck(
+                    check_name="rule_priorities",
+                    description="Check Observatory rule priority conflicts",
+                    result=ValidationResult.PASS,
+                    level=SecurityLevel.MEDIUM,
+                    details={"duplicate_priorities": False},
+                    recommendations=["Rule priorities are appropriately configured"]
+                ))
+            
+        except Exception as e:
+            checks.append(SecurityCheck(
+                check_name="rule_priorities",
+                description="Check Observatory rule priority conflicts",
+                result=ValidationResult.FAIL,
+                level=SecurityLevel.MEDIUM,
+                details={"error": str(e)},
+                recommendations=["Fix API connectivity issues"]
+            ))
         
-        return {
-            "overall_score": overall_score,
-            "individual_results": results,
-            "total_issues": total_issues,
-            "total_recommendations": list(set(total_recommendations)),  # Remove duplicates
-            "recommendation": "Proceed" if overall_score >= 0.8 else "Review required"
-        }
+        return checks
+    
+    async def _validate_bot_protection_maintenance(self) -> List[SecurityCheck]:
+        """Validate that bot protection remains active"""
+        checks = []
         
-    async def audit_security_rules(self, zone_id: str) -> Dict[str, Any]:
-        """Audit all security rules for potential issues."""
         try:
-            # Get all firewall rules
-            firewall_rules = await self.api_client.list_firewall_rules(zone_id)
+            bot_config = await self.api_client.get_bot_management_config()
             
-            audit_results = {
-                "total_rules": len(firewall_rules.get("result", [])),
-                "allow_rules": 0,
-                "block_rules": 0,
-                "challenge_rules": 0,
-                "potential_issues": [],
-                "recommendations": []
+            # Check if bot protection is enabled
+            bot_protection_enabled = bot_config.get("enable_js", False) or bot_config.get("enable_cookie", False)
+            
+            if not bot_protection_enabled:
+                checks.append(SecurityCheck(
+                    check_name="bot_protection_maintenance",
+                    description="Verify bot protection remains active",
+                    result=ValidationResult.FAIL,
+                    level=SecurityLevel.CRITICAL,
+                    details={"bot_protection_enabled": False},
+                    recommendations=[
+                        "Enable bot protection features",
+                        "Ensure Observatory whitelist doesn't disable bot protection"
+                    ]
+                ))
+            else:
+                checks.append(SecurityCheck(
+                    check_name="bot_protection_maintenance",
+                    description="Verify bot protection remains active",
+                    result=ValidationResult.PASS,
+                    level=SecurityLevel.CRITICAL,
+                    details={"bot_protection_enabled": True},
+                    recommendations=["Bot protection is properly maintained"]
+                ))
+            
+        except Exception as e:
+            checks.append(SecurityCheck(
+                check_name="bot_protection_maintenance",
+                description="Verify bot protection remains active",
+                result=ValidationResult.FAIL,
+                level=SecurityLevel.CRITICAL,
+                details={"error": str(e)},
+                recommendations=["Fix API connectivity to verify bot protection"]
+            ))
+        
+        return checks
+    
+    async def _validate_rate_limiting_integrity(self) -> List[SecurityCheck]:
+        """Validate that rate limiting exceptions are appropriate"""
+        checks = []
+        
+        try:
+            _, rate_limit_rules = await self.rule_manager.get_existing_observatory_rules()
+            
+            # Check for overly permissive rate limits
+            overly_permissive = []
+            for rule in rate_limit_rules:
+                rate = rule.get("rate", 0)
+                if rate > 10000:  # Threshold for overly permissive
+                    overly_permissive.append(rule)
+            
+            if overly_permissive:
+                checks.append(SecurityCheck(
+                    check_name="rate_limiting_integrity",
+                    description="Check Observatory rate limiting exceptions",
+                    result=ValidationResult.WARNING,
+                    level=SecurityLevel.MEDIUM,
+                    details={"overly_permissive_rules": len(overly_permissive)},
+                    recommendations=[
+                        "Review rate limits for Observatory exceptions",
+                        "Ensure rate limits are appropriate for legitimate traffic"
+                    ]
+                ))
+            else:
+                checks.append(SecurityCheck(
+                    check_name="rate_limiting_integrity",
+                    description="Check Observatory rate limiting exceptions",
+                    result=ValidationResult.PASS,
+                    level=SecurityLevel.MEDIUM,
+                    details={"overly_permissive_rules": 0},
+                    recommendations=["Rate limiting exceptions are appropriately configured"]
+                ))
+            
+        except Exception as e:
+            checks.append(SecurityCheck(
+                check_name="rate_limiting_integrity",
+                description="Check Observatory rate limiting exceptions",
+                result=ValidationResult.FAIL,
+                level=SecurityLevel.MEDIUM,
+                details={"error": str(e)},
+                recommendations=["Fix API connectivity issues"]
+            ))
+        
+        return checks
+    
+    async def _validate_traffic_patterns(self) -> List[SecurityCheck]:
+        """Validate Observatory traffic patterns for security"""
+        checks = []
+        
+        try:
+            traffic_summary = await self.traffic_analyzer.get_observatory_traffic_summary()
+            
+            # Check for suspicious activity
+            suspicious_count = traffic_summary.get("suspicious_activity_count", 0)
+            
+            if suspicious_count > 0:
+                checks.append(SecurityCheck(
+                    check_name="traffic_patterns",
+                    description="Check Observatory traffic for suspicious activity",
+                    result=ValidationResult.WARNING,
+                    level=SecurityLevel.MEDIUM,
+                    details={"suspicious_activity_count": suspicious_count},
+                    recommendations=[
+                        "Investigate suspicious Observatory traffic patterns",
+                        "Review whitelist rules for potential abuse"
+                    ]
+                ))
+            else:
+                checks.append(SecurityCheck(
+                    check_name="traffic_patterns",
+                    description="Check Observatory traffic for suspicious activity",
+                    result=ValidationResult.PASS,
+                    level=SecurityLevel.MEDIUM,
+                    details={"suspicious_activity_count": 0},
+                    recommendations=["No suspicious Observatory traffic detected"]
+                ))
+            
+            # Check Observatory traffic ratio
+            total_requests = traffic_summary.get("total_requests_24h", 0)
+            observatory_requests = traffic_summary.get("observatory_requests_24h", 0)
+            
+            if total_requests > 0:
+                observatory_ratio = observatory_requests / total_requests
+                if observatory_ratio > 0.9:
+                    checks.append(SecurityCheck(
+                        check_name="traffic_ratio",
+                        description="Check Observatory traffic ratio",
+                        result=ValidationResult.WARNING,
+                        level=SecurityLevel.LOW,
+                        details={"observatory_ratio": observatory_ratio},
+                        recommendations=["Monitor for potential abuse of Observatory whitelist"]
+                    ))
+                else:
+                    checks.append(SecurityCheck(
+                        check_name="traffic_ratio",
+                        description="Check Observatory traffic ratio",
+                        result=ValidationResult.PASS,
+                        level=SecurityLevel.LOW,
+                        details={"observatory_ratio": observatory_ratio},
+                        recommendations=["Observatory traffic ratio is within normal range"]
+                    ))
+            
+        except Exception as e:
+            checks.append(SecurityCheck(
+                check_name="traffic_patterns",
+                description="Check Observatory traffic for suspicious activity",
+                result=ValidationResult.FAIL,
+                level=SecurityLevel.MEDIUM,
+                details={"error": str(e)},
+                recommendations=["Fix traffic analysis connectivity issues"]
+            ))
+        
+        return checks
+    
+    async def _validate_security_monitoring(self) -> List[SecurityCheck]:
+        """Validate that security monitoring is in place"""
+        checks = []
+        
+        try:
+            # Check if we can access security events
+            events = await self.api_client.get_security_events(limit=10)
+            
+            if len(events) == 0:
+                checks.append(SecurityCheck(
+                    check_name="security_monitoring",
+                    description="Verify security event monitoring",
+                    result=ValidationResult.WARNING,
+                    level=SecurityLevel.MEDIUM,
+                    details={"events_available": False},
+                    recommendations=["Ensure security event logging is enabled"]
+                ))
+            else:
+                checks.append(SecurityCheck(
+                    check_name="security_monitoring",
+                    description="Verify security event monitoring",
+                    result=ValidationResult.PASS,
+                    level=SecurityLevel.MEDIUM,
+                    details={"events_available": True, "sample_count": len(events)},
+                    recommendations=["Security event monitoring is operational"]
+                ))
+            
+        except Exception as e:
+            checks.append(SecurityCheck(
+                check_name="security_monitoring",
+                description="Verify security event monitoring",
+                result=ValidationResult.FAIL,
+                level=SecurityLevel.MEDIUM,
+                details={"error": str(e)},
+                recommendations=["Fix security event monitoring connectivity"]
+            ))
+        
+        return checks
+    
+    def _generate_validation_report(self, checks: List[SecurityCheck]) -> SecurityValidationReport:
+        """Generate comprehensive validation report"""
+        checks_performed = len(checks)
+        checks_passed = sum(1 for check in checks if check.result == ValidationResult.PASS)
+        checks_failed = sum(1 for check in checks if check.result == ValidationResult.FAIL)
+        checks_warning = sum(1 for check in checks if check.result == ValidationResult.WARNING)
+        
+        # Calculate security score (0-100)
+        if checks_performed == 0:
+            security_score = 0.0
+        else:
+            security_score = (checks_passed / checks_performed) * 100
+        
+        # Determine overall status
+        if checks_failed > 0:
+            overall_status = ValidationResult.FAIL
+        elif checks_warning > 0:
+            overall_status = ValidationResult.WARNING
+        else:
+            overall_status = ValidationResult.PASS
+        
+        # Generate summary
+        summary = self._generate_summary(checks, overall_status, security_score)
+        
+        return SecurityValidationReport(
+            overall_status=overall_status,
+            checks_performed=checks_performed,
+            checks_passed=checks_passed,
+            checks_failed=checks_failed,
+            checks_warning=checks_warning,
+            security_score=security_score,
+            checks=checks,
+            summary=summary,
+            timestamp=datetime.utcnow()
+        )
+    
+    def _generate_summary(self, checks: List[SecurityCheck], 
+                         overall_status: ValidationResult, 
+                         security_score: float) -> str:
+        """Generate human-readable summary"""
+        critical_issues = [c for c in checks if c.level == SecurityLevel.CRITICAL and c.result == ValidationResult.FAIL]
+        high_issues = [c for c in checks if c.level == SecurityLevel.HIGH and c.result == ValidationResult.FAIL]
+        
+        if critical_issues:
+            return f"CRITICAL: {len(critical_issues)} critical security issues found. Immediate action required."
+        elif high_issues:
+            return f"HIGH: {len(high_issues)} high-priority security issues found. Review recommended."
+        elif overall_status == ValidationResult.WARNING:
+            return f"WARNING: Security validation passed with warnings. Monitor recommended."
+        else:
+            return f"PASS: Observatory integration security validation successful (Score: {security_score:.1f}%)"
+    
+    async def get_security_status(self) -> Dict[str, Any]:
+        """
+        Get current security status summary
+        
+        Returns:
+            Dictionary with current security status
+        """
+        self._log_action("get_security_status", "in_progress", {})
+        
+        try:
+            report = await self.validate_observatory_integration()
+            
+            status = {
+                "overall_status": report.overall_status.value,
+                "security_score": report.security_score,
+                "checks_performed": report.checks_performed,
+                "checks_passed": report.checks_passed,
+                "checks_failed": report.checks_failed,
+                "checks_warning": report.checks_warning,
+                "summary": report.summary,
+                "timestamp": report.timestamp.isoformat() + "Z"
             }
             
-            for rule in firewall_rules.get("result", []):
-                action = rule.get("action", "").lower()
-                
-                if action == "allow":
-                    audit_results["allow_rules"] += 1
-                    
-                    # Check for overly permissive allow rules
-                    expression = rule.get("filter", {}).get("expression", "")
-                    if self._contains_dangerous_patterns(expression):
-                        audit_results["potential_issues"].append(
-                            f"Rule {rule.get('id')} may be overly permissive"
-                        )
-                        
-                elif action == "block":
-                    audit_results["block_rules"] += 1
-                elif action == "challenge":
-                    audit_results["challenge_rules"] += 1
-                    
-            # Add recommendations
-            if audit_results["allow_rules"] > 10:
-                audit_results["recommendations"].append(
-                    "Consider consolidating allow rules to reduce complexity"
-                )
-                
-            if audit_results["potential_issues"]:
-                audit_results["recommendations"].append(
-                    "Review potentially problematic rules"
-                )
-                
-            return audit_results
+            self._log_action("get_security_status", "completed", {
+                "overall_status": report.overall_status.value,
+                "security_score": report.security_score
+            })
             
-        except CloudflareAPIError as e:
-            self.logger.error(f"Security audit failed: {e}")
-            return {
-                "error": str(e),
-                "total_rules": 0,
-                "potential_issues": ["Audit failed"],
-                "recommendations": ["Fix API access issues"]
-            }
+            return status
+            
+        except Exception as e:
+            self._log_action("get_security_status", "error", {
+                "error": str(e)
+            })
+            raise

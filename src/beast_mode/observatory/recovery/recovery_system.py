@@ -1,123 +1,162 @@
 """
 Automated WebSocket Recovery System
 
-This module provides the main AutomatedRecoverySystem class that orchestrates
-the entire recovery process with comprehensive logging and monitoring.
+Main system that orchestrates automated recovery for WebSocket failures.
 """
 
+import asyncio
 import json
 import logging
-import asyncio
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Callable
+from datetime import datetime
+from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 
-from .failure_classifier import FailureClassifier, FailureType, FailureContext
-from .recovery_strategies import RecoveryStrategyManager, RecoveryResult
-from .recovery_validator import RecoveryValidator, ValidationResult
+from .failure_classifier import FailureClassifier, FailureType, FailureData
+from .recovery_strategies import (
+    RecoveryStrategy,
+    WebSocketReconnectionStrategy,
+    TunnelRestartStrategy,
+    ConfigurationReloadStrategy,
+    BotProtectionClearStrategy,
+    FallbackActivationStrategy,
+    RecoveryAttempt,
+    RecoveryResult
+)
+from .recovery_validator import RecoveryValidator
 from .recovery_coordinator import RecoveryCoordinator, RecoverySession
-
-logger = logging.getLogger(__name__)
 
 
 @dataclass
-class RecoveryMetrics:
-    """Metrics for recovery system performance"""
-    total_recoveries: int = 0
-    successful_recoveries: int = 0
-    failed_recoveries: int = 0
+class SystemMetrics:
+    """System metrics for monitoring."""
+    total_failures_detected: int = 0
+    total_recoveries_attempted: int = 0
+    total_recoveries_successful: int = 0
     average_recovery_time: float = 0.0
+    last_failure_time: Optional[datetime] = None
     last_recovery_time: Optional[datetime] = None
-    consecutive_failures: int = 0
-    recovery_rate_24h: float = 0.0
+    system_uptime: float = 0.0
 
 
 class AutomatedRecoverySystem:
-    """
-    Main automated recovery system that coordinates all recovery components
-    """
+    """Main automated recovery system for WebSocket failures."""
     
-    def __init__(self, 
-                 auto_recovery_enabled: bool = True,
-                 max_consecutive_failures: int = 5,
-                 recovery_cooldown: float = 60.0):
-        """
-        Initialize the automated recovery system
-        
-        Args:
-            auto_recovery_enabled: Whether automatic recovery is enabled
-            max_consecutive_failures: Maximum consecutive failures before escalation
-            recovery_cooldown: Minimum time between recovery attempts (seconds)
-        """
-        self.auto_recovery_enabled = auto_recovery_enabled
-        self.max_consecutive_failures = max_consecutive_failures
-        self.recovery_cooldown = recovery_cooldown
+    def __init__(self):
+        self.logger = logging.getLogger(__name__)
         
         # Initialize components
         self.failure_classifier = FailureClassifier()
-        self.strategy_manager = RecoveryStrategyManager()
         self.recovery_validator = RecoveryValidator()
-        self.coordinator = RecoveryCoordinator()
+        self.recovery_coordinator = RecoveryCoordinator()
         
-        # State tracking
-        self.last_recovery_attempt: Optional[datetime] = None
-        self.metrics = RecoveryMetrics()
-        self.recovery_callbacks: List[Callable] = []
+        # Initialize recovery strategies
+        self.recovery_strategies = [
+            WebSocketReconnectionStrategy(),
+            TunnelRestartStrategy(),
+            TunnelRestartStrategy(),
+            ConfigurationReloadStrategy(),
+            BotProtectionClearStrategy()
+        ]
         
-        self._log_action("automated_recovery_system_init", "completed", {
-            "auto_recovery_enabled": auto_recovery_enabled,
-            "max_consecutive_failures": max_consecutive_failures,
-            "recovery_cooldown": recovery_cooldown
-        })
-
-    def _log_action(self, action: str, status: str, details: Dict[str, Any] = None) -> None:
-        """Log action in JSON format"""
+        # System state
+        self.is_active = False
+        self.metrics = SystemMetrics()
+        self.start_time = datetime.utcnow()
+        
+        # Configuration
+        self.failure_detection_timeout = 30  # seconds
+        self.recovery_timeout = 60  # seconds
+        self.validation_timeout = 30  # seconds
+        
+    def _log_action(self, action: str, status: str, details: Dict[str, Any] = None):
+        """Log action in JSON format."""
         log_entry = {
             "timestamp": datetime.utcnow().isoformat(),
             "task": "4.1",
             "action": action,
-            "status": status
+            "status": status,
+            "details": details or {}
         }
-        if details:
-            log_entry["details"] = details
-        
         print(json.dumps(log_entry))
-        logger.info(f"Automated recovery system action: {action} - {status}", extra=details)
-
+        
+    async def start(self):
+        """Start the automated recovery system."""
+        self._log_action("start_recovery_system", "in_progress")
+        
+        try:
+            self.is_active = True
+            self.start_time = datetime.utcnow()
+            
+            self._log_action("start_recovery_system", "completed", {
+                "system_active": True,
+                "start_time": self.start_time.isoformat(),
+                "strategies_loaded": len(self.recovery_strategies)
+            })
+            
+        except Exception as e:
+            self._log_action("start_recovery_system", "error", {"error": str(e)})
+            raise
+    
+    async def stop(self):
+        """Stop the automated recovery system."""
+        self._log_action("stop_recovery_system", "in_progress")
+        
+        try:
+            self.is_active = False
+            
+            # Update metrics
+            self.metrics.system_uptime = (datetime.utcnow() - self.start_time).total_seconds()
+            
+            self._log_action("stop_recovery_system", "completed", {
+                "system_active": False,
+                "total_uptime": self.metrics.system_uptime,
+                "total_failures": self.metrics.total_failures_detected,
+                "total_recoveries": self.metrics.total_recoveries_attempted,
+                "success_rate": self._calculate_success_rate()
+            })
+            
+        except Exception as e:
+            self._log_action("stop_recovery_system", "error", {"error": str(e)})
+            raise
+    
     async def detect_failure(self, symptoms: List[str]) -> FailureType:
         """
-        Detect failure type from symptoms
+        Detect failure type from symptoms.
         
         Args:
-            symptoms: List of failure symptoms/indicators
+            symptoms: List of failure symptoms
             
         Returns:
             FailureType: The detected failure type
         """
         self._log_action("detect_failure", "in_progress", {
-            "symptoms_count": len(symptoms)
+            "symptoms": symptoms,
+            "symptom_count": len(symptoms)
         })
         
         try:
-            failure_type = await self.failure_classifier.detect_failure_symptoms(symptoms)
+            # Update metrics
+            self.metrics.total_failures_detected += 1
+            self.metrics.last_failure_time = datetime.utcnow()
+            
+            # Detect failure type
+            failure_type = await self.failure_classifier.detect_failure_from_symptoms(symptoms)
             
             self._log_action("detect_failure", "completed", {
                 "failure_type": failure_type.value,
-                "symptoms_analyzed": len(symptoms)
+                "priority": self.failure_classifier.get_recovery_priority(failure_type),
+                "estimated_recovery_time": self.failure_classifier.get_estimated_recovery_time(failure_type)
             })
             
             return failure_type
             
         except Exception as e:
-            self._log_action("detect_failure", "error", {
-                "error": str(e),
-                "fallback_type": FailureType.UNKNOWN.value
-            })
+            self._log_action("detect_failure", "error", {"error": str(e)})
             return FailureType.UNKNOWN
-
+    
     async def classify_failure(self, failure_data: Dict[str, Any]) -> FailureType:
         """
-        Classify failure based on detailed failure data
+        Classify failure from detailed failure data.
         
         Args:
             failure_data: Detailed failure information
@@ -126,354 +165,262 @@ class AutomatedRecoverySystem:
             FailureType: The classified failure type
         """
         self._log_action("classify_failure", "in_progress", {
-            "failure_data_keys": list(failure_data.keys())
+            "error_code": failure_data.get("error_code"),
+            "error_message": failure_data.get("error_message"),
+            "http_status": failure_data.get("http_status")
         })
         
         try:
-            # Create failure context from data
-            context = FailureContext(
-                error_message=failure_data.get("error_message", ""),
+            # Convert dict to FailureData
+            failure_data_obj = FailureData(
                 error_code=failure_data.get("error_code"),
+                error_message=failure_data.get("error_message"),
                 http_status=failure_data.get("http_status"),
                 response_headers=failure_data.get("response_headers"),
-                timestamp=failure_data.get("timestamp"),
-                retry_count=failure_data.get("retry_count", 0),
-                connection_duration=failure_data.get("connection_duration"),
-                last_successful_connection=failure_data.get("last_successful_connection")
+                connection_attempts=failure_data.get("connection_attempts", 0),
+                last_successful_connection=failure_data.get("last_successful_connection"),
+                symptoms=failure_data.get("symptoms", [])
             )
             
-            failure_type = await self.failure_classifier.classify_failure(context)
+            # Classify failure
+            failure_type = await self.failure_classifier.classify_failure(failure_data_obj)
             
             self._log_action("classify_failure", "completed", {
                 "failure_type": failure_type.value,
-                "classification_method": "detailed_context"
+                "confidence": "high" if failure_type != FailureType.UNKNOWN else "low"
             })
             
             return failure_type
             
         except Exception as e:
-            self._log_action("classify_failure", "error", {
-                "error": str(e),
-                "fallback_type": FailureType.UNKNOWN.value
-            })
+            self._log_action("classify_failure", "error", {"error": str(e)})
             return FailureType.UNKNOWN
-
+    
     async def execute_recovery(self, failure_type: FailureType) -> RecoveryResult:
         """
-        Execute recovery for the given failure type
+        Execute recovery for a specific failure type.
         
         Args:
             failure_type: The type of failure to recover from
             
         Returns:
-            RecoveryResult: Result of the recovery operation
+            RecoveryResult: The result of the recovery attempt
         """
         self._log_action("execute_recovery", "in_progress", {
             "failure_type": failure_type.value,
-            "auto_recovery_enabled": self.auto_recovery_enabled
+            "system_active": self.is_active
         })
         
-        # Check if recovery is enabled
-        if not self.auto_recovery_enabled:
-            result = RecoveryResult(
-                success=False,
-                strategy_used=None,
-                attempts_made=0,
-                total_duration=0.0,
-                error_message="Automatic recovery is disabled"
-            )
-            
-            self._log_action("execute_recovery", "skipped", {
-                "reason": "auto_recovery_disabled"
+        if not self.is_active:
+            self._log_action("execute_recovery", "error", {
+                "error": "Recovery system is not active"
             })
-            
-            return result
-        
-        # Check cooldown period
-        if self.last_recovery_attempt:
-            time_since_last = (datetime.utcnow() - self.last_recovery_attempt).total_seconds()
-            if time_since_last < self.recovery_cooldown:
-                result = RecoveryResult(
-                    success=False,
-                    strategy_used=None,
-                    attempts_made=0,
-                    total_duration=0.0,
-                    error_message=f"Recovery cooldown active: {self.recovery_cooldown - time_since_last:.1f}s remaining"
-                )
-                
-                self._log_action("execute_recovery", "skipped", {
-                    "reason": "cooldown_active",
-                    "remaining_seconds": self.recovery_cooldown - time_since_last
-                })
-                
-                return result
+            return RecoveryResult(
+                success=False,
+                strategy_used="none",
+                recovery_time=0.0,
+                error_message="Recovery system is not active"
+            )
         
         try:
-            # Update last recovery attempt time
-            self.last_recovery_attempt = datetime.utcnow()
+            # Update metrics
+            self.metrics.total_recoveries_attempted += 1
             
-            # Execute recovery through strategy manager
-            result = await self.strategy_manager.execute_recovery(failure_type, {})
+            # Create failure data for coordination
+            failure_data = FailureData(
+                symptoms=[f"Recovery requested for {failure_type.value}"]
+            )
+            
+            # Coordinate recovery
+            recovery_session = await self.recovery_coordinator.coordinate_recovery(failure_data)
             
             # Update metrics
-            self.metrics.total_recoveries += 1
-            if result.success:
-                self.metrics.successful_recoveries += 1
-                self.metrics.consecutive_failures = 0
-            else:
-                self.metrics.failed_recoveries += 1
-                self.metrics.consecutive_failures += 1
+            if recovery_session.success:
+                self.metrics.total_recoveries_successful += 1
+                self.metrics.last_recovery_time = datetime.utcnow()
+                
+                # Update average recovery time
+                total_time = self.metrics.average_recovery_time * (self.metrics.total_recoveries_successful - 1)
+                self.metrics.average_recovery_time = (total_time + recovery_session.total_recovery_time) / self.metrics.total_recoveries_successful
             
-            self.metrics.last_recovery_time = datetime.utcnow()
-            self.metrics.average_recovery_time = (
-                (self.metrics.average_recovery_time * (self.metrics.total_recoveries - 1) + result.total_duration) /
-                self.metrics.total_recoveries
+            # Create recovery result
+            recovery_result = RecoveryResult(
+                success=recovery_session.success,
+                strategy_used=recovery_session.final_strategy or "none",
+                recovery_time=recovery_session.total_recovery_time,
+                error_message=None if recovery_session.success else "Recovery failed",
+                fallback_activated=recovery_session.final_strategy == "fallback_activation"
             )
-            
-            # Trigger callbacks
-            await self._trigger_recovery_callbacks(result)
             
             self._log_action("execute_recovery", "completed", {
-                "success": result.success,
-                "strategy_used": result.strategy_used.value if result.strategy_used else None,
-                "attempts_made": result.attempts_made,
-                "total_duration": result.total_duration,
-                "consecutive_failures": self.metrics.consecutive_failures
+                "success": recovery_session.success,
+                "recovery_time": recovery_session.total_recovery_time,
+                "attempts_made": len(recovery_session.attempts),
+                "final_strategy": recovery_session.final_strategy,
+                "session_id": recovery_session.session_id
             })
             
-            return result
+            return recovery_result
             
         except Exception as e:
-            self.metrics.failed_recoveries += 1
-            self.metrics.consecutive_failures += 1
+            self._log_action("execute_recovery", "error", {"error": str(e)})
             
-            result = RecoveryResult(
+            return RecoveryResult(
                 success=False,
-                strategy_used=None,
-                attempts_made=0,
-                total_duration=0.0,
+                strategy_used="none",
+                recovery_time=0.0,
                 error_message=str(e)
             )
-            
-            self._log_action("execute_recovery", "error", {
-                "error": str(e),
-                "consecutive_failures": self.metrics.consecutive_failures
-            })
-            
-            return result
-
-    async def validate_recovery(self, recovery_attempt: Any) -> bool:
+    
+    async def validate_recovery(self, recovery_attempt: RecoveryAttempt) -> bool:
         """
-        Validate that a recovery attempt was successful
+        Validate a recovery attempt.
         
         Args:
             recovery_attempt: The recovery attempt to validate
             
         Returns:
-            bool: True if recovery is validated as successful
+            bool: True if recovery is valid
         """
         self._log_action("validate_recovery", "in_progress", {
-            "recovery_attempt_type": type(recovery_attempt).__name__
+            "strategy": recovery_attempt.strategy_name,
+            "failure_type": recovery_attempt.failure_type.value,
+            "attempt_number": recovery_attempt.attempt_number
         })
         
         try:
-            # Use recovery validator to validate the attempt
-            validation_result = await self.recovery_validator.validate_recovery(recovery_attempt)
-            
-            success = validation_result.overall_success
+            # Validate recovery
+            is_valid = await self.recovery_validator.verify_recovery_success(recovery_attempt)
             
             self._log_action("validate_recovery", "completed", {
-                "validation_success": success,
-                "checks_performed": len(validation_result.checks_performed),
-                "warnings_count": validation_result.warnings_count,
-                "failures_count": validation_result.failures_count,
-                "total_duration": validation_result.total_duration
+                "is_valid": is_valid,
+                "strategy": recovery_attempt.strategy_name
             })
             
-            return success
+            return is_valid
             
         except Exception as e:
-            self._log_action("validate_recovery", "error", {
-                "error": str(e)
-            })
+            self._log_action("validate_recovery", "error", {"error": str(e)})
             return False
-
-    async def full_recovery_cycle(self, symptoms: List[str], context: Dict[str, Any] = None) -> RecoverySession:
+    
+    async def handle_failure(self, symptoms: List[str], failure_data: Optional[Dict[str, Any]] = None) -> RecoveryResult:
         """
-        Execute a full recovery cycle from detection to validation
+        Handle a failure by detecting, classifying, and recovering.
         
         Args:
             symptoms: List of failure symptoms
-            context: Additional context information
+            failure_data: Optional detailed failure data
             
         Returns:
-            RecoverySession: Complete recovery session information
+            RecoveryResult: The result of the recovery attempt
         """
-        self._log_action("full_recovery_cycle", "in_progress", {
-            "symptoms_count": len(symptoms),
-            "context_provided": context is not None
+        self._log_action("handle_failure", "in_progress", {
+            "symptoms": symptoms,
+            "has_failure_data": failure_data is not None
         })
         
         try:
-            # Use coordinator for full recovery cycle
-            session = await self.coordinator.initiate_recovery(symptoms, context)
-            
-            # Update metrics based on session result
-            if session.success:
-                self.metrics.successful_recoveries += 1
-                self.metrics.consecutive_failures = 0
+            # Detect failure type
+            if failure_data:
+                failure_type = await self.classify_failure(failure_data)
             else:
-                self.metrics.failed_recoveries += 1
-                self.metrics.consecutive_failures += 1
+                failure_type = await self.detect_failure(symptoms)
             
-            self.metrics.total_recoveries += 1
-            self.metrics.last_recovery_time = datetime.utcnow()
+            # Execute recovery
+            recovery_result = await self.execute_recovery(failure_type)
             
-            self._log_action("full_recovery_cycle", "completed", {
-                "session_id": session.session_id,
-                "success": session.success,
-                "failure_type": session.failure_type.value if session.failure_type else None,
-                "total_duration": (session.end_time - session.start_time).total_seconds() if session.end_time else 0
+            self._log_action("handle_failure", "completed", {
+                "failure_type": failure_type.value,
+                "recovery_success": recovery_result.success,
+                "recovery_time": recovery_result.recovery_time,
+                "strategy_used": recovery_result.strategy_used
             })
             
-            return session
+            return recovery_result
             
         except Exception as e:
-            self._log_action("full_recovery_cycle", "error", {
-                "error": str(e)
-            })
+            self._log_action("handle_failure", "error", {"error": str(e)})
             
-            # Create failed session
-            failed_session = RecoverySession(
-                session_id=f"failed_{datetime.utcnow().strftime('%Y%m%d_%H%M%S_%f')}",
-                start_time=datetime.utcnow(),
-                end_time=datetime.utcnow(),
+            return RecoveryResult(
                 success=False,
+                strategy_used="none",
+                recovery_time=0.0,
                 error_message=str(e)
             )
-            
-            return failed_session
-
-    def add_recovery_callback(self, callback: Callable) -> None:
-        """Add a callback to be triggered after recovery attempts"""
-        self.recovery_callbacks.append(callback)
-        
-        self._log_action("add_recovery_callback", "completed", {
-            "callback_count": len(self.recovery_callbacks)
-        })
-
-    async def _trigger_recovery_callbacks(self, result: RecoveryResult) -> None:
-        """Trigger all registered recovery callbacks"""
-        for callback in self.recovery_callbacks:
-            try:
-                if asyncio.iscoroutinefunction(callback):
-                    await callback(result)
-                else:
-                    callback(result)
-            except Exception as e:
-                self._log_action("trigger_recovery_callbacks", "error", {
-                    "callback_error": str(e)
-                })
-
+    
     def get_system_status(self) -> Dict[str, Any]:
-        """Get comprehensive system status"""
-        coordinator_stats = self.coordinator.get_recovery_statistics()
+        """Get current system status."""
+        current_time = datetime.utcnow()
         
         status = {
-            "system_enabled": self.auto_recovery_enabled,
+            "is_active": self.is_active,
+            "uptime_seconds": (current_time - self.start_time).total_seconds(),
             "metrics": {
-                "total_recoveries": self.metrics.total_recoveries,
-                "successful_recoveries": self.metrics.successful_recoveries,
-                "failed_recoveries": self.metrics.failed_recoveries,
-                "success_rate": (
-                    self.metrics.successful_recoveries / self.metrics.total_recoveries
-                    if self.metrics.total_recoveries > 0 else 0.0
-                ),
+                "total_failures_detected": self.metrics.total_failures_detected,
+                "total_recoveries_attempted": self.metrics.total_recoveries_attempted,
+                "total_recoveries_successful": self.metrics.total_recoveries_successful,
+                "success_rate": self._calculate_success_rate(),
                 "average_recovery_time": self.metrics.average_recovery_time,
-                "consecutive_failures": self.metrics.consecutive_failures,
+                "last_failure_time": self.metrics.last_failure_time.isoformat() if self.metrics.last_failure_time else None,
                 "last_recovery_time": self.metrics.last_recovery_time.isoformat() if self.metrics.last_recovery_time else None
             },
-            "coordinator_stats": coordinator_stats,
-            "active_sessions": len(self.coordinator.active_sessions),
-            "recovery_callbacks": len(self.recovery_callbacks),
-            "timestamp": datetime.utcnow().isoformat()
+            "available_strategies": len(self.recovery_strategies),
+            "configuration": {
+                "failure_detection_timeout": self.failure_detection_timeout,
+                "recovery_timeout": self.recovery_timeout,
+                "validation_timeout": self.validation_timeout
+            }
         }
         
-        self._log_action("get_system_status", "completed", {
-            "total_recoveries": self.metrics.total_recoveries,
-            "success_rate": status["metrics"]["success_rate"]
-        })
-        
         return status
-
-    async def health_check(self) -> Dict[str, Any]:
-        """Perform comprehensive health check"""
-        self._log_action("health_check", "in_progress", {})
+    
+    def _calculate_success_rate(self) -> float:
+        """Calculate recovery success rate."""
+        if self.metrics.total_recoveries_attempted == 0:
+            return 0.0
+        
+        return self.metrics.total_recoveries_successful / self.metrics.total_recoveries_attempted
+    
+    async def get_recovery_statistics(self) -> Dict[str, Any]:
+        """Get detailed recovery statistics."""
+        self._log_action("get_recovery_statistics", "in_progress")
         
         try:
-            # Get coordinator health
-            coordinator_health = await self.coordinator.health_check()
+            # Get statistics from coordinator
+            coordinator_stats = await self.recovery_coordinator.get_recovery_statistics()
             
-            # Check for escalation conditions
-            escalation_needed = (
-                self.metrics.consecutive_failures >= self.max_consecutive_failures
-            )
-            
-            health_status = {
-                "overall_health": "healthy",
-                "escalation_needed": escalation_needed,
-                "consecutive_failures": self.metrics.consecutive_failures,
-                "max_consecutive_failures": self.max_consecutive_failures,
-                "coordinator_health": coordinator_health,
+            # Combine with system metrics
+            statistics = {
                 "system_metrics": {
-                    "total_recoveries": self.metrics.total_recoveries,
-                    "success_rate": (
-                        self.metrics.successful_recoveries / self.metrics.total_recoveries
-                        if self.metrics.total_recoveries > 0 else 0.0
-                    )
+                    "total_failures_detected": self.metrics.total_failures_detected,
+                    "total_recoveries_attempted": self.metrics.total_recoveries_attempted,
+                    "total_recoveries_successful": self.metrics.total_recoveries_successful,
+                    "success_rate": self._calculate_success_rate(),
+                    "average_recovery_time": self.metrics.average_recovery_time,
+                    "system_uptime": (datetime.utcnow() - self.start_time).total_seconds()
                 },
-                "timestamp": datetime.utcnow().isoformat()
+                "coordinator_statistics": coordinator_stats,
+                "available_strategies": self.recovery_coordinator.get_available_strategies()
             }
             
-            if escalation_needed:
-                health_status["overall_health"] = "critical"
-            elif coordinator_health.get("overall_health") == "warning":
-                health_status["overall_health"] = "warning"
-            
-            self._log_action("health_check", "completed", {
-                "overall_health": health_status["overall_health"],
-                "escalation_needed": escalation_needed
+            self._log_action("get_recovery_statistics", "completed", {
+                "total_strategies": len(statistics["available_strategies"]),
+                "success_rate": statistics["system_metrics"]["success_rate"]
             })
             
-            return health_status
+            return statistics
             
         except Exception as e:
-            health_status = {
-                "overall_health": "unhealthy",
-                "error": str(e),
-                "timestamp": datetime.utcnow().isoformat()
-            }
+            self._log_action("get_recovery_statistics", "error", {"error": str(e)})
             
-            self._log_action("health_check", "error", {
+            return {
+                "system_metrics": {
+                    "total_failures_detected": self.metrics.total_failures_detected,
+                    "total_recoveries_attempted": self.metrics.total_recoveries_attempted,
+                    "total_recoveries_successful": self.metrics.total_recoveries_successful,
+                    "success_rate": self._calculate_success_rate(),
+                    "average_recovery_time": self.metrics.average_recovery_time,
+                    "system_uptime": (datetime.utcnow() - self.start_time).total_seconds()
+                },
                 "error": str(e)
-            })
-            
-            return health_status
-
-    def enable_auto_recovery(self) -> None:
-        """Enable automatic recovery"""
-        self.auto_recovery_enabled = True
-        
-        self._log_action("enable_auto_recovery", "completed", {})
-
-    def disable_auto_recovery(self) -> None:
-        """Disable automatic recovery"""
-        self.auto_recovery_enabled = False
-        
-        self._log_action("disable_auto_recovery", "completed", {})
-
-    def reset_metrics(self) -> None:
-        """Reset recovery metrics"""
-        self.metrics = RecoveryMetrics()
-        
-        self._log_action("reset_metrics", "completed", {})
+            }

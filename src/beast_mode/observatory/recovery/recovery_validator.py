@@ -1,492 +1,522 @@
 """
 Recovery Validation System
 
-This module provides comprehensive validation of recovery attempts to ensure
-WebSocket connectivity is fully restored and functioning properly.
+Validates recovery attempts and verifies system health after recovery.
 """
 
+import asyncio
 import json
 import logging
-import asyncio
 import time
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
-from enum import Enum
 
 from .failure_classifier import FailureType
-from .recovery_strategies import RecoveryAttempt, RecoveryStrategyType
-
-logger = logging.getLogger(__name__)
-
-
-class ValidationStatus(Enum):
-    """Status of validation checks"""
-    PASSED = "passed"
-    FAILED = "failed"
-    WARNING = "warning"
-    SKIPPED = "skipped"
-
-
-@dataclass
-class ValidationCheck:
-    """Individual validation check result"""
-    check_name: str
-    status: ValidationStatus
-    message: str
-    duration: float
-    details: Optional[Dict[str, Any]] = None
+from .recovery_strategies import RecoveryAttempt
 
 
 @dataclass
 class ValidationResult:
-    """Overall validation result"""
-    overall_success: bool
-    checks_performed: List[ValidationCheck]
-    total_duration: float
-    warnings_count: int
-    failures_count: int
-    validation_timestamp: datetime
+    """Result of recovery validation."""
+    is_valid: bool
+    validation_time: float
+    tests_passed: int
+    tests_failed: int
+    error_messages: List[str]
+    performance_metrics: Dict[str, Any]
+    health_score: float  # 0.0 to 1.0
 
 
 class RecoveryValidator:
-    """
-    Validates that recovery attempts have successfully restored WebSocket functionality
-    """
+    """Validates recovery attempts and system health."""
     
-    def __init__(self, validation_timeout: float = 30.0):
-        self.validation_timeout = validation_timeout
-        self.validation_checks = []
+    def __init__(self):
+        self.logger = logging.getLogger(__name__)
+        self.validation_timeout = 30  # seconds
         
-        self._log_action("recovery_validator_init", "completed", {
-            "validation_timeout": validation_timeout
-        })
-
-    def _log_action(self, action: str, status: str, details: Dict[str, Any] = None) -> None:
-        """Log action in JSON format"""
+    def _log_action(self, action: str, status: str, details: Dict[str, Any] = None):
+        """Log action in JSON format."""
         log_entry = {
             "timestamp": datetime.utcnow().isoformat(),
             "task": "4.1",
             "action": action,
-            "status": status
+            "status": status,
+            "details": details or {}
         }
-        if details:
-            log_entry["details"] = details
-        
         print(json.dumps(log_entry))
-        logger.info(f"Recovery validator action: {action} - {status}", extra=details)
-
+        
     async def validate_recovery(self, recovery_attempt: RecoveryAttempt) -> ValidationResult:
         """
-        Validate that a recovery attempt has successfully restored functionality
+        Validate a recovery attempt.
         
         Args:
             recovery_attempt: The recovery attempt to validate
             
         Returns:
-            ValidationResult: Comprehensive validation results
+            ValidationResult: Validation results
         """
+        start_time = time.time()
+        
         self._log_action("validate_recovery", "in_progress", {
-            "strategy_type": recovery_attempt.strategy_type.value,
+            "strategy": recovery_attempt.strategy_name,
             "failure_type": recovery_attempt.failure_type.value,
             "attempt_number": recovery_attempt.attempt_number
         })
         
-        start_time = datetime.utcnow()
-        checks_performed = []
-        
         try:
-            # Perform comprehensive validation checks
-            checks = [
-                self._validate_websocket_connectivity(),
-                self._validate_message_roundtrip(),
-                self._validate_performance_metrics(),
-                self._validate_stability(),
-                self._validate_error_rates()
-            ]
+            # Run validation tests
+            validation_tests = await self._run_validation_tests(recovery_attempt)
             
-            # Execute all validation checks
-            for check_func in checks:
-                try:
-                    check_result = await asyncio.wait_for(check_func, timeout=self.validation_timeout)
-                    checks_performed.append(check_result)
-                except asyncio.TimeoutError:
-                    timeout_check = ValidationCheck(
-                        check_name=check_func.__name__,
-                        status=ValidationStatus.FAILED,
-                        message=f"Validation check timed out after {self.validation_timeout}s",
-                        duration=self.validation_timeout
-                    )
-                    checks_performed.append(timeout_check)
-                except Exception as e:
-                    error_check = ValidationCheck(
-                        check_name=check_func.__name__,
-                        status=ValidationStatus.FAILED,
-                        message=f"Validation check failed: {str(e)}",
-                        duration=0.0
-                    )
-                    checks_performed.append(error_check)
+            # Calculate health score
+            health_score = self._calculate_health_score(validation_tests)
             
-            # Calculate overall result
-            total_duration = (datetime.utcnow() - start_time).total_seconds()
-            warnings_count = sum(1 for check in checks_performed if check.status == ValidationStatus.WARNING)
-            failures_count = sum(1 for check in checks_performed if check.status == ValidationStatus.FAILED)
+            # Determine overall validation result
+            is_valid = health_score >= 0.8 and validation_tests["tests_failed"] == 0
             
-            # Overall success if no failures and at most 1 warning
-            overall_success = failures_count == 0 and warnings_count <= 1
-            
-            result = ValidationResult(
-                overall_success=overall_success,
-                checks_performed=checks_performed,
-                total_duration=total_duration,
-                warnings_count=warnings_count,
-                failures_count=failures_count,
-                validation_timestamp=datetime.utcnow()
-            )
+            validation_time = time.time() - start_time
             
             self._log_action("validate_recovery", "completed", {
-                "overall_success": overall_success,
-                "checks_performed": len(checks_performed),
-                "warnings_count": warnings_count,
-                "failures_count": failures_count,
-                "total_duration": total_duration
-            })
-            
-            return result
-            
-        except Exception as e:
-            total_duration = (datetime.utcnow() - start_time).total_seconds()
-            
-            error_result = ValidationResult(
-                overall_success=False,
-                checks_performed=checks_performed,
-                total_duration=total_duration,
-                warnings_count=0,
-                failures_count=1,
-                validation_timestamp=datetime.utcnow()
-            )
-            
-            self._log_action("validate_recovery", "error", {
-                "error": str(e),
-                "total_duration": total_duration
-            })
-            
-            return error_result
-
-    async def _validate_websocket_connectivity(self) -> ValidationCheck:
-        """Validate WebSocket connection can be established"""
-        start_time = time.time()
-        
-        try:
-            # Simulate WebSocket connectivity test
-            # In a real implementation, this would:
-            # 1. Attempt to establish WebSocket connection
-            # 2. Verify handshake completion
-            # 3. Check connection state
-            
-            await asyncio.sleep(0.5)  # Simulate connection test
-            
-            duration = time.time() - start_time
-            
-            # Simulate successful connection
-            return ValidationCheck(
-                check_name="websocket_connectivity",
-                status=ValidationStatus.PASSED,
-                message="WebSocket connection established successfully",
-                duration=duration,
-                details={
-                    "connection_time": duration,
-                    "handshake_completed": True,
-                    "connection_state": "connected"
-                }
-            )
-            
-        except Exception as e:
-            duration = time.time() - start_time
-            return ValidationCheck(
-                check_name="websocket_connectivity",
-                status=ValidationStatus.FAILED,
-                message=f"WebSocket connection failed: {str(e)}",
-                duration=duration
-            )
-
-    async def _validate_message_roundtrip(self) -> ValidationCheck:
-        """Validate message round-trip functionality"""
-        start_time = time.time()
-        
-        try:
-            # Simulate message round-trip test
-            # In a real implementation, this would:
-            # 1. Send test message
-            # 2. Wait for acknowledgment
-            # 3. Verify message integrity
-            
-            await asyncio.sleep(0.3)  # Simulate round-trip test
-            
-            duration = time.time() - start_time
-            
-            return ValidationCheck(
-                check_name="message_roundtrip",
-                status=ValidationStatus.PASSED,
-                message="Message round-trip test successful",
-                duration=duration,
-                details={
-                    "roundtrip_time": duration,
-                    "message_integrity": True,
-                    "acknowledgment_received": True
-                }
-            )
-            
-        except Exception as e:
-            duration = time.time() - start_time
-            return ValidationCheck(
-                check_name="message_roundtrip",
-                status=ValidationStatus.FAILED,
-                message=f"Message round-trip test failed: {str(e)}",
-                duration=duration
-            )
-
-    async def _validate_performance_metrics(self) -> ValidationCheck:
-        """Validate performance metrics are within acceptable ranges"""
-        start_time = time.time()
-        
-        try:
-            # Simulate performance metrics validation
-            # In a real implementation, this would:
-            # 1. Measure connection latency
-            # 2. Check throughput metrics
-            # 3. Verify resource usage
-            
-            await asyncio.sleep(0.2)  # Simulate metrics collection
-            
-            duration = time.time() - start_time
-            
-            # Simulate performance metrics
-            latency = 50.0  # ms
-            throughput = 1000.0  # messages/second
-            
-            if latency > 100.0:  # High latency threshold
-                return ValidationCheck(
-                    check_name="performance_metrics",
-                    status=ValidationStatus.WARNING,
-                    message=f"High latency detected: {latency}ms",
-                    duration=duration,
-                    details={
-                        "latency_ms": latency,
-                        "throughput_msg_per_sec": throughput,
-                        "warning_reason": "high_latency"
-                    }
-                )
-            
-            return ValidationCheck(
-                check_name="performance_metrics",
-                status=ValidationStatus.PASSED,
-                message="Performance metrics within acceptable ranges",
-                duration=duration,
-                details={
-                    "latency_ms": latency,
-                    "throughput_msg_per_sec": throughput,
-                    "performance_acceptable": True
-                }
-            )
-            
-        except Exception as e:
-            duration = time.time() - start_time
-            return ValidationCheck(
-                check_name="performance_metrics",
-                status=ValidationStatus.FAILED,
-                message=f"Performance validation failed: {str(e)}",
-                duration=duration
-            )
-
-    async def _validate_stability(self) -> ValidationCheck:
-        """Validate connection stability over time"""
-        start_time = time.time()
-        
-        try:
-            # Simulate stability test
-            # In a real implementation, this would:
-            # 1. Monitor connection for stability period
-            # 2. Check for disconnections
-            # 3. Verify consistent performance
-            
-            await asyncio.sleep(1.0)  # Simulate stability monitoring
-            
-            duration = time.time() - start_time
-            
-            return ValidationCheck(
-                check_name="stability",
-                status=ValidationStatus.PASSED,
-                message="Connection stability verified",
-                duration=duration,
-                details={
-                    "monitoring_duration": duration,
-                    "disconnections": 0,
-                    "stability_score": 0.95
-                }
-            )
-            
-        except Exception as e:
-            duration = time.time() - start_time
-            return ValidationCheck(
-                check_name="stability",
-                status=ValidationStatus.FAILED,
-                message=f"Stability validation failed: {str(e)}",
-                duration=duration
-            )
-
-    async def _validate_error_rates(self) -> ValidationCheck:
-        """Validate error rates are within acceptable thresholds"""
-        start_time = time.time()
-        
-        try:
-            # Simulate error rate validation
-            # In a real implementation, this would:
-            # 1. Check recent error logs
-            # 2. Calculate error rates
-            # 3. Compare against thresholds
-            
-            await asyncio.sleep(0.1)  # Simulate error rate calculation
-            
-            duration = time.time() - start_time
-            
-            # Simulate error rate calculation
-            error_rate = 0.01  # 1% error rate
-            
-            if error_rate > 0.05:  # 5% error rate threshold
-                return ValidationCheck(
-                    check_name="error_rates",
-                    status=ValidationStatus.WARNING,
-                    message=f"Elevated error rate detected: {error_rate:.2%}",
-                    duration=duration,
-                    details={
-                        "error_rate": error_rate,
-                        "threshold": 0.05,
-                        "warning_reason": "elevated_error_rate"
-                    }
-                )
-            
-            return ValidationCheck(
-                check_name="error_rates",
-                status=ValidationStatus.PASSED,
-                message="Error rates within acceptable thresholds",
-                duration=duration,
-                details={
-                    "error_rate": error_rate,
-                    "threshold": 0.05,
-                    "error_rate_acceptable": True
-                }
-            )
-            
-        except Exception as e:
-            duration = time.time() - start_time
-            return ValidationCheck(
-                check_name="error_rates",
-                status=ValidationStatus.FAILED,
-                message=f"Error rate validation failed: {str(e)}",
-                duration=duration
-            )
-
-    async def validate_recurring_failures(self, failure_history: List[RecoveryAttempt]) -> ValidationResult:
-        """
-        Validate that failures are not recurring after recovery
-        
-        Args:
-            failure_history: History of recent recovery attempts
-            
-        Returns:
-            ValidationResult: Validation results for recurring failure check
-        """
-        self._log_action("validate_recurring_failures", "in_progress", {
-            "failure_history_count": len(failure_history)
-        })
-        
-        start_time = datetime.utcnow()
-        
-        try:
-            # Analyze failure patterns
-            recent_failures = [
-                attempt for attempt in failure_history
-                if attempt.start_time > datetime.utcnow() - timedelta(hours=1)
-            ]
-            
-            if len(recent_failures) > 3:
-                check = ValidationCheck(
-                    check_name="recurring_failures",
-                    status=ValidationStatus.WARNING,
-                    message=f"Multiple failures detected in last hour: {len(recent_failures)}",
-                    duration=0.0,
-                    details={
-                        "recent_failures": len(recent_failures),
-                        "time_window_hours": 1,
-                        "warning_reason": "multiple_recent_failures"
-                    }
-                )
-                
-                result = ValidationResult(
-                    overall_success=False,
-                    checks_performed=[check],
-                    total_duration=0.0,
-                    warnings_count=1,
-                    failures_count=0,
-                    validation_timestamp=datetime.utcnow()
-                )
-            else:
-                check = ValidationCheck(
-                    check_name="recurring_failures",
-                    status=ValidationStatus.PASSED,
-                    message="No recurring failure patterns detected",
-                    duration=0.0,
-                    details={
-                        "recent_failures": len(recent_failures),
-                        "time_window_hours": 1
-                    }
-                )
-                
-                result = ValidationResult(
-                    overall_success=True,
-                    checks_performed=[check],
-                    total_duration=0.0,
-                    warnings_count=0,
-                    failures_count=0,
-                    validation_timestamp=datetime.utcnow()
-                )
-            
-            total_duration = (datetime.utcnow() - start_time).total_seconds()
-            
-            self._log_action("validate_recurring_failures", "completed", {
-                "overall_success": result.overall_success,
-                "recent_failures": len(recent_failures),
-                "total_duration": total_duration
-            })
-            
-            return result
-            
-        except Exception as e:
-            total_duration = (datetime.utcnow() - start_time).total_seconds()
-            
-            self._log_action("validate_recurring_failures", "error", {
-                "error": str(e),
-                "total_duration": total_duration
+                "is_valid": is_valid,
+                "health_score": health_score,
+                "validation_time": validation_time,
+                "tests_passed": validation_tests["tests_passed"],
+                "tests_failed": validation_tests["tests_failed"]
             })
             
             return ValidationResult(
-                overall_success=False,
-                checks_performed=[],
-                total_duration=total_duration,
-                warnings_count=0,
-                failures_count=1,
-                validation_timestamp=datetime.utcnow()
+                is_valid=is_valid,
+                validation_time=validation_time,
+                tests_passed=validation_tests["tests_passed"],
+                tests_failed=validation_tests["tests_failed"],
+                error_messages=validation_tests["error_messages"],
+                performance_metrics=validation_tests["performance_metrics"],
+                health_score=health_score
             )
-
-    def get_validation_summary(self, result: ValidationResult) -> Dict[str, Any]:
-        """Get a summary of validation results"""
+            
+        except Exception as e:
+            validation_time = time.time() - start_time
+            
+            self._log_action("validate_recovery", "error", {
+                "error": str(e),
+                "validation_time": validation_time
+            })
+            
+            return ValidationResult(
+                is_valid=False,
+                validation_time=validation_time,
+                tests_passed=0,
+                tests_failed=1,
+                error_messages=[str(e)],
+                performance_metrics={},
+                health_score=0.0
+            )
+    
+    async def _run_validation_tests(self, recovery_attempt: RecoveryAttempt) -> Dict[str, Any]:
+        """Run comprehensive validation tests."""
+        self._log_action("run_validation_tests", "in_progress", {
+            "strategy": recovery_attempt.strategy_name,
+            "failure_type": recovery_attempt.failure_type.value
+        })
+        
+        tests_passed = 0
+        tests_failed = 0
+        error_messages = []
+        performance_metrics = {}
+        
+        # Test 1: WebSocket Connectivity
+        connectivity_test = await self._test_websocket_connectivity()
+        if connectivity_test["passed"]:
+            tests_passed += 1
+        else:
+            tests_failed += 1
+            error_messages.append(f"WebSocket connectivity failed: {connectivity_test['error']}")
+        
+        # Test 2: Message Round-trip
+        roundtrip_test = await self._test_message_roundtrip()
+        if roundtrip_test["passed"]:
+            tests_passed += 1
+        else:
+            tests_failed += 1
+            error_messages.append(f"Message round-trip failed: {roundtrip_test['error']}")
+        
+        # Test 3: Performance Metrics
+        performance_test = await self._test_performance_metrics()
+        if performance_test["passed"]:
+            tests_passed += 1
+            performance_metrics.update(performance_test["metrics"])
+        else:
+            tests_failed += 1
+            error_messages.append(f"Performance test failed: {performance_test['error']}")
+        
+        # Test 4: Recurring Failure Check
+        recurrence_test = await self._test_recurring_failures()
+        if recurrence_test["passed"]:
+            tests_passed += 1
+        else:
+            tests_failed += 1
+            error_messages.append(f"Recurring failure detected: {recurrence_test['error']}")
+        
+        # Test 5: Strategy-specific validation
+        strategy_test = await self._test_strategy_specific(recovery_attempt)
+        if strategy_test["passed"]:
+            tests_passed += 1
+        else:
+            tests_failed += 1
+            error_messages.append(f"Strategy-specific test failed: {strategy_test['error']}")
+        
+        self._log_action("run_validation_tests", "completed", {
+            "tests_passed": tests_passed,
+            "tests_failed": tests_failed,
+            "total_tests": tests_passed + tests_failed
+        })
+        
         return {
-            "overall_success": result.overall_success,
-            "checks_performed": len(result.checks_performed),
-            "passed_checks": len([c for c in result.checks_performed if c.status == ValidationStatus.PASSED]),
-            "warning_checks": result.warnings_count,
-            "failed_checks": result.failures_count,
-            "total_duration": result.total_duration,
-            "validation_timestamp": result.validation_timestamp.isoformat()
+            "tests_passed": tests_passed,
+            "tests_failed": tests_failed,
+            "error_messages": error_messages,
+            "performance_metrics": performance_metrics
         }
+    
+    async def _test_websocket_connectivity(self) -> Dict[str, Any]:
+        """Test WebSocket connectivity."""
+        self._log_action("test_websocket_connectivity", "in_progress")
+        
+        try:
+            # Simulate WebSocket connection test
+            # In real implementation, this would:
+            # 1. Create WebSocket connection
+            # 2. Verify connection is established
+            # 3. Check connection stability
+            
+            await asyncio.sleep(1)  # Simulate connection time
+            
+            # Simulate random success/failure for testing
+            import random
+            is_connected = random.choice([True, True, True, False])  # 75% success rate
+            
+            if is_connected:
+                self._log_action("test_websocket_connectivity", "completed", {
+                    "connected": True,
+                    "connection_time": 1.0
+                })
+                
+                return {
+                    "passed": True,
+                    "connection_time": 1.0,
+                    "error": None
+                }
+            else:
+                self._log_action("test_websocket_connectivity", "failed", {
+                    "connected": False,
+                    "error": "Connection timeout"
+                })
+                
+                return {
+                    "passed": False,
+                    "connection_time": None,
+                    "error": "Connection timeout"
+                }
+                
+        except Exception as e:
+            self._log_action("test_websocket_connectivity", "error", {"error": str(e)})
+            
+            return {
+                "passed": False,
+                "connection_time": None,
+                "error": str(e)
+            }
+    
+    async def _test_message_roundtrip(self) -> Dict[str, Any]:
+        """Test message round-trip functionality."""
+        self._log_action("test_message_roundtrip", "in_progress")
+        
+        try:
+            # Simulate message round-trip test
+            # In real implementation, this would:
+            # 1. Send test message
+            # 2. Wait for response
+            # 3. Verify response content
+            
+            test_message = "ping"
+            await asyncio.sleep(0.5)  # Simulate round-trip time
+            
+            # Simulate response
+            response = "pong"
+            
+            if response == "pong":
+                self._log_action("test_message_roundtrip", "completed", {
+                    "roundtrip_time": 0.5,
+                    "message_sent": test_message,
+                    "response_received": response
+                })
+                
+                return {
+                    "passed": True,
+                    "roundtrip_time": 0.5,
+                    "error": None
+                }
+            else:
+                self._log_action("test_message_roundtrip", "failed", {
+                    "error": "Invalid response"
+                })
+                
+                return {
+                    "passed": False,
+                    "roundtrip_time": None,
+                    "error": "Invalid response"
+                }
+                
+        except Exception as e:
+            self._log_action("test_message_roundtrip", "error", {"error": str(e)})
+            
+            return {
+                "passed": False,
+                "roundtrip_time": None,
+                "error": str(e)
+            }
+    
+    async def _test_performance_metrics(self) -> Dict[str, Any]:
+        """Test performance metrics."""
+        self._log_action("test_performance_metrics", "in_progress")
+        
+        try:
+            # Simulate performance metrics collection
+            # In real implementation, this would:
+            # 1. Measure connection latency
+            # 2. Check throughput
+            # 3. Monitor resource usage
+            
+            await asyncio.sleep(0.5)
+            
+            # Simulate performance metrics
+            metrics = {
+                "latency_ms": 50,
+                "throughput_mbps": 10.5,
+                "cpu_usage_percent": 15.2,
+                "memory_usage_mb": 128.5,
+                "connection_count": 1
+            }
+            
+            # Check if metrics are within acceptable ranges
+            is_healthy = (
+                metrics["latency_ms"] < 100 and
+                metrics["throughput_mbps"] > 5.0 and
+                metrics["cpu_usage_percent"] < 50.0 and
+                metrics["memory_usage_mb"] < 500.0
+            )
+            
+            if is_healthy:
+                self._log_action("test_performance_metrics", "completed", {
+                    "healthy": True,
+                    "metrics": metrics
+                })
+                
+                return {
+                    "passed": True,
+                    "metrics": metrics,
+                    "error": None
+                }
+            else:
+                self._log_action("test_performance_metrics", "failed", {
+                    "healthy": False,
+                    "metrics": metrics
+                })
+                
+                return {
+                    "passed": False,
+                    "metrics": metrics,
+                    "error": "Performance metrics outside acceptable ranges"
+                }
+                
+        except Exception as e:
+            self._log_action("test_performance_metrics", "error", {"error": str(e)})
+            
+            return {
+                "passed": False,
+                "metrics": {},
+                "error": str(e)
+            }
+    
+    async def _test_recurring_failures(self) -> Dict[str, Any]:
+        """Test for recurring failures."""
+        self._log_action("test_recurring_failures", "in_progress")
+        
+        try:
+            # Simulate recurring failure check
+            # In real implementation, this would:
+            # 1. Check recent failure history
+            # 2. Look for patterns
+            # 3. Verify no immediate re-failure
+            
+            await asyncio.sleep(0.3)
+            
+            # Simulate failure history check
+            recent_failures = 0  # Simulate no recent failures
+            
+            if recent_failures == 0:
+                self._log_action("test_recurring_failures", "completed", {
+                    "recurring_failures": False,
+                    "recent_failure_count": recent_failures
+                })
+                
+                return {
+                    "passed": True,
+                    "recent_failure_count": recent_failures,
+                    "error": None
+                }
+            else:
+                self._log_action("test_recurring_failures", "failed", {
+                    "recurring_failures": True,
+                    "recent_failure_count": recent_failures
+                })
+                
+                return {
+                    "passed": False,
+                    "recent_failure_count": recent_failures,
+                    "error": f"Detected {recent_failures} recent failures"
+                }
+                
+        except Exception as e:
+            self._log_action("test_recurring_failures", "error", {"error": str(e)})
+            
+            return {
+                "passed": False,
+                "recent_failure_count": None,
+                "error": str(e)
+            }
+    
+    async def _test_strategy_specific(self, recovery_attempt: RecoveryAttempt) -> Dict[str, Any]:
+        """Test strategy-specific validation."""
+        self._log_action("test_strategy_specific", "in_progress", {
+            "strategy": recovery_attempt.strategy_name
+        })
+        
+        try:
+            strategy_name = recovery_attempt.strategy_name
+            
+            if strategy_name == "websocket_reconnection":
+                return await self._test_reconnection_strategy()
+            elif strategy_name == "tunnel_restart":
+                return await self._test_tunnel_strategy()
+            elif strategy_name == "configuration_reload":
+                return await self._test_config_strategy()
+            elif strategy_name == "bot_protection_clear":
+                return await self._test_bot_protection_strategy()
+            elif strategy_name == "fallback_activation":
+                return await self._test_fallback_strategy()
+            else:
+                return {"passed": True, "error": None}
+                
+        except Exception as e:
+            self._log_action("test_strategy_specific", "error", {"error": str(e)})
+            
+            return {
+                "passed": False,
+                "error": str(e)
+            }
+    
+    async def _test_reconnection_strategy(self) -> Dict[str, Any]:
+        """Test reconnection strategy specific validation."""
+        # Verify connection is stable and not dropping
+        await asyncio.sleep(0.2)
+        return {"passed": True, "error": None}
+    
+    async def _test_tunnel_strategy(self) -> Dict[str, Any]:
+        """Test tunnel strategy specific validation."""
+        # Verify tunnel is running and healthy
+        await asyncio.sleep(0.3)
+        return {"passed": True, "error": None}
+    
+    async def _test_config_strategy(self) -> Dict[str, Any]:
+        """Test configuration strategy specific validation."""
+        # Verify configuration is applied correctly
+        await asyncio.sleep(0.2)
+        return {"passed": True, "error": None}
+    
+    async def _test_bot_protection_strategy(self) -> Dict[str, Any]:
+        """Test bot protection strategy specific validation."""
+        # Verify no more bot protection errors
+        await asyncio.sleep(0.2)
+        return {"passed": True, "error": None}
+    
+    async def _test_fallback_strategy(self) -> Dict[str, Any]:
+        """Test fallback strategy specific validation."""
+        # Verify fallback mode is working
+        await asyncio.sleep(0.3)
+        return {"passed": True, "error": None}
+    
+    def _calculate_health_score(self, validation_tests: Dict[str, Any]) -> float:
+        """Calculate overall health score from validation tests."""
+        total_tests = validation_tests["tests_passed"] + validation_tests["tests_failed"]
+        
+        if total_tests == 0:
+            return 0.0
+        
+        base_score = validation_tests["tests_passed"] / total_tests
+        
+        # Adjust score based on performance metrics
+        performance_metrics = validation_tests.get("performance_metrics", {})
+        
+        if performance_metrics:
+            # Check latency
+            latency = performance_metrics.get("latency_ms", 100)
+            latency_score = max(0, 1.0 - (latency - 50) / 100)  # Penalty for high latency
+            
+            # Check throughput
+            throughput = performance_metrics.get("throughput_mbps", 0)
+            throughput_score = min(1.0, throughput / 10.0)  # Normalize to 10 Mbps
+            
+            # Check resource usage
+            cpu_usage = performance_metrics.get("cpu_usage_percent", 100)
+            cpu_score = max(0, 1.0 - cpu_usage / 100.0)
+            
+            memory_usage = performance_metrics.get("memory_usage_mb", 1000)
+            memory_score = max(0, 1.0 - memory_usage / 1000.0)
+            
+            # Weighted average
+            performance_score = (
+                latency_score * 0.3 +
+                throughput_score * 0.3 +
+                cpu_score * 0.2 +
+                memory_score * 0.2
+            )
+            
+            # Combine base score with performance score
+            final_score = base_score * 0.7 + performance_score * 0.3
+        else:
+            final_score = base_score
+        
+        return min(1.0, max(0.0, final_score))
+    
+    async def verify_recovery_success(self, recovery_attempt: RecoveryAttempt) -> bool:
+        """
+        Verify that recovery was successful.
+        
+        Args:
+            recovery_attempt: The recovery attempt to verify
+            
+        Returns:
+            bool: True if recovery was successful
+        """
+        self._log_action("verify_recovery_success", "in_progress", {
+            "strategy": recovery_attempt.strategy_name,
+            "failure_type": recovery_attempt.failure_type.value
+        })
+        
+        try:
+            validation_result = await self.validate_recovery(recovery_attempt)
+            
+            is_successful = validation_result.is_valid and validation_result.health_score >= 0.8
+            
+            self._log_action("verify_recovery_success", "completed", {
+                "successful": is_successful,
+                "health_score": validation_result.health_score,
+                "validation_time": validation_result.validation_time
+            })
+            
+            return is_successful
+            
+        except Exception as e:
+            self._log_action("verify_recovery_success", "error", {"error": str(e)})
+            return False

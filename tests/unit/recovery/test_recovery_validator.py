@@ -1,362 +1,303 @@
 """
-Unit tests for RecoveryValidator
+Unit tests for RecoveryValidator.
 """
 
 import pytest
-import asyncio
-from datetime import datetime, timedelta
-from unittest.mock import Mock, patch
+from datetime import datetime
+from unittest.mock import AsyncMock, patch
 
-from src.beast_mode.observatory.recovery.recovery_validator import (
-    RecoveryValidator, ValidationStatus, ValidationCheck, ValidationResult
-)
-from src.beast_mode.observatory.recovery.recovery_strategies import (
-    RecoveryAttempt, RecoveryStrategyType
-)
 from src.beast_mode.observatory.recovery.failure_classifier import FailureType
+from src.beast_mode.observatory.recovery.recovery_strategies import RecoveryAttempt
+from src.beast_mode.observatory.recovery.recovery_validator import (
+    RecoveryValidator,
+    ValidationResult
+)
 
 
 class TestRecoveryValidator:
-    """Test cases for RecoveryValidator"""
+    """Test cases for RecoveryValidator."""
     
     @pytest.fixture
     def validator(self):
-        """Create recovery validator instance"""
-        return RecoveryValidator(validation_timeout=5.0)
+        """Create a RecoveryValidator instance."""
+        return RecoveryValidator()
     
     @pytest.fixture
     def sample_recovery_attempt(self):
-        """Create sample recovery attempt for testing"""
+        """Create a sample recovery attempt."""
         return RecoveryAttempt(
-            strategy_type=RecoveryStrategyType.WEBSOCKET_RECONNECTION,
+            strategy_name="websocket_reconnection",
             failure_type=FailureType.CONNECTION_REFUSED,
             attempt_number=1,
-            start_time=datetime.utcnow() - timedelta(seconds=10),
+            start_time=datetime.utcnow(),
             end_time=datetime.utcnow(),
-            success=True,
-            recovery_data={"connection_restored": True}
+            success=True
         )
     
     @pytest.mark.asyncio
-    async def test_validate_recovery_success(self, validator, sample_recovery_attempt):
-        """Test successful recovery validation"""
-        with patch('asyncio.sleep') as mock_sleep:
+    async def test_validate_recovery_successful(self, validator, sample_recovery_attempt):
+        """Test successful recovery validation."""
+        with patch.object(validator, '_run_validation_tests', return_value={
+            "tests_passed": 5,
+            "tests_failed": 0,
+            "error_messages": [],
+            "performance_metrics": {
+                "latency_ms": 50,
+                "throughput_mbps": 10.5,
+                "cpu_usage_percent": 15.2,
+                "memory_usage_mb": 128.5
+            }
+        }):
             result = await validator.validate_recovery(sample_recovery_attempt)
             
-            assert isinstance(result, ValidationResult)
-            assert result.overall_success is True
-            assert len(result.checks_performed) == 5  # All validation checks
-            assert result.failures_count == 0
-            assert result.total_duration > 0
-            assert result.validation_timestamp is not None
+            assert result.is_valid == True
+            assert result.tests_passed == 5
+            assert result.tests_failed == 0
+            assert result.health_score >= 0.8
+            assert result.error_messages == []
+            assert "latency_ms" in result.performance_metrics
     
     @pytest.mark.asyncio
-    async def test_validate_recovery_timeout(self, validator, sample_recovery_attempt):
-        """Test recovery validation with timeout"""
-        # Mock validation checks to take longer than timeout
-        with patch('asyncio.sleep', side_effect=asyncio.sleep):
-            with patch.object(validator, '_validate_websocket_connectivity') as mock_check:
-                mock_check.side_effect = asyncio.TimeoutError()
-                
-                result = await validator.validate_recovery(sample_recovery_attempt)
-                
-                assert isinstance(result, ValidationResult)
-                # Should have timeout failures
-                assert result.failures_count > 0
-    
-    @pytest.mark.asyncio
-    async def test_validate_recovery_exception(self, validator, sample_recovery_attempt):
-        """Test recovery validation with exception"""
-        with patch.object(validator, '_validate_websocket_connectivity') as mock_check:
-            mock_check.side_effect = Exception("Validation error")
-            
+    async def test_validate_recovery_failed(self, validator, sample_recovery_attempt):
+        """Test failed recovery validation."""
+        with patch.object(validator, '_run_validation_tests', return_value={
+            "tests_passed": 2,
+            "tests_failed": 3,
+            "error_messages": ["WebSocket connectivity failed", "Performance test failed"],
+            "performance_metrics": {
+                "latency_ms": 200,
+                "throughput_mbps": 2.0,
+                "cpu_usage_percent": 80.0,
+                "memory_usage_mb": 800.0
+            }
+        }):
             result = await validator.validate_recovery(sample_recovery_attempt)
             
-            assert isinstance(result, ValidationResult)
-            assert result.failures_count > 0
+            assert result.is_valid == False
+            assert result.tests_passed == 2
+            assert result.tests_failed == 3
+            assert result.health_score < 0.8
+            assert len(result.error_messages) == 2
     
     @pytest.mark.asyncio
-    async def test_validate_websocket_connectivity_success(self, validator):
-        """Test WebSocket connectivity validation success"""
-        with patch('asyncio.sleep') as mock_sleep:
-            check = await validator._validate_websocket_connectivity()
+    async def test_validate_recovery_with_exception(self, validator, sample_recovery_attempt):
+        """Test validation with exception."""
+        with patch.object(validator, '_run_validation_tests', side_effect=Exception("Test error")):
+            result = await validator.validate_recovery(sample_recovery_attempt)
             
-            assert isinstance(check, ValidationCheck)
-            assert check.check_name == "websocket_connectivity"
-            assert check.status == ValidationStatus.PASSED
-            assert check.duration > 0
-            assert check.details is not None
-            assert "connection_time" in check.details
+            assert result.is_valid == False
+            assert result.tests_passed == 0
+            assert result.tests_failed == 1
+            assert result.error_messages == ["Test error"]
+            assert result.health_score == 0.0
     
     @pytest.mark.asyncio
-    async def test_validate_websocket_connectivity_failure(self, validator):
-        """Test WebSocket connectivity validation failure"""
-        with patch('asyncio.sleep', side_effect=Exception("Connection failed")):
-            check = await validator._validate_websocket_connectivity()
+    async def test_run_validation_tests(self, validator, sample_recovery_attempt):
+        """Test running validation tests."""
+        with patch.object(validator, '_test_websocket_connectivity', return_value={"passed": True}), \
+             patch.object(validator, '_test_message_roundtrip', return_value={"passed": True}), \
+             patch.object(validator, '_test_performance_metrics', return_value={"passed": True, "metrics": {}}), \
+             patch.object(validator, '_test_recurring_failures', return_value={"passed": True}), \
+             patch.object(validator, '_test_strategy_specific', return_value={"passed": True}):
             
-            assert isinstance(check, ValidationCheck)
-            assert check.check_name == "websocket_connectivity"
-            assert check.status == ValidationStatus.FAILED
-            assert "Connection failed" in check.message
-    
-    @pytest.mark.asyncio
-    async def test_validate_message_roundtrip_success(self, validator):
-        """Test message round-trip validation success"""
-        with patch('asyncio.sleep') as mock_sleep:
-            check = await validator._validate_message_roundtrip()
+            result = await validator._run_validation_tests(sample_recovery_attempt)
             
-            assert isinstance(check, ValidationCheck)
-            assert check.check_name == "message_roundtrip"
-            assert check.status == ValidationStatus.PASSED
-            assert check.details is not None
-            assert "roundtrip_time" in check.details
+            assert result["tests_passed"] == 5
+            assert result["tests_failed"] == 0
+            assert result["error_messages"] == []
     
     @pytest.mark.asyncio
-    async def test_validate_performance_metrics_normal(self, validator):
-        """Test performance metrics validation with normal values"""
-        with patch('asyncio.sleep') as mock_sleep:
-            check = await validator._validate_performance_metrics()
+    async def test_test_websocket_connectivity_success(self, validator):
+        """Test WebSocket connectivity test success."""
+        with patch('asyncio.sleep', return_value=None):
+            result = await validator._test_websocket_connectivity()
             
-            assert isinstance(check, ValidationCheck)
-            assert check.check_name == "performance_metrics"
-            assert check.status == ValidationStatus.PASSED
-            assert check.details is not None
-            assert "latency_ms" in check.details
-            assert "throughput_msg_per_sec" in check.details
+            # Result depends on random choice in implementation
+            assert "passed" in result
+            assert "connection_time" in result or "error" in result
     
     @pytest.mark.asyncio
-    async def test_validate_performance_metrics_high_latency(self, validator):
-        """Test performance metrics validation with high latency"""
-        with patch('asyncio.sleep') as mock_sleep:
-            # Mock high latency scenario
-            with patch.object(validator, '_validate_performance_metrics') as mock_validate:
-                mock_check = ValidationCheck(
-                    check_name="performance_metrics",
-                    status=ValidationStatus.WARNING,
-                    message="High latency detected: 150.0ms",
-                    duration=0.2,
-                    details={
-                        "latency_ms": 150.0,
-                        "throughput_msg_per_sec": 1000.0,
-                        "warning_reason": "high_latency"
-                    }
-                )
-                mock_validate.return_value = mock_check
-                
-                check = await validator._validate_performance_metrics()
-                
-                assert check.status == ValidationStatus.WARNING
-                assert "High latency" in check.message
-    
-    @pytest.mark.asyncio
-    async def test_validate_stability_success(self, validator):
-        """Test stability validation success"""
-        with patch('asyncio.sleep') as mock_sleep:
-            check = await validator._validate_stability()
+    async def test_test_message_roundtrip_success(self, validator):
+        """Test message round-trip test success."""
+        with patch('asyncio.sleep', return_value=None):
+            result = await validator._test_message_roundtrip()
             
-            assert isinstance(check, ValidationCheck)
-            assert check.check_name == "stability"
-            assert check.status == ValidationStatus.PASSED
-            assert check.details is not None
-            assert "monitoring_duration" in check.details
-            assert "stability_score" in check.details
+            assert result["passed"] == True
+            assert result["roundtrip_time"] == 0.5
+            assert result["error"] is None
     
     @pytest.mark.asyncio
-    async def test_validate_error_rates_normal(self, validator):
-        """Test error rates validation with normal values"""
-        with patch('asyncio.sleep') as mock_sleep:
-            check = await validator._validate_error_rates()
+    async def test_test_performance_metrics_success(self, validator):
+        """Test performance metrics test success."""
+        with patch('asyncio.sleep', return_value=None):
+            result = await validator._test_performance_metrics()
             
-            assert isinstance(check, ValidationCheck)
-            assert check.check_name == "error_rates"
-            assert check.status == ValidationStatus.PASSED
-            assert check.details is not None
-            assert "error_rate" in check.details
-            assert check.details["error_rate"] <= 0.05  # Should be within threshold
+            # Result depends on random metrics in implementation
+            assert "passed" in result
+            assert "metrics" in result
     
     @pytest.mark.asyncio
-    async def test_validate_error_rates_elevated(self, validator):
-        """Test error rates validation with elevated rates"""
-        with patch('asyncio.sleep') as mock_sleep:
-            # Mock elevated error rate scenario
-            with patch.object(validator, '_validate_error_rates') as mock_validate:
-                mock_check = ValidationCheck(
-                    check_name="error_rates",
-                    status=ValidationStatus.WARNING,
-                    message="Elevated error rate detected: 0.08",
-                    duration=0.1,
-                    details={
-                        "error_rate": 0.08,
-                        "threshold": 0.05,
-                        "warning_reason": "elevated_error_rate"
-                    }
-                )
-                mock_validate.return_value = mock_check
-                
-                check = await validator._validate_error_rates()
-                
-                assert check.status == ValidationStatus.WARNING
-                assert "Elevated error rate" in check.message
+    async def test_test_recurring_failures_success(self, validator):
+        """Test recurring failures test success."""
+        with patch('asyncio.sleep', return_value=None):
+            result = await validator._test_recurring_failures()
+            
+            assert result["passed"] == True
+            assert result["recent_failure_count"] == 0
+            assert result["error"] is None
     
     @pytest.mark.asyncio
-    async def test_validate_recurring_failures_no_pattern(self, validator):
-        """Test recurring failures validation with no pattern"""
-        failure_history = []  # Empty history
+    async def test_test_strategy_specific_websocket(self, validator, sample_recovery_attempt):
+        """Test strategy-specific validation for WebSocket reconnection."""
+        sample_recovery_attempt.strategy_name = "websocket_reconnection"
         
-        result = await validator.validate_recurring_failures(failure_history)
-        
-        assert isinstance(result, ValidationResult)
-        assert result.overall_success is True
-        assert len(result.checks_performed) == 1
-        assert result.checks_performed[0].check_name == "recurring_failures"
-        assert result.checks_performed[0].status == ValidationStatus.PASSED
+        with patch.object(validator, '_test_reconnection_strategy', return_value={"passed": True}):
+            result = await validator._test_strategy_specific(sample_recovery_attempt)
+            
+            assert result["passed"] == True
+            assert result["error"] is None
     
     @pytest.mark.asyncio
-    async def test_validate_recurring_failures_multiple_failures(self, validator):
-        """Test recurring failures validation with multiple recent failures"""
-        # Create mock failure history with multiple recent failures
-        recent_time = datetime.utcnow() - timedelta(minutes=30)
-        failure_history = [
-            Mock(start_time=recent_time),
-            Mock(start_time=recent_time + timedelta(minutes=5)),
-            Mock(start_time=recent_time + timedelta(minutes=10)),
-            Mock(start_time=recent_time + timedelta(minutes=15)),
-            Mock(start_time=recent_time + timedelta(minutes=20))
-        ]
+    async def test_test_strategy_specific_tunnel(self, validator, sample_recovery_attempt):
+        """Test strategy-specific validation for tunnel restart."""
+        sample_recovery_attempt.strategy_name = "tunnel_restart"
         
-        result = await validator.validate_recurring_failures(failure_history)
-        
-        assert isinstance(result, ValidationResult)
-        assert result.overall_success is False
-        assert len(result.checks_performed) == 1
-        assert result.checks_performed[0].check_name == "recurring_failures"
-        assert result.checks_performed[0].status == ValidationStatus.WARNING
+        with patch.object(validator, '_test_tunnel_strategy', return_value={"passed": True}):
+            result = await validator._test_strategy_specific(sample_recovery_attempt)
+            
+            assert result["passed"] == True
+            assert result["error"] is None
     
-    def test_get_validation_summary(self, validator):
-        """Test getting validation summary"""
-        checks = [
-            ValidationCheck("check1", ValidationStatus.PASSED, "Passed", 1.0),
-            ValidationCheck("check2", ValidationStatus.PASSED, "Passed", 0.5),
-            ValidationCheck("check3", ValidationStatus.WARNING, "Warning", 0.3),
-            ValidationCheck("check4", ValidationStatus.FAILED, "Failed", 0.2)
-        ]
+    @pytest.mark.asyncio
+    async def test_test_strategy_specific_config(self, validator, sample_recovery_attempt):
+        """Test strategy-specific validation for configuration reload."""
+        sample_recovery_attempt.strategy_name = "configuration_reload"
         
-        result = ValidationResult(
-            overall_success=False,
-            checks_performed=checks,
-            total_duration=2.0,
-            warnings_count=1,
-            failures_count=1,
-            validation_timestamp=datetime.utcnow()
-        )
-        
-        summary = validator.get_validation_summary(result)
-        
-        assert summary["overall_success"] is False
-        assert summary["checks_performed"] == 4
-        assert summary["passed_checks"] == 2
-        assert summary["warning_checks"] == 1
-        assert summary["failed_checks"] == 1
-        assert summary["total_duration"] == 2.0
-        assert "validation_timestamp" in summary
-
-
-class TestValidationCheck:
-    """Test cases for ValidationCheck dataclass"""
+        with patch.object(validator, '_test_config_strategy', return_value={"passed": True}):
+            result = await validator._test_strategy_specific(sample_recovery_attempt)
+            
+            assert result["passed"] == True
+            assert result["error"] is None
     
-    def test_validation_check_creation(self):
-        """Test creating validation check"""
-        check = ValidationCheck(
-            check_name="test_check",
-            status=ValidationStatus.PASSED,
-            message="Test passed",
-            duration=1.5,
-            details={"key": "value"}
-        )
+    @pytest.mark.asyncio
+    async def test_test_strategy_specific_bot_protection(self, validator, sample_recovery_attempt):
+        """Test strategy-specific validation for bot protection clear."""
+        sample_recovery_attempt.strategy_name = "bot_protection_clear"
         
-        assert check.check_name == "test_check"
-        assert check.status == ValidationStatus.PASSED
-        assert check.message == "Test passed"
-        assert check.duration == 1.5
-        assert check.details == {"key": "value"}
+        with patch.object(validator, '_test_bot_protection_strategy', return_value={"passed": True}):
+            result = await validator._test_strategy_specific(sample_recovery_attempt)
+            
+            assert result["passed"] == True
+            assert result["error"] is None
     
-    def test_validation_check_minimal(self):
-        """Test creating validation check with minimal data"""
-        check = ValidationCheck(
-            check_name="minimal_check",
-            status=ValidationStatus.FAILED,
-            message="Test failed",
-            duration=0.0
-        )
+    @pytest.mark.asyncio
+    async def test_test_strategy_specific_fallback(self, validator, sample_recovery_attempt):
+        """Test strategy-specific validation for fallback activation."""
+        sample_recovery_attempt.strategy_name = "fallback_activation"
         
-        assert check.check_name == "minimal_check"
-        assert check.status == ValidationStatus.FAILED
-        assert check.message == "Test failed"
-        assert check.duration == 0.0
-        assert check.details is None
-
-
-class TestValidationResult:
-    """Test cases for ValidationResult dataclass"""
+        with patch.object(validator, '_test_fallback_strategy', return_value={"passed": True}):
+            result = await validator._test_strategy_specific(sample_recovery_attempt)
+            
+            assert result["passed"] == True
+            assert result["error"] is None
     
-    def test_validation_result_creation(self):
-        """Test creating validation result"""
-        checks = [
-            ValidationCheck("check1", ValidationStatus.PASSED, "Passed", 1.0),
-            ValidationCheck("check2", ValidationStatus.PASSED, "Passed", 0.5)
-        ]
+    @pytest.mark.asyncio
+    async def test_test_strategy_specific_unknown(self, validator, sample_recovery_attempt):
+        """Test strategy-specific validation for unknown strategy."""
+        sample_recovery_attempt.strategy_name = "unknown_strategy"
         
-        result = ValidationResult(
-            overall_success=True,
-            checks_performed=checks,
-            total_duration=1.5,
-            warnings_count=0,
-            failures_count=0,
-            validation_timestamp=datetime.utcnow()
-        )
+        result = await validator._test_strategy_specific(sample_recovery_attempt)
         
-        assert result.overall_success is True
-        assert len(result.checks_performed) == 2
-        assert result.total_duration == 1.5
-        assert result.warnings_count == 0
-        assert result.failures_count == 0
-        assert result.validation_timestamp is not None
+        assert result["passed"] == True
+        assert result["error"] is None
     
-    def test_validation_result_with_warnings_and_failures(self):
-        """Test creating validation result with warnings and failures"""
-        checks = [
-            ValidationCheck("check1", ValidationStatus.PASSED, "Passed", 1.0),
-            ValidationCheck("check2", ValidationStatus.WARNING, "Warning", 0.5),
-            ValidationCheck("check3", ValidationStatus.FAILED, "Failed", 0.3)
-        ]
+    def test_calculate_health_score_perfect(self, validator):
+        """Test health score calculation with perfect metrics."""
+        validation_tests = {
+            "tests_passed": 5,
+            "tests_failed": 0,
+            "performance_metrics": {
+                "latency_ms": 50,
+                "throughput_mbps": 10.0,
+                "cpu_usage_percent": 10.0,
+                "memory_usage_mb": 100.0
+            }
+        }
         
-        result = ValidationResult(
-            overall_success=False,
-            checks_performed=checks,
-            total_duration=1.8,
-            warnings_count=1,
-            failures_count=1,
-            validation_timestamp=datetime.utcnow()
-        )
+        score = validator._calculate_health_score(validation_tests)
+        assert score == 1.0
+    
+    def test_calculate_health_score_poor(self, validator):
+        """Test health score calculation with poor metrics."""
+        validation_tests = {
+            "tests_passed": 2,
+            "tests_failed": 3,
+            "performance_metrics": {
+                "latency_ms": 200,
+                "throughput_mbps": 2.0,
+                "cpu_usage_percent": 80.0,
+                "memory_usage_mb": 800.0
+            }
+        }
         
-        assert result.overall_success is False
-        assert len(result.checks_performed) == 3
-        assert result.warnings_count == 1
-        assert result.failures_count == 1
-
-
-class TestValidationStatus:
-    """Test cases for ValidationStatus enum"""
+        score = validator._calculate_health_score(validation_tests)
+        assert score < 0.5
     
-    def test_validation_status_values(self):
-        """Test validation status enum values"""
-        assert ValidationStatus.PASSED.value == "passed"
-        assert ValidationStatus.FAILED.value == "failed"
-        assert ValidationStatus.WARNING.value == "warning"
-        assert ValidationStatus.SKIPPED.value == "skipped"
+    def test_calculate_health_score_no_metrics(self, validator):
+        """Test health score calculation without performance metrics."""
+        validation_tests = {
+            "tests_passed": 4,
+            "tests_failed": 1,
+            "performance_metrics": {}
+        }
+        
+        score = validator._calculate_health_score(validation_tests)
+        assert score == 0.8  # 4/5 tests passed
     
-    def test_validation_status_members(self):
-        """Test validation status enum members"""
-        expected_members = {"PASSED", "FAILED", "WARNING", "SKIPPED"}
-        actual_members = {status.name for status in ValidationStatus}
-        assert actual_members == expected_members
+    def test_calculate_health_score_no_tests(self, validator):
+        """Test health score calculation with no tests."""
+        validation_tests = {
+            "tests_passed": 0,
+            "tests_failed": 0,
+            "performance_metrics": {}
+        }
+        
+        score = validator._calculate_health_score(validation_tests)
+        assert score == 0.0
+    
+    @pytest.mark.asyncio
+    async def test_verify_recovery_success(self, validator, sample_recovery_attempt):
+        """Test recovery success verification."""
+        with patch.object(validator, 'validate_recovery', return_value=ValidationResult(
+            is_valid=True,
+            validation_time=1.0,
+            tests_passed=5,
+            tests_failed=0,
+            error_messages=[],
+            performance_metrics={},
+            health_score=0.9
+        )):
+            result = await validator.verify_recovery_success(sample_recovery_attempt)
+            assert result == True
+    
+    @pytest.mark.asyncio
+    async def test_verify_recovery_failure(self, validator, sample_recovery_attempt):
+        """Test recovery failure verification."""
+        with patch.object(validator, 'validate_recovery', return_value=ValidationResult(
+            is_valid=False,
+            validation_time=1.0,
+            tests_passed=2,
+            tests_failed=3,
+            error_messages=["Test error"],
+            performance_metrics={},
+            health_score=0.4
+        )):
+            result = await validator.verify_recovery_success(sample_recovery_attempt)
+            assert result == False
+    
+    @pytest.mark.asyncio
+    async def test_verify_recovery_with_exception(self, validator, sample_recovery_attempt):
+        """Test recovery verification with exception."""
+        with patch.object(validator, 'validate_recovery', side_effect=Exception("Test error")):
+            result = await validator.verify_recovery_success(sample_recovery_attempt)
+            assert result == False

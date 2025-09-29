@@ -1,230 +1,266 @@
 """
 Rate Limiter for Intelligent Polling
 
-Implements per-endpoint and global rate limiting to prevent
-triggering bot protection systems.
+This module provides rate limiting capabilities to prevent triggering
+bot protection systems and manage resource usage.
 """
 
-import json
 import asyncio
-from typing import Dict, Set, Optional
-from datetime import datetime, timedelta
+import time
+from typing import Dict, Set, Optional, Tuple
 from dataclasses import dataclass
+from collections import defaultdict, deque
+import json
 
 
 @dataclass
 class RateLimitConfig:
-    """Configuration for rate limiting."""
-    max_requests_per_minute: int = 12  # Conservative limit
-    max_requests_per_hour: int = 720   # 12 requests/minute * 60
-    burst_allowance: int = 3           # Allow burst of 3 requests
-    cooldown_period: float = 5.0       # Seconds between requests
+    """Configuration for rate limiting"""
+    max_requests_per_minute: int = 60
+    max_requests_per_hour: int = 1000
+    max_concurrent_requests: int = 10
+    burst_limit: int = 5
+    burst_window: float = 10.0  # seconds
 
 
 class RateLimiter:
-    """Manages rate limiting for HTTP polling requests."""
+    """Rate limiter with per-endpoint and global limits"""
     
     def __init__(self, config: Optional[RateLimitConfig] = None):
         self.config = config or RateLimitConfig()
         
         # Per-endpoint tracking
-        self.endpoint_requests: Dict[str, list] = {}
-        self.endpoint_last_request: Dict[str, datetime] = {}
+        self.endpoint_requests: Dict[str, deque] = defaultdict(deque)
+        self.endpoint_last_request: Dict[str, float] = {}
         
         # Global tracking
-        self.global_requests: list = []
-        self.global_last_request: Optional[datetime] = None
+        self.global_requests: deque = deque()
+        self.global_last_request: float = 0.0
         
-        # Cooldown tracking
-        self.endpoint_cooldowns: Dict[str, datetime] = {}
+        # Concurrent request tracking
+        self.active_requests: Set[str] = set()
+        self.request_start_times: Dict[str, float] = {}
         
-        self._log_action("init", "RateLimiter initialized", {
-            "max_per_minute": self.config.max_requests_per_minute,
-            "max_per_hour": self.config.max_requests_per_hour
-        })
-    
-    async def can_make_request(self, endpoint: str) -> bool:
+        # Burst protection
+        self.burst_requests: deque = deque()
+        
+        # Statistics
+        self.stats = {
+            "total_requests": 0,
+            "rate_limited_requests": 0,
+            "burst_limited_requests": 0,
+            "concurrent_limited_requests": 0
+        }
+        
+        self._lock = asyncio.Lock()
+        
+    async def can_make_request(self, endpoint: str) -> Tuple[bool, str]:
         """
-        Check if a request can be made for the given endpoint.
+        Check if a request can be made to the endpoint
         
         Args:
             endpoint: The endpoint to check
             
         Returns:
-            True if request is allowed, False otherwise
+            Tuple of (can_make_request, reason)
         """
-        now = datetime.utcnow()
+        async with self._lock:
+            current_time = time.time()
+            
+            # Clean old requests
+            self._cleanup_old_requests(current_time)
+            
+            # Check concurrent request limit
+            if len(self.active_requests) >= self.config.max_concurrent_requests:
+                self.stats["concurrent_limited_requests"] += 1
+                return False, "concurrent_limit_exceeded"
+            
+            # Check burst limit
+            if not self._check_burst_limit(current_time):
+                self.stats["burst_limited_requests"] += 1
+                return False, "burst_limit_exceeded"
+            
+            # Check global rate limit
+            if not self._check_global_rate_limit(current_time):
+                self.stats["rate_limited_requests"] += 1
+                return False, "global_rate_limit_exceeded"
+            
+            # Check per-endpoint rate limit
+            if not self._check_endpoint_rate_limit(endpoint, current_time):
+                self.stats["rate_limited_requests"] += 1
+                return False, "endpoint_rate_limit_exceeded"
+            
+            return True, "allowed"
+    
+    async def record_request(self, endpoint: str, request_id: str) -> None:
+        """
+        Record a request for rate limiting tracking
         
-        # Check global rate limits
-        if not self._check_global_limits(now):
-            self._log_action("rate_limit_check", "Global rate limit exceeded", {
-                "endpoint": endpoint,
-                "allowed": False
-            })
+        Args:
+            endpoint: The endpoint being requested
+            request_id: Unique identifier for the request
+        """
+        async with self._lock:
+            current_time = time.time()
+            
+            # Record global request
+            self.global_requests.append(current_time)
+            self.global_last_request = current_time
+            
+            # Record endpoint request
+            self.endpoint_requests[endpoint].append(current_time)
+            self.endpoint_last_request[endpoint] = current_time
+            
+            # Record burst request
+            self.burst_requests.append(current_time)
+            
+            # Track active request
+            self.active_requests.add(request_id)
+            self.request_start_times[request_id] = current_time
+            
+            # Update statistics
+            self.stats["total_requests"] += 1
+            
+            # Log the request
+            self._log_request(endpoint, request_id, "recorded")
+    
+    async def complete_request(self, request_id: str) -> None:
+        """
+        Mark a request as completed
+        
+        Args:
+            request_id: The request identifier
+        """
+        async with self._lock:
+            if request_id in self.active_requests:
+                self.active_requests.remove(request_id)
+                if request_id in self.request_start_times:
+                    del self.request_start_times[request_id]
+                
+                self._log_request("", request_id, "completed")
+    
+    def _cleanup_old_requests(self, current_time: float) -> None:
+        """Clean up old request records"""
+        # Clean global requests older than 1 hour
+        cutoff_time = current_time - 3600
+        while self.global_requests and self.global_requests[0] < cutoff_time:
+            self.global_requests.popleft()
+        
+        # Clean burst requests older than burst window
+        burst_cutoff = current_time - self.config.burst_window
+        while self.burst_requests and self.burst_requests[0] < burst_cutoff:
+            self.burst_requests.popleft()
+        
+        # Clean endpoint requests older than 1 hour
+        for endpoint in list(self.endpoint_requests.keys()):
+            endpoint_queue = self.endpoint_requests[endpoint]
+            while endpoint_queue and endpoint_queue[0] < cutoff_time:
+                endpoint_queue.popleft()
+            
+            # Remove empty queues
+            if not endpoint_queue:
+                del self.endpoint_requests[endpoint]
+                if endpoint in self.endpoint_last_request:
+                    del self.endpoint_last_request[endpoint]
+    
+    def _check_global_rate_limit(self, current_time: float) -> bool:
+        """Check global rate limits"""
+        # Check requests per minute
+        minute_cutoff = current_time - 60
+        recent_requests = sum(1 for req_time in self.global_requests if req_time > minute_cutoff)
+        if recent_requests >= self.config.max_requests_per_minute:
             return False
         
-        # Check endpoint-specific limits
-        if not self._check_endpoint_limits(endpoint, now):
-            self._log_action("rate_limit_check", "Endpoint rate limit exceeded", {
-                "endpoint": endpoint,
-                "allowed": False
-            })
+        # Check requests per hour
+        hour_cutoff = current_time - 3600
+        hourly_requests = sum(1 for req_time in self.global_requests if req_time > hour_cutoff)
+        if hourly_requests >= self.config.max_requests_per_hour:
             return False
-        
-        # Check cooldown period
-        if not self._check_cooldown(endpoint, now):
-            self._log_action("rate_limit_check", "Cooldown period active", {
-                "endpoint": endpoint,
-                "allowed": False
-            })
-            return False
-        
-        self._log_action("rate_limit_check", "Request allowed", {
-            "endpoint": endpoint,
-            "allowed": True
-        })
         
         return True
     
-    async def record_request(self, endpoint: str) -> None:
-        """
-        Record a request for rate limiting purposes.
-        
-        Args:
-            endpoint: The endpoint that was requested
-        """
-        now = datetime.utcnow()
-        
-        # Record global request
-        self.global_requests.append(now)
-        self.global_last_request = now
-        
-        # Record endpoint request
+    def _check_endpoint_rate_limit(self, endpoint: str, current_time: float) -> bool:
+        """Check per-endpoint rate limits"""
         if endpoint not in self.endpoint_requests:
-            self.endpoint_requests[endpoint] = []
-        self.endpoint_requests[endpoint].append(now)
-        self.endpoint_last_request[endpoint] = now
+            return True
         
-        # Set cooldown
-        self.endpoint_cooldowns[endpoint] = now + timedelta(seconds=self.config.cooldown_period)
+        endpoint_queue = self.endpoint_requests[endpoint]
         
-        # Cleanup old requests
-        self._cleanup_old_requests(now)
+        # Check requests per minute for this endpoint
+        minute_cutoff = current_time - 60
+        recent_requests = sum(1 for req_time in endpoint_queue if req_time > minute_cutoff)
         
-        self._log_action("record_request", "Request recorded", {
-            "endpoint": endpoint,
-            "global_count": len(self.global_requests),
-            "endpoint_count": len(self.endpoint_requests.get(endpoint, []))
-        })
+        # Allow fewer requests per endpoint than global limit
+        endpoint_limit = max(1, self.config.max_requests_per_minute // 10)
+        return recent_requests < endpoint_limit
     
-    def get_next_allowed_time(self, endpoint: str) -> Optional[datetime]:
+    def _check_burst_limit(self, current_time: float) -> bool:
+        """Check burst protection limits"""
+        burst_cutoff = current_time - self.config.burst_window
+        recent_burst_requests = sum(1 for req_time in self.burst_requests if req_time > burst_cutoff)
+        return recent_burst_requests < self.config.burst_limit
+    
+    def _log_request(self, endpoint: str, request_id: str, action: str) -> None:
+        """Log request activity"""
+        log_entry = {
+            "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S.%fZ", time.gmtime()),
+            "task": "2.2",
+            "action": f"rate_limit_{action}",
+            "status": "in_progress",
+            "details": {
+                "endpoint": endpoint,
+                "request_id": request_id,
+                "active_requests": len(self.active_requests),
+                "global_requests_per_minute": self._get_recent_requests_count(60),
+                "burst_requests": len(self.burst_requests)
+            }
+        }
+        print(json.dumps(log_entry))
+    
+    def _get_recent_requests_count(self, window_seconds: int) -> int:
+        """Get count of requests in the last N seconds"""
+        cutoff_time = time.time() - window_seconds
+        return sum(1 for req_time in self.global_requests if req_time > cutoff_time)
+    
+    def get_stats(self) -> Dict:
+        """Get rate limiter statistics"""
+        current_time = time.time()
+        self._cleanup_old_requests(current_time)
+        
+        return {
+            "stats": self.stats.copy(),
+            "current_active_requests": len(self.active_requests),
+            "requests_per_minute": self._get_recent_requests_count(60),
+            "requests_per_hour": self._get_recent_requests_count(3600),
+            "endpoint_count": len(self.endpoint_requests),
+            "burst_requests": len(self.burst_requests)
+        }
+    
+    async def get_wait_time(self, endpoint: str) -> float:
         """
-        Get the next time a request will be allowed for the endpoint.
+        Get the time to wait before next request is allowed
         
         Args:
             endpoint: The endpoint to check
             
         Returns:
-            Next allowed time, or None if request is allowed now
+            Time to wait in seconds
         """
-        now = datetime.utcnow()
-        
-        # Check cooldown
-        if endpoint in self.endpoint_cooldowns:
-            cooldown_end = self.endpoint_cooldowns[endpoint]
-            if now < cooldown_end:
-                return cooldown_end
-        
-        # Check if we need to wait for rate limit reset
-        if not self._check_endpoint_limits(endpoint, now):
-            # Find when the oldest request will expire
-            if endpoint in self.endpoint_requests:
-                oldest_request = min(self.endpoint_requests[endpoint])
-                return oldest_request + timedelta(minutes=1)
-        
-        return None
-    
-    def _check_global_limits(self, now: datetime) -> bool:
-        """Check global rate limits."""
-        # Remove requests older than 1 hour
-        cutoff = now - timedelta(hours=1)
-        self.global_requests = [req for req in self.global_requests if req > cutoff]
-        
-        # Check hourly limit
-        if len(self.global_requests) >= self.config.max_requests_per_hour:
-            return False
-        
-        # Check minute limit
-        minute_cutoff = now - timedelta(minutes=1)
-        recent_requests = [req for req in self.global_requests if req > minute_cutoff]
-        
-        return len(recent_requests) < self.config.max_requests_per_minute
-    
-    def _check_endpoint_limits(self, endpoint: str, now: datetime) -> bool:
-        """Check endpoint-specific rate limits."""
-        if endpoint not in self.endpoint_requests:
-            return True
-        
-        # Remove requests older than 1 hour
-        cutoff = now - timedelta(hours=1)
-        self.endpoint_requests[endpoint] = [
-            req for req in self.endpoint_requests[endpoint] if req > cutoff
-        ]
-        
-        # Check hourly limit (proportional to global limit)
-        max_per_endpoint = self.config.max_requests_per_hour // 10  # Assume 10 endpoints max
-        if len(self.endpoint_requests[endpoint]) >= max_per_endpoint:
-            return False
-        
-        # Check minute limit (proportional to global limit)
-        minute_cutoff = now - timedelta(minutes=1)
-        recent_requests = [
-            req for req in self.endpoint_requests[endpoint] 
-            if req > minute_cutoff
-        ]
-        
-        max_per_minute_endpoint = self.config.max_requests_per_minute // 10
-        return len(recent_requests) < max_per_minute_endpoint
-    
-    def _check_cooldown(self, endpoint: str, now: datetime) -> bool:
-        """Check if endpoint is in cooldown period."""
-        if endpoint not in self.endpoint_cooldowns:
-            return True
-        
-        return now >= self.endpoint_cooldowns[endpoint]
-    
-    def _cleanup_old_requests(self, now: datetime) -> None:
-        """Clean up old request records."""
-        cutoff = now - timedelta(hours=1)
-        
-        # Clean global requests
-        self.global_requests = [req for req in self.global_requests if req > cutoff]
-        
-        # Clean endpoint requests
-        for endpoint in self.endpoint_requests:
-            self.endpoint_requests[endpoint] = [
-                req for req in self.endpoint_requests[endpoint] if req > cutoff
-            ]
-        
-        # Clean expired cooldowns
-        self.endpoint_cooldowns = {
-            endpoint: cooldown_end 
-            for endpoint, cooldown_end in self.endpoint_cooldowns.items()
-            if cooldown_end > now
-        }
-    
-    def _log_action(self, action: str, description: str, details: Dict = None):
-        """Log action in JSON format."""
-        log_entry = {
-            "timestamp": datetime.utcnow().isoformat(),
-            "task": "2.2",
-            "component": "RateLimiter",
-            "action": action,
-            "status": "completed",
-            "description": description
-        }
-        
-        if details:
-            log_entry["details"] = details
+        async with self._lock:
+            current_time = time.time()
             
-        print(json.dumps(log_entry))
+            # Check if we need to wait for burst limit
+            if len(self.burst_requests) >= self.config.burst_limit:
+                oldest_burst = self.burst_requests[0]
+                burst_wait = (oldest_burst + self.config.burst_window) - current_time
+                if burst_wait > 0:
+                    return burst_wait
+            
+            # Check if we need to wait for rate limit
+            if len(self.global_requests) >= self.config.max_requests_per_minute:
+                oldest_request = self.global_requests[0]
+                rate_wait = (oldest_request + 60) - current_time
+                if rate_wait > 0:
+                    return rate_wait
+            
+            return 0.0

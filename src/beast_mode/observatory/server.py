@@ -24,6 +24,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .emoji_rain import EmojiRainEngine, EmojiRainWebSocketHandler
 from .core import ObservatoryCoreEngine
+from .observation_handler import ObservationHandler, set_global_observation_handler
 from .models import (
     ObservatoryConfig,
     CoordinationEvent,
@@ -31,6 +32,13 @@ from .models import (
     Achievement,
 )
 from .config import load_observatory_config
+
+# Import tracing
+try:
+    from src.beast_mode.tracing.tracer import get_tracer
+    TRACING_AVAILABLE = True
+except ImportError:
+    TRACING_AVAILABLE = False
 
 
 logger = logging.getLogger(__name__)
@@ -44,6 +52,17 @@ class ObservatoryServer:
         self.emoji_engine = EmojiRainEngine()
         self.observatory_core = ObservatoryCoreEngine(config)
         self.emoji_ws_handler = EmojiRainWebSocketHandler(self.emoji_engine)
+        self.observation_handler = ObservationHandler()
+        
+        # Set as global handler for ReflectiveModules to use
+        set_global_observation_handler(self.observation_handler)
+        
+        # Initialize distributed tracing
+        if TRACING_AVAILABLE:
+            self.tracer = get_tracer("observatory-server")
+            logger.info("🔍 Distributed tracing initialized for Observatory")
+        else:
+            self.tracer = None
         
         # Create FastAPI app with lifespan
         self.app = FastAPI(
@@ -52,6 +71,10 @@ class ObservatoryServer:
             version="1.0.0",
             lifespan=self.lifespan
         )
+        
+        # Instrument FastAPI for tracing
+        if self.tracer and self.tracer.is_available():
+            self.tracer.instrument_fastapi(self.app)
         
         # Setup middleware
         self._setup_middleware()
@@ -352,6 +375,71 @@ class ObservatoryServer:
                 "canvas_size": f"{self.emoji_engine._canvas_width}x{self.emoji_engine._canvas_height}"
             }
         
+        @self.app.get("/api/observations/recent")
+        async def get_recent_observations():
+            """Get recent system observations from Beastly Modules."""
+            try:
+                # Get recent observations from the observation handler
+                observations = self.observation_handler.get_recent_observations(limit=20)
+                
+                # If no observations yet, provide some sample data
+                if not observations:
+                    observations = [
+                        {
+                            "timestamp": datetime.now().isoformat(),
+                            "module": "ObservatoryServer",
+                            "event_type": "info",
+                            "message": "Observatory observation system initialized 🎬",
+                            "emoji": "🎬",
+                            "severity": "info",
+                            "context": {
+                                "connected_clients": len(self.observation_handler.connected_clients),
+                                "correlation_id": f"init_{datetime.now().timestamp()}"
+                            }
+                        }
+                    ]
+                
+                return observations
+                
+            except Exception as e:
+                logger.error(f"Failed to get observations: {e}")
+                raise HTTPException(status_code=500, detail=str(e))
+        
+        @self.app.post("/api/observations")
+        async def post_observation(request: Request):
+            """Post a new observation to the Observatory system."""
+            try:
+                observation_data = await request.json()
+                
+                # Validate required fields
+                required_fields = ["message", "module"]
+                for field in required_fields:
+                    if field not in observation_data:
+                        raise HTTPException(status_code=400, detail=f"Missing required field: {field}")
+                
+                # Add timestamp if not provided
+                if "timestamp" not in observation_data:
+                    observation_data["timestamp"] = datetime.now().isoformat()
+                
+                # Set defaults for optional fields
+                observation_data.setdefault("event_type", "info")
+                observation_data.setdefault("emoji", "📰")
+                observation_data.setdefault("severity", "info")
+                observation_data.setdefault("context", {})
+                
+                # Broadcast the observation
+                await self.observation_handler.broadcast_observation(observation_data)
+                
+                logger.info(f"📰 Received external observation: {observation_data['message']}")
+                
+                return {"status": "success", "message": "Observation posted successfully"}
+                
+            except json.JSONDecodeError:
+                raise HTTPException(status_code=400, detail="Invalid JSON in request body")
+            except Exception as e:
+                logger.error(f"Failed to post observation: {e}")
+                raise HTTPException(status_code=500, detail=str(e))
+
         @self.app.get("/api/metrics/components")
         async def discovered_components():
             """Get discovered Beast Mode components and their metrics."""
@@ -876,10 +964,40 @@ class ObservatoryServer:
             except Exception as e:
                 logger.error(f"Doctor status WebSocket error: {e}")
         
+        @self.app.websocket("/ws/observations")
+        async def observations_websocket(websocket: WebSocket):
+            """WebSocket endpoint for real-time observation events from Beastly Modules."""
+            await websocket.accept()
+            await self.observation_handler.add_client(websocket)
+            
+            try:
+                # Keep connection alive and handle ping/pong
+                while True:
+                    try:
+                        # Wait for messages from client (ping, etc.)
+                        message = await asyncio.wait_for(websocket.receive_text(), timeout=30.0)
+                        data = json.loads(message)
+                        
+                        if data.get('type') == 'ping':
+                            await websocket.send_text(json.dumps({'type': 'pong'}))
+                        
+                    except asyncio.TimeoutError:
+                        # Send periodic heartbeat
+                        await websocket.send_text(json.dumps({
+                            'type': 'heartbeat',
+                            'timestamp': datetime.now().isoformat()
+                        }))
+                    
+            except WebSocketDisconnect:
+                await self.observation_handler.remove_client(websocket)
+            except Exception as e:
+                logger.error(f"Observations WebSocket error: {e}")
+                await self.observation_handler.remove_client(websocket)
+        
         # WebSocket endpoints are now registered using decorators above
         
         logger.info("✅ WebSocket endpoints registered successfully")
-        logger.info(f"📊 Registered {len(['/ws/emoji-rain', '/ws/observatory', '/ws/anomalies', '/ws/doctor-status'])} WebSocket endpoints")
+        logger.info(f"📊 Registered {len(['/ws/emoji-rain', '/ws/observatory', '/ws/anomalies', '/ws/doctor-status', '/ws/observations'])} WebSocket endpoints")
 
     def _setup_static_files(self):
         """Setup static file serving."""

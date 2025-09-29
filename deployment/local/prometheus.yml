@@ -52,6 +52,14 @@ scrape_configs:
     metrics_path: /metrics
     scrape_timeout: 5s
 
+  # Beast Mode Historical Performance Data
+  - job_name: 'beast-mode-historical'
+    static_configs:
+      - targets: ['host.docker.internal:8001']
+    scrape_interval: 30s
+    metrics_path: /metrics
+    scrape_timeout: 10s
+
 # Storage configuration (moved to command line arguments in docker-compose.yml)
 
 # Remote write configuration (optional - for long-term storage)

@@ -48,3 +48,23 @@ class RetryExhaustedError(WebSocketError):
 class MaxConnectionsError(WebSocketError):
     """Raised when maximum number of connections is reached."""
     pass
+
+
+class WebSocketConnectionError(WebSocketError):
+    """Raised when WebSocket connection encounters an error."""
+    pass
+
+
+class WebSocketTimeoutError(WebSocketError):
+    """Raised when WebSocket operation times out."""
+    pass
+
+
+class WebSocketAuthenticationError(WebSocketError):
+    """Raised when WebSocket authentication fails."""
+    pass
+
+
+class WebSocketRateLimitError(WebSocketError):
+    """Raised when WebSocket rate limit is exceeded."""
+    pass

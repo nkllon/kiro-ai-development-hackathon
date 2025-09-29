@@ -1,333 +1,350 @@
 """
-Unit tests for RuleManager.
+Unit tests for RuleManager
+
+Tests the rule management functionality including Observatory
+whitelist rule creation, rate limiting exceptions, and rule operations.
 """
 
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, Mock, patch
+from datetime import datetime
 
-from src.beast_mode.observatory.cloudflare.rule_manager import RuleManager
-from src.beast_mode.observatory.cloudflare.api_client import CloudflareAPIError
+from src.beast_mode.observatory.cloudflare.rule_manager import (
+    RuleManager,
+    ObservatoryRule,
+    RuleType,
+    RuleAction
+)
+from src.beast_mode.observatory.cloudflare.api_client import CloudflareAPIClient, CloudflareAPIError
+
+
+class TestObservatoryRule:
+    """Test ObservatoryRule dataclass"""
+    
+    def test_rule_creation(self):
+        """Test basic rule creation"""
+        rule = ObservatoryRule(
+            name="test_rule",
+            expression="true",
+            action=RuleAction.ALLOW,
+            description="Test rule",
+            priority=1
+        )
+        
+        assert rule.name == "test_rule"
+        assert rule.expression == "true"
+        assert rule.action == RuleAction.ALLOW
+        assert rule.description == "Test rule"
+        assert rule.priority == 1
+        assert rule.enabled is True
+        assert rule.rule_type == RuleType.FIREWALL
+    
+    def test_rule_with_custom_values(self):
+        """Test rule with custom values"""
+        rule = ObservatoryRule(
+            name="custom_rule",
+            expression="false",
+            action=RuleAction.BLOCK,
+            description="Custom rule",
+            priority=5,
+            enabled=False,
+            rule_type=RuleType.RATE_LIMIT
+        )
+        
+        assert rule.name == "custom_rule"
+        assert rule.expression == "false"
+        assert rule.action == RuleAction.BLOCK
+        assert rule.description == "Custom rule"
+        assert rule.priority == 5
+        assert rule.enabled is False
+        assert rule.rule_type == RuleType.RATE_LIMIT
 
 
 class TestRuleManager:
-    """Test cases for RuleManager."""
+    """Test RuleManager functionality"""
     
     @pytest.fixture
-    def rule_manager(self):
-        """Create a RuleManager instance for testing."""
-        mock_api_client = AsyncMock()
-        return RuleManager(mock_api_client)
-        
-    @pytest.fixture
     def mock_api_client(self):
-        """Mock API client."""
-        return AsyncMock()
+        """Create mock API client"""
+        return AsyncMock(spec=CloudflareAPIClient)
+    
+    @pytest.fixture
+    def rule_manager(self, mock_api_client):
+        """Create rule manager with mock client"""
+        return RuleManager(mock_api_client)
+    
+    def test_rule_manager_initialization(self, rule_manager):
+        """Test rule manager initialization"""
+        assert rule_manager.api_client is not None
+        assert len(rule_manager.OBSERVATORY_WHITELIST_RULES) == 5
+    
+    def test_observatory_whitelist_rules(self, rule_manager):
+        """Test Observatory whitelist rules are properly defined"""
+        rules = rule_manager.OBSERVATORY_WHITELIST_RULES
         
+        # Check that all rules are ObservatoryRule instances
+        for rule in rules:
+            assert isinstance(rule, ObservatoryRule)
+            assert rule.action == RuleAction.ALLOW
+            assert rule.enabled is True
+            assert rule.rule_type == RuleType.FIREWALL
+        
+        # Check specific rules exist
+        rule_names = [rule.name for rule in rules]
+        assert "observatory-internal-polling" in rule_names
+        assert "observatory-websocket-endpoints" in rule_names
+        assert "observatory-polling-fallback" in rule_names
+        assert "observatory-health-checks" in rule_names
+        assert "observatory-metrics-endpoints" in rule_names
+    
     @pytest.mark.asyncio
-    async def test_create_whitelist_rule_success(self, rule_manager):
-        """Test successful whitelist rule creation."""
-        # Mock API client response
-        rule_manager.api_client.create_firewall_rule.return_value = {
-            "result": {"id": "rule_123", "description": "Test rule"}
-        }
+    async def test_create_observatory_whitelist_rules(self, rule_manager, mock_api_client):
+        """Test creation of Observatory whitelist rules"""
+        # Mock API responses
+        mock_responses = [
+            {"id": f"rule_{i}", "success": True}
+            for i in range(len(rule_manager.OBSERVATORY_WHITELIST_RULES))
+        ]
+        mock_api_client.create_firewall_rule.side_effect = mock_responses
         
-        # Test the method
-        result = await rule_manager.create_whitelist_rule(
-            zone_id="zone_123",
-            expression='(http.user_agent contains "Observatory-Internal")',
-            description="Test Observatory rule",
-            action="allow"
-        )
+        result = await rule_manager.create_observatory_whitelist_rules()
         
-        # Verify results
-        assert result["result"]["id"] == "rule_123"
+        assert len(result) == len(rule_manager.OBSERVATORY_WHITELIST_RULES)
+        assert mock_api_client.create_firewall_rule.call_count == len(rule_manager.OBSERVATORY_WHITELIST_RULES)
         
-        # Verify API call
-        rule_manager.api_client.create_firewall_rule.assert_called_once()
-        call_args = rule_manager.api_client.create_firewall_rule.call_args
-        
-        assert call_args[0][0] == "zone_123"  # zone_id
-        rule_data = call_args[0][1]  # rule_data
-        
-        assert rule_data["filter"]["expression"] == '(http.user_agent contains "Observatory-Internal")'
-        assert rule_data["action"] == "allow"
-        assert rule_data["description"] == "Test Observatory rule"
-        assert rule_data["paused"] is False
-        
+        # Check that each rule was created with correct data
+        for i, call in enumerate(mock_api_client.create_firewall_rule.call_args_list):
+            rule_data = call[0][0]
+            assert "action" in rule_data
+            assert "expression" in rule_data
+            assert "description" in rule_data
+            assert "priority" in rule_data
+    
     @pytest.mark.asyncio
-    async def test_create_whitelist_rule_api_error(self, rule_manager):
-        """Test whitelist rule creation with API error."""
-        # Mock API client error
-        rule_manager.api_client.create_firewall_rule.side_effect = CloudflareAPIError("API Error")
+    async def test_create_observatory_whitelist_rules_api_error(self, rule_manager, mock_api_client):
+        """Test API error handling in rule creation"""
+        mock_api_client.create_firewall_rule.side_effect = CloudflareAPIError("API Error")
         
-        # Test the method - should raise CloudflareAPIError
         with pytest.raises(CloudflareAPIError):
-            await rule_manager.create_whitelist_rule(
-                zone_id="zone_123",
-                expression='(http.user_agent contains "Observatory-Internal")',
-                description="Test Observatory rule"
-            )
-            
+            await rule_manager.create_observatory_whitelist_rules()
+    
     @pytest.mark.asyncio
-    async def test_create_rate_limit_exception_success(self, rule_manager):
-        """Test successful rate limit exception creation."""
-        # Mock API client response
-        rule_manager.api_client.create_rate_limit_rule.return_value = {
-            "result": {"id": "rate_limit_123"}
-        }
+    async def test_create_rate_limit_exception(self, rule_manager, mock_api_client):
+        """Test rate limit exception creation"""
+        mock_api_client.create_rate_limit_rule.return_value = {"id": "rate_rule_1"}
         
-        # Test the method
         result = await rule_manager.create_rate_limit_exception(
-            zone_id="zone_123",
-            match_expression='http.request.uri.path matches "^/ws/"',
-            description="Observatory WebSocket rate limit exception",
-            rate_limit=1000,
-            period=60
+            pattern="/test/*",
+            description="Test rate limit",
+            rate_limit=1000
         )
         
-        # Verify results
-        assert result["result"]["id"] == "rate_limit_123"
+        assert result["id"] == "rate_rule_1"
+        mock_api_client.create_rate_limit_rule.assert_called_once()
         
-        # Verify API call
-        rule_manager.api_client.create_rate_limit_rule.assert_called_once()
-        call_args = rule_manager.api_client.create_rate_limit_rule.call_args
-        
-        assert call_args[0][0] == "zone_123"  # zone_id
-        rule_data = call_args[0][1]  # rule_data
-        
-        assert rule_data["match"]["request"]["url"] == 'http.request.uri.path matches "^/ws/"'
-        assert rule_data["rate"] == 1000
-        assert rule_data["period"] == 60
-        assert rule_data["description"] == "Observatory WebSocket rate limit exception"
-        assert rule_data["disabled"] is False
-        
+        # Check rule data structure
+        call_args = mock_api_client.create_rate_limit_rule.call_args[0][0]
+        assert call_args["match"]["request"]["url"] == "/test/*"
+        assert call_args["rate"] == 1000
+        assert call_args["period"] == 60
+        assert call_args["description"] == "Test rate limit"
+    
     @pytest.mark.asyncio
-    async def test_create_rate_limit_exception_api_error(self, rule_manager):
-        """Test rate limit exception creation with API error."""
-        # Mock API client error
-        rule_manager.api_client.create_rate_limit_rule.side_effect = CloudflareAPIError("API Error")
+    async def test_create_observatory_rate_limit_exceptions(self, rule_manager, mock_api_client):
+        """Test creation of Observatory rate limit exceptions"""
+        mock_responses = [
+            {"id": f"rate_rule_{i}"}
+            for i in range(4)  # 4 exceptions defined
+        ]
+        mock_api_client.create_rate_limit_rule.side_effect = mock_responses
         
-        # Test the method - should raise CloudflareAPIError
-        with pytest.raises(CloudflareAPIError):
-            await rule_manager.create_rate_limit_exception(
-                zone_id="zone_123",
-                match_expression='http.request.uri.path matches "^/ws/"',
-                description="Test rate limit exception"
-            )
-            
+        result = await rule_manager.create_observatory_rate_limit_exceptions()
+        
+        assert len(result) == 4
+        assert mock_api_client.create_rate_limit_rule.call_count == 4
+    
     @pytest.mark.asyncio
-    async def test_update_rule_description_firewall_success(self, rule_manager):
-        """Test successful firewall rule description update."""
-        # Mock existing rule data
+    async def test_get_existing_observatory_rules(self, rule_manager, mock_api_client):
+        """Test getting existing Observatory rules"""
+        # Mock firewall rules
+        firewall_rules = [
+            {"id": "rule1", "description": "Observatory internal polling"},
+            {"id": "rule2", "description": "Regular firewall rule"},
+            {"id": "rule3", "description": "Observatory WebSocket"}
+        ]
+        
+        # Mock rate limit rules
+        rate_limit_rules = [
+            {"id": "rate1", "description": "Observatory rate limit"},
+            {"id": "rate2", "description": "Regular rate limit"}
+        ]
+        
+        mock_api_client.list_firewall_rules.return_value = firewall_rules
+        mock_api_client.list_rate_limit_rules.return_value = rate_limit_rules
+        
+        observatory_firewall, observatory_rate_limit = await rule_manager.get_existing_observatory_rules()
+        
+        assert len(observatory_firewall) == 2  # 2 Observatory-related
+        assert len(observatory_rate_limit) == 1  # 1 Observatory-related
+        
+        # Check that Observatory rules are filtered correctly
+        observatory_firewall_ids = [rule["id"] for rule in observatory_firewall]
+        assert "rule1" in observatory_firewall_ids
+        assert "rule3" in observatory_firewall_ids
+        assert "rule2" not in observatory_firewall_ids
+    
+    @pytest.mark.asyncio
+    async def test_update_rule_priority(self, rule_manager, mock_api_client):
+        """Test updating rule priority"""
+        # Mock existing rule
         existing_rule = {
-            "id": "rule_123",
-            "filter": {"expression": "test"},
+            "id": "rule1",
             "action": "allow",
-            "description": "Old description",
+            "expression": "true",
+            "description": "Test rule",
+            "priority": 10,
             "paused": False
         }
         
-        rule_manager.api_client.list_firewall_rules.return_value = {
-            "result": [existing_rule]
+        mock_api_client.list_firewall_rules.return_value = [existing_rule]
+        mock_api_client.update_firewall_rule.return_value = {"id": "rule1", "priority": 5}
+        
+        result = await rule_manager.update_rule_priority("rule1", 5)
+        
+        assert result["id"] == "rule1"
+        assert result["priority"] == 5
+        
+        # Check update call
+        update_call_args = mock_api_client.update_firewall_rule.call_args[0]
+        assert update_call_args[0] == "rule1"
+        assert update_call_args[1]["priority"] == 5
+    
+    @pytest.mark.asyncio
+    async def test_update_rule_priority_not_found(self, rule_manager, mock_api_client):
+        """Test updating priority of non-existent rule"""
+        mock_api_client.list_firewall_rules.return_value = []
+        
+        with pytest.raises(CloudflareAPIError) as exc_info:
+            await rule_manager.update_rule_priority("nonexistent", 5)
+        
+        assert "not found" in str(exc_info.value)
+    
+    @pytest.mark.asyncio
+    async def test_disable_rule(self, rule_manager, mock_api_client):
+        """Test disabling a rule"""
+        existing_rule = {
+            "id": "rule1",
+            "action": "allow",
+            "expression": "true",
+            "description": "Test rule",
+            "priority": 10,
+            "paused": False
         }
         
-        rule_manager.api_client.update_firewall_rule.return_value = {
-            "result": {"id": "rule_123"}
-        }
+        mock_api_client.list_firewall_rules.return_value = [existing_rule]
+        mock_api_client.update_firewall_rule.return_value = {"id": "rule1", "paused": True}
         
-        # Test the method
-        result = await rule_manager.update_rule_description(
-            zone_id="zone_123",
-            rule_id="rule_123",
-            new_description="New description",
-            rule_type="firewall"
+        result = await rule_manager.disable_rule("rule1")
+        
+        assert result["id"] == "rule1"
+        assert result["paused"] is True
+        
+        # Check update call
+        update_call_args = mock_api_client.update_firewall_rule.call_args[0]
+        assert update_call_args[0] == "rule1"
+        assert update_call_args[1]["paused"] is True
+    
+    @pytest.mark.asyncio
+    async def test_cleanup_observatory_rules(self, rule_manager, mock_api_client):
+        """Test cleanup of Observatory rules"""
+        # Mock existing rules
+        observatory_firewall = [
+            {"id": "rule1", "description": "Observatory rule 1"},
+            {"id": "rule2", "description": "Observatory rule 2"}
+        ]
+        
+        observatory_rate_limit = [
+            {"id": "rate1", "description": "Observatory rate limit"}
+        ]
+        
+        mock_api_client.list_firewall_rules.return_value = observatory_firewall
+        mock_api_client.list_rate_limit_rules.return_value = observatory_rate_limit
+        mock_api_client.delete_firewall_rule.return_value = True
+        
+        result = await rule_manager.cleanup_observatory_rules()
+        
+        assert result["firewall_rules_deleted"] == 2
+        assert result["rate_limit_rules_deleted"] == 0  # Not implemented yet
+        assert result["errors"] == 0
+        
+        # Check that delete was called for each firewall rule
+        assert mock_api_client.delete_firewall_rule.call_count == 2
+    
+    @pytest.mark.asyncio
+    async def test_cleanup_observatory_rules_with_errors(self, rule_manager, mock_api_client):
+        """Test cleanup with some errors"""
+        observatory_firewall = [
+            {"id": "rule1", "description": "Observatory rule 1"},
+            {"id": "rule2", "description": "Observatory rule 2"}
+        ]
+        
+        mock_api_client.list_firewall_rules.return_value = observatory_firewall
+        mock_api_client.delete_firewall_rule.side_effect = [
+            True,  # First deletion succeeds
+            CloudflareAPIError("Delete failed")  # Second deletion fails
+        ]
+        
+        result = await rule_manager.cleanup_observatory_rules()
+        
+        assert result["firewall_rules_deleted"] == 1
+        assert result["errors"] == 1
+    
+    def test_build_firewall_rule_data(self, rule_manager):
+        """Test building firewall rule data"""
+        rule = ObservatoryRule(
+            name="test_rule",
+            expression="true",
+            action=RuleAction.ALLOW,
+            description="Test rule",
+            priority=5,
+            enabled=True
         )
         
-        # Verify results
-        assert result["result"]["id"] == "rule_123"
+        rule_data = rule_manager._build_firewall_rule_data(rule)
         
-        # Verify API calls
-        rule_manager.api_client.list_firewall_rules.assert_called_once()
-        rule_manager.api_client.update_firewall_rule.assert_called_once()
-        
-        # Verify update data
-        update_call_args = rule_manager.api_client.update_firewall_rule.call_args
-        update_data = update_call_args[0][2]  # rule_data
-        
-        assert update_data["description"] == "New description"
-        assert update_data["filter"] == existing_rule["filter"]
-        assert update_data["action"] == existing_rule["action"]
-        
-    @pytest.mark.asyncio
-    async def test_update_rule_description_firewall_not_found(self, rule_manager):
-        """Test firewall rule description update when rule not found."""
-        # Mock empty rules list
-        rule_manager.api_client.list_firewall_rules.return_value = {"result": []}
-        
-        # Test the method - should raise CloudflareAPIError
-        with pytest.raises(CloudflareAPIError, match="Firewall rule rule_123 not found"):
-            await rule_manager.update_rule_description(
-                zone_id="zone_123",
-                rule_id="rule_123",
-                new_description="New description",
-                rule_type="firewall"
-            )
-            
-    @pytest.mark.asyncio
-    async def test_update_rule_description_rate_limit_not_implemented(self, rule_manager):
-        """Test rate limit rule description update (not implemented)."""
-        # Test the method - should raise CloudflareAPIError
-        with pytest.raises(CloudflareAPIError, match="Rate limit rule updates not fully implemented"):
-            await rule_manager.update_rule_description(
-                zone_id="zone_123",
-                rule_id="rate_limit_123",
-                new_description="New description",
-                rule_type="rate_limit"
-            )
-            
-    @pytest.mark.asyncio
-    async def test_update_rule_description_unknown_type(self, rule_manager):
-        """Test rule description update with unknown rule type."""
-        # Test the method - should raise CloudflareAPIError
-        with pytest.raises(CloudflareAPIError, match="Unknown rule type: unknown"):
-            await rule_manager.update_rule_description(
-                zone_id="zone_123",
-                rule_id="rule_123",
-                new_description="New description",
-                rule_type="unknown"
-            )
-            
-    @pytest.mark.asyncio
-    async def test_delete_rule_firewall_success(self, rule_manager):
-        """Test successful firewall rule deletion."""
-        # Mock API client response
-        rule_manager.api_client.delete_firewall_rule.return_value = {
-            "result": {"id": "rule_123"}
-        }
-        
-        # Test the method
-        result = await rule_manager.delete_rule(
-            zone_id="zone_123",
-            rule_id="rule_123",
-            rule_type="firewall"
+        assert rule_data["action"] == "allow"
+        assert rule_data["expression"] == "true"
+        assert rule_data["description"] == "Test rule"
+        assert rule_data["priority"] == 5
+        assert rule_data["paused"] is False  # enabled=True means paused=False
+    
+    def test_build_firewall_rule_data_disabled(self, rule_manager):
+        """Test building firewall rule data for disabled rule"""
+        rule = ObservatoryRule(
+            name="test_rule",
+            expression="true",
+            action=RuleAction.ALLOW,
+            description="Test rule",
+            priority=5,
+            enabled=False
         )
         
-        # Verify results
-        assert result["result"]["id"] == "rule_123"
+        rule_data = rule_manager._build_firewall_rule_data(rule)
         
-        # Verify API call
-        rule_manager.api_client.delete_firewall_rule.assert_called_once_with("zone_123", "rule_123")
-        
-    @pytest.mark.asyncio
-    async def test_delete_rule_unknown_type(self, rule_manager):
-        """Test rule deletion with unknown rule type."""
-        # Test the method - should raise CloudflareAPIError
-        with pytest.raises(CloudflareAPIError, match="Rule deletion not implemented for type: unknown"):
-            await rule_manager.delete_rule(
-                zone_id="zone_123",
-                rule_id="rule_123",
-                rule_type="unknown"
-            )
+        assert rule_data["paused"] is True  # enabled=False means paused=True
+    
+    def test_log_action(self, rule_manager):
+        """Test logging functionality"""
+        with patch('builtins.print') as mock_print:
+            rule_manager._log_action("test_action", "completed", {"test": "data"})
             
-    @pytest.mark.asyncio
-    async def test_delete_rule_api_error(self, rule_manager):
-        """Test rule deletion with API error."""
-        # Mock API client error
-        rule_manager.api_client.delete_firewall_rule.side_effect = CloudflareAPIError("API Error")
-        
-        # Test the method - should raise CloudflareAPIError
-        with pytest.raises(CloudflareAPIError):
-            await rule_manager.delete_rule(
-                zone_id="zone_123",
-                rule_id="rule_123",
-                rule_type="firewall"
-            )
+            mock_print.assert_called_once()
+            # Verify JSON format
+            call_args = mock_print.call_args[0][0]
+            import json
+            log_data = json.loads(call_args)
             
-    @pytest.mark.asyncio
-    async def test_list_observatory_rules_success(self, rule_manager):
-        """Test successful Observatory rules listing."""
-        # Mock API client response
-        mock_rules = [
-            {
-                "id": "rule_1",
-                "description": "Observatory internal polling traffic",
-                "action": "allow",
-                "filter": {"expression": "test"},
-                "paused": False
-            },
-            {
-                "id": "rule_2", 
-                "description": "Regular firewall rule",
-                "action": "block",
-                "filter": {"expression": "test2"},
-                "paused": False
-            },
-            {
-                "id": "rule_3",
-                "description": "Observatory WebSocket endpoints",
-                "action": "allow",
-                "filter": {"expression": "test3"},
-                "paused": False
-            }
-        ]
-        
-        rule_manager.api_client.list_firewall_rules.return_value = {"result": mock_rules}
-        
-        # Test the method
-        result = await rule_manager.list_observatory_rules("zone_123")
-        
-        # Verify results - should only include Observatory rules
-        assert len(result) == 2
-        assert result[0]["id"] == "rule_1"
-        assert result[1]["id"] == "rule_3"
-        
-        # Verify all returned rules have Observatory in description
-        for rule in result:
-            assert "observatory" in rule["description"].lower()
-            assert "type" in rule
-            assert rule["type"] == "firewall"
-            
-    @pytest.mark.asyncio
-    async def test_list_observatory_rules_api_error(self, rule_manager):
-        """Test Observatory rules listing with API error."""
-        # Mock API client error
-        rule_manager.api_client.list_firewall_rules.side_effect = CloudflareAPIError("API Error")
-        
-        # Test the method - should raise CloudflareAPIError
-        with pytest.raises(CloudflareAPIError):
-            await rule_manager.list_observatory_rules("zone_123")
-            
-    def test_validate_rule_syntax_valid(self, rule_manager):
-        """Test rule syntax validation with valid expression."""
-        valid_expressions = [
-            '(http.user_agent contains "Observatory-Internal")',
-            '(http.request.uri.path matches "^/ws/")',
-            '(http.request.headers["x-observatory-client"][0] eq "internal-polling")',
-            '(ip.src eq 192.168.1.1)',
-            '(cf.threat_score gt 10)'
-        ]
-        
-        for expression in valid_expressions:
-            assert rule_manager.validate_rule_syntax(expression) is True
-            
-    def test_validate_rule_syntax_invalid(self, rule_manager):
-        """Test rule syntax validation with invalid expressions."""
-        invalid_expressions = [
-            "",  # Empty
-            None,  # None
-            "invalid expression",  # No parentheses
-            "(unbalanced parentheses",  # Unbalanced
-            "(no http field)",  # No required fields
-            "()",  # Empty parentheses
-        ]
-        
-        for expression in invalid_expressions:
-            assert rule_manager.validate_rule_syntax(expression) is False
-            
-    def test_validate_rule_syntax_exception(self, rule_manager):
-        """Test rule syntax validation with exception."""
-        # Mock an exception in validation
-        with patch.object(rule_manager, 'validate_rule_syntax', side_effect=Exception("Test error")):
-            # The method should catch the exception and return False
-            result = rule_manager.validate_rule_syntax("test")
-            assert result is False
+            assert log_data["task"] == "5.1"
+            assert log_data["action"] == "test_action"
+            assert log_data["status"] == "completed"
+            assert log_data["details"] == {"test": "data"}

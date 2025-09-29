@@ -1,197 +1,219 @@
 """
-Unit tests for RequestDeduplicator.
+Unit tests for RequestDeduplicator
 """
 
 import pytest
 import asyncio
-from datetime import datetime, timedelta
-from unittest.mock import patch, AsyncMock
+import time
+from unittest.mock import patch
 
-from src.beast_mode.observatory.polling.request_deduplicator import RequestDeduplicator, CachedRequest
+from src.beast_mode.observatory.polling.request_deduplicator import RequestDeduplicator
 
 
 class TestRequestDeduplicator:
-    """Test cases for RequestDeduplicator."""
+    """Test cases for RequestDeduplicator"""
     
     @pytest.fixture
     def deduplicator(self):
-        """Create a RequestDeduplicator instance for testing."""
-        return RequestDeduplicator(cache_ttl=10, max_cache_size=100)
+        """Create a RequestDeduplicator instance for testing"""
+        return RequestDeduplicator(cache_ttl=10.0, batch_window=1.0)
     
-    @pytest.fixture
-    def mock_request_func(self):
-        """Create a mock request function."""
-        async def mock_func(endpoint, params=None):
-            return {"data": "test"}, 200
-        return mock_func
+    def test_generate_request_key(self, deduplicator):
+        """Test request key generation"""
+        endpoint1 = "https://api.example.com/data"
+        params1 = {"param1": "value1", "param2": "value2"}
+        headers1 = {"User-Agent": "test-agent"}
+        
+        endpoint2 = "https://api.example.com/data"
+        params2 = {"param2": "value2", "param1": "value1"}  # Different order
+        headers2 = {"User-Agent": "test-agent"}
+        
+        # Same request should generate same key
+        key1 = deduplicator._generate_request_key(endpoint1, params1, headers1)
+        key2 = deduplicator._generate_request_key(endpoint2, params2, headers2)
+        assert key1 == key2
+        
+        # Different endpoint should generate different key
+        endpoint3 = "https://api.example.com/other"
+        key3 = deduplicator._generate_request_key(endpoint3, params1, headers1)
+        assert key1 != key3
     
     @pytest.mark.asyncio
-    async def test_cache_miss_new_request(self, deduplicator, mock_request_func):
-        """Test cache miss triggers new request."""
-        endpoint = "test-endpoint"
-        params = {"key": "value"}
+    async def test_get_or_create_request_new(self, deduplicator):
+        """Test creating a new request"""
+        endpoint = "https://api.example.com/data"
+        params = {"param1": "value1"}
+        headers = {"User-Agent": "test-agent"}
+        client_id = "client-1"
         
-        response_data, status_code = await deduplicator.get_or_request(
-            endpoint, params, mock_request_func
+        request, is_new = await deduplicator.get_or_create_request(
+            endpoint, params, headers, client_id
         )
         
-        assert response_data == {"data": "test"}
-        assert status_code == 200
-        assert len(deduplicator.cache) == 1
+        assert is_new is True
+        assert request.endpoint == endpoint
+        assert request.params == params
+        assert request.headers == headers
+        assert client_id in request.clients_waiting
     
     @pytest.mark.asyncio
-    async def test_cache_hit_returns_cached(self, deduplicator, mock_request_func):
-        """Test cache hit returns cached response."""
-        endpoint = "test-endpoint"
-        params = {"key": "value"}
+    async def test_get_or_create_request_cached(self, deduplicator):
+        """Test getting a cached request"""
+        endpoint = "https://api.example.com/data"
+        params = {"param1": "value1"}
+        headers = {"User-Agent": "test-agent"}
         
-        # First request
-        response_data1, status_code1 = await deduplicator.get_or_request(
-            endpoint, params, mock_request_func
+        # Create first request
+        request1, is_new1 = await deduplicator.get_or_create_request(
+            endpoint, params, headers, "client-1"
+        )
+        assert is_new1 is True
+        
+        # Complete the request
+        await deduplicator.complete_request(
+            deduplicator._generate_request_key(endpoint, params, headers),
+            response_data={"result": "success"},
+            status_code=200
         )
         
-        # Second request with same parameters
-        response_data2, status_code2 = await deduplicator.get_or_request(
-            endpoint, params, mock_request_func
+        # Get same request again
+        request2, is_new2 = await deduplicator.get_or_create_request(
+            endpoint, params, headers, "client-2"
+        )
+        assert is_new2 is False
+        assert request2.response_data == {"result": "success"}
+        assert request2.status_code == 200
+    
+    @pytest.mark.asyncio
+    async def test_get_or_create_request_deduplication(self, deduplicator):
+        """Test request deduplication for active requests"""
+        endpoint = "https://api.example.com/data"
+        params = {"param1": "value1"}
+        headers = {"User-Agent": "test-agent"}
+        
+        # Create first request
+        request1, is_new1 = await deduplicator.get_or_create_request(
+            endpoint, params, headers, "client-1"
+        )
+        assert is_new1 is True
+        
+        # Try to create same request while first is still active
+        request2, is_new2 = await deduplicator.get_or_create_request(
+            endpoint, params, headers, "client-2"
+        )
+        assert is_new2 is False
+        assert request1 == request2
+        assert "client-2" in request1.clients_waiting
+    
+    @pytest.mark.asyncio
+    async def test_complete_request(self, deduplicator):
+        """Test request completion"""
+        endpoint = "https://api.example.com/data"
+        params = {"param1": "value1"}
+        headers = {"User-Agent": "test-agent"}
+        
+        # Create request
+        request, is_new = await deduplicator.get_or_create_request(
+            endpoint, params, headers, "client-1"
+        )
+        assert is_new is True
+        
+        # Complete request
+        request_key = deduplicator._generate_request_key(endpoint, params, headers)
+        await deduplicator.complete_request(
+            request_key,
+            response_data={"result": "success"},
+            response_headers={"Content-Type": "application/json"},
+            status_code=200
         )
         
-        assert response_data1 == response_data2
-        assert status_code1 == status_code2
-        assert len(deduplicator.cache) == 1
+        # Check that request is now cached
+        stats = deduplicator.get_stats()
+        assert stats["cache_size"] == 1
+        assert stats["active_requests"] == 0
     
     @pytest.mark.asyncio
-    async def test_different_params_create_different_cache_entries(self, deduplicator, mock_request_func):
-        """Test different parameters create different cache entries."""
-        endpoint = "test-endpoint"
+    async def test_cache_expiration(self, deduplicator):
+        """Test cache expiration"""
+        endpoint = "https://api.example.com/data"
+        params = {"param1": "value1"}
+        headers = {"User-Agent": "test-agent"}
         
-        # First request
-        await deduplicator.get_or_request(
-            endpoint, {"key1": "value1"}, mock_request_func
+        # Create and complete request
+        request, is_new = await deduplicator.get_or_create_request(
+            endpoint, params, headers, "client-1"
         )
+        request_key = deduplicator._generate_request_key(endpoint, params, headers)
+        await deduplicator.complete_request(request_key, response_data={"result": "success"})
         
-        # Second request with different parameters
-        await deduplicator.get_or_request(
-            endpoint, {"key2": "value2"}, mock_request_func
+        # Mock time to simulate cache expiration
+        with patch('time.time', return_value=time.time() + 15.0):  # Past TTL
+            # Try to get same request - should create new one
+            request2, is_new2 = await deduplicator.get_or_create_request(
+                endpoint, params, headers, "client-2"
+            )
+            assert is_new2 is True
+    
+    @pytest.mark.asyncio
+    async def test_batching_logic(self, deduplicator):
+        """Test request batching"""
+        endpoint = "https://api.example.com/data"
+        params = {"param1": "value1"}
+        headers = {"User-Agent": "test-agent"}
+        
+        # Create first request
+        request1, is_new1 = await deduplicator.get_or_create_request(
+            endpoint, params, headers, "client-1"
         )
+        assert is_new1 is True
         
-        assert len(deduplicator.cache) == 2
-    
-    @pytest.mark.asyncio
-    async def test_request_batching(self, deduplicator):
-        """Test that multiple simultaneous requests are batched."""
-        endpoint = "test-endpoint"
-        params = {"key": "value"}
-        
-        call_count = 0
-        
-        async def counting_request_func(endpoint, params=None):
-            nonlocal call_count
-            call_count += 1
-            await asyncio.sleep(0.1)  # Simulate network delay
-            return {"data": f"response-{call_count}"}, 200
-        
-        # Make multiple simultaneous requests
-        tasks = [
-            deduplicator.get_or_request(endpoint, params, counting_request_func)
-            for _ in range(3)
-        ]
-        
-        results = await asyncio.gather(*tasks)
-        
-        # All requests should get the same response
-        for response_data, status_code in results:
-            assert response_data == {"data": "response-1"}
-            assert status_code == 200
-        
-        # Only one actual HTTP request should have been made
-        assert call_count == 1
-    
-    @pytest.mark.asyncio
-    async def test_cache_expiration(self, deduplicator, mock_request_func):
-        """Test cache expiration."""
-        endpoint = "test-endpoint"
-        params = {"key": "value"}
-        
-        # First request
-        await deduplicator.get_or_request(endpoint, params, mock_request_func)
-        assert len(deduplicator.cache) == 1
-        
-        # Simulate time passing beyond TTL
-        with patch('src.beast_mode.observatory.polling.request_deduplicator.datetime') as mock_datetime:
-            mock_datetime.utcnow.return_value = datetime.utcnow() + timedelta(seconds=15)
-            
-            # Second request should trigger new HTTP request
-            await deduplicator.get_or_request(endpoint, params, mock_request_func)
-            
-            # Cache should be cleaned up
-            assert len(deduplicator.cache) == 1
-    
-    @pytest.mark.asyncio
-    async def test_request_error_propagation(self, deduplicator):
-        """Test that request errors are properly propagated."""
-        endpoint = "test-endpoint"
-        
-        async def error_request_func(endpoint, params=None):
-            raise Exception("Network error")
-        
-        with pytest.raises(Exception, match="Network error"):
-            await deduplicator.get_or_request(endpoint, {}, error_request_func)
-    
-    @pytest.mark.asyncio
-    async def test_cache_size_limit(self, deduplicator):
-        """Test cache size limit enforcement."""
-        # Create deduplicator with small cache size
-        small_deduplicator = RequestDeduplicator(cache_ttl=3600, max_cache_size=2)
-        
-        async def mock_request_func(endpoint, params=None):
-            return {"data": "test"}, 200
-        
-        # Fill cache to limit
-        await small_deduplicator.get_or_request("endpoint1", {}, mock_request_func)
-        await small_deduplicator.get_or_request("endpoint2", {}, mock_request_func)
-        
-        # Add one more request
-        await small_deduplicator.get_or_request("endpoint3", {}, mock_request_func)
-        
-        # Cache should not exceed limit
-        assert len(small_deduplicator.cache) <= 2
-    
-    def test_get_cache_stats(self, deduplicator):
-        """Test cache statistics."""
-        stats = deduplicator.get_cache_stats()
-        
-        assert "total_entries" in stats
-        assert "valid_entries" in stats
-        assert "expired_entries" in stats
-        assert "pending_requests" in stats
-        assert "request_counts" in stats
-    
-    def test_clear_cache(self, deduplicator):
-        """Test cache clearing."""
-        # Add some cache entries
-        cached_request = CachedRequest(
-            endpoint="test",
-            params_hash="hash",
-            timestamp=datetime.utcnow(),
-            response_data={"data": "test"},
-            response_status=200
+        # Create second request quickly - should be batched
+        request2, is_new2 = await deduplicator.get_or_create_request(
+            endpoint, params, headers, "client-2"
         )
-        deduplicator.cache["test:hash"] = cached_request
+        assert is_new2 is False  # Should be deduplicated
         
-        assert len(deduplicator.cache) == 1
-        
-        deduplicator.clear_cache()
-        
-        assert len(deduplicator.cache) == 0
+        # Check batching stats
+        stats = deduplicator.get_stats()
+        assert stats["stats"]["batched_requests"] > 0
     
-    def test_params_hash_generation(self, deduplicator):
-        """Test parameter hash generation."""
-        endpoint = "test-endpoint"
-        params1 = {"key1": "value1", "key2": "value2"}
-        params2 = {"key2": "value2", "key1": "value1"}  # Different order
+    @pytest.mark.asyncio
+    async def test_clear_cache(self, deduplicator):
+        """Test cache clearing"""
+        endpoint = "https://api.example.com/data"
+        params = {"param1": "value1"}
+        headers = {"User-Agent": "test-agent"}
         
-        hash1 = deduplicator._generate_params_hash(endpoint, params1)
-        hash2 = deduplicator._generate_params_hash(endpoint, params2)
+        # Create and complete request
+        request, is_new = await deduplicator.get_or_create_request(
+            endpoint, params, headers, "client-1"
+        )
+        request_key = deduplicator._generate_request_key(endpoint, params, headers)
+        await deduplicator.complete_request(request_key, response_data={"result": "success"})
         
-        # Hashes should be the same regardless of parameter order
-        assert hash1 == hash2
+        # Check cache has data
+        stats = deduplicator.get_stats()
+        assert stats["cache_size"] == 1
+        
+        # Clear cache
+        await deduplicator.clear_cache()
+        
+        # Check cache is empty
+        stats = deduplicator.get_stats()
+        assert stats["cache_size"] == 0
+        assert stats["active_requests"] == 0
+    
+    def test_stats_tracking(self, deduplicator):
+        """Test statistics tracking"""
+        stats = deduplicator.get_stats()
+        
+        assert "stats" in stats
+        assert "cache_size" in stats
+        assert "active_requests" in stats
+        assert "pending_batches" in stats
+        assert "batch_timers" in stats
+        
+        # Check initial stats
+        assert stats["stats"]["total_requests"] == 0
+        assert stats["cache_size"] == 0
+        assert stats["active_requests"] == 0

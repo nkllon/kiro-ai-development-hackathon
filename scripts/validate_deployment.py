@@ -1,57 +1,49 @@
 #!/usr/bin/env python3
 """
 Deployment Validation Suite
+Task 7.2: Deployment Automation and Validation
 
-Comprehensive validation system for WebSocket deployment with health checks,
-performance monitoring, and quality assurance validation.
-
-Features:
-- Multi-stage health validation
+This script provides comprehensive post-deployment validation including:
+- Health checks for all environments
+- WebSocket functionality validation
 - Performance metrics validation
-- End-to-end connectivity testing
-- Quality assurance checks
-- Automated reporting and alerting
+- Configuration validation
+- Automated rollback triggers
 """
 
 import asyncio
 import json
 import logging
-import requests
-import subprocess
-import sys
 import time
-from dataclasses import dataclass, field
-from datetime import datetime, timedelta
-from enum import Enum
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
 import yaml
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Dict, List, Optional, Any, Tuple
+from dataclasses import dataclass, asdict
+from enum import Enum
+
+import aiohttp
 import websockets
-from concurrent.futures import ThreadPoolExecutor
+from websockets.exceptions import ConnectionClosed, InvalidStatusCode
 
-# Add src to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+# Add project root to path
+import sys
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from beast_mode.observatory.websocket import (
-    WebSocketHealthValidator,
-    HealthStatus,
-    EndpointMonitor,
-    FailureDetector,
-    QualityMetricsCollector
-)
-from beast_mode.observatory.monitoring.health_monitor import WebSocketHealthMonitor
+from src.beast_mode.observatory.tunnel.tunnel_config_manager import TunnelConfigManager
+from src.beast_mode.observatory.websocket.manager import WebSocketManager, WebSocketManagerConfig
 
 
 class ValidationStatus(Enum):
-    """Validation status levels"""
+    """Validation status enumeration."""
     PASSED = "passed"
-    WARNING = "warning"
     FAILED = "failed"
+    WARNING = "warning"
     SKIPPED = "skipped"
 
 
 class ValidationSeverity(Enum):
-    """Validation severity levels"""
+    """Validation severity levels."""
     CRITICAL = "critical"
     HIGH = "high"
     MEDIUM = "medium"
@@ -60,869 +52,1108 @@ class ValidationSeverity(Enum):
 
 @dataclass
 class ValidationResult:
-    """Result of a validation check"""
-    check_name: str
+    """Result of a validation check."""
+    name: str
     status: ValidationStatus
     severity: ValidationSeverity
     message: str
-    details: Dict[str, Any] = field(default_factory=dict)
-    timestamp: datetime = field(default_factory=datetime.now)
-    duration_ms: float = 0.0
+    details: Dict[str, Any] = None
+    execution_time_ms: float = 0.0
+    timestamp: datetime = None
+    
+    def __post_init__(self):
+        if self.timestamp is None:
+            self.timestamp = datetime.now()
+        if self.details is None:
+            self.details = {}
 
 
 @dataclass
-class ValidationConfig:
-    """Configuration for validation suite"""
-    # Environment configurations
-    environments: Dict[str, Dict[str, Any]] = field(default_factory=dict)
+class ValidationSuite:
+    """Complete validation suite results."""
+    suite_name: str
+    start_time: datetime
+    end_time: Optional[datetime] = None
+    overall_status: ValidationStatus = ValidationStatus.PASSED
+    results: List[ValidationResult] = None
+    summary: Dict[str, Any] = None
     
-    # Validation thresholds
-    thresholds: Dict[str, float] = field(default_factory=lambda: {
-        "max_latency_ms": 1000,
-        "max_error_rate": 0.05,
-        "min_throughput_msgs_per_sec": 1.0,
-        "max_connection_failure_rate": 0.1,
-        "min_health_score": 0.8,
-        "max_response_time_ms": 2000
-    })
-    
-    # Test configuration
-    test_duration_seconds: int = 300  # 5 minutes
-    test_interval_seconds: int = 10
-    max_concurrent_tests: int = 5
-    
-    # Reporting configuration
-    generate_report: bool = True
-    report_format: str = "json"  # json, html, text
-    alert_on_failure: bool = True
+    def __post_init__(self):
+        if self.results is None:
+            self.results = []
+        if self.summary is None:
+            self.summary = {}
 
 
 class DeploymentValidator:
-    """
-    Comprehensive deployment validation system.
+    """Comprehensive deployment validation system."""
     
-    Performs multi-stage validation including health checks, performance
-    monitoring, and quality assurance validation.
-    """
-    
-    def __init__(self, config_path: Optional[str] = None):
-        """Initialize validator with configuration"""
-        self.config = self._load_config(config_path)
+    def __init__(self, config_path: str = "deployment-config.yml"):
+        """Initialize deployment validator."""
+        self.config_path = Path(config_path)
+        self.config = self._load_config()
+        self.tunnel_manager = TunnelConfigManager()
         self.logger = self._setup_logging()
         
-        # Initialize monitoring components
-        self.health_validator = WebSocketHealthValidator()
-        self.endpoint_monitor = EndpointMonitor()
-        self.failure_detector = FailureDetector()
-        self.health_monitor = WebSocketHealthMonitor()
-        self.quality_metrics = QualityMetricsCollector()
-        
-        # Validation tracking
-        self.validation_results: List[ValidationResult] = []
-        self.test_metrics: Dict[str, List[float]] = {}
-        
-        self.logger.info("Deployment Validator initialized")
+        self.log_action("deployment_validator_init", "completed", {
+            "config_path": str(self.config_path),
+            "environments": list(self.config.environments.keys())
+        })
     
-    def _load_config(self, config_path: Optional[str]) -> ValidationConfig:
-        """Load validation configuration from file or use defaults"""
-        if config_path and Path(config_path).exists():
-            with open(config_path, 'r') as f:
-                config_data = yaml.safe_load(f)
-                return ValidationConfig(**config_data)
+    def _load_config(self) -> Dict[str, Any]:
+        """Load deployment configuration."""
+        if not self.config_path.exists():
+            raise FileNotFoundError(f"Configuration file not found: {self.config_path}")
         
-        # Default configuration
-        return ValidationConfig(
-            environments={
-                "dev": {
-                    "url": "http://localhost:8888",
-                    "websocket_url": "ws://localhost:8888/ws",
-                    "health_endpoint": "/health",
-                    "expected_response_time_ms": 500
-                },
-                "staging": {
-                    "url": "https://staging-observatory.nkllon.com",
-                    "websocket_url": "wss://staging-observatory.nkllon.com/ws",
-                    "health_endpoint": "/health",
-                    "expected_response_time_ms": 1000
-                },
-                "production": {
-                    "url": "https://observatory.nkllon.com",
-                    "websocket_url": "wss://observatory.nkllon.com/ws",
-                    "health_endpoint": "/health",
-                    "expected_response_time_ms": 1500
-                }
-            }
-        )
+        with open(self.config_path, 'r') as f:
+            return yaml.safe_load(f)
     
     def _setup_logging(self) -> logging.Logger:
-        """Setup structured logging for validation operations"""
+        """Setup logging configuration."""
         logger = logging.getLogger("deployment_validator")
         logger.setLevel(logging.INFO)
         
-        # Create logs directory if it doesn't exist
-        logs_dir = Path("logs")
-        logs_dir.mkdir(exist_ok=True)
-        
-        # File handler for validation logs
-        file_handler = logging.FileHandler(
-            logs_dir / f"validation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-        )
-        file_handler.setLevel(logging.INFO)
-        
-        # Console handler for real-time output
-        console_handler = logging.StreamHandler()
-        console_handler.setLevel(logging.INFO)
-        
-        # JSON formatter for structured logs
-        json_formatter = logging.Formatter(
-            '{"timestamp": "%(asctime)s", "level": "%(levelname)s", '
-            '"component": "validation", "message": "%(message)s"}'
-        )
-        file_handler.setFormatter(json_formatter)
-        console_handler.setFormatter(logging.Formatter(
-            '%(asctime)s - %(levelname)s - %(message)s'
-        ))
-        
-        logger.addHandler(file_handler)
-        logger.addHandler(console_handler)
+        if not logger.handlers:
+            handler = logging.StreamHandler()
+            formatter = logging.Formatter(
+                '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            )
+            handler.setFormatter(formatter)
+            logger.addHandler(handler)
         
         return logger
     
-    async def validate_deployment(
-        self,
-        environments: List[str] = None,
-        validation_types: List[str] = None
-    ) -> Dict[str, Any]:
-        """
-        Execute comprehensive deployment validation.
+    def log_action(self, action: str, status: str, details: Dict[str, Any] = None):
+        """Log action in JSON format as required."""
+        log_entry = {
+            "timestamp": datetime.now().isoformat(),
+            "task": "7.2",
+            "action": f"DeploymentValidator.{action}",
+            "status": status,
+            "details": details or {}
+        }
+        print(json.dumps(log_entry))
+    
+    async def validate_deployment(self, 
+                                environment: str = "production",
+                                validate_all_envs: bool = False) -> ValidationSuite:
+        """Perform comprehensive deployment validation."""
+        start_time = datetime.now()
         
-        Args:
-            environments: List of environments to validate (default: all)
-            validation_types: List of validation types to run (default: all)
-            
-        Returns:
-            Dict containing validation results and summary
-        """
-        if environments is None:
-            environments = list(self.config.environments.keys())
+        self.log_action("validate_deployment_start", "in_progress", {
+            "environment": environment,
+            "validate_all_envs": validate_all_envs
+        })
         
-        if validation_types is None:
-            validation_types = [
-                "health_check", "performance", "connectivity", 
-                "websocket", "tunnel", "monitoring", "quality_assurance"
-            ]
-        
-        self.logger.info(f"Starting deployment validation for environments: {environments}")
-        
-        validation_start = datetime.now()
-        overall_status = "passed"
-        environment_results = {}
+        suite = ValidationSuite(
+            suite_name=f"deployment_validation_{environment}",
+            start_time=start_time
+        )
         
         try:
-            # Execute validation for each environment
+            # Determine environments to validate
+            if validate_all_envs:
+                environments = list(self.config["environments"].keys())
+            else:
+                environments = [environment]
+            
+            # Run validation for each environment
             for env in environments:
-                self.logger.info(f"Validating environment: {env}")
-                
-                env_result = await self._validate_environment(env, validation_types)
-                environment_results[env] = env_result
-                
-                # Check if validation failed
-                if env_result["overall_status"] == "failed":
-                    self.logger.error(f"Validation failed for environment: {env}")
-                    overall_status = "failed"
-                
-            # Generate comprehensive report
-            if self.config.generate_report:
-                await self._generate_validation_report(environment_results)
+                env_results = await self._validate_environment(env)
+                suite.results.extend(env_results)
+            
+            # Run cross-environment validations
+            cross_env_results = await self._validate_cross_environment()
+            suite.results.extend(cross_env_results)
+            
+            # Run configuration validations
+            config_results = await self._validate_configuration()
+            suite.results.extend(config_results)
+            
+            # Run performance validations
+            performance_results = await self._validate_performance(environment)
+            suite.results.extend(performance_results)
+            
+            # Run security validations
+            security_results = await self._validate_security(environment)
+            suite.results.extend(security_results)
+            
+            # Calculate overall status
+            suite.overall_status = self._calculate_overall_status(suite.results)
+            suite.end_time = datetime.now()
+            suite.summary = self._generate_summary(suite.results)
+            
+            self.log_action("validate_deployment_complete", "completed", {
+                "environment": environment,
+                "overall_status": suite.overall_status.value,
+                "total_checks": len(suite.results),
+                "duration_seconds": (suite.end_time - suite.start_time).total_seconds()
+            })
             
         except Exception as e:
-            self.logger.error(f"Validation failed with exception: {e}")
-            overall_status = "failed"
+            suite.end_time = datetime.now()
+            suite.overall_status = ValidationStatus.FAILED
+            
+            error_result = ValidationResult(
+                name="validation_suite_error",
+                status=ValidationStatus.FAILED,
+                severity=ValidationSeverity.CRITICAL,
+                message=f"Validation suite failed: {str(e)}",
+                details={"error_type": type(e).__name__}
+            )
+            suite.results.append(error_result)
+            
+            self.log_action("validate_deployment_error", "error", {"error": str(e)})
         
-        validation_end = datetime.now()
-        validation_duration = (validation_end - validation_start).total_seconds()
-        
-        # Generate summary
-        summary = {
-            "overall_status": overall_status,
-            "validation_duration_seconds": validation_duration,
-            "environments_validated": environments,
-            "total_checks": len(self.validation_results),
-            "passed_checks": len([r for r in self.validation_results if r.status == ValidationStatus.PASSED]),
-            "failed_checks": len([r for r in self.validation_results if r.status == ValidationStatus.FAILED]),
-            "warning_checks": len([r for r in self.validation_results if r.status == ValidationStatus.WARNING]),
-            "environment_results": environment_results,
-            "critical_issues": [
-                r for r in self.validation_results 
-                if r.status == ValidationStatus.FAILED and r.severity == ValidationSeverity.CRITICAL
-            ]
-        }
-        
-        self.logger.info(f"Validation completed with status: {overall_status}")
-        return summary
+        return suite
     
-    async def _validate_environment(
-        self, 
-        environment: str, 
-        validation_types: List[str]
-    ) -> Dict[str, Any]:
-        """Validate a specific environment"""
-        env_config = self.config.environments[environment]
+    async def _validate_environment(self, environment: str) -> List[ValidationResult]:
+        """Validate a specific environment."""
+        self.log_action("validate_environment", "in_progress", {"environment": environment})
         
-        self.logger.info(f"Starting validation for {environment}")
+        results = []
+        env_config = self.config["environments"][environment]
         
-        validation_tasks = []
+        try:
+            # HTTP Health Check
+            http_result = await self._validate_http_health(environment, env_config)
+            results.append(http_result)
+            
+            # WebSocket Health Check
+            websocket_result = await self._validate_websocket_health(environment, env_config)
+            results.append(websocket_result)
+            
+            # Response Time Check
+            response_time_result = await self._validate_response_time(environment, env_config)
+            results.append(response_time_result)
+            
+            # WebSocket Endpoints Check
+            endpoints_result = await self._validate_websocket_endpoints(environment, env_config)
+            results.append(endpoints_result)
+            
+            # Tunnel Configuration Check
+            tunnel_result = await self._validate_tunnel_configuration(environment)
+            results.append(tunnel_result)
+            
+            self.log_action("validate_environment", "completed", {
+                "environment": environment,
+                "checks_performed": len(results)
+            })
+            
+        except Exception as e:
+            error_result = ValidationResult(
+                name=f"environment_validation_error_{environment}",
+                status=ValidationStatus.FAILED,
+                severity=ValidationSeverity.CRITICAL,
+                message=f"Environment validation failed: {str(e)}",
+                details={"environment": environment, "error": str(e)}
+            )
+            results.append(error_result)
+            self.log_action("validate_environment", "error", {"environment": environment, "error": str(e)})
         
-        # Create validation tasks based on types
-        if "health_check" in validation_types:
-            validation_tasks.append(self._validate_health_endpoints(environment, env_config))
+        return results
+    
+    async def _validate_http_health(self, environment: str, env_config: Dict[str, Any]) -> ValidationResult:
+        """Validate HTTP health endpoint."""
+        start_time = time.time()
         
-        if "performance" in validation_types:
-            validation_tasks.append(self._validate_performance_metrics(environment, env_config))
+        try:
+            health_url = f"{env_config['url']}{env_config['health_endpoint']}"
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.get(health_url, timeout=10) as response:
+                    execution_time = (time.time() - start_time) * 1000
+                    
+                    if response.status == 200:
+                        return ValidationResult(
+                            name=f"http_health_{environment}",
+                            status=ValidationStatus.PASSED,
+                            severity=ValidationSeverity.HIGH,
+                            message=f"HTTP health check passed for {environment}",
+                            details={
+                                "url": health_url,
+                                "status_code": response.status,
+                                "response_time_ms": execution_time
+                            },
+                            execution_time_ms=execution_time
+                        )
+                    else:
+                        return ValidationResult(
+                            name=f"http_health_{environment}",
+                            status=ValidationStatus.FAILED,
+                            severity=ValidationSeverity.CRITICAL,
+                            message=f"HTTP health check failed for {environment}: Status {response.status}",
+                            details={
+                                "url": health_url,
+                                "status_code": response.status,
+                                "response_time_ms": execution_time
+                            },
+                            execution_time_ms=execution_time
+                        )
+                        
+        except Exception as e:
+            execution_time = (time.time() - start_time) * 1000
+            return ValidationResult(
+                name=f"http_health_{environment}",
+                status=ValidationStatus.FAILED,
+                severity=ValidationSeverity.CRITICAL,
+                message=f"HTTP health check failed for {environment}: {str(e)}",
+                details={
+                    "url": f"{env_config['url']}{env_config['health_endpoint']}",
+                    "error": str(e),
+                    "response_time_ms": execution_time
+                },
+                execution_time_ms=execution_time
+            )
+    
+    async def _validate_websocket_health(self, environment: str, env_config: Dict[str, Any]) -> ValidationResult:
+        """Validate WebSocket health."""
+        start_time = time.time()
         
-        if "connectivity" in validation_types:
-            validation_tasks.append(self._validate_connectivity(environment, env_config))
+        try:
+            websocket_url = env_config["websocket_url"]
+            
+            async with websockets.connect(websocket_url, timeout=10) as websocket:
+                # Test basic connectivity
+                await websocket.ping()
+                
+                # Test message sending
+                test_message = {
+                    "type": "health_check",
+                    "timestamp": datetime.now().isoformat(),
+                    "environment": environment
+                }
+                await websocket.send(json.dumps(test_message))
+                
+                execution_time = (time.time() - start_time) * 1000
+                
+                return ValidationResult(
+                    name=f"websocket_health_{environment}",
+                    status=ValidationStatus.PASSED,
+                    severity=ValidationSeverity.HIGH,
+                    message=f"WebSocket health check passed for {environment}",
+                    details={
+                        "url": websocket_url,
+                        "connection_time_ms": execution_time,
+                        "message_test": True
+                    },
+                    execution_time_ms=execution_time
+                )
+                
+        except Exception as e:
+            execution_time = (time.time() - start_time) * 1000
+            return ValidationResult(
+                name=f"websocket_health_{environment}",
+                status=ValidationStatus.FAILED,
+                severity=ValidationSeverity.CRITICAL,
+                message=f"WebSocket health check failed for {environment}: {str(e)}",
+                details={
+                    "url": env_config["websocket_url"],
+                    "error": str(e),
+                    "response_time_ms": execution_time
+                },
+                execution_time_ms=execution_time
+            )
+    
+    async def _validate_response_time(self, environment: str, env_config: Dict[str, Any]) -> ValidationResult:
+        """Validate response time."""
+        start_time = time.time()
         
-        if "websocket" in validation_types:
-            validation_tasks.append(self._validate_websocket_functionality(environment, env_config))
+        try:
+            base_url = env_config["url"]
+            expected_time = env_config.get("expected_response_time_ms", 2000)
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.get(base_url, timeout=15) as response:
+                    execution_time = (time.time() - start_time) * 1000
+                    
+                    if execution_time <= expected_time:
+                        return ValidationResult(
+                            name=f"response_time_{environment}",
+                            status=ValidationStatus.PASSED,
+                            severity=ValidationSeverity.MEDIUM,
+                            message=f"Response time check passed for {environment}",
+                            details={
+                                "url": base_url,
+                                "response_time_ms": execution_time,
+                                "expected_time_ms": expected_time,
+                                "status_code": response.status
+                            },
+                            execution_time_ms=execution_time
+                        )
+                    else:
+                        return ValidationResult(
+                            name=f"response_time_{environment}",
+                            status=ValidationStatus.WARNING,
+                            severity=ValidationSeverity.MEDIUM,
+                            message=f"Response time exceeded threshold for {environment}",
+                            details={
+                                "url": base_url,
+                                "response_time_ms": execution_time,
+                                "expected_time_ms": expected_time,
+                                "status_code": response.status
+                            },
+                            execution_time_ms=execution_time
+                        )
+                        
+        except Exception as e:
+            execution_time = (time.time() - start_time) * 1000
+            return ValidationResult(
+                name=f"response_time_{environment}",
+                status=ValidationStatus.FAILED,
+                severity=ValidationSeverity.HIGH,
+                message=f"Response time check failed for {environment}: {str(e)}",
+                details={
+                    "url": env_config["url"],
+                    "error": str(e),
+                    "response_time_ms": execution_time
+                },
+                execution_time_ms=execution_time
+            )
+    
+    async def _validate_websocket_endpoints(self, environment: str, env_config: Dict[str, Any]) -> ValidationResult:
+        """Validate all WebSocket endpoints."""
+        start_time = time.time()
         
-        if "tunnel" in validation_types:
-            validation_tasks.append(self._validate_tunnel_health(environment, env_config))
+        try:
+            websocket_url = env_config["websocket_url"]
+            endpoints = ["/ws/emoji-rain", "/ws/observatory", "/ws/anomalies", "/ws/doctor-status"]
+            
+            endpoint_results = {}
+            failed_endpoints = []
+            
+            for endpoint in endpoints:
+                full_url = f"{websocket_url}{endpoint}"
+                try:
+                    async with websockets.connect(full_url, timeout=10) as websocket:
+                        await websocket.ping()
+                        
+                        # Test message functionality
+                        test_message = {
+                            "type": "endpoint_test",
+                            "endpoint": endpoint,
+                            "timestamp": datetime.now().isoformat()
+                        }
+                        await websocket.send(json.dumps(test_message))
+                        
+                        endpoint_results[endpoint] = {
+                            "status": "healthy",
+                            "connectivity": True,
+                            "message_test": True
+                        }
+                        
+                except Exception as e:
+                    endpoint_results[endpoint] = {
+                        "status": "unhealthy",
+                        "error": str(e)
+                    }
+                    failed_endpoints.append(endpoint)
+            
+            execution_time = (time.time() - start_time) * 1000
+            
+            if not failed_endpoints:
+                return ValidationResult(
+                    name=f"websocket_endpoints_{environment}",
+                    status=ValidationStatus.PASSED,
+                    severity=ValidationSeverity.HIGH,
+                    message=f"All WebSocket endpoints healthy for {environment}",
+                    details={
+                        "environment": environment,
+                        "endpoints_tested": len(endpoints),
+                        "healthy_endpoints": len(endpoints) - len(failed_endpoints),
+                        "failed_endpoints": failed_endpoints,
+                        "endpoint_results": endpoint_results
+                    },
+                    execution_time_ms=execution_time
+                )
+            else:
+                return ValidationResult(
+                    name=f"websocket_endpoints_{environment}",
+                    status=ValidationStatus.FAILED,
+                    severity=ValidationSeverity.CRITICAL,
+                    message=f"WebSocket endpoints failed for {environment}: {failed_endpoints}",
+                    details={
+                        "environment": environment,
+                        "endpoints_tested": len(endpoints),
+                        "healthy_endpoints": len(endpoints) - len(failed_endpoints),
+                        "failed_endpoints": failed_endpoints,
+                        "endpoint_results": endpoint_results
+                    },
+                    execution_time_ms=execution_time
+                )
+                
+        except Exception as e:
+            execution_time = (time.time() - start_time) * 1000
+            return ValidationResult(
+                name=f"websocket_endpoints_{environment}",
+                status=ValidationStatus.FAILED,
+                severity=ValidationSeverity.CRITICAL,
+                message=f"WebSocket endpoints validation failed for {environment}: {str(e)}",
+                details={
+                    "environment": environment,
+                    "error": str(e)
+                },
+                execution_time_ms=execution_time
+            )
+    
+    async def _validate_tunnel_configuration(self, environment: str) -> ValidationResult:
+        """Validate tunnel configuration."""
+        start_time = time.time()
         
-        if "monitoring" in validation_types:
-            validation_tasks.append(self._validate_monitoring_systems(environment, env_config))
+        try:
+            config_info = self.tunnel_manager.get_config_info()
+            execution_time = (time.time() - start_time) * 1000
+            
+            validation_status = config_info.get("validation_status", "unknown")
+            websocket_enabled = config_info.get("websocket_enabled", False)
+            validation_errors = config_info.get("validation_errors", [])
+            
+            if validation_status == "valid" and websocket_enabled:
+                return ValidationResult(
+                    name=f"tunnel_config_{environment}",
+                    status=ValidationStatus.PASSED,
+                    severity=ValidationSeverity.HIGH,
+                    message=f"Tunnel configuration valid for {environment}",
+                    details={
+                        "environment": environment,
+                        "validation_status": validation_status,
+                        "websocket_enabled": websocket_enabled,
+                        "tunnel_name": config_info.get("tunnel_name"),
+                        "hostnames": config_info.get("hostnames", [])
+                    },
+                    execution_time_ms=execution_time
+                )
+            else:
+                return ValidationResult(
+                    name=f"tunnel_config_{environment}",
+                    status=ValidationStatus.FAILED,
+                    severity=ValidationSeverity.CRITICAL,
+                    message=f"Tunnel configuration invalid for {environment}",
+                    details={
+                        "environment": environment,
+                        "validation_status": validation_status,
+                        "websocket_enabled": websocket_enabled,
+                        "validation_errors": validation_errors
+                    },
+                    execution_time_ms=execution_time
+                )
+                
+        except Exception as e:
+            execution_time = (time.time() - start_time) * 1000
+            return ValidationResult(
+                name=f"tunnel_config_{environment}",
+                status=ValidationStatus.FAILED,
+                severity=ValidationSeverity.CRITICAL,
+                message=f"Tunnel configuration validation failed for {environment}: {str(e)}",
+                details={
+                    "environment": environment,
+                    "error": str(e)
+                },
+                execution_time_ms=execution_time
+            )
+    
+    async def _validate_cross_environment(self) -> List[ValidationResult]:
+        """Validate cross-environment consistency."""
+        self.log_action("validate_cross_environment", "in_progress")
         
-        if "quality_assurance" in validation_types:
-            validation_tasks.append(self._validate_quality_assurance(environment, env_config))
+        results = []
         
-        # Execute validation tasks
-        results = await asyncio.gather(*validation_tasks, return_exceptions=True)
-        
-        # Process results
-        env_results = []
-        env_status = "passed"
-        
-        for i, result in enumerate(results):
-            if isinstance(result, Exception):
-                error_result = ValidationResult(
-                    check_name=f"validation_task_{i}",
+        try:
+            # Check environment consistency
+            environments = self.config["environments"]
+            
+            # Validate that all environments have required fields
+            required_fields = ["url", "websocket_url", "health_endpoint"]
+            missing_fields = {}
+            
+            for env_name, env_config in environments.items():
+                missing = [field for field in required_fields if field not in env_config]
+                if missing:
+                    missing_fields[env_name] = missing
+            
+            if missing_fields:
+                results.append(ValidationResult(
+                    name="cross_environment_config_consistency",
                     status=ValidationStatus.FAILED,
                     severity=ValidationSeverity.HIGH,
-                    message=f"Validation task failed: {result}"
-                )
-                env_results.append(error_result)
-                env_status = "failed"
+                    message="Environment configuration inconsistency detected",
+                    details={"missing_fields": missing_fields}
+                ))
             else:
-                env_results.extend(result)
-                # Check if any critical failures
-                if any(r.status == ValidationStatus.FAILED and r.severity == ValidationSeverity.CRITICAL 
-                      for r in result):
-                    env_status = "failed"
-        
-        return {
-            "environment": environment,
-            "overall_status": env_status,
-            "validation_results": env_results,
-            "total_checks": len(env_results),
-            "passed": len([r for r in env_results if r.status == ValidationStatus.PASSED]),
-            "failed": len([r for r in env_results if r.status == ValidationStatus.FAILED]),
-            "warnings": len([r for r in env_results if r.status == ValidationStatus.WARNING])
-        }
-    
-    async def _validate_health_endpoints(
-        self, 
-        environment: str, 
-        config: Dict[str, Any]
-    ) -> List[ValidationResult]:
-        """Validate health endpoints"""
-        results = []
-        
-        try:
-            start_time = time.time()
+                results.append(ValidationResult(
+                    name="cross_environment_config_consistency",
+                    status=ValidationStatus.PASSED,
+                    severity=ValidationSeverity.MEDIUM,
+                    message="Environment configuration consistency validated",
+                    details={"environments_checked": list(environments.keys())}
+                ))
             
-            # Test HTTP health endpoint
-            health_url = f"{config['url']}{config['health_endpoint']}"
-            response = requests.get(health_url, timeout=10)
+            # Check URL format consistency
+            url_format_issues = []
+            for env_name, env_config in environments.items():
+                url = env_config.get("url", "")
+                websocket_url = env_config.get("websocket_url", "")
+                
+                if not url.startswith(("http://", "https://")):
+                    url_format_issues.append(f"{env_name}.url: Invalid protocol")
+                
+                if not websocket_url.startswith(("ws://", "wss://")):
+                    url_format_issues.append(f"{env_name}.websocket_url: Invalid protocol")
             
-            duration_ms = (time.time() - start_time) * 1000
-            
-            if response.status_code == 200:
-                status = ValidationStatus.PASSED
-                message = f"Health endpoint responding correctly"
-                severity = ValidationSeverity.LOW
+            if url_format_issues:
+                results.append(ValidationResult(
+                    name="cross_environment_url_format",
+                    status=ValidationStatus.FAILED,
+                    severity=ValidationSeverity.MEDIUM,
+                    message="URL format issues detected",
+                    details={"url_format_issues": url_format_issues}
+                ))
             else:
-                status = ValidationStatus.FAILED
-                message = f"Health endpoint returned status {response.status_code}"
-                severity = ValidationSeverity.CRITICAL
+                results.append(ValidationResult(
+                    name="cross_environment_url_format",
+                    status=ValidationStatus.PASSED,
+                    severity=ValidationSeverity.LOW,
+                    message="URL format consistency validated",
+                    details={"environments_checked": list(environments.keys())}
+                ))
             
-            results.append(ValidationResult(
-                check_name="health_endpoint",
-                status=status,
-                severity=severity,
-                message=message,
-                details={
-                    "url": health_url,
-                    "status_code": response.status_code,
-                    "response_time_ms": duration_ms,
-                    "response_size_bytes": len(response.content)
-                },
-                duration_ms=duration_ms
-            ))
+            self.log_action("validate_cross_environment", "completed", {
+                "checks_performed": len(results)
+            })
             
         except Exception as e:
             results.append(ValidationResult(
-                check_name="health_endpoint",
+                name="cross_environment_validation_error",
                 status=ValidationStatus.FAILED,
                 severity=ValidationSeverity.CRITICAL,
-                message=f"Health endpoint check failed: {e}",
-                details={"url": health_url, "error": str(e)}
-            ))
-        
-        return results
-    
-    async def _validate_performance_metrics(
-        self, 
-        environment: str, 
-        config: Dict[str, Any]
-    ) -> List[ValidationResult]:
-        """Validate performance metrics"""
-        results = []
-        
-        try:
-            # Get current performance metrics
-            metrics = self.health_monitor.get_performance_metrics()
-            
-            # Validate latency
-            latency_stats = metrics.get('latency_stats', {})
-            avg_latency = latency_stats.get('avg', 0)
-            
-            if avg_latency <= self.config.thresholds['max_latency_ms']:
-                latency_status = ValidationStatus.PASSED
-                latency_severity = ValidationSeverity.LOW
-            else:
-                latency_status = ValidationStatus.FAILED
-                latency_severity = ValidationSeverity.HIGH
-            
-            results.append(ValidationResult(
-                check_name="latency_check",
-                status=latency_status,
-                severity=latency_severity,
-                message=f"Average latency: {avg_latency:.1f}ms",
-                details={
-                    "avg_latency_ms": avg_latency,
-                    "threshold_ms": self.config.thresholds['max_latency_ms'],
-                    "latency_stats": latency_stats
-                }
-            ))
-            
-            # Validate error rate
-            error_rate = metrics.get('websocket_error_rate', 0)
-            
-            if error_rate <= self.config.thresholds['max_error_rate']:
-                error_status = ValidationStatus.PASSED
-                error_severity = ValidationSeverity.LOW
-            else:
-                error_status = ValidationStatus.FAILED
-                error_severity = ValidationSeverity.CRITICAL
-            
-            results.append(ValidationResult(
-                check_name="error_rate_check",
-                status=error_status,
-                severity=error_severity,
-                message=f"Error rate: {error_rate:.2%}",
-                details={
-                    "error_rate": error_rate,
-                    "threshold": self.config.thresholds['max_error_rate']
-                }
-            ))
-            
-            # Validate throughput
-            throughput = metrics.get('websocket_throughput_msgs_per_sec', 0)
-            
-            if throughput >= self.config.thresholds['min_throughput_msgs_per_sec']:
-                throughput_status = ValidationStatus.PASSED
-                throughput_severity = ValidationSeverity.LOW
-            else:
-                throughput_status = ValidationStatus.WARNING
-                throughput_severity = ValidationSeverity.MEDIUM
-            
-            results.append(ValidationResult(
-                check_name="throughput_check",
-                status=throughput_status,
-                severity=throughput_severity,
-                message=f"Throughput: {throughput:.1f} msgs/sec",
-                details={
-                    "throughput_msgs_per_sec": throughput,
-                    "threshold": self.config.thresholds['min_throughput_msgs_per_sec']
-                }
-            ))
-            
-        except Exception as e:
-            results.append(ValidationResult(
-                check_name="performance_metrics",
-                status=ValidationStatus.FAILED,
-                severity=ValidationSeverity.HIGH,
-                message=f"Performance metrics validation failed: {e}",
+                message=f"Cross-environment validation failed: {str(e)}",
                 details={"error": str(e)}
             ))
+            self.log_action("validate_cross_environment", "error", {"error": str(e)})
         
         return results
     
-    async def _validate_connectivity(
-        self, 
-        environment: str, 
-        config: Dict[str, Any]
-    ) -> List[ValidationResult]:
-        """Validate connectivity to the environment"""
+    async def _validate_configuration(self) -> List[ValidationResult]:
+        """Validate deployment configuration."""
+        self.log_action("validate_configuration", "in_progress")
+        
         results = []
         
         try:
-            start_time = time.time()
+            # Check required configuration sections
+            required_sections = ["environments", "health_check_timeout", "rollback_timeout"]
+            missing_sections = [section for section in required_sections if section not in self.config]
             
-            # Test HTTP connectivity
-            response = requests.get(config['url'], timeout=10)
-            duration_ms = (time.time() - start_time) * 1000
-            
-            if response.status_code in [200, 404]:  # 404 is acceptable for root
-                status = ValidationStatus.PASSED
-                message = f"HTTP connectivity successful"
-                severity = ValidationSeverity.LOW
+            if missing_sections:
+                results.append(ValidationResult(
+                    name="configuration_completeness",
+                    status=ValidationStatus.FAILED,
+                    severity=ValidationSeverity.CRITICAL,
+                    message="Missing required configuration sections",
+                    details={"missing_sections": missing_sections}
+                ))
             else:
-                status = ValidationStatus.FAILED
-                message = f"HTTP connectivity failed with status {response.status_code}"
-                severity = ValidationSeverity.CRITICAL
+                results.append(ValidationResult(
+                    name="configuration_completeness",
+                    status=ValidationStatus.PASSED,
+                    severity=ValidationSeverity.HIGH,
+                    message="Configuration completeness validated",
+                    details={"sections_checked": required_sections}
+                ))
             
-            results.append(ValidationResult(
-                check_name="http_connectivity",
-                status=status,
-                severity=severity,
-                message=message,
-                details={
-                    "url": config['url'],
-                    "status_code": response.status_code,
-                    "response_time_ms": duration_ms
-                },
-                duration_ms=duration_ms
-            ))
+            # Check validation thresholds
+            validation_thresholds = self.config.get("validation_thresholds", {})
+            if validation_thresholds:
+                results.append(ValidationResult(
+                    name="validation_thresholds",
+                    status=ValidationStatus.PASSED,
+                    severity=ValidationSeverity.MEDIUM,
+                    message="Validation thresholds configured",
+                    details={"thresholds": validation_thresholds}
+                ))
+            else:
+                results.append(ValidationResult(
+                    name="validation_thresholds",
+                    status=ValidationStatus.WARNING,
+                    severity=ValidationSeverity.MEDIUM,
+                    message="No validation thresholds configured",
+                    details={}
+                ))
+            
+            # Check rollback triggers
+            rollback_triggers = self.config.get("rollback_triggers", {})
+            if rollback_triggers:
+                enabled_triggers = [name for name, config in rollback_triggers.items() 
+                                  if config.get("enabled", False)]
+                results.append(ValidationResult(
+                    name="rollback_triggers",
+                    status=ValidationStatus.PASSED,
+                    severity=ValidationSeverity.HIGH,
+                    message="Rollback triggers configured",
+                    details={"enabled_triggers": enabled_triggers}
+                ))
+            else:
+                results.append(ValidationResult(
+                    name="rollback_triggers",
+                    status=ValidationStatus.WARNING,
+                    severity=ValidationSeverity.HIGH,
+                    message="No rollback triggers configured",
+                    details={}
+                ))
+            
+            self.log_action("validate_configuration", "completed", {
+                "checks_performed": len(results)
+            })
             
         except Exception as e:
             results.append(ValidationResult(
-                check_name="http_connectivity",
+                name="configuration_validation_error",
                 status=ValidationStatus.FAILED,
                 severity=ValidationSeverity.CRITICAL,
-                message=f"HTTP connectivity failed: {e}",
-                details={"url": config['url'], "error": str(e)}
+                message=f"Configuration validation failed: {str(e)}",
+                details={"error": str(e)}
             ))
+            self.log_action("validate_configuration", "error", {"error": str(e)})
         
         return results
     
-    async def _validate_websocket_functionality(
-        self, 
-        environment: str, 
-        config: Dict[str, Any]
-    ) -> List[ValidationResult]:
-        """Validate WebSocket functionality"""
+    async def _validate_performance(self, environment: str) -> List[ValidationResult]:
+        """Validate performance metrics."""
+        self.log_action("validate_performance", "in_progress", {"environment": environment})
+        
         results = []
         
         try:
-            websocket_url = config['websocket_url']
+            env_config = self.config["environments"][environment]
+            validation_thresholds = self.config.get("validation_thresholds", {})
             
-            # Test WebSocket connection
+            # Response time validation
+            max_response_time = validation_thresholds.get("max_response_time_ms", 2000)
+            response_time_result = await self._validate_response_time(environment, env_config)
+            results.append(response_time_result)
+            
+            # Throughput validation (simplified)
+            throughput_result = await self._validate_throughput(environment, env_config)
+            results.append(throughput_result)
+            
+            # Connection failure rate validation
+            connection_failure_result = await self._validate_connection_failure_rate(environment, env_config)
+            results.append(connection_failure_result)
+            
+            self.log_action("validate_performance", "completed", {
+                "environment": environment,
+                "checks_performed": len(results)
+            })
+            
+        except Exception as e:
+            results.append(ValidationResult(
+                name="performance_validation_error",
+                status=ValidationStatus.FAILED,
+                severity=ValidationSeverity.CRITICAL,
+                message=f"Performance validation failed: {str(e)}",
+                details={"environment": environment, "error": str(e)}
+            ))
+            self.log_action("validate_performance", "error", {"environment": environment, "error": str(e)})
+        
+        return results
+    
+    async def _validate_throughput(self, environment: str, env_config: Dict[str, Any]) -> ValidationResult:
+        """Validate message throughput."""
+        start_time = time.time()
+        
+        try:
+            websocket_url = env_config["websocket_url"]
+            min_throughput = self.config.get("validation_thresholds", {}).get("min_throughput_msgs_per_sec", 1.0)
+            
+            # Test message throughput
+            message_count = 10
+            test_start = time.time()
+            
             async with websockets.connect(websocket_url, timeout=10) as websocket:
-                # Send test message
-                test_message = json.dumps({
-                    "type": "health_check",
-                    "timestamp": datetime.now().isoformat()
-                })
+                for i in range(message_count):
+                    test_message = {
+                        "type": "throughput_test",
+                        "message_id": i,
+                        "timestamp": datetime.now().isoformat()
+                    }
+                    await websocket.send(json.dumps(test_message))
                 
-                start_time = time.time()
-                await websocket.send(test_message)
+                # Wait for responses or timeout
+                await asyncio.sleep(1)
+            
+            test_duration = time.time() - test_start
+            actual_throughput = message_count / test_duration if test_duration > 0 else 0
+            
+            execution_time = (time.time() - start_time) * 1000
+            
+            if actual_throughput >= min_throughput:
+                return ValidationResult(
+                    name=f"throughput_{environment}",
+                    status=ValidationStatus.PASSED,
+                    severity=ValidationSeverity.MEDIUM,
+                    message=f"Throughput validation passed for {environment}",
+                    details={
+                        "environment": environment,
+                        "actual_throughput": actual_throughput,
+                        "min_throughput": min_throughput,
+                        "messages_sent": message_count,
+                        "test_duration": test_duration
+                    },
+                    execution_time_ms=execution_time
+                )
+            else:
+                return ValidationResult(
+                    name=f"throughput_{environment}",
+                    status=ValidationStatus.WARNING,
+                    severity=ValidationSeverity.MEDIUM,
+                    message=f"Throughput below threshold for {environment}",
+                    details={
+                        "environment": environment,
+                        "actual_throughput": actual_throughput,
+                        "min_throughput": min_throughput,
+                        "messages_sent": message_count,
+                        "test_duration": test_duration
+                    },
+                    execution_time_ms=execution_time
+                )
                 
-                # Wait for response
-                response = await asyncio.wait_for(websocket.recv(), timeout=5)
-                duration_ms = (time.time() - start_time) * 1000
-                
-                if response:
-                    status = ValidationStatus.PASSED
-                    message = f"WebSocket communication successful"
-                    severity = ValidationSeverity.LOW
-                else:
-                    status = ValidationStatus.FAILED
-                    message = f"WebSocket communication failed - no response"
-                    severity = ValidationSeverity.HIGH
-            
-            results.append(ValidationResult(
-                check_name="websocket_communication",
-                status=status,
-                severity=severity,
-                message=message,
-                details={
-                    "websocket_url": websocket_url,
-                    "response_time_ms": duration_ms,
-                    "response_received": bool(response)
-                },
-                duration_ms=duration_ms
-            ))
-            
         except Exception as e:
-            results.append(ValidationResult(
-                check_name="websocket_communication",
-                status=ValidationStatus.FAILED,
-                severity=ValidationSeverity.CRITICAL,
-                message=f"WebSocket functionality test failed: {e}",
-                details={"websocket_url": config['websocket_url'], "error": str(e)}
-            ))
-        
-        return results
-    
-    async def _validate_tunnel_health(
-        self, 
-        environment: str, 
-        config: Dict[str, Any]
-    ) -> List[ValidationResult]:
-        """Validate Cloudflare tunnel health"""
-        results = []
-        
-        try:
-            # Check if cloudflared process is running
-            result = subprocess.run(
-                ["pgrep", "-f", "cloudflared"],
-                capture_output=True,
-                text=True,
-                timeout=5
-            )
-            
-            if result.returncode == 0:
-                status = ValidationStatus.PASSED
-                message = f"Cloudflare tunnel process is running"
-                severity = ValidationSeverity.LOW
-                details = {"process_count": len(result.stdout.strip().split('\n'))}
-            else:
-                status = ValidationStatus.FAILED
-                message = f"Cloudflare tunnel process not found"
-                severity = ValidationSeverity.CRITICAL
-                details = {"error": "Process not running"}
-            
-            results.append(ValidationResult(
-                check_name="tunnel_process",
-                status=status,
-                severity=severity,
-                message=message,
-                details=details
-            ))
-            
-        except Exception as e:
-            results.append(ValidationResult(
-                check_name="tunnel_process",
-                status=ValidationStatus.FAILED,
-                severity=ValidationSeverity.HIGH,
-                message=f"Tunnel health check failed: {e}",
-                details={"error": str(e)}
-            ))
-        
-        return results
-    
-    async def _validate_monitoring_systems(
-        self, 
-        environment: str, 
-        config: Dict[str, Any]
-    ) -> List[ValidationResult]:
-        """Validate monitoring systems"""
-        results = []
-        
-        try:
-            # Check health monitor status
-            health_status = self.health_monitor.get_all_health_status()
-            
-            if health_status:
-                status = ValidationStatus.PASSED
-                message = f"Health monitoring active for {len(health_status)} endpoints"
-                severity = ValidationSeverity.LOW
-            else:
-                status = ValidationStatus.WARNING
-                message = f"No health monitoring data available"
-                severity = ValidationSeverity.MEDIUM
-            
-            results.append(ValidationResult(
-                check_name="health_monitoring",
-                status=status,
-                severity=severity,
-                message=message,
-                details={
-                    "monitored_endpoints": len(health_status),
-                    "health_data_available": bool(health_status)
-                }
-            ))
-            
-            # Check endpoint monitor
-            try:
-                monitor_config = self.endpoint_monitor.get_config()
-                if monitor_config:
-                    status = ValidationStatus.PASSED
-                    message = f"Endpoint monitoring configured"
-                    severity = ValidationSeverity.LOW
-                else:
-                    status = ValidationStatus.WARNING
-                    message = f"Endpoint monitoring not configured"
-                    severity = ValidationSeverity.MEDIUM
-            except Exception:
-                status = ValidationStatus.WARNING
-                message = f"Endpoint monitoring check failed"
-                severity = ValidationSeverity.MEDIUM
-            
-            results.append(ValidationResult(
-                check_name="endpoint_monitoring",
-                status=status,
-                severity=severity,
-                message=message,
-                details={"monitoring_configured": status == ValidationStatus.PASSED}
-            ))
-            
-        except Exception as e:
-            results.append(ValidationResult(
-                check_name="monitoring_systems",
-                status=ValidationStatus.FAILED,
-                severity=ValidationSeverity.HIGH,
-                message=f"Monitoring systems validation failed: {e}",
-                details={"error": str(e)}
-            ))
-        
-        return results
-    
-    async def _validate_quality_assurance(
-        self, 
-        environment: str, 
-        config: Dict[str, Any]
-    ) -> List[ValidationResult]:
-        """Validate quality assurance metrics"""
-        results = []
-        
-        try:
-            # Get quality metrics
-            quality_metrics = await self.quality_metrics.collect_metrics()
-            
-            # Validate overall quality score
-            overall_score = quality_metrics.get('overall_score', 0)
-            
-            if overall_score >= self.config.thresholds['min_health_score']:
-                status = ValidationStatus.PASSED
-                message = f"Quality score: {overall_score:.2f}"
-                severity = ValidationSeverity.LOW
-            else:
-                status = ValidationStatus.FAILED
-                message = f"Quality score below threshold: {overall_score:.2f}"
-                severity = ValidationSeverity.HIGH
-            
-            results.append(ValidationResult(
-                check_name="quality_score",
-                status=status,
-                severity=severity,
-                message=message,
-                details={
-                    "quality_score": overall_score,
-                    "threshold": self.config.thresholds['min_health_score'],
-                    "quality_metrics": quality_metrics
-                }
-            ))
-            
-        except Exception as e:
-            results.append(ValidationResult(
-                check_name="quality_assurance",
+            execution_time = (time.time() - start_time) * 1000
+            return ValidationResult(
+                name=f"throughput_{environment}",
                 status=ValidationStatus.FAILED,
                 severity=ValidationSeverity.MEDIUM,
-                message=f"Quality assurance validation failed: {e}",
-                details={"error": str(e)}
+                message=f"Throughput validation failed for {environment}: {str(e)}",
+                details={
+                    "environment": environment,
+                    "error": str(e)
+                },
+                execution_time_ms=execution_time
+            )
+    
+    async def _validate_connection_failure_rate(self, environment: str, env_config: Dict[str, Any]) -> ValidationResult:
+        """Validate connection failure rate."""
+        start_time = time.time()
+        
+        try:
+            websocket_url = env_config["websocket_url"]
+            max_failure_rate = self.config.get("validation_thresholds", {}).get("max_connection_failure_rate", 0.1)
+            
+            # Test multiple connections
+            connection_attempts = 10
+            successful_connections = 0
+            failed_connections = 0
+            
+            for i in range(connection_attempts):
+                try:
+                    async with websockets.connect(websocket_url, timeout=5) as websocket:
+                        await websocket.ping()
+                        successful_connections += 1
+                except Exception:
+                    failed_connections += 1
+            
+            failure_rate = failed_connections / connection_attempts if connection_attempts > 0 else 0
+            
+            execution_time = (time.time() - start_time) * 1000
+            
+            if failure_rate <= max_failure_rate:
+                return ValidationResult(
+                    name=f"connection_failure_rate_{environment}",
+                    status=ValidationStatus.PASSED,
+                    severity=ValidationSeverity.HIGH,
+                    message=f"Connection failure rate acceptable for {environment}",
+                    details={
+                        "environment": environment,
+                        "failure_rate": failure_rate,
+                        "max_failure_rate": max_failure_rate,
+                        "successful_connections": successful_connections,
+                        "failed_connections": failed_connections,
+                        "total_attempts": connection_attempts
+                    },
+                    execution_time_ms=execution_time
+                )
+            else:
+                return ValidationResult(
+                    name=f"connection_failure_rate_{environment}",
+                    status=ValidationStatus.FAILED,
+                    severity=ValidationSeverity.HIGH,
+                    message=f"Connection failure rate too high for {environment}",
+                    details={
+                        "environment": environment,
+                        "failure_rate": failure_rate,
+                        "max_failure_rate": max_failure_rate,
+                        "successful_connections": successful_connections,
+                        "failed_connections": failed_connections,
+                        "total_attempts": connection_attempts
+                    },
+                    execution_time_ms=execution_time
+                )
+                
+        except Exception as e:
+            execution_time = (time.time() - start_time) * 1000
+            return ValidationResult(
+                name=f"connection_failure_rate_{environment}",
+                status=ValidationStatus.FAILED,
+                severity=ValidationSeverity.HIGH,
+                message=f"Connection failure rate validation failed for {environment}: {str(e)}",
+                details={
+                    "environment": environment,
+                    "error": str(e)
+                },
+                execution_time_ms=execution_time
+            )
+    
+    async def _validate_security(self, environment: str) -> List[ValidationResult]:
+        """Validate security aspects."""
+        self.log_action("validate_security", "in_progress", {"environment": environment})
+        
+        results = []
+        
+        try:
+            env_config = self.config["environments"][environment]
+            
+            # Check HTTPS/WSS usage
+            url = env_config.get("url", "")
+            websocket_url = env_config.get("websocket_url", "")
+            
+            if url.startswith("https://") and websocket_url.startswith("wss://"):
+                results.append(ValidationResult(
+                    name=f"secure_protocols_{environment}",
+                    status=ValidationStatus.PASSED,
+                    severity=ValidationSeverity.HIGH,
+                    message=f"Secure protocols (HTTPS/WSS) used for {environment}",
+                    details={
+                        "environment": environment,
+                        "http_protocol": "https",
+                        "websocket_protocol": "wss"
+                    }
+                ))
+            else:
+                results.append(ValidationResult(
+                    name=f"secure_protocols_{environment}",
+                    status=ValidationStatus.WARNING,
+                    severity=ValidationSeverity.MEDIUM,
+                    message=f"Insecure protocols detected for {environment}",
+                    details={
+                        "environment": environment,
+                        "http_protocol": "https" if url.startswith("https://") else "http",
+                        "websocket_protocol": "wss" if websocket_url.startswith("wss://") else "ws"
+                    }
+                ))
+            
+            # Check tunnel configuration security
+            tunnel_security_result = await self._validate_tunnel_security(environment)
+            results.append(tunnel_security_result)
+            
+            self.log_action("validate_security", "completed", {
+                "environment": environment,
+                "checks_performed": len(results)
+            })
+            
+        except Exception as e:
+            results.append(ValidationResult(
+                name="security_validation_error",
+                status=ValidationStatus.FAILED,
+                severity=ValidationSeverity.CRITICAL,
+                message=f"Security validation failed: {str(e)}",
+                details={"environment": environment, "error": str(e)}
             ))
+            self.log_action("validate_security", "error", {"environment": environment, "error": str(e)})
         
         return results
     
-    async def _generate_validation_report(self, environment_results: Dict[str, Any]) -> None:
-        """Generate comprehensive validation report"""
-        report_dir = Path("reports")
-        report_dir.mkdir(exist_ok=True)
+    async def _validate_tunnel_security(self, environment: str) -> ValidationResult:
+        """Validate tunnel security configuration."""
+        start_time = time.time()
         
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        
-        if self.config.report_format == "json":
-            report_path = report_dir / f"validation_report_{timestamp}.json"
+        try:
+            config_info = self.tunnel_manager.get_config_info()
+            execution_time = (time.time() - start_time) * 1000
             
-            report_data = {
-                "timestamp": datetime.now().isoformat(),
-                "validation_summary": {
-                    "total_checks": len(self.validation_results),
-                    "passed": len([r for r in self.validation_results if r.status == ValidationStatus.PASSED]),
-                    "failed": len([r for r in self.validation_results if r.status == ValidationStatus.FAILED]),
-                    "warnings": len([r for r in self.validation_results if r.status == ValidationStatus.WARNING])
+            # Check if tunnel configuration exists and is valid
+            if config_info.get("validation_status") == "valid":
+                return ValidationResult(
+                    name=f"tunnel_security_{environment}",
+                    status=ValidationStatus.PASSED,
+                    severity=ValidationSeverity.HIGH,
+                    message=f"Tunnel security configuration valid for {environment}",
+                    details={
+                        "environment": environment,
+                        "validation_status": "valid",
+                        "websocket_enabled": config_info.get("websocket_enabled", False)
+                    },
+                    execution_time_ms=execution_time
+                )
+            else:
+                return ValidationResult(
+                    name=f"tunnel_security_{environment}",
+                    status=ValidationStatus.WARNING,
+                    severity=ValidationSeverity.MEDIUM,
+                    message=f"Tunnel security configuration needs review for {environment}",
+                    details={
+                        "environment": environment,
+                        "validation_status": config_info.get("validation_status", "unknown"),
+                        "validation_errors": config_info.get("validation_errors", [])
+                    },
+                    execution_time_ms=execution_time
+                )
+                
+        except Exception as e:
+            execution_time = (time.time() - start_time) * 1000
+            return ValidationResult(
+                name=f"tunnel_security_{environment}",
+                status=ValidationStatus.FAILED,
+                severity=ValidationSeverity.HIGH,
+                message=f"Tunnel security validation failed for {environment}: {str(e)}",
+                details={
+                    "environment": environment,
+                    "error": str(e)
                 },
-                "environment_results": environment_results,
-                "detailed_results": [
-                    {
-                        "check_name": r.check_name,
-                        "status": r.status.value,
-                        "severity": r.severity.value,
-                        "message": r.message,
-                        "timestamp": r.timestamp.isoformat(),
-                        "duration_ms": r.duration_ms,
-                        "details": r.details
-                    }
-                    for r in self.validation_results
-                ]
-            }
-            
-            with open(report_path, 'w') as f:
-                json.dump(report_data, f, indent=2)
-            
-            self.logger.info(f"Validation report generated: {report_path}")
-        
-        elif self.config.report_format == "html":
-            # Generate HTML report
-            html_content = self._generate_html_report(environment_results)
-            report_path = report_dir / f"validation_report_{timestamp}.html"
-            
-            with open(report_path, 'w') as f:
-                f.write(html_content)
-            
-            self.logger.info(f"HTML validation report generated: {report_path}")
+                execution_time_ms=execution_time
+            )
     
-    def _generate_html_report(self, environment_results: Dict[str, Any]) -> str:
-        """Generate HTML validation report"""
-        total_checks = len(self.validation_results)
-        passed_checks = len([r for r in self.validation_results if r.status == ValidationStatus.PASSED])
-        failed_checks = len([r for r in self.validation_results if r.status == ValidationStatus.FAILED])
-        warning_checks = len([r for r in self.validation_results if r.status == ValidationStatus.WARNING])
+    def _calculate_overall_status(self, results: List[ValidationResult]) -> ValidationStatus:
+        """Calculate overall validation status."""
+        if not results:
+            return ValidationStatus.FAILED
         
-        html = f"""
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Deployment Validation Report</title>
-    <style>
-        body {{ font-family: Arial, sans-serif; margin: 20px; }}
-        .header {{ background-color: #f0f0f0; padding: 20px; border-radius: 5px; }}
-        .summary {{ display: flex; gap: 20px; margin: 20px 0; }}
-        .summary-item {{ padding: 15px; border-radius: 5px; text-align: center; }}
-        .passed {{ background-color: #d4edda; color: #155724; }}
-        .failed {{ background-color: #f8d7da; color: #721c24; }}
-        .warning {{ background-color: #fff3cd; color: #856404; }}
-        .environment {{ margin: 20px 0; border: 1px solid #ddd; border-radius: 5px; }}
-        .environment-header {{ background-color: #e9ecef; padding: 10px; font-weight: bold; }}
-        .environment-content {{ padding: 15px; }}
-        .check {{ margin: 10px 0; padding: 10px; border-left: 4px solid; }}
-        .check.passed {{ border-color: #28a745; }}
-        .check.failed {{ border-color: #dc3545; }}
-        .check.warning {{ border-color: #ffc107; }}
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>Deployment Validation Report</h1>
-        <p>Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
-    </div>
+        # Check for any critical failures
+        critical_failures = [r for r in results if r.severity == ValidationSeverity.CRITICAL and r.status == ValidationStatus.FAILED]
+        if critical_failures:
+            return ValidationStatus.FAILED
+        
+        # Check for any failures
+        failures = [r for r in results if r.status == ValidationStatus.FAILED]
+        if failures:
+            return ValidationStatus.FAILED
+        
+        # Check for warnings
+        warnings = [r for r in results if r.status == ValidationStatus.WARNING]
+        if warnings:
+            return ValidationStatus.WARNING
+        
+        return ValidationStatus.PASSED
     
-    <div class="summary">
-        <div class="summary-item passed">
-            <h3>{passed_checks}</h3>
-            <p>Passed</p>
-        </div>
-        <div class="summary-item failed">
-            <h3>{failed_checks}</h3>
-            <p>Failed</p>
-        </div>
-        <div class="summary-item warning">
-            <h3>{warning_checks}</h3>
-            <p>Warnings</p>
-        </div>
-    </div>
-"""
+    def _generate_summary(self, results: List[ValidationResult]) -> Dict[str, Any]:
+        """Generate validation summary."""
+        total_checks = len(results)
+        passed_checks = len([r for r in results if r.status == ValidationStatus.PASSED])
+        failed_checks = len([r for r in results if r.status == ValidationStatus.FAILED])
+        warning_checks = len([r for r in results if r.status == ValidationStatus.WARNING])
         
-        for env, result in environment_results.items():
-            html += f"""
-    <div class="environment">
-        <div class="environment-header">
-            {env.upper()} Environment - {result['overall_status'].upper()}
-        </div>
-        <div class="environment-content">
-            <p>Total Checks: {result['total_checks']} | 
-               Passed: {result['passed']} | 
-               Failed: {result['failed']} | 
-               Warnings: {result['warnings']}</p>
-"""
-            
-            for check in result['validation_results']:
-                status_class = check['status']
-                html += f"""
-            <div class="check {status_class}">
-                <strong>{check['check_name']}</strong> - {check['message']}
-                <br><small>Severity: {check['severity']} | Duration: {check['duration_ms']:.1f}ms</small>
-            </div>
-"""
-            
-            html += """
-        </div>
-    </div>
-"""
+        # Group by severity
+        critical_checks = len([r for r in results if r.severity == ValidationSeverity.CRITICAL])
+        high_checks = len([r for r in results if r.severity == ValidationSeverity.HIGH])
+        medium_checks = len([r for r in results if r.severity == ValidationSeverity.MEDIUM])
+        low_checks = len([r for r in results if r.severity == ValidationSeverity.LOW])
         
-        html += """
-</body>
-</html>
-"""
+        # Calculate average execution time
+        avg_execution_time = sum(r.execution_time_ms for r in results) / total_checks if total_checks > 0 else 0
         
-        return html
+        return {
+            "total_checks": total_checks,
+            "passed_checks": passed_checks,
+            "failed_checks": failed_checks,
+            "warning_checks": warning_checks,
+            "critical_checks": critical_checks,
+            "high_checks": high_checks,
+            "medium_checks": medium_checks,
+            "low_checks": low_checks,
+            "average_execution_time_ms": avg_execution_time,
+            "success_rate": (passed_checks / total_checks * 100) if total_checks > 0 else 0
+        }
 
 
 async def main():
-    """Main entry point for validation script"""
+    """Main entry point for validation script."""
     import argparse
     
-    parser = argparse.ArgumentParser(description="Validate WebSocket deployment")
-    parser.add_argument("--environments", nargs="+", 
-                       choices=["dev", "staging", "production"],
-                       default=["dev", "staging", "production"],
-                       help="Environments to validate")
-    parser.add_argument("--types", nargs="+",
-                       choices=["health_check", "performance", "connectivity", 
-                               "websocket", "tunnel", "monitoring", "quality_assurance"],
-                       default=["health_check", "performance", "connectivity", 
-                               "websocket", "tunnel", "monitoring", "quality_assurance"],
-                       help="Validation types to run")
-    parser.add_argument("--config", type=str,
-                       help="Path to validation configuration file")
-    parser.add_argument("--report-format", choices=["json", "html", "text"],
-                       default="json", help="Report format")
+    parser = argparse.ArgumentParser(description="Validate deployment")
+    parser.add_argument("--environment", choices=["dev", "staging", "production"], 
+                       default="production", help="Environment to validate")
+    parser.add_argument("--all-environments", action="store_true",
+                       help="Validate all environments")
+    parser.add_argument("--config", default="deployment-config.yml",
+                       help="Path to deployment configuration file")
+    parser.add_argument("--output", choices=["json", "text"], default="json",
+                       help="Output format")
     
     args = parser.parse_args()
     
-    # Initialize validator
-    validator = DeploymentValidator(args.config)
-    
-    # Set report format
-    validator.config.report_format = args.report_format
-    
     try:
-        # Execute validation
-        result = await validator.validate_deployment(
-            environments=args.environments,
-            validation_types=args.types
+        # Initialize validator
+        validator = DeploymentValidator(args.config)
+        
+        # Run validation
+        suite = await validator.validate_deployment(
+            environment=args.environment,
+            validate_all_envs=args.all_environments
         )
         
-        # Print results
-        print("\n" + "="*60)
-        print("VALIDATION RESULTS")
-        print("="*60)
-        print(json.dumps(result, indent=2, default=str))
+        # Generate output
+        if args.output == "json":
+            output_data = {
+                "suite_name": suite.suite_name,
+                "start_time": suite.start_time.isoformat(),
+                "end_time": suite.end_time.isoformat() if suite.end_time else None,
+                "overall_status": suite.overall_status.value,
+                "summary": suite.summary,
+                "results": [
+                    {
+                        "name": r.name,
+                        "status": r.status.value,
+                        "severity": r.severity.value,
+                        "message": r.message,
+                        "details": r.details,
+                        "execution_time_ms": r.execution_time_ms,
+                        "timestamp": r.timestamp.isoformat()
+                    }
+                    for r in suite.results
+                ]
+            }
+            print(json.dumps(output_data, indent=2, default=str))
+        else:
+            # Text output
+            print(f"\n{'='*80}")
+            print(f"DEPLOYMENT VALIDATION REPORT")
+            print(f"{'='*80}")
+            print(f"Suite: {suite.suite_name}")
+            print(f"Start Time: {suite.start_time}")
+            print(f"End Time: {suite.end_time}")
+            print(f"Overall Status: {suite.overall_status.value.upper()}")
+            print(f"\nSUMMARY:")
+            print(f"  Total Checks: {suite.summary['total_checks']}")
+            print(f"  Passed: {suite.summary['passed_checks']}")
+            print(f"  Failed: {suite.summary['failed_checks']}")
+            print(f"  Warnings: {suite.summary['warning_checks']}")
+            print(f"  Success Rate: {suite.summary['success_rate']:.1f}%")
+            print(f"  Avg Execution Time: {suite.summary['average_execution_time_ms']:.1f}ms")
+            
+            print(f"\nRESULTS:")
+            for result in suite.results:
+                status_icon = "✅" if result.status == ValidationStatus.PASSED else "❌" if result.status == ValidationStatus.FAILED else "⚠️"
+                print(f"  {status_icon} {result.name} ({result.severity.value})")
+                print(f"     {result.message}")
+                if result.details:
+                    for key, value in result.details.items():
+                        print(f"     {key}: {value}")
+                print(f"     Execution Time: {result.execution_time_ms:.1f}ms")
+                print()
         
         # Exit with appropriate code
-        if result["overall_status"] == "passed":
+        if suite.overall_status == ValidationStatus.PASSED:
+            print("\n✅ Validation completed successfully!")
             sys.exit(0)
-        else:
+        elif suite.overall_status == ValidationStatus.WARNING:
+            print("\n⚠️ Validation completed with warnings!")
             sys.exit(1)
+        else:
+            print("\n❌ Validation failed!")
+            sys.exit(2)
             
-    except KeyboardInterrupt:
-        print("\nValidation interrupted by user")
-        sys.exit(130)
     except Exception as e:
-        print(f"Validation failed: {e}")
-        sys.exit(1)
+        print(f"\n❌ Validation error: {e}")
+        sys.exit(3)
 
 
 if __name__ == "__main__":

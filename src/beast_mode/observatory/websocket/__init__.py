@@ -29,6 +29,14 @@ from .exceptions import (
     WebSocketRateLimitError,
 )
 
+# WebSocket Manager
+from .manager import (
+    WebSocketManager,
+    WebSocketManagerConfig,
+    create_websocket_manager,
+    connect_to_endpoints,
+)
+
 # Connection optimization components
 from .connection_pool import (
     ConnectionPool,
@@ -54,6 +62,12 @@ from .compression_handler import (
 )
 
 __all__ = [
+    # WebSocket Manager
+    "WebSocketManager",
+    "WebSocketManagerConfig",
+    "create_websocket_manager",
+    "connect_to_endpoints",
+    
     # Core connection management
     "WebSocketConnection",
     "ConnectionState",
