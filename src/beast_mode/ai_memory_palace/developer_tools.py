@@ -12,14 +12,14 @@ from typing import Dict, List, Any, Optional, Tuple
 from pathlib import Path
 import uuid
 
-from ..core.reflective_module import ReflectiveModule
+from src.beast_mode.core.beastly_module import BeastlyModule
 from .models import SessionContext, ContextEvent, ContextEventType
 from .context_manager import ContextManager
 from .context_registry import ContextRegistry
 from .context_validator import ContextValidator
 
 
-class ContextInspector(ReflectiveModule):
+class ContextInspector(BeastlyModule):
     """Context inspection and debugging tools"""
     
     def __init__(self, context_manager: ContextManager):
@@ -522,7 +522,7 @@ class ContextInspector(ReflectiveModule):
         }
 
 
-class ContextDebugger(ReflectiveModule):
+class ContextDebugger(BeastlyModule):
     """Advanced debugging tools for context system"""
     
     def __init__(self, context_manager: ContextManager):

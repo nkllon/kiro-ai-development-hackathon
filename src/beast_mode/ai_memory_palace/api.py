@@ -28,7 +28,7 @@ except ImportError:
     class BaseModel:
         pass
 
-from ..core.reflective_module import ReflectiveModule
+from src.beast_mode.core.beastly_module import BeastlyModule
 from .context_manager import ContextManager
 from .context_registry import ContextRegistry
 from .multi_project_manager import MultiProjectContextManager
@@ -83,7 +83,7 @@ class APIResponse(BaseModel):
     timestamp: str = Field(default_factory=lambda: datetime.now().isoformat())
 
 
-class ContextAPI(ReflectiveModule):
+class ContextAPI(BeastlyModule):
     """REST API for AI Memory Palace context operations"""
     
     def __init__(self, context_manager: ContextManager, 
@@ -610,7 +610,7 @@ class ContextAPI(ReflectiveModule):
         return self.app.openapi()
 
 
-class ContextCLITools(ReflectiveModule):
+class ContextCLITools(BeastlyModule):
     """Comprehensive CLI tools for AI Memory Palace"""
     
     def __init__(self, context_manager: ContextManager,

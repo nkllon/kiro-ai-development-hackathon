@@ -20,7 +20,7 @@ from enum import Enum
 from collections import defaultdict, Counter
 import math
 
-from ..core.reflective_module import ReflectiveModule
+from src.beast_mode.core.beastly_module import BeastlyModule
 from .models import SessionContext, ContextEvent, ContextEventType, Decision, WorkItem
 from .context_manager import ContextManager
 from .context_registry import ContextRegistry
@@ -126,7 +126,7 @@ class UsagePattern:
         }
 
 
-class ContextAnalyzer(ReflectiveModule):
+class ContextAnalyzer(BeastlyModule):
     """Analyzes context usage patterns and performance"""
     
     def __init__(self, context_registry: ContextRegistry):
@@ -737,7 +737,7 @@ class ContextAnalyzer(ReflectiveModule):
         return []
 
 
-class ContextOptimizer(ReflectiveModule):
+class ContextOptimizer(BeastlyModule):
     """Optimizes context storage and performance"""
     
     def __init__(self, context_registry: ContextRegistry, analyzer: ContextAnalyzer):

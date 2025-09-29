@@ -11,7 +11,8 @@ import json
 import re
 from collections import Counter
 
-from ..core.reflective_module import ReflectiveModule
+from src.beast_mode.core.beastly_module import BeastlyModule
+from src.rm_ddd.core.unified_reflective_module import ModuleCapability, ModuleHealth, ModuleStatus, GracefulDegradationResult
 from .models import SessionContext, ConversationEvent, ContextEvent
 
 
@@ -60,7 +61,7 @@ class MergedContext:
         self.created_at = datetime.now()
 
 
-class ContextEngine(ReflectiveModule):
+class ContextEngine(BeastlyModule):
     """Intelligent context processing and summarization"""
     
     def __init__(self):
@@ -75,7 +76,7 @@ class ContextEngine(ReflectiveModule):
         # Pattern cache
         self._pattern_cache: Dict[str, List[Pattern]] = {}
         
-        self.logger.info("🧠 ContextEngine initialized")
+        self._logger.info("🧠 ContextEngine initialized")
     
     def summarize_context(self, full_context: SessionContext, max_size_kb: int = 100) -> ContextSummary:
         """Create intelligent summary of context for efficiency"""
@@ -101,7 +102,7 @@ class ContextEngine(ReflectiveModule):
             summary = ContextSummary(full_context, summary_data)
             self._summarizations_performed += 1
             
-            self.logger.info(f"📊 Context summarized: {summary.get_size_reduction():.1f}x compression")
+            self._logger.info(f"📊 Context summarized: {summary.get_size_reduction():.1f}x compression")
             
             self.emit_observation({
                 "type": "context_summarization_completed",
@@ -113,7 +114,7 @@ class ContextEngine(ReflectiveModule):
             return summary
             
         except Exception as e:
-            self.logger.error(f"💥 Error summarizing context: {e}")
+            self._logger.error(f"💥 Error summarizing context: {e}")
             # Return original context as fallback
             return ContextSummary(full_context, full_context.to_dict())
     
@@ -149,7 +150,7 @@ class ContextEngine(ReflectiveModule):
             filtered_context = FilteredContext(context, filtered_data, relevance_score)
             self._filterings_performed += 1
             
-            self.logger.info(f"🎯 Context filtered: relevance score {relevance_score:.2f}")
+            self._logger.info(f"🎯 Context filtered: relevance score {relevance_score:.2f}")
             
             self.emit_observation({
                 "type": "context_filtering_completed",
@@ -161,7 +162,7 @@ class ContextEngine(ReflectiveModule):
             return filtered_context
             
         except Exception as e:
-            self.logger.error(f"💥 Error filtering context: {e}")
+            self._logger.error(f"💥 Error filtering context: {e}")
             # Return original context as fallback
             return FilteredContext(context, context.to_dict(), 1.0)
     
@@ -191,7 +192,7 @@ class ContextEngine(ReflectiveModule):
             self._pattern_cache[cache_key] = patterns
             self._patterns_detected += len(patterns)
             
-            self.logger.info(f"🔍 Detected {len(patterns)} context patterns")
+            self._logger.info(f"🔍 Detected {len(patterns)} context patterns")
             
             self.emit_observation({
                 "type": "context_patterns_detected",
@@ -203,7 +204,7 @@ class ContextEngine(ReflectiveModule):
             return patterns
             
         except Exception as e:
-            self.logger.error(f"💥 Error detecting patterns: {e}")
+            self._logger.error(f"💥 Error detecting patterns: {e}")
             return []
     
     def merge_contexts(self, contexts: List[SessionContext]) -> MergedContext:
@@ -253,7 +254,7 @@ class ContextEngine(ReflectiveModule):
             merged_context = MergedContext(contexts, merged_data)
             self._merges_performed += 1
             
-            self.logger.info(f"🔗 Merged {len(contexts)} contexts")
+            self._logger.info(f"🔗 Merged {len(contexts)} contexts")
             
             self.emit_observation({
                 "type": "context_merging_completed",
@@ -266,7 +267,7 @@ class ContextEngine(ReflectiveModule):
             return merged_context
             
         except Exception as e:
-            self.logger.error(f"💥 Error merging contexts: {e}")
+            self._logger.error(f"💥 Error merging contexts: {e}")
             # Return empty merged context
             return MergedContext(contexts, {"error": str(e)})
     
@@ -518,3 +519,48 @@ class ContextEngine(ReflectiveModule):
             "context_engine_merges_total": self._merges_performed,
             "context_engine_pattern_cache_size": len(self._pattern_cache)
         }
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information - RDI Compliant"""
+        return {
+            "module_id": "ai_memory_palace_context_engine",
+            "module_name": "ContextEngine", 
+            "version": "1.0.0",
+            "description": "Intelligent context processing and summarization"
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities - RDI Compliant"""
+        from src.rm_ddd.core.unified_reflective_module import ModuleCapability
+        return [
+            ModuleCapability.CORE_FUNCTIONALITY,
+            ModuleCapability.DATA_PROCESSING,
+            ModuleCapability.API_INTEGRATION
+        ]
+    
+    def get_health_status(self) -> ModuleHealth:
+        """Get module health status - RDI Compliant"""
+        from src.rm_ddd.core.unified_reflective_module import ModuleHealth, ModuleStatus
+        return ModuleHealth(
+            module_id="ai_memory_palace_context_engine",
+            status=ModuleStatus.HEALTHY,
+            health_score=0.95,
+            issues=[],
+            last_check=datetime.now(),
+            uptime_seconds=(datetime.now() - self._start_time).total_seconds(),
+            error_count=self._error_count,
+            warning_count=self._warning_count
+        )
+    
+    def graceful_degradation(self) -> GracefulDegradationResult:
+        """Perform graceful degradation - RDI Compliant"""
+        from src.rm_ddd.core.unified_reflective_module import GracefulDegradationResult, ModuleCapability
+        return GracefulDegradationResult(
+            success=True,
+            degraded_capabilities=[],
+            remaining_capabilities=[
+                ModuleCapability.CORE_FUNCTIONALITY,
+                ModuleCapability.DATA_PROCESSING,
+                ModuleCapability.API_INTEGRATION
+            ]
+        )

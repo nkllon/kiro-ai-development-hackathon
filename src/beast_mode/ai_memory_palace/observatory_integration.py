@@ -10,11 +10,11 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 import json
 
-from ..core.reflective_module import ReflectiveModule
+from src.beast_mode.core.beastly_module import BeastlyModule
 from .models import SessionContext, ContextEvent
 
 
-class ContextObservatoryIntegration(ReflectiveModule):
+class ContextObservatoryIntegration(BeastlyModule):
     """Integration between AI Memory Palace and Observatory system"""
     
     def __init__(self):

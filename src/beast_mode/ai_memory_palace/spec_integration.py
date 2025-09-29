@@ -19,7 +19,7 @@ import time
 from dataclasses import dataclass, field
 from enum import Enum
 
-from ..core.reflective_module import ReflectiveModule
+from src.beast_mode.core.beastly_module import BeastlyModule
 from .models import SessionContext, ContextEvent, ContextEventType, Decision, WorkItem, SystemDiscovery
 from .context_manager import ContextManager
 from .context_registry import ContextRegistry
@@ -123,7 +123,7 @@ class TaskInfo:
         }
 
 
-class SpecFileWatcher(ReflectiveModule):
+class SpecFileWatcher(BeastlyModule):
     """Watches spec files for changes and updates context"""
     
     def __init__(self, context_manager: ContextManager):
@@ -413,7 +413,7 @@ class SpecFileWatcher(ReflectiveModule):
             return ""
 
 
-class SpecWorkflowIntegrator(ReflectiveModule):
+class SpecWorkflowIntegrator(BeastlyModule):
     """Integrates AI Memory Palace with spec workflow"""
     
     def __init__(self, context_manager: ContextManager, 

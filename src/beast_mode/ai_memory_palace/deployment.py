@@ -22,7 +22,7 @@ from enum import Enum
 import yaml
 import logging
 
-from ..core.reflective_module import ReflectiveModule
+from src.beast_mode.core.beastly_module import BeastlyModule
 from .storage import ContextStorage
 from .context_registry import ContextRegistry
 from .context_manager import ContextManager
@@ -204,7 +204,7 @@ class Migration:
         }
 
 
-class ConfigurationManager(ReflectiveModule):
+class ConfigurationManager(BeastlyModule):
     """Manages AI Memory Palace configuration"""
     
     def __init__(self, config_path: Optional[Path] = None):
@@ -423,7 +423,7 @@ class ConfigurationManager(ReflectiveModule):
                 base_dict[key] = value
 
 
-class DatabaseMigrationManager(ReflectiveModule):
+class DatabaseMigrationManager(BeastlyModule):
     """Manages database schema migrations"""
     
     def __init__(self, storage: ContextStorage):
@@ -711,7 +711,7 @@ class DatabaseMigrationManager(ReflectiveModule):
         return hashlib.md5(content.encode()).hexdigest()
 
 
-class DeploymentOrchestrator(ReflectiveModule):
+class DeploymentOrchestrator(BeastlyModule):
     """Orchestrates AI Memory Palace deployment and initialization"""
     
     def __init__(self, config_manager: ConfigurationManager):

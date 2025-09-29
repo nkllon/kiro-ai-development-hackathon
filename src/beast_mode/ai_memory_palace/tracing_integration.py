@@ -10,12 +10,13 @@ from typing import Dict, List, Any, Optional
 from contextlib import contextmanager
 import uuid
 
-from ..core.reflective_module import ReflectiveModule
+from src.beast_mode.core.beastly_module import BeastlyModule
+from src.rm_ddd.core.unified_reflective_module import ModuleCapability, ModuleHealth, ModuleStatus, GracefulDegradationResult
 from ..tracing.tracer import BeastModeTracer
 from .models import SessionContext, ContextEvent
 
 
-class ContextTracingIntegration(ReflectiveModule):
+class ContextTracingIntegration(BeastlyModule):
     """Integration between AI Memory Palace and distributed tracing"""
     
     def __init__(self, service_name: str = "ai-memory-palace"):
@@ -33,7 +34,7 @@ class ContextTracingIntegration(ReflectiveModule):
         # Active span context
         self._active_spans = {}
         
-        self.logger.info(f"🔗 ContextTracingIntegration initialized for service: {service_name}")
+        self._logger.info(f"🔗 ContextTracingIntegration initialized for service: {service_name}")
     
     @contextmanager
     def trace_context_operation(self, operation_name: str, context: Optional[SessionContext] = None, 
@@ -124,7 +125,7 @@ class ContextTracingIntegration(ReflectiveModule):
         
         except Exception as e:
             # Fallback if tracing fails
-            self.logger.error(f"💥 Tracing failed for operation {operation_name}: {e}")
+            self._logger.error(f"💥 Tracing failed for operation {operation_name}: {e}")
             
             # Emit tracing failure observation
             self.emit_observation({
@@ -256,7 +257,7 @@ class ContextTracingIntegration(ReflectiveModule):
             })
             
         except Exception as e:
-            self.logger.error(f"💥 Error propagating correlation context: {e}")
+            self._logger.error(f"💥 Error propagating correlation context: {e}")
     
     def get_trace_context(self) -> Dict[str, Any]:
         """Get current trace context information"""
@@ -274,7 +275,7 @@ class ContextTracingIntegration(ReflectiveModule):
                 return {"trace_id": None, "span_id": None, "active": False}
                 
         except Exception as e:
-            self.logger.error(f"💥 Error getting trace context: {e}")
+            self._logger.error(f"💥 Error getting trace context: {e}")
             return {"error": str(e)}
     
     def add_trace_event(self, name: str, attributes: Dict[str, Any]):
@@ -292,7 +293,7 @@ class ContextTracingIntegration(ReflectiveModule):
                 })
             
         except Exception as e:
-            self.logger.error(f"💥 Error adding trace event: {e}")
+            self._logger.error(f"💥 Error adding trace event: {e}")
     
     def create_child_span(self, name: str, parent_correlation_id: str) -> str:
         """Create a child span with correlation to parent"""
@@ -313,7 +314,7 @@ class ContextTracingIntegration(ReflectiveModule):
             return child_correlation_id
             
         except Exception as e:
-            self.logger.error(f"💥 Error creating child span correlation: {e}")
+            self._logger.error(f"💥 Error creating child span correlation: {e}")
             return str(uuid.uuid4())  # Fallback
     
     def get_tracing_stats(self) -> Dict[str, Any]:
@@ -361,6 +362,46 @@ class ContextTracingIntegration(ReflectiveModule):
             "context_tracing_correlation_ids_propagated_total": self._correlation_ids_propagated,
             "context_tracing_active_spans": len(self._active_spans)
         }
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information - RDI Compliant"""
+        return {
+            "module_id": "ai_memory_palace_context_tracing_integration",
+            "module_name": "ContextTracingIntegration", 
+            "version": "1.0.0",
+            "description": "Integration between AI Memory Palace and distributed tracing"
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities - RDI Compliant"""
+        return [
+            ModuleCapability.CORE_FUNCTIONALITY,
+            ModuleCapability.MONITORING
+        ]
+    
+    def get_health_status(self) -> ModuleHealth:
+        """Get module health status - RDI Compliant"""
+        return ModuleHealth(
+            module_id="ai_memory_palace_context_tracing_integration",
+            status=ModuleStatus.HEALTHY,
+            health_score=0.95,
+            issues=[],
+            last_check=datetime.now(),
+            uptime_seconds=(datetime.now() - self._start_time).total_seconds(),
+            error_count=self._error_count,
+            warning_count=self._warning_count
+        )
+    
+    def graceful_degradation(self) -> GracefulDegradationResult:
+        """Perform graceful degradation - RDI Compliant"""
+        return GracefulDegradationResult(
+            success=True,
+            degraded_capabilities=[],
+            remaining_capabilities=[
+                ModuleCapability.CORE_FUNCTIONALITY,
+                ModuleCapability.MONITORING
+            ]
+        )
 
 
 # Convenience class that combines tracer functionality
@@ -401,3 +442,4 @@ class DistributedTracer:
     def get_metrics(self) -> Dict[str, Any]:
         """Get metrics"""
         return self.integration.get_metrics()
+    

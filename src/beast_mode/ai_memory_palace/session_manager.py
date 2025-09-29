@@ -12,7 +12,7 @@ from pathlib import Path
 import uuid
 import time
 
-from ..core.reflective_module import ReflectiveModule
+from src.beast_mode.core.beastly_module import BeastlyModule
 from .models import SessionContext, ContextEvent, ProjectState, ServiceInfo, HealthStatus
 from .context_registry import ContextRegistry
 from .context_engine import ContextEngine
@@ -34,7 +34,7 @@ class SessionRestorationResult:
         self.timestamp = datetime.now()
 
 
-class SessionManager(ReflectiveModule):
+class SessionManager(BeastlyModule):
     """Fast context loading and session restoration manager"""
     
     def __init__(self, registry: ContextRegistry, engine: ContextEngine, 

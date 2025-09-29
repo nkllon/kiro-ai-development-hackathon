@@ -11,7 +11,8 @@ from typing import Dict, List, Any, Optional, Set, Tuple
 from dataclasses import dataclass
 from enum import Enum
 
-from ..core.reflective_module import ReflectiveModule
+from src.beast_mode.core.beastly_module import BeastlyModule
+from src.rm_ddd.core.unified_reflective_module import ModuleCapability, ModuleHealth, ModuleStatus, GracefulDegradationResult
 from .models import SessionContext, ContextEvent, ContextEventType
 
 
@@ -84,7 +85,7 @@ class RepairResult:
     unresolved_issues: List[ValidationIssue]
 
 
-class ContextValidator(ReflectiveModule):
+class ContextValidator(BeastlyModule):
     """Validates context integrity and DAG compliance"""
     
     def __init__(self):
@@ -100,7 +101,7 @@ class ContextValidator(ReflectiveModule):
         # Validation rules cache
         self._validation_rules = self._initialize_validation_rules()
         
-        self.logger.info("🔍 ContextValidator initialized with mathematical governance")
+        self._logger.info("🔍 ContextValidator initialized with mathematical governance")
     
     def validate_dag_integrity(self, context: SessionContext) -> DAGValidationResult:
         """Validate DAG compliance for context event dependencies"""
@@ -147,9 +148,9 @@ class ContextValidator(ReflectiveModule):
             
             self._dag_validations += 1
             
-            self.logger.info(f"📊 DAG validation: {'✅ Valid' if result.is_valid else '❌ Invalid'}")
+            self._logger.info(f"📊 DAG validation: {'✅ Valid' if result.is_valid else '❌ Invalid'}")
             if cycles:
-                self.logger.warning(f"🔄 Detected {len(cycles)} circular dependencies")
+                self._logger.warning(f"🔄 Detected {len(cycles)} circular dependencies")
             
             self.emit_observation({
                 "type": "dag_validation_completed",
@@ -162,7 +163,7 @@ class ContextValidator(ReflectiveModule):
             return result
             
         except Exception as e:
-            self.logger.error(f"💥 Error validating DAG: {e}")
+            self._logger.error(f"💥 Error validating DAG: {e}")
             return DAGValidationResult(
                 is_valid=False,
                 cycles_detected=[],
@@ -210,7 +211,7 @@ class ContextValidator(ReflectiveModule):
             
             self._consistency_checks += 1
             
-            self.logger.info(f"🔍 Consistency check: {integrity_score:.2f} integrity score")
+            self._logger.info(f"🔍 Consistency check: {integrity_score:.2f} integrity score")
             
             self.emit_observation({
                 "type": "consistency_check_completed",
@@ -223,7 +224,7 @@ class ContextValidator(ReflectiveModule):
             return result
             
         except Exception as e:
-            self.logger.error(f"💥 Error checking consistency: {e}")
+            self._logger.error(f"💥 Error checking consistency: {e}")
             return ConsistencyResult(
                 is_consistent=False,
                 inconsistencies=[ValidationIssue(
@@ -248,12 +249,12 @@ class ContextValidator(ReflectiveModule):
             # Detect cycles
             cycles = self._detect_cycles(graph)
             
-            self.logger.info(f"🔄 Circular dependency detection: {len(cycles)} cycles found")
+            self._logger.info(f"🔄 Circular dependency detection: {len(cycles)} cycles found")
             
             return cycles
             
         except Exception as e:
-            self.logger.error(f"💥 Error detecting circular dependencies: {e}")
+            self._logger.error(f"💥 Error detecting circular dependencies: {e}")
             return []
     
     def repair_context_corruption(self, corrupted_context: SessionContext) -> RepairResult:
@@ -310,8 +311,8 @@ class ContextValidator(ReflectiveModule):
                 unresolved_issues=unresolved_issues
             )
             
-            self.logger.info(f"🔧 Context repair: {'✅ Success' if success else '❌ Failed'}")
-            self.logger.info(f"🛠️ Repairs applied: {', '.join(repairs_applied)}")
+            self._logger.info(f"🔧 Context repair: {'✅ Success' if success else '❌ Failed'}")
+            self._logger.info(f"🛠️ Repairs applied: {', '.join(repairs_applied)}")
             
             self.emit_observation({
                 "type": "context_repair_completed",
@@ -324,7 +325,7 @@ class ContextValidator(ReflectiveModule):
             return result
             
         except Exception as e:
-            self.logger.error(f"💥 Error repairing context: {e}")
+            self._logger.error(f"💥 Error repairing context: {e}")
             return RepairResult(
                 success=False,
                 repaired_context=None,
@@ -367,12 +368,12 @@ class ContextValidator(ReflectiveModule):
                 info=info
             )
             
-            self.logger.info(f"✅ Context validation: {len(errors)} errors, {len(warnings)} warnings")
+            self._logger.info(f"✅ Context validation: {len(errors)} errors, {len(warnings)} warnings")
             
             return result
             
         except Exception as e:
-            self.logger.error(f"💥 Error validating context integrity: {e}")
+            self._logger.error(f"💥 Error validating context integrity: {e}")
             return ValidationResult(
                 is_valid=False,
                 errors=[ValidationIssue(
@@ -407,7 +408,7 @@ class ContextValidator(ReflectiveModule):
             return True
             
         except Exception as e:
-            self.logger.error(f"💥 Error validating context event: {e}")
+            self._logger.error(f"💥 Error validating context event: {e}")
             return False
     
     def _build_dependency_graph(self, context: SessionContext) -> Dict[str, List[str]]:
@@ -708,3 +709,46 @@ class ContextValidator(ReflectiveModule):
             "context_validator_repairs_successful_total": self._repairs_successful,
             "context_validator_repair_success_rate": self._repairs_successful / max(1, self._repairs_attempted)
         }
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information - RDI Compliant"""
+        return {
+            "module_id": "ai_memory_palace_context_validator",
+            "module_name": "ContextValidator", 
+            "version": "1.0.0",
+            "description": "Validates context integrity and DAG compliance"
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities - RDI Compliant"""
+        from src.rm_ddd.core.unified_reflective_module import ModuleCapability
+        return [
+            ModuleCapability.CORE_FUNCTIONALITY,
+            ModuleCapability.VALIDATION
+        ]
+    
+    def get_health_status(self) -> ModuleHealth:
+        """Get module health status - RDI Compliant"""
+        from src.rm_ddd.core.unified_reflective_module import ModuleHealth, ModuleStatus
+        return ModuleHealth(
+            module_id="ai_memory_palace_context_validator",
+            status=ModuleStatus.HEALTHY,
+            health_score=0.95,
+            issues=[],
+            last_check=datetime.now(),
+            uptime_seconds=(datetime.now() - self._start_time).total_seconds(),
+            error_count=self._error_count,
+            warning_count=self._warning_count
+        )
+    
+    def graceful_degradation(self) -> GracefulDegradationResult:
+        """Perform graceful degradation - RDI Compliant"""
+        from src.rm_ddd.core.unified_reflective_module import GracefulDegradationResult, ModuleCapability
+        return GracefulDegradationResult(
+            success=True,
+            degraded_capabilities=[],
+            remaining_capabilities=[
+                ModuleCapability.CORE_FUNCTIONALITY,
+                ModuleCapability.VALIDATION
+            ]
+        )

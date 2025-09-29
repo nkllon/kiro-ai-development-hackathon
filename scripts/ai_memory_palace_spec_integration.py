@@ -22,7 +22,7 @@ from beast_mode.ai_memory_palace.context_manager import ContextManager
 from beast_mode.ai_memory_palace.context_registry import ContextRegistry
 from beast_mode.ai_memory_palace.storage import ContextStorage
 from beast_mode.ai_memory_palace.multi_project_manager import MultiProjectContextManager
-from beast_mode.ai_memory_palace.security import ContextSecurity
+from beast_mode.ai_memory_palace.security import ContextSecurityManager
 
 
 def create_integrator() -> SpecWorkflowIntegrator:
@@ -36,7 +36,7 @@ def create_integrator() -> SpecWorkflowIntegrator:
     context_manager = ContextManager(registry)
     
     # Initialize multi-project manager
-    security = ContextSecurity()
+    security = ContextSecurityManager()
     multi_project_manager = MultiProjectContextManager(registry, security)
     
     # Create integrator

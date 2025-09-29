@@ -20,7 +20,7 @@ import time
 from dataclasses import dataclass
 from enum import Enum
 
-from ..core.reflective_module import ReflectiveModule
+from src.beast_mode.core.beastly_module import BeastlyModule
 from .models import SessionContext, ContextEvent, ValidationSeverity
 from .context_registry import ContextRegistry
 from .context_validator import ContextValidator
@@ -87,7 +87,7 @@ class BackupMetadata:
         )
 
 
-class ContextBackupManager(ReflectiveModule):
+class ContextBackupManager(BeastlyModule):
     """Manages automatic context backups and recovery operations"""
     
     def __init__(self, storage: ContextStorage, validator: ContextValidator, 
@@ -869,7 +869,7 @@ class ContextBackupManager(ReflectiveModule):
         return min(3.0, max(1.0, total_chars / unique_chars / 10))
 
 
-class ContextRecoveryCLI(ReflectiveModule):
+class ContextRecoveryCLI(BeastlyModule):
     """Command-line interface for context recovery operations"""
     
     def __init__(self, backup_manager: ContextBackupManager):

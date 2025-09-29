@@ -11,8 +11,9 @@ from typing import Dict, List, Any, Optional
 from pathlib import Path
 import uuid
 
-from ..core.reflective_module import ReflectiveModule
-from ..tracing.tracer import DistributedTracer
+from src.beast_mode.core.beastly_module import BeastlyModule
+from src.rm_ddd.core.unified_reflective_module import ModuleCapability, ModuleHealth, ModuleStatus, GracefulDegradationResult
+from .tracing_integration import DistributedTracer
 from .models import (
     SessionContext, ContextEvent, ProjectState, ContextEventType,
     ConversationEvent, Decision, WorkItem, Discovery, SpecState,
@@ -23,7 +24,7 @@ from .context_engine import ContextEngine
 from .context_validator import ContextValidator
 
 
-class ContextManager(ReflectiveModule):
+class ContextManager(BeastlyModule):
     """Main orchestrator for AI conversation context persistence"""
     
     def __init__(self, config: Optional[Dict[str, Any]] = None):
@@ -49,8 +50,8 @@ class ContextManager(ReflectiveModule):
         self._context_events_processed = 0
         self._validation_failures = 0
         
-        self.logger.info(f"🧠 ContextManager initialized for project: {self.current_project_id}")
-        self.logger.info(f"🆔 Session ID: {self.current_session_id}")
+        self._logger.info(f"🧠 ContextManager initialized for project: {self.current_project_id}")
+        self._logger.info(f"🆔 Session ID: {self.current_session_id}")
         
         # Emit initialization observation
         self.emit_observation({
@@ -89,8 +90,8 @@ class ContextManager(ReflectiveModule):
                         span.set_attribute("context_restored", True)
                         span.set_attribute("context_size", existing_context.get_context_size())
                         
-                        self.logger.info(f"✅ Restored context for project {self.current_project_id}")
-                        self.logger.info(f"📊 Context summary: {existing_context.get_summary()}")
+                        self._logger.info(f"✅ Restored context for project {self.current_project_id}")
+                        self._logger.info(f"📊 Context summary: {existing_context.get_summary()}")
                         
                         # Emit successful restoration
                         self.emit_observation({
@@ -104,15 +105,15 @@ class ContextManager(ReflectiveModule):
                         return self.current_context
                     else:
                         self._validation_failures += 1
-                        self.logger.warning(f"⚠️ Context validation failed: {validation_result.errors}")
+                        self._logger.warning(f"⚠️ Context validation failed: {validation_result.errors}")
                         
                         # Attempt repair
                         repair_result = self.validator.repair_context_corruption(existing_context)
                         if repair_result.success:
                             self.current_context = repair_result.repaired_context
-                            self.logger.info("🔧 Context successfully repaired")
+                            self._logger.info("🔧 Context successfully repaired")
                         else:
-                            self.logger.error("💥 Context repair failed, creating new context")
+                            self._logger.error("💥 Context repair failed, creating new context")
                             existing_context = None
                 
                 # Create new context if none exists or repair failed
@@ -122,7 +123,7 @@ class ContextManager(ReflectiveModule):
                     
                     span.set_attribute("context_created", True)
                     
-                    self.logger.info(f"🆕 Created new context for project {self.current_project_id}")
+                    self._logger.info(f"🆕 Created new context for project {self.current_project_id}")
                     
                     # Emit new context creation
                     self.emit_observation({
@@ -138,7 +139,7 @@ class ContextManager(ReflectiveModule):
                 span.record_exception(e)
                 span.set_status("ERROR", str(e))
                 
-                self.logger.error(f"💥 Error loading session context: {e}")
+                self._logger.error(f"💥 Error loading session context: {e}")
                 
                 self.emit_observation({
                     "type": "session_context_loading_error",
@@ -158,7 +159,7 @@ class ContextManager(ReflectiveModule):
                 
                 # Validate event
                 if not self.validator.validate_context_event(event):
-                    self.logger.error(f"❌ Context event validation failed: {event.event_id}")
+                    self._logger.error(f"❌ Context event validation failed: {event.event_id}")
                     return False
                 
                 # Store event in registry
@@ -173,7 +174,7 @@ class ContextManager(ReflectiveModule):
                     
                     span.set_attribute("event_stored", True)
                     
-                    self.logger.debug(f"📝 Stored context event: {event.event_type.value}")
+                    self._logger.debug(f"📝 Stored context event: {event.event_type.value}")
                     
                     # Emit event stored observation
                     self.emit_observation({
@@ -184,7 +185,7 @@ class ContextManager(ReflectiveModule):
                         "session_id": self.current_session_id
                     })
                 else:
-                    self.logger.error(f"💥 Failed to store context event: {event.event_id}")
+                    self._logger.error(f"💥 Failed to store context event: {event.event_id}")
                 
                 return success
                 
@@ -192,7 +193,7 @@ class ContextManager(ReflectiveModule):
                 span.record_exception(e)
                 span.set_status("ERROR", str(e))
                 
-                self.logger.error(f"💥 Error saving context event: {e}")
+                self._logger.error(f"💥 Error saving context event: {e}")
                 return False
     
     def validate_context_integrity(self) -> Dict[str, Any]:
@@ -228,20 +229,20 @@ class ContextManager(ReflectiveModule):
                 span.record_exception(e)
                 span.set_status("ERROR", str(e))
                 
-                self.logger.error(f"💥 Error validating context: {e}")
+                self._logger.error(f"💥 Error validating context: {e}")
                 return {"valid": False, "error": str(e)}
     
     def clear_context(self, confirmation: str) -> bool:
         """Clear current context (requires confirmation)"""
         if confirmation != "CONFIRM_CLEAR_CONTEXT":
-            self.logger.warning("⚠️ Context clear attempted without proper confirmation")
+            self._logger.warning("⚠️ Context clear attempted without proper confirmation")
             return False
         
         try:
             self.current_context = None
             self.current_session_id = str(uuid.uuid4())
             
-            self.logger.info("🧹 Context cleared, new session started")
+            self._logger.info("🧹 Context cleared, new session started")
             
             # Emit context cleared observation
             self.emit_observation({
@@ -253,7 +254,7 @@ class ContextManager(ReflectiveModule):
             return True
             
         except Exception as e:
-            self.logger.error(f"💥 Error clearing context: {e}")
+            self._logger.error(f"💥 Error clearing context: {e}")
             return False
     
     async def _create_new_context(self) -> SessionContext:
@@ -309,7 +310,7 @@ class ContextManager(ReflectiveModule):
             )
             
         except Exception as e:
-            self.logger.error(f"💥 Error discovering project state: {e}")
+            self._logger.error(f"💥 Error discovering project state: {e}")
             
             # Return minimal project state
             return ProjectState(
@@ -479,3 +480,95 @@ class ContextManager(ReflectiveModule):
             return {"error": "No current context"}
         
         return self.current_context.get_summary()
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information - RDI Compliant"""
+        return {
+            "module_id": "ai_memory_palace_context_manager",
+            "module_name": "ContextManager", 
+            "version": "1.0.0",
+            "description": "Main orchestrator for AI conversation context persistence",
+            "project_id": self.current_project_id,
+            "session_id": self.current_session_id,
+            "sessions_started": self._sessions_started,
+            "sessions_restored": self._sessions_restored,
+            "context_events_processed": self._context_events_processed
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities - RDI Compliant"""
+        return [
+            ModuleCapability.CORE_FUNCTIONALITY,
+            ModuleCapability.DATA_PROCESSING,
+            ModuleCapability.API_INTEGRATION,
+            ModuleCapability.VALIDATION,
+            ModuleCapability.MONITORING
+        ]
+    
+    def get_health_status(self) -> ModuleHealth:
+        """Get module health status - RDI Compliant"""
+        
+        # Determine status based on validation failures and errors
+        if self._validation_failures > 10:
+            status = ModuleStatus.ERROR
+            health_score = 0.3
+        elif self._validation_failures > 5:
+            status = ModuleStatus.WARNING  
+            health_score = 0.7
+        else:
+            status = ModuleStatus.HEALTHY
+            health_score = 0.95
+            
+        issues = []
+        if self._validation_failures > 0:
+            issues.append(f"Validation failures: {self._validation_failures}")
+        if self._error_count > 0:
+            issues.append(f"Error count: {self._error_count}")
+            
+        return ModuleHealth(
+            module_id="ai_memory_palace_context_manager",
+            status=status,
+            health_score=health_score,
+            issues=issues,
+            last_check=datetime.now(),
+            uptime_seconds=(datetime.now() - self.session_start_time).total_seconds(),
+            error_count=self._error_count,
+            warning_count=self._warning_count
+        )
+    
+    def graceful_degradation(self) -> GracefulDegradationResult:
+        """Perform graceful degradation - RDI Compliant"""
+        
+        try:
+            # In degraded mode, disable advanced features but keep core functionality
+            degraded_capabilities = []
+            remaining_capabilities = [ModuleCapability.CORE_FUNCTIONALITY]
+            
+            # Check if tracing is available
+            if not self.get_tracing_status().get("tracing_enabled", False):
+                degraded_capabilities.append(ModuleCapability.MONITORING)
+            else:
+                remaining_capabilities.append(ModuleCapability.MONITORING)
+                
+            # Check if validation is working
+            try:
+                if self.validator:
+                    remaining_capabilities.append(ModuleCapability.VALIDATION)
+                else:
+                    degraded_capabilities.append(ModuleCapability.VALIDATION)
+            except:
+                degraded_capabilities.append(ModuleCapability.VALIDATION)
+                
+            return GracefulDegradationResult(
+                success=True,
+                degraded_capabilities=degraded_capabilities,
+                remaining_capabilities=remaining_capabilities
+            )
+            
+        except Exception as e:
+            return GracefulDegradationResult(
+                success=False,
+                degraded_capabilities=[],
+                remaining_capabilities=[ModuleCapability.CORE_FUNCTIONALITY],
+                error_message=str(e)
+            )

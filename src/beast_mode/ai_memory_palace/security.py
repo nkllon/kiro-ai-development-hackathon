@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from enum import Enum
 import uuid
 
-from ..core.reflective_module import ReflectiveModule
+from src.beast_mode.core.beastly_module import BeastlyModule
 from .models import SessionContext, ContextEvent
 
 
@@ -66,7 +66,7 @@ class AccessLogEntry:
     details: Dict[str, Any]
 
 
-class ContextSecurityManager(ReflectiveModule):
+class ContextSecurityManager(BeastlyModule):
     """Security and privacy protection for context data"""
     
     def __init__(self, encryption_key: Optional[str] = None):

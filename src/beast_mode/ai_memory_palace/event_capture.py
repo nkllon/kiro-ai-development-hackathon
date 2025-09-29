@@ -13,13 +13,13 @@ from functools import wraps
 from pathlib import Path
 import uuid
 
-from ..core.reflective_module import ReflectiveModule
+from src.beast_mode.core.beastly_module import BeastlyModule
 from ..tracing.tracer import DistributedTracer
 from .models import ContextEvent, ContextEventType, EventMetadata
 from .context_manager import ContextManager
 
 
-class EventCapture(ReflectiveModule):
+class EventCapture(BeastlyModule):
     """Automatic context event capture system"""
     
     def __init__(self, context_manager: ContextManager):

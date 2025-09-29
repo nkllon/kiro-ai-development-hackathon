@@ -18,11 +18,11 @@ import time
 from dataclasses import dataclass, field
 from enum import Enum
 
-from ..core.reflective_module import ReflectiveModule
+from src.beast_mode.core.beastly_module import BeastlyModule
 from .models import SessionContext, ContextEvent, ProjectState
 from .context_registry import ContextRegistry
 from .context_manager import ContextManager
-from .security import ContextSecurity
+from .security import ContextSecurityManager
 
 
 class ProjectType(Enum):
@@ -135,7 +135,7 @@ class SharedContextConfig:
         )
 
 
-class ProjectDetector(ReflectiveModule):
+class ProjectDetector(BeastlyModule):
     """Detects and classifies projects in the workspace"""
     
     def __init__(self):
@@ -426,10 +426,10 @@ class ProjectDetector(ReflectiveModule):
         return f"proj_{path.name}_{path_hash}"
 
 
-class MultiProjectContextManager(ReflectiveModule):
+class MultiProjectContextManager(BeastlyModule):
     """Manages context across multiple projects with isolation and sharing"""
     
-    def __init__(self, context_registry: ContextRegistry, security: ContextSecurity):
+    def __init__(self, context_registry: ContextRegistry, security: ContextSecurityManager):
         super().__init__()
         
         self.context_registry = context_registry

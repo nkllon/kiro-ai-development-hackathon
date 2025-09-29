@@ -274,37 +274,51 @@ class ReflectiveModule(ABC):
             # Store content with metadata
             content_data = {
                 "id": content_id,
-                "collection": collection,
                 "data": data,
                 "module_id": getattr(self, "module_id", self.__class__.__name__),
                 "timestamp": datetime.now().isoformat(),
                 "version": "1.0.0"
             }
             
-            # For now, store in memory until Directus is fully configured
+            # Try to use real Directus client
+            if hasattr(self._cms_client, 'create_item'):
+                result = self._cms_client.create_item(collection, content_data)
+                if result:
+                    self._logger.info(f"Stored content {content_id} in Directus collection {collection}")
+                    return True
+                else:
+                    self._logger.warning(f"Failed to store content {content_id} in Directus, using memory fallback")
+            
+            # Fallback to memory storage
             if not hasattr(self, '_content_store'):
                 self._content_store = {}
             
             self._content_store[content_id] = content_data
-            self._logger.info(f"Stored content {content_id} in collection {collection}")
+            self._logger.info(f"Stored content {content_id} in memory collection {collection}")
             return True
             
         except Exception as e:
             self._logger.error(f"Failed to store content {content_id}: {e}")
             return False
 
-    def get_content(self, content_id: str) -> Optional[Dict[str, Any]]:
+    def get_content(self, content_id: str, collection: str = "content") -> Optional[Dict[str, Any]]:
         """Retrieve content from unified CMS."""
         try:
             # Initialize CMS connection if needed
             if not hasattr(self, '_cms_client'):
                 self._initialize_cms_client()
             
-            # For now, retrieve from memory store
+            # Try to use real Directus client
+            if hasattr(self._cms_client, 'get_items'):
+                items = self._cms_client.get_items(collection, {"filter": {"id": {"_eq": content_id}}})
+                if items:
+                    return items[0]
+            
+            # Fallback to memory store
             if hasattr(self, '_content_store') and content_id in self._content_store:
                 return self._content_store[content_id]
             
-            self._logger.warning(f"Content {content_id} not found")
+            self._logger.warning(f"Content {content_id} not found in Directus or memory")
             return None
             
         except Exception as e:
@@ -314,14 +328,30 @@ class ReflectiveModule(ABC):
     def _initialize_cms_client(self):
         """Initialize CMS client connection."""
         try:
-            # TODO: Initialize actual Directus client when available
-            # For now, use in-memory storage
-            self._cms_client = "memory_store"
-            self._logger.info("CMS client initialized (memory mode)")
+            # Initialize actual Directus client
+            from src.beast_mode.directus_cms.directus_client import DirectusClient
             
+            # Get Directus configuration from environment
+            directus_url = os.getenv("DIRECTUS_URL", "http://localhost:8055")
+            directus_token = os.getenv("DIRECTUS_TOKEN")
+            
+            self._cms_client = DirectusClient(base_url=directus_url, token=directus_token)
+            
+            # Test connection
+            if self._cms_client.health_check():
+                self._logger.info("CMS client initialized (Directus connected)")
+            else:
+                self._logger.warning("CMS client initialized (Directus not accessible, will retry)")
+            
+        except ImportError:
+            # Fallback to memory storage if DirectusClient not available
+            self._cms_client = "memory_store"
+            self._logger.warning("DirectusClient not available, using memory storage fallback")
         except Exception as e:
             self._logger.error(f"Failed to initialize CMS client: {e}")
-            self._cms_client = None
+            # Fallback to memory storage
+            self._cms_client = "memory_store"
+            self._logger.warning("Using memory storage fallback due to CMS client error")
 
     def get_cli_interface(self) -> Dict[str, Any]:
         """

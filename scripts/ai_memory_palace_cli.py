@@ -24,7 +24,7 @@ from beast_mode.ai_memory_palace.backup_recovery import ContextBackupManager
 from beast_mode.ai_memory_palace.analytics import ContextAnalyzer, ContextOptimizer
 from beast_mode.ai_memory_palace.spec_integration import SpecWorkflowIntegrator
 from beast_mode.ai_memory_palace.developer_tools import ContextInspector
-from beast_mode.ai_memory_palace.security import ContextSecurity
+from beast_mode.ai_memory_palace.security import ContextSecurityManager
 from beast_mode.ai_memory_palace.context_validator import ContextValidator
 
 
@@ -37,7 +37,7 @@ def create_cli_system() -> ContextCLITools:
     
     # Initialize managers
     context_manager = ContextManager(registry)
-    security = ContextSecurity()
+    security = ContextSecurityManager()
     multi_project_manager = MultiProjectContextManager(registry, security)
     
     # Initialize backup system
