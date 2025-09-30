@@ -3,7 +3,7 @@
 ## Phase 1: Infrastructure Discovery Engine (Est: 4-5 days)
 *Requirements: 1, 4, 5, 8*
 
-- [ ] 1.1 Set up project structure and core discovery system
+- [x] 1.1 Set up project structure and core discovery system
   - Create directory structure for infrastructure discovery components
   - Implement InfrastructureDiscoverer class inheriting from ReflectiveModule
   - Define enhanced data models with versioning and validation
@@ -11,7 +11,7 @@
   - Set up Observatory WebSocket client integration
   - _Requirements: 1.1, 4.1, 5.1_
 
-- [ ] 1.2 Implement Observatory WebSocket integration
+- [x] 1.2 Implement Observatory WebSocket integration
   - Create ObservatoryWebSocketClient for real-time service discovery
   - Implement WebSocket endpoint health monitoring (/ws/observatory, /ws/anomalies, /ws/emoji-rain, /ws/doctor-status)
   - Build real-time metrics collection from Observatory feeds
@@ -19,7 +19,7 @@
   - Implement correlation ID tracking for WebSocket events
   - _Requirements: 1.2, 6.1, 6.2_
 
-- [ ] 1.3 Implement comprehensive service discovery scanner
+- [x] 1.3 Implement comprehensive service discovery scanner
   - Build unified scanner for running services (Observatory, Prometheus, Grafana)
   - Integrate with existing Prometheus metrics API for live service status
   - Create configuration parser for YAML/JSON configs including tunnel credentials

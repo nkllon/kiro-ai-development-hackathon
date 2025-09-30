@@ -11,15 +11,13 @@ ingress:
     service: http://localhost:8888
     originRequest:
       # WebSocket-specific settings
-      httpHostHeader: localhost:8888
+      httpHostHeader: observatory.nkllon.com
       # Enable WebSocket support
       noTLSVerify: false
       # Increase timeout for WebSocket connections
       connectTimeout: 30s
       tlsTimeout: 10s
       tcpKeepAlive: 30s
-      # WebSocket-specific headers
-      httpHostHeader: observatory.nkllon.com
       # Disable compression for WebSocket frames
       disableChunkedEncoding: false
       

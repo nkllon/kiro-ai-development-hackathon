@@ -1,0 +1,10 @@
+Implement a simple CloudflareTunnelDiscoverer class for the System Architecture Wiring Diagram.
+
+Requirements:
+- Inherit from ReflectiveModule (from src.rm_ddd.core.unified_reflective_module)
+- Parse Cloudflare tunnel configuration from config files
+- Extract tunnel ID: d1e53e43-033f-4994-8f46-c83962ae3785
+- Map subdomain routing (observatory.nkllon.com, grafana.observatory.nkllon.com, etc.)
+- Include proper error handling and logging
+
+Please provide the complete Python implementation with imports.

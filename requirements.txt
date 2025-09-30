@@ -1,51 +1,53 @@
-# WebSocket Validation Framework Dependencies
+# Cloudflare Custom Error Pages CLI - Dependencies
+# ================================================
 
 # Core dependencies
-requests>=2.31.0
-websockets>=11.0.3
-aiohttp>=3.8.5
-fastapi>=0.104.1
-pydantic>=2.4.2
+requests>=2.28.0
+pyyaml>=6.0
+click>=8.0.0
 
-# Testing and validation
-pytest>=7.4.2
-pytest-asyncio>=0.21.1
-pytest-cov>=4.1.0
-pytest-mock>=3.11.1
+# Rich CLI experience (optional but recommended)
+rich>=13.0.0
+typer>=0.9.0
 
-# Code analysis
-ast-tools>=0.1.2
-python-ast>=0.1.0
+# Development and testing
+pytest>=7.0.0
+pytest-cov>=4.0.0
+black>=22.0.0
+flake8>=5.0.0
+mypy>=1.0.0
 
-# Cryptography and security
-cryptography>=41.0.4
-hashlib-compat>=1.0.1
+# Monitoring and analytics
+prometheus-client>=0.15.0
 
-# Configuration and environment
-python-dotenv>=1.0.0
-pyyaml>=6.0.1
+# Configuration management
+python-dotenv>=0.19.0
+jinja2>=3.0.0
 
-# Logging and monitoring
-structlog>=23.1.0
-prometheus-client>=0.17.1
+# HTTP client with retries
+httpx>=0.24.0
 
-# Network and HTTP utilities
-httpx>=0.24.1
-urllib3>=2.0.4
+# Progress bars and CLI utilities
+tqdm>=4.64.0
+colorama>=0.4.5
 
-# Data processing and analysis
-pandas>=2.1.1
-numpy>=1.24.3
+# JSON schema validation
+jsonschema>=4.0.0
 
-# Report generation
-jinja2>=3.1.2
-matplotlib>=3.7.2
-plotly>=5.16.1
+# Date/time utilities
+python-dateutil>=2.8.0
 
-# Development tools
-black>=23.7.0
-flake8>=6.0.0
-mypy>=1.5.1
-pre-commit>=3.4.0# DNS resolu
-tion
-dnspython>=2.4.2
+# Logging enhancements
+structlog>=22.0.0
+
+# Optional: Docker support
+# docker>=6.0.0
+
+# Optional: Slack notifications
+# slack-sdk>=3.19.0
+
+# Optional: Email notifications
+# smtplib (built-in)
+
+# Optional: GitHub API integration
+# pygithub>=1.57

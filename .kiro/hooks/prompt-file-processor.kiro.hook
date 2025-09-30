@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "Prompt File Processor",
+  "description": "Automatically reads prompt files created in the prompts/ directory, executes the requested task by implementing code and creating necessary files, then moves the completed prompt file to prompts/completed/",
+  "version": "1",
+  "when": {
+    "type": "fileDeleted",
+    "patterns": [
+      "prompts/*.txt",
+      "prompts/*.md"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A new prompt file has been created in the prompts/ directory. Please:\n\n1. Read the prompt file content to understand the requested task\n2. Create the prompts/ and prompts/completed/ directories if they don't exist\n3. Execute the requested task by implementing the necessary code and creating required files\n4. Once the task is completed, move the prompt file from prompts/ to prompts/completed/\n5. Provide a summary of what was implemented and completed\n\nThe prompt file path is: {filePath}\n\nPlease process this prompt file systematically and ensure all requested functionality is properly implemented before moving the file to the completed directory."
+  }
+}

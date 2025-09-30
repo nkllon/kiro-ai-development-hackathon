@@ -1,0 +1,59 @@
+# Claude AI Task: DAG-Compliant Dependency Analysis Implementation
+
+## Context
+You are implementing DAG-Compliant Dependency Analysis Implementation as part of the system-architecture-wiring-diagram specification. This is Task 2.1 in a DAG-orchestrated parallel execution framework.
+
+## Task Requirements
+Implement Task 2.1: DAG-Compliant Dependency Analysis for the system-architecture-wiring-diagram spec.
+
+Requirements:
+- Create RelationshipMapper class with mathematical validation
+- Build dependency graph analysis with cycle detection algorithms
+- Implement DAG Registry integration for dependency validation
+- Map ReflectiveModule initialization sequences and dependencies
+- Create dependency visualization with validation status indicators
+- Implement topological sorting for execution order determination
+
+Deliverables:
+- src/system_architecture/analysis/relationship_mapper.py
+- src/system_architecture/models/dependency_graph.py
+- docs/dag_dependency_analysis_report.md
+- tests/test_relationship_mapper.py
+
+Use the infrastructure discovery results from Tasks 1.4 and 1.6. Follow Beast Mode framework patterns and ensure >90% test coverage.
+
+## Dependencies
+This task depends on: 1.4, 1.6
+
+## Context Files
+The following files are provided for context:
+- .kiro/specs/system-architecture-wiring-diagram/tasks.md
+- .kiro/specs/system-architecture-wiring-diagram/requirements.md
+- src/rm_ddd/core/dag_registry.py
+
+## Implementation Guidelines
+1. Follow Beast Mode framework patterns
+2. Inherit from ReflectiveModule for systematic observability
+3. Implement proper error handling and structured logging
+4. Use correlation IDs for traceability
+5. Ensure >90% test coverage
+6. Create comprehensive documentation
+7. Follow existing code patterns and architectural decisions
+
+## Success Criteria
+- All deliverables created and functional
+- Unit tests passing with >90% coverage
+- Integration with existing Beast Mode components
+- Proper ReflectiveModule health endpoints (/health, /ready, /metrics)
+- Documentation complete and accurate
+- Code follows established patterns and quality standards
+
+## Output Format
+Please provide:
+1. Complete implementation code for all deliverables
+2. Comprehensive unit tests
+3. Documentation explaining the implementation
+4. Integration notes for connecting with other components
+5. Any architectural decisions or trade-offs made
+
+Focus on systematic, production-ready implementation that integrates seamlessly with the existing Beast Mode framework.

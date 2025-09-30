@@ -1,0 +1,18 @@
+Implement task 2.1 from the System Architecture Wiring Diagram spec: DAG dependency analysis.
+
+Requirements:
+- Create src/system_architecture/analysis/dag_dependency_analyzer.py
+- Inherit from ReflectiveModule (from src.rm_ddd.core.unified_reflective_module)
+- Implement mathematical validation with cycle detection
+- Analyze task dependencies and create dependency graphs
+- Validate DAG compliance (no circular dependencies)
+- Provide topological ordering for task execution
+- Generate dependency matrices and validation reports
+- Include systematic error handling for circular dependencies
+- Map dependency relationships between system components
+- Create mathematical proofs of dependency correctness
+- Include comprehensive error handling and logging
+- Add health monitoring endpoints
+- Follow Beast Mode systematic patterns
+
+Please implement the complete DAGDependencyAnalyzer class with all necessary imports and methods.

@@ -200,21 +200,36 @@ The final design integrates seamlessly with existing Beast Mode components, ACE 
 
 **Decision**: **BUY** - Use for structured logging and audit trails.
 
+## ADR Conformance Review
+
+### Relevant ADRs Reviewed
+- ADR-004: DAG Orchestration with Celery + Redis - ✅ **Compliant** - Design uses Celery+Redis architecture
+- ADR-005: ReflectiveModule Pattern for Universal Observability - ✅ **Compliant** - All components inherit ReflectiveModule
+- ADR-006: Existing DAG Registry Over External Graph Libraries - ✅ **Compliant** - Uses existing DAG Registry
+- ADR-008: Failure Isolation Over Cascade Prevention - ✅ **Compliant** - Implements failure isolation strategy
+- ADR-009: Resource-Aware Dynamic Concurrency - ✅ **Compliant** - Dynamic concurrency adjustment implemented
+
+### Conformance Assessment
+- **Infrastructure**: Aligns with Celery+Redis decision (ADR-004) and existing Beast Mode network
+- **Integration**: Follows ReflectiveModule pattern (ADR-005) and existing DAG Registry usage (ADR-006)
+- **Operations**: Implements failure isolation (ADR-008) and dynamic concurrency (ADR-009)
+- **Technology**: Consistent with established Beast Mode framework patterns
+
+### Architectural Consistency
+Design maintains full architectural consistency with existing ADRs and Beast Mode framework patterns.
+
 ## Recommended Architecture Strategy
 
-### Hybrid Approach: Strategic Build + Buy
+### ADR-Compliant Architecture: Celery + Redis + Beast Mode Integration
 
-Based on the analysis, the optimal strategy combines proven external tools with targeted custom development:
+Based on ADR-004 and the build vs. buy analysis, the architecture uses Celery+Redis with existing Beast Mode infrastructure:
 
-#### **BUY** - External Tools
+#### **PRIMARY** - Celery + Redis (ADR-004 Compliant)
 1. **Celery** - Distributed task queue with parallel execution, retry logic, and resource management
-2. **Redis** - Task broker and result backend (restore existing infrastructure)
+2. **Redis** - Task broker and result backend (restore existing Beast Mode infrastructure at 192.168.1.119:6379)
+3. **Fallback Redis** - Local Redis (localhost:6380) if remote remains unavailable
 
-#### **BUILD** - Custom Components (Minimal)
-1. **DAG-Aware Celery Tasks** - Task definitions that validate dependencies before execution
-2. **Redis Connectivity Restoration** - Fix network access to existing Beast Mode Redis infrastructure
-
-#### **INHERIT** - Existing Beast Mode Capabilities
+#### **INHERIT** - Existing Beast Mode Capabilities (ADR-005, ADR-006)
 1. **ReflectiveModule Pattern** - Complete observability framework with automatic Prometheus metrics, health endpoints, CLI generation, and tracing
 2. **DAG Registry** - Existing `src/rm_ddd/core/dag_registry.py` with cycle detection, topological sorting, and mathematical validation
 3. **AI Memory Palace** - Context management and learning capabilities at `src/beast_mode/ai_memory_palace/`
@@ -222,11 +237,11 @@ Based on the analysis, the optimal strategy combines proven external tools with 
 5. **Structured Logging** - Built-in correlation IDs and systematic error handling
 6. **CLI Generation** - Automatic CLI interface generation from ReflectiveModule introspection
 
-#### **EVALUATE** - Conditional Adoption
-1. **Airflow** - If workflow complexity increases significantly
-2. **Prefect** - If medium-complexity orchestration needs emerge
-3. **Celery** - If distributed execution becomes required
-4. **Ray** - If ML/AI workload distribution becomes necessary
+#### **BUILD** - Custom Integration Components (Minimal)
+1. **DAG-Aware Celery Tasks** - Task definitions that validate dependencies before execution using existing DAG Registry
+2. **Prefire Testing System** - Comprehensive validation before DAG execution (Requirement 3)
+3. **Resource-Aware Scheduler** - Dynamic concurrency adjustment (ADR-009 compliant)
+4. **Failure Isolation Manager** - Isolate failures while continuing independent tasks (ADR-008 compliant)
 
 ## Architecture
 
@@ -284,50 +299,49 @@ graph TB
 
 ### Core Components Strategy
 
-#### 1. Parallel Execution Engine (BUILD)
-**Rationale**: Custom engine required to bridge DAG constraints with parallel execution - no existing tool provides this specific integration.
+#### 1. DAG-Aware Celery Orchestrator (BUILD - ADR-004 Compliant)
+**Rationale**: Custom orchestrator that bridges existing DAG Registry with Celery's parallel execution capabilities.
 
-**Why BUILD instead of BUY:**
-- **Airflow**: Too heavyweight for in-process execution, requires database/scheduler infrastructure
-- **Celery**: Designed for distributed systems with message brokers, overkill for local parallel execution
-- **Ray**: ML-focused with complex setup, unnecessary for general task orchestration
-- **Prefect**: Still requires infrastructure setup, not designed for embedded execution
-- **concurrent.futures alone**: No DAG awareness, can't handle dependency constraints
+**Why Celery + Custom Integration (ADR-004):**
+- **Mature Framework**: Celery provides battle-tested parallel execution, retry logic, and resource management
+- **Existing Infrastructure**: Leverages Beast Mode Redis network (192.168.1.119:6379)
+- **Distributed Capability**: Supports multi-node coordination when needed
+- **Proven Reliability**: Production-grade task queue with comprehensive monitoring
 
-**Custom Engine Advantages:**
-- **Seamless DAG Integration**: Direct integration with existing `DAGRegistry` for dependency validation
-- **Lightweight**: No external infrastructure required, runs in-process
+**Custom Integration Advantages:**
+- **DAG Validation**: Integrates existing DAG Registry for mathematical dependency validation
 - **Beast Mode Native**: Inherits from ReflectiveModule for automatic observability
-- **Resource Aware**: Dynamic concurrency adjustment based on system resources
-- **Failure Isolation**: Task failures don't cascade to independent tasks
+- **Failure Isolation**: Implements ADR-008 failure isolation strategy
+- **Resource Awareness**: Dynamic concurrency adjustment per ADR-009
 
 **Core Responsibilities:**
-- **DAG-Aware Scheduling**: Only executes tasks when dependencies are satisfied
-- **Dynamic Concurrency**: Adjusts thread pool size based on resource utilization
-- **Dependency Tracking**: Monitors task completion to trigger dependent tasks
-- **Failure Management**: Isolates failures while preserving independent execution paths
-- **Resource Optimization**: Balances parallelism with system resource constraints
+- **DAG-Aware Task Scheduling**: Celery tasks validate dependencies before execution
+- **Dynamic Worker Management**: Adjusts Celery worker count based on resource utilization
+- **Dependency Coordination**: Coordinates task completion signals to trigger dependent tasks
+- **Failure Isolation**: Isolates task failures while preserving independent execution paths
+- **Resource Optimization**: Balances Celery worker allocation with system resource constraints
 
 **Implementation Strategy:**
 ```python
-class ParallelExecutionEngine(ReflectiveModule):
-    def __init__(self, dag_registry: DAGRegistry, max_workers: int = 10):
+class DAGCeleryOrchestrator(ReflectiveModule):
+    def __init__(self, dag_registry: DAGRegistry, redis_url: str = "redis://192.168.1.119:6379"):
         super().__init__()
         self.dag_registry = dag_registry
-        self.executor = ThreadPoolExecutor(max_workers=max_workers)
-        self.resource_manager = ResourceManager()
+        self.celery_app = Celery('dag_orchestrator', broker=redis_url, backend=redis_url)
+        self.resource_manager = ResourceAwareScheduler()
         
     def execute_dag_parallel(self, tasks: List[TaskDefinition]) -> Dict[str, ExecutionResult]:
         # 1. Validate DAG using existing registry
         # 2. Get topological ordering
-        # 3. Execute ready tasks in parallel
+        # 3. Submit ready tasks to Celery
         # 4. Monitor completions and trigger dependents
-        # 5. Handle failures with isolation
+        # 5. Handle failures with isolation per ADR-008
 ```
 
 **Integration Points:**
-- **DAG Registry**: Uses existing cycle detection and topological sorting
-- **ReflectiveModule**: Automatic Prometheus metrics, health endpoints, CLI
+- **DAG Registry**: Uses existing cycle detection and topological sorting (ADR-006)
+- **ReflectiveModule**: Automatic Prometheus metrics, health endpoints, CLI (ADR-005)
+- **Redis Infrastructure**: Leverages existing Beast Mode network coordination
 - **AI Memory Palace**: Context preservation across task executions
 - **ACE Reporter**: Progress broadcasting for long-running executions
 
@@ -365,7 +379,38 @@ class ParallelExecutionEngine(ReflectiveModule):
   - Graceful degradation strategies
 - **Implementation**: Custom ResourceManager wrapping concurrent.futures
 
-#### 5. Monitoring and Observability (INHERIT - ReflectiveModule)
+#### 5. Prefire Testing System (BUILD - Requirement 3)
+**Rationale**: Comprehensive validation before DAG execution prevents failures and ensures system readiness.
+
+**Core Capabilities:**
+- **Infrastructure Validation**: Redis connectivity, system resources, dependency availability
+- **DAG Consistency Checks**: Mathematical validation using existing DAG Registry
+- **Resource Availability Assessment**: CPU, memory, I/O capacity for parallel execution
+- **Readiness Reporting**: Confidence metrics and remediation guidance
+
+**Implementation Strategy:**
+```python
+class PrefireTester(ReflectiveModule):
+    def __init__(self, dag_registry: DAGRegistry, resource_manager: ResourceManager):
+        super().__init__()
+        self.dag_registry = dag_registry
+        self.resource_manager = resource_manager
+        
+    def validate_execution_readiness(self, tasks: List[TaskDefinition]) -> PrefireReport:
+        # 1. Validate DAG consistency and detect cycles
+        # 2. Check Redis connectivity and Celery worker availability
+        # 3. Assess system resource capacity for parallel execution
+        # 4. Validate all task dependencies exist and are accessible
+        # 5. Generate readiness report with confidence metrics
+```
+
+**Validation Categories:**
+- **Mathematical Validation**: DAG consistency, cycle detection, topological ordering
+- **Infrastructure Validation**: Redis connectivity, Celery worker health, network access
+- **Resource Validation**: CPU/memory/I/O capacity assessment for planned concurrency
+- **Dependency Validation**: All task dependencies exist and are accessible
+
+#### 6. Monitoring and Observability (INHERIT - ReflectiveModule)
 **Rationale**: All monitoring and observability capabilities are automatically provided by inheriting from ReflectiveModule.
 
 - **Metrics**: Automatic Prometheus metrics registration and collection
@@ -612,32 +657,201 @@ class DAGExecutionContext:
         return (self.completed_tasks + self.failed_tasks) / self.total_tasks * 100
 ```
 
-## Error Handling
+### Prefire Testing Models (Requirement 3)
 
-### Failure Isolation Strategy
+```python
+@dataclass
+class PrefireReport:
+    """Comprehensive prefire validation report."""
+    execution_id: str
+    overall_readiness: bool
+    confidence_score: float  # 0.0 to 1.0
+    validation_results: Dict[str, ValidationResult]
+    remediation_guidance: List[str]
+    estimated_execution_time: Optional[float] = None
+    
+    def is_ready_for_execution(self) -> bool:
+        """Determine if system is ready for DAG execution."""
+        return self.overall_readiness and self.confidence_score >= 0.8
+
+@dataclass
+class ValidationResult:
+    """Individual validation check result."""
+    category: str  # 'mathematical', 'infrastructure', 'resource', 'dependency'
+    status: str    # 'passed', 'failed', 'warning'
+    details: str
+    remediation: Optional[str] = None
+    confidence_impact: float = 0.0  # Impact on overall confidence score
+```
+
+### Resource Management Models (ADR-009 Compliant)
+
+```python
+@dataclass
+class ResourceMetrics:
+    """Real-time system resource metrics."""
+    cpu_percent: float
+    memory_percent: float
+    disk_io_percent: float
+    network_io_percent: float
+    timestamp: datetime
+    
+    def exceeds_thresholds(self, config: ResourceConfiguration) -> bool:
+        """Check if any resource exceeds configured thresholds."""
+        return (self.cpu_percent > config.cpu_threshold or
+                self.memory_percent > config.memory_threshold or
+                self.disk_io_percent > config.io_threshold)
+
+@dataclass
+class ConcurrencyAdjustment:
+    """Record of concurrency adjustment decision."""
+    timestamp: datetime
+    old_workers: int
+    new_workers: int
+    reason: str
+    resource_metrics: ResourceMetrics
+    effectiveness_score: Optional[float] = None  # Measured after adjustment
+```
+
+## Error Handling and Recovery (Requirement 9)
+
+### Failure Isolation Strategy (ADR-008 Compliant)
 **Rationale**: Prevents cascade failures while maintaining system stability and providing clear recovery paths.
 
 1. **Task-Level Isolation**: Individual task failures don't affect independent tasks
 2. **Dependency Chain Management**: Failed tasks halt their dependents but allow independent execution
-3. **Critical Path Protection**: Priority handling for critical path tasks
+3. **Critical Path Protection**: Priority handling for critical path tasks with immediate notification
 4. **Graceful Degradation**: Automatic fallback to sequential execution when parallel execution fails
+5. **DAG Integrity Maintenance**: All recovery actions preserve mathematical DAG consistency
 
-### Error Recovery Mechanisms
+### Error Classification and Response
+
+```python
+class ErrorClassifier:
+    """Classify errors for appropriate response strategy."""
+    
+    ERROR_CATEGORIES = {
+        'transient': ['network_timeout', 'resource_exhaustion', 'temporary_unavailability'],
+        'permanent': ['invalid_input', 'missing_dependency', 'configuration_error'],
+        'critical': ['dag_consistency_violation', 'system_failure', 'security_breach'],
+        'recoverable': ['task_failure', 'worker_crash', 'partial_completion']
+    }
+    
+    def classify_error(self, error: Exception, context: Dict[str, Any]) -> str:
+        """Classify error type for appropriate recovery strategy."""
+        pass
+    
+    def determine_retry_eligibility(self, error_type: str, retry_count: int) -> bool:
+        """Determine if error is eligible for retry based on type and history."""
+        pass
+```
+
+### Error Recovery Mechanisms (Requirement 9.1-9.5)
 
 ```python
 class FailureHandler(ReflectiveModule):
-    """Systematic failure handling and recovery."""
+    """Systematic failure handling and recovery with DAG consistency preservation."""
     
-    def isolate_failure(self, failed_task: str, execution_context: DAGExecutionContext) -> None:
-        """Isolate task failure to prevent cascade effects."""
+    def __init__(self, dag_registry: DAGRegistry, config: ExecutionPolicy):
+        super().__init__()
+        self.dag_registry = dag_registry
+        self.config = config
+        self.error_classifier = ErrorClassifier()
+        
+    def isolate_failure(self, failed_task: str, execution_context: DAGExecutionContext) -> IsolationResult:
+        """Isolate task failure to prevent cascade effects while maintaining DAG integrity."""
+        # 1. Identify all dependent tasks using DAG Registry
+        # 2. Mark dependents as blocked, not failed
+        # 3. Continue execution of independent tasks
+        # 4. Preserve DAG mathematical properties
+        # 5. Log isolation decision with correlation ID
         pass
     
-    def determine_recovery_strategy(self, failure_context: Dict[str, Any]) -> str:
-        """Determine optimal recovery approach based on failure type."""
+    def handle_critical_path_failure(self, failed_task: str, execution_context: DAGExecutionContext) -> RecoveryAction:
+        """Handle critical path task failures with immediate notification and recovery options."""
+        # 1. Identify if task is on critical path
+        # 2. Provide immediate notification via ACE Reporter
+        # 3. Offer recovery options: retry, skip, manual intervention
+        # 4. Maintain execution context for recovery
         pass
     
-    def execute_rollback(self, execution_id: str, rollback_point: str) -> bool:
-        """Execute rollback to last consistent state."""
+    def determine_recovery_strategy(self, failure_context: FailureContext) -> RecoveryStrategy:
+        """Determine optimal recovery approach based on failure type and system state."""
+        error_type = self.error_classifier.classify_error(failure_context.error, failure_context.context)
+        
+        if error_type == 'transient':
+            return self._create_retry_strategy(failure_context)
+        elif error_type == 'permanent':
+            return self._create_isolation_strategy(failure_context)
+        elif error_type == 'critical':
+            return self._create_halt_strategy(failure_context)
+        else:
+            return self._create_graceful_degradation_strategy(failure_context)
+    
+    def execute_rollback(self, execution_id: str, rollback_point: str) -> RollbackResult:
+        """Execute rollback to last consistent state with DAG validation."""
+        # 1. Validate rollback point maintains DAG consistency
+        # 2. Cancel in-progress tasks safely
+        # 3. Restore system state to rollback point
+        # 4. Verify DAG integrity after rollback
+        # 5. Provide rollback report with next steps
+        pass
+    
+    def validate_recovery_dag_consistency(self, recovery_action: RecoveryAction) -> bool:
+        """Ensure recovery action maintains DAG mathematical properties."""
+        # Use existing DAG Registry to validate consistency
+        return self.dag_registry.validate_dag_after_recovery(recovery_action)
+
+@dataclass
+class FailureContext:
+    """Comprehensive failure context for recovery decisions."""
+    task_id: str
+    error: Exception
+    execution_context: DAGExecutionContext
+    retry_count: int
+    is_critical_path: bool
+    dependent_tasks: List[str]
+    independent_tasks: List[str]
+    system_resources: ResourceMetrics
+    timestamp: datetime
+
+@dataclass
+class RecoveryStrategy:
+    """Recovery strategy with specific actions and validation."""
+    strategy_type: str  # 'retry', 'isolate', 'halt', 'degrade'
+    actions: List[RecoveryAction]
+    dag_consistency_preserved: bool
+    estimated_recovery_time: Optional[float]
+    success_probability: float
+    rollback_available: bool
+
+@dataclass
+class IsolationResult:
+    """Result of failure isolation operation."""
+    isolated_task: str
+    blocked_dependents: List[str]
+    continuing_tasks: List[str]
+    dag_integrity_maintained: bool
+    isolation_effectiveness: float
+    recovery_options: List[str]
+```
+
+### Recovery Validation and Monitoring
+
+```python
+class RecoveryMonitor(ReflectiveModule):
+    """Monitor recovery effectiveness and learn from failure patterns."""
+    
+    def track_recovery_effectiveness(self, recovery_action: RecoveryAction, outcome: RecoveryOutcome) -> None:
+        """Track recovery action effectiveness for future optimization."""
+        pass
+    
+    def analyze_failure_patterns(self, execution_history: List[DAGExecutionContext]) -> FailureAnalysis:
+        """Analyze historical failures to improve recovery strategies."""
+        pass
+    
+    def recommend_preventive_measures(self, failure_analysis: FailureAnalysis) -> List[PreventiveMeasure]:
+        """Recommend system improvements to prevent recurring failures."""
         pass
 ```
 
@@ -674,6 +888,178 @@ class FailureHandler(ReflectiveModule):
 - **Scalability Testing**: Performance with increasing task counts and complexity
 - **Resource Utilization Testing**: Optimal resource usage under various scenarios
 - **Latency Testing**: Response times for different execution patterns
+
+## Execution State Management (Requirement 5)
+
+### Real-Time State Tracking
+**Rationale**: Comprehensive state management enables monitoring, debugging, and recovery from failures.
+
+```python
+class ExecutionStateManager(ReflectiveModule):
+    """Comprehensive execution state tracking and management."""
+    
+    def __init__(self, redis_client: Redis):
+        super().__init__()
+        self.redis_client = redis_client
+        self.state_store = RedisStateStore(redis_client)
+        self.state_broadcaster = StateChangeBroadcaster()
+        
+    def initialize_execution_state(self, execution_id: str, tasks: List[TaskDefinition]) -> DAGExecutionContext:
+        """Initialize execution state for DAG execution."""
+        context = DAGExecutionContext(
+            execution_id=execution_id,
+            total_tasks=len(tasks),
+            completed_tasks=0,
+            failed_tasks=0,
+            active_tasks=0,
+            start_time=datetime.now()
+        )
+        
+        # Initialize task states
+        for task in tasks:
+            task_state = TaskExecutionState(
+                task_id=task.id,
+                status=TaskStatus.PENDING,
+                dependencies=task.dependencies,
+                dependents=self._get_dependents(task.id, tasks)
+            )
+            self.state_store.store_task_state(execution_id, task_state)
+        
+        self.state_store.store_execution_context(execution_id, context)
+        return context
+    
+    def update_task_state(self, execution_id: str, task_id: str, new_status: TaskStatus, 
+                         context: Dict[str, Any] = None) -> None:
+        """Update task state and broadcast changes."""
+        # 1. Update task state in Redis
+        # 2. Update execution context metrics
+        # 3. Check dependent task readiness
+        # 4. Broadcast state changes via ACE Reporter
+        # 5. Update progress estimates
+        pass
+    
+    def get_ready_tasks(self, execution_id: str) -> List[str]:
+        """Get tasks ready for execution based on dependency satisfaction."""
+        # Query Redis for current task states
+        # Check dependency satisfaction for pending tasks
+        # Return list of ready task IDs
+        pass
+    
+    def calculate_progress_metrics(self, execution_id: str) -> ProgressMetrics:
+        """Calculate real-time progress and completion estimates."""
+        # Analyze current state and historical execution patterns
+        # Estimate remaining execution time
+        # Calculate parallelization efficiency
+        pass
+```
+
+### State Persistence and Recovery
+
+```python
+class RedisStateStore:
+    """Redis-based state persistence for execution recovery."""
+    
+    def __init__(self, redis_client: Redis):
+        self.redis = redis_client
+        self.execution_key_prefix = "dag_execution:"
+        self.task_key_prefix = "task_state:"
+        
+    def store_execution_context(self, execution_id: str, context: DAGExecutionContext) -> None:
+        """Store execution context with atomic operations."""
+        key = f"{self.execution_key_prefix}{execution_id}"
+        self.redis.hset(key, mapping=asdict(context))
+        self.redis.expire(key, 86400)  # 24 hour retention
+    
+    def store_task_state(self, execution_id: str, task_state: TaskExecutionState) -> None:
+        """Store task state with dependency tracking."""
+        key = f"{self.task_key_prefix}{execution_id}:{task_state.task_id}"
+        self.redis.hset(key, mapping=asdict(task_state))
+        self.redis.expire(key, 86400)
+    
+    def get_execution_checkpoint(self, execution_id: str) -> Optional[ExecutionCheckpoint]:
+        """Get execution state for recovery purposes."""
+        # Retrieve execution context and all task states
+        # Create checkpoint with consistent state snapshot
+        # Validate checkpoint integrity
+        pass
+    
+    def restore_from_checkpoint(self, checkpoint: ExecutionCheckpoint) -> bool:
+        """Restore execution state from checkpoint."""
+        # Validate checkpoint consistency
+        # Restore execution context and task states
+        # Verify DAG integrity after restoration
+        pass
+
+@dataclass
+class ExecutionCheckpoint:
+    """Consistent execution state snapshot for recovery."""
+    execution_id: str
+    checkpoint_time: datetime
+    execution_context: DAGExecutionContext
+    task_states: Dict[str, TaskExecutionState]
+    resource_state: ResourceMetrics
+    dag_integrity_verified: bool
+```
+
+### State Change Broadcasting
+
+```python
+class StateChangeBroadcaster(ReflectiveModule):
+    """Broadcast state changes to interested components."""
+    
+    def __init__(self, ace_reporter: ACEReporter):
+        super().__init__()
+        self.ace_reporter = ace_reporter
+        self.subscribers = []
+        
+    def broadcast_task_state_change(self, execution_id: str, task_id: str, 
+                                  old_state: TaskStatus, new_state: TaskStatus) -> None:
+        """Broadcast task state changes to all subscribers."""
+        change_event = TaskStateChangeEvent(
+            execution_id=execution_id,
+            task_id=task_id,
+            old_state=old_state,
+            new_state=new_state,
+            timestamp=datetime.now()
+        )
+        
+        # Broadcast via ACE Reporter
+        self.ace_reporter.broadcast_task_update(change_event)
+        
+        # Notify direct subscribers
+        for subscriber in self.subscribers:
+            subscriber.handle_state_change(change_event)
+    
+    def broadcast_execution_progress(self, execution_id: str, progress_metrics: ProgressMetrics) -> None:
+        """Broadcast execution progress updates."""
+        progress_event = ExecutionProgressEvent(
+            execution_id=execution_id,
+            progress_metrics=progress_metrics,
+            timestamp=datetime.now()
+        )
+        
+        self.ace_reporter.broadcast_progress_update(progress_event)
+
+@dataclass
+class TaskStateChangeEvent:
+    """Task state change event for broadcasting."""
+    execution_id: str
+    task_id: str
+    old_state: TaskStatus
+    new_state: TaskStatus
+    timestamp: datetime
+    context: Optional[Dict[str, Any]] = None
+
+@dataclass
+class ProgressMetrics:
+    """Real-time execution progress metrics."""
+    completion_percentage: float
+    estimated_completion_time: Optional[datetime]
+    parallelization_efficiency: float
+    active_workers: int
+    tasks_per_minute: float
+    resource_utilization: ResourceMetrics
+```
 
 ## Integration Points
 
@@ -726,35 +1112,141 @@ class AIMemoryPalaceIntegration:
 
 ## Configuration and Customization
 
-### Execution Policies
+### Execution Policies (Requirement 10.1, 10.2)
 **Rationale**: Flexible configuration enables optimization for different environments and use cases.
 
 ```python
 @dataclass
 class ExecutionPolicy:
+    """Comprehensive execution policy configuration."""
     strategy: str  # 'aggressive_parallel', 'conservative', 'sequential_fallback'
     max_concurrency: int = 10
-    resource_thresholds: Dict[str, float] = None
-    retry_policy: Dict[str, Any] = None
-    timeout_policy: Dict[str, int] = None
+    min_concurrency: int = 1
+    resource_thresholds: ResourceConfiguration = None
+    retry_policy: RetryConfiguration = None
+    timeout_policy: TimeoutConfiguration = None
+    prefire_requirements: PrefireConfiguration = None
     
     def validate_policy(self) -> bool:
         """Validate policy configuration consistency."""
-        pass
+        return (self.min_concurrency <= self.max_concurrency and
+                self.strategy in ['aggressive_parallel', 'conservative', 'sequential_fallback'])
+
+@dataclass
+class RetryConfiguration:
+    """Task retry policy configuration."""
+    max_retries: int = 3
+    retry_delay: float = 1.0  # seconds
+    exponential_backoff: bool = True
+    retry_on_resource_exhaustion: bool = True
+    critical_path_priority: bool = True
+
+@dataclass
+class TimeoutConfiguration:
+    """Task timeout policy configuration."""
+    default_task_timeout: int = 300  # seconds
+    critical_path_timeout_multiplier: float = 2.0
+    resource_check_timeout: int = 30
+    prefire_validation_timeout: int = 60
 ```
 
-### Resource Management Configuration
+### Resource Management Configuration (ADR-009 Compliant)
 
 ```python
 @dataclass
 class ResourceConfiguration:
+    """Dynamic resource management configuration."""
     cpu_threshold: float = 0.8  # 80% CPU utilization threshold
     memory_threshold: float = 0.85  # 85% memory utilization threshold
     io_threshold: float = 0.7  # 70% I/O utilization threshold
+    network_threshold: float = 0.75  # 75% network utilization threshold
     adjustment_interval: int = 5  # seconds between resource checks
+    adjustment_sensitivity: float = 0.1  # minimum change to trigger adjustment
+    scale_up_threshold: float = 0.5  # resource level to scale up workers
+    scale_down_threshold: float = 0.9  # resource level to scale down workers
     
-    def should_reduce_concurrency(self, current_metrics: Dict[str, float]) -> bool:
+    def should_reduce_concurrency(self, current_metrics: ResourceMetrics) -> bool:
         """Determine if concurrency should be reduced based on current metrics."""
+        return current_metrics.exceeds_thresholds(self)
+    
+    def calculate_optimal_workers(self, current_metrics: ResourceMetrics, current_workers: int) -> int:
+        """Calculate optimal worker count based on resource utilization."""
+        if current_metrics.exceeds_thresholds(self):
+            return max(self.min_workers, int(current_workers * 0.8))
+        elif all(metric < self.scale_up_threshold for metric in 
+                [current_metrics.cpu_percent, current_metrics.memory_percent]):
+            return min(self.max_workers, int(current_workers * 1.2))
+        return current_workers
+```
+
+### Monitoring Configuration (Requirement 10.3)
+
+```python
+@dataclass
+class MonitoringConfiguration:
+    """Monitoring and observability configuration."""
+    metrics_collection_interval: int = 10  # seconds
+    performance_reporting_interval: int = 60  # seconds
+    health_check_interval: int = 30  # seconds
+    audit_log_level: str = "INFO"  # DEBUG, INFO, WARNING, ERROR
+    prometheus_metrics_enabled: bool = True
+    structured_logging_enabled: bool = True
+    correlation_id_tracking: bool = True
+    execution_tracing_enabled: bool = True
+    
+    # Alert thresholds
+    failure_rate_alert_threshold: float = 0.1  # 10% failure rate
+    execution_time_alert_multiplier: float = 2.0  # 2x expected time
+    resource_exhaustion_alert_threshold: float = 0.95  # 95% resource usage
+
+@dataclass
+class IntegrationConfiguration:
+    """Integration component configuration."""
+    ace_reporter_enabled: bool = True
+    ai_memory_palace_enabled: bool = True
+    beast_mode_health_monitoring: bool = True
+    automatic_spec_conversion: bool = True
+    graceful_degradation_enabled: bool = True
+    
+    # Integration-specific settings
+    ace_reporter_broadcast_interval: int = 5  # seconds
+    memory_palace_context_retention: int = 24  # hours
+    health_endpoint_timeout: int = 10  # seconds
+```
+
+### Configuration Management (Requirement 10.4, 10.5)
+
+```python
+class ConfigurationManager(ReflectiveModule):
+    """Centralized configuration management with validation and hot-reload."""
+    
+    def __init__(self, config_source: str = "environment"):
+        super().__init__()
+        self.config_source = config_source
+        self.current_config = self._load_configuration()
+        
+    def validate_configuration_consistency(self, new_config: Dict[str, Any]) -> bool:
+        """Validate configuration changes for consistency and safety."""
+        # Validate execution policy consistency
+        # Check resource threshold sanity
+        # Ensure integration compatibility
+        # Verify timeout and retry logic
+        pass
+    
+    def apply_configuration_changes(self, changes: Dict[str, Any]) -> bool:
+        """Apply configuration changes safely with rollback capability."""
+        # Validate changes first
+        # Create rollback point
+        # Apply changes incrementally
+        # Verify system stability
+        # Commit or rollback based on results
+        pass
+    
+    def get_environment_specific_config(self, environment: str) -> Dict[str, Any]:
+        """Get configuration optimized for specific environment."""
+        # Development: Lower thresholds, more logging
+        # Staging: Production-like with enhanced monitoring
+        # Production: Optimized for performance and reliability
         pass
 ```
 

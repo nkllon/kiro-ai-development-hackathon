@@ -1,0 +1,59 @@
+# Claude AI Task: Real-Time Diagram Updates Implementation
+
+## Context
+You are implementing Real-Time Diagram Updates Implementation as part of the system-architecture-wiring-diagram specification. This is Task 3.4 in a DAG-orchestrated parallel execution framework.
+
+## Task Requirements
+Implement Task 3.4: Real-Time Diagram Updates for the system-architecture-wiring-diagram spec.
+
+Requirements:
+- Create RealTimeDiagramUpdater inheriting from ReflectiveModule
+- Implement live component diagrams with real-time service status indicators
+- Generate WebSocket connection status overlays on topology diagrams
+- Build live metrics flow diagrams showing real-time data movement
+- Create interactive sequence diagrams for operational workflows
+- Implement automated diagram refresh within 1 hour of infrastructure changes
+- Add "Last Updated" timestamps and validation status indicators
+
+Deliverables:
+- src/system_architecture/updates/real_time_diagram_updater.py
+- src/system_architecture/models/real_time_models.py
+- docs/real_time_diagram_updates_report.md
+- tests/test_real_time_diagram_updater.py
+
+Use the diagram generation system from Task 3.1. Follow Beast Mode framework patterns and ensure >90% test coverage.
+
+## Dependencies
+This task depends on: 3.1
+
+## Context Files
+The following files are provided for context:
+- .kiro/specs/system-architecture-wiring-diagram/tasks.md
+- .kiro/specs/system-architecture-wiring-diagram/requirements.md
+
+## Implementation Guidelines
+1. Follow Beast Mode framework patterns
+2. Inherit from ReflectiveModule for systematic observability
+3. Implement proper error handling and structured logging
+4. Use correlation IDs for traceability
+5. Ensure >90% test coverage
+6. Create comprehensive documentation
+7. Follow existing code patterns and architectural decisions
+
+## Success Criteria
+- All deliverables created and functional
+- Unit tests passing with >90% coverage
+- Integration with existing Beast Mode components
+- Proper ReflectiveModule health endpoints (/health, /ready, /metrics)
+- Documentation complete and accurate
+- Code follows established patterns and quality standards
+
+## Output Format
+Please provide:
+1. Complete implementation code for all deliverables
+2. Comprehensive unit tests
+3. Documentation explaining the implementation
+4. Integration notes for connecting with other components
+5. Any architectural decisions or trade-offs made
+
+Focus on systematic, production-ready implementation that integrates seamlessly with the existing Beast Mode framework.

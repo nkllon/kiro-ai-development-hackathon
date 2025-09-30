@@ -1,0 +1,136 @@
+# Cloudflare Custom Error Pages - Configuration Template
+# =====================================================
+
+# Cloudflare Zone Configuration
+zone:
+  name: "nkllon.com"
+  # API token with Zone:Edit permissions
+  api_token: "${CLOUDFLARE_API_TOKEN}"
+  
+# Error Page Configuration
+error_page:
+  # Error code to handle (1033 = Tunnel connection error)
+  error_code: 1033
+  
+  # HTML file path (relative to project root)
+  html_file: "cloudflare/error-pages/1033-enhanced.html"
+  
+  # Backup/rollback configuration
+  backup_enabled: true
+  backup_directory: "backups/error-pages"
+  
+# Deployment Configuration
+deployment:
+  # Validation settings
+  validate_html: true
+  validate_size_limit: 51200  # 50KB in bytes
+  validate_dependencies: true
+  
+  # Progress and logging
+  interactive_mode: true
+  log_level: "INFO"
+  progress_indicators: true
+  
+  # CI/CD settings
+  silent_mode: false
+  output_format: "text"  # text, json
+  
+  # Retry configuration
+  max_retries: 3
+  retry_delay: 5  # seconds
+  
+# Testing Configuration
+testing:
+  # Domains to test after deployment
+  test_domains:
+    - "observatory.nkllon.com"
+    - "grafana.observatory.nkllon.com"
+    - "prometheus.observatory.nkllon.com"
+  
+  # Testing options
+  auto_test: true
+  test_timeout: 30  # seconds
+  verify_animations: true
+  verify_interactive_features: true
+  
+  # Tunnel management for testing
+  tunnel_stop_command: "make tunnel-stop"
+  tunnel_start_command: "make tunnel-start"
+  tunnel_process_name: "cloudflared"
+
+# Monitoring Configuration
+monitoring:
+  # Post-deployment monitoring
+  enable_monitoring: true
+  
+  # Cloudflare Analytics
+  track_page_views: true
+  track_user_interactions: true
+  track_performance_metrics: true
+  
+  # Alerting
+  alert_on_high_error_rate: true
+  alert_threshold: 0.05  # 5% error rate
+  
+  # Success metrics
+  target_engagement_rate: 0.6  # 60%
+  target_retry_rate: 0.5       # 50%
+  target_load_time: 1.0        # 1 second
+
+# Environment-specific overrides
+environments:
+  development:
+    zone:
+      name: "dev.nkllon.com"
+    deployment:
+      log_level: "DEBUG"
+      interactive_mode: true
+    testing:
+      auto_test: false
+  
+  staging:
+    zone:
+      name: "staging.nkllon.com"
+    deployment:
+      log_level: "INFO"
+      interactive_mode: false
+      silent_mode: true
+      output_format: "json"
+    testing:
+      auto_test: true
+  
+  production:
+    zone:
+      name: "nkllon.com"
+    deployment:
+      log_level: "WARNING"
+      interactive_mode: false
+      silent_mode: true
+      output_format: "json"
+    testing:
+      auto_test: true
+    monitoring:
+      enable_monitoring: true
+      alert_on_high_error_rate: true
+
+# Notification Configuration
+notifications:
+  # Deployment notifications
+  slack:
+    enabled: false
+    webhook_url: "${SLACK_WEBHOOK_URL}"
+    channel: "#deployments"
+  
+  email:
+    enabled: false
+    smtp_server: "smtp.gmail.com"
+    smtp_port: 587
+    username: "${EMAIL_USERNAME}"
+    password: "${EMAIL_PASSWORD}"
+    recipients:
+      - "admin@nkllon.com"
+  
+  # Success/failure templates
+  templates:
+    success: "✅ Cloudflare Error Pages deployed successfully to {zone}"
+    failure: "❌ Cloudflare Error Pages deployment failed: {error}"
