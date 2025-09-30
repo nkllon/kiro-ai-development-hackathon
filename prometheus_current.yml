@@ -1,0 +1,85 @@
+# Prometheus Configuration for Kiro AI Development Hackathon
+# This configuration sets up monitoring for the systematic PDCA orchestrator
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'kiro-ai-local'
+    environment: 'development'
+
+# Rule files to be loaded
+rule_files:
+  - "alert_rules.yml"
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    scrape_interval: 5s
+    metrics_path: /metrics
+
+  # Beast Mode Clean Metrics (our working server)
+  - job_name: 'beast-mode-clean'
+    static_configs:
+      - targets: ['host.docker.internal:8889']
+    scrape_interval: 10s
+    metrics_path: /metrics
+    scrape_timeout: 5s
+
+  # Beast Mode Metrics Exporter (Docker networking)
+  - job_name: 'beast-mode-metrics'
+    static_configs:
+      - targets: ['beast-mode-metrics:8000']
+    scrape_interval: 10s
+    metrics_path: /metrics
+    scrape_timeout: 5s
+    
+  # Systematic PDCA Orchestrator Application Metrics
+  - job_name: 'systematic-pdca-app'
+    static_configs:
+      - targets: ['systematic-pdca-orchestrator:8080']
+    scrape_interval: 15s
+    metrics_path: /metrics
+    scrape_timeout: 10s
+
+  # Google Calendar MCP Integration Metrics
+  - job_name: 'google-calendar-mcp'
+    static_configs:
+      - targets: ['google_calendar_mcp:8080']
+    scrape_interval: 10s
+    metrics_path: /metrics
+    scrape_timeout: 5s
+
+  # Beast Mode Historical Performance Data
+  - job_name: 'beast-mode-historical'
+    static_configs:
+      - targets: ['host.docker.internal:8001']
+    scrape_interval: 30s
+    metrics_path: /metrics
+    scrape_timeout: 10s
+
+# Storage configuration (moved to command line arguments in docker-compose.yml)
+
+# Remote write configuration (optional - for long-term storage)
+# remote_write:
+#   - url: "https://your-remote-storage/api/v1/write"
+#     basic_auth:
+#       username: "your-username"
+#       password: "your-password"
+
+# Remote read configuration (optional - for querying remote storage)
+# remote_read:
+#   - url: "https://your-remote-storage/api/v1/read"
+#     basic_auth:
+#       username: "your-username"
+#       password: "your-password"

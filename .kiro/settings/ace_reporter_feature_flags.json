@@ -1,0 +1,72 @@
+{
+  "features": {
+    "ai_memory_palace_integration": {
+      "enabled": false,
+      "status": "disabled",
+      "description": "AI Memory Palace context integration",
+      "dependencies": [],
+      "risk_level": "medium",
+      "rollout_percentage": 0.0,
+      "last_updated": "",
+      "error_count": 0,
+      "success_count": 0
+    },
+    "multi_channel_delivery": {
+      "enabled": false,
+      "status": "disabled",
+      "description": "Multi-channel delivery system (WebSocket + HTTP + Directus)",
+      "dependencies": [
+        "ai_memory_palace_integration"
+      ],
+      "risk_level": "high",
+      "rollout_percentage": 0.0,
+      "last_updated": "",
+      "error_count": 0,
+      "success_count": 0
+    },
+    "enhanced_context": {
+      "enabled": true,
+      "status": "enabled",
+      "description": "Enhanced observation context with correlation IDs",
+      "dependencies": [],
+      "risk_level": "low",
+      "rollout_percentage": 100.0,
+      "last_updated": "2025-09-29T13:17:08.981845",
+      "error_count": 0,
+      "success_count": 0
+    },
+    "spec_progress_monitoring": {
+      "enabled": true,
+      "status": "enabled",
+      "description": "Automatic spec progress tracking and reporting",
+      "dependencies": [
+        "enhanced_context"
+      ],
+      "risk_level": "low",
+      "rollout_percentage": 100.0,
+      "last_updated": "2025-09-29T13:17:08.981985",
+      "error_count": 0,
+      "success_count": 0
+    },
+    "directus_persistence": {
+      "enabled": false,
+      "status": "disabled",
+      "description": "Directus CMS persistence layer",
+      "dependencies": [
+        "multi_channel_delivery"
+      ],
+      "risk_level": "medium",
+      "rollout_percentage": 0.0,
+      "last_updated": "",
+      "error_count": 0,
+      "success_count": 0
+    }
+  },
+  "safety_thresholds": {
+    "max_error_rate": 0.05,
+    "max_performance_degradation": 0.2,
+    "min_health_score": 0.8,
+    "monitoring_window_minutes": 15
+  },
+  "last_saved": "2025-09-29T13:17:08.982001"
+}
