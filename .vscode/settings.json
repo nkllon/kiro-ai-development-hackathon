@@ -1,23 +1,4 @@
 {
     "kiroAgent.configureMCP": "Disabled",
-    "workbench.colorCustomizations": {
-        "activityBar.activeBackground": "#81bf4b",
-        "activityBar.background": "#81bf4b",
-        "activityBar.foreground": "#15202b",
-        "activityBar.inactiveForeground": "#15202b99",
-        "activityBarBadge.background": "#3b6ca5",
-        "activityBarBadge.foreground": "#e7e7e7",
-        "commandCenter.border": "#15202b99",
-        "sash.hoverBorder": "#81bf4b",
-        "statusBar.background": "#689f38",
-        "statusBar.foreground": "#15202b",
-        "statusBarItem.hoverBackground": "#4f792b",
-        "statusBarItem.remoteBackground": "#689f38",
-        "statusBarItem.remoteForeground": "#15202b",
-        "titleBar.activeBackground": "#689f38",
-        "titleBar.activeForeground": "#15202b",
-        "titleBar.inactiveBackground": "#689f3899",
-        "titleBar.inactiveForeground": "#15202b99"
-    },
     "peacock.color": "#689f38"
 }
