@@ -10,6 +10,8 @@
     <script src="/static/chart_architecture.js"></script>
     <script src="/static/engagement.js"></script>
     <script src="/static/data_insights.js"></script>
+    <script src="/static/engagement_controls.js"></script>
+    <script src="/static/engagement_charts.js"></script>
     <style>
         * {
             margin: 0;
@@ -441,6 +443,118 @@
             margin: 30px 0;
         }
 
+        /* Engagement-specific styles */
+        .engagement-chart {
+            border: 2px solid rgba(155, 89, 182, 0.3);
+            background: rgba(155, 89, 182, 0.05);
+        }
+        
+        .engagement-chart:hover {
+            border-color: rgba(155, 89, 182, 0.6);
+            box-shadow: 0 8px 25px rgba(155, 89, 182, 0.3);
+        }
+        
+        .engagement-controls-section {
+            background: rgba(52, 73, 94, 0.1);
+            border: 2px solid rgba(52, 152, 219, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .engagement-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .engagement-metric-card {
+            background: rgba(155, 89, 182, 0.1);
+            border: 1px solid rgba(155, 89, 182, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .engagement-metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.2);
+        }
+        
+        .engagement-metric-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #9b59b6;
+            margin-bottom: 5px;
+        }
+        
+        .engagement-metric-label {
+            font-size: 0.9em;
+            color: #bdc3c7;
+        }
+        
+        .personality-indicator {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .personality-calm {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            border: 1px solid #3498db;
+        }
+        
+        .personality-focused {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
+        
+        .personality-celebratory {
+            background: rgba(243, 156, 18, 0.2);
+            color: #f39c12;
+            border: 1px solid #f39c12;
+        }
+        
+        .personality-energetic {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid #2ecc71;
+        }
+        
+        .attention-heatmap {
+            position: relative;
+            background: linear-gradient(45deg, 
+                rgba(52, 152, 219, 0.1) 0%, 
+                rgba(155, 89, 182, 0.1) 50%, 
+                rgba(231, 76, 60, 0.1) 100%);
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .interaction-trail {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(52, 152, 219, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: fadeOut 2s ease-out forwards;
+        }
+        
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.5); }
+        }
+        
         /* Responsive adjustments for donation section */
         @media (max-width: 768px) {
             .donation-section {
@@ -473,6 +587,10 @@
 
             .chart-wrapper {
                 height: 250px;
+            }
+            
+            .engagement-metrics-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -951,6 +1069,60 @@
             </div>
             <div style="text-align: center; margin-top: 10px; font-size: 0.8em; color: #95a5a6;">
                 <em>Trigger experimental events to observe multi-agent coordination patterns</em>
+            </div>
+        </div>
+        
+        <!-- Engagement Controls Section -->
+        <div class="engagement-controls-section" id="engagementControlsSection">
+            <h3 style="color: #9b59b6; text-align: center; margin-bottom: 20px;">
+                🎯 Live Engagement System
+            </h3>
+            
+            <!-- Engagement Metrics Overview -->
+            <div class="engagement-metrics-grid">
+                <div class="engagement-metric-card">
+                    <div class="engagement-metric-value" id="liveSessionDuration">0:00</div>
+                    <div class="engagement-metric-label">Session Duration</div>
+                </div>
+                <div class="engagement-metric-card">
+                    <div class="engagement-metric-value" id="liveInteractionCount">0</div>
+                    <div class="engagement-metric-label">Interactions</div>
+                </div>
+                <div class="engagement-metric-card">
+                    <div class="engagement-metric-value" id="liveEngagementScore">0.0</div>
+                    <div class="engagement-metric-label">Engagement Score</div>
+                </div>
+                <div class="engagement-metric-card">
+                    <div class="engagement-metric-value" id="livePersonalityMood">😌</div>
+                    <div class="engagement-metric-label">Current Mood</div>
+                </div>
+            </div>
+            
+            <!-- Personality Controls -->
+            <div style="text-align: center; margin: 20px 0;">
+                <h4 style="color: #ecf0f1; margin-bottom: 15px;">Dashboard Personality</h4>
+                <div>
+                    <span class="personality-indicator personality-calm" onclick="setPersonality('calm')">😌 Calm</span>
+                    <span class="personality-indicator personality-focused" onclick="setPersonality('focused')">🎯 Focused</span>
+                    <span class="personality-indicator personality-celebratory" onclick="setPersonality('celebratory')">🎉 Celebratory</span>
+                    <span class="personality-indicator personality-energetic" onclick="setPersonality('energetic')">⚡ Energetic</span>
+                </div>
+            </div>
+            
+            <!-- Engagement Settings -->
+            <div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #ecf0f1;">
+                    <input type="checkbox" id="enableAttentionTracking" checked>
+                    <span>Attention Tracking</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #ecf0f1;">
+                    <input type="checkbox" id="enableInteractionFeedback" checked>
+                    <span>Interaction Feedback</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #ecf0f1;">
+                    <input type="checkbox" id="enablePersonalityAdaptation" checked>
+                    <span>Personality Adaptation</span>
+                </label>
             </div>
         </div>
         

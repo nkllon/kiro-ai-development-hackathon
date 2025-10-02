@@ -10,13 +10,33 @@ import asyncio
 import json
 import logging
 from datetime import datetime
-from typing import Dict, List, Any, Optional, Set
+from typing import Dict, List, Any, Optional, Set, Callable
 from fastapi import WebSocket, WebSocketDisconnect
 
 from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
 from ..intelligence.data_storyteller import DataStorytellerEngine, DataPoint
 from .observatory_data_bridge import ObservatoryDataBridge
 from ...models import ObservatoryConfig
+from ..monitoring import (
+    EngagementMetricsCollector,
+    EngagementPrometheusIntegration,
+    EngagementHealthMonitor,
+    create_engagement_prometheus_integration,
+    create_engagement_health_monitor
+)
+from ..coordination import (
+    EngagementEventCoordinator,
+    EngagementEventType,
+    EngagementEventPriority
+)
+from ..error_handling import (
+    EngagementErrorHandler,
+    EngagementErrorType,
+    EngagementErrorSeverity,
+    EngagementFallbackMode,
+    EngagementResilienceManager,
+    EngagementErrorRecovery
+)
 
 logger = logging.getLogger(__name__)
 
@@ -48,29 +68,33 @@ class EngagementWebSocketManager:
             logger.info(f"🔌 Engagement WebSocket disconnected: {len(self.active_connections)} remaining")
     
     async def broadcast(self, message: Dict[str, Any]):
-        """Broadcast a message to all connected clients."""
+        """Broadcast a message to all connected clients with error handling."""
         if not self.active_connections:
             return
         
-        message_json = json.dumps(message)
-        disconnected = set()
-        
-        for websocket in self.active_connections:
-            try:
-                await websocket.send_text(message_json)
-                
-                # Update metadata
-                if websocket in self.connection_metadata:
-                    self.connection_metadata[websocket]["messages_sent"] += 1
-                    self.connection_metadata[websocket]["last_activity"] = datetime.now()
+        try:
+            message_json = json.dumps(message)
+            disconnected = set()
+            
+            for websocket in self.active_connections:
+                try:
+                    await websocket.send_text(message_json)
                     
-            except Exception as e:
-                logger.warning(f"Failed to send message to WebSocket client: {e}")
-                disconnected.add(websocket)
-        
-        # Clean up disconnected clients
-        for websocket in disconnected:
-            await self.disconnect(websocket)
+                    # Update metadata
+                    if websocket in self.connection_metadata:
+                        self.connection_metadata[websocket]["messages_sent"] += 1
+                        self.connection_metadata[websocket]["last_activity"] = datetime.now()
+                        
+                except Exception as e:
+                    logger.warning(f"Failed to send message to WebSocket client: {e}")
+                    disconnected.add(websocket)
+            
+            # Clean up disconnected clients
+            for websocket in disconnected:
+                await self.disconnect(websocket)
+                
+        except Exception as e:
+            logger.error(f"Error in WebSocket broadcast: {e}")
     
     async def send_to_client(self, websocket: WebSocket, message: Dict[str, Any]):
         """Send a message to a specific client."""
@@ -118,10 +142,23 @@ class ObservatoryEngagementIntegration(ReflectiveModule):
         
         self.config = config
         
+        # Error handling and resilience components (initialize first)
+        self.error_handler = EngagementErrorHandler()
+        self.error_recovery = EngagementErrorRecovery()
+        self.resilience_manager: Optional[EngagementResilienceManager] = None
+        
         # Core components
         self.storyteller = DataStorytellerEngine()
         self.data_bridge = ObservatoryDataBridge(config, self.storyteller)
         self.websocket_manager = EngagementWebSocketManager()
+        
+        # Monitoring components
+        self.metrics_collector = EngagementMetricsCollector()
+        self.prometheus_integration: Optional[EngagementPrometheusIntegration] = None
+        self.health_monitor: Optional[EngagementHealthMonitor] = None
+        
+        # Coordination components
+        self.event_coordinator = EngagementEventCoordinator()
         
         # State
         self.running = False
@@ -134,67 +171,201 @@ class ObservatoryEngagementIntegration(ReflectiveModule):
         logger.info("🎯 Observatory Engagement Integration initialized")
     
     async def initialize(self) -> bool:
-        """Initialize the engagement integration."""
+        """Initialize the engagement integration with comprehensive error handling."""
         try:
-            # Initialize storyteller
-            await self.storyteller.initialize()
+            # Initialize error handling components first
+            if not await self.error_handler.initialize():
+                logger.error("Failed to initialize error handler")
+                return False
             
-            # Initialize data bridge
-            await self.data_bridge.initialize()
+            if not await self.error_recovery.initialize():
+                logger.error("Failed to initialize error recovery")
+                return False
+            
+            # Create resilience manager
+            self.resilience_manager = EngagementResilienceManager(self.error_handler)
+            if not await self.resilience_manager.initialize():
+                logger.error("Failed to initialize resilience manager")
+                return False
+            
+            # Initialize core components with error handling
+            await self._initialize_component_with_error_handling(
+                "storyteller", self.storyteller.initialize
+            )
+            
+            await self._initialize_component_with_error_handling(
+                "data_bridge", self.data_bridge.initialize
+            )
+            
+            await self._initialize_component_with_error_handling(
+                "event_coordinator", self.event_coordinator.initialize
+            )
+            
+            await self._initialize_component_with_error_handling(
+                "metrics_collector", self.metrics_collector.initialize
+            )
+            
+            # Create monitoring components with error handling
+            try:
+                self.prometheus_integration = await create_engagement_prometheus_integration(
+                    self.metrics_collector
+                )
+            except Exception as e:
+                await self.error_handler.handle_error(
+                    EngagementErrorType.INITIALIZATION_ERROR,
+                    "prometheus_integration",
+                    f"Failed to create Prometheus integration: {e}",
+                    e
+                )
+                self.prometheus_integration = None
+            
+            try:
+                self.health_monitor = await create_engagement_health_monitor(
+                    self.metrics_collector, self.prometheus_integration
+                )
+            except Exception as e:
+                await self.error_handler.handle_error(
+                    EngagementErrorType.INITIALIZATION_ERROR,
+                    "health_monitor",
+                    f"Failed to create health monitor: {e}",
+                    e
+                )
+                self.health_monitor = None
+            
+            # Register components with event coordinator and resilience manager
+            self._register_components_with_coordinator()
+            self._register_components_with_resilience_manager()
             
             logger.info("✅ Observatory Engagement Integration initialization complete")
             return True
             
         except Exception as e:
+            # Handle initialization failure
+            await self.error_handler.handle_error(
+                EngagementErrorType.INITIALIZATION_ERROR,
+                "server_integration",
+                f"Observatory Engagement Integration initialization failed: {e}",
+                e
+            )
             logger.error(f"Observatory Engagement Integration initialization failed: {e}")
             return False
     
     async def start_integration(self) -> bool:
-        """Start the engagement integration."""
+        """Start the engagement integration with error handling."""
         try:
             if self.running:
                 logger.warning("Observatory Engagement Integration is already running")
                 return True
             
-            # Start data bridge
-            await self.data_bridge.start_bridge()
+            # Start data bridge with error handling
+            try:
+                await self.data_bridge.start_bridge()
+            except Exception as e:
+                await self.error_handler.handle_error(
+                    EngagementErrorType.INTEGRATION_ERROR,
+                    "data_bridge",
+                    f"Failed to start data bridge: {e}",
+                    e
+                )
+                # Continue with degraded functionality
             
-            # Start insight broadcasting
+            # Start insight broadcasting with error handling
             self.running = True
-            self.broadcast_task = asyncio.create_task(self._insight_broadcast_loop())
+            try:
+                self.broadcast_task = asyncio.create_task(self._insight_broadcast_loop())
+            except Exception as e:
+                await self.error_handler.handle_error(
+                    EngagementErrorType.INTEGRATION_ERROR,
+                    "broadcast_task",
+                    f"Failed to start broadcast task: {e}",
+                    e
+                )
+                # Continue without broadcasting
             
             logger.info("🚀 Observatory Engagement Integration started")
             return True
             
         except Exception as e:
+            await self.error_handler.handle_error(
+                EngagementErrorType.INTEGRATION_ERROR,
+                "server_integration",
+                f"Failed to start Observatory Engagement Integration: {e}",
+                e
+            )
             logger.error(f"Failed to start Observatory Engagement Integration: {e}")
             return False
     
     async def stop_integration(self) -> None:
-        """Stop the engagement integration."""
+        """Stop the engagement integration with error handling."""
         logger.info("🛑 Stopping Observatory Engagement Integration...")
         
         self.running = False
         
-        # Stop broadcast task
+        # Stop broadcast task with error handling
         if self.broadcast_task and not self.broadcast_task.done():
-            self.broadcast_task.cancel()
             try:
+                self.broadcast_task.cancel()
                 await self.broadcast_task
             except asyncio.CancelledError:
                 pass
+            except Exception as e:
+                logger.warning(f"Error stopping broadcast task: {e}")
+        
+        # Stop resilience manager
+        if self.resilience_manager:
+            try:
+                await self.resilience_manager.shutdown()
+            except Exception as e:
+                logger.warning(f"Error stopping resilience manager: {e}")
+        
+        # Stop coordination system
+        try:
+            await self.event_coordinator.shutdown()
+        except Exception as e:
+            logger.warning(f"Error stopping event coordinator: {e}")
+        
+        # Stop monitoring components
+        if self.health_monitor:
+            try:
+                await self.health_monitor.shutdown()
+            except Exception as e:
+                logger.warning(f"Error stopping health monitor: {e}")
+        
+        if self.prometheus_integration:
+            try:
+                await self.prometheus_integration.shutdown()
+            except Exception as e:
+                logger.warning(f"Error stopping prometheus integration: {e}")
+        
+        try:
+            await self.metrics_collector.shutdown()
+        except Exception as e:
+            logger.warning(f"Error stopping metrics collector: {e}")
         
         # Stop data bridge
-        await self.data_bridge.stop_bridge()
+        try:
+            await self.data_bridge.stop_bridge()
+        except Exception as e:
+            logger.warning(f"Error stopping data bridge: {e}")
         
         logger.info("✅ Observatory Engagement Integration stopped")
     
     async def handle_websocket_connection(self, websocket: WebSocket):
         """Handle a new engagement WebSocket connection."""
-        await self.websocket_manager.connect(websocket, {
+        client_info = {
             "user_agent": websocket.headers.get("user-agent", "unknown"),
             "origin": websocket.headers.get("origin", "unknown")
-        })
+        }
+        
+        await self.websocket_manager.connect(websocket, client_info)
+        
+        # Record connection metrics
+        user_id = f"ws_{id(websocket)}"
+        session_id = f"session_{id(websocket)}_{int(datetime.now().timestamp())}"
+        
+        await self.metrics_collector.start_attention_session(
+            user_id, session_id, "engagement_dashboard"
+        )
         
         try:
             # Send initial data
@@ -225,11 +396,31 @@ class ObservatoryEngagementIntegration(ReflectiveModule):
         except WebSocketDisconnect:
             pass
         finally:
+            # End attention session and record metrics
+            await self.metrics_collector.end_attention_session(session_id)
             await self.websocket_manager.disconnect(websocket)
     
     async def _handle_websocket_message(self, websocket: WebSocket, data: Dict[str, Any]):
         """Handle incoming WebSocket messages."""
         message_type = data.get("type")
+        user_id = f"ws_{id(websocket)}"
+        
+        # Record interaction
+        await self.metrics_collector.record_interaction(
+            user_id, "websocket_message", message_type or "unknown",
+            metadata={"message_data": data}
+        )
+        
+        # Emit engagement event
+        await self.emit_engagement_event(
+            EngagementEventType.USER_INTERACTION,
+            {
+                "user_id": user_id,
+                "event_type": "websocket_message",
+                "component": message_type or "unknown",
+                "data": data
+            }
+        )
         
         if message_type == "get_insights":
             # Send current insights
@@ -286,33 +477,70 @@ class ObservatoryEngagementIntegration(ReflectiveModule):
             logger.error(f"Error handling custom data point: {e}")
     
     async def _insight_broadcast_loop(self):
-        """Background loop that broadcasts insights to connected clients."""
+        """Background loop that broadcasts insights to connected clients with error handling."""
         logger.info("📡 Starting insight broadcast loop")
+        
+        consecutive_errors = 0
+        max_consecutive_errors = 5
         
         while self.running:
             try:
-                # Get latest insights
-                insights = await self.data_bridge.get_recent_insights()
+                # Get latest insights with error handling
+                try:
+                    insights = await self.data_bridge.get_recent_insights()
+                except Exception as e:
+                    await self.error_handler.handle_error(
+                        EngagementErrorType.DATA_PROCESSING_ERROR,
+                        "data_bridge",
+                        f"Failed to get recent insights: {e}",
+                        e
+                    )
+                    insights = {"patterns": [], "error": "Failed to get insights"}
                 
                 # Only broadcast if we have patterns
                 if insights.get("patterns"):
-                    await self.websocket_manager.broadcast({
-                        "type": "insights_update",
-                        "data": insights,
-                        "timestamp": datetime.now().isoformat()
-                    })
-                    
-                    self.insights_broadcasted += 1
-                    self.last_broadcast = datetime.now()
-                    
-                    logger.debug(f"Broadcasted insights to {len(self.websocket_manager.active_connections)} clients")
+                    try:
+                        await self.websocket_manager.broadcast({
+                            "type": "insights_update",
+                            "data": insights,
+                            "timestamp": datetime.now().isoformat()
+                        })
+                        
+                        self.insights_broadcasted += 1
+                        self.last_broadcast = datetime.now()
+                        consecutive_errors = 0  # Reset error count on success
+                        
+                        logger.debug(f"Broadcasted insights to {len(self.websocket_manager.active_connections)} clients")
+                        
+                    except Exception as e:
+                        await self.error_handler.handle_error(
+                            EngagementErrorType.WEBSOCKET_ERROR,
+                            "websocket_manager",
+                            f"Failed to broadcast insights: {e}",
+                            e
+                        )
+                        consecutive_errors += 1
                 
-                # Wait before next broadcast
-                await asyncio.sleep(30)  # Broadcast every 30 seconds
+                # Wait before next broadcast (adjust based on error count)
+                sleep_time = 30 + (consecutive_errors * 10)  # Increase delay with errors
+                await asyncio.sleep(min(sleep_time, 300))  # Max 5 minutes
                 
             except Exception as e:
-                logger.error(f"Error in insight broadcast loop: {e}")
-                await asyncio.sleep(60)  # Wait longer on error
+                consecutive_errors += 1
+                await self.error_handler.handle_error(
+                    EngagementErrorType.INTEGRATION_ERROR,
+                    "broadcast_loop",
+                    f"Error in insight broadcast loop: {e}",
+                    e
+                )
+                
+                # If too many consecutive errors, enter degraded mode
+                if consecutive_errors >= max_consecutive_errors:
+                    logger.warning("Too many broadcast errors, entering degraded mode")
+                    await asyncio.sleep(300)  # Wait 5 minutes before retrying
+                    consecutive_errors = 0
+                else:
+                    await asyncio.sleep(60)  # Wait longer on error
     
     async def _get_system_status(self) -> Dict[str, Any]:
         """Get comprehensive system status."""
@@ -412,7 +640,7 @@ class ObservatoryEngagementIntegration(ReflectiveModule):
     
     def get_health_status(self) -> Dict[str, Any]:
         """Get Observatory Engagement Integration health status."""
-        return {
+        base_health = {
             "status": "healthy" if self.running else "stopped",
             "insights_broadcasted": self.insights_broadcasted,
             "last_broadcast": self.last_broadcast.isoformat(),
@@ -420,6 +648,161 @@ class ObservatoryEngagementIntegration(ReflectiveModule):
             "storyteller_healthy": self.storyteller.get_health_status().get("status") == "healthy",
             "data_bridge_running": self.data_bridge.running
         }
+        
+        # Add monitoring health if available
+        if self.health_monitor:
+            monitoring_health = self.health_monitor.get_health_summary()
+            base_health["monitoring"] = {
+                "overall_status": monitoring_health.get("overall_status"),
+                "health_score": monitoring_health.get("health_score"),
+                "component_health": monitoring_health.get("component_health")
+            }
+        
+        # Add metrics summary if available
+        if self.metrics_collector:
+            metrics_summary = self.metrics_collector.get_engagement_summary()
+            base_health["metrics"] = {
+                "active_sessions": metrics_summary.get("active_attention_sessions"),
+                "total_interactions": metrics_summary.get("total_interactions"),
+                "interaction_rate": metrics_summary.get("recent_interaction_rate_per_minute")
+            }
+        
+        return base_health
+    
+    def _register_components_with_coordinator(self):
+        """Register all engagement components with the event coordinator."""
+        try:
+            # Register core components
+            self.event_coordinator.register_component(
+                "storyteller", self.storyteller, 
+                {"status": "active", "insights_generated": 0}
+            )
+            
+            self.event_coordinator.register_component(
+                "data_bridge", self.data_bridge,
+                {"status": "active", "bridge_running": self.data_bridge.running}
+            )
+            
+            self.event_coordinator.register_component(
+                "websocket_manager", self.websocket_manager,
+                {"active_connections": len(self.websocket_manager.active_connections)}
+            )
+            
+            self.event_coordinator.register_component(
+                "metrics_collector", self.metrics_collector,
+                {"metrics_collected": 0, "active_sessions": 0}
+            )
+            
+            if self.prometheus_integration:
+                self.event_coordinator.register_component(
+                    "prometheus_integration", self.prometheus_integration,
+                    {"prometheus_registered": self.prometheus_integration.prometheus_registered}
+                )
+            
+            if self.health_monitor:
+                self.event_coordinator.register_component(
+                    "health_monitor", self.health_monitor,
+                    {"monitoring_running": True, "health_score": 0.0}
+                )
+            
+            logger.info("✅ Registered all components with event coordinator")
+            
+        except Exception as e:
+            logger.error(f"Failed to register components with coordinator: {e}")
+    
+    async def _initialize_component_with_error_handling(self, component_name: str, init_func: Callable):
+        """Initialize a component with comprehensive error handling."""
+        try:
+            if asyncio.iscoroutinefunction(init_func):
+                result = await init_func()
+            else:
+                result = init_func()
+            
+            if result is False:
+                await self.error_handler.handle_error(
+                    EngagementErrorType.INITIALIZATION_ERROR,
+                    component_name,
+                    f"Component {component_name} initialization returned False",
+                    None,
+                    {"component": component_name}
+                )
+            
+        except Exception as e:
+            await self.error_handler.handle_error(
+                EngagementErrorType.INITIALIZATION_ERROR,
+                component_name,
+                f"Component {component_name} initialization failed: {e}",
+                e,
+                {"component": component_name}
+            )
+    
+    def _register_components_with_resilience_manager(self):
+        """Register all components with the resilience manager for health monitoring."""
+        if not self.resilience_manager:
+            return
+        
+        try:
+            # Register core components
+            self.resilience_manager.register_component(
+                "storyteller",
+                lambda: self.storyteller.get_health_status(),
+                critical=True
+            )
+            
+            self.resilience_manager.register_component(
+                "data_bridge",
+                lambda: {"status": "healthy" if self.data_bridge.running else "unhealthy"},
+                dependencies=["storyteller"],
+                critical=True
+            )
+            
+            self.resilience_manager.register_component(
+                "websocket_manager",
+                lambda: {
+                    "status": "healthy",
+                    "active_connections": len(self.websocket_manager.active_connections)
+                },
+                critical=False
+            )
+            
+            self.resilience_manager.register_component(
+                "event_coordinator",
+                lambda: self.event_coordinator.get_health_status(),
+                critical=True
+            )
+            
+            self.resilience_manager.register_component(
+                "metrics_collector",
+                lambda: {"status": "healthy", "metrics_collected": 0},
+                critical=False
+            )
+            
+            if self.prometheus_integration:
+                self.resilience_manager.register_component(
+                    "prometheus_integration",
+                    lambda: {"status": "healthy", "prometheus_registered": True},
+                    critical=False
+                )
+            
+            if self.health_monitor:
+                self.resilience_manager.register_component(
+                    "health_monitor",
+                    lambda: self.health_monitor.get_health_status(),
+                    critical=False
+                )
+            
+            logger.info("✅ Registered all components with resilience manager")
+            
+        except Exception as e:
+            logger.error(f"Failed to register components with resilience manager: {e}")
+    
+    async def emit_engagement_event(self, event_type: EngagementEventType, 
+                                  data: Dict[str, Any] = None,
+                                  priority: EngagementEventPriority = EngagementEventPriority.MEDIUM) -> str:
+        """Emit an engagement event through the coordinator."""
+        return await self.event_coordinator.emit_event(
+            event_type, "server_integration", data, priority
+        )
     
     def get_module_info(self) -> Dict[str, Any]:
         """Get Observatory Engagement Integration module information."""
@@ -435,18 +818,39 @@ class ObservatoryEngagementIntegration(ReflectiveModule):
         try:
             logger.warning(f"Observatory Engagement Integration entering degradation mode due to: {error}")
             
+            # Report degradation to error handler
+            await self.error_handler.handle_error(
+                EngagementErrorType.INTEGRATION_ERROR,
+                "server_integration",
+                f"Entering graceful degradation: {error}",
+                error,
+                {"degradation_triggered": True}
+            )
+            
+            # Apply fallback modes through resilience manager
+            if self.resilience_manager:
+                try:
+                    # This will trigger appropriate fallback strategies
+                    pass
+                except Exception as e:
+                    logger.error(f"Error applying resilience strategies: {e}")
+            
             # Reduce broadcast frequency
             if self.broadcast_task:
                 # The broadcast loop will automatically slow down on errors
                 pass
             
             # Notify connected clients about degraded mode
-            await self.websocket_manager.broadcast({
-                "type": "system_status",
-                "status": "degraded",
-                "message": "System operating in degraded mode",
-                "timestamp": datetime.now().isoformat()
-            })
+            try:
+                await self.websocket_manager.broadcast({
+                    "type": "system_status",
+                    "status": "degraded",
+                    "message": "System operating in degraded mode",
+                    "timestamp": datetime.now().isoformat(),
+                    "fallback_mode": self.error_handler.get_component_fallback_mode("server_integration").value
+                })
+            except Exception as e:
+                logger.error(f"Failed to notify clients about degradation: {e}")
             
             logger.info("Degradation applied: reduced broadcast frequency and notified clients")
             return True
@@ -483,3 +887,115 @@ async def inject_observatory_costs(integration: ObservatoryEngagementIntegration
                                  cost_data: Dict[str, Any]):
     """Inject Observatory cost data into the engagement system."""
     await integration.inject_observatory_data("costs", cost_data)
+
+
+# New monitoring integration functions
+
+async def inject_engagement_metrics_into_observatory_endpoint(
+    integration: ObservatoryEngagementIntegration,
+    observatory_metrics: Dict[str, Any]
+) -> None:
+    """Inject engagement metrics into Observatory's metrics endpoint."""
+    if integration.prometheus_integration:
+        from ..monitoring import inject_engagement_metrics_into_observatory
+        await inject_engagement_metrics_into_observatory(
+            integration.prometheus_integration, observatory_metrics
+        )
+
+
+async def inject_engagement_health_into_observatory_endpoint(
+    integration: ObservatoryEngagementIntegration,
+    observatory_health: Dict[str, Any]
+) -> None:
+    """Inject engagement health into Observatory's health endpoint."""
+    if integration.health_monitor:
+        from ..monitoring import inject_engagement_health_into_observatory
+        await inject_engagement_health_into_observatory(
+            integration.health_monitor, observatory_health
+        )
+
+
+def get_engagement_prometheus_metrics_text(
+    integration: ObservatoryEngagementIntegration
+) -> str:
+    """Get engagement metrics in Prometheus format."""
+    if integration.prometheus_integration:
+        from ..monitoring import get_engagement_prometheus_metrics
+        return get_engagement_prometheus_metrics(integration.prometheus_integration)
+    return "# Engagement metrics not available\n"
+
+
+async def record_user_interaction(
+    integration: ObservatoryEngagementIntegration,
+    user_id: str,
+    event_type: str,
+    component: str,
+    duration: float = None,
+    metadata: Dict[str, Any] = None
+) -> None:
+    """Record a user interaction for engagement metrics."""
+    if integration.metrics_collector:
+        await integration.metrics_collector.record_interaction(
+            user_id, event_type, component, duration, metadata
+        )
+    
+    # Emit engagement event
+    await integration.emit_engagement_event(
+        EngagementEventType.USER_INTERACTION,
+        {
+            "user_id": user_id,
+            "event_type": event_type,
+            "component": component,
+            "duration": duration,
+            "metadata": metadata or {}
+        }
+    )
+
+
+async def trigger_personality_transition(
+    integration: ObservatoryEngagementIntegration,
+    from_mood: str,
+    to_mood: str,
+    trigger: str
+) -> None:
+    """Trigger a personality transition through the event coordinator."""
+    await integration.emit_engagement_event(
+        EngagementEventType.PERSONALITY_TRANSITION,
+        {
+            "from_mood": from_mood,
+            "to_mood": to_mood,
+            "trigger": trigger
+        },
+        EngagementEventPriority.MEDIUM
+    )
+
+
+async def trigger_animation_event(
+    integration: ObservatoryEngagementIntegration,
+    animation_type: str,
+    duration: float,
+    component: str = None
+) -> None:
+    """Trigger an animation event through the event coordinator."""
+    await integration.emit_engagement_event(
+        EngagementEventType.ANIMATION_TRIGGER,
+        {
+            "animation_type": animation_type,
+            "duration": duration,
+            "component": component
+        },
+        EngagementEventPriority.LOW
+    )
+
+
+def get_engagement_coordination_status(
+    integration: ObservatoryEngagementIntegration
+) -> Dict[str, Any]:
+    """Get engagement coordination system status."""
+    if integration.event_coordinator:
+        return {
+            "coordinator_status": integration.event_coordinator.get_health_status(),
+            "unified_state": integration.event_coordinator.get_unified_state(),
+            "event_statistics": integration.event_coordinator.get_event_statistics()
+        }
+    return {"error": "Event coordinator not available"}

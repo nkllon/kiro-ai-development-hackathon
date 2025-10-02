@@ -17,8 +17,15 @@ from typing import Dict, List, Any, Optional, Set, Tuple
 from dataclasses import dataclass, field
 from pathlib import Path
 import json
+from datetime import datetime
 
-from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
+from src.rm_ddd.core.unified_reflective_module import (
+    ReflectiveModule,
+    ModuleHealth,
+    ModuleStatus,
+    ModuleCapability,
+    GracefulDegradationResult
+)
 from src.rm_ddd.core.dag_registry import DAGRegistry
 
 logger = logging.getLogger(__name__)
@@ -57,6 +64,7 @@ class TaskListConverter(ReflectiveModule):
     
     def __init__(self):
         super().__init__()
+        self.module_id = "TaskListConverter"
         self.dag_registry = DAGRegistry()
         self.task_patterns = {
             'checkbox': re.compile(r'^- \[([ x])\] (.+)$', re.MULTILINE),
@@ -64,6 +72,104 @@ class TaskListConverter(ReflectiveModule):
             'dependency': re.compile(r'_Requirements: (.+)_'),
             'description': re.compile(r'- (.+)$', re.MULTILINE)
         }
+        
+        # Statistics
+        self._total_conversions = 0
+        self._successful_conversions = 0
+        self._total_exports = 0
+        self._successful_exports = 0
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information - RDI Compliant"""
+        return {
+            "module_id": self.module_id,
+            "name": "Task List Converter",
+            "version": "1.0.0",
+            "description": "Converts sequential task lists to DAG representations",
+            "statistics": {
+                "total_conversions": self._total_conversions,
+                "successful_conversions": self._successful_conversions,
+                "conversion_success_rate": self._successful_conversions / max(self._total_conversions, 1),
+                "total_exports": self._total_exports,
+                "successful_exports": self._successful_exports,
+                "export_success_rate": self._successful_exports / max(self._total_exports, 1)
+            }
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities - RDI Compliant"""
+        return [
+            ModuleCapability.CORE_FUNCTIONALITY,
+            ModuleCapability.DATA_PROCESSING,
+            ModuleCapability.VALIDATION
+        ]
+    
+    def get_health_status(self) -> ModuleHealth:
+        """Get module health status - RDI Compliant"""
+        try:
+            issues = []
+            health_score = 1.0
+            
+            # Check conversion success rate
+            if self._total_conversions > 0:
+                conversion_rate = self._successful_conversions / self._total_conversions
+                if conversion_rate < 0.9:
+                    issues.append(f"Low conversion success rate: {conversion_rate:.1%}")
+                    health_score *= 0.8
+            
+            # Check export success rate
+            if self._total_exports > 0:
+                export_rate = self._successful_exports / self._total_exports
+                if export_rate < 0.9:
+                    issues.append(f"Low export success rate: {export_rate:.1%}")
+                    health_score *= 0.8
+            
+            # Determine overall status
+            if health_score >= 0.9:
+                status = ModuleStatus.HEALTHY
+            elif health_score >= 0.7:
+                status = ModuleStatus.WARNING
+            else:
+                status = ModuleStatus.ERROR
+                
+        except Exception as e:
+            status = ModuleStatus.ERROR
+            health_score = 0.0
+            issues = [f"Health check failed: {str(e)}"]
+        
+        return ModuleHealth(
+            module_id=self.module_id,
+            status=status,
+            health_score=health_score,
+            issues=issues,
+            last_check=datetime.now(),
+            uptime_seconds=(datetime.now() - self._start_time).total_seconds()
+        )
+    
+    def graceful_degradation(self) -> GracefulDegradationResult:
+        """Perform graceful degradation - RDI Compliant"""
+        try:
+            remaining_capabilities = [
+                ModuleCapability.CORE_FUNCTIONALITY,
+                ModuleCapability.DATA_PROCESSING
+            ]
+            
+            degraded_capabilities = [
+                ModuleCapability.VALIDATION
+            ]
+            
+            return GracefulDegradationResult(
+                success=True,
+                degraded_capabilities=degraded_capabilities,
+                remaining_capabilities=remaining_capabilities
+            )
+        except Exception as e:
+            return GracefulDegradationResult(
+                success=False,
+                degraded_capabilities=[ModuleCapability.CORE_FUNCTIONALITY],
+                remaining_capabilities=[],
+                error_message=str(e)
+            )
         
     def convert_spec_tasks(self, spec_path: str) -> ConversionResult:
         """
@@ -75,24 +181,39 @@ class TaskListConverter(ReflectiveModule):
         Returns:
             ConversionResult with task definitions and validation
         """
-        try:
-            with self.trace_operation("convert_spec_tasks"):
+        with self.trace_operation("convert_spec_tasks", spec_path=spec_path) as trace:
+            try:
+                self._total_conversions += 1
+                
                 spec_file = Path(spec_path)
                 if not spec_file.exists():
+                    trace.output_result = {'success': False, 'error': 'File not found'}
                     return ConversionResult(
                         success=False,
                         errors=[f"Spec file not found: {spec_path}"]
                     )
                 
                 content = spec_file.read_text()
-                return self._parse_task_content(content, spec_path)
+                result = self._parse_task_content(content, spec_path)
                 
-        except Exception as e:
-            logger.error(f"Error converting spec tasks: {e}")
-            return ConversionResult(
-                success=False,
-                errors=[f"Conversion error: {str(e)}"]
-            )
+                if result.success:
+                    self._successful_conversions += 1
+                
+                trace.output_result = {
+                    'success': result.success,
+                    'task_count': len(result.task_definitions),
+                    'errors': len(result.errors)
+                }
+                
+                return result
+                
+            except Exception as e:
+                logger.error(f"Error converting spec tasks: {e}")
+                trace.output_result = {'success': False, 'error': str(e)}
+                return ConversionResult(
+                    success=False,
+                    errors=[f"Conversion error: {str(e)}"]
+                )
     
     def _parse_task_content(self, content: str, spec_path: str) -> ConversionResult:
         """Parse task content and extract task definitions."""
@@ -308,42 +429,55 @@ class TaskListConverter(ReflectiveModule):
     
     def export_dag_definition(self, conversion_result: ConversionResult, output_path: str) -> bool:
         """Export DAG definition to JSON file for orchestration."""
-        try:
-            if not conversion_result.success:
-                logger.error("Cannot export failed conversion result")
+        with self.trace_operation("export_dag_definition", output_path=output_path) as trace:
+            try:
+                self._total_exports += 1
+                
+                if not conversion_result.success:
+                    logger.error("Cannot export failed conversion result")
+                    trace.output_result = {'success': False, 'error': 'Conversion result failed'}
+                    return False
+                
+                dag_definition = {
+                    'execution_plan': {
+                        'plan_id': f"converted_spec_{Path(output_path).stem}",
+                        'created_at': self._get_current_timestamp(),
+                        'description': 'Converted from sequential task list to DAG representation',
+                        'total_tasks': len(conversion_result.task_definitions),
+                        'parallelization_strategy': 'dependency_aware'
+                    },
+                    'task_definitions': [
+                        {
+                            'id': task.id,
+                            'name': task.name,
+                            'description': task.description,
+                            'dependencies': task.dependencies,
+                            'resource_requirements': task.resource_requirements,
+                            'execution_context': task.execution_context
+                        }
+                        for task in conversion_result.task_definitions
+                    ],
+                    'dag_validation': conversion_result.dag_validation
+                }
+                
+                with open(output_path, 'w') as f:
+                    json.dump(dag_definition, f, indent=2)
+                
+                self._successful_exports += 1
+                
+                trace.output_result = {
+                    'success': True,
+                    'output_path': output_path,
+                    'task_count': len(conversion_result.task_definitions)
+                }
+                
+                logger.info(f"DAG definition exported to {output_path}")
+                return True
+                
+            except Exception as e:
+                logger.error(f"Error exporting DAG definition: {e}")
+                trace.output_result = {'success': False, 'error': str(e)}
                 return False
-            
-            dag_definition = {
-                'execution_plan': {
-                    'plan_id': f"converted_spec_{Path(output_path).stem}",
-                    'created_at': self._get_current_timestamp(),
-                    'description': 'Converted from sequential task list to DAG representation',
-                    'total_tasks': len(conversion_result.task_definitions),
-                    'parallelization_strategy': 'dependency_aware'
-                },
-                'task_definitions': [
-                    {
-                        'id': task.id,
-                        'name': task.name,
-                        'description': task.description,
-                        'dependencies': task.dependencies,
-                        'resource_requirements': task.resource_requirements,
-                        'execution_context': task.execution_context
-                    }
-                    for task in conversion_result.task_definitions
-                ],
-                'dag_validation': conversion_result.dag_validation
-            }
-            
-            with open(output_path, 'w') as f:
-                json.dump(dag_definition, f, indent=2)
-            
-            logger.info(f"DAG definition exported to {output_path}")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Error exporting DAG definition: {e}")
-            return False
     
     def _get_current_timestamp(self) -> str:
         """Get current timestamp in ISO format."""

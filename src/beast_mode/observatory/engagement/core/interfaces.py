@@ -169,6 +169,30 @@ class IContextAnalyzer(ABC):
         pass
 
 
+class IThemeManager(ABC):
+    """Interface for visual themes and moods based on system state."""
+    
+    @abstractmethod
+    async def get_current_theme(self) -> Dict[str, Any]:
+        """Get current visual theme configuration."""
+        pass
+    
+    @abstractmethod
+    async def apply_theme(self, theme_name: str, context: EngagementContext) -> bool:
+        """Apply visual theme based on personality and context."""
+        pass
+    
+    @abstractmethod
+    async def get_available_themes(self) -> List[str]:
+        """Get list of available themes."""
+        pass
+    
+    @abstractmethod
+    async def create_dynamic_theme(self, personality_state: str, system_context: Dict[str, Any]) -> Dict[str, Any]:
+        """Create dynamic theme based on personality and system state."""
+        pass
+
+
 # Attention Management Interfaces
 
 class IAttentionPrioritizer(ABC):
@@ -209,6 +233,30 @@ class IFocusController(ABC):
         pass
 
 
+class IProgressiveDisclosure(ABC):
+    """Interface for controlling information revelation."""
+    
+    @abstractmethod
+    async def reveal_information(self, information_id: str, level: int) -> Dict[str, Any]:
+        """Reveal information at specified detail level."""
+        pass
+    
+    @abstractmethod
+    async def hide_information(self, information_id: str) -> bool:
+        """Hide previously revealed information."""
+        pass
+    
+    @abstractmethod
+    async def get_disclosure_level(self, information_id: str) -> int:
+        """Get current disclosure level for information."""
+        pass
+    
+    @abstractmethod
+    async def set_disclosure_rules(self, rules: Dict[str, Any]) -> bool:
+        """Set rules for progressive disclosure."""
+        pass
+
+
 # Interaction Engine Interfaces
 
 class IInteractionHandler(ABC):
@@ -246,6 +294,88 @@ class IAccessibilityProvider(ABC):
     @abstractmethod
     async def get_accessibility_status(self) -> Dict[str, bool]:
         """Get current accessibility feature status."""
+        pass
+
+
+class IMultiModalInterface(ABC):
+    """Interface for audio, haptic, and visual feedback."""
+    
+    @abstractmethod
+    async def provide_audio_feedback(self, message: str, priority: str = "normal") -> bool:
+        """Provide audio feedback to user."""
+        pass
+    
+    @abstractmethod
+    async def provide_haptic_feedback(self, pattern: str, intensity: float = 0.5) -> bool:
+        """Provide haptic feedback for supported devices."""
+        pass
+    
+    @abstractmethod
+    async def provide_visual_feedback(self, feedback_type: str, config: Dict[str, Any]) -> bool:
+        """Provide visual feedback with animations or highlights."""
+        pass
+    
+    @abstractmethod
+    async def get_supported_modalities(self) -> List[str]:
+        """Get list of supported feedback modalities."""
+        pass
+
+
+class ICollaborationManager(ABC):
+    """Interface for multi-user interactions and shared experiences."""
+    
+    @abstractmethod
+    async def create_shared_session(self, session_id: str, participants: List[str]) -> Dict[str, Any]:
+        """Create a shared collaboration session."""
+        pass
+    
+    @abstractmethod
+    async def add_shared_cursor(self, user_id: str, position: Dict[str, float]) -> bool:
+        """Add or update shared cursor position."""
+        pass
+    
+    @abstractmethod
+    async def create_annotation(self, annotation: Dict[str, Any]) -> str:
+        """Create a shared annotation."""
+        pass
+    
+    @abstractmethod
+    async def add_contextual_comment(self, comment: Dict[str, Any]) -> str:
+        """Add contextual comment tied to specific metrics."""
+        pass
+    
+    @abstractmethod
+    async def share_insight(self, insight: Dict[str, Any]) -> str:
+        """Share knowledge insight with team."""
+        pass
+    
+    @abstractmethod
+    async def get_collaboration_state(self, session_id: str) -> Dict[str, Any]:
+        """Get current collaboration state."""
+        pass
+
+
+class IMobileAdapter(ABC):
+    """Interface for touch interface optimization and mobile adaptation."""
+    
+    @abstractmethod
+    async def optimize_for_touch(self, interface_config: Dict[str, Any]) -> Dict[str, Any]:
+        """Optimize interface for touch interactions."""
+        pass
+    
+    @abstractmethod
+    async def enable_responsive_design(self, screen_size: Dict[str, int]) -> bool:
+        """Enable responsive design for given screen size."""
+        pass
+    
+    @abstractmethod
+    async def configure_touch_gestures(self, gesture_config: Dict[str, Any]) -> bool:
+        """Configure touch-specific interaction patterns."""
+        pass
+    
+    @abstractmethod
+    async def get_mobile_capabilities(self) -> Dict[str, Any]:
+        """Get mobile device capabilities."""
         pass
 
 

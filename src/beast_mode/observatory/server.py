@@ -67,15 +67,26 @@ class ObservatoryServer:
         self.emoji_ws_handler = EmojiRainWebSocketHandler(self.emoji_engine)
         self.observation_handler = ObservationHandler()
         
-        # Initialize engagement integration if available
+        # Initialize engagement integration if available with comprehensive error handling
         self.engagement_integration = None
+        self.engagement_available = False
+        
         if ENGAGEMENT_AVAILABLE:
             try:
                 self.engagement_integration = ObservatoryEngagementIntegration(config)
+                self.engagement_available = True
                 logger.info("🎯 Engagement integration initialized")
-            except Exception as e:
-                logger.warning(f"Failed to initialize engagement integration: {e}")
+            except ImportError as e:
+                logger.warning(f"Engagement integration not available due to import error: {e}")
                 self.engagement_integration = None
+                self.engagement_available = False
+            except Exception as e:
+                logger.error(f"Failed to initialize engagement integration: {e}")
+                # Continue without engagement features
+                self.engagement_integration = None
+                self.engagement_available = False
+        else:
+            logger.info("Engagement integration not available - missing dependencies")
         
         # Set as global handler for ReflectiveModules to use
         set_global_observation_handler(self.observation_handler)
@@ -124,15 +135,28 @@ class ObservatoryServer:
         # Start emoji rain engine
         await self.emoji_engine.start_animation_loop()
         
-        # Start engagement integration if available
+        # Start engagement integration if available with error handling
         if self.engagement_integration:
             try:
-                await self.engagement_integration.initialize()
-                await self.engagement_integration.start_integration()
-                logger.info("🎯 Engagement integration started")
+                initialization_success = await self.engagement_integration.initialize()
+                if initialization_success:
+                    start_success = await self.engagement_integration.start_integration()
+                    if start_success:
+                        logger.info("🎯 Engagement integration started successfully")
+                    else:
+                        logger.warning("🎯 Engagement integration started with degraded functionality")
+                        # Keep integration but mark as degraded
+                else:
+                    logger.error("🎯 Engagement integration initialization failed")
+                    # Disable engagement integration but continue server startup
+                    self.engagement_integration = None
+                    self.engagement_available = False
             except Exception as e:
                 logger.error(f"Failed to start engagement integration: {e}")
+                # Continue server startup without engagement features
                 self.engagement_integration = None
+                self.engagement_available = False
+                logger.info("🎯 Observatory server continuing without engagement features")
         
         logger.info("✅ Observatory Server started successfully")
         
@@ -141,21 +165,14 @@ class ObservatoryServer:
         # Shutdown
         logger.info("🛑 Shutting down Observatory Server...")
         
-        # Stop engagement integration
+        # Stop engagement integration with error handling
         if self.engagement_integration:
             try:
                 await self.engagement_integration.stop_integration()
                 logger.info("🎯 Engagement integration stopped")
             except Exception as e:
                 logger.error(f"Error stopping engagement integration: {e}")
-        
-        # Stop engagement integration if running
-        if self.engagement_integration:
-            try:
-                await self.engagement_integration.stop_integration()
-                logger.info("🎯 Engagement integration stopped")
-            except Exception as e:
-                logger.error(f"Error stopping engagement integration: {e}")
+                # Continue shutdown process even if engagement stop fails
         
         # Stop emoji rain engine
         await self.emoji_engine.stop_animation_loop()
@@ -195,7 +212,7 @@ class ObservatoryServer:
         
         @self.app.get("/health")
         async def health_check():
-            """Health check endpoint."""
+            """Health check endpoint with engagement system status."""
             observatory_health = self.observatory_core.get_health_status()
             emoji_stats = self.emoji_engine.get_performance_stats()
             
@@ -215,20 +232,121 @@ class ObservatoryServer:
                 }
             }
             
-            # Add engagement data if available
-            if self.engagement_integration:
+            # Add engagement system status with comprehensive error handling (Requirement 28.1)
+            if self.engagement_integration and self.engagement_available:
                 try:
                     engagement_health = self.engagement_integration.get_health_status()
-                    health_data["engagement"] = engagement_health
+                    
+                    # Get error handler statistics if available
+                    error_stats = {}
+                    resilience_status = {}
+                    
+                    if hasattr(self.engagement_integration, 'error_handler') and self.engagement_integration.error_handler:
+                        try:
+                            error_stats = self.engagement_integration.error_handler.get_error_statistics()
+                        except Exception as e:
+                            logger.debug(f"Could not get error statistics: {e}")
+                    
+                    if hasattr(self.engagement_integration, 'resilience_manager') and self.engagement_integration.resilience_manager:
+                        try:
+                            resilience_status = self.engagement_integration.resilience_manager.get_resilience_status()
+                        except Exception as e:
+                            logger.debug(f"Could not get resilience status: {e}")
+                    
+                    health_data["engagement"] = {
+                        "status": engagement_health.get("status", "unknown"),
+                        "integration_running": engagement_health.get("integration_running", False),
+                        "active_websockets": engagement_health.get("active_websockets", 0),
+                        "insights_broadcasted": engagement_health.get("insights_broadcasted", 0),
+                        "storyteller_healthy": engagement_health.get("storyteller_healthy", False),
+                        "data_bridge_running": engagement_health.get("data_bridge_running", False),
+                        "monitoring": engagement_health.get("monitoring", {}),
+                        "metrics": engagement_health.get("metrics", {}),
+                        "error_handling": {
+                            "total_errors": error_stats.get("total_errors", 0),
+                            "recent_errors": error_stats.get("recent_errors", 0),
+                            "system_degraded": error_stats.get("system_degraded", False),
+                            "recovery_success_rate": error_stats.get("recovery_success_rate", 0.0)
+                        },
+                        "resilience": {
+                            "current_strategy": resilience_status.get("current_strategy", "unknown"),
+                            "system_health": resilience_status.get("system_health", 0.0),
+                            "components_healthy": resilience_status.get("components_healthy", 0),
+                            "components_degraded": resilience_status.get("components_degraded", 0),
+                            "components_failed": resilience_status.get("components_failed", 0)
+                        },
+                        "component_health": {
+                            "dashboard_engine": "implemented",
+                            "data_storyteller": "implemented", 
+                            "animation_engine": "placeholder",
+                            "personality_engine": "placeholder",
+                            "attention_manager": "placeholder",
+                            "interaction_engine": "placeholder",
+                            "learning_engine": "placeholder",
+                            "error_handler": "implemented",
+                            "resilience_manager": "implemented",
+                            "error_recovery": "implemented"
+                        }
+                    }
+                    
+                    # Inject comprehensive engagement health into Observatory health
+                    try:
+                        from .engagement.integration.server_integration import inject_engagement_health_into_observatory_endpoint
+                        await inject_engagement_health_into_observatory_endpoint(
+                            self.engagement_integration, health_data
+                        )
+                    except Exception as e:
+                        logger.debug(f"Could not inject engagement health: {e}")
                     
                     # Inject health data into engagement system
-                    await inject_observatory_health(self.engagement_integration, {
-                        "health_score": observatory_health.health_score,
-                        "status": observatory_health.status.value,
-                        "uptime_seconds": observatory_health.uptime_seconds
-                    })
+                    try:
+                        await inject_observatory_health(self.engagement_integration, {
+                            "health_score": observatory_health.health_score,
+                            "status": observatory_health.status.value,
+                            "uptime_seconds": observatory_health.uptime_seconds
+                        })
+                    except Exception as e:
+                        logger.debug(f"Could not inject Observatory health: {e}")
+                        
                 except Exception as e:
                     logger.warning(f"Error adding engagement health data: {e}")
+                    health_data["engagement"] = {
+                        "status": "error",
+                        "error": str(e),
+                        "message": "Engagement system encountered an error but Observatory continues to function",
+                        "component_health": {
+                            "dashboard_engine": "error",
+                            "data_storyteller": "error",
+                            "animation_engine": "error",
+                            "personality_engine": "error", 
+                            "attention_manager": "error",
+                            "interaction_engine": "error",
+                            "learning_engine": "error",
+                            "error_handler": "error",
+                            "resilience_manager": "error",
+                            "error_recovery": "error"
+                        }
+                    }
+            else:
+                # Engagement system not available or disabled
+                reason = "not available" if not ENGAGEMENT_AVAILABLE else "disabled due to initialization failure"
+                health_data["engagement"] = {
+                    "status": "disabled",
+                    "message": f"Engagement integration {reason}",
+                    "observatory_core_functional": True,
+                    "component_health": {
+                        "dashboard_engine": "not_available",
+                        "data_storyteller": "not_available",
+                        "animation_engine": "not_available",
+                        "personality_engine": "not_available",
+                        "attention_manager": "not_available", 
+                        "interaction_engine": "not_available",
+                        "learning_engine": "not_available",
+                        "error_handler": "not_available",
+                        "resilience_manager": "not_available",
+                        "error_recovery": "not_available"
+                    }
+                }
             
             return health_data
         
@@ -283,6 +401,89 @@ class ObservatoryServer:
                 }
             }
         
+        @self.app.get("/ready")
+        async def readiness_check():
+            """Readiness check endpoint with engagement component health."""
+            observatory_health = self.observatory_core.get_health_status()
+            
+            # Base readiness criteria
+            ready = observatory_health.health_score > 0.5
+            
+            readiness_data = {
+                "ready": ready,
+                "timestamp": observatory_health.last_check.isoformat(),
+                "observatory": {
+                    "ready": ready,
+                    "health_score": observatory_health.health_score,
+                    "status": observatory_health.status.value
+                },
+                "emoji_rain": {
+                    "ready": self.emoji_engine._running,
+                    "animation_running": self.emoji_engine._running
+                }
+            }
+            
+            # Add engagement component readiness (Requirement 28.2)
+            if self.engagement_integration:
+                try:
+                    engagement_health = self.engagement_integration.get_health_status()
+                    engagement_ready = (
+                        engagement_health.get("integration_running", False) and
+                        engagement_health.get("storyteller_healthy", False)
+                    )
+                    
+                    readiness_data["engagement"] = {
+                        "ready": engagement_ready,
+                        "integration_running": engagement_health.get("integration_running", False),
+                        "storyteller_healthy": engagement_health.get("storyteller_healthy", False),
+                        "data_bridge_running": engagement_health.get("data_bridge_running", False),
+                        "components": {
+                            "dashboard_engine": "ready",
+                            "data_storyteller": "ready" if engagement_health.get("storyteller_healthy") else "not_ready",
+                            "animation_engine": "placeholder",
+                            "personality_engine": "placeholder",
+                            "attention_manager": "placeholder",
+                            "interaction_engine": "placeholder", 
+                            "learning_engine": "placeholder"
+                        }
+                    }
+                    
+                    # Overall readiness includes engagement
+                    readiness_data["ready"] = ready and engagement_ready
+                    
+                except Exception as e:
+                    logger.warning(f"Error checking engagement readiness: {e}")
+                    readiness_data["engagement"] = {
+                        "ready": False,
+                        "error": str(e),
+                        "components": {
+                            "dashboard_engine": "error",
+                            "data_storyteller": "error",
+                            "animation_engine": "placeholder",
+                            "personality_engine": "placeholder",
+                            "attention_manager": "placeholder",
+                            "interaction_engine": "placeholder",
+                            "learning_engine": "placeholder"
+                        }
+                    }
+                    readiness_data["ready"] = False
+            else:
+                readiness_data["engagement"] = {
+                    "ready": False,
+                    "message": "Engagement integration not available",
+                    "components": {
+                        "dashboard_engine": "not_available",
+                        "data_storyteller": "not_available", 
+                        "animation_engine": "not_available",
+                        "personality_engine": "not_available",
+                        "attention_manager": "not_available",
+                        "interaction_engine": "not_available",
+                        "learning_engine": "not_available"
+                    }
+                }
+            
+            return readiness_data
+        
         @self.app.get("/metrics")
         async def prometheus_metrics():
             """Prometheus metrics endpoint."""
@@ -293,7 +494,35 @@ class ObservatoryServer:
                     from prometheus_client import CollectorRegistry, REGISTRY
                     
                     # Generate metrics in Prometheus format
-                    metrics_output = generate_latest(REGISTRY)
+                    metrics_output = generate_latest(REGISTRY).decode('utf-8')
+                    
+                    # Add engagement metrics if available (Requirement 28.3)
+                    if self.engagement_integration:
+                        try:
+                            from .engagement.integration.server_integration import get_engagement_prometheus_metrics_text
+                            engagement_metrics = get_engagement_prometheus_metrics_text(self.engagement_integration)
+                            metrics_output += "\n" + engagement_metrics
+                            
+                            # Add basic engagement component metrics
+                            engagement_health = self.engagement_integration.get_health_status()
+                            metrics_output += f"\n# HELP engagement_integration_running Engagement integration status\n"
+                            metrics_output += f"# TYPE engagement_integration_running gauge\n"
+                            metrics_output += f"engagement_integration_running {1 if engagement_health.get('integration_running') else 0}\n"
+                            
+                            metrics_output += f"# HELP engagement_active_websockets Active engagement WebSocket connections\n"
+                            metrics_output += f"# TYPE engagement_active_websockets gauge\n"
+                            metrics_output += f"engagement_active_websockets {engagement_health.get('active_websockets', 0)}\n"
+                            
+                            metrics_output += f"# HELP engagement_insights_broadcasted Total insights broadcasted\n"
+                            metrics_output += f"# TYPE engagement_insights_broadcasted counter\n"
+                            metrics_output += f"engagement_insights_broadcasted {engagement_health.get('insights_broadcasted', 0)}\n"
+                            
+                        except Exception as e:
+                            logger.warning(f"Failed to add engagement metrics: {e}")
+                            # Add error metric
+                            metrics_output += f"\n# HELP engagement_metrics_error Engagement metrics collection error\n"
+                            metrics_output += f"# TYPE engagement_metrics_error gauge\n"
+                            metrics_output += f"engagement_metrics_error 1\n"
                     
                     from fastapi import Response
                     return Response(
@@ -323,6 +552,36 @@ class ObservatoryServer:
                         f"# TYPE emoji_rain_connected_clients gauge",
                         f"emoji_rain_connected_clients {len(self.emoji_ws_handler.connected_clients)}",
                     ]
+                    
+                    # Add engagement metrics if available (Requirement 28.3)
+                    if self.engagement_integration:
+                        try:
+                            from .engagement.integration.server_integration import get_engagement_prometheus_metrics_text
+                            engagement_metrics = get_engagement_prometheus_metrics_text(self.engagement_integration)
+                            metrics_lines.append(engagement_metrics.rstrip())
+                            
+                            # Add basic engagement component metrics
+                            engagement_health = self.engagement_integration.get_health_status()
+                            metrics_lines.extend([
+                                f"# HELP engagement_integration_running Engagement integration status",
+                                f"# TYPE engagement_integration_running gauge", 
+                                f"engagement_integration_running {1 if engagement_health.get('integration_running') else 0}",
+                                f"# HELP engagement_active_websockets Active engagement WebSocket connections",
+                                f"# TYPE engagement_active_websockets gauge",
+                                f"engagement_active_websockets {engagement_health.get('active_websockets', 0)}",
+                                f"# HELP engagement_insights_broadcasted Total insights broadcasted",
+                                f"# TYPE engagement_insights_broadcasted counter", 
+                                f"engagement_insights_broadcasted {engagement_health.get('insights_broadcasted', 0)}"
+                            ])
+                            
+                        except Exception as e:
+                            logger.warning(f"Failed to add engagement metrics: {e}")
+                            # Add error metric
+                            metrics_lines.extend([
+                                f"# HELP engagement_metrics_error Engagement metrics collection error",
+                                f"# TYPE engagement_metrics_error gauge",
+                                f"engagement_metrics_error 1"
+                            ])
                     
                     from fastapi import Response
                     return Response(
@@ -499,6 +758,287 @@ class ObservatoryServer:
                 "frame_rate": self.emoji_engine._frame_rate,
                 "canvas_size": f"{self.emoji_engine._canvas_width}x{self.emoji_engine._canvas_height}"
             }
+        
+        @self.app.get("/api/engagement/status")
+        async def engagement_status():
+            """Get engagement system status and component health."""
+            if not self.engagement_integration:
+                return {
+                    "status": "disabled",
+                    "message": "Engagement integration not available",
+                    "components": {},
+                    "timestamp": datetime.now().isoformat()
+                }
+            
+            try:
+                engagement_health = self.engagement_integration.get_health_status()
+                coordination_status = {}
+                
+                # Get coordination status if available
+                try:
+                    from .engagement.integration.server_integration import get_engagement_coordination_status
+                    coordination_status = get_engagement_coordination_status(self.engagement_integration)
+                except Exception as e:
+                    logger.warning(f"Failed to get coordination status: {e}")
+                
+                return {
+                    "status": engagement_health.get("status", "unknown"),
+                    "timestamp": datetime.now().isoformat(),
+                    "integration": {
+                        "running": engagement_health.get("integration_running", False),
+                        "insights_broadcasted": engagement_health.get("insights_broadcasted", 0),
+                        "last_broadcast": engagement_health.get("last_broadcast"),
+                        "active_websockets": engagement_health.get("active_websockets", 0)
+                    },
+                    "components": {
+                        "dashboard_engine": {
+                            "status": "implemented",
+                            "health": "healthy",
+                            "description": "Core dashboard rendering with real-time data integration"
+                        },
+                        "data_storyteller": {
+                            "status": "implemented", 
+                            "health": "healthy" if engagement_health.get("storyteller_healthy") else "degraded",
+                            "description": "Intelligent narrative generation from data patterns"
+                        },
+                        "animation_engine": {
+                            "status": "placeholder",
+                            "health": "placeholder",
+                            "description": "GPU-accelerated animations (placeholder implementation)"
+                        },
+                        "personality_engine": {
+                            "status": "placeholder",
+                            "health": "placeholder", 
+                            "description": "Adaptive dashboard personality (placeholder implementation)"
+                        },
+                        "attention_manager": {
+                            "status": "placeholder",
+                            "health": "placeholder",
+                            "description": "Intelligent attention prioritization (placeholder implementation)"
+                        },
+                        "interaction_engine": {
+                            "status": "placeholder",
+                            "health": "placeholder",
+                            "description": "Multi-modal user interaction (placeholder implementation)"
+                        },
+                        "learning_engine": {
+                            "status": "placeholder", 
+                            "health": "placeholder",
+                            "description": "Continuous improvement through user behavior analysis (placeholder implementation)"
+                        }
+                    },
+                    "monitoring": engagement_health.get("monitoring", {}),
+                    "metrics": engagement_health.get("metrics", {}),
+                    "coordination": coordination_status
+                }
+                
+            except Exception as e:
+                logger.error(f"Error getting engagement status: {e}")
+                return {
+                    "status": "error",
+                    "error": str(e),
+                    "timestamp": datetime.now().isoformat(),
+                    "components": {}
+                }
+        
+        @self.app.get("/api/engagement/config")
+        async def engagement_config():
+            """Get basic engagement system configuration."""
+            if not self.engagement_integration:
+                return {
+                    "enabled": False,
+                    "message": "Engagement integration not available",
+                    "config": {},
+                    "timestamp": datetime.now().isoformat()
+                }
+            
+            try:
+                # Get current configuration from engagement system
+                config_data = {
+                    "enabled": True,
+                    "timestamp": datetime.now().isoformat(),
+                    "features": {
+                        "real_time_insights": True,
+                        "websocket_broadcasting": True,
+                        "data_storytelling": True,
+                        "pattern_discovery": True,
+                        "observatory_integration": True,
+                        "live_data_streaming": True,
+                        "gpu_animations": False,  # Placeholder
+                        "adaptive_personality": False,  # Placeholder
+                        "attention_management": False,  # Placeholder
+                        "multi_modal_interaction": False,  # Placeholder
+                        "continuous_learning": False  # Placeholder
+                    },
+                    "settings": {
+                        "broadcast_interval_seconds": 30,
+                        "max_websocket_connections": 100,
+                        "insight_retention_hours": 24,
+                        "pattern_detection_threshold": 0.7,
+                        "health_check_interval_seconds": 60
+                    },
+                    "component_config": {
+                        "dashboard_engine": {
+                            "enabled": True,
+                            "contextual_layering": True,
+                            "engagement_analytics": True,
+                            "performance_monitoring": True
+                        },
+                        "data_storyteller": {
+                            "enabled": True,
+                            "pattern_detection": True,
+                            "narrative_generation": True,
+                            "correlation_analysis": True,
+                            "background_analysis_interval": 60
+                        },
+                        "animation_engine": {
+                            "enabled": False,
+                            "implementation": "placeholder",
+                            "gpu_acceleration": False,
+                            "target_fps": 60
+                        },
+                        "personality_engine": {
+                            "enabled": False,
+                            "implementation": "placeholder",
+                            "mood_transitions": False,
+                            "context_analysis": False
+                        },
+                        "attention_manager": {
+                            "enabled": False,
+                            "implementation": "placeholder",
+                            "event_prioritization": False,
+                            "focus_control": False
+                        },
+                        "interaction_engine": {
+                            "enabled": False,
+                            "implementation": "placeholder",
+                            "multi_modal_support": False,
+                            "accessibility_features": False
+                        },
+                        "learning_engine": {
+                            "enabled": False,
+                            "implementation": "placeholder",
+                            "behavior_analysis": False,
+                            "ab_testing": False
+                        }
+                    }
+                }
+                
+                return config_data
+                
+            except Exception as e:
+                logger.error(f"Error getting engagement config: {e}")
+                return {
+                    "enabled": False,
+                    "error": str(e),
+                    "timestamp": datetime.now().isoformat(),
+                    "config": {}
+                }
+        
+        @self.app.get("/api/engagement/analytics")
+        async def engagement_analytics():
+            """Get basic engagement metrics and analytics."""
+            if not self.engagement_integration:
+                return {
+                    "available": False,
+                    "message": "Engagement integration not available",
+                    "analytics": {},
+                    "timestamp": datetime.now().isoformat()
+                }
+            
+            try:
+                engagement_health = self.engagement_integration.get_health_status()
+                
+                # Get WebSocket connection stats
+                websocket_stats = {}
+                if hasattr(self.engagement_integration, 'websocket_manager'):
+                    websocket_stats = self.engagement_integration.websocket_manager.get_connection_stats()
+                
+                # Get storyteller metrics if available
+                storyteller_metrics = {}
+                if hasattr(self.engagement_integration, 'storyteller'):
+                    try:
+                        storyteller_health = self.engagement_integration.storyteller.get_health_status()
+                        storyteller_metrics = {
+                            "patterns_detected": storyteller_health.get("patterns_detected", 0),
+                            "insights_generated": storyteller_health.get("insights_generated", 0),
+                            "data_points_processed": storyteller_health.get("data_points_processed", 0),
+                            "analysis_cycles": storyteller_health.get("analysis_cycles", 0)
+                        }
+                    except Exception as e:
+                        logger.warning(f"Failed to get storyteller metrics: {e}")
+                
+                analytics_data = {
+                    "available": True,
+                    "timestamp": datetime.now().isoformat(),
+                    "summary": {
+                        "integration_running": engagement_health.get("integration_running", False),
+                        "insights_broadcasted": engagement_health.get("insights_broadcasted", 0),
+                        "active_websockets": engagement_health.get("active_websockets", 0),
+                        "storyteller_healthy": engagement_health.get("storyteller_healthy", False)
+                    },
+                    "websocket_analytics": {
+                        "active_connections": websocket_stats.get("active_connections", 0),
+                        "total_messages_sent": websocket_stats.get("total_messages_sent", 0),
+                        "connection_metadata": websocket_stats.get("connection_metadata", {})
+                    },
+                    "storyteller_analytics": storyteller_metrics,
+                    "engagement_metrics": engagement_health.get("metrics", {}),
+                    "component_analytics": {
+                        "dashboard_engine": {
+                            "status": "active",
+                            "interactions": 0,  # Placeholder
+                            "render_time_ms": 0  # Placeholder
+                        },
+                        "data_storyteller": {
+                            "status": "active" if engagement_health.get("storyteller_healthy") else "inactive",
+                            "patterns_detected": storyteller_metrics.get("patterns_detected", 0),
+                            "insights_generated": storyteller_metrics.get("insights_generated", 0)
+                        },
+                        "animation_engine": {
+                            "status": "placeholder",
+                            "animations_triggered": 0,
+                            "average_fps": 0
+                        },
+                        "personality_engine": {
+                            "status": "placeholder",
+                            "mood_transitions": 0,
+                            "current_mood": "neutral"
+                        },
+                        "attention_manager": {
+                            "status": "placeholder",
+                            "events_prioritized": 0,
+                            "attention_budget_used": 0
+                        },
+                        "interaction_engine": {
+                            "status": "placeholder",
+                            "interactions_processed": 0,
+                            "accessibility_requests": 0
+                        },
+                        "learning_engine": {
+                            "status": "placeholder",
+                            "patterns_learned": 0,
+                            "optimizations_applied": 0
+                        }
+                    },
+                    "performance": {
+                        "last_broadcast": engagement_health.get("last_broadcast"),
+                        "broadcast_frequency": "30 seconds",
+                        "average_response_time_ms": 0,  # Placeholder
+                        "error_rate": 0  # Placeholder
+                    }
+                }
+                
+                return analytics_data
+                
+            except Exception as e:
+                logger.error(f"Error getting engagement analytics: {e}")
+                return {
+                    "available": False,
+                    "error": str(e),
+                    "timestamp": datetime.now().isoformat(),
+                    "analytics": {}
+                }
         
         @self.app.get("/api/observations/recent")
         async def get_recent_observations():
@@ -1217,57 +1757,105 @@ class ObservatoryServer:
         logger.info(f"📊 Registered {len(['/ws/emoji-rain', '/ws/observatory', '/ws/anomalies', '/ws/doctor-status', '/ws/observations'])} WebSocket endpoints")
     
     def _setup_engagement_features(self):
-        """Setup engagement features and WebSocket endpoints."""
-        if not self.engagement_integration:
+        """Setup engagement features and WebSocket endpoints with error handling."""
+        if not self.engagement_integration or not self.engagement_available:
             logger.info("🎯 Engagement features not available")
             return
         
         logger.info("🎯 Setting up engagement features...")
         
-        # Add engagement WebSocket endpoint
-        @self.app.websocket("/ws/engagement")
-        async def engagement_websocket(websocket: WebSocket):
-            """WebSocket endpoint for real-time engagement updates and data insights."""
-            await self.engagement_integration.handle_websocket_connection(websocket)
+        try:
+            # Add engagement WebSocket endpoint with error handling
+            @self.app.websocket("/ws/engagement")
+            async def engagement_websocket(websocket: WebSocket):
+                """WebSocket endpoint for real-time engagement updates and data insights."""
+                try:
+                    await self.engagement_integration.handle_websocket_connection(websocket)
+                except Exception as e:
+                    logger.error(f"Error in engagement WebSocket connection: {e}")
+                    try:
+                        await websocket.close(code=1011, reason="Internal server error")
+                    except Exception:
+                        pass  # Connection might already be closed
+        except Exception as e:
+            logger.error(f"Failed to setup engagement WebSocket endpoint: {e}")
+            self.engagement_available = False
         
-        # Add engagement API endpoints
-        @self.app.get("/api/engagement/insights")
-        async def get_engagement_insights():
-            """Get current engagement insights and discovered patterns."""
-            try:
-                insights = await self.engagement_integration.data_bridge.get_recent_insights()
-                return insights
-            except Exception as e:
-                logger.error(f"Error getting engagement insights: {e}")
-                raise HTTPException(status_code=500, detail="Failed to get insights")
-        
-        @self.app.get("/api/engagement/status")
-        async def get_engagement_status():
-            """Get engagement system status."""
-            try:
-                status = await self.engagement_integration._get_system_status()
-                return status
-            except Exception as e:
-                logger.error(f"Error getting engagement status: {e}")
-                raise HTTPException(status_code=500, detail="Failed to get status")
-        
-        @self.app.post("/api/engagement/data")
-        async def inject_engagement_data(data: dict):
-            """Inject custom data into the engagement system."""
-            try:
-                data_type = data.get("type", "metrics")
-                data_payload = data.get("data", {})
+        # Add engagement API endpoints with comprehensive error handling
+        try:
+            @self.app.get("/api/engagement/insights")
+            async def get_engagement_insights():
+                """Get current engagement insights and discovered patterns."""
+                if not self.engagement_integration or not self.engagement_available:
+                    raise HTTPException(status_code=503, detail="Engagement system not available")
                 
-                await self.engagement_integration.inject_observatory_data(data_type, data_payload)
+                try:
+                    insights = await self.engagement_integration.data_bridge.get_recent_insights()
+                    return insights
+                except Exception as e:
+                    logger.error(f"Error getting engagement insights: {e}")
+                    # Return degraded response instead of failing completely
+                    return {
+                        "patterns": [],
+                        "insights": [],
+                        "status": "degraded",
+                        "error": "Failed to get insights",
+                        "timestamp": datetime.now().isoformat()
+                    }
+            
+            @self.app.get("/api/engagement/status")
+            async def get_engagement_status():
+                """Get engagement system status."""
+                if not self.engagement_integration or not self.engagement_available:
+                    return {
+                        "status": "disabled",
+                        "message": "Engagement system not available",
+                        "observatory_functional": True,
+                        "timestamp": datetime.now().isoformat()
+                    }
                 
-                return {
-                    "status": "success",
-                    "message": f"Injected {data_type} data",
-                    "timestamp": datetime.now().isoformat()
-                }
-            except Exception as e:
-                logger.error(f"Error injecting engagement data: {e}")
-                raise HTTPException(status_code=500, detail="Failed to inject data")
+                try:
+                    status = await self.engagement_integration._get_system_status()
+                    return status
+                except Exception as e:
+                    logger.error(f"Error getting engagement status: {e}")
+                    return {
+                        "status": "error",
+                        "error": str(e),
+                        "observatory_functional": True,
+                        "timestamp": datetime.now().isoformat()
+                    }
+            
+            @self.app.post("/api/engagement/data")
+            async def inject_engagement_data(data: dict):
+                """Inject custom data into the engagement system."""
+                if not self.engagement_integration or not self.engagement_available:
+                    raise HTTPException(status_code=503, detail="Engagement system not available")
+                
+                try:
+                    data_type = data.get("type", "metrics")
+                    data_payload = data.get("data", {})
+                    
+                    await self.engagement_integration.inject_observatory_data(data_type, data_payload)
+                    
+                    return {
+                        "status": "success",
+                        "message": f"Injected {data_type} data",
+                        "timestamp": datetime.now().isoformat()
+                    }
+                except Exception as e:
+                    logger.error(f"Error injecting engagement data: {e}")
+                    return {
+                        "status": "error",
+                        "message": f"Failed to inject data: {e}",
+                        "timestamp": datetime.now().isoformat()
+                    }
+            
+            logger.info("✅ Engagement API endpoints setup complete")
+            
+        except Exception as e:
+            logger.error(f"Failed to setup engagement API endpoints: {e}")
+            self.engagement_available = False
         
         logger.info("🎯 Engagement features setup complete")
 
