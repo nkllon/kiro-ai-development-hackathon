@@ -21,6 +21,21 @@ The current Makefile system is outdated and focused on Cloudflare Custom Error P
 7. WHEN integration with existing infrastructure is required THEN the system SHALL seamlessly integrate with pytest, Makefile targets, and CI/CD pipelines
 8. WHEN test maintenance is needed THEN the system SHALL provide self-healing capabilities and automated test quality improvements
 
+### Requirement 0.1: Code Generation Validation and Syntax Integrity
+
+**User Story:** As a developer, I want all generated code to be syntactically valid and properly formatted, so that upstream generators don't create broken implementations that block the development process.
+
+#### Acceptance Criteria
+
+1. WHEN code generation occurs THEN the system SHALL validate Python syntax using AST parsing before writing files
+2. WHEN indentation issues are detected THEN the system SHALL automatically correct indentation to match Python standards (4 spaces per level)
+3. WHEN generated code contains syntax errors THEN the system SHALL log specific error details and provide corrective guidance
+4. WHEN template-based code generation is used THEN the system SHALL validate template parameters and ensure proper string interpolation
+5. WHEN multi-line string literals are generated THEN the system SHALL ensure proper indentation alignment with surrounding code
+6. WHEN code generators are updated THEN the system SHALL include regression tests to prevent syntax corruption
+7. WHEN syntax validation fails THEN the system SHALL provide executable patch scripts to repair malformed code
+8. WHEN upstream generators are identified as broken THEN the system SHALL create requirements to fix the root cause generators
+
 ## Core System Requirements
 
 ### Requirement 1: System Discovery and Inventory

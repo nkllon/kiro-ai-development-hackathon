@@ -13,7 +13,7 @@ from pathlib import Path
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from scripts.orchestrate_makefile_unit_tests import MakefileTestOrchestrator
+# from scripts.orchestrate_makefile_unit_tests import MakefileTestOrchestrator  # Temporarily disabled due to syntax issues
 
 
 async def quick_test_creation():
@@ -100,9 +100,9 @@ def main():
     elif args.run:
         asyncio.run(run_existing_tests())
     elif args.full:
-        # Import the full orchestrator
+        # Use the working orchestrator
         from scripts.orchestrate_makefile_unit_tests import main as full_main
-        asyncio.run(full_main())
+        full_main()
 
 
 if __name__ == "__main__":

@@ -21,7 +21,7 @@ from typing import Dict, List, Set, Any, Optional, Tuple
 from dataclasses import dataclass, field
 from enum import Enum
 
-from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
+from src.rm_ddd.core.unified_reflective_module import ReflectiveModule, ModuleCapability, ModuleHealth, ModuleStatus, GracefulDegradationResult
 
 
 class TestType(Enum):
@@ -86,6 +86,87 @@ class MakefileSystemTester(ReflectiveModule):
         
         # Initialize built-in test cases
         self._initialize_builtin_tests()
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information - RDI Compliant"""
+        return {
+            "module_id": self.module_id,
+            "name": "Makefile System Tester",
+            "version": "1.0.0",
+            "description": "Comprehensive testing framework for Makefile system operations",
+            "repository_root": str(self.repository_root),
+            "test_cases_count": len(self.test_cases),
+            "test_results_count": len(self.test_results)
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities - RDI Compliant"""
+        from src.rm_ddd.core.unified_reflective_module import ModuleCapability
+        return [
+            ModuleCapability.CORE_FUNCTIONALITY,
+            ModuleCapability.VALIDATION,
+            ModuleCapability.MONITORING
+        ]
+    
+    def get_health_status(self) -> ModuleHealth:
+        """Get module health status - RDI Compliant"""
+        from src.rm_ddd.core.unified_reflective_module import ModuleHealth, ModuleStatus
+        from datetime import datetime
+        
+        # Calculate health metrics
+        total_tests = len(self.test_results)
+        failed_tests = sum(1 for result in self.test_results if result.status == TestStatus.FAILED)
+        error_tests = sum(1 for result in self.test_results if result.status == TestStatus.ERROR)
+        
+        # Determine status
+        if error_tests > 0:
+            status = ModuleStatus.ERROR
+            health_score = 0.0
+        elif failed_tests > 0:
+            status = ModuleStatus.WARNING
+            health_score = max(0.5, 1.0 - (failed_tests / max(total_tests, 1)))
+        else:
+            status = ModuleStatus.HEALTHY
+            health_score = 1.0
+        
+        issues = []
+        if failed_tests > 0:
+            issues.append(f"{failed_tests} test(s) failed")
+        if error_tests > 0:
+            issues.append(f"{error_tests} test(s) had errors")
+        
+        uptime = (datetime.now() - self._start_time).total_seconds()
+        
+        return ModuleHealth(
+            module_id=self.module_id,
+            status=status,
+            health_score=health_score,
+            issues=issues,
+            last_check=datetime.now(),
+            uptime_seconds=uptime,
+            error_count=error_tests,
+            warning_count=failed_tests
+        )
+    
+    def graceful_degradation(self) -> GracefulDegradationResult:
+        """Perform graceful degradation - RDI Compliant"""
+        from src.rm_ddd.core.unified_reflective_module import GracefulDegradationResult, ModuleCapability
+        
+        # In case of issues, we can still provide basic testing capabilities
+        remaining_capabilities = [ModuleCapability.CORE_FUNCTIONALITY]
+        degraded_capabilities = [ModuleCapability.VALIDATION, ModuleCapability.MONITORING]
+        
+        return GracefulDegradationResult(
+            success=True,
+            degraded_capabilities=degraded_capabilities,
+            remaining_capabilities=remaining_capabilities,
+            error_message=None
+        )
+    
+    def _get_current_timestamp(self) -> str:
+        """Get current timestamp in ISO format."""
+        from datetime import datetime
+        return datetime.now().isoformat()
     
     def _initialize_builtin_tests(self):
         """Initialize built-in test cases."""
