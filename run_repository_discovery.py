@@ -26,7 +26,7 @@ from src.repository_discovery.core.content_inventory_manager import ContentInven
 # Directus configuration
 DIRECTUS_URL = "http://localhost:8055"
 ADMIN_EMAIL = "admin@example.com"
-ADMIN_PASSWORD = "d1r3ctu5"
+ADMIN_PASSWORD = get_directus_password()
 
 def get_auth_token():
     """Get authentication token from Directus"""

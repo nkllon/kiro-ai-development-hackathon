@@ -1,0 +1,268 @@
+name: Deploy Cloudflare Error Pages
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'cloudflare/error-pages/**'
+      - '.github/workflows/deploy-error-pages.yml'
+      - 'cloudflare-error-pages-cli.py'
+  
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'cloudflare/error-pages/**'
+  
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      force_deploy:
+        description: 'Force deployment even if validation fails'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  PYTHON_VERSION: '3.9'
+
+jobs:
+  validate:
+    name: Validate Error Pages
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Validate HTML content
+      run: |
+        python3 -c "
+        import sys
+        from pathlib import Path
+        
+        html_file = Path('cloudflare/error-pages/1033-enhanced.html')
+        if not html_file.exists():
+            print('❌ HTML file not found')
+            sys.exit(1)
+        
+        content = html_file.read_text()
+        required_elements = [
+            '<!DOCTYPE html>',
+            'Observatory',
+            'Minor Lab Incident',
+            '🐭',
+            'Retry Now',
+            'countdown',
+            'd1e53e43-033f-4994-8f46-c83962ae3785'
+        ]
+        
+        missing = [elem for elem in required_elements if elem not in content]
+        if missing:
+            print(f'❌ Missing required elements: {missing}')
+            sys.exit(1)
+        
+        size = html_file.stat().st_size
+        if size > 50 * 1024:
+            print(f'❌ File too large: {size/1024:.1f} KB (max 50KB)')
+            sys.exit(1)
+        
+        print(f'✅ Validation passed - Size: {size/1024:.1f} KB')
+        "
+    
+    - name: Run CLI validation
+      run: |
+        chmod +x cloudflare-error-pages-cli.py
+        ./cloudflare-error-pages-cli.py deploy --verify-only --silent --output json
+    
+    - name: Upload validation results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: validation-results
+        path: |
+          logs/
+          *.log
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: validate
+    if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+    environment: staging
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Deploy to Staging
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN_STAGING }}
+        CLOUDFLARE_ZONE: staging.nkllon.com
+      run: |
+        chmod +x cloudflare-error-pages-cli.py
+        ./cloudflare-error-pages-cli.py deploy --silent --output json --zone staging.nkllon.com
+    
+    - name: Verify Staging Deployment
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN_STAGING }}
+      run: |
+        ./cloudflare-error-pages-cli.py verify --silent --output json --zone staging.nkllon.com
+    
+    - name: Notify Slack (Staging)
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#deployments'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: validate
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Create deployment backup
+      run: |
+        mkdir -p backups/$(date +%Y%m%d_%H%M%S)
+        cp cloudflare/error-pages/1033-enhanced.html backups/$(date +%Y%m%d_%H%M%S)/
+    
+    - name: Deploy to Production
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN_PRODUCTION }}
+        CLOUDFLARE_ZONE: nkllon.com
+      run: |
+        chmod +x cloudflare-error-pages-cli.py
+        ./cloudflare-error-pages-cli.py deploy --silent --output json --zone nkllon.com
+    
+    - name: Verify Production Deployment
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN_PRODUCTION }}
+      run: |
+        ./cloudflare-error-pages-cli.py verify --silent --output json --zone nkllon.com
+    
+    - name: Run End-to-End Tests
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN_PRODUCTION }}
+      run: |
+        python3 verify_deployment.py
+    
+    - name: Notify Slack (Production)
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#deployments'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow
+    
+    - name: Create GitHub Release
+      if: success() && github.ref == 'refs/heads/main'
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: error-pages-v${{ github.run_number }}
+        release_name: Error Pages Release v${{ github.run_number }}
+        body: |
+          Automated deployment of Cloudflare Custom Error Pages
+          
+          **Changes:**
+          - Updated error page content
+          - Deployed to production environment
+          - Verified functionality
+          
+          **Deployment Details:**
+          - Zone: nkllon.com
+          - Error Code: 1033
+          - File Size: $(wc -c < cloudflare/error-pages/1033-enhanced.html) bytes
+          - Commit: ${{ github.sha }}
+        draft: false
+        prerelease: false
+
+  rollback:
+    name: Rollback Deployment
+    runs-on: ubuntu-latest
+    if: failure() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    needs: [deploy-staging, deploy-production]
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Rollback Production
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN_PRODUCTION }}
+      run: |
+        chmod +x cloudflare-error-pages-cli.py
+        ./cloudflare-error-pages-cli.py rollback --zone nkllon.com
+    
+    - name: Notify Rollback
+      uses: 8398a7/action-slack@v3
+      with:
+        status: 'warning'
+        channel: '#deployments'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        text: '⚠️ Cloudflare Error Pages deployment rolled back due to failure'

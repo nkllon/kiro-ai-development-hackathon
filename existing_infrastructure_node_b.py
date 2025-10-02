@@ -13,6 +13,8 @@ the established Beast Mode framework components.
 import asyncio
 import sys
 from pathlib import Path
+
+from src.security.secure_credentials import get_redis_password
 from typing import Dict, Any, Optional
 
 # Add src to path
@@ -30,7 +32,7 @@ except ImportError as e:
 NODE_ID = "existing-infrastructure-node-b"
 REDIS_HOST = "192.168.1.119"  # Vonnegut
 REDIS_PORT = 6379
-REDIS_PASSWORD = "beastmode2025"
+REDIS_PASSWORD = get_redis_password()
 
 class ConversationalNodeB:
     """Node B using existing Beast Mode infrastructure."""

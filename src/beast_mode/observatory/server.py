@@ -33,6 +33,19 @@ from .models import (
 )
 from .config import load_observatory_config
 
+# Import engagement integration
+try:
+    from .engagement.integration.server_integration import (
+        ObservatoryEngagementIntegration,
+        add_engagement_websocket_to_server,
+        inject_observatory_metrics,
+        inject_observatory_health,
+        inject_observatory_costs
+    )
+    ENGAGEMENT_AVAILABLE = True
+except ImportError:
+    ENGAGEMENT_AVAILABLE = False
+
 # Import tracing
 try:
     from src.beast_mode.tracing.tracer import get_tracer
@@ -53,6 +66,16 @@ class ObservatoryServer:
         self.observatory_core = ObservatoryCoreEngine(config)
         self.emoji_ws_handler = EmojiRainWebSocketHandler(self.emoji_engine)
         self.observation_handler = ObservationHandler()
+        
+        # Initialize engagement integration if available
+        self.engagement_integration = None
+        if ENGAGEMENT_AVAILABLE:
+            try:
+                self.engagement_integration = ObservatoryEngagementIntegration(config)
+                logger.info("🎯 Engagement integration initialized")
+            except Exception as e:
+                logger.warning(f"Failed to initialize engagement integration: {e}")
+                self.engagement_integration = None
         
         # Set as global handler for ReflectiveModules to use
         set_global_observation_handler(self.observation_handler)
@@ -82,9 +105,12 @@ class ObservatoryServer:
         # Setup routes
         self._setup_routes()
         self._setup_websockets()
+        self._setup_engagement_features()
         self._setup_static_files()
         
         logger.info(f"🌐 Observatory Server initialized on port {config.websocket_config.port}")
+        
+        # Engagement integration already initialized above if available
     
     @asynccontextmanager
     async def lifespan(self, app: FastAPI):
@@ -98,12 +124,38 @@ class ObservatoryServer:
         # Start emoji rain engine
         await self.emoji_engine.start_animation_loop()
         
+        # Start engagement integration if available
+        if self.engagement_integration:
+            try:
+                await self.engagement_integration.initialize()
+                await self.engagement_integration.start_integration()
+                logger.info("🎯 Engagement integration started")
+            except Exception as e:
+                logger.error(f"Failed to start engagement integration: {e}")
+                self.engagement_integration = None
+        
         logger.info("✅ Observatory Server started successfully")
         
         yield
         
         # Shutdown
         logger.info("🛑 Shutting down Observatory Server...")
+        
+        # Stop engagement integration
+        if self.engagement_integration:
+            try:
+                await self.engagement_integration.stop_integration()
+                logger.info("🎯 Engagement integration stopped")
+            except Exception as e:
+                logger.error(f"Error stopping engagement integration: {e}")
+        
+        # Stop engagement integration if running
+        if self.engagement_integration:
+            try:
+                await self.engagement_integration.stop_integration()
+                logger.info("🎯 Engagement integration stopped")
+            except Exception as e:
+                logger.error(f"Error stopping engagement integration: {e}")
         
         # Stop emoji rain engine
         await self.emoji_engine.stop_animation_loop()
@@ -147,7 +199,7 @@ class ObservatoryServer:
             observatory_health = self.observatory_core.get_health_status()
             emoji_stats = self.emoji_engine.get_performance_stats()
             
-            return {
+            health_data = {
                 "status": "healthy",
                 "timestamp": observatory_health.last_check.isoformat(),
                 "observatory": {
@@ -162,6 +214,23 @@ class ObservatoryServer:
                     "connected_clients": len(self.emoji_ws_handler.connected_clients)
                 }
             }
+            
+            # Add engagement data if available
+            if self.engagement_integration:
+                try:
+                    engagement_health = self.engagement_integration.get_health_status()
+                    health_data["engagement"] = engagement_health
+                    
+                    # Inject health data into engagement system
+                    await inject_observatory_health(self.engagement_integration, {
+                        "health_score": observatory_health.health_score,
+                        "status": observatory_health.status.value,
+                        "uptime_seconds": observatory_health.uptime_seconds
+                    })
+                except Exception as e:
+                    logger.warning(f"Error adding engagement health data: {e}")
+            
+            return health_data
         
         @self.app.get("/healthemoji-rain")
         async def health_emoji_rain():
@@ -213,6 +282,62 @@ class ObservatoryServer:
                     "frame_rate": emoji_stats.get("frame_rate", 60)
                 }
             }
+        
+        @self.app.get("/metrics")
+        async def prometheus_metrics():
+            """Prometheus metrics endpoint."""
+            try:
+                # Try to get metrics from prometheus_client if available
+                try:
+                    from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
+                    from prometheus_client import CollectorRegistry, REGISTRY
+                    
+                    # Generate metrics in Prometheus format
+                    metrics_output = generate_latest(REGISTRY)
+                    
+                    from fastapi import Response
+                    return Response(
+                        content=metrics_output,
+                        media_type=CONTENT_TYPE_LATEST
+                    )
+                except ImportError:
+                    # Fallback to basic metrics if prometheus_client not available
+                    observatory_health = self.observatory_core.get_health_status()
+                    emoji_stats = self.emoji_engine.get_performance_stats()
+                    
+                    # Basic Prometheus format metrics
+                    metrics_lines = [
+                        f"# HELP observatory_health_score Observatory health score",
+                        f"# TYPE observatory_health_score gauge",
+                        f"observatory_health_score {observatory_health.health_score}",
+                        f"# HELP observatory_uptime_seconds Observatory uptime in seconds",
+                        f"# TYPE observatory_uptime_seconds counter",
+                        f"observatory_uptime_seconds {observatory_health.uptime_seconds}",
+                        f"# HELP observatory_error_count Total error count",
+                        f"# TYPE observatory_error_count counter",
+                        f"observatory_error_count {observatory_health.error_count}",
+                        f"# HELP emoji_rain_active_effects Active emoji rain effects",
+                        f"# TYPE emoji_rain_active_effects gauge",
+                        f"emoji_rain_active_effects {emoji_stats.get('active_effects', 0)}",
+                        f"# HELP emoji_rain_connected_clients Connected WebSocket clients",
+                        f"# TYPE emoji_rain_connected_clients gauge",
+                        f"emoji_rain_connected_clients {len(self.emoji_ws_handler.connected_clients)}",
+                    ]
+                    
+                    from fastapi import Response
+                    return Response(
+                        content="\n".join(metrics_lines) + "\n",
+                        media_type="text/plain; version=0.0.4; charset=utf-8"
+                    )
+                    
+            except Exception as e:
+                logger.error(f"Failed to generate Prometheus metrics: {e}")
+                from fastapi import Response
+                return Response(
+                    content=f"# Error generating metrics: {e}\n",
+                    media_type="text/plain; version=0.0.4; charset=utf-8",
+                    status_code=500
+                )
         
         @self.app.get("/api/observatory/status")
         async def observatory_status():
@@ -788,10 +913,98 @@ class ObservatoryServer:
                     "status": "error",
                     "error": str(e)
                 }
+    
+    def _setup_engagement_integration(self):
+        """Setup engagement integration if available."""
+        try:
+            from .engagement.integration.server_integration import ObservatoryEngagementIntegration
+            
+            # Initialize engagement integration
+            self.engagement_integration = ObservatoryEngagementIntegration(self.config)
+            
+            # Add engagement WebSocket endpoint
+            @self.app.websocket("/ws/engagement")
+            async def engagement_websocket(websocket: WebSocket):
+                """WebSocket endpoint for real-time engagement updates."""
+                if self.engagement_integration:
+                    await self.engagement_integration.handle_websocket_connection(websocket)
+                else:
+                    await websocket.close(code=1000, reason="Engagement system not available")
+            
+            # Add engagement API endpoints
+            @self.app.get("/api/engagement/insights")
+            async def get_engagement_insights():
+                """Get current data insights from engagement system."""
+                if self.engagement_integration:
+                    insights = await self.engagement_integration.data_bridge.get_recent_insights()
+                    return {
+                        "status": "success",
+                        "data": insights,
+                        "timestamp": datetime.now().isoformat()
+                    }
+                else:
+                    return {
+                        "status": "error",
+                        "message": "Engagement system not available",
+                        "timestamp": datetime.now().isoformat()
+                    }
+            
+            @self.app.get("/api/engagement/status")
+            async def get_engagement_status():
+                """Get engagement system status."""
+                if self.engagement_integration:
+                    status = await self.engagement_integration._get_system_status()
+                    return {
+                        "status": "success",
+                        "data": status,
+                        "timestamp": datetime.now().isoformat()
+                    }
+                else:
+                    return {
+                        "status": "error",
+                        "message": "Engagement system not available",
+                        "timestamp": datetime.now().isoformat()
+                    }
+            
+            logger.info("🎯 Engagement integration setup complete")
+            
+        except ImportError as e:
+            logger.info("🎯 Engagement system not available - continuing without engagement features")
+            self.engagement_integration = None
+        except Exception as e:
+            logger.error(f"Failed to setup engagement integration: {e}")
+            self.engagement_integration = None
+    
+    async def _inject_live_data_to_engagement(self):
+        """Inject live Observatory data into the engagement system."""
+        if not self.engagement_integration:
+            return
+        
+        try:
+            # Get current Observatory data
+            dashboard_data = await self._get_consolidated_dashboard_data()
+            
+            # Inject metrics data
+            if "metrics" in dashboard_data:
+                await self.engagement_integration.inject_observatory_data("metrics", dashboard_data["metrics"])
+            
+            # Inject analytics data as health
+            if "analytics" in dashboard_data:
+                await self.engagement_integration.inject_observatory_data("health", dashboard_data["analytics"])
+            
+            # Inject cost data
+            if "costs" in dashboard_data:
+                await self.engagement_integration.inject_observatory_data("costs", dashboard_data["costs"])
+            
+        except Exception as e:
+            logger.debug(f"Error injecting data to engagement system: {e}")
 
     def _setup_websockets(self):
         """Setup WebSocket endpoints with explicit registration."""
         logger.info("🔌 Setting up WebSocket endpoints...")
+        
+        # Initialize engagement integration if available
+        self._setup_engagement_integration()
         
         @self.app.websocket("/ws/emoji-rain")
         async def emoji_rain_websocket(websocket: WebSocket):
@@ -901,6 +1114,10 @@ class ObservatoryServer:
                     }
                     
                     await websocket.send_text(json.dumps(status_data))
+                    
+                    # Inject data into engagement system
+                    await self._inject_live_data_to_engagement()
+                    
                     await asyncio.sleep(5)
                     
             except WebSocketDisconnect:
@@ -998,6 +1215,61 @@ class ObservatoryServer:
         
         logger.info("✅ WebSocket endpoints registered successfully")
         logger.info(f"📊 Registered {len(['/ws/emoji-rain', '/ws/observatory', '/ws/anomalies', '/ws/doctor-status', '/ws/observations'])} WebSocket endpoints")
+    
+    def _setup_engagement_features(self):
+        """Setup engagement features and WebSocket endpoints."""
+        if not self.engagement_integration:
+            logger.info("🎯 Engagement features not available")
+            return
+        
+        logger.info("🎯 Setting up engagement features...")
+        
+        # Add engagement WebSocket endpoint
+        @self.app.websocket("/ws/engagement")
+        async def engagement_websocket(websocket: WebSocket):
+            """WebSocket endpoint for real-time engagement updates and data insights."""
+            await self.engagement_integration.handle_websocket_connection(websocket)
+        
+        # Add engagement API endpoints
+        @self.app.get("/api/engagement/insights")
+        async def get_engagement_insights():
+            """Get current engagement insights and discovered patterns."""
+            try:
+                insights = await self.engagement_integration.data_bridge.get_recent_insights()
+                return insights
+            except Exception as e:
+                logger.error(f"Error getting engagement insights: {e}")
+                raise HTTPException(status_code=500, detail="Failed to get insights")
+        
+        @self.app.get("/api/engagement/status")
+        async def get_engagement_status():
+            """Get engagement system status."""
+            try:
+                status = await self.engagement_integration._get_system_status()
+                return status
+            except Exception as e:
+                logger.error(f"Error getting engagement status: {e}")
+                raise HTTPException(status_code=500, detail="Failed to get status")
+        
+        @self.app.post("/api/engagement/data")
+        async def inject_engagement_data(data: dict):
+            """Inject custom data into the engagement system."""
+            try:
+                data_type = data.get("type", "metrics")
+                data_payload = data.get("data", {})
+                
+                await self.engagement_integration.inject_observatory_data(data_type, data_payload)
+                
+                return {
+                    "status": "success",
+                    "message": f"Injected {data_type} data",
+                    "timestamp": datetime.now().isoformat()
+                }
+            except Exception as e:
+                logger.error(f"Error injecting engagement data: {e}")
+                raise HTTPException(status_code=500, detail="Failed to inject data")
+        
+        logger.info("🎯 Engagement features setup complete")
 
     def _setup_static_files(self):
         """Setup static file serving."""

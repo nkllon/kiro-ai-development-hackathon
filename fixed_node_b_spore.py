@@ -24,7 +24,7 @@ except ImportError:
 NODE_ID = "node-b-fixed"
 REDIS_HOST = "192.168.1.119"
 REDIS_PORT = 6379
-REDIS_PASSWORD = "beastmode2025"
+REDIS_PASSWORD = get_redis_password()
 CHANNEL = "beast_mode_network"
 
 class FixedNodeB:

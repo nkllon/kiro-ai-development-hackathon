@@ -132,7 +132,23 @@ This specification defines a self-organizing, decentralized network for coordina
 6. WHEN documentation is needed THEN comprehensive specifications SHALL be available
 7. WHEN community contributions are made THEN they SHALL be incorporated through open processes
 
-### Requirement 10: Privacy and Security Protection
+### Requirement 10: Secure Credential Management
+
+**User Story:** As a network participant, I want all credentials and sensitive configuration managed securely through environment variables, so that no sensitive information is exposed in source code or network communications.
+
+#### Acceptance Criteria
+
+1. WHEN nodes connect to Redis THEN they SHALL use `get_redis_password()` for credential retrieval
+2. WHEN credentials are needed THEN they SHALL be loaded from environment variables via `src.security.secure_credentials`
+3. WHEN validating setup THEN nodes SHALL verify required credentials are set in environment
+4. WHEN detecting hardcoded credentials THEN security scans SHALL fail with CRITICAL severity
+5. WHEN deploying nodes THEN they SHALL require proper `.env` file configuration with real credentials
+6. WHEN credentials are missing THEN nodes SHALL fail gracefully with helpful error messages
+7. WHEN placeholder credentials are detected THEN the system SHALL reject them and require real values
+8. WHEN credentials are transmitted THEN they SHALL be encrypted in transit using TLS 1.3 or higher
+9. WHEN storing credentials temporarily THEN they SHALL be cleared from memory after use
+
+### Requirement 11: Privacy and Security Protection
 
 **User Story:** As a network participant, I want my privacy protected and the network secured against attacks, so that I can contribute safely without compromising sensitive information.
 
@@ -151,15 +167,15 @@ This specification defines a self-organizing, decentralized network for coordina
 The requirements will be considered successfully implemented when:
 
 1. **Network operates autonomously** with no central control or single points of failure
-2. **Quality is maintained** through effective reputation and peer review systems
-3. **Economic incentives work** with fair compensation driving high-quality contributions
-4. **Consensus mechanisms function** enabling democratic governance and evolution
-5. **Fault tolerance is proven** with network continuing operation despite node failures
-6. **Global scale is achieved** with contributors from multiple continents and time zones
-7. **Multi-LLM integration works** leveraging diverse AI capabilities effectively
-8. **Open standards enable** third-party tools and client implementations
-9. **Security and privacy are maintained** protecting all network participants
-10. **Network effects emerge** with value increasing as more participants join
+2. **Quality is maintained** through effective reputation and peer review systems with >4.0/5.0 average scores
+3. **Economic incentives work** with fair compensation driving high-quality contributions and >85% contributor retention
+4. **Consensus mechanisms function** enabling democratic governance with >80% participation rates
+5. **Fault tolerance is proven** with network continuing operation despite node failures with <30 minute recovery times
+6. **Global scale is achieved** with contributors from multiple continents and time zones operating 24/7
+7. **Multi-LLM integration works** leveraging diverse AI capabilities with automatic failover
+8. **Open standards enable** third-party tools and client implementations with documented APIs
+9. **Security and privacy are maintained** protecting all network participants with zero credential exposures
+10. **Network effects emerge** with value increasing as more participants join, demonstrating positive network externalities
 
 ## Dependencies
 
@@ -187,10 +203,12 @@ The requirements will be considered successfully implemented when:
 
 ### Legal Dependencies
 - Intellectual property frameworks for collaborative development
-- Regulatory compliance across multiple jurisdictions
+- Regulatory compliance across multiple jurisdictions (GDPR, CCPA, etc.)
 - Privacy protection mechanisms meeting global standards
 - Liability and insurance frameworks for network participants
 - Open source licensing and contribution agreements
+- Cross-border data transfer compliance mechanisms
+- Dispute resolution and arbitration frameworks
 
 ## Risk Mitigation
 

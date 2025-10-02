@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  node-b-vonnegut:
+    image: python:3.9-slim
+    container_name: node-b-vonnegut
+    restart: unless-stopped
+    environment:
+      - REDIS_HOST=192.168.1.119
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=beastmode2025
+      - NODE_ID=node-b-vonnegut-container
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./node_b_container.py:/app/node_b_container.py:ro
+    working_dir: /app
+    command: >
+      sh -c "pip install redis && python node_b_container.py"
+    network_mode: host
+    
+  # Additional Beast Mode services can be added here
+  redis-monitor:
+    image: redis:7-alpine
+    container_name: redis-monitor
+    restart: unless-stopped
+    command: redis-cli -h 192.168.1.119 -p 6379 -a beastmode2025 monitor
+    network_mode: host
+    
+  # Future: Directus CMS, Observatory, etc.

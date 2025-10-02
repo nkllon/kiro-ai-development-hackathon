@@ -7,7 +7,7 @@ import json
 import redis.asyncio as redis
 
 async def check_recent_messages():
-    client = redis.from_url("redis://:beastmode2025@192.168.1.119:6379")
+    client = redis.from_url(f"redis://:{get_redis_password()}@192.168.1.119:6379")
 
     print("👂 Monitoring Beast Mode network for Node B's message...")
 

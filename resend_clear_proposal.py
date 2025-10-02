@@ -9,7 +9,7 @@ from datetime import datetime
 import redis.asyncio as redis
 
 async def resend_clear_proposal():
-    client = redis.from_url("redis://:beastmode2025@192.168.1.119:6379")
+    client = redis.from_url(f"redis://:{get_redis_password()}@192.168.1.119:6379")
 
     clear_proposal = {
         "id": str(uuid.uuid4()),

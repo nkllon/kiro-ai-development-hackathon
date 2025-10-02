@@ -70,7 +70,7 @@ class InfrastructurePreconditionValidator(ReflectiveModule):
         self.redis_config = {
             'host': '192.168.1.119',  # Vonnegut IP from existing code
             'port': 6379,
-            'password': 'beastmode2025',
+            'password': os.getenv('REDIS_PASSWORD', os.getenv('BEAST_MODE_REDIS_PASSWORD', '')),
             'db': 0
         }
         

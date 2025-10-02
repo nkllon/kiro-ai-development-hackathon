@@ -19,7 +19,7 @@ class DirectusSync:
     def __init__(self):
         self.directus_url = "http://localhost:8055"
         self.admin_email = "admin@example.com"
-        self.admin_password = "d1r3ctu5"
+        self.admin_password = get_directus_password()
         self.token = None
         
     def authenticate(self):

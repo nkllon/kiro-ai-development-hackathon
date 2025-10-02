@@ -92,7 +92,19 @@ This specification defines the setup and configuration of Directus as a Content 
 4. WHEN testing THEN the system SHALL include automated tests for CMS functionality
 5. WHEN deploying THEN the system SHALL support environment-specific configurations
 
-### Requirement 8: Content Workflow Management
+### Requirement 8: Secure Credential Management
+
+**User Story:** As a security-conscious developer, I want all Directus credentials managed securely through environment variables, so that sensitive information is never exposed in source code.
+
+#### Acceptance Criteria
+
+1. WHEN configuring Directus THEN the system SHALL use `get_directus_password()` for admin password retrieval
+2. WHEN accessing credentials THEN the system SHALL load from environment variables via `src.security.secure_credentials`
+3. WHEN validating setup THEN the system SHALL verify `DIRECTUS_ADMIN_PASSWORD` is set in environment
+4. WHEN detecting hardcoded credentials THEN the system SHALL fail security scans with CRITICAL severity
+5. WHEN deploying THEN the system SHALL require proper `.env` file configuration with real credentials
+
+### Requirement 9: Content Workflow Management
 
 **User Story:** As a content manager, I want workflow capabilities for content approval and publishing, so that I can maintain content quality and consistency.
 
@@ -116,6 +128,10 @@ This specification defines the setup and configuration of Directus as a Content 
 - System SHALL implement proper authentication and authorization
 - System SHALL sanitize all user inputs to prevent injection attacks
 - System SHALL maintain audit logs for all content modifications
+- System SHALL NEVER hardcode admin credentials in source code
+- System SHALL use environment variables for all sensitive configuration
+- System SHALL provide secure credential management through `get_directus_password()` function
+- System SHALL validate that credentials are not placeholder values
 
 ### Compatibility Requirements
 - System SHALL work with Docker and Docker Compose

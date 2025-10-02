@@ -129,7 +129,8 @@ class PreLaunchValidator(ReflectiveModule):
         # Initialize report
         report = ValidationReport(
             spec_name=spec_path.name,
-            spec_path=spec_path
+            spec_path=spec_path,
+            overall_status="unknown"  # Will be calculated later
         )
         
         print(f"🔍 Validating Specification Readiness: {spec_path.name}")

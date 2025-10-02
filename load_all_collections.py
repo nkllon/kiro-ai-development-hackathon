@@ -11,9 +11,11 @@ from pathlib import Path
 # Add project root to path
 sys.path.append('.')
 
+from src.security.secure_credentials import get_directus_password
+
 DIRECTUS_URL = "http://localhost:8055"
 ADMIN_EMAIL = "admin@example.com"
-ADMIN_PASSWORD = "d1r3ctu5"
+ADMIN_PASSWORD = get_directus_password()
 
 def get_auth_token():
     """Get authentication token from Directus"""

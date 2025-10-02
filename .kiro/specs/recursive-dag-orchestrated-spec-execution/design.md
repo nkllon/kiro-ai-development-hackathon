@@ -532,6 +532,31 @@ class RecursiveExecutionResult:
 - **Integration**: Stores recursive execution patterns and optimization insights
 - **Recursive Usage**: Learns from recursive execution to improve future orchestration
 
+### 5. Multi-LLM Provider System
+- **Component**: `configurable_llm_dag_executor.py`
+- **Integration**: Configurable LLM provider system supporting multiple CLI-based LLM tools
+- **Supported Providers**: 
+  - **Cursor**: `cursor --print -` (Primary - headless execution with tool access)
+  - **Claude**: `claude -` (API-based with credit limitations)
+  - **Kiro**: `kiro -` (GUI-based, not suitable for headless automation)
+  - **OpenAI**: `openai -` (Requires API key configuration)
+  - **LLM**: `llm -` (Generic LLM CLI wrapper)
+- **Provider Selection Strategy**:
+  1. Auto-detect available LLM CLIs using `which` command
+  2. Prioritize Cursor for headless automation capabilities
+  3. Fallback to Claude, then other providers based on availability
+  4. Provide clear error messages when no providers are available
+- **Configuration**:
+  ```python
+  llm_config = LLMConfig(
+      provider=LLMProvider.CURSOR,
+      command="cursor",
+      args=["--print", "-"],
+      output_capture=True,
+      timeout_seconds=300
+  )
+  ```
+
 ## Mathematical Foundations
 
 ### Recursion Termination Proof

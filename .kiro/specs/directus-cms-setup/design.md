@@ -623,16 +623,98 @@ class CachedDirectusClient:
 
 ## Security Considerations
 
-### 1. Authentication and Authorization
+### 1. Secure Credential Management Architecture
+
+```python
+from src.security.secure_credentials import get_directus_password, get_secure_credentials
+
+class SecureDirectusConfiguration:
+    """Secure configuration management for Directus"""
+    
+    def __init__(self):
+        self.creds = get_secure_credentials()
+        self.config = self._load_secure_config()
+    
+    def _load_secure_config(self) -> Dict[str, Any]:
+        """Load Directus configuration from secure environment variables"""
+        return {
+            'url': self.creds.get_credential('DIRECTUS_URL', 'Directus URL', 
+                                           required=False, default='http://localhost:8055'),
+            'admin_email': self.creds.get_credential('DIRECTUS_ADMIN_EMAIL', 'Directus admin email',
+                                                   required=False, default='admin@example.com'),
+            'admin_password': self.creds.get_credential('DIRECTUS_ADMIN_PASSWORD', 'Directus admin password'),
+            'api_token': self.creds.get_credential('DIRECTUS_API_TOKEN', 'Directus API token', required=False),
+            'db_password': self.creds.get_credential('DIRECTUS_DB_PASSWORD', 'Directus database password')
+        }
+    
+    def get_admin_credentials(self) -> Tuple[str, str]:
+        """Get admin email and password for authentication"""
+        return self.config['admin_email'], self.config['admin_password']
+    
+    def validate_configuration(self) -> bool:
+        """Validate that all required credentials are present and valid"""
+        required_vars = ['DIRECTUS_ADMIN_PASSWORD', 'DIRECTUS_DB_PASSWORD']
+        return self.creds.validate_all_credentials(required_vars)
+
+# Usage in Directus setup scripts
+def setup_directus_with_secure_credentials():
+    """Setup Directus using secure credential management"""
+    config = SecureDirectusConfiguration()
+    
+    # Validate configuration before proceeding
+    if not config.validate_configuration():
+        raise ValueError("Invalid Directus configuration - check environment variables")
+    
+    admin_email, admin_password = config.get_admin_credentials()
+    
+    # Use credentials for Directus initialization
+    return initialize_directus(
+        url=config.config['url'],
+        admin_email=admin_email,
+        admin_password=admin_password
+    )
+```
+
+### 2. Environment Variable Security Pattern
+
+```bash
+# Required environment variables for Directus CMS
+# Add these to ~/.env (NEVER commit to git)
+
+# Directus Admin Credentials
+DIRECTUS_ADMIN_EMAIL=admin@example.com
+DIRECTUS_ADMIN_PASSWORD=secure_random_password_here
+
+# Directus Database Credentials  
+DIRECTUS_DB_PASSWORD=secure_db_password_here
+
+# Optional Directus Configuration
+DIRECTUS_URL=http://localhost:8055
+DIRECTUS_API_TOKEN=optional_api_token_here
+
+# Directus Security Keys (generate random values)
+DIRECTUS_KEY=random_32_character_key_here
+DIRECTUS_SECRET=random_64_character_secret_here
+```
+
+### 3. Authentication and Authorization
 
 ```python
 class SecureDirectusClient:
     """Directus client with enhanced security"""
     
-    def __init__(self, config: DirectusConfig):
-        self.config = config
+    def __init__(self):
+        self.config = SecureDirectusConfiguration()
         self.session = None
         self.token_expires_at = None
+    
+    async def authenticate(self) -> str:
+        """Authenticate using secure credentials"""
+        admin_email, admin_password = self.config.get_admin_credentials()
+        
+        response = await self._make_auth_request(admin_email, admin_password)
+        self.token_expires_at = datetime.now() + timedelta(seconds=response['expires'])
+        return response['access_token']
     
     async def ensure_authenticated(self):
         """Ensure valid authentication token"""
@@ -640,10 +722,9 @@ class SecureDirectusClient:
             await self._refresh_token()
     
     async def _refresh_token(self):
-        """Refresh authentication token"""
-        response = await self._make_auth_request()
-        self.config.token = response['access_token']
-        self.token_expires_at = datetime.now() + timedelta(seconds=response['expires'])
+        """Refresh authentication token using secure credentials"""
+        token = await self.authenticate()
+        self.session.headers.update({'Authorization': f'Bearer {token}'})
 ```
 
 ### 2. Input Validation

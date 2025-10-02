@@ -1,509 +1,457 @@
 #!/usr/bin/env python3
 """
-Repository Setup and Installation - Pre-Launch Validation
-========================================================
-
-Validates system readiness for parallel DAG execution of repository setup tasks.
-Ensures all prerequisites, dependencies, and infrastructure are in place.
+Repository Setup and Installation - Prelaunch Validation
+Validates infrastructure readiness using updated workflow control patterns.
 """
 
-import json
+import sys
 import os
 import subprocess
-import sys
 from pathlib import Path
-from typing import Dict, List, Any, Tuple
-import logging
+from typing import Dict, List, Tuple, Any
+import importlib.util
 
-# Setup logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+# Add project root to path for imports
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
-class RepositorySetupPreLaunchChecker:
-    """Pre-launch validation for repository setup DAG execution."""
+try:
+    from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
+    from src.rm_ddd.core.dag_registry import DAGRegistry
+except ImportError as e:
+    print(f"❌ Critical import failure: {e}")
+    print("Ensure Beast Mode infrastructure is available")
+    sys.exit(1)
+
+class RepositorySetupPrelaunchValidator(ReflectiveModule):
+    """Validates readiness for Repository Setup and Installation implementation."""
     
     def __init__(self):
-        self.repository_root = Path.cwd()
-        self.spec_path = self.repository_root / ".kiro" / "specs" / "repository-setup-and-installation"
-        self.validation_results = []
+        super().__init__()
+        self.validation_results = {}
         self.critical_failures = []
-        
-    def run_comprehensive_check(self) -> Dict[str, Any]:
-        """Run all pre-launch validation checks."""
-        logger.info("🚀 Repository Setup Pre-Launch Validation Starting...")
-        
-        checks = [
-            ("Specification Files", self.check_specification_files),
-            ("Python Environment", self.check_python_environment),
-            ("Git Repository", self.check_git_repository),
-            ("Directory Structure", self.check_directory_structure),
-            ("Dependencies", self.check_dependencies),
-            ("Makefile System", self.check_makefile_system),
-            ("Beast Mode Framework", self.check_beast_mode_framework),
-            ("Test Infrastructure", self.check_test_infrastructure),
-            ("Parallel Execution", self.check_parallel_execution_readiness),
-            ("Resource Availability", self.check_resource_availability)
-        ]
-        
-        results = {
-            "overall_status": "unknown",
-            "checks": {},
-            "critical_failures": [],
-            "warnings": [],
-            "recommendations": []
+        self.warnings = []
+    
+    def get_capabilities(self) -> Dict[str, Any]:
+        """Return component capabilities."""
+        return {
+            'validation_types': ['infrastructure', 'repository_health', 'installation_readiness'],
+            'readiness_assessment': True,
+            'confidence_scoring': True,
+            'remediation_guidance': True
+        }
+    
+    def get_health_status(self) -> Dict[str, Any]:
+        """Return component health status."""
+        return {
+            'status': 'healthy',
+            'validation_results_count': len(self.validation_results),
+            'critical_failures_count': len(self.critical_failures),
+            'warnings_count': len(self.warnings)
+        }
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Return module information."""
+        return {
+            'name': 'RepositorySetupPrelaunchValidator',
+            'version': '1.0.0',
+            'description': 'Validates readiness for Repository Setup and Installation implementation',
+            'dependencies': ['ReflectiveModule', 'DAGRegistry']
+        }
+    
+    def graceful_degradation(self, error: Exception) -> Dict[str, Any]:
+        """Handle graceful degradation on errors."""
+        return {
+            'degraded_mode': True,
+            'error': str(error),
+            'available_functions': ['basic_validation'],
+            'recommendation': 'Run with reduced validation scope'
         }
         
-        for check_name, check_function in checks:
-            logger.info(f"🔍 Running {check_name} validation...")
-            try:
-                check_result = check_function()
-                results["checks"][check_name] = check_result
-                
-                if not check_result["passed"]:
-                    if check_result.get("critical", False):
-                        self.critical_failures.append(f"{check_name}: {check_result['message']}")
-                    else:
-                        results["warnings"].append(f"{check_name}: {check_result['message']}")
-                        
-            except Exception as e:
-                error_msg = f"{check_name} validation failed: {str(e)}"
-                logger.error(error_msg)
-                self.critical_failures.append(error_msg)
-                results["checks"][check_name] = {
-                    "passed": False,
-                    "critical": True,
-                    "message": str(e)
-                }
+    def validate_infrastructure_readiness(self) -> Dict[str, Any]:
+        """Comprehensive infrastructure readiness validation."""
+        print("🔍 Validating Repository Setup Infrastructure Readiness...")
         
-        # Determine overall status
-        if self.critical_failures:
-            results["overall_status"] = "FAILED"
-            results["critical_failures"] = self.critical_failures
-        elif results["warnings"]:
-            results["overall_status"] = "WARNING"
+        # Core infrastructure validation
+        self._validate_beast_mode_infrastructure()
+        self._validate_repository_structure()
+        self._validate_development_environment()
+        self._validate_installation_prerequisites()
+        self._validate_specification_completeness()
+        
+        return self._generate_readiness_report()
+    
+    def _validate_beast_mode_infrastructure(self):
+        """Validate Beast Mode infrastructure availability."""
+        print("\n📊 Validating Beast Mode Infrastructure...")
+        
+        # Test ReflectiveModule inheritance
+        try:
+            class TestModule(ReflectiveModule):
+                def get_capabilities(self): return {'test': True}
+                def get_health_status(self): return {'status': 'healthy'}
+                def get_module_info(self): return {'name': 'TestModule'}
+                def graceful_degradation(self, error): return {'degraded': True}
+            
+            test_module = TestModule()
+            health = test_module.get_health_status()
+            
+            self.validation_results['reflective_module'] = {
+                'status': 'available',
+                'details': 'ReflectiveModule inheritance working with abstract methods',
+                'confidence': 0.95
+            }
+            print("  ✅ ReflectiveModule inheritance: AVAILABLE")
+        except Exception as e:
+            self.critical_failures.append(f"ReflectiveModule inheritance failed: {e}")
+            self.validation_results['reflective_module'] = {
+                'status': 'failed',
+                'details': str(e),
+                'confidence': 0.0
+            }
+            print(f"  ❌ ReflectiveModule inheritance: FAILED - {e}")
+        
+        # Test DAG Registry availability
+        try:
+            dag_registry = DAGRegistry()
+            dag_registry.register_module('test_task_1', dependencies=[])
+            dag_registry.register_module('test_task_2', dependencies=['test_task_1'])
+            dependencies = dag_registry.get_dependency_chain('test_task_2')
+            stats = dag_registry.get_registry_stats()
+            
+            self.validation_results['dag_registry'] = {
+                'status': 'available',
+                'details': f'DAG Registry operational with {stats.get("total_modules", 0)} modules',
+                'confidence': 0.98
+            }
+            print("  ✅ DAG Registry: AVAILABLE")
+        except Exception as e:
+            self.critical_failures.append(f"DAG Registry validation failed: {e}")
+            self.validation_results['dag_registry'] = {
+                'status': 'failed',
+                'details': str(e),
+                'confidence': 0.0
+            }
+            print(f"  ❌ DAG Registry: FAILED - {e}")
+    
+    def _validate_repository_structure(self):
+        """Validate repository structure and specification completeness."""
+        print("\n📁 Validating Repository Structure...")
+        
+        spec_path = Path('.kiro/specs/repository-setup-and-installation')
+        required_files = ['requirements.md', 'design.md', 'tasks.md']
+        
+        if spec_path.exists():
+            missing_files = []
+            for file_name in required_files:
+                file_path = spec_path / file_name
+                if not file_path.exists():
+                    missing_files.append(file_name)
+            
+            if not missing_files:
+                self.validation_results['specification_structure'] = {
+                    'status': 'complete',
+                    'details': f'All {len(required_files)} specification files present',
+                    'confidence': 0.95
+                }
+                print(f"  ✅ Specification Files: All {len(required_files)} present")
+            else:
+                self.warnings.append(f"Missing specification files: {missing_files}")
+                self.validation_results['specification_structure'] = {
+                    'status': 'incomplete',
+                    'details': f'Missing files: {missing_files}',
+                    'confidence': 0.5
+                }
+                print(f"  ⚠️  Specification Files: Missing {missing_files}")
         else:
-            results["overall_status"] = "READY"
-            
-        # Add recommendations
-        results["recommendations"] = self.generate_recommendations(results)
-        
-        return results
-    
-    def check_specification_files(self) -> Dict[str, Any]:
-        """Validate specification files exist and are properly formatted."""
-        required_files = ["requirements.md", "design.md", "tasks.md"]
-        missing_files = []
-        
-        for file_name in required_files:
-            file_path = self.spec_path / file_name
-            if not file_path.exists():
-                missing_files.append(file_name)
-            elif file_path.stat().st_size == 0:
-                missing_files.append(f"{file_name} (empty)")
-        
-        if missing_files:
-            return {
-                "passed": False,
-                "critical": True,
-                "message": f"Missing specification files: {', '.join(missing_files)}",
-                "details": {"missing_files": missing_files}
+            self.critical_failures.append("Specification directory not found")
+            self.validation_results['specification_structure'] = {
+                'status': 'missing',
+                'details': 'Specification directory not found',
+                'confidence': 0.0
             }
-        
-        # Check tasks.md format
-        tasks_content = (self.spec_path / "tasks.md").read_text()
-        task_count = tasks_content.count("- [ ]")
-        
-        return {
-            "passed": True,
-            "message": f"All specification files present. Found {task_count} tasks.",
-            "details": {"task_count": task_count}
-        }
+            print("  ❌ Specification Directory: NOT FOUND")
     
-    def check_python_environment(self) -> Dict[str, Any]:
-        """Validate Python environment and version."""
+    def _validate_development_environment(self):
+        """Validate development environment readiness."""
+        print("\n💻 Validating Development Environment...")
+        
+        # Python version check
+        python_version = sys.version_info
+        if python_version >= (3, 9):
+            self.validation_results['python_version'] = {
+                'status': 'compatible',
+                'details': f'Python {python_version.major}.{python_version.minor}.{python_version.micro}',
+                'confidence': 0.95
+            }
+            print(f"  ✅ Python Version: {python_version.major}.{python_version.minor}.{python_version.micro}")
+        else:
+            self.critical_failures.append(f"Python version {python_version.major}.{python_version.minor} < 3.9")
+            self.validation_results['python_version'] = {
+                'status': 'incompatible',
+                'details': f'Python {python_version.major}.{python_version.minor} < 3.9 required',
+                'confidence': 0.0
+            }
+            print(f"  ❌ Python Version: {python_version.major}.{python_version.minor} (requires 3.9+)")
+        
+        # Git availability check
         try:
-            python_version = sys.version_info
-            if python_version < (3, 9):
-                return {
-                    "passed": False,
-                    "critical": True,
-                    "message": f"Python 3.9+ required, found {python_version.major}.{python_version.minor}"
+            result = subprocess.run(['git', '--version'], capture_output=True, text=True, timeout=5)
+            if result.returncode == 0:
+                git_version = result.stdout.strip()
+                self.validation_results['git_availability'] = {
+                    'status': 'available',
+                    'details': git_version,
+                    'confidence': 0.95
                 }
-            
-            # Check virtual environment
-            in_venv = hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)
-            
-            return {
-                "passed": True,
-                "message": f"Python {python_version.major}.{python_version.minor}.{python_version.micro}, venv: {in_venv}",
-                "details": {
-                    "version": f"{python_version.major}.{python_version.minor}.{python_version.micro}",
-                    "virtual_env": in_venv
+                print(f"  ✅ Git: {git_version}")
+            else:
+                self.critical_failures.append("Git command failed")
+                self.validation_results['git_availability'] = {
+                    'status': 'failed',
+                    'details': 'Git command execution failed',
+                    'confidence': 0.0
                 }
+                print("  ❌ Git: Command execution failed")
+        except (subprocess.TimeoutExpired, FileNotFoundError) as e:
+            self.critical_failures.append(f"Git not available: {e}")
+            self.validation_results['git_availability'] = {
+                'status': 'missing',
+                'details': str(e),
+                'confidence': 0.0
             }
-            
-        except Exception as e:
-            return {
-                "passed": False,
-                "critical": True,
-                "message": f"Python environment check failed: {str(e)}"
-            }
+            print(f"  ❌ Git: NOT AVAILABLE - {e}")
     
-    def check_git_repository(self) -> Dict[str, Any]:
-        """Validate git repository status and configuration."""
-        try:
-            # Check if we're in a git repository
-            result = subprocess.run(["git", "rev-parse", "--git-dir"], 
-                                  capture_output=True, text=True, cwd=self.repository_root)
-            if result.returncode != 0:
-                return {
-                    "passed": False,
-                    "critical": True,
-                    "message": "Not in a git repository"
-                }
-            
-            # Check git status
-            result = subprocess.run(["git", "status", "--porcelain"], 
-                                  capture_output=True, text=True, cwd=self.repository_root)
-            
-            untracked_files = [line for line in result.stdout.split('\n') if line.startswith('??')]
-            modified_files = [line for line in result.stdout.split('\n') if line and not line.startswith('??')]
-            
-            return {
-                "passed": True,
-                "message": f"Git repository ready. {len(untracked_files)} untracked, {len(modified_files)} modified files",
-                "details": {
-                    "untracked_count": len(untracked_files),
-                    "modified_count": len(modified_files)
-                }
-            }
-            
-        except Exception as e:
-            return {
-                "passed": False,
-                "critical": True,
-                "message": f"Git repository check failed: {str(e)}"
-            }
-    
-    def check_directory_structure(self) -> Dict[str, Any]:
-        """Validate required directory structure exists."""
-        required_dirs = [
-            ".kiro",
-            ".kiro/specs",
-            ".kiro/steering",
-            "src",
-            "tests",
-            "scripts"
-        ]
+    def _validate_installation_prerequisites(self):
+        """Validate installation prerequisites and system readiness."""
+        print("\n🔧 Validating Installation Prerequisites...")
         
-        missing_dirs = []
-        for dir_path in required_dirs:
-            full_path = self.repository_root / dir_path
-            if not full_path.exists():
-                missing_dirs.append(dir_path)
-        
-        if missing_dirs:
-            return {
-                "passed": False,
-                "critical": True,
-                "message": f"Missing required directories: {', '.join(missing_dirs)}"
-            }
-        
-        return {
-            "passed": True,
-            "message": "All required directories present"
-        }
-    
-    def check_dependencies(self) -> Dict[str, Any]:
-        """Check if required dependencies are available."""
-        required_packages = [
-            "pytest",
-            "pathlib",
-            "typing",
-            "json",
-            "subprocess"
-        ]
-        
-        missing_packages = []
-        for package in required_packages:
+        # Check for Makefile
+        makefile_path = Path('Makefile')
+        if makefile_path.exists():
             try:
-                __import__(package)
-            except ImportError:
-                missing_packages.append(package)
-        
-        if missing_packages:
-            return {
-                "passed": False,
-                "critical": True,
-                "message": f"Missing required packages: {', '.join(missing_packages)}"
-            }
-        
-        return {
-            "passed": True,
-            "message": "All required dependencies available"
-        }
-    
-    def check_makefile_system(self) -> Dict[str, Any]:
-        """Validate Makefile system is functional."""
-        makefile_path = self.repository_root / "Makefile"
-        
-        if not makefile_path.exists():
-            return {
-                "passed": False,
-                "critical": True,
-                "message": "Makefile not found"
-            }
-        
-        try:
-            # Test make help
-            result = subprocess.run(["make", "help"], 
-                                  capture_output=True, text=True, cwd=self.repository_root)
-            
-            if result.returncode != 0:
-                return {
-                    "passed": False,
-                    "critical": False,
-                    "message": "Makefile exists but 'make help' failed"
+                content = makefile_path.read_text()
+                if 'install:' in content:
+                    self.validation_results['makefile_install'] = {
+                        'status': 'available',
+                        'details': 'Makefile with install target found',
+                        'confidence': 0.90
+                    }
+                    print("  ✅ Makefile install target: AVAILABLE")
+                else:
+                    self.warnings.append("Makefile exists but no install target found")
+                    self.validation_results['makefile_install'] = {
+                        'status': 'incomplete',
+                        'details': 'Makefile exists but no install target',
+                        'confidence': 0.3
+                    }
+                    print("  ⚠️  Makefile install target: MISSING")
+            except Exception as e:
+                self.warnings.append(f"Could not read Makefile: {e}")
+                self.validation_results['makefile_install'] = {
+                    'status': 'error',
+                    'details': str(e),
+                    'confidence': 0.0
                 }
-            
-            # Check for install target
-            makefile_content = makefile_path.read_text()
-            has_install = "install:" in makefile_content
-            
-            return {
-                "passed": True,
-                "message": f"Makefile functional, install target: {has_install}",
-                "details": {"has_install_target": has_install}
+                print(f"  ❌ Makefile: READ ERROR - {e}")
+        else:
+            self.warnings.append("Makefile not found")
+            self.validation_results['makefile_install'] = {
+                'status': 'missing',
+                'details': 'Makefile not found',
+                'confidence': 0.0
             }
-            
-        except Exception as e:
-            return {
-                "passed": False,
-                "critical": False,
-                "message": f"Makefile validation failed: {str(e)}"
+            print("  ⚠️  Makefile: NOT FOUND")
+        
+        # Check write permissions for key directories
+        key_dirs = ['.kiro', 'src', 'scripts']
+        permission_issues = []
+        
+        for dir_name in key_dirs:
+            dir_path = Path(dir_name)
+            if dir_path.exists():
+                if not os.access(dir_path, os.W_OK):
+                    permission_issues.append(dir_name)
+            else:
+                # Check if we can create the directory
+                try:
+                    test_dir = dir_path / 'test_write'
+                    test_dir.mkdir(parents=True, exist_ok=True)
+                    test_dir.rmdir()
+                except Exception:
+                    permission_issues.append(dir_name)
+        
+        if not permission_issues:
+            self.validation_results['directory_permissions'] = {
+                'status': 'adequate',
+                'details': f'Write access confirmed for {len(key_dirs)} key directories',
+                'confidence': 0.90
             }
+            print(f"  ✅ Directory Permissions: Adequate for {len(key_dirs)} directories")
+        else:
+            self.warnings.append(f"Permission issues in directories: {permission_issues}")
+            self.validation_results['directory_permissions'] = {
+                'status': 'limited',
+                'details': f'Permission issues: {permission_issues}',
+                'confidence': 0.4
+            }
+            print(f"  ⚠️  Directory Permissions: Issues in {permission_issues}")
     
-    def check_beast_mode_framework(self) -> Dict[str, Any]:
-        """Check Beast Mode framework availability."""
-        beast_mode_path = self.repository_root / "src" / "beast_mode"
+    def _validate_specification_completeness(self):
+        """Validate specification completeness and task readiness."""
+        print("\n📋 Validating Specification Completeness...")
         
-        if not beast_mode_path.exists():
-            return {
-                "passed": False,
-                "critical": False,
-                "message": "Beast Mode framework not found in src/beast_mode"
-            }
+        spec_path = Path('.kiro/specs/repository-setup-and-installation')
         
-        # Check for ReflectiveModule
-        core_path = beast_mode_path / "core"
-        if core_path.exists():
-            return {
-                "passed": True,
-                "message": "Beast Mode framework available"
-            }
+        if not spec_path.exists():
+            self.critical_failures.append("Specification directory missing")
+            return
         
-        return {
-            "passed": False,
-            "critical": False,
-            "message": "Beast Mode framework incomplete (missing core)"
-        }
-    
-    def check_test_infrastructure(self) -> Dict[str, Any]:
-        """Validate test generation infrastructure."""
-        test_generator_path = self.repository_root / "scripts" / "generate_missing_tests.py"
-        
-        if not test_generator_path.exists():
-            return {
-                "passed": False,
-                "critical": False,
-                "message": "Test generator script not found"
-            }
-        
-        tests_dir = self.repository_root / "tests"
-        if not tests_dir.exists():
-            return {
-                "passed": False,
-                "critical": False,
-                "message": "Tests directory not found"
-            }
-        
-        return {
-            "passed": True,
-            "message": "Test infrastructure available"
-        }
-    
-    def check_parallel_execution_readiness(self) -> Dict[str, Any]:
-        """Check system readiness for parallel task execution."""
-        try:
-            import concurrent.futures
-            import multiprocessing
-            
-            cpu_count = multiprocessing.cpu_count()
-            
-            # Test parallel execution capability
-            with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-                futures = [executor.submit(lambda: True) for _ in range(2)]
-                results = [f.result() for f in futures]
-            
-            return {
-                "passed": True,
-                "message": f"Parallel execution ready, {cpu_count} CPUs available",
-                "details": {"cpu_count": cpu_count}
-            }
-            
-        except Exception as e:
-            return {
-                "passed": False,
-                "critical": True,
-                "message": f"Parallel execution check failed: {str(e)}"
-            }
-    
-    def check_resource_availability(self) -> Dict[str, Any]:
-        """Check system resource availability."""
-        try:
-            import shutil
-            
-            # Check disk space
-            disk_usage = shutil.disk_usage(self.repository_root)
-            free_gb = disk_usage.free / (1024**3)
-            
-            if free_gb < 1.0:
-                return {
-                    "passed": False,
-                    "critical": True,
-                    "message": f"Insufficient disk space: {free_gb:.1f}GB free"
+        # Check tasks.md for implementation readiness
+        tasks_file = spec_path / 'tasks.md'
+        if tasks_file.exists():
+            try:
+                content = tasks_file.read_text()
+                
+                # Count total tasks and completed tasks
+                total_tasks = content.count('- [ ]') + content.count('- [x]')
+                completed_tasks = content.count('- [x]')
+                
+                if total_tasks > 0:
+                    completion_rate = (completed_tasks / total_tasks) * 100
+                    self.validation_results['task_completeness'] = {
+                        'status': 'analyzed',
+                        'details': f'{completed_tasks}/{total_tasks} tasks completed ({completion_rate:.1f}%)',
+                        'confidence': 0.85,
+                        'completion_rate': completion_rate
+                    }
+                    print(f"  📊 Task Analysis: {completed_tasks}/{total_tasks} completed ({completion_rate:.1f}%)")
+                    
+                    if completion_rate < 10:
+                        print(f"  💡 Ready for implementation - most tasks are pending")
+                    elif completion_rate > 90:
+                        print(f"  🎉 Implementation nearly complete!")
+                    else:
+                        print(f"  🔄 Implementation in progress")
+                else:
+                    self.warnings.append("No tasks found in tasks.md")
+                    self.validation_results['task_completeness'] = {
+                        'status': 'empty',
+                        'details': 'No tasks found in tasks.md',
+                        'confidence': 0.2
+                    }
+                    print("  ⚠️  Task Analysis: No tasks found")
+                    
+            except Exception as e:
+                self.warnings.append(f"Could not analyze tasks.md: {e}")
+                self.validation_results['task_completeness'] = {
+                    'status': 'error',
+                    'details': str(e),
+                    'confidence': 0.0
                 }
-            
-            return {
-                "passed": True,
-                "message": f"Resources available: {free_gb:.1f}GB free disk space",
-                "details": {"free_disk_gb": free_gb}
+                print(f"  ❌ Task Analysis: ERROR - {e}")
+        else:
+            self.warnings.append("tasks.md file not found")
+            self.validation_results['task_completeness'] = {
+                'status': 'missing',
+                'details': 'tasks.md file not found',
+                'confidence': 0.0
             }
-            
-        except Exception as e:
-            return {
-                "passed": False,
-                "critical": False,
-                "message": f"Resource check failed: {str(e)}"
-            }
+            print("  ❌ Task Analysis: tasks.md NOT FOUND")
     
-    def generate_recommendations(self, results: Dict[str, Any]) -> List[str]:
-        """Generate recommendations based on validation results."""
+    def _generate_readiness_report(self) -> Dict[str, Any]:
+        """Generate comprehensive readiness report."""
+        print("\n📋 Generating Readiness Report...")
+        
+        # Calculate overall readiness score
+        total_confidence = sum(result.get('confidence', 0) for result in self.validation_results.values())
+        max_confidence = len(self.validation_results)
+        overall_confidence = (total_confidence / max_confidence) if max_confidence > 0 else 0
+        
+        # Determine readiness status
+        if len(self.critical_failures) == 0 and overall_confidence >= 0.8:
+            readiness_status = "READY"
+            readiness_color = "🟢"
+        elif len(self.critical_failures) == 0 and overall_confidence >= 0.6:
+            readiness_status = "READY_WITH_WARNINGS"
+            readiness_color = "🟡"
+        else:
+            readiness_status = "NOT_READY"
+            readiness_color = "🔴"
+        
+        report = {
+            'overall_status': readiness_status,
+            'confidence_score': overall_confidence,
+            'critical_failures': self.critical_failures,
+            'warnings': self.warnings,
+            'validation_results': self.validation_results,
+            'recommendations': self._generate_recommendations()
+        }
+        
+        # Print summary
+        print(f"\n{readiness_color} READINESS STATUS: {readiness_status}")
+        print(f"📊 Confidence Score: {overall_confidence:.2f} ({overall_confidence*100:.1f}%)")
+        
+        if self.critical_failures:
+            print(f"\n❌ Critical Failures ({len(self.critical_failures)}):")
+            for failure in self.critical_failures:
+                print(f"  • {failure}")
+        
+        if self.warnings:
+            print(f"\n⚠️  Warnings ({len(self.warnings)}):")
+            for warning in self.warnings:
+                print(f"  • {warning}")
+        
+        return report
+    
+    def _generate_recommendations(self) -> List[str]:
+        """Generate actionable recommendations based on validation results."""
         recommendations = []
         
-        if results["overall_status"] == "FAILED":
-            recommendations.append("❌ CRITICAL: Fix all critical failures before launching")
-            recommendations.append("📋 Review critical_failures list for specific issues")
+        if self.critical_failures:
+            recommendations.append("Resolve all critical failures before proceeding with implementation")
         
-        if results["overall_status"] == "WARNING":
-            recommendations.append("⚠️  WARNING: Address warnings for optimal execution")
-            recommendations.append("🚀 Launch possible but may encounter issues")
+        if any(result.get('status') == 'missing' for result in self.validation_results.values()):
+            recommendations.append("Install missing prerequisites and dependencies")
         
-        if results["overall_status"] == "READY":
-            recommendations.append("✅ READY: All systems go for parallel DAG execution")
-            recommendations.append("🎯 Estimated execution time: 12-16 hours")
-            recommendations.append("👥 Recommended workers: 3-4 parallel")
+        task_result = self.validation_results.get('task_completeness', {})
+        completion_rate = task_result.get('completion_rate', 0)
+        if completion_rate < 10:
+            recommendations.append("Ready to begin implementation - start with Phase 1 tasks")
+        elif completion_rate > 90:
+            recommendations.append("Implementation nearly complete - focus on final validation and testing")
         
-        # Specific recommendations based on checks
-        checks = results.get("checks", {})
+        if len(self.warnings) > 3:
+            recommendations.append("Address warnings to improve implementation success rate")
         
-        if "Beast Mode Framework" in checks and not checks["Beast Mode Framework"]["passed"]:
-            recommendations.append("🐺 Consider implementing ReflectiveModule pattern manually")
-        
-        if "Test Infrastructure" in checks and not checks["Test Infrastructure"]["passed"]:
-            recommendations.append("🧪 Test generation will be manual without test generator")
+        if not recommendations:
+            recommendations.append("System is ready for Repository Setup and Installation implementation")
         
         return recommendations
-    
-    def save_results(self, results: Dict[str, Any]) -> str:
-        """Save validation results to file."""
-        output_file = self.spec_path / "LAUNCH_READINESS.md"
-        
-        content = f"""# Repository Setup and Installation - Launch Readiness Report
-
-## Overall Status: {results['overall_status']}
-
-Generated: {subprocess.run(['date'], capture_output=True, text=True).stdout.strip()}
-
-## Validation Summary
-
-"""
-        
-        for check_name, check_result in results["checks"].items():
-            status_icon = "✅" if check_result["passed"] else ("❌" if check_result.get("critical") else "⚠️")
-            content += f"- {status_icon} **{check_name}**: {check_result['message']}\n"
-        
-        if results["critical_failures"]:
-            content += "\n## Critical Failures\n\n"
-            for failure in results["critical_failures"]:
-                content += f"- ❌ {failure}\n"
-        
-        if results["warnings"]:
-            content += "\n## Warnings\n\n"
-            for warning in results["warnings"]:
-                content += f"- ⚠️ {warning}\n"
-        
-        content += "\n## Recommendations\n\n"
-        for recommendation in results["recommendations"]:
-            content += f"- {recommendation}\n"
-        
-        content += f"""
-## Next Steps
-
-### If Status is READY ✅
-```bash
-# Launch parallel DAG execution
-./scripts/repository_setup_background_launch.sh
-```
-
-### If Status is WARNING ⚠️
-1. Review warnings above
-2. Decide if acceptable risk
-3. Launch with caution or fix issues first
-
-### If Status is FAILED ❌
-1. Fix all critical failures
-2. Re-run pre-launch check
-3. Do not launch until READY
-
-## Technical Details
-
-```json
-{json.dumps(results, indent=2)}
-```
-"""
-        
-        output_file.write_text(content)
-        return str(output_file)
 
 def main():
     """Main execution function."""
-    checker = RepositorySetupPreLaunchChecker()
+    print("🚀 Repository Setup and Installation - Prelaunch Validation")
+    print("=" * 70)
     
-    print("🚀 Repository Setup and Installation - Pre-Launch Validation")
-    print("=" * 60)
-    
-    results = checker.run_comprehensive_check()
-    
-    # Save results
-    output_file = checker.save_results(results)
-    
-    # Print summary
-    print(f"\n📊 Validation Complete - Status: {results['overall_status']}")
-    print(f"📄 Full report saved to: {output_file}")
-    
-    if results["overall_status"] == "READY":
-        print("\n✅ SYSTEM READY FOR PARALLEL DAG EXECUTION")
-        print("🚀 Run: ./scripts/repository_setup_background_launch.sh")
-    elif results["overall_status"] == "WARNING":
-        print("\n⚠️  SYSTEM HAS WARNINGS - REVIEW BEFORE LAUNCH")
-        print("📋 Check warnings in the report above")
-    else:
-        print("\n❌ SYSTEM NOT READY - CRITICAL FAILURES DETECTED")
-        print("🔧 Fix critical issues before attempting launch")
-        return 1
-    
-    return 0
+    try:
+        validator = RepositorySetupPrelaunchValidator()
+        report = validator.validate_infrastructure_readiness()
+        
+        # Exit with appropriate code
+        if report['overall_status'] == 'READY':
+            print(f"\n✅ VALIDATION COMPLETE: System ready for implementation")
+            sys.exit(0)
+        elif report['overall_status'] == 'READY_WITH_WARNINGS':
+            print(f"\n⚠️  VALIDATION COMPLETE: Ready with warnings - proceed with caution")
+            sys.exit(0)
+        else:
+            print(f"\n❌ VALIDATION FAILED: Resolve critical issues before proceeding")
+            sys.exit(1)
+            
+    except Exception as e:
+        print(f"\n💥 VALIDATION ERROR: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

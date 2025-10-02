@@ -11,6 +11,7 @@ Purpose: Track launched specifications, their status, and check-in history
 
 import json
 import asyncio
+import os
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any, Set
 from dataclasses import dataclass, asdict
@@ -24,6 +25,7 @@ except ImportError:
     REDIS_AVAILABLE = False
 
 from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
+from src.security.secure_credentials import get_secure_credentials
 
 
 class ExecutionStatus(Enum):
@@ -54,6 +56,7 @@ class ExecutionRecord:
     efficiency_gain: Optional[float] = None
     total_tasks: Optional[int] = None
     completed_tasks: Optional[int] = None
+    estimated_hours: Optional[float] = None
     error_message: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
 
@@ -73,11 +76,16 @@ class CheckinRecord:
 class RedisExecutionTracker(ReflectiveModule):
     """Redis-based execution tracking system."""
     
-    def __init__(self, redis_host: str = "192.168.1.119", redis_port: int = 6379, redis_password: str = "beastmode2025"):
+    def __init__(self, redis_host: str = None, redis_port: int = None, redis_password: str = None):
         super().__init__()
-        self.redis_host = redis_host
-        self.redis_port = redis_port
-        self.redis_password = redis_password
+        
+        # ✅ SECURE: Use secure credentials helper for configuration
+        creds = get_secure_credentials(strict_mode=False)
+        redis_config = creds.get_redis_config()
+        
+        self.redis_host = redis_host or redis_config['host']
+        self.redis_port = redis_port or redis_config['port']
+        self.redis_password = redis_password or redis_config['password']
         self.redis_client: Optional[redis.Redis] = None
         self.tracker_id = f"execution_tracker_{uuid.uuid4().hex[:8]}"
         

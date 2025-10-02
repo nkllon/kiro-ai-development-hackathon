@@ -1,400 +1,325 @@
 #!/bin/bash
-"""
-Repository Setup and Installation - Background Launch Script
-==========================================================
 
-Launches parallel DAG execution in the background with comprehensive monitoring,
-logging, and progress tracking. Provides real-time status updates and handles
-graceful shutdown and error recovery.
-"""
+# Repository Setup and Installation - Background Launch Script
+# Updated with proven workflow control patterns
 
 set -euo pipefail
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-SPEC_DIR="$PROJECT_ROOT/.kiro/specs/repository-setup-and-installation"
-LOG_DIR="$PROJECT_ROOT/logs/repository-setup-$(date +%Y%m%d-%H%M%S)"
-PID_FILE="$LOG_DIR/orchestrator.pid"
-STATUS_FILE="$LOG_DIR/status.json"
-PROGRESS_FILE="$LOG_DIR/progress.log"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+LOG_DIR="$PROJECT_ROOT/logs"
+EXECUTION_ID="repository_setup_$(date +%Y%m%d_%H%M%S)"
+PID_FILE="$LOG_DIR/${EXECUTION_ID}.pid"
+LOG_FILE="$LOG_DIR/${EXECUTION_ID}.log"
+PROGRESS_FILE="$LOG_DIR/${EXECUTION_ID}_progress.json"
+LOCK_FILE="$LOG_DIR/repository_setup.lock"
 
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-PURPLE='\033[0;35m'
-CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Logging functions
 log_info() {
-    echo -e "${BLUE}[INFO]${NC} $(date '+%Y-%m-%d %H:%M:%S') $1" | tee -a "$LOG_DIR/launch.log"
-}
-
-log_warn() {
-    echo -e "${YELLOW}[WARN]${NC} $(date '+%Y-%m-%d %H:%M:%S') $1" | tee -a "$LOG_DIR/launch.log"
-}
-
-log_error() {
-    echo -e "${RED}[ERROR]${NC} $(date '+%Y-%m-%d %H:%M:%S') $1" | tee -a "$LOG_DIR/launch.log"
+    echo -e "${BLUE}[INFO]${NC} $(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
 }
 
 log_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $(date '+%Y-%m-%d %H:%M:%S') $1" | tee -a "$LOG_DIR/launch.log"
+    echo -e "${GREEN}[SUCCESS]${NC} $(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
+}
+
+log_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
+}
+
+log_error() {
+    echo -e "${RED}[ERROR]${NC} $(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
+}
+
+# Execution locking functions (proven pattern from spec-creation-dag-compliance)
+acquire_lock() {
+    log_info "Checking for concurrent executions..."
+    
+    if [[ -f "$LOCK_FILE" ]]; then
+        local lock_pid=$(cat "$LOCK_FILE" 2>/dev/null || echo "")
+        if [[ -n "$lock_pid" ]] && kill -0 "$lock_pid" 2>/dev/null; then
+            log_error "Another execution is already running (PID: $lock_pid)"
+            log_error "Wait for completion or stop with: $0 stop"
+            exit 1
+        else
+            log_warning "Stale lock file found, removing..."
+            rm -f "$LOCK_FILE"
+        fi
+    fi
+    
+    echo $$ > "$LOCK_FILE"
+    log_info "Execution lock acquired (PID: $$)"
+}
+
+release_lock() {
+    if [[ -f "$LOCK_FILE" ]]; then
+        rm -f "$LOCK_FILE"
+        log_info "Execution lock released"
+    fi
+}
+
+# Progress tracking functions
+update_progress() {
+    local phase="$1"
+    local status="$2"
+    local details="$3"
+    
+    cat > "$PROGRESS_FILE" << EOF
+{
+    "execution_id": "$EXECUTION_ID",
+    "timestamp": "$(date -Iseconds)",
+    "current_phase": "$phase",
+    "status": "$status",
+    "details": "$details",
+    "log_file": "$LOG_FILE",
+    "pid_file": "$PID_FILE",
+    "lock_file": "$LOCK_FILE"
+}
+EOF
 }
 
 # Cleanup function
 cleanup() {
-    log_info "🧹 Cleaning up background processes..."
+    local exit_code=$?
+    log_info "Cleaning up background launch process..."
+    
+    # Release execution lock
+    release_lock
     
     if [[ -f "$PID_FILE" ]]; then
-        local pid=$(cat "$PID_FILE")
-        if kill -0 "$pid" 2>/dev/null; then
-            log_info "⏹️  Stopping orchestrator process (PID: $pid)"
-            kill -TERM "$pid" 2>/dev/null || true
-            
-            # Wait for graceful shutdown
-            local count=0
-            while kill -0 "$pid" 2>/dev/null && [[ $count -lt 10 ]]; do
-                sleep 1
-                ((count++))
-            done
-            
-            # Force kill if still running
-            if kill -0 "$pid" 2>/dev/null; then
-                log_warn "🔨 Force killing orchestrator process"
-                kill -KILL "$pid" 2>/dev/null || true
-            fi
-        fi
         rm -f "$PID_FILE"
+        log_info "Removed PID file: $PID_FILE"
     fi
     
-    log_info "✅ Cleanup complete"
+    if [[ $exit_code -eq 0 ]]; then
+        update_progress "cleanup" "completed" "Background launch completed successfully"
+        log_success "Background launch completed successfully"
+    else
+        update_progress "cleanup" "failed" "Background launch failed with exit code $exit_code"
+        log_error "Background launch failed with exit code $exit_code"
+    fi
+    
+    exit $exit_code
 }
 
-# Set up signal handlers
+# Set up cleanup trap
 trap cleanup EXIT INT TERM
 
-# Create log directory
-create_log_directory() {
-    log_info "📁 Creating log directory: $LOG_DIR"
+# Main execution function
+main() {
+    log_info "🚀 Starting Repository Setup and Installation Background Launch"
+    log_info "Execution ID: $EXECUTION_ID"
+    log_info "Log File: $LOG_FILE"
+    log_info "Progress File: $PROGRESS_FILE"
+    
+    # Create logs directory
     mkdir -p "$LOG_DIR"
     
-    # Create initial status file
-    cat > "$STATUS_FILE" << EOF
-{
-    "status": "initializing",
-    "start_time": "$(date -Iseconds)",
-    "pid": null,
-    "progress": {
-        "completed_tasks": 0,
-        "total_tasks": 0,
-        "current_phase": "initialization"
-    },
-    "log_directory": "$LOG_DIR"
-}
-EOF
-}
-
-# Pre-launch validation
-run_prelaunch_check() {
-    log_info "🔍 Running pre-launch validation..."
+    # Acquire execution lock to prevent concurrent runs
+    acquire_lock
     
-    if ! python3 "$SCRIPT_DIR/repository_setup_prelaunch_check.py"; then
-        log_error "❌ Pre-launch validation failed"
-        log_error "🔧 Fix critical issues before launching"
-        exit 1
+    # Store PID for monitoring
+    echo $$ > "$PID_FILE"
+    log_info "Background process PID: $$"
+    
+    # Phase 1: Pre-launch validation
+    update_progress "prelaunch_validation" "running" "Running infrastructure readiness checks"
+    log_info "Phase 1: Running prelaunch validation..."
+    
+    if python3 "$SCRIPT_DIR/repository_setup_prelaunch_check.py" >> "$LOG_FILE" 2>&1; then
+        log_success "Prelaunch validation completed successfully"
+        update_progress "prelaunch_validation" "completed" "Infrastructure validation passed"
+    else
+        log_error "Prelaunch validation failed"
+        update_progress "prelaunch_validation" "failed" "Infrastructure validation failed - check logs"
+        return 1
     fi
     
-    log_success "✅ Pre-launch validation passed"
-}
-
-# Start progress monitor
-start_progress_monitor() {
-    log_info "📊 Starting progress monitor..."
+    # Phase 2: Launch parallel execution
+    update_progress "parallel_execution" "running" "Launching parallel execution with updated workflow control"
+    log_info "Phase 2: Launching parallel execution..."
     
-    # Background progress monitoring
-    (
-        while [[ -f "$PID_FILE" ]]; do
-            if [[ -f "$SPEC_DIR/LAUNCH_SUMMARY.md" ]]; then
-                # Extract progress from summary file
-                local completed=$(grep -o "Completed Tasks.*" "$SPEC_DIR/LAUNCH_SUMMARY.md" | head -1 || echo "0/0")
-                local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-                echo "[$timestamp] Progress: $completed" >> "$PROGRESS_FILE"
-            fi
-            sleep 10
-        done
-    ) &
-    
-    local monitor_pid=$!
-    echo "$monitor_pid" > "$LOG_DIR/monitor.pid"
-}
-
-# Launch orchestrator
-launch_orchestrator() {
-    local max_workers=${1:-4}
-    
-    log_info "🚀 Launching DAG orchestrator with $max_workers workers..."
-    
-    # Update status
-    jq --arg status "launching" --arg pid "$$" \
-       '.status = $status | .launcher_pid = ($pid | tonumber)' \
-       "$STATUS_FILE" > "$STATUS_FILE.tmp" && mv "$STATUS_FILE.tmp" "$STATUS_FILE"
-    
-    # Launch orchestrator in background
-    python3 "$SCRIPT_DIR/repository_setup_launch.py" "$max_workers" \
-        > "$LOG_DIR/orchestrator.log" 2>&1 &
-    
-    local orchestrator_pid=$!
-    echo "$orchestrator_pid" > "$PID_FILE"
-    
-    # Update status with PID
-    jq --arg pid "$orchestrator_pid" \
-       '.status = "running" | .pid = ($pid | tonumber)' \
-       "$STATUS_FILE" > "$STATUS_FILE.tmp" && mv "$STATUS_FILE.tmp" "$STATUS_FILE"
-    
-    log_success "🎯 Orchestrator launched (PID: $orchestrator_pid)"
-    log_info "📄 Logs: $LOG_DIR/orchestrator.log"
-    log_info "📊 Status: $STATUS_FILE"
-    
-    return $orchestrator_pid
-}
-
-# Monitor execution
-monitor_execution() {
-    local orchestrator_pid=$1
-    
-    log_info "👀 Monitoring execution (PID: $orchestrator_pid)..."
-    
-    # Start progress monitor
-    start_progress_monitor
-    
-    # Wait for completion or failure
-    local exit_code=0
-    
-    while kill -0 "$orchestrator_pid" 2>/dev/null; do
-        # Show live progress
-        if [[ -f "$PROGRESS_FILE" ]]; then
-            local last_progress=$(tail -1 "$PROGRESS_FILE" 2>/dev/null || echo "No progress yet")
-            echo -ne "\r${CYAN}📈 $last_progress${NC}"
-        fi
-        
-        sleep 2
-    done
-    
-    # Get final exit code
-    wait "$orchestrator_pid" || exit_code=$?
-    
-    echo # New line after progress display
-    
-    # Update final status
-    local final_status="completed"
-    if [[ $exit_code -ne 0 ]]; then
-        final_status="failed"
+    if python3 "$SCRIPT_DIR/repository_setup_launch.py" >> "$LOG_FILE" 2>&1; then
+        log_success "Parallel execution completed successfully"
+        update_progress "parallel_execution" "completed" "All phases executed successfully"
+    else
+        log_error "Parallel execution failed"
+        update_progress "parallel_execution" "failed" "Parallel execution failed - check logs"
+        return 1
     fi
     
-    jq --arg status "$final_status" --arg end_time "$(date -Iseconds)" --arg exit_code "$exit_code" \
-       '.status = $status | .end_time = $end_time | .exit_code = ($exit_code | tonumber)' \
-       "$STATUS_FILE" > "$STATUS_FILE.tmp" && mv "$STATUS_FILE.tmp" "$STATUS_FILE"
+    # Phase 3: Post-execution validation
+    update_progress "post_validation" "running" "Running post-execution validation"
+    log_info "Phase 3: Running post-execution validation..."
     
-    return $exit_code
+    # Validate execution results
+    if validate_execution_results; then
+        log_success "Post-execution validation completed"
+        update_progress "post_validation" "completed" "Execution results validated successfully"
+    else
+        log_warning "Post-execution validation found issues"
+        update_progress "post_validation" "completed_with_warnings" "Validation completed with warnings"
+    fi
+    
+    # Phase 4: Generate final report
+    update_progress "reporting" "running" "Generating final execution report"
+    log_info "Phase 4: Generating final report..."
+    
+    generate_final_report
+    log_success "Final report generated"
+    update_progress "reporting" "completed" "Final report generated successfully"
+    
+    log_success "🎉 Repository Setup and Installation implementation completed successfully!"
+    log_info "Check logs and reports in: $LOG_DIR"
 }
 
-# Generate final report
+# Validation function
+validate_execution_results() {
+    log_info "Validating execution results..."
+    
+    local validation_passed=true
+    
+    # Check if specification files exist
+    local spec_dir="$PROJECT_ROOT/.kiro/specs/repository-setup-and-installation"
+    if [[ ! -d "$spec_dir" ]]; then
+        log_error "Specification directory not found: $spec_dir"
+        validation_passed=false
+    fi
+    
+    # Check for execution logs
+    local execution_logs=$(find "$LOG_DIR" -name "repository_setup_execution_*.json" -mmin -60 | wc -l)
+    if [[ $execution_logs -eq 0 ]]; then
+        log_warning "No recent execution logs found"
+        validation_passed=false
+    else
+        log_info "Found $execution_logs recent execution log(s)"
+    fi
+    
+    # Check for any critical errors in logs
+    if grep -q "CRITICAL\|FATAL" "$LOG_FILE" 2>/dev/null; then
+        log_warning "Critical errors found in execution logs"
+        validation_passed=false
+    fi
+    
+    if [[ "$validation_passed" == "true" ]]; then
+        log_success "Execution results validation passed"
+        return 0
+    else
+        log_warning "Execution results validation found issues"
+        return 1
+    fi
+}
+
+# Report generation function
 generate_final_report() {
-    local exit_code=$1
+    local report_file="$LOG_DIR/${EXECUTION_ID}_final_report.md"
     
-    log_info "📋 Generating final execution report..."
-    
-    local report_file="$LOG_DIR/FINAL_REPORT.md"
+    log_info "Generating final report: $report_file"
     
     cat > "$report_file" << EOF
-# Repository Setup and Installation - Final Execution Report
+# Repository Setup and Installation - Execution Report
 
 ## Execution Summary
+- **Execution ID**: $EXECUTION_ID
+- **Start Time**: $(head -1 "$LOG_FILE" | grep -o '[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\} [0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\}' || echo "Unknown")
+- **End Time**: $(date '+%Y-%m-%d %H:%M:%S')
+- **Log File**: $LOG_FILE
+- **Progress File**: $PROGRESS_FILE
 
-- **Start Time**: $(jq -r '.start_time' "$STATUS_FILE")
-- **End Time**: $(jq -r '.end_time // "N/A"' "$STATUS_FILE")
-- **Final Status**: $(jq -r '.status' "$STATUS_FILE")
-- **Exit Code**: $exit_code
-- **Log Directory**: $LOG_DIR
+## Phase Results
+$(grep -E "\[SUCCESS\].*Phase [0-9]:" "$LOG_FILE" | sed 's/.*\[SUCCESS\]/✅/' || echo "No phase completions found")
 
-## Files Generated
-
-- **Orchestrator Log**: \`$LOG_DIR/orchestrator.log\`
-- **Launch Log**: \`$LOG_DIR/launch.log\`
-- **Progress Log**: \`$LOG_DIR/progress.log\`
-- **Status File**: \`$STATUS_FILE\`
-- **Detailed Summary**: \`$SPEC_DIR/LAUNCH_SUMMARY.md\`
-
-## Quick Status Check
-
-\`\`\`bash
-# Check current status
-cat $STATUS_FILE | jq '.'
-
-# View orchestrator logs
-tail -f $LOG_DIR/orchestrator.log
-
-# View progress
-tail -f $LOG_DIR/progress.log
-\`\`\`
+## Warnings and Errors
+$(grep -E "\[WARNING\]|\[ERROR\]" "$LOG_FILE" | tail -10 || echo "No warnings or errors found")
 
 ## Next Steps
+1. Review execution logs for any warnings or issues
+2. Test the new repository setup system with \`make install\`
+3. Validate repository health with \`make validate\`
+4. Use \`make cleanup\` to test automated cleanup features
+5. Review generated documentation and examples
 
+## Files Generated
+- Log File: $LOG_FILE
+- Progress File: $PROGRESS_FILE
+- Final Report: $report_file
+- Execution Reports: $LOG_DIR/repository_setup_execution_*.json
+
+---
+Generated by Repository Setup and Installation Background Launch
+Execution ID: $EXECUTION_ID
 EOF
 
-    if [[ $exit_code -eq 0 ]]; then
-        cat >> "$report_file" << EOF
-### ✅ Execution Successful
+    log_success "Final report generated: $report_file"
+}
 
-1. **Test Installation System**:
-   \`\`\`bash
-   make install
-   \`\`\`
-
-2. **Test Validation System**:
-   \`\`\`bash
-   make validate
-   \`\`\`
-
-3. **Test Cleanup System**:
-   \`\`\`bash
-   make cleanup
-   \`\`\`
-
-4. **Review Implementation**:
-   - Check generated files in \`src/repository_setup/\`
-   - Review updated Makefile targets
-   - Test CLI tools and reporting
-
-EOF
+# Process monitoring functions
+show_status() {
+    if [[ -f "$PROGRESS_FILE" ]]; then
+        echo "📊 Current Status:"
+        cat "$PROGRESS_FILE" | python3 -m json.tool 2>/dev/null || cat "$PROGRESS_FILE"
     else
-        cat >> "$report_file" << EOF
-### ❌ Execution Failed
-
-1. **Review Logs**:
-   \`\`\`bash
-   cat $LOG_DIR/orchestrator.log
-   \`\`\`
-
-2. **Check Detailed Summary**:
-   \`\`\`bash
-   cat $SPEC_DIR/LAUNCH_SUMMARY.md
-   \`\`\`
-
-3. **Fix Issues and Retry**:
-   - Address failed tasks
-   - Re-run pre-launch check
-   - Launch again with fixes
-
-EOF
+        echo "❌ No progress file found"
     fi
-    
-    log_info "📄 Final report saved: $report_file"
 }
 
-# Display usage
-usage() {
-    cat << EOF
-Repository Setup and Installation - Background Launch
-
-Usage: $0 [OPTIONS]
-
-Options:
-    -w, --workers NUM     Number of parallel workers (default: 4)
-    -h, --help           Show this help message
-    
-Examples:
-    $0                   # Launch with 4 workers
-    $0 -w 6              # Launch with 6 workers
-    
-The script will:
-1. Run pre-launch validation
-2. Launch DAG orchestrator in background
-3. Monitor progress and provide real-time updates
-4. Generate comprehensive execution report
-5. Clean up processes on completion or interruption
-
-Logs and status files are saved to: logs/repository-setup-YYYYMMDD-HHMMSS/
-EOF
+show_logs() {
+    if [[ -f "$LOG_FILE" ]]; then
+        echo "📋 Recent Logs:"
+        tail -20 "$LOG_FILE"
+    else
+        echo "❌ No log file found"
+    fi
 }
 
-# Main execution
-main() {
-    local max_workers=4
-    
-    # Parse command line arguments
-    while [[ $# -gt 0 ]]; do
-        case $1 in
-            -w|--workers)
-                max_workers="$2"
-                shift 2
-                ;;
-            -h|--help)
-                usage
-                exit 0
-                ;;
-            *)
-                log_error "Unknown option: $1"
-                usage
-                exit 1
-                ;;
-        esac
-    done
-    
-    # Validate workers parameter
-    if ! [[ "$max_workers" =~ ^[0-9]+$ ]] || [[ "$max_workers" -lt 1 ]] || [[ "$max_workers" -gt 16 ]]; then
-        log_error "Invalid worker count: $max_workers (must be 1-16)"
+# Handle command line arguments
+case "${1:-run}" in
+    "run")
+        main
+        ;;
+    "status")
+        show_status
+        ;;
+    "logs")
+        show_logs
+        ;;
+    "stop")
+        if [[ -f "$LOCK_FILE" ]]; then
+            local lock_pid=$(cat "$LOCK_FILE" 2>/dev/null || echo "")
+            if [[ -n "$lock_pid" ]] && kill -0 "$lock_pid" 2>/dev/null; then
+                log_info "Stopping background process (PID: $lock_pid)"
+                kill "$lock_pid"
+                # Wait a moment for cleanup
+                sleep 2
+                # Force remove lock if still exists
+                if [[ -f "$LOCK_FILE" ]]; then
+                    rm -f "$LOCK_FILE"
+                    log_info "Removed stale lock file"
+                fi
+                log_success "Background process stopped"
+            else
+                log_warning "Background process not running"
+                # Clean up stale lock
+                rm -f "$LOCK_FILE"
+            fi
+        else
+            log_warning "No active execution found"
+        fi
+        ;;
+    *)
+        echo "Usage: $0 [run|status|logs|stop]"
+        echo "  run    - Start background execution (default)"
+        echo "  status - Show current execution status"
+        echo "  logs   - Show recent execution logs"
+        echo "  stop   - Stop background execution"
         exit 1
-    fi
-    
-    echo -e "${PURPLE}🚀 Repository Setup and Installation - Background Launch${NC}"
-    echo -e "${PURPLE}================================================================${NC}"
-    echo
-    
-    log_info "🎯 Configuration:"
-    log_info "   📁 Project Root: $PROJECT_ROOT"
-    log_info "   📊 Max Workers: $max_workers"
-    log_info "   📂 Log Directory: $LOG_DIR"
-    echo
-    
-    # Create log directory
-    create_log_directory
-    
-    # Run pre-launch validation
-    run_prelaunch_check
-    echo
-    
-    # Launch orchestrator
-    local orchestrator_pid
-    orchestrator_pid=$(launch_orchestrator "$max_workers")
-    echo
-    
-    # Monitor execution
-    local exit_code=0
-    monitor_execution "$orchestrator_pid" || exit_code=$?
-    echo
-    
-    # Generate final report
-    generate_final_report "$exit_code"
-    echo
-    
-    # Final status
-    if [[ $exit_code -eq 0 ]]; then
-        log_success "🎉 Repository Setup DAG execution completed successfully!"
-        log_info "📋 Review the summary: $SPEC_DIR/LAUNCH_SUMMARY.md"
-        log_info "🧪 Test the new installation system: make install"
-    else
-        log_error "💥 Repository Setup DAG execution failed (exit code: $exit_code)"
-        log_info "📋 Review the logs: $LOG_DIR/orchestrator.log"
-        log_info "🔧 Fix issues and retry the launch"
-    fi
-    
-    return $exit_code
-}
-
-# Run main function
-main "$@"
+        ;;
+esac

@@ -266,6 +266,54 @@ class DAGOrchestrator(ReflectiveModule):
                 error_message=str(e)
             )
     
+    def get_execution_statistics(self) -> Dict[str, Any]:
+        """Get comprehensive execution statistics and performance metrics."""
+        try:
+            # Get component statistics
+            engine_stats = self._parallel_engine.get_execution_statistics()
+            scheduler_stats = self._scheduler.get_scheduling_statistics()
+            
+            # Calculate orchestration statistics
+            orchestration_success_rate = (
+                self._successful_orchestrations / max(self._total_orchestrations, 1)
+            )
+            
+            return {
+                "orchestration_statistics": {
+                    "total_orchestrations": self._total_orchestrations,
+                    "successful_orchestrations": self._successful_orchestrations,
+                    "failed_orchestrations": self._failed_orchestrations,
+                    "success_rate": orchestration_success_rate,
+                    "current_orchestration": self._current_orchestration.orchestration_id if self._current_orchestration else None,
+                    "orchestration_history_count": len(self._orchestration_history)
+                },
+                "execution_statistics": engine_stats,
+                "scheduling_statistics": scheduler_stats,
+                "component_health": {
+                    "orchestrator": self.get_health_status().status.value,
+                    "execution_engine": self._parallel_engine.get_health_status().status.value,
+                    "scheduler": self._scheduler.get_health_status().status.value,
+                    "infrastructure_validator": self._infrastructure_validator.get_health_status().status.value
+                },
+                "configuration": {
+                    "max_workers": self._config.max_workers,
+                    "execution_strategy": self._config.execution_strategy.value,
+                    "scheduling_strategy": self._config.scheduling_strategy.value,
+                    "prefire_testing_enabled": self._config.enable_prefire_testing,
+                    "continuous_monitoring_enabled": self._config.enable_continuous_monitoring
+                }
+            }
+        except Exception as e:
+            self._logger.error(f"Failed to get execution statistics: {e}")
+            return {
+                "error": f"Statistics collection failed: {str(e)}",
+                "orchestration_statistics": {
+                    "total_orchestrations": self._total_orchestrations,
+                    "successful_orchestrations": self._successful_orchestrations,
+                    "failed_orchestrations": self._failed_orchestrations
+                }
+            }
+
     async def execute_dag(self, tasks: List[TaskDefinition], 
                          execution_requirements: Optional[Dict[str, Any]] = None) -> OrchestrationResult:
         """
@@ -815,4 +863,43 @@ def create_orchestration_config(
         scheduling_strategy=scheduling_strategy,
         enable_prefire_testing=enable_prefire_testing,
         enable_continuous_monitoring=enable_continuous_monitoring
+    )
+
+
+def create_dag_orchestrator(config: Optional[OrchestrationConfig] = None, 
+                           max_workers: Optional[int] = None) -> DAGOrchestrator:
+    """
+    Factory function to create DAG orchestrator with flexible configuration.
+    
+    Args:
+        config: Optional orchestration configuration
+        max_workers: Optional max workers (for backward compatibility)
+        
+    Returns:
+        DAGOrchestrator instance
+    """
+    if config is None:
+        # Create default config, using max_workers if provided
+        workers = max_workers if max_workers is not None else 10
+        config = OrchestrationConfig(max_workers=workers)
+    
+    return DAGOrchestrator(config)
+
+
+def create_orchestration_result(orchestration_id: str, 
+                              status: OrchestrationStatus = OrchestrationStatus.IDLE) -> OrchestrationResult:
+    """
+    Factory function to create orchestration result.
+    
+    Args:
+        orchestration_id: Unique orchestration identifier
+        status: Initial orchestration status
+        
+    Returns:
+        OrchestrationResult instance
+    """
+    return OrchestrationResult(
+        orchestration_id=orchestration_id,
+        status=status,
+        start_time=datetime.now()
     )

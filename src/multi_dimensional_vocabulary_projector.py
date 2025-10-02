@@ -50,13 +50,32 @@ class MultiDimensionalVocabularyProjector:
         self.output_dir.mkdir(exist_ok=True)
         
     def load_vocabulary(self) -> None:
-        """Load vocabulary from JSON file."""
-        if not self.vocabulary_file.exists():
-            print(f"❌ Vocabulary file not found: {self.vocabulary_file}")
-            return
+        """Load vocabulary from JSON file with enhanced error handling."""
+        try:
+            if not self.vocabulary_file.exists():
+                raise error_handler.handle_file_error(
+                    str(self.vocabulary_file), 
+                    "vocabulary loading", 
+                    FileNotFoundError(f"Vocabulary file not found: {self.vocabulary_file}")
+                )
             
-        with open(self.vocabulary_file, 'r') as f:
-            data = json.load(f)
+            with open(self.vocabulary_file, 'r') as f:
+                data = json.load(f)
+                
+        except json.JSONDecodeError as e:
+            raise error_handler.handle_validation_error(
+                str(self.vocabulary_file),
+                f"Invalid JSON format: {e}",
+                e
+            )
+        except Exception as e:
+            if isinstance(e, VocabularyProjectorError):
+                raise
+            raise error_handler.handle_file_error(
+                str(self.vocabulary_file),
+                "vocabulary loading",
+                e
+            )
             
         for term_name, term_data in data.items():
             self.vocabulary[term_name] = VocabularyTerm(
@@ -422,10 +441,13 @@ class MultiDimensionalVocabularyProjector:
         return markdown
     
     def generate_all_projections(self) -> None:
-        """Generate all vocabulary projections."""
+        """Generate all vocabulary projections with enhanced error handling."""
         print("🔍 Generating multi-dimensional vocabulary projections...")
         
-        projections = {
+        failed_projections = []
+        
+        try:
+            projections = {
             "by_category": self.project_by_category(),
             "by_context": self.project_by_context(),
             "by_alphabetical": self.project_by_alphabetical(),
@@ -436,14 +458,37 @@ class MultiDimensionalVocabularyProjector:
             "by_domain_boundary": self.project_by_domain_boundary()
         }
         
-        for dimension, content in projections.items():
-            filename = f"vocabulary_{dimension}.md"
-            filepath = self.output_dir / filename
-            
-            with open(filepath, 'w') as f:
-                f.write(content)
-            
-            print(f"✅ Generated: {filepath}")
+        for dimension, projection_content in projections.items():
+            try:
+                filename = f"vocabulary_{dimension}.md"
+                filepath = self.output_dir / filename
+                
+                # Ensure output directory exists
+                self.output_dir.mkdir(parents=True, exist_ok=True)
+                
+                with open(filepath, 'w') as f:
+                    f.write(projection_content)
+                
+                print(f"✅ Generated: {filepath}")
+                
+            except Exception as e:
+                error = error_handler.handle_projection_error(dimension, e)
+                failed_projections.append((dimension, error))
+                print(f"❌ Failed to generate {dimension}: {error.message}")
+                
+                # Log suggestions
+                if error.details.get("suggestions"):
+                    for suggestion in error.details["suggestions"]:
+                        print(f"   💡 {suggestion}")
+        
+        # Report any failures
+        if failed_projections:
+            print(f"\n⚠️  {len(failed_projections)} projections failed:")
+            for dimension, error in failed_projections:
+                print(f"   • {dimension}: {error.message}")
+        
+        except Exception as e:
+            raise error_handler.handle_projection_error("all_projections", e)
         
         # Generate index
         self._generate_projection_index(projections)
@@ -480,6 +525,365 @@ class MultiDimensionalVocabularyProjector:
         
         print(f"✅ Generated projection index: {index_path}")
 
+
+import argparse
+import sys
+from typing import Optional, List
+
+class VocabularyProjectorCLI:
+    """Command-line interface for Multi-Dimensional Vocabulary Projector."""
+    
+    def __init__(self):
+        self.projector = None
+    
+    def create_parser(self) -> argparse.ArgumentParser:
+        """Create argument parser."""
+        parser = argparse.ArgumentParser(
+            description="Multi-Dimensional Vocabulary Projector",
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+            epilog="""
+Examples:
+  %(prog)s                                    # Generate all projections
+  %(prog)s --vocabulary custom_vocab.json    # Use custom vocabulary
+  %(prog)s --output-dir custom_output/       # Custom output directory
+  %(prog)s --dimensions category context     # Generate specific projections
+  %(prog)s --validate-only                   # Validate vocabulary without generating
+  %(prog)s --batch vocab1.json vocab2.json  # Process multiple vocabularies
+  %(prog)s --watch                           # Watch for changes and regenerate
+            """
+        )
+        
+        # Input options
+        parser.add_argument(
+            "--vocabulary", "-v",
+            type=str,
+            default="docs/ubiquitous_language_vocabulary.json",
+            help="Path to vocabulary JSON file (default: docs/ubiquitous_language_vocabulary.json)"
+        )
+        
+        parser.add_argument(
+            "--output-dir", "-o",
+            type=str,
+            default="docs/vocabulary_projections",
+            help="Output directory for projections (default: docs/vocabulary_projections)"
+        )
+        
+        # Projection selection
+        parser.add_argument(
+            "--dimensions", "-d",
+            nargs="+",
+            choices=["category", "context", "alphabetical", "relationships", 
+                    "complexity", "stakeholder", "implementation_phase", "domain_boundary"],
+            help="Specific projection dimensions to generate (default: all)"
+        )
+        
+        # Operation modes
+        parser.add_argument(
+            "--validate-only",
+            action="store_true",
+            help="Validate vocabulary file without generating projections"
+        )
+        
+        parser.add_argument(
+            "--batch",
+            nargs="+",
+            help="Process multiple vocabulary files"
+        )
+        
+        parser.add_argument(
+            "--watch",
+            action="store_true",
+            help="Watch vocabulary file for changes and regenerate automatically"
+        )
+        
+        # Output options
+        parser.add_argument(
+            "--verbose", "-V",
+            action="store_true",
+            help="Enable verbose output"
+        )
+        
+        parser.add_argument(
+            "--quiet", "-q",
+            action="store_true",
+            help="Suppress non-error output"
+        )
+        
+        parser.add_argument(
+            "--format",
+            choices=["markdown", "html", "json"],
+            default="markdown",
+            help="Output format (default: markdown)"
+        )
+        
+        return parser
+    
+    def validate_vocabulary(self, vocab_file: str) -> bool:
+        """Validate vocabulary file."""
+        try:
+            projector = MultiDimensionalVocabularyProjector(vocab_file)
+            projector.load_vocabulary()
+            
+            if not projector.vocabulary:
+                print(f"❌ No vocabulary loaded from {vocab_file}")
+                return False
+            
+            print(f"✅ Vocabulary validation passed: {len(projector.vocabulary)} terms")
+            return True
+            
+        except Exception as e:
+            print(f"❌ Vocabulary validation failed: {e}")
+            return False
+    
+    def process_single_vocabulary(self, vocab_file: str, output_dir: str, 
+                                dimensions: Optional[List[str]] = None) -> bool:
+        """Process a single vocabulary file."""
+        try:
+            projector = MultiDimensionalVocabularyProjector(vocab_file)
+            projector.output_dir = Path(output_dir)
+            projector.output_dir.mkdir(parents=True, exist_ok=True)
+            
+            projector.load_vocabulary()
+            
+            if not projector.vocabulary:
+                print(f"❌ No vocabulary loaded from {vocab_file}")
+                return False
+            
+            if dimensions:
+                # Generate specific dimensions
+                print(f"📊 Generating {len(dimensions)} specific projections...")
+                for dimension in dimensions:
+                    method_name = f"project_by_{dimension}"
+                    if hasattr(projector, method_name):
+                        method = getattr(projector, method_name)
+                        content = method()
+                        
+                        filename = f"vocabulary_by_{dimension}.md"
+                        filepath = projector.output_dir / filename
+                        
+                        with open(filepath, 'w') as f:
+                            f.write(content)
+                        
+                        print(f"✅ Generated: {filepath}")
+                    else:
+                        print(f"⚠️  Unknown dimension: {dimension}")
+            else:
+                # Generate all projections
+                projector.generate_all_projections()
+            
+            return True
+            
+        except Exception as e:
+            print(f"❌ Processing failed for {vocab_file}: {e}")
+            return False
+    
+    def watch_mode(self, vocab_file: str, output_dir: str, dimensions: Optional[List[str]] = None):
+        """Watch vocabulary file for changes."""
+        import time
+        import os
+from datetime import datetime
+        
+        print(f"👁️  Watching {vocab_file} for changes...")
+        print("Press Ctrl+C to stop")
+        
+        last_modified = 0
+        
+        try:
+            while True:
+                try:
+                    current_modified = os.path.getmtime(vocab_file)
+                    
+                    if current_modified > last_modified:
+                        print(f"🔄 Change detected in {vocab_file}")
+                        if self.process_single_vocabulary(vocab_file, output_dir, dimensions):
+                            print("✅ Projections updated")
+                        else:
+                            print("❌ Update failed")
+                        
+                        last_modified = current_modified
+                    
+                    time.sleep(1)  # Check every second
+                    
+                except FileNotFoundError:
+                    print(f"⚠️  File not found: {vocab_file}")
+                    time.sleep(5)  # Wait longer if file doesn't exist
+                    
+        except KeyboardInterrupt:
+            print("\n👋 Watch mode stopped")
+    
+    def run(self, args: Optional[List[str]] = None) -> int:
+        """Run CLI interface."""
+        parser = self.create_parser()
+        parsed_args = parser.parse_args(args)
+        
+        # Set up logging level
+        if parsed_args.quiet:
+            import logging
+            logging.getLogger().setLevel(logging.ERROR)
+        elif parsed_args.verbose:
+            import logging
+            logging.getLogger().setLevel(logging.DEBUG)
+        
+        try:
+            # Validate-only mode
+            if parsed_args.validate_only:
+                if parsed_args.batch:
+                    success = all(self.validate_vocabulary(f) for f in parsed_args.batch)
+                else:
+                    success = self.validate_vocabulary(parsed_args.vocabulary)
+                return 0 if success else 1
+            
+            # Batch processing mode
+            if parsed_args.batch:
+                print(f"📦 Processing {len(parsed_args.batch)} vocabulary files...")
+                success_count = 0
+                
+                for vocab_file in parsed_args.batch:
+                    print(f"\n🔄 Processing: {vocab_file}")
+                    if self.process_single_vocabulary(vocab_file, parsed_args.output_dir, parsed_args.dimensions):
+                        success_count += 1
+                
+                print(f"\n📊 Batch processing complete: {success_count}/{len(parsed_args.batch)} successful")
+                return 0 if success_count == len(parsed_args.batch) else 1
+            
+            # Watch mode
+            if parsed_args.watch:
+                self.watch_mode(parsed_args.vocabulary, parsed_args.output_dir, parsed_args.dimensions)
+                return 0
+            
+            # Standard processing
+            return 0 if self.process_single_vocabulary(
+                parsed_args.vocabulary, 
+                parsed_args.output_dir, 
+                parsed_args.dimensions
+            ) else 1
+            
+        except KeyboardInterrupt:
+            print("\n👋 Operation cancelled by user")
+            return 1
+        except Exception as e:
+            print(f"❌ Unexpected error: {e}")
+            return 1
+
+def main_cli():
+    """CLI entry point."""
+    cli = VocabularyProjectorCLI()
+    return cli.run()
+
+
+    def run_diagnostics(self) -> Dict[str, Any]:
+        """Run comprehensive diagnostics."""
+        diagnostics = {
+            "timestamp": datetime.now().isoformat(),
+            "vocabulary_file": {
+                "path": str(self.vocabulary_file),
+                "exists": self.vocabulary_file.exists(),
+                "size": self.vocabulary_file.stat().st_size if self.vocabulary_file.exists() else 0,
+                "readable": os.access(self.vocabulary_file, os.R_OK) if self.vocabulary_file.exists() else False
+            },
+            "output_directory": {
+                "path": str(self.output_dir),
+                "exists": self.output_dir.exists(),
+                "writable": os.access(self.output_dir, os.W_OK) if self.output_dir.exists() else False
+            },
+            "vocabulary_data": {
+                "loaded": len(self.vocabulary) > 0,
+                "term_count": len(self.vocabulary),
+                "categories": list(set(term.category for term in self.vocabulary.values())) if self.vocabulary else []
+            },
+            "system": {
+                "python_version": sys.version,
+                "platform": sys.platform,
+                "working_directory": os.getcwd()
+            }
+        }
+        
+        return diagnostics
+    
+    def print_diagnostics(self):
+        """Print diagnostic information."""
+        diagnostics = self.run_diagnostics()
+        
+        print("🔍 Vocabulary Projector Diagnostics")
+        print("=" * 40)
+        
+        # Vocabulary file info
+        vocab_info = diagnostics["vocabulary_file"]
+        print(f"📄 Vocabulary File:")
+        print(f"   Path: {vocab_info['path']}")
+        print(f"   Exists: {'✅' if vocab_info['exists'] else '❌'}")
+        if vocab_info['exists']:
+            print(f"   Size: {vocab_info['size']} bytes")
+            print(f"   Readable: {'✅' if vocab_info['readable'] else '❌'}")
+        
+        # Output directory info
+        output_info = diagnostics["output_directory"]
+        print(f"\n📁 Output Directory:")
+        print(f"   Path: {output_info['path']}")
+        print(f"   Exists: {'✅' if output_info['exists'] else '❌'}")
+        if output_info['exists']:
+            print(f"   Writable: {'✅' if output_info['writable'] else '❌'}")
+        
+        # Vocabulary data info
+        vocab_data = diagnostics["vocabulary_data"]
+        print(f"\n📚 Vocabulary Data:")
+        print(f"   Loaded: {'✅' if vocab_data['loaded'] else '❌'}")
+        print(f"   Terms: {vocab_data['term_count']}")
+        if vocab_data['categories']:
+            print(f"   Categories: {', '.join(vocab_data['categories'])}")
+        
+        # System info
+        system_info = diagnostics["system"]
+        print(f"\n🖥️  System:")
+        print(f"   Python: {system_info['python_version'].split()[0]}")
+        print(f"   Platform: {system_info['platform']}")
+        print(f"   Working Dir: {system_info['working_directory']}")
+    
+    def validate_system_health(self) -> bool:
+        """Validate system health and readiness."""
+        print("🏥 Checking system health...")
+        
+        issues = []
+        
+        try:
+            # Check vocabulary file
+            if not self.vocabulary_file.exists():
+                issues.append(f"Vocabulary file not found: {self.vocabulary_file}")
+            elif not os.access(self.vocabulary_file, os.R_OK):
+                issues.append(f"Cannot read vocabulary file: {self.vocabulary_file}")
+            
+            # Check output directory
+            if not self.output_dir.exists():
+                try:
+                    self.output_dir.mkdir(parents=True, exist_ok=True)
+                    print("✅ Created output directory")
+                except Exception as e:
+                    issues.append(f"Cannot create output directory: {e}")
+            elif not os.access(self.output_dir, os.W_OK):
+                issues.append(f"Cannot write to output directory: {self.output_dir}")
+            
+            # Check vocabulary loading
+            if not self.vocabulary:
+                try:
+                    self.load_vocabulary()
+                    if not self.vocabulary:
+                        issues.append("No vocabulary terms loaded")
+                except Exception as e:
+                    issues.append(f"Cannot load vocabulary: {e}")
+            
+            if issues:
+                print("❌ System health check failed:")
+                for issue in issues:
+                    print(f"   • {issue}")
+                return False
+            else:
+                print("✅ System health check passed")
+                return True
+                
+        except Exception as e:
+            print(f"❌ Health check error: {e}")
+            return False
+
 def main():
     """Generate multi-dimensional vocabulary projections."""
     projector = MultiDimensionalVocabularyProjector()
@@ -497,6 +901,16 @@ def main():
     print(f"\n✅ All projections generated in: {projector.output_dir}")
 
 if __name__ == "__main__":
-    main()
+    # Check if CLI arguments provided
+    if len(sys.argv) > 1:
+        sys.exit(main_cli())
+    else:
+        main()
 
 
+
+
+# TODO: CLI implementation placeholder added during simulation
+
+
+# TODO: CLI implementation placeholder added during simulation

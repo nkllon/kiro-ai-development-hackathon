@@ -1,0 +1,50 @@
+SYSTEM ARCHITECTURE WIRING DIAGRAM IMPLEMENTATION
+Task ID: 2.2_data_flow_mapping
+Task: Implement comprehensive data flow mapping
+Dependencies: 1.2_observatory_websocket_integration, 2.1_dag_dependency_analysis
+Execution ID: llm-dag-20250930-160652
+LLM Provider: kiro
+
+CONTEXT:
+You are implementing the System Architecture Wiring Diagram specification.
+- Spec Location: .kiro/specs/system-architecture-wiring-diagram/
+- Use ReflectiveModule pattern from src.rm_ddd.core.unified_reflective_module
+- Follow Beast Mode systematic approaches
+- Create production-ready code with >90% test coverage
+
+SPECIFIC TASK IMPLEMENTATION:
+
+Implement comprehensive data flow mapping:
+
+1. Trace metrics flow from ReflectiveModule → Observatory → Prometheus → Grafana
+2. Map WebSocket real-time metrics streaming
+3. Document systematic error handling with correlation IDs
+4. Create integration flow mapping (ACE Reporter → AI Memory Palace → DAG Registry)
+5. Map WebSocket message flows and emoji rain data flow
+
+
+REQUIREMENTS:
+1. Read the full spec requirements and design documents
+2. Implement systematic, production-ready code
+3. Create comprehensive tests
+4. Use proper error handling and logging
+5. Follow mathematical governance principles
+6. Integrate with existing Beast Mode framework
+
+DELIVERABLES:
+- Working implementation with tests
+- Integration with existing Beast Mode framework  
+- Documentation updates
+- Health monitoring endpoints
+- Prometheus metrics integration
+
+EXECUTION INSTRUCTIONS:
+- Implement the code systematically
+- Create all necessary files and directories
+- Write comprehensive tests
+- Document integration points
+- Report completion status when done
+
+IMPORTANT: Please provide actual code implementation, not just acknowledgment.
+
+Execute this task now and report when complete.

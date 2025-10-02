@@ -20,12 +20,20 @@ This implementation plan follows Beast Mode DAG principles for setting up Direct
   - Implement database health monitoring
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-- [ ] 3. Configure Directus initial setup
-  - Set up admin user and authentication
+- [ ] 3. Configure Directus initial setup with secure credentials
+  - Implement secure credential management using `get_directus_password()`
+  - Set up admin user authentication with environment variables
   - Configure API endpoints and CORS settings
   - Set up file storage and upload handling
   - Configure email settings for notifications
-  - _Requirements: 1.1, 1.3, 4.1, 4.2_
+  - _Requirements: 1.1, 1.3, 4.1, 4.2, 8.1, 8.2, 8.3_
+
+- [ ] 3.1 Implement secure credential infrastructure
+  - Add `get_directus_password()` function to `src.security.secure_credentials`
+  - Create `get_directus_config()` method for complete configuration
+  - Update all Directus scripts to use secure credential functions
+  - Add credential validation and placeholder detection
+  - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
 
 ## Core Implementation - Directus Client and API Integration
 
@@ -37,11 +45,12 @@ This implementation plan follows Beast Mode DAG principles for setting up Direct
   - _Requirements: 5.1, 5.2, 5.3, 5.4_
 
 - [ ] 4.1 Create DirectusClient authentication system
-  - Implement token-based authentication
+  - Implement token-based authentication using secure credentials
   - Add automatic token refresh mechanism
-  - Create secure credential management
-  - Add authentication error handling
-  - _Requirements: 5.3, 4.2_
+  - Integrate with `SecureCredentials` class for credential management
+  - Add authentication error handling and credential validation
+  - Ensure no hardcoded credentials in authentication flow
+  - _Requirements: 5.3, 4.2, 8.1, 8.2, 8.3_
 
 - [ ] 4.2 Implement REST API client methods
   - Create methods for document CRUD operations
@@ -273,6 +282,16 @@ This implementation plan follows Beast Mode DAG principles for setting up Direct
   - Document backup and recovery procedures
   - Create user training materials
   - _Requirements: All requirements_
+
+## Security Remediation - Completed Tasks
+
+- [x] **COMPLETED**: Fix hardcoded Directus credentials in existing files
+  - ✅ Created `get_directus_password()` function in `src.security.secure_credentials`
+  - ✅ Added `get_directus_config()` method for complete configuration
+  - ✅ Fixed 8 files with hardcoded `ADMIN_PASSWORD = "d1r3ctu5"`
+  - ✅ Updated all affected scripts to use secure credential functions
+  - ✅ Reduced security violations from 56 to 47 (eliminated all Directus HIGH severity issues)
+  - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
 
 ## Validation and Acceptance
 

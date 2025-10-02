@@ -37,7 +37,7 @@ except ImportError:
 NODE_ID = "persistent-node-b"
 REDIS_HOST = "192.168.1.119"  # Vonnegut IP
 REDIS_PORT = 6379
-REDIS_PASSWORD = "beastmode2025"
+REDIS_PASSWORD = get_redis_password()
 
 class PersistentNodeB:
     """Persistent Node B that stays connected to Beast Mode network."""

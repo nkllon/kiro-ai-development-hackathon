@@ -226,7 +226,7 @@ async def test_redis_connectivity():
     except Exception as e:
         try:
             # Try with password
-            client = redis.Redis(host='localhost', port=6379, db=0, password='beastmode2025')
+            client = redis.Redis(host='localhost', port=6379, db=0, password=get_redis_password())
             await client.ping()
             await client.aclose()
             print("✅ Local Redis server is accessible (with auth)")
@@ -241,7 +241,7 @@ async def test_vonnegut_connectivity():
 
     vonnegut_ip = "192.168.1.119"
     try:
-        client = redis.Redis(host=vonnegut_ip, port=6379, db=0, password='beastmode2025')
+        client = redis.Redis(host=vonnegut_ip, port=6379, db=0, password=get_redis_password())
         await client.ping()
         await client.aclose()
         print(f"✅ Vonnegut Redis server is accessible at {vonnegut_ip}")

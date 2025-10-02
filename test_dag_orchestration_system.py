@@ -123,8 +123,9 @@ class DAGOrchestrationSystemTester:
             print("Testing DAG execution...")
             execution_result = await orchestrator.execute_dag(tasks)
             
-            print(f"✅ DAG Execution: {execution_result.get('success_rate', 0):.1%} success rate")
-            print(f"✅ Tasks Executed: {execution_result.get('successful_tasks', 0)}/{execution_result.get('task_count', 0)}")
+            success_rate = execution_result.completed_tasks / max(execution_result.total_tasks, 1)
+            print(f"✅ DAG Execution: {success_rate:.1%} success rate")
+            print(f"✅ Tasks Executed: {execution_result.completed_tasks}/{execution_result.total_tasks}")
             
             # Test statistics
             stats = orchestrator.get_execution_statistics()
@@ -224,7 +225,8 @@ class DAGOrchestrationSystemTester:
             learning_result = await ai_memory.learn_from_execution(
                 "test_execution_1", performance_metrics
             )
-            print(f"✅ Learn from Execution: {len(learning_result.get('optimization_suggestions', []))} suggestions")
+            suggestions = learning_result.get('optimization_suggestions', []) if isinstance(learning_result, dict) else []
+            print(f"✅ Learn from Execution: {len(suggestions)} suggestions")
             
             # Test statistics
             stats = ai_memory.get_learning_statistics()
@@ -328,7 +330,8 @@ class DAGOrchestrationSystemTester:
             
             # Execute DAG
             execution_result = await orchestrator.execute_dag(tasks)
-            print(f"✅ Integrated DAG Execution: {execution_result.get('success_rate', 0):.1%} success")
+            success_rate = execution_result.completed_tasks / max(execution_result.total_tasks, 1)
+            print(f"✅ Integrated DAG Execution: {success_rate:.1%} success")
             
             # Store pattern in AI Memory Palace
             pattern_data = {
@@ -339,7 +342,7 @@ class DAGOrchestrationSystemTester:
             performance_metrics = {
                 "parallelization_efficiency": 1.8,
                 "resource_utilization": 0.5,
-                "actual_duration": execution_result.get('actual_duration', 0)
+                "actual_duration": execution_result.duration_seconds or 0
             }
             
             await ai_memory.store_execution_pattern("integrated_test", pattern_data, performance_metrics)

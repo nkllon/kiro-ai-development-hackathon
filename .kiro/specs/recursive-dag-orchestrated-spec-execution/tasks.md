@@ -48,6 +48,15 @@ python verify_recursive_consistency.py --full-validation
 - [ ] 1.2 Build RecursionValidator for mathematical consistency
   - Create RecursionValidator class with DAG consistency checking
   - Implement termination condition validation using graph theory
+
+- [ ] 1.3 Update configurable LLM DAG executor with cursor support
+  - Add CURSOR to LLMProvider enum in `configurable_llm_dag_executor.py`
+  - Update argument parser to include cursor as CLI option (`--llm cursor`)
+  - Add cursor to CLI detection logic in `_detect_available_clis()`
+  - Configure cursor with appropriate arguments (`--print -`) for headless execution
+  - Update default LLM selection to prioritize cursor for automation
+  - Test cursor integration with DAG task execution
+  - _Requirements: 2.1.1, 2.1.2, 2.1.3, 2.1.4, 2.1.5_
   - Add cross-level dependency cycle detection using existing DAG Registry
   - Build resource bound validation for hierarchical allocation
   - Create recursive plan validation with mathematical proofs

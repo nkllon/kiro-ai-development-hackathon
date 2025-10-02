@@ -2,6 +2,30 @@
 
 ## High Priority
 
+### Fix Prepare-Spec-for-Execution ValidationReport Initialization
+**Status:** Ready for Implementation  
+**Priority:** High  
+**Reason:** Critical tool failure preventing DAG orchestration execution. ValidationReport.__init__() missing required positional argument 'overall_status'
+
+**Requirements:**
+- Fix ValidationReport dataclass initialization in src/spec_framework/validation/prelaunch_validator.py
+- Ensure all required fields (spec_name, overall_status, confidence_score) are properly initialized
+- Verify dataclass field ordering and default values are correct
+- Test ValidationReport instantiation in prepare_spec_cli.py
+- Ensure compatibility with CLI reporting and JSON serialization
+- Add proper error handling for missing required fields
+
+**Key Technical Details:**
+- Error occurs in prepare_spec_cli.py line calling PreLaunchValidator.validate_specification_readiness()
+- ValidationReport constructor expects overall_status as required positional argument
+- Need to verify dataclass field definitions match constructor usage
+- Must maintain backward compatibility with existing validation code
+
+**Estimated Effort:** Small (1-2 hours)  
+**Dependencies:** None - blocking DAG orchestration execution  
+**Added:** 2025-01-27  
+**Added By:** DAG orchestration execution failure analysis
+
 ### Observatory Feature Flag System
 **Status:** Needs Spec  
 **Priority:** High  

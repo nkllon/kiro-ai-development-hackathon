@@ -32,6 +32,18 @@ This recursive approach creates a self-improving system where the DAG orchestrat
 4. WHEN tasks complete THEN the system SHALL automatically trigger dependent tasks while maintaining DAG integrity
 5. IF spec tasks contain cycles THEN the system SHALL provide decomposition guidance and prevent execution
 
+### Requirement 2.1: Multi-LLM Provider Support
+
+**User Story:** As a spec executor, I want the DAG orchestration system to support multiple LLM providers including Cursor, Claude, Kiro, OpenAI, and others, so that spec execution is not dependent on a single LLM service.
+
+#### Acceptance Criteria
+
+1. WHEN LLM providers are configured THEN the system SHALL support kiro, claude, cursor, llm, openai, and other CLI-based LLM tools
+2. WHEN cursor is used as LLM provider THEN the system SHALL use appropriate command-line arguments (--print -) for headless execution
+3. WHEN LLM provider selection occurs THEN the system SHALL automatically detect available LLM CLIs and prioritize working providers
+4. WHEN LLM execution fails THEN the system SHALL provide fallback options to alternative LLM providers
+5. IF no LLM providers are available THEN the system SHALL provide clear error messages and setup guidance
+
 ### Requirement 3: Meta-Programming Execution Engine
 
 **User Story:** As a system observer, I want to observe the system orchestrating itself, so that I can validate the recursive capabilities and monitor meta-system performance.

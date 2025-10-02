@@ -1,0 +1,23 @@
+🔍 AGENT CONTROL GOVERNANCE DAG VALIDATION REPORT
+============================================================
+
+✅ Overall Status: VALID
+
+📊 Validation Metrics:
+  • Total Tasks: 28
+  • Total Phases: 8
+  • Max Parallel Tasks: 4
+  • Total Dependencies: 95
+  • Parallelization Efficiency: 66.7%
+  • Sequential Time: 22.5 hours
+  • Parallel Time: 7.5 hours
+  • Time Savings: 15.0 hours
+  • Infrastructure Ready: False
+
+⚠️  Validation Warnings:
+  • Could not validate infrastructure: 'InfrastructureValidator' object has no attribute 'validate_all_preconditions'
+
+💡 Recommendations:
+  • DAG structure is valid and ready for execution
+  • Consider running infrastructure validation before execution
+  • Monitor resource usage during parallel execution

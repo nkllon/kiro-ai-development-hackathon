@@ -2,17 +2,17 @@
 
 ## Introduction
 
-This specification defines the requirements for creating comprehensive system architecture documentation that maps the relationships between all infrastructure components in the Beast Mode framework ecosystem. The system includes multiple interconnected layers:
+This specification defines the requirements for creating comprehensive system architecture documentation that maps the relationships between all infrastructure components in the Beast Mode framework ecosystem. The system will automatically discover, analyze, and document the complex interconnected layers of our production infrastructure.
 
-**Infrastructure Layer**: Cloudflare tunnels, DNS routing, and network topology with Redis coordination.
+**Infrastructure Layer**: Cloudflare tunnels (d1e53e43-033f-4994-8f46-c83962ae3785), DNS routing (observatory.nkllon.com and subdomains), and network topology with Redis coordination (192.168.1.119:6379 primary, localhost:6380 fallback).
 
-**Observability Stack**: Observatory server with WebSocket endpoints, Prometheus metrics collection, Grafana visualization, and Beast Mode ReflectiveModule pattern for universal observability.
+**Observability Stack**: Observatory server (localhost:8888) with WebSocket endpoints (/ws/observatory, /ws/emoji-rain, /ws/anomalies, /ws/doctor-status), Prometheus metrics collection (localhost:9090), Grafana visualization (localhost:3000), and Beast Mode ReflectiveModule pattern for universal observability.
 
-**Automation Layer**: Makefile orchestration with 50+ targets, Python automation scripts, and systematic deployment workflows.
+**Automation Layer**: Makefile orchestration with 50+ targets (tunnel-start, dashboard-up, dashboard-status, etc.), Python automation scripts (observatory-daemon.py, tunnel management, metrics collection), and systematic deployment workflows.
 
-**Integration Points**: ACE Reporter for progress broadcasting, AI Memory Palace for context storage, DAG Registry for dependency validation, and CMS-based configuration management through Directus.
+**Integration Points**: ACE Reporter for progress broadcasting, AI Memory Palace for context storage, DAG Registry for dependency validation, and CMS-based configuration management through Directus (localhost:8055).
 
-The goal is to create clear UML diagrams, sequence diagrams, network topology maps, and interaction documentation that enables anyone to understand how these complex, interconnected systems work together as a cohesive Beast Mode framework.
+The goal is to create automatically-generated and continuously-updated UML diagrams, sequence diagrams, network topology maps, and comprehensive interaction documentation that enables anyone to understand how these complex, interconnected systems work together as a cohesive Beast Mode framework.
 
 *Note: Specific infrastructure details (tunnel IDs, IP addresses, ports, endpoints) are documented in Appendix A - Infrastructure Inventory.*
 
@@ -127,8 +127,7 @@ The goal is to create clear UML diagrams, sequence diagrams, network topology ma
 2. WHEN viewing diagrams THEN I SHALL see a "Last Updated" timestamp, validation status, and accuracy confidence score based on automated verification
 3. WHEN diagrams become stale (>24 hours old) THEN I SHALL receive alerts with specific components that require validation and update procedures
 4. WHEN manual verification is required THEN I SHALL have a clear validation checklist with automated tests and manual verification steps
-## Append
-ix A - Infrastructure Inventory
+## Appendix A - Infrastructure Inventory
 
 ### Cloudflare Infrastructure
 - **Tunnel ID**: d1e53e43-033f-4994-8f46-c83962ae3785

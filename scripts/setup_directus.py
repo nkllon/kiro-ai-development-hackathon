@@ -19,9 +19,15 @@ from pathlib import Path
 # Add project root to path
 sys.path.append('.')
 
-DIRECTUS_URL = "http://localhost:8055"
-ADMIN_EMAIL = "admin@example.com"
-ADMIN_PASSWORD = "d1r3ctu5"
+from src.security.secure_credentials import get_directus_password, get_secure_credentials
+
+# Get Directus configuration from environment variables
+creds = get_secure_credentials()
+directus_config = creds.get_directus_config()
+
+DIRECTUS_URL = directus_config['url']
+ADMIN_EMAIL = directus_config['admin_email']
+ADMIN_PASSWORD = directus_config['admin_password']
 
 
 def wait_for_directus():

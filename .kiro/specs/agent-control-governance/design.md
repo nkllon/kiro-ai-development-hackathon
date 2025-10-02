@@ -4,7 +4,7 @@
 
 The Agent Control Governance system provides systematic coordination and control mechanisms for AI agents within the Kiro development framework. This system implements a mathematical governance model that ensures no agency can act without valid orders, maintains clear separation between leadership and execution roles, and provides uniform interfaces for systematic coordination across all agent types.
 
-The design follows a coordinator-worker architecture pattern where leader LLMs act as pure orchestrators, delegating all execution to specialized worker agents through uniform interfaces. Mathematical constraints govern all interactions, ensuring deterministic and reliable coordination.
+The design follows a coordinator-worker architecture pattern where leader LLMs act as pure orchestrators, delegating all execution to specialized worker agents through uniform interfaces. Mathematical constraints govern all interactions, ensuring deterministic and reliable coordination. The system integrates seamlessly with existing Beast Mode infrastructure, leveraging proven Redis coordination patterns, DAG orchestration systems, and ReflectiveModule observability frameworks.
 
 ## ADR Conformance Review
 
@@ -133,13 +133,25 @@ class OrderValidator:
 ```python
 class AgentLifecycleManager(ReflectiveModule):
     def spawn_agent(self, agent_type: AgentType, config: AgentConfig) -> Agent:
-        """Creates new agent with proper isolation"""
+        """Creates new agent with proper isolation using existing process management"""
         
     def delegate_task(self, task: Task, target_agent: Agent) -> TaskResult:
-        """Routes task to appropriate agent with order validation"""
+        """Routes task to appropriate agent with order validation and Redis coordination"""
         
     def cleanup_agent(self, agent: Agent) -> CleanupResult:
-        """Properly terminates agent and cleans resources"""
+        """Properly terminates agent and cleans resources using existing resource management"""
+        
+    def track_performance(self, agent: Agent) -> PerformanceMetrics:
+        """Tracks agent performance using existing Prometheus integration"""
+        
+    def optimize_patterns(self, successful_patterns: List[Pattern]) -> OptimizationResult:
+        """Promotes successful patterns to deterministic rules following LLM efficiency principles"""
+        
+    def enforce_observation_first(self, leader_agent: Agent) -> EnforcementResult:
+        """Automatically enforces observation-first protocols for leader LLMs"""
+        
+    def validate_mathematical_constraints(self, operation: Operation) -> ValidationResult:
+        """Validates operations against mathematical governance constraints"""
 ```
 
 ## Data Models
@@ -202,6 +214,8 @@ class TaskResult:
 - **Capability Bounds**: Mathematical limits on agent permissions
 - **Resource Quotas**: Enforced limits prevent resource exhaustion
 - **Isolation Verification**: Mathematical proof of security boundaries
+- **Cryptographic Authority**: Mathematical validation of order authority chains
+- **Sandboxing Constraints**: Mathematical bounds on agent execution environments
 
 ## Error Handling
 
@@ -286,16 +300,19 @@ class FailureRecoveryManager(ReflectiveModule):
 ## Performance and Scalability
 
 ### Horizontal Scaling
-- **Agent Pool Management**: Dynamic scaling based on demand
-- **Load Balancing**: Intelligent routing to available agents
-- **Resource Optimization**: Mathematical optimization of agent allocation
-- **Parallel Execution**: Unlimited parallel capacity within resource constraints
+- **Agent Pool Management**: Dynamic scaling based on demand using existing resource-aware dynamic concurrency patterns
+- **Load Balancing**: Intelligent routing to available agents leveraging existing Redis pub/sub infrastructure
+- **Resource Optimization**: Mathematical optimization of agent allocation using existing constraint satisfaction algorithms
+- **Parallel Execution**: Unlimited parallel capacity within resource constraints using existing ParallelExecutionEngine
+- **Backpressure Management**: Systematic handling of system load increases following existing backpressure patterns
 
 ### Performance Optimization
-- **Caching Strategy**: Results cached for similar requests
-- **Connection Pooling**: Efficient resource utilization
-- **Batch Processing**: Grouped operations for efficiency
-- **Lazy Loading**: On-demand agent instantiation
+- **Caching Strategy**: Results cached for similar requests using existing Redis infrastructure
+- **Connection Pooling**: Efficient resource utilization leveraging existing Redis connection patterns
+- **Batch Processing**: Grouped operations for efficiency using existing DAG orchestration batching
+- **Lazy Loading**: On-demand agent instantiation following existing resource management patterns
+- **Communication Pattern Optimization**: Minimize coordination overhead using existing Redis pub/sub optimization
+- **Resource Management**: Efficient utilization within mathematical constraints using existing Prometheus monitoring
 
 ### Monitoring and Observability
 Following ADR-005, all components inherit ReflectiveModule capabilities:
@@ -353,4 +370,19 @@ Following ADR-005, all components inherit ReflectiveModule capabilities:
 ### Decision 7: Failure Isolation Strategy
 **Rationale**: Maintains system operation during partial failures (ADR-008), providing better reliability and resource utilization than cascade prevention.
 
-This design provides a systematic, mathematically-governed approach to agent coordination that ensures reliable, secure, and scalable AI agent management within the Kiro development framework.
+### Decision 8: Observation-First Leadership Enforcement
+**Rationale**: Automatic enforcement of observation-first principles ensures leaders maintain proper separation from execution, preventing loss of objectivity through direct action.
+
+### Decision 9: Cryptographic Order Authority
+**Rationale**: Provides mathematical validation of order authority chains, ensuring no agency can act without valid orders and maintaining complete audit trails.
+
+### Decision 10: Existing Infrastructure Integration
+**Rationale**: Leverages existing Redis infrastructure (192.168.1.119:6379), DAG orchestration systems, and ReflectiveModule patterns to avoid duplication and ensure architectural consistency.
+
+### Decision 11: Parallel Execution Integration
+**Rationale**: Integrates with existing ParallelExecutionEngine to support unlimited parallel agent execution within resource constraints, maintaining proven coordination patterns.
+
+### Decision 12: Beast Mode Framework Compliance
+**Rationale**: Inherits from ReflectiveModule and follows established Beast Mode patterns to ensure consistent observability, health monitoring, and operational procedures across all components.
+
+This design provides a systematic, mathematically-governed approach to agent coordination that ensures reliable, secure, and scalable AI agent management within the Kiro development framework while maintaining full compatibility with existing infrastructure and operational patterns.

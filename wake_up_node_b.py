@@ -9,7 +9,7 @@ from datetime import datetime
 import redis.asyncio as redis
 
 async def wake_up_node_b():
-    client = redis.from_url("redis://:beastmode2025@192.168.1.119:6379")
+    client = redis.from_url(f"redis://:{get_redis_password()}@192.168.1.119:6379")
 
     message = {
         "id": str(uuid.uuid4()),

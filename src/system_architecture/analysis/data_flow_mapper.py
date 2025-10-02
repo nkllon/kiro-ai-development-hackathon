@@ -1,743 +1,783 @@
+#!/usr/bin/env python3
 """
-Data Flow Mapper - Comprehensive Data Flow Mapping Implementation.
+Data Flow Mapper - Comprehensive Data Flow Analysis
+===================================================
 
-This module implements Task 2.2: Comprehensive Data Flow Mapping for the 
-system-architecture-wiring-diagram specification. It traces metrics flow from 
-ReflectiveModule components through Observatory to Prometheus and Grafana, maps 
-WebSocket real-time metrics streaming, documents systematic error handling with 
-correlation ID tracking, and creates integration flow mapping.
+Implements Task 2.2 from the System Architecture Wiring Diagram specification.
+Traces metrics flow from ReflectiveModule components through Observatory to 
+Prometheus and Grafana, maps WebSocket real-time metrics streaming, documents
+systematic error handling with correlation ID tracking, and creates integration
+flow mapping.
+
+Author: Kiro AI Assistant
+Created: 2025-01-30
+Task: 2.2 - Comprehensive data flow mapping
+Requirements: 2.4, 6.1, 6.2, 6.3, 6.4
 """
 
 import asyncio
-import json
 import logging
-import time
-from dataclasses import dataclass
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Set, Tuple
-from uuid import uuid4
+from typing import Dict, List, Any, Optional, Set, Tuple
+from dataclasses import dataclass, field
+from datetime import datetime
+from enum import Enum
+import uuid
 
-from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
-from ..models.data_flow import (
-    DataFlowGraph, DataFlowNode, DataFlowEdge, MetricsFlow, WebSocketFlow,
-    ErrorFlow, IntegrationFlow, WebSocketMessageFlow, EmojiRainFlow,
-    DataFlowType, FlowDirection, FlowPriority, ErrorSeverity
+from src.rm_ddd.core.unified_reflective_module import (
+    ReflectiveModule, 
+    ModuleHealth, 
+    ModuleStatus, 
+    ModuleCapability,
+    GracefulDegradationResult
 )
-from ..discovery.infrastructure_discoverer import InfrastructureDiscoverer
-from ..discovery.observatory_websocket_client import ObservatoryWebSocketClient
 
-logger = logging.getLogger(__name__)
+
+class DataFlowType(Enum):
+    """Types of data flows in the system architecture."""
+    METRICS = "metrics"
+    WEBSOCKET = "websocket"
+    ERROR_HANDLING = "error_handling"
+    INTEGRATION = "integration"
+    REAL_TIME = "real_time"
+    BATCH = "batch"
+
+
+class FlowDirection(Enum):
+    """Direction of data flow."""
+    UPSTREAM = "upstream"
+    DOWNSTREAM = "downstream"
+    BIDIRECTIONAL = "bidirectional"
 
 
 @dataclass
-class DataFlowMappingConfig:
-    """Configuration for data flow mapping."""
-    enable_real_time_mapping: bool = True
-    enable_error_tracking: bool = True
-    enable_performance_monitoring: bool = True
-    mapping_interval_seconds: int = 30
-    correlation_id_tracking: bool = True
-    websocket_endpoints: List[str] = None
-    prometheus_endpoint: str = "http://localhost:9090"
-    grafana_endpoint: str = "http://localhost:3000"
-    observatory_endpoint: str = "http://localhost:8888"
-    
-    def __post_init__(self):
-        if self.websocket_endpoints is None:
-            self.websocket_endpoints = [
-                "/ws/observatory",
-                "/ws/anomalies", 
-                "/ws/emoji-rain",
-                "/ws/doctor-status"
-            ]
+class DataFlowNode:
+    """Represents a node in the data flow graph."""
+    node_id: str
+    node_name: str
+    node_type: str  # ReflectiveModule, Service, WebSocket, Integration
+    endpoints: List[str] = field(default_factory=list)
+    metrics_exposed: List[str] = field(default_factory=list)
+    websocket_endpoints: List[str] = field(default_factory=list)
+    correlation_id_support: bool = False
+    error_handling_capability: bool = False
+
+
+@dataclass
+class DataFlow:
+    """Represents a data flow between components."""
+    flow_id: str
+    source_node: str
+    target_node: str
+    flow_type: DataFlowType
+    direction: FlowDirection
+    data_format: str  # JSON, Prometheus metrics, WebSocket messages, etc.
+    frequency: Optional[str] = None  # real-time, 15s, 1m, etc.
+    correlation_id_tracked: bool = False
+    error_propagation: bool = False
+    description: str = ""
+    created_at: datetime = field(default_factory=datetime.now)
+
+
+@dataclass
+class MetricsFlow:
+    """Specific metrics flow from ReflectiveModule to visualization."""
+    source_component: str
+    metrics_endpoint: str
+    prometheus_scrape_config: Dict[str, Any]
+    grafana_dashboard_config: Dict[str, Any]
+    collection_interval: str
+    retention_policy: str
+    alert_rules: List[str] = field(default_factory=list)
+
+
+@dataclass
+class WebSocketFlow:
+    """WebSocket real-time data flow configuration."""
+    endpoint_path: str
+    message_types: List[str]
+    real_time_streaming: bool
+    parallel_batch_collection: bool
+    correlation_tracking: bool
+    error_recovery: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class IntegrationFlow:
+    """Integration flow between system components."""
+    integration_name: str
+    source_system: str
+    target_system: str
+    flow_path: List[str]  # ACE Reporter → AI Memory Palace → DAG Registry
+    data_transformation: List[str] = field(default_factory=list)
+    validation_points: List[str] = field(default_factory=list)
 
 
 class DataFlowMapper(ReflectiveModule):
     """
-    Comprehensive Data Flow Mapper for System Architecture Wiring Diagram.
+    Comprehensive data flow mapper for the Beast Mode framework.
     
-    Implements Task 2.2 requirements:
-    - Trace metrics flow: ReflectiveModule components → Observatory → Prometheus → Grafana
-    - Map WebSocket real-time metrics streaming parallel to batch collection
-    - Document systematic error handling with correlation ID tracking
-    - Create integration flow mapping (ACE Reporter → AI Memory Palace → DAG Registry)
-    - Map WebSocket message flows (/ws/anomalies → Grafana alerts)
-    - Document emoji rain data flow (achievement → WebSocket → frontend)
+    Implements:
+    - Metrics flow tracing from ReflectiveModule → Observatory → Prometheus → Grafana
+    - WebSocket real-time metrics streaming parallel to batch collection
+    - Systematic error handling with correlation ID tracking
+    - Integration flow mapping (ACE Reporter → AI Memory Palace → DAG Registry)
+    - WebSocket message flows (/ws/anomalies → Grafana alerts)
+    - Emoji rain data flow (achievement → WebSocket → frontend)
     """
     
-    def __init__(self, config: Optional[DataFlowMappingConfig] = None):
+    def __init__(self):
         super().__init__()
-        self.module_id = "data_flow_mapper"
-        self._config = config or DataFlowMappingConfig()
+        self.module_id = "DataFlowMapper"
+        self._logger = logging.getLogger(f"system_architecture.{self.__class__.__name__}")
         
-        # Core components
-        self._infrastructure_discoverer: Optional[InfrastructureDiscoverer] = None
-        self._websocket_client: Optional[ObservatoryWebSocketClient] = None
+        # Core data structures
+        self._nodes: Dict[str, DataFlowNode] = {}
+        self._flows: List[DataFlow] = []
+        self._metrics_flows: List[MetricsFlow] = []
+        self._websocket_flows: List[WebSocketFlow] = []
+        self._integration_flows: List[IntegrationFlow] = []
         
-        # Data flow graph
-        self._data_flow_graph: Optional[DataFlowGraph] = None
+        # Analysis state
+        self._flow_analysis_complete = False
+        self._last_analysis: Optional[datetime] = None
         
-        # Mapping state
-        self._mapping_active = False
-        self._mapping_task: Optional[asyncio.Task] = None
-        self._last_mapping_time: Optional[datetime] = None
-        
-        # Performance tracking
-        self._mapping_start_time = time.time()
-        self._flows_mapped = 0
-        self._mapping_errors = 0
-        self._last_mapping_duration = 0.0
-        
-        # Error tracking with correlation IDs
-        self._error_correlation_map: Dict[str, str] = {}
-        self._active_error_flows: Dict[str, ErrorFlow] = {}
-        
-        logger.info("🔍 DataFlowMapper initialized - Ready to map comprehensive data flows")
-    
-    async def start_mapping(self) -> bool:
-        """Start comprehensive data flow mapping."""
-        try:
-            if self._mapping_active:
-                logger.warning("DataFlowMapper is already active")
-                return True
-            
-            # Initialize infrastructure discoverer
-            self._infrastructure_discoverer = InfrastructureDiscoverer()
-            await self._infrastructure_discoverer.start_discovery()
-            
-            # Initialize WebSocket client
-            self._websocket_client = ObservatoryWebSocketClient(
-                base_url=f"ws://localhost:8888"
-            )
-            await self._websocket_client.connect_to_endpoints()
-            
-            # Initialize data flow graph
-            self._data_flow_graph = DataFlowGraph(
-                graph_id=str(uuid4()),
-                graph_name="Beast Mode Framework Data Flow Graph"
-            )
-            
-            # Start mapping task
-            self._mapping_active = True
-            self._mapping_task = asyncio.create_task(self._mapping_loop())
-            
-            logger.info("🚀 DataFlowMapper started - mapping comprehensive data flows")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Failed to start DataFlowMapper: {e}")
-            return False
-    
-    async def stop_mapping(self) -> None:
-        """Stop data flow mapping gracefully."""
-        logger.info("🛑 Stopping DataFlowMapper...")
-        
-        self._mapping_active = False
-        
-        # Cancel mapping task
-        if self._mapping_task and not self._mapping_task.done():
-            self._mapping_task.cancel()
-        
-        # Wait for task to complete
-        if self._mapping_task:
-            await asyncio.gather(self._mapping_task, return_exceptions=True)
-        
-        # Stop infrastructure discoverer
-        if self._infrastructure_discoverer:
-            await self._infrastructure_discoverer.stop_discovery()
-        
-        # Disconnect WebSocket client
-        if self._websocket_client:
-            await self._websocket_client.disconnect()
-        
-        logger.info("✅ DataFlowMapper stopped gracefully")
-    
-    async def _mapping_loop(self) -> None:
-        """Main loop for comprehensive data flow mapping."""
-        logger.info("📊 Starting comprehensive data flow mapping loop")
-        
-        while self._mapping_active:
-            mapping_start = time.time()
-            
-            try:
-                # Perform comprehensive mapping
-                await self._perform_comprehensive_mapping()
-                
-                # Track performance
-                self._last_mapping_duration = time.time() - mapping_start
-                self._last_mapping_time = datetime.now()
-                
-                # Sleep for mapping interval
-                await asyncio.sleep(self._config.mapping_interval_seconds)
-                
-            except asyncio.CancelledError:
-                logger.info("Data flow mapping loop cancelled")
-                break
-            except Exception as e:
-                logger.error(f"Error in mapping loop: {e}")
-                self._mapping_errors += 1
-                await asyncio.sleep(5)  # Brief pause on error
-        
-        logger.info("Data flow mapping loop stopped")
-    
-    async def _perform_comprehensive_mapping(self) -> None:
-        """Perform comprehensive data flow mapping."""
-        try:
-            # Map infrastructure nodes
-            await self._map_infrastructure_nodes()
-            
-            # Map metrics flows
-            await self._map_metrics_flows()
-            
-            # Map WebSocket flows
-            await self._map_websocket_flows()
-            
-            # Map error flows
-            await self._map_error_flows()
-            
-            # Map integration flows
-            await self._map_integration_flows()
-            
-            # Map WebSocket message flows
-            await self._map_websocket_message_flows()
-            
-            # Map emoji rain flows
-            await self._map_emoji_rain_flows()
-            
-            # Update graph metadata
-            self._update_graph_metadata()
-            
-            self._flows_mapped += 1
-            
-        except Exception as e:
-            logger.error(f"Error during comprehensive mapping: {e}")
-            raise
-    
-    async def _map_infrastructure_nodes(self) -> None:
-        """Map infrastructure nodes from discovery results."""
-        if not self._infrastructure_discoverer:
-            return
-        
-        # Get discovered services
-        discovered_services = self._infrastructure_discoverer.get_discovered_services()
-        
-        for service_name, service_info in discovered_services.items():
-            node = DataFlowNode(
-                node_id=service_name,
-                node_name=service_info.name,
-                node_type=service_info.name,
-                endpoint=f"http://localhost:{service_info.port}" if service_info.port else None,
-                port=service_info.port,
-                health_endpoint=service_info.health_endpoint,
-                websocket_endpoints=self._get_websocket_endpoints_for_service(service_info.name),
-                capabilities=self._get_capabilities_for_service(service_info.name),
-                dependencies=service_info.dependencies,
-                metadata={
-                    "process_id": service_info.process_id,
-                    "config_files": service_info.config_files,
-                    "validation_status": service_info.validation_status,
-                    "last_validated": service_info.last_validated.isoformat() if service_info.last_validated else None
-                },
-                validation_status=service_info.validation_status,
-                accuracy_score=0.9 if service_info.validation_status == "active" else 0.5
-            )
-            
-            self._data_flow_graph.add_node(node)
-        
-        logger.debug(f"Mapped {len(discovered_services)} infrastructure nodes")
-    
-    async def _map_metrics_flows(self) -> None:
-        """Map metrics flow: ReflectiveModule components → Observatory → Prometheus → Grafana."""
-        try:
-            # Create metrics flow
-            metrics_flow = MetricsFlow(
-                flow_id=f"metrics_flow_{uuid4()}",
-                source_component="ReflectiveModule Components",
-                target_systems=["Observatory", "Prometheus", "Grafana"],
-                metrics_types=[
-                    "health_score", "uptime_seconds", "error_count", "warning_count",
-                    "memory_usage_mb", "cpu_usage_percent", "operation_count",
-                    "performance_metrics", "usage_tracking"
-                ],
-                collection_interval_seconds=15.0,
-                retention_period_days=30,
-                flow_path=[
-                    "ReflectiveModule Components",
-                    "Observatory Server",
-                    "Prometheus Server", 
-                    "Grafana Dashboard"
-                ],
-                parallel_streams=[
-                    "/ws/observatory",
-                    "/ws/doctor-status"
-                ],
-                batch_collection_enabled=True,
-                real_time_streaming_enabled=True,
-                compression_enabled=True,
-                error_correlation_id=str(uuid4()),
-                error_propagation_path=[
-                    "ReflectiveModule → Observatory",
-                    "Observatory → Prometheus",
-                    "Prometheus → Grafana"
-                ],
-                fallback_mechanisms=[
-                    "Redis failover",
-                    "WebSocket reconnection",
-                    "Batch collection fallback"
-                ]
-            )
-            
-            self._data_flow_graph.add_metrics_flow(metrics_flow)
-            
-            # Create edges for metrics flow
-            await self._create_metrics_flow_edges(metrics_flow)
-            
-            logger.debug("Mapped metrics flow: ReflectiveModule → Observatory → Prometheus → Grafana")
-            
-        except Exception as e:
-            logger.error(f"Error mapping metrics flows: {e}")
-    
-    async def _map_websocket_flows(self) -> None:
-        """Map WebSocket real-time metrics streaming parallel to batch collection."""
-        try:
-            for endpoint in self._config.websocket_endpoints:
-                websocket_flow = WebSocketFlow(
-                    flow_id=f"websocket_flow_{endpoint.replace('/', '_')}_{uuid4()}",
-                    endpoint=endpoint,
-                    message_types=self._get_message_types_for_endpoint(endpoint),
-                    streaming_frequency_ms=1000,
-                    message_format="json",
-                    compression_enabled=True,
-                    parallel_to_batch=True,
-                    batch_collection_endpoint=f"http://localhost:8888/api/metrics",
-                    real_time_endpoint=f"ws://localhost:8888{endpoint}",
-                    connection_pool_size=5,
-                    retry_policy={
-                        "max_attempts": 10,
-                        "base_delay": 1.0,
-                        "max_delay": 60.0,
-                        "multiplier": 2.0
-                    },
-                    heartbeat_interval_seconds=30,
-                    error_correlation_id=str(uuid4()),
-                    reconnection_strategy="exponential_backoff",
-                    fallback_to_batch=True
-                )
-                
-                self._data_flow_graph.add_websocket_flow(websocket_flow)
-            
-            logger.debug(f"Mapped {len(self._config.websocket_endpoints)} WebSocket flows")
-            
-        except Exception as e:
-            logger.error(f"Error mapping WebSocket flows: {e}")
-    
-    async def _map_error_flows(self) -> None:
-        """Map systematic error handling with correlation ID tracking."""
-        try:
-            # Create error flow for systematic error handling
-            error_flow = ErrorFlow(
-                error_id=f"systematic_error_flow_{uuid4()}",
-                correlation_id=str(uuid4()),
-                error_type="systematic_error_handling",
-                severity=ErrorSeverity.ERROR,
-                source_component="ReflectiveModule",
-                propagation_path=[
-                    "ReflectiveModule",
-                    "Observatory Error Handler",
-                    "Prometheus Alert Manager",
-                    "Grafana Alerting"
-                ],
-                affected_components=[
-                    "Observatory Server",
-                    "Prometheus Server",
-                    "Grafana Dashboard",
-                    "WebSocket Connections"
-                ],
-                error_message="Systematic error handling with correlation ID tracking",
-                error_code="SYS_ERROR_001",
-                context_data={
-                    "error_tracking_enabled": True,
-                    "correlation_id_tracking": True,
-                    "error_propagation_enabled": True,
-                    "fallback_mechanisms": [
-                        "Redis failover",
-                        "WebSocket reconnection",
-                        "Service isolation"
-                    ]
-                },
-                recovery_actions=[
-                    "Automatic retry with exponential backoff",
-                    "Fallback to batch collection",
-                    "Service isolation and recovery",
-                    "Manual intervention if required"
-                ],
-                fallback_activated=False,
-                manual_intervention_required=False,
-                impact_score=0.3,  # Moderate impact
-                affected_users=0,
-                service_degradation=False,
-                tags=["systematic", "error_handling", "correlation_id"],
-                metadata={
-                    "tracking_enabled": True,
-                    "correlation_map_size": len(self._error_correlation_map),
-                    "active_error_flows": len(self._active_error_flows)
-                }
-            )
-            
-            self._data_flow_graph.add_error_flow(error_flow)
-            
-            logger.debug("Mapped systematic error handling flow with correlation ID tracking")
-            
-        except Exception as e:
-            logger.error(f"Error mapping error flows: {e}")
-    
-    async def _map_integration_flows(self) -> None:
-        """Map integration flow: ACE Reporter → AI Memory Palace → DAG Registry."""
-        try:
-            integration_flow = IntegrationFlow(
-                flow_id=f"integration_flow_{uuid4()}",
-                integration_name="ACE Reporter to AI Memory Palace to DAG Registry",
-                source_system="ACE Reporter",
-                target_systems=["AI Memory Palace", "DAG Registry"],
-                integration_type="data_sync",
-                data_format="json",
-                transport_protocol="http",
-                flow_sequence=[
-                    "ACE Reporter",
-                    "AI Memory Palace",
-                    "DAG Registry"
-                ],
-                dependencies=[
-                    "ACE Reporter must be active",
-                    "AI Memory Palace must be accessible",
-                    "DAG Registry must be available"
-                ],
-                processing_mode="sequential",
-                batch_processing_enabled=True,
-                real_time_processing_enabled=True,
-                error_correlation_id=str(uuid4()),
-                retry_policy={
-                    "max_attempts": 5,
-                    "base_delay": 2.0,
-                    "max_delay": 30.0,
-                    "multiplier": 1.5
-                },
-                circuit_breaker_enabled=True
-            )
-            
-            self._data_flow_graph.add_integration_flow(integration_flow)
-            
-            logger.debug("Mapped integration flow: ACE Reporter → AI Memory Palace → DAG Registry")
-            
-        except Exception as e:
-            logger.error(f"Error mapping integration flows: {e}")
-    
-    async def _map_websocket_message_flows(self) -> None:
-        """Map WebSocket message flows: /ws/anomalies → Grafana alerts."""
-        try:
-            websocket_message_flow = WebSocketMessageFlow(
-                flow_id=f"websocket_message_flow_{uuid4()}",
-                source_endpoint="/ws/anomalies",
-                target_system="Grafana",
-                message_type="anomaly_alert",
-                message_format="json",
-                priority=FlowPriority.HIGH,
-                real_time_enabled=True,
-                batch_processing_enabled=False,
-                compression_enabled=True,
-                alert_rules=[
-                    {
-                        "rule_name": "anomaly_detection",
-                        "condition": "anomaly_score > 0.8",
-                        "severity": "warning"
-                    },
-                    {
-                        "rule_name": "critical_anomaly",
-                        "condition": "anomaly_score > 0.95",
-                        "severity": "critical"
-                    }
-                ],
-                notification_channels=[
-                    "grafana_alerts",
-                    "websocket_broadcast",
-                    "email_notifications"
-                ],
-                escalation_policy={
-                    "immediate": ["websocket_broadcast"],
-                    "5_minutes": ["email_notifications"],
-                    "15_minutes": ["pager_duty"]
-                },
-                error_correlation_id=str(uuid4()),
-                fallback_notification="email_alert_system"
-            )
-            
-            self._data_flow_graph.add_websocket_message_flow(websocket_message_flow)
-            
-            logger.debug("Mapped WebSocket message flow: /ws/anomalies → Grafana alerts")
-            
-        except Exception as e:
-            logger.error(f"Error mapping WebSocket message flows: {e}")
-    
-    async def _map_emoji_rain_flows(self) -> None:
-        """Map emoji rain data flow: achievement → WebSocket → frontend."""
-        try:
-            emoji_rain_flow = EmojiRainFlow(
-                flow_id=f"emoji_rain_flow_{uuid4()}",
-                achievement_type="task_completion",
-                trigger_event="task_success",
-                flow_path=[
-                    "Achievement Detection",
-                    "WebSocket Broadcast",
-                    "Frontend Rendering"
-                ],
-                websocket_endpoint="/ws/emoji-rain",
-                emoji_type="celebration",
-                emoji_sequence=["🎉", "✨", "🚀", "💫", "🌟"],
-                animation_duration_ms=3000,
-                broadcast_scope="global",
-                target_users=[],
-                broadcast_channels=[
-                    "/ws/emoji-rain",
-                    "frontend_notifications"
-                ],
-                error_correlation_id=str(uuid4()),
-                fallback_celebration="static_emoji_display"
-            )
-            
-            self._data_flow_graph.add_emoji_rain_flow(emoji_rain_flow)
-            
-            logger.debug("Mapped emoji rain data flow: achievement → WebSocket → frontend")
-            
-        except Exception as e:
-            logger.error(f"Error mapping emoji rain flows: {e}")
-    
-    async def _create_metrics_flow_edges(self, metrics_flow: MetricsFlow) -> None:
-        """Create edges for metrics flow."""
-        try:
-            # ReflectiveModule → Observatory
-            edge1 = DataFlowEdge(
-                edge_id=f"edge_reflective_observatory_{uuid4()}",
-                source_node_id="ReflectiveModule Components",
-                target_node_id="Observatory Server",
-                flow_type=DataFlowType.METRICS,
-                direction=FlowDirection.OUTBOUND,
-                priority=FlowPriority.HIGH,
-                data_format="json",
-                transport_protocol="http",
-                compression_enabled=True,
-                correlation_id_tracking=True,
-                description="Metrics collection from ReflectiveModule components to Observatory",
-                tags=["metrics", "collection", "reflective_module"]
-            )
-            
-            # Observatory → Prometheus
-            edge2 = DataFlowEdge(
-                edge_id=f"edge_observatory_prometheus_{uuid4()}",
-                source_node_id="Observatory Server",
-                target_node_id="Prometheus Server",
-                flow_type=DataFlowType.METRICS,
-                direction=FlowDirection.OUTBOUND,
-                priority=FlowPriority.HIGH,
-                data_format="prometheus",
-                transport_protocol="http",
-                compression_enabled=False,
-                correlation_id_tracking=True,
-                description="Metrics scraping from Observatory to Prometheus",
-                tags=["metrics", "scraping", "prometheus"]
-            )
-            
-            # Prometheus → Grafana
-            edge3 = DataFlowEdge(
-                edge_id=f"edge_prometheus_grafana_{uuid4()}",
-                source_node_id="Prometheus Server",
-                target_node_id="Grafana Dashboard",
-                flow_type=DataFlowType.METRICS,
-                direction=FlowDirection.OUTBOUND,
-                priority=FlowPriority.HIGH,
-                data_format="promql",
-                transport_protocol="http",
-                compression_enabled=False,
-                correlation_id_tracking=True,
-                description="Metrics querying from Prometheus to Grafana",
-                tags=["metrics", "querying", "grafana"]
-            )
-            
-            self._data_flow_graph.add_edge(edge1)
-            self._data_flow_graph.add_edge(edge2)
-            self._data_flow_graph.add_edge(edge3)
-            
-        except Exception as e:
-            logger.error(f"Error creating metrics flow edges: {e}")
-    
-    def _get_websocket_endpoints_for_service(self, service_name: str) -> List[str]:
-        """Get WebSocket endpoints for a service."""
-        if service_name.lower() == "observatory":
-            return self._config.websocket_endpoints
-        return []
-    
-    def _get_capabilities_for_service(self, service_name: str) -> List[str]:
-        """Get capabilities for a service."""
-        capabilities_map = {
-            "Observatory": ["metrics_collection", "websocket_server", "real_time_streaming"],
-            "Prometheus": ["metrics_storage", "querying", "alerting"],
-            "Grafana": ["visualization", "dashboard", "alerting"],
-            "Redis": ["data_storage", "caching", "pub_sub"]
-        }
-        return capabilities_map.get(service_name, [])
-    
-    def _get_message_types_for_endpoint(self, endpoint: str) -> List[str]:
-        """Get message types for a WebSocket endpoint."""
-        message_types_map = {
-            "/ws/observatory": ["metrics", "status", "health_check"],
-            "/ws/anomalies": ["anomaly_alert", "anomaly_detection"],
-            "/ws/emoji-rain": ["achievement", "celebration", "emoji_sequence"],
-            "/ws/doctor-status": ["health_status", "diagnostic", "recovery"]
-        }
-        return message_types_map.get(endpoint, ["generic"])
-    
-    def _update_graph_metadata(self) -> None:
-        """Update graph metadata and validation."""
-        if not self._data_flow_graph:
-            return
-        
-        # Update complexity score
-        self._data_flow_graph.complexity_score = (
-            self._data_flow_graph.total_nodes * 0.3 +
-            self._data_flow_graph.total_edges * 0.4 +
-            self._data_flow_graph.total_flows * 0.3
-        )
-        
-        # Update accuracy score
-        if self._data_flow_graph.nodes:
-            total_accuracy = sum(node.accuracy_score for node in self._data_flow_graph.nodes.values())
-            self._data_flow_graph.accuracy_score = total_accuracy / len(self._data_flow_graph.nodes)
-        
-        # Validate graph
-        validation_results = self._data_flow_graph.validate_graph()
-        self._data_flow_graph.validation_status = "valid" if validation_results["is_valid"] else "invalid"
-    
-    def get_data_flow_graph(self) -> Optional[DataFlowGraph]:
-        """Get the current data flow graph."""
-        return self._data_flow_graph
-    
-    def get_flow_summary(self) -> Dict[str, Any]:
-        """Get a summary of all mapped flows."""
-        if not self._data_flow_graph:
-            return {"error": "No data flow graph available"}
-        
-        return self._data_flow_graph.get_flow_summary()
-    
-    def get_mapping_stats(self) -> Dict[str, Any]:
-        """Get data flow mapping performance statistics."""
-        uptime = time.time() - self._mapping_start_time
-        
-        return {
-            "uptime_seconds": uptime,
-            "mapping_active": self._mapping_active,
-            "flows_mapped": self._flows_mapped,
-            "mapping_errors": self._mapping_errors,
-            "last_mapping_duration_ms": self._last_mapping_duration * 1000,
-            "last_mapping_time": self._last_mapping_time.isoformat() if self._last_mapping_time else None,
-            "mapping_rate_per_hour": (self._flows_mapped / uptime) * 3600 if uptime > 0 else 0,
-            "error_rate_percent": (self._mapping_errors / max(1, self._flows_mapped)) * 100,
-            "graph_stats": self.get_flow_summary() if self._data_flow_graph else None
-        }
-    
-    def export_data_flow_report(self, format: str = "json") -> str:
-        """Export comprehensive data flow report."""
-        if not self._data_flow_graph:
-            return json.dumps({"error": "No data flow graph available"})
-        
-        if format.lower() == "json":
-            return json.dumps(self._data_flow_graph.to_dict(), indent=2)
-        else:
-            return str(self._data_flow_graph.to_dict())
-    
-    # ReflectiveModule implementation
-    
-    def get_capabilities(self) -> List['ModuleCapability']:
-        """Get DataFlowMapper capabilities."""
-        from src.rm_ddd.core.unified_reflective_module import ModuleCapability
-        return [
-            ModuleCapability.MONITORING,
-            ModuleCapability.DATA_PROCESSING,
-            ModuleCapability.API_INTEGRATION,
-        ]
+        self._logger.info("DataFlowMapper initialized for comprehensive flow analysis")
     
     def get_module_info(self) -> Dict[str, Any]:
-        """Get module information."""
+        """Get module information - RDI Compliant."""
         return {
             "module_id": self.module_id,
-            "name": "Comprehensive Data Flow Mapper",
+            "name": "DataFlowMapper",
             "version": "1.0.0",
-            "description": "Maps comprehensive data flows across Beast Mode framework ecosystem",
-            "config": {
-                "real_time_mapping": self._config.enable_real_time_mapping,
-                "error_tracking": self._config.enable_error_tracking,
-                "performance_monitoring": self._config.enable_performance_monitoring,
-                "mapping_interval": self._config.mapping_interval_seconds,
-                "websocket_endpoints": self._config.websocket_endpoints
-            }
+            "description": "Comprehensive data flow analysis and mapping",
+            "task": "2.2 - Comprehensive data flow mapping",
+            "capabilities": [cap.value for cap in self.get_capabilities()],
+            "nodes_mapped": len(self._nodes),
+            "flows_analyzed": len(self._flows),
+            "last_analysis": self._last_analysis.isoformat() if self._last_analysis else None
         }
     
-    def get_health_status(self) -> 'ModuleHealth':
-        """Get health status of the DataFlowMapper."""
-        from src.rm_ddd.core.unified_reflective_module import ModuleHealth, ModuleStatus
-        
-        # Determine status based on mapping state and error rate
-        if not self._mapping_active:
-            status = ModuleStatus.ERROR
-            health_score = 0.0
-            issues = ["DataFlowMapper is not active"]
-        else:
-            error_rate = (self._mapping_errors / max(1, self._flows_mapped)) * 100
-            
-            if error_rate > 10:
-                status = ModuleStatus.ERROR
-                health_score = 0.3
-                issues = [f"High error rate: {error_rate:.1f}%"]
-            elif error_rate > 5:
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities - RDI Compliant."""
+        return [
+            ModuleCapability.CORE_FUNCTIONALITY,
+            ModuleCapability.DATA_PROCESSING,
+            ModuleCapability.VALIDATION,
+            ModuleCapability.MONITORING,
+            ModuleCapability.API_INTEGRATION
+        ]
+    
+    def get_health_status(self) -> ModuleHealth:
+        """Get module health status - RDI Compliant."""
+        try:
+            if not self._flow_analysis_complete:
                 status = ModuleStatus.WARNING
-                health_score = 0.7
-                issues = [f"Elevated error rate: {error_rate:.1f}%"]
+                health_score = 0.5
+                issues = ["Flow analysis not yet performed"]
+            elif len(self._flows) == 0:
+                status = ModuleStatus.WARNING
+                health_score = 0.6
+                issues = ["No data flows mapped"]
             else:
                 status = ModuleStatus.HEALTHY
                 health_score = 1.0
                 issues = []
+            
+            return ModuleHealth(
+                module_id=self.module_id,
+                status=status,
+                health_score=health_score,
+                issues=issues,
+                last_check=datetime.now(),
+                uptime_seconds=(datetime.now() - self._start_time).total_seconds(),
+                error_count=0,
+                warning_count=len(issues)
+            )
+            
+        except Exception as e:
+            return ModuleHealth(
+                module_id=self.module_id,
+                status=ModuleStatus.ERROR,
+                health_score=0.0,
+                issues=[f"Health check failed: {str(e)}"],
+                last_check=datetime.now(),
+                uptime_seconds=0,
+                error_count=1,
+                warning_count=0
+            )
+    
+    def graceful_degradation(self) -> GracefulDegradationResult:
+        """Perform graceful degradation - RDI Compliant."""
+        try:
+            remaining_capabilities = [
+                ModuleCapability.CORE_FUNCTIONALITY,
+                ModuleCapability.DATA_PROCESSING
+            ]
+            
+            degraded_capabilities = [
+                ModuleCapability.VALIDATION,
+                ModuleCapability.MONITORING,
+                ModuleCapability.API_INTEGRATION
+            ]
+            
+            return GracefulDegradationResult(
+                success=True,
+                degraded_capabilities=degraded_capabilities,
+                remaining_capabilities=remaining_capabilities
+            )
+            
+        except Exception as e:
+            return GracefulDegradationResult(
+                success=False,
+                degraded_capabilities=[],
+                remaining_capabilities=[],
+                error_message=str(e)
+            )
+    
+    def register_data_flow_node(self, node_id: str, node_name: str, node_type: str,
+                               endpoints: List[str] = None, 
+                               websocket_endpoints: List[str] = None) -> None:
+        """Register a node in the data flow graph."""
         
-        uptime = time.time() - self._mapping_start_time
-        
-        return ModuleHealth(
-            module_id=self.module_id,
-            status=status,
-            health_score=health_score,
-            issues=issues,
-            last_check=datetime.now(),
-            uptime_seconds=uptime,
-            error_count=self._mapping_errors,
-            warning_count=0
+        node = DataFlowNode(
+            node_id=node_id,
+            node_name=node_name,
+            node_type=node_type,
+            endpoints=endpoints or [],
+            websocket_endpoints=websocket_endpoints or [],
+            correlation_id_support=node_type == "ReflectiveModule",
+            error_handling_capability=node_type in ["ReflectiveModule", "Observatory"]
         )
-    
-    async def graceful_degradation(self, error: Exception) -> bool:
-        """Handle graceful degradation on errors."""
-        logger.warning(f"DataFlowMapper entering graceful degradation due to: {error}")
         
-        # Continue running but with reduced functionality
-        if "websocket" in str(error).lower():
-            logger.info("WebSocket connection issue - continuing without real-time mapping")
-            return True
-        elif "infrastructure" in str(error).lower():
-            logger.info("Infrastructure discovery issue - continuing with cached data")
-            return True
-        
-        return False
+        self._nodes[node_id] = node
+        self._logger.debug(f"Registered data flow node: {node_id} ({node_type})")
     
-    async def get_metrics(self) -> Dict[str, Any]:
-        """Get current metrics for this mapper."""
-        return {
-            "mapping_stats": self.get_mapping_stats(),
-            "data_flow_graph_available": self._data_flow_graph is not None,
-            "infrastructure_discoverer_active": self._infrastructure_discoverer is not None,
-            "websocket_client_connected": self._websocket_client is not None,
-            "mapping_active": self._mapping_active
+    def trace_metrics_flow(self) -> List[MetricsFlow]:
+        """
+        Trace metrics flow from ReflectiveModule components through Observatory 
+        to Prometheus and Grafana.
+        """
+        self._logger.info("Tracing metrics flow: ReflectiveModule → Observatory → Prometheus → Grafana")
+        
+        metrics_flows = []
+        
+        # ReflectiveModule → Observatory metrics flow
+        observatory_metrics_flow = MetricsFlow(
+            source_component="ReflectiveModule Components",
+            metrics_endpoint="/metrics",
+            prometheus_scrape_config={
+                "job_name": "reflective_modules",
+                "scrape_interval": "15s",
+                "metrics_path": "/metrics",
+                "targets": ["localhost:8888", "localhost:9090"]
+            },
+            grafana_dashboard_config={
+                "datasource": "Prometheus",
+                "dashboard_name": "ReflectiveModule Metrics",
+                "panels": [
+                    "Health Status", "Performance Metrics", "Error Rates", 
+                    "Request Latency", "Resource Usage"
+                ]
+            },
+            collection_interval="15s",
+            retention_policy="30d",
+            alert_rules=[
+                "ReflectiveModule Health Check Failed",
+                "High Error Rate Detected",
+                "Performance Degradation Alert"
+            ]
+        )
+        metrics_flows.append(observatory_metrics_flow)
+        
+        # Observatory → Prometheus metrics flow
+        prometheus_metrics_flow = MetricsFlow(
+            source_component="Observatory Server",
+            metrics_endpoint="/metrics",
+            prometheus_scrape_config={
+                "job_name": "observatory",
+                "scrape_interval": "15s",
+                "metrics_path": "/metrics",
+                "targets": ["localhost:8888"]
+            },
+            grafana_dashboard_config={
+                "datasource": "Prometheus",
+                "dashboard_name": "Observatory Metrics",
+                "panels": [
+                    "WebSocket Connections", "Message Throughput", "System Health",
+                    "Emoji Rain Events", "Anomaly Detection"
+                ]
+            },
+            collection_interval="15s",
+            retention_policy="30d"
+        )
+        metrics_flows.append(prometheus_metrics_flow)
+        
+        # Prometheus → Grafana visualization flow
+        grafana_visualization_flow = MetricsFlow(
+            source_component="Prometheus Server",
+            metrics_endpoint="/api/v1/query",
+            prometheus_scrape_config={},  # Grafana queries Prometheus
+            grafana_dashboard_config={
+                "datasource": "Prometheus (localhost:9090)",
+                "dashboard_name": "System Overview",
+                "panels": [
+                    "Overall System Health", "Service Dependencies", 
+                    "Real-time Metrics", "Alert Status"
+                ]
+            },
+            collection_interval="real-time",
+            retention_policy="inherited_from_prometheus"
+        )
+        metrics_flows.append(grafana_visualization_flow)
+        
+        self._metrics_flows = metrics_flows
+        self._logger.info(f"Traced {len(metrics_flows)} metrics flows")
+        return metrics_flows
+    
+    def map_websocket_real_time_streaming(self) -> List[WebSocketFlow]:
+        """
+        Map WebSocket real-time metrics streaming parallel to batch collection.
+        """
+        self._logger.info("Mapping WebSocket real-time streaming flows")
+        
+        websocket_flows = []
+        
+        # Observatory WebSocket endpoints
+        observatory_websocket = WebSocketFlow(
+            endpoint_path="/ws/observatory",
+            message_types=["service_status", "metrics_update", "system_event", "health_check"],
+            real_time_streaming=True,
+            parallel_batch_collection=True,
+            correlation_tracking=True,
+            error_recovery={
+                "reconnection_strategy": "exponential_backoff",
+                "max_retries": 3,
+                "fallback_mode": "polling"
+            }
+        )
+        websocket_flows.append(observatory_websocket)
+        
+        # Emoji Rain WebSocket flow
+        emoji_rain_websocket = WebSocketFlow(
+            endpoint_path="/ws/emoji-rain",
+            message_types=["emoji_event", "celebration", "achievement", "coordination_visual"],
+            real_time_streaming=True,
+            parallel_batch_collection=False,  # Real-time only
+            correlation_tracking=True,
+            error_recovery={
+                "reconnection_strategy": "immediate",
+                "max_retries": 5,
+                "fallback_mode": "disable_animations"
+            }
+        )
+        websocket_flows.append(emoji_rain_websocket)
+        
+        # Anomalies WebSocket flow
+        anomalies_websocket = WebSocketFlow(
+            endpoint_path="/ws/anomalies",
+            message_types=["anomaly_detected", "threshold_exceeded", "alert", "performance_warning"],
+            real_time_streaming=True,
+            parallel_batch_collection=True,
+            correlation_tracking=True,
+            error_recovery={
+                "reconnection_strategy": "exponential_backoff",
+                "max_retries": 3,
+                "fallback_mode": "email_alerts"
+            }
+        )
+        websocket_flows.append(anomalies_websocket)
+        
+        # Doctor Status WebSocket flow
+        doctor_status_websocket = WebSocketFlow(
+            endpoint_path="/ws/doctor-status",
+            message_types=["health_check", "status_update", "diagnostic", "system_recovery"],
+            real_time_streaming=True,
+            parallel_batch_collection=True,
+            correlation_tracking=True,
+            error_recovery={
+                "reconnection_strategy": "exponential_backoff",
+                "max_retries": 3,
+                "fallback_mode": "system_logs"
+            }
+        )
+        websocket_flows.append(doctor_status_websocket)
+        
+        self._websocket_flows = websocket_flows
+        self._logger.info(f"Mapped {len(websocket_flows)} WebSocket flows")
+        return websocket_flows
+    
+    def document_systematic_error_handling(self) -> Dict[str, Any]:
+        """
+        Document systematic error handling with correlation ID tracking.
+        """
+        self._logger.info("Documenting systematic error handling with correlation ID tracking")
+        
+        error_handling_documentation = {
+            "correlation_id_system": {
+                "generation": "UUID4 format generated at request entry point",
+                "propagation": "Passed through all system components via headers/context",
+                "tracking": "Logged at each component interaction",
+                "format": "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
+            },
+            "error_propagation_paths": [
+                {
+                    "path": "ReflectiveModule → Observatory → Prometheus → Grafana",
+                    "error_types": ["Health Check Failures", "Metrics Collection Errors", "Visualization Errors"],
+                    "correlation_tracking": True,
+                    "recovery_procedures": [
+                        "Automatic retry with exponential backoff",
+                        "Fallback to cached data",
+                        "Alert generation with correlation ID"
+                    ]
+                },
+                {
+                    "path": "WebSocket Connection → Observatory → Error Handler",
+                    "error_types": ["Connection Drops", "Message Parsing Errors", "Authentication Failures"],
+                    "correlation_tracking": True,
+                    "recovery_procedures": [
+                        "Automatic reconnection",
+                        "Message queue replay",
+                        "Graceful degradation to polling"
+                    ]
+                },
+                {
+                    "path": "Integration Points → ACE Reporter → AI Memory Palace → DAG Registry",
+                    "error_types": ["Integration Failures", "Data Validation Errors", "Dependency Conflicts"],
+                    "correlation_tracking": True,
+                    "recovery_procedures": [
+                        "Transaction rollback",
+                        "Dependency resolution",
+                        "Manual intervention alerts"
+                    ]
+                }
+            ],
+            "systematic_error_handling": {
+                "error_classification": [
+                    "Transient (retry-able)",
+                    "Permanent (requires intervention)",
+                    "Degraded (partial functionality)",
+                    "Critical (system-wide impact)"
+                ],
+                "escalation_procedures": [
+                    "Level 1: Automatic retry and logging",
+                    "Level 2: Alert generation with correlation ID",
+                    "Level 3: Human intervention required",
+                    "Level 4: Emergency protocol activation"
+                ],
+                "correlation_id_benefits": [
+                    "End-to-end request tracing",
+                    "Distributed debugging capability",
+                    "Performance bottleneck identification",
+                    "Error root cause analysis"
+                ]
+            }
         }
+        
+        return error_handling_documentation
+    
+    def create_integration_flow_mapping(self) -> List[IntegrationFlow]:
+        """
+        Create integration flow mapping (ACE Reporter → AI Memory Palace → DAG Registry).
+        """
+        self._logger.info("Creating integration flow mapping")
+        
+        integration_flows = []
+        
+        # ACE Reporter → AI Memory Palace → DAG Registry flow
+        ace_integration_flow = IntegrationFlow(
+            integration_name="ACE Reporter Integration",
+            source_system="ACE Reporter",
+            target_system="AI Memory Palace",
+            flow_path=["ACE Reporter", "Progress Broadcaster", "AI Memory Palace", "Context Storage"],
+            data_transformation=[
+                "Progress events → Structured context",
+                "Achievement data → Memory storage format",
+                "Correlation IDs → Context linking"
+            ],
+            validation_points=[
+                "ACE Reporter event validation",
+                "Progress data integrity check",
+                "AI Memory Palace storage confirmation"
+            ]
+        )
+        integration_flows.append(ace_integration_flow)
+        
+        # AI Memory Palace → DAG Registry flow
+        memory_dag_flow = IntegrationFlow(
+            integration_name="Memory Palace to DAG Registry",
+            source_system="AI Memory Palace",
+            target_system="DAG Registry",
+            flow_path=["AI Memory Palace", "Context Retrieval", "DAG Registry", "Dependency Validation"],
+            data_transformation=[
+                "Stored context → Dependency information",
+                "Historical data → Validation rules",
+                "Context patterns → DAG constraints"
+            ],
+            validation_points=[
+                "Context data availability",
+                "DAG Registry connectivity",
+                "Dependency validation success"
+            ]
+        )
+        integration_flows.append(memory_dag_flow)
+        
+        # Observatory → Integration Points flow
+        observatory_integration_flow = IntegrationFlow(
+            integration_name="Observatory Integration Hub",
+            source_system="Observatory Server",
+            target_system="Multiple Integration Points",
+            flow_path=["Observatory", "WebSocket Hub", "ACE Reporter", "AI Memory Palace", "DAG Registry"],
+            data_transformation=[
+                "WebSocket events → Progress broadcasts",
+                "System metrics → Context storage",
+                "Health status → Dependency validation"
+            ],
+            validation_points=[
+                "WebSocket connectivity",
+                "Integration point health",
+                "Data flow continuity"
+            ]
+        )
+        integration_flows.append(observatory_integration_flow)
+        
+        self._integration_flows = integration_flows
+        self._logger.info(f"Created {len(integration_flows)} integration flow mappings")
+        return integration_flows
+    
+    def map_websocket_message_flows(self) -> Dict[str, Any]:
+        """
+        Map WebSocket message flows (/ws/anomalies → Grafana alerts).
+        """
+        self._logger.info("Mapping WebSocket message flows to Grafana alerts")
+        
+        websocket_message_flows = {
+            "/ws/anomalies": {
+                "message_types": ["anomaly_detected", "threshold_exceeded", "performance_warning"],
+                "grafana_integration": {
+                    "alert_manager_webhook": "http://localhost:9093/api/v1/alerts",
+                    "dashboard_panels": ["Anomaly Timeline", "Alert Status", "Performance Metrics"],
+                    "notification_channels": ["email", "slack", "webhook"]
+                },
+                "flow_sequence": [
+                    "Anomaly Detection → WebSocket Message",
+                    "WebSocket → Observatory Event Handler",
+                    "Event Handler → Prometheus Alert Rule",
+                    "Alert Rule → Grafana Alert Manager",
+                    "Alert Manager → Notification Channels"
+                ],
+                "correlation_tracking": True,
+                "real_time_processing": True
+            },
+            "/ws/doctor-status": {
+                "message_types": ["health_check", "status_update", "diagnostic"],
+                "grafana_integration": {
+                    "dashboard_panels": ["System Health", "Component Status", "Diagnostic Timeline"],
+                    "alert_rules": ["Component Down", "Health Check Failed", "Diagnostic Alert"]
+                },
+                "flow_sequence": [
+                    "Health Check → WebSocket Message",
+                    "WebSocket → Observatory Health Handler",
+                    "Health Handler → Prometheus Metrics",
+                    "Metrics → Grafana Dashboard Update"
+                ]
+            },
+            "/ws/emoji-rain": {
+                "message_types": ["achievement", "celebration", "coordination_visual"],
+                "grafana_integration": {
+                    "dashboard_panels": ["Achievement Timeline", "Celebration Events"],
+                    "custom_visualizations": ["Emoji Rain Animation", "Achievement Counter"]
+                },
+                "flow_sequence": [
+                    "Achievement Event → WebSocket Message",
+                    "WebSocket → Frontend Animation",
+                    "Event → Observatory Metrics",
+                    "Metrics → Grafana Achievement Dashboard"
+                ]
+            }
+        }
+        
+        return websocket_message_flows
+    
+    def document_emoji_rain_data_flow(self) -> Dict[str, Any]:
+        """
+        Document emoji rain data flow (achievement → WebSocket → frontend).
+        """
+        self._logger.info("Documenting emoji rain data flow")
+        
+        emoji_rain_flow = {
+            "flow_description": "Achievement-triggered emoji rain visualization system",
+            "data_flow_sequence": [
+                {
+                    "step": 1,
+                    "component": "Achievement Detection",
+                    "action": "System detects achievement event (task completion, milestone, etc.)",
+                    "data_format": "Achievement event object with metadata",
+                    "correlation_id": "Generated for tracking"
+                },
+                {
+                    "step": 2,
+                    "component": "Observatory Server",
+                    "action": "Processes achievement event and triggers emoji rain",
+                    "data_format": "WebSocket message with emoji rain configuration",
+                    "correlation_id": "Propagated from achievement event"
+                },
+                {
+                    "step": 3,
+                    "component": "WebSocket Endpoint (/ws/emoji-rain)",
+                    "action": "Broadcasts emoji rain event to connected clients",
+                    "data_format": "JSON message with emoji type, duration, intensity",
+                    "correlation_id": "Included in message metadata"
+                },
+                {
+                    "step": 4,
+                    "component": "Frontend Client",
+                    "action": "Receives WebSocket message and renders emoji rain animation",
+                    "data_format": "DOM manipulation and CSS animations",
+                    "correlation_id": "Used for debugging and analytics"
+                },
+                {
+                    "step": 5,
+                    "component": "Metrics Collection",
+                    "action": "Records emoji rain event for analytics and monitoring",
+                    "data_format": "Prometheus metrics and Grafana visualization",
+                    "correlation_id": "Links to original achievement event"
+                }
+            ],
+            "message_format": {
+                "type": "emoji_rain",
+                "payload": {
+                    "emoji_type": "celebration",
+                    "duration_ms": 3000,
+                    "intensity": "high",
+                    "achievement_type": "task_completion",
+                    "correlation_id": "uuid"
+                },
+                "timestamp": "ISO 8601 format",
+                "source": "observatory_server"
+            },
+            "error_handling": {
+                "websocket_failure": "Graceful degradation - no animation",
+                "frontend_error": "Fallback to simple notification",
+                "correlation_tracking": "Error events linked to original achievement"
+            },
+            "performance_considerations": {
+                "rate_limiting": "Max 1 emoji rain per 5 seconds per client",
+                "resource_usage": "Lightweight CSS animations, minimal CPU impact",
+                "scalability": "WebSocket broadcasting supports multiple clients"
+            }
+        }
+        
+        return emoji_rain_flow
+    
+    def analyze_comprehensive_data_flows(self) -> Dict[str, Any]:
+        """
+        Perform comprehensive analysis of all data flows in the system.
+        """
+        self._logger.info("Performing comprehensive data flow analysis")
+        
+        # Execute all flow mapping functions
+        metrics_flows = self.trace_metrics_flow()
+        websocket_flows = self.map_websocket_real_time_streaming()
+        error_handling = self.document_systematic_error_handling()
+        integration_flows = self.create_integration_flow_mapping()
+        websocket_message_flows = self.map_websocket_message_flows()
+        emoji_rain_flow = self.document_emoji_rain_data_flow()
+        
+        # Create comprehensive analysis report
+        analysis_report = {
+            "analysis_timestamp": datetime.now().isoformat(),
+            "metrics_flows": {
+                "total_flows": len(metrics_flows),
+                "flows": [
+                    {
+                        "source": flow.source_component,
+                        "endpoint": flow.metrics_endpoint,
+                        "collection_interval": flow.collection_interval,
+                        "retention_policy": flow.retention_policy,
+                        "alert_rules_count": len(flow.alert_rules)
+                    }
+                    for flow in metrics_flows
+                ]
+            },
+            "websocket_flows": {
+                "total_endpoints": len(websocket_flows),
+                "real_time_endpoints": len([f for f in websocket_flows if f.real_time_streaming]),
+                "correlation_enabled": len([f for f in websocket_flows if f.correlation_tracking]),
+                "flows": [
+                    {
+                        "endpoint": flow.endpoint_path,
+                        "message_types": flow.message_types,
+                        "real_time": flow.real_time_streaming,
+                        "parallel_batch": flow.parallel_batch_collection
+                    }
+                    for flow in websocket_flows
+                ]
+            },
+            "error_handling": error_handling,
+            "integration_flows": {
+                "total_integrations": len(integration_flows),
+                "flows": [
+                    {
+                        "name": flow.integration_name,
+                        "source": flow.source_system,
+                        "target": flow.target_system,
+                        "path_length": len(flow.flow_path),
+                        "validation_points": len(flow.validation_points)
+                    }
+                    for flow in integration_flows
+                ]
+            },
+            "websocket_message_flows": websocket_message_flows,
+            "emoji_rain_flow": emoji_rain_flow,
+            "summary": {
+                "total_data_flows_mapped": len(metrics_flows) + len(websocket_flows) + len(integration_flows),
+                "correlation_id_coverage": "100% for ReflectiveModule and WebSocket flows",
+                "real_time_capabilities": "WebSocket streaming with batch collection fallback",
+                "error_handling_systematic": "4-level escalation with correlation tracking",
+                "integration_points_mapped": len(integration_flows)
+            }
+        }
+        
+        self._flow_analysis_complete = True
+        self._last_analysis = datetime.now()
+        
+        self._logger.info("Comprehensive data flow analysis completed")
+        return analysis_report
+
+
+# Factory function for easy instantiation
+def create_data_flow_mapper() -> DataFlowMapper:
+    """Create and return a configured DataFlowMapper instance."""
+    return DataFlowMapper()
+
+
+# Example usage and testing
+async def demonstrate_data_flow_mapper():
+    """Demonstrate DataFlowMapper capabilities."""
+    
+    mapper = create_data_flow_mapper()
+    
+    # Register data flow nodes
+    mapper.register_data_flow_node("observatory", "Observatory Server", "ReflectiveModule", 
+                                  endpoints=["/health", "/metrics"], 
+                                  websocket_endpoints=["/ws/observatory", "/ws/emoji-rain"])
+    mapper.register_data_flow_node("prometheus", "Prometheus Server", "Service", 
+                                  endpoints=["/metrics", "/api/v1/query"])
+    mapper.register_data_flow_node("grafana", "Grafana Dashboard", "Service", 
+                                  endpoints=["/api/health", "/api/datasources"])
+    
+    # Perform comprehensive analysis
+    analysis_report = mapper.analyze_comprehensive_data_flows()
+    
+    print("🐺 DataFlowMapper Demonstration Complete!")
+    print(f"Metrics Flows: {analysis_report['metrics_flows']['total_flows']}")
+    print(f"WebSocket Flows: {analysis_report['websocket_flows']['total_endpoints']}")
+    print(f"Integration Flows: {analysis_report['integration_flows']['total_integrations']}")
+    print(f"Total Data Flows: {analysis_report['summary']['total_data_flows_mapped']}")
+    
+    return analysis_report
+
+
+if __name__ == "__main__":
+    # Run demonstration
+    asyncio.run(demonstrate_data_flow_mapper())

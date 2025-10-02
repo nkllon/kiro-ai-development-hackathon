@@ -40,7 +40,7 @@ SPORE_VERSION = "1.0.0"
 NODE_ID = "external-node-b"
 REDIS_HOST = "192.168.1.119"  # Vonnegut IP
 REDIS_PORT = 6379
-REDIS_PASSWORD = "beastmode2025"
+REDIS_PASSWORD = get_redis_password()
 
 def install_dependencies():
     """Auto-install required dependencies."""

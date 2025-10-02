@@ -68,6 +68,14 @@ scrape_configs:
     metrics_path: /metrics
     scrape_timeout: 10s
 
+  # Observatory Beast Mode Performance Monitoring
+  - job_name: 'observatory'
+    static_configs:
+      - targets: ['host.docker.internal:8888']
+    scrape_interval: 15s
+    metrics_path: /metrics
+    scrape_timeout: 10s
+
 # Storage configuration (moved to command line arguments in docker-compose.yml)
 
 # Remote write configuration (optional - for long-term storage)
