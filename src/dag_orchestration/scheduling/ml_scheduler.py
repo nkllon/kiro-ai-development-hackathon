@@ -19,7 +19,13 @@ from datetime import datetime, timedelta
 from enum import Enum
 import json
 
-from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
+from src.rm_ddd.core.unified_reflective_module import (
+    ReflectiveModule,
+    ModuleHealth,
+    ModuleStatus,
+    ModuleCapability,
+    GracefulDegradationResult
+)
 
 logger = logging.getLogger(__name__)
 
@@ -80,6 +86,7 @@ class MLTaskScheduler(ReflectiveModule):
     
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         super().__init__()
+        self.module_id = "MLTaskScheduler"
         self.config = config or self._get_default_config()
         self.task_metrics: Dict[str, TaskMetrics] = {}
         self.execution_history: List[Dict[str, Any]] = []
@@ -120,6 +127,104 @@ class MLTaskScheduler(ReflectiveModule):
             'trained': False,
             'accuracy': 0.0
         }
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information - RDI Compliant"""
+        return {
+            "module_id": self.module_id,
+            "name": "MLTaskScheduler",
+            "version": "1.0.0",
+            "description": "Machine learning-based intelligent task scheduler",
+            "capabilities": [cap.value for cap in self.get_capabilities()],
+            "config": self.config,
+            "current_strategy": self.current_strategy.value,
+            "task_metrics_count": len(self.task_metrics),
+            "execution_history_count": len(self.execution_history)
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities - RDI Compliant"""
+        return [
+            ModuleCapability.CORE_FUNCTIONALITY,
+            ModuleCapability.DATA_PROCESSING,
+            ModuleCapability.MONITORING
+        ]
+    
+    def get_health_status(self) -> ModuleHealth:
+        """Get module health status - RDI Compliant"""
+        try:
+            issues = []
+            health_score = 1.0
+            
+            # Check if we have sufficient historical data
+            if len(self.task_metrics) == 0:
+                issues.append("No historical task metrics available")
+                health_score *= 0.8
+            
+            # Check prediction model status
+            if not self.duration_predictor.get('trained', False):
+                issues.append("Duration prediction model not trained")
+                health_score *= 0.9
+            
+            if not self.priority_optimizer.get('trained', False):
+                issues.append("Priority optimization model not trained")
+                health_score *= 0.9
+            
+            # Check execution history size
+            if len(self.execution_history) > 1000:
+                issues.append("Large execution history may impact performance")
+                health_score *= 0.95
+            
+            # Determine status
+            if health_score >= 0.9:
+                status = ModuleStatus.HEALTHY
+            elif health_score >= 0.7:
+                status = ModuleStatus.WARNING
+            else:
+                status = ModuleStatus.ERROR
+                
+        except Exception as e:
+            status = ModuleStatus.ERROR
+            health_score = 0.0
+            issues = [f"Health check failed: {str(e)}"]
+        
+        return ModuleHealth(
+            module_id=self.module_id,
+            status=status,
+            health_score=health_score,
+            issues=issues,
+            last_check=datetime.now(),
+            uptime_seconds=(datetime.now() - self._start_time).total_seconds()
+        )
+    
+    def graceful_degradation(self) -> GracefulDegradationResult:
+        """Perform graceful degradation - RDI Compliant"""
+        try:
+            # In degraded mode, we can still provide basic scheduling
+            remaining_capabilities = [
+                ModuleCapability.CORE_FUNCTIONALITY
+            ]
+            
+            degraded_capabilities = [
+                ModuleCapability.DATA_PROCESSING,  # May lose ML predictions
+                ModuleCapability.MONITORING       # May lose detailed monitoring
+            ]
+            
+            # Switch to simpler scheduling strategy
+            self.current_strategy = SchedulingStrategy.FIFO
+            
+            return GracefulDegradationResult(
+                success=True,
+                degraded_capabilities=degraded_capabilities,
+                remaining_capabilities=remaining_capabilities
+            )
+        except Exception as e:
+            return GracefulDegradationResult(
+                success=False,
+                degraded_capabilities=[ModuleCapability.CORE_FUNCTIONALITY],
+                remaining_capabilities=[],
+                error_message=str(e)
+            )
     
     def predict_execution_time(self, task_definition: Dict[str, Any]) -> Tuple[float, float]:
         """
