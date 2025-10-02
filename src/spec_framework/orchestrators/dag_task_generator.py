@@ -19,6 +19,7 @@ from datetime import datetime, timedelta
 import json
 
 from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
+from src.spec_framework.performance import performance_monitor, parallel_process
 from src.dag_orchestration.execution.parallel_execution_engine import (
     TaskDefinition, 
     ExecutionStrategy,
@@ -115,9 +116,19 @@ class DAGTaskGenerator(ReflectiveModule):
             'recommendation': 'Use sequential execution strategy'
         }
     
+    @performance_monitor("generate_dag_execution_plan")
     def generate_dag_execution_plan(self, spec_path: str, 
-                                   execution_strategy: ExecutionStrategy = ExecutionStrategy.CONSERVATIVE) -> DAGExecutionPlan:
+                                   execution_strategy: str = "conservative") -> DAGExecutionPlan:
         """Generate complete DAG execution plan from specification."""
+        # Convert string strategy to ExecutionStrategy enum
+        strategy_lower = execution_strategy.lower()
+        if strategy_lower == "aggressive":
+            strategy_enum = ExecutionStrategy.AGGRESSIVE
+        elif strategy_lower == "sequential":
+            strategy_enum = ExecutionStrategy.SEQUENTIAL
+        else:
+            strategy_enum = ExecutionStrategy.CONSERVATIVE
+        
         # Analyze specification
         spec_data = self.spec_analyzer.analyze_specification(spec_path)
         
@@ -148,7 +159,7 @@ class DAGTaskGenerator(ReflectiveModule):
             estimated_sequential_time=sequential_time,
             estimated_parallel_time=parallel_time,
             efficiency_gain=efficiency_gain,
-            execution_strategy=execution_strategy,
+            execution_strategy=strategy_enum,
             metadata={
                 'spec_path': str(spec_data.spec_path),
                 'completeness_score': spec_data.completeness_score,
@@ -494,7 +505,16 @@ if __name__ == "__main__":
 def generate_dag_plan(spec_path: str, strategy: str = "conservative") -> DAGExecutionPlan:
     """Generate DAG execution plan for a specification."""
     generator = DAGTaskGenerator()
-    execution_strategy = ExecutionStrategy(strategy.lower())
+    
+    # Convert string strategy to ExecutionStrategy enum
+    strategy_lower = strategy.lower()
+    if strategy_lower == "aggressive":
+        execution_strategy = ExecutionStrategy.AGGRESSIVE
+    elif strategy_lower == "sequential":
+        execution_strategy = ExecutionStrategy.SEQUENTIAL
+    else:
+        execution_strategy = ExecutionStrategy.CONSERVATIVE
+    
     return generator.generate_dag_execution_plan(spec_path, execution_strategy)
 
 

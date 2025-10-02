@@ -29,6 +29,12 @@ try:
     from src.spec_framework.orchestrators.dag_task_generator import DAGTaskGenerator, generate_dag_plan
     from src.spec_framework.validation.prelaunch_validator import PreLaunchValidator, validate_spec_readiness
     from src.spec_framework.generators.task_script_generator import TaskScriptGenerator, generate_scripts_for_spec
+    from src.spec_framework.performance import (
+        get_performance_optimizer, 
+        performance_monitor, 
+        cached_operation,
+        parallel_process
+    )
 except ImportError as e:
     print(f"❌ Critical import failure: {e}")
     print("Ensure Beast Mode infrastructure and spec framework are available")
@@ -44,25 +50,38 @@ class PrepareSpecCLI(ReflectiveModule):
         self.dag_generator = DAGTaskGenerator()
         self.validator = PreLaunchValidator()
         self.script_generator = TaskScriptGenerator()
+        self.performance_optimizer = get_performance_optimizer()
+        
+        # Performance settings
+        self.enable_performance_monitoring = True
+        self.enable_parallel_processing = True
     
     def get_capabilities(self) -> Dict[str, Any]:
         """Return component capabilities."""
         return {
-            'commands': ['analyze', 'validate', 'generate', 'prepare', 'status'],
+            'commands': ['analyze', 'validate', 'generate', 'prepare', 'status', 'performance'],
             'output_formats': ['json', 'yaml', 'text'],
             'batch_processing': True,
-            'interactive_mode': True
+            'interactive_mode': True,
+            'performance_optimization': True,
+            'parallel_processing': self.enable_parallel_processing,
+            'caching': True,
+            'large_spec_support': True
         }
     
     def get_health_status(self) -> Dict[str, Any]:
         """Return component health status."""
+        perf_status = self.performance_optimizer.get_health_status()
         return {
             'status': 'healthy',
             'components_ready': True,
             'spec_analyzer': True,
             'dag_generator': True,
             'validator': True,
-            'script_generator': True
+            'script_generator': True,
+            'performance_optimizer': perf_status['status'],
+            'cache_entries': perf_status['cache_entries'],
+            'cache_utilization': f"{perf_status['cache_utilization']:.1f}%"
         }
     
     def get_module_info(self) -> Dict[str, Any]:
@@ -84,12 +103,26 @@ class PrepareSpecCLI(ReflectiveModule):
             'recommendation': 'Use individual components directly'
         }
     
+    @performance_monitor("analyze_specification")
     def analyze_command(self, args: argparse.Namespace) -> int:
         """Analyze specification structure and content."""
         print("🔍 Analyzing Specification")
         print("=" * 50)
         
         try:
+            # Apply optimizations for large specs
+            spec_path = Path(args.spec_path)
+            if spec_path.exists():
+                # Quick check for spec size
+                tasks_file = spec_path / "tasks.md"
+                if tasks_file.exists():
+                    task_count = len([line for line in tasks_file.read_text().split('\n') 
+                                    if line.strip().startswith('- [')])
+                    optimizations = self.performance_optimizer.optimize_for_large_spec(task_count)
+                    if task_count > 50:
+                        print(f"🚀 Large specification detected ({task_count} tasks)")
+                        print(f"   Applying performance optimizations...")
+            
             spec_data = self.spec_analyzer.analyze_specification(args.spec_path)
             
             print(f"Specification: {spec_data.spec_name}")
@@ -132,6 +165,7 @@ class PrepareSpecCLI(ReflectiveModule):
             print(f"\\n❌ Analysis failed: {e}")
             return 1
     
+    @performance_monitor("validate_specification")
     def validate_command(self, args: argparse.Namespace) -> int:
         """Validate specification readiness for execution."""
         print("🔍 Validating Specification Readiness")
@@ -189,6 +223,7 @@ class PrepareSpecCLI(ReflectiveModule):
             print(f"\\n❌ Validation failed: {e}")
             return 1
     
+    @performance_monitor("generate_dag_plan")
     def generate_command(self, args: argparse.Namespace) -> int:
         """Generate DAG execution plan and task definitions."""
         print("🔄 Generating DAG Execution Plan")
@@ -229,6 +264,7 @@ class PrepareSpecCLI(ReflectiveModule):
             print(f"\\n❌ DAG generation failed: {e}")
             return 1
     
+    @performance_monitor("prepare_specification")
     def prepare_command(self, args: argparse.Namespace) -> int:
         """Complete preparation: analyze, validate, generate DAG, and create scripts."""
         print("🚀 Preparing Specification for Execution")
@@ -350,6 +386,68 @@ class PrepareSpecCLI(ReflectiveModule):
             print(f"\\n❌ Status check failed: {e}")
             return 1
     
+    def performance_command(self, args: argparse.Namespace) -> int:
+        """Show performance metrics and optimization status."""
+        print("📊 Performance Metrics")
+        print("=" * 50)
+        
+        try:
+            # Get performance report
+            report = self.performance_optimizer.get_performance_report()
+            
+            if report['status'] == 'no_data':
+                print("📈 No performance data available yet")
+                print("   Run some operations to collect metrics")
+                return 0
+            
+            # Display summary
+            summary = report['summary']
+            print(f"Total Operations: {summary['total_operations']}")
+            print(f"Total Duration: {summary['total_duration']:.2f}s")
+            print(f"Average Duration: {summary['avg_duration']:.3f}s")
+            print(f"Slow Operations: {summary['slow_operations']}")
+            print(f"Cache Hits: {summary['cache_hits']}")
+            
+            # Display cache stats
+            cache_stats = report['cache_stats']
+            print(f"\n💾 Cache Statistics:")
+            print(f"   Entries: {cache_stats['entries']}")
+            print(f"   Size: {cache_stats['size_mb']:.2f} MB")
+            print(f"   Hit Rate: {cache_stats['hit_rate']:.1f}%")
+            
+            # Display operation breakdown
+            if report['by_operation']:
+                print(f"\n⚡ Operation Breakdown:")
+                for op_name, stats in report['by_operation'].items():
+                    print(f"   {op_name}:")
+                    print(f"     Count: {stats['count']}")
+                    print(f"     Avg Duration: {stats['avg_duration']:.3f}s")
+                    print(f"     Max Duration: {stats['max_duration']:.3f}s")
+            
+            # Performance recommendations
+            print(f"\n💡 Performance Recommendations:")
+            if cache_stats['hit_rate'] < 50:
+                print("   • Consider running repeated operations to improve cache hit rate")
+            if summary['slow_operations'] > 0:
+                print(f"   • {summary['slow_operations']} slow operations detected - consider optimization")
+            if cache_stats['size_mb'] > 80:
+                print("   • Cache is nearly full - consider increasing cache size")
+            
+            # Clear options
+            if hasattr(args, 'clear_cache') and args.clear_cache:
+                self.performance_optimizer.clear_cache()
+                print("\n🧹 Cache cleared")
+            
+            if hasattr(args, 'clear_metrics') and args.clear_metrics:
+                self.performance_optimizer.clear_metrics()
+                print("\n🧹 Metrics cleared")
+            
+            return 0
+            
+        except Exception as e:
+            print(f"\n❌ Performance metrics failed: {e}")
+            return 1
+    
     def _generate_preparation_summary(self, spec_data, execution_plan, scripts, output_dir) -> str:
         """Generate preparation summary report."""
         return f'''# Specification Preparation Summary
@@ -371,7 +469,7 @@ class PrepareSpecCLI(ReflectiveModule):
 - **Sequential Time**: {execution_plan.estimated_sequential_time:.1f} hours
 - **Parallel Time**: {execution_plan.estimated_parallel_time:.1f} hours
 - **Efficiency Gain**: {execution_plan.efficiency_gain:.1f}%
-- **Strategy**: {execution_plan.execution_strategy.value}
+- **Strategy**: {execution_plan.execution_strategy if isinstance(execution_plan.execution_strategy, str) else execution_plan.execution_strategy.value}
 
 ## Generated Scripts
 {chr(10).join(f"- **{script.script_type.title()}**: `{script.script_name}`" for script in scripts.values())}
@@ -468,10 +566,16 @@ Examples:
                                 default='conservative', help='Execution strategy')
     prepare_parser.add_argument('--skip-validation', action='store_true', help='Skip prelaunch validation')
     prepare_parser.add_argument('--allow-warnings', action='store_true', help='Allow warnings in validation')
+    prepare_parser.add_argument('--verbose', '-v', action='store_true', help='Verbose output')
     
     # Status command
     status_parser = subparsers.add_parser('status', help='Show specification preparation status')
     status_parser.add_argument('spec_path', help='Path to specification directory')
+    
+    # Performance command
+    perf_parser = subparsers.add_parser('performance', help='Show performance metrics and optimization status')
+    perf_parser.add_argument('--clear-cache', action='store_true', help='Clear performance cache')
+    perf_parser.add_argument('--clear-metrics', action='store_true', help='Clear performance metrics')
     
     return parser
 
@@ -498,6 +602,8 @@ def main():
             return cli.prepare_command(args)
         elif args.command == 'status':
             return cli.status_command(args)
+        elif args.command == 'performance':
+            return cli.performance_command(args)
         else:
             print(f"❌ Unknown command: {args.command}")
             return 1

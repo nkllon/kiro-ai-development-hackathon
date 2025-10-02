@@ -20,6 +20,7 @@ from enum import Enum
 import json
 
 from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
+from src.spec_framework.performance import performance_monitor, cached_operation
 
 
 class TaskStatus(Enum):
@@ -84,6 +85,8 @@ class SpecAnalyzer(ReflectiveModule):
     def __init__(self):
         super().__init__()
         self.spec_cache: Dict[str, SpecificationData] = {}
+        self.enable_caching = True
+        self.cache_ttl = 3600  # 1 hour default TTL
         
     def get_capabilities(self) -> Dict[str, Any]:
         """Return component capabilities."""
@@ -121,6 +124,8 @@ class SpecAnalyzer(ReflectiveModule):
             'recommendation': 'Check file permissions and format'
         }
     
+    @performance_monitor("analyze_specification")
+    @cached_operation(ttl=3600)  # Cache for 1 hour
     def analyze_specification(self, spec_path: str) -> SpecificationData:
         """Analyze a complete specification directory."""
         spec_path = Path(spec_path)
@@ -128,9 +133,9 @@ class SpecAnalyzer(ReflectiveModule):
         if not spec_path.exists():
             raise FileNotFoundError(f"Specification path not found: {spec_path}")
         
-        # Check cache first
+        # Check cache first (legacy cache for backward compatibility)
         cache_key = str(spec_path.absolute())
-        if cache_key in self.spec_cache:
+        if self.enable_caching and cache_key in self.spec_cache:
             return self.spec_cache[cache_key]
         
         spec_data = SpecificationData(
@@ -147,8 +152,9 @@ class SpecAnalyzer(ReflectiveModule):
         self._validate_specification(spec_data)
         self._calculate_completeness(spec_data)
         
-        # Cache result
-        self.spec_cache[cache_key] = spec_data
+        # Cache result (legacy cache for backward compatibility)
+        if self.enable_caching:
+            self.spec_cache[cache_key] = spec_data
         
         return spec_data
     
