@@ -30,7 +30,8 @@
         "git_commit",
         "git_diff_staged",
         "git_branch",
-        "git_diff_unstaged"
+        "git_diff_unstaged",
+        "git_checkout"
       ],
       "disabledTools": []
     }
