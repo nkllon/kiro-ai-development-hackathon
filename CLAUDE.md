@@ -7,66 +7,73 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Build, Test, and Quality Assurance
 ```bash
 # Run all tests
-make test
+python -m pytest tests/ -v --tb=short
+make dev-test
 
-# Run linting
-make lint
-make ruff
+# Run specific test types
+python -m pytest tests/unit/ -v
+python -m pytest tests/integration/ -v
+python -m pytest tests/ -k "test_pattern"
+python -m pytest tests/ -m slow  # Run slow tests
+python -m pytest tests/ -m "not slow"  # Skip slow tests
 
-# Type checking
-make mypy
+# Linting and formatting
+python -m flake8 src/ --max-line-length=120
+python -m mypy src/ --ignore-missing-imports
+python -m black src/ --line-length=88
+python -m isort src/
 
-# Code formatting
-make format
+# Combined quality checks
+make dev-lint
+make dev-format
 
-# Run coverage
-make coverage
-
-# Full quality check (lint + type check + test)
-make quality
-
-# Python virtual environment setup
-make venv
-
-# Install dependencies
-make install
+# Coverage
+python -m pytest tests/ --cov=src --cov-report=html
 ```
 
 ### Beast Mode Framework Commands
 ```bash
 # Show comprehensive help and available commands
 make help
-make beast-mode-help
 
 # System status and health checks
-make beast-mode-status
-make beast-mode-health
+make observatory-status
+make observatory-health
+make infra-status
+make infra-health
 
-# Execute PDCA cycle
-make pdca-cycle
+# DAG orchestration
+make dag-validate
+make dag-execute
+make dag-monitor
+make dag-status
 
-# Development utilities
-make beast-mode-cli    # CLI interface
-make devpost-cli       # DevPost integration
+# Beast Mode operations
+make beast-test
+make beast-compliance
+make beast-validate-all
+
+# Observatory operations
+make observatory-deploy
+make observatory-start
+make observatory-stop
+make observatory-logs
 ```
 
-### Testing Commands
+### Installation and Setup
 ```bash
-# Run specific test types
-make test-unit
-make test-integration
-make test-slow        # Run slow tests
+# Install dependencies
+pip install -r requirements.txt
+make install
 
-# Test with specific patterns
-pytest tests/ -k "test_pattern"
-pytest tests/unit/
-pytest tests/integration/
+# Install package in editable mode
+pip install -e .
 ```
 
 ## Architecture Overview
 
 ### Core Structure
-This is an AI-Powered Spec-Driven Development Framework called "Beast Mode Framework" with the following key components:
+This is an AI-Powered Spec-Driven Development Framework called "Beast Mode Framework" built for the Kiro AI Development Hackathon. It demonstrates systematic development excellence through integration with AI-assisted project management.
 
 **Primary Source Structure:**
 - `src/beast_mode/` - Main framework implementation
@@ -75,63 +82,189 @@ This is an AI-Powered Spec-Driven Development Framework called "Beast Mode Frame
   - `assessment/` - Production readiness and compliance validation
   - `autonomous/` - PDCA orchestration and autonomous agents
   - `backlog/` - Task and dependency management
-  - `billing/` - GCP integration and cost management
   - `cli/` - Command-line interface
   - `compliance/` - Git analysis and compliance checking
   - `mcp_integrations/` - Model Context Protocol integrations (Google Calendar, etc.)
+  - `observatory/` - Observatory system for monitoring and WebSocket management
+  - `rmddd/` - RM-DDD framework core
 
 **Configuration and Specifications:**
-- `.kiro/` - Framework specifications and configuration
+- `.kiro/` - Framework specifications and configuration (100+ feature specs)
   - `.kiro/specs/` - Individual feature specifications with requirements, design, and tasks
   - `.kiro/settings/` - MCP and other service configurations
 
 **Docker Services:**
-- `docker/google-calendar-mcp/` - Google Calendar MCP server
 - `docker/google-workspace-mcp/` - Google Workspace integration
-- `docker/g2n-calendar-sse/` - Calendar Server-Sent Events service
+
+**Testing:**
+- `tests/unit/` - Unit tests
+- `tests/integration/` - Integration tests
+- Use pytest markers: `@pytest.mark.slow`, `@pytest.mark.integration`, `@pytest.mark.unit`
 
 ### Key Architectural Patterns
 
-**Reflective Module (RM) Architecture:** The framework follows RM principles where components are decomposed into focused, single-responsibility modules rather than monolithic specifications.
+**Reflective Module (RM) Architecture:** The framework follows RM principles where components are decomposed into focused, single-responsibility modules rather than monolithic specifications. All modules should implement the ReflectiveModule pattern.
 
 **PDCA-Driven Development:** Plan-Do-Check-Act cycles are fundamental to the framework's operation, with systematic orchestration and metrics collection.
 
-**Spec-Driven Development:** Features are defined through comprehensive specifications in `.kiro/specs/` with requirements, design documents, and task breakdowns.
+**Spec-Driven Development:** Features are defined through comprehensive specifications in `.kiro/specs/` with requirements, design documents, and task breakdowns. Each spec typically contains:
+- `requirements.md` - Feature requirements
+- `design.md` - Design documentation
+- `tasks.md` - Task breakdown
 
 **MCP Integration:** Model Context Protocol is used for external service integrations, particularly for calendar and workspace management.
 
+**Interface Governance:** Centralized interface registry prevents duplication. Always check `src/rm_ddd/core/interface_registry.py` before creating new interfaces.
+
 ## Development Guidelines
+
+### Critical Development Rules
+
+**🚫 ANTI-NO-VERIFY RULE:** NEVER use `--no-verify` or bypass quality gates.
+
+**🐍 Python Execution:** Target Python 3.9+. Package is installed in editable mode.
+
+**🔧 Interface Governance:** ALWAYS check interface registry before creating new interfaces to prevent duplication. Run `python src/rm_ddd/core/interface_duplication_detector.py` before interface changes.
+
+**🏗️ Architecture Compliance:** ALL components must implement ReflectiveModule pattern.
 
 ### Working with Specifications
 - All new features should have corresponding specs in `.kiro/specs/[feature-name]/`
 - Each spec includes: `requirements.md`, `design.md`, and `tasks.md`
 - Follow RM principles - avoid monolithic specifications
+- Specs drive development - implement based on spec requirements
 
-### Python Development
+### Python Development Standards
 - Target Python 3.9+
 - Use Black for formatting (line length: 88)
-- Use Ruff for linting
+- Use Ruff for linting with flake8 compatibility
 - Use MyPy for type checking
 - Pytest for testing with coverage reporting
+- Type hints required for all functions
+- Google-style docstrings required
 
 ### Testing Standards
 - Unit tests in `tests/unit/`
 - Integration tests in `tests/integration/`
-- Maintain test coverage above reporting thresholds
+- Maintain test coverage above reporting thresholds (>90% target)
 - Use pytest markers: `@pytest.mark.slow`, `@pytest.mark.integration`, `@pytest.mark.unit`
+- Run specific test types: `pytest -m unit`, `pytest -m integration`, `pytest -m "not slow"`
+
+### Interface Development Workflow
+
+**Before Creating Interfaces:**
+1. Check existing interfaces in `src/rm_ddd/core/interface_registry.py`
+2. Run `python src/rm_ddd/core/interface_duplication_detector.py`
+3. Verify no conflicts exist
+
+**During Interface Development:**
+1. All interfaces MUST inherit from `ABC` and use `@abstractmethod`
+2. Comprehensive type hints required for all methods
+3. Google-style docstrings required
+4. Single interface per file in most cases
+
+**After Interface Creation:**
+1. Register in central registry
+2. Update all imports to use centralized interface
+3. Run full test suite
+4. Validate integration
 
 ### Docker Services
 - Each service has its own dockerfile and docker-compose configuration
 - MCP servers run as containerized services
 - Check individual service README files for specific setup instructions
 
-## Project Scripts
-- `beast-mode` - Main CLI entry point
-- `kiro-discovery` - Repository discovery tools
+## Project Scripts and Entry Points
 
-## Dependencies
-- Core: pydantic, click, rich, typer
-- ML: transformers, torch, scikit-learn
-- Testing: pytest, pytest-cov, coverage
-- Dev tools: black, ruff, mypy, pre-commit
-- Monitoring: prometheus-client, psutil
+**Main CLI Entry Points:**
+- `beast-mode` - Main CLI entry point (defined in pyproject.toml)
+- `kiro-discovery` - Repository discovery tools (defined in pyproject.toml)
+
+**Key Scripts:**
+- `scripts/beast_mode_cli.py` - Beast Mode CLI implementation
+- `scripts/deploy_observatory.py` - Deploy Observatory system
+- Various specialized scripts for DAG orchestration, compliance, validation
+
+## Project Dependencies
+
+**Core:**
+- pydantic (>=2.0.0) - Data validation
+- click (>=8.0.0), typer (>=0.9.0), rich (>=13.0.0) - CLI framework
+
+**ML/AI:**
+- transformers (>=4.30.0), torch (>=2.0.0), scikit-learn (>=1.3.0)
+
+**Testing:**
+- pytest (>=7.0.0), pytest-cov (>=4.0.0), coverage (>=7.0.0)
+
+**Dev Tools:**
+- black (>=23.0.0), ruff (>=0.1.0), mypy (>=1.0.0), pre-commit (>=3.0.0)
+
+**Monitoring:**
+- prometheus-client (>=0.20.0), psutil (>=5.9.0)
+
+**Optional:**
+- `dev` - Development tools (black, ruff, mypy, pre-commit)
+- `monitoring` - Monitoring tools (grafana-client, influxdb-client)
+- `ml` - ML tools (tensorboard, wandb, jupyter)
+
+## Quality Standards
+
+### Code Quality
+- Black formatting with 88 character line length
+- Flake8/Ruff compliance - zero linting errors
+- Type annotations required
+- Comprehensive docstrings (Google style)
+
+### Architecture Standards
+- RM-DDD compliance - all modules implement ReflectiveModule
+- Interface governance - registry-based duplication prevention
+- Systematic prevention - proactive quality gates
+- Zero technical debt goal
+
+### Git Workflow
+- Pre-commit hooks configured (`.pre-commit-config.yaml`)
+- Never use `--no-verify` flag
+- All commits must pass quality gates
+
+## Important Context
+
+### Project Mission
+Demonstrate systematic development excellence through Beast Mode framework + AI-assisted development, targeting 10x velocity advantage over traditional approaches.
+
+### Interface Duplication Crisis
+The project previously had 48+ duplicate interface classes across 11+ files. Interface governance is now a critical focus:
+- Always check interface registry before creating new interfaces
+- Run duplication detection tools
+- Follow consolidation procedures if duplicates found
+
+### Spec-Driven Workflow
+This project is heavily spec-driven with 100+ feature specifications. When working on features:
+1. Start with requirements in `.kiro/specs/[feature]/requirements.md`
+2. Review design in `.kiro/specs/[feature]/design.md`
+3. Follow task breakdown in `.kiro/specs/[feature]/tasks.md`
+4. Implement systematically following the spec
+
+### Observatory System
+The Observatory system provides monitoring, WebSocket management, and system health tracking. It's a critical component with:
+- WebSocket support
+- Cloudflare tunnel integration
+- Real-time monitoring
+- Health checks and recovery
+
+## Development Workflow Pattern
+
+1. **Requirements First** - Start with spec requirements
+2. **Design Second** - Review/create design documentation
+3. **Code Third** - Implement with proper structure
+4. **Quality Gates** - All code must pass linting, type checking, tests
+5. **Documentation** - Update specs and docs as needed
+
+## Makefile System
+
+The project uses a comprehensive Makefile system with modular targets:
+- Main: `Makefile` - Primary orchestration
+- Include: `makefiles/*.mk` - Modular targets
+- Legacy: `Makefile.legacy` - Old Cloudflare-specific targets
+
+Use `make help` to see all available targets organized by category.

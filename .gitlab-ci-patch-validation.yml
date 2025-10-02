@@ -1,0 +1,52 @@
+
+stages:
+  - validate
+  - report
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip/
+    - venv/
+
+patch-validation:
+  stage: validate
+  image: python:3.9
+  before_script:
+    - python -m venv venv
+    - source venv/bin/activate
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+  script:
+    - python -m technical_debt_patch_annotation.integration.cicd_integration validate-annotations .
+    - python -m technical_debt_patch_annotation.integration.cicd_integration check-thresholds .
+  artifacts:
+    reports:
+      junit: patch_validation_report.xml
+    paths:
+      - patch_validation_report.json
+    expire_in: 1 week
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+patch-impact-report:
+  stage: report
+  image: python:3.9
+  dependencies:
+    - patch-validation
+  before_script:
+    - python -m venv venv
+    - source venv/bin/activate
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+  script:
+    - python -m technical_debt_patch_annotation.integration.cicd_integration pr-report . --base-branch $CI_MERGE_REQUEST_TARGET_BRANCH_NAME --head-branch $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+  artifacts:
+    paths:
+      - patch_impact_report.md
+    expire_in: 1 week
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"

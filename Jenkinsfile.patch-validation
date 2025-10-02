@@ -1,0 +1,72 @@
+
+pipeline {
+    agent any
+    
+    environment {
+        PYTHON_VERSION = '3.9'
+    }
+    
+    stages {
+        stage('Setup') {
+            steps {
+                sh '''
+                    python${PYTHON_VERSION} -m venv venv
+                    . venv/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                '''
+            }
+        }
+        
+        stage('Validate Patch Annotations') {
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    python -m technical_debt_patch_annotation.integration.cicd_integration validate-annotations .
+                '''
+            }
+        }
+        
+        stage('Check Debt Thresholds') {
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    python -m technical_debt_patch_annotation.integration.cicd_integration check-thresholds .
+                '''
+            }
+        }
+        
+        stage('Generate PR Report') {
+            when {
+                changeRequest()
+            }
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    python -m technical_debt_patch_annotation.integration.cicd_integration pr-report . --base-branch ${CHANGE_TARGET} --head-branch ${CHANGE_BRANCH}
+                '''
+            }
+        }
+    }
+    
+    post {
+        always {
+            archiveArtifacts artifacts: 'patch_*.json,patch_*.md', allowEmptyArchive: true
+            publishHTML([
+                allowMissing: false,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: '.',
+                reportFiles: 'patch_impact_report.html',
+                reportName: 'Patch Impact Report'
+            ])
+        }
+        failure {
+            emailext (
+                subject: "Patch Validation Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER}",
+                body: "Patch validation failed. Check the build logs for details.",
+                to: "${env.CHANGE_AUTHOR_EMAIL}"
+            )
+        }
+    }
+}
