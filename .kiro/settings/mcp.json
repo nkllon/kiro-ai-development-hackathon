@@ -29,7 +29,8 @@
         "git_add",
         "git_commit",
         "git_diff_staged",
-        "git_branch"
+        "git_branch",
+        "git_diff_unstaged"
       ],
       "disabledTools": []
     }
