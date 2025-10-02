@@ -124,10 +124,12 @@ class TaskScriptGenerator(ReflectiveModule):
         template = self.templates['prelaunch']
         
         # Prepare template variables
+        spec_name_title = str(spec_data.spec_name).replace('-', ' ').title()
         variables = {
             'spec_name': spec_data.spec_name,
-            'spec_name_snake': spec_data.spec_name.lower().replace('-', '_'),
-            'spec_name_title': spec_data.spec_name.replace('-', ' ').title(),
+            'spec_name_snake': str(spec_data.spec_name).lower().replace('-', '_'),
+            'spec_name_title': spec_name_title,
+            'spec_name_class': spec_name_title.replace(' ', ''),
             'spec_path': str(spec_data.spec_path),
             'total_tasks': execution_plan.total_tasks,
             'estimated_hours': execution_plan.estimated_parallel_time,
@@ -163,10 +165,12 @@ class TaskScriptGenerator(ReflectiveModule):
         task_execution_code = self._generate_task_execution_code(execution_plan)
         
         # Prepare template variables
+        spec_name_title = str(spec_data.spec_name).replace('-', ' ').title()
         variables = {
             'spec_name': spec_data.spec_name,
-            'spec_name_snake': spec_data.spec_name.lower().replace('-', '_'),
-            'spec_name_title': spec_data.spec_name.replace('-', ' ').title(),
+            'spec_name_snake': str(spec_data.spec_name).lower().replace('-', '_'),
+            'spec_name_title': spec_name_title,
+            'spec_name_class': spec_name_title.replace(' ', ''),
             'spec_path': str(spec_data.spec_path),
             'total_tasks': execution_plan.total_tasks,
             'estimated_hours': execution_plan.estimated_parallel_time,
@@ -199,10 +203,12 @@ class TaskScriptGenerator(ReflectiveModule):
         template = self.templates['background']
         
         # Prepare template variables
+        spec_name_title = str(spec_data.spec_name).replace('-', ' ').title()
         variables = {
             'spec_name': spec_data.spec_name,
-            'spec_name_snake': spec_data.spec_name.lower().replace('-', '_'),
-            'spec_name_title': spec_data.spec_name.replace('-', ' ').title(),
+            'spec_name_snake': str(spec_data.spec_name).lower().replace('-', '_'),
+            'spec_name_title': spec_name_title,
+            'spec_name_class': spec_name_title.replace(' ', ''),
             'spec_path': str(spec_data.spec_path),
             'total_tasks': execution_plan.total_tasks,
             'estimated_hours': execution_plan.estimated_parallel_time,
@@ -231,38 +237,36 @@ class TaskScriptGenerator(ReflectiveModule):
         """Generate task execution code for launch script."""
         code_lines = []
         
-        code_lines.append("        # Execute tasks in parallel groups")
-        code_lines.append("        execution_results = []")
+        code_lines.append("            # Execute tasks in parallel groups")
+        code_lines.append("            execution_results = []")
         code_lines.append("")
         
         for i, group in enumerate(execution_plan.execution_groups):
-            code_lines.append(f"        # Phase {i + 1}: {group.phase.title()} ({len(group.tasks)} tasks)")
-            code_lines.append(f"        print(f\"🚀 Starting {group.phase} phase with {{len(group.tasks)}} tasks...\")")
+            code_lines.append(f"            # Phase {i + 1}: {group.phase.title()} ({len(group.tasks)} tasks)")
+            code_lines.append(f"            print(f\"🚀 Starting {group.phase} phase with {len(group.tasks)} tasks...\")")
             code_lines.append("")
             
             # Add task definitions for this group
             for task in group.tasks:
-                code_lines.append(f"        # Task: {task.name}")
-                code_lines.append(f"        task_{task.task_id.replace('.', '_')} = TaskDefinition(")
-                code_lines.append(f"            task_id='{task.task_id}',")
-                code_lines.append(f"            name='{task.name}',")
-                code_lines.append(f"            dependencies={{{', '.join(repr(d) for d in task.dependencies)}}},")
-                code_lines.append(f"            execution_function=self._execute_task_{task.task_id.replace('.', '_')}")
-                code_lines.append("        )")
+                code_lines.append(f"            # Task: {task.name}")
+                code_lines.append(f"            task_{task.task_id.replace('.', '_')} = TaskDefinition(")
+                code_lines.append(f"                task_id='{task.task_id}',")
+                code_lines.append(f"                name={repr(task.name)},")
+                code_lines.append(f"                dependencies={{{', '.join(repr(d) for d in task.dependencies)}}},")
+                code_lines.append(f"                execution_function=self._execute_task_via_llm")
+                code_lines.append("            )")
                 code_lines.append("")
             
-            code_lines.append(f"        group_{i + 1}_tasks = [")
+            code_lines.append(f"            group_{i + 1}_tasks = [")
             for task in group.tasks:
-                code_lines.append(f"            task_{task.task_id.replace('.', '_')},")
-            code_lines.append("        ]")
+                code_lines.append(f"                task_{task.task_id.replace('.', '_')},")
+            code_lines.append("            ]")
             code_lines.append("")
             
-            code_lines.append(f"        # Execute group {i + 1}")
-            code_lines.append(f"        group_results = await self.execution_engine.execute_tasks(group_{i + 1}_tasks)")
-            code_lines.append("        execution_results.extend(group_results)")
+            code_lines.append(f"            # Execute group {i + 1}")
+            code_lines.append(f"            group_results = await self.execution_engine.execute_dag_parallel(group_{i + 1}_tasks)")
+            code_lines.append("            execution_results.extend(list(group_results.values()))")
             code_lines.append("")
-        
-        code_lines.append("        return execution_results")
         
         return "\n".join(code_lines)
     
@@ -331,7 +335,7 @@ except ImportError as e:
     print("Ensure Beast Mode infrastructure is available")
     sys.exit(1)
 
-class {spec_name_title.replace(' ', '')}PrelaunchValidator(ReflectiveModule):
+class {spec_name_class}PrelaunchValidator(ReflectiveModule):
     """Validates readiness for {spec_name_title} implementation."""
     
     def __init__(self):
@@ -359,7 +363,7 @@ class {spec_name_title.replace(' ', '')}PrelaunchValidator(ReflectiveModule):
     def get_module_info(self) -> Dict[str, Any]:
         """Return module information."""
         return {{
-            'name': '{spec_name_title.replace(' ', '')}PrelaunchValidator',
+            'name': '{spec_name_class}PrelaunchValidator',
             'version': '2.0.0',
             'description': 'Validates readiness for {spec_name_title} implementation',
             'dependencies': ['ReflectiveModule', 'PreLaunchValidator'],
@@ -407,7 +411,7 @@ def main():
     print("=" * 60)
     
     try:
-        validator = {spec_name_title.replace(' ', '')}PrelaunchValidator()
+        validator = {spec_name_class}PrelaunchValidator()
         result = validator.validate_infrastructure_readiness()
         
         if result['ready_for_execution']:
@@ -466,7 +470,7 @@ except ImportError as e:
     print("Ensure Beast Mode infrastructure is available")
     sys.exit(1)
 
-class {spec_name_title.replace(' ', '')}Launcher(ReflectiveModule):
+class {spec_name_class}Launcher(ReflectiveModule):
     """Launches {spec_name_title} implementation with parallel execution."""
     
     def __init__(self):
@@ -500,7 +504,7 @@ class {spec_name_title.replace(' ', '')}Launcher(ReflectiveModule):
     def get_module_info(self) -> Dict[str, Any]:
         """Return module information."""
         return {{
-            'name': '{spec_name_title.replace(' ', '')}Launcher',
+            'name': '{spec_name_class}Launcher',
             'version': '2.0.0',
             'description': 'Launches {spec_name_title} implementation',
             'dependencies': ['ParallelExecutionEngine', 'RedisExecutionTracker'],
@@ -591,7 +595,7 @@ async def main():
             sys.exit(1)
         
         # Launch execution
-        launcher = {spec_name_title.replace(' ', '')}Launcher()
+        launcher = {spec_name_class}Launcher()
         result = await launcher.launch_execution()
         
         print(f"\\n✅ Launch completed: {{result}}")

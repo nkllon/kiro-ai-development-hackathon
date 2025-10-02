@@ -49,6 +49,21 @@ The Live Dashboard Engagement System transforms static monitoring dashboards int
 4. WHEN real implementations replace placeholders THEN the transition SHALL be seamless without system restart
 5. WHEN import errors occur THEN the system SHALL provide clear guidance on which components need implementation
 
+### Requirement 3: Complete Engagement Engine Implementation
+
+**User Story:** As a system operator, I want fully functional engagement engines with comprehensive capabilities so that the Live Dashboard Engagement System provides real value to users.
+
+#### Acceptance Criteria
+
+1. WHEN AnimationEngine is instantiated THEN it SHALL provide GPU acceleration, performance monitoring, data-driven animations, and graceful degradation capabilities
+2. WHEN PersonalityEngine is instantiated THEN it SHALL provide adaptive behavior, emotional intelligence, context analysis, and graceful degradation capabilities  
+3. WHEN AttentionManager is instantiated THEN it SHALL provide intelligent focus control, event prioritization, attention budgeting, and graceful degradation capabilities
+4. WHEN InteractionEngine is instantiated THEN it SHALL provide multi-modal support, accessibility features, engagement tracking, and graceful degradation capabilities
+5. WHEN any engagement engine is created THEN it SHALL inherit from ReflectiveModule and implement ALL required abstract methods
+6. WHEN graceful_degradation is called on any engine THEN it SHALL reduce functionality to essential operations and return detailed status
+7. WHEN Observatory server initializes THEN it SHALL successfully create and maintain engagement integration without overriding it to None
+8. WHEN all engagement engines are tested THEN they SHALL initialize successfully and provide their advertised capabilities
+
 ### Requirement 3: Execution Script Syntax Validation and Quality Assurance
 
 **User Story:** As a system operator using automated spec execution, I want all generated execution scripts to be syntactically correct and properly structured so that "release the hounds" commands execute successfully without manual intervention.
@@ -395,7 +410,148 @@ The Live Dashboard Engagement System transforms static monitoring dashboards int
 2. WHEN engagement WebSocket endpoints are requested but unavailable THEN the server SHALL return appropriate HTTP status codes with helpful error messages
 3. WHEN engagement components throw exceptions THEN the exceptions SHALL be caught and logged without crashing the Observatory server
 4. WHEN engagement features are partially available THEN the server SHALL provide a status endpoint indicating which features are functional
-5. WHEN engagement system is fully functional THEN the server SHALL enable all engagement endpoints and features automatically
+5. WHEN engagement features are requested THEN the system SHALL provide clear feedback about availability status
+
+### Requirement 32: Execution Mode Control and LLM Integration
+
+**User Story:** As a developer using the prepare-spec-for-execution system, I want generated scripts to support different execution modes including real LLM task execution so that I can choose between simulation and actual implementation.
+
+#### Acceptance Criteria
+
+1. WHEN execution scripts are generated THEN they SHALL check the EXECUTION_MODE environment variable to determine execution behavior
+2. WHEN EXECUTION_MODE is set to 'dry-run' THEN the system SHALL simulate task execution without calling external LLMs
+3. WHEN EXECUTION_MODE is set to 'full-parallel' THEN the system SHALL execute tasks via LLM using the kiro CLI pattern
+4. WHEN executing tasks via LLM THEN the system SHALL use the golden pattern: `echo "task_prompt" | tee logfile.log | kiro -`
+5. WHEN LLM execution fails THEN the system SHALL provide clear error messages and maintain execution logs
+6. WHEN LLM execution times out THEN the system SHALL handle timeouts gracefully and continue with remaining tasks
+7. WHEN task execution completes THEN the system SHALL log both the execution method used and the results achieved
+
+#### Reference Implementation
+
+**Executable Patch Code:** `scripts/fix_execution_mode_support.py`
+
+This script demonstrates the exact fix needed and can be run to apply the solution:
+
+```python
+# Key fix: Add execution mode checking
+execution_mode = os.getenv('EXECUTION_MODE', 'full-parallel')
+
+if execution_mode == 'dry-run':
+    print("  [DRY RUN] Simulating task execution...")
+    # Simulation logic
+else:
+    print("  🤖 Executing tasks via LLM...")
+    # Real execution via LLM
+    for task in tasks:
+        result = await self._execute_task_via_llm(task)
+```
+
+**Usage:**
+- Apply fix: `python scripts/fix_execution_mode_support.py <script_path>`
+- Validate fix: `python scripts/fix_execution_mode_support.py --validate <script_path>`
+
+### Requirement 33: Script Generation Quality and LLM Execution Support
+
+**User Story:** As a system operator, I want the TaskScriptGenerator to produce scripts that can perform real LLM-based task execution rather than just simulation placeholders.
+
+#### Acceptance Criteria
+
+1. WHEN TaskScriptGenerator creates execution functions THEN it SHALL generate `_execute_task_via_llm` methods instead of placeholder methods
+2. WHEN LLM execution methods are generated THEN they SHALL include proper error handling, timeout management, and logging
+3. WHEN task prompts are created THEN they SHALL include task ID, name, dependencies, and specification context
+4. WHEN kiro CLI is invoked THEN the system SHALL use subprocess with proper timeout and error capture
+5. WHEN execution logs are created THEN they SHALL be stored in a logs directory with timestamped filenames
+6. WHEN script generation occurs THEN the generated scripts SHALL import all required modules (os, subprocess, datetime)
+7. WHEN execution mode checking is implemented THEN it SHALL properly handle both simulation and real execution paths
+
+#### Reference Implementation
+
+**Executable Patch Code:** `scripts/fix_execution_mode_support.py`
+
+The `_execute_task_via_llm` method implementation:
+
+```python
+async def _execute_task_via_llm(self, task_definition):
+    """Execute task via LLM using kiro CLI pattern."""
+    task_prompt = f"""
+Task: {task_definition.name}
+Task ID: {task_definition.task_id}
+Dependencies: {task_definition.dependencies}
+
+Please implement this task according to the specification.
+"""
+    
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    log_file = f"logs/task_{task_definition.task_id}_{timestamp}.log"
+    os.makedirs("logs", exist_ok=True)
+    
+    try:
+        # Golden pattern: echo | tee | kiro -
+        result = subprocess.run([
+            'bash', '-c', 
+            f'echo "{task_prompt}" | tee {log_file} | kiro -'
+        ], capture_output=True, text=True, timeout=300)
+        
+        return {
+            'status': 'completed' if result.returncode == 0 else 'failed',
+            'execution_method': 'llm_via_kiro_cli',
+            'log_file': log_file
+        }
+    except subprocess.TimeoutExpired:
+        return {'status': 'failed', 'message': 'Timeout after 5 minutes'}
+```
+
+**TaskScriptGenerator Fix:**
+```python
+# Change in src/spec_framework/generators/task_script_generator.py
+code_lines.append(f"execution_function=self._execute_task_via_llm")  # Not placeholder
+```
+
+### Requirement 34: Observer Mode Governance Compliance with Executable Patch Code
+
+**User Story:** As a system maintainer, I want all functional patches to be systematically backed into requirements with executable patch code so that future LLMs understand exactly what the requirement means and can apply identical fixes.
+
+#### Acceptance Criteria
+
+1. WHEN functional code is patched THEN the root cause SHALL be analyzed and documented in requirements
+2. WHEN execution issues are discovered THEN new requirements SHALL be created to prevent recurrence
+3. WHEN system behavior is modified THEN the requirements SHALL be updated to reflect the new expected behavior
+4. WHEN missing functionality is implemented THEN comprehensive acceptance criteria SHALL be added to validate the implementation
+5. WHEN observer mode governance is applied THEN all changes SHALL be traceable from requirements through implementation to validation
+6. WHEN requirements are updated THEN executable patch code SHALL be included as reference implementation
+7. WHEN patch code is created THEN it SHALL demonstrate the exact fix needed and be runnable for validation
+
+#### Reference Implementation Pattern
+
+**Executable Patch Code Template:**
+
+```python
+#!/usr/bin/env python3
+"""
+Patch Script: [Problem Description]
+Root Cause: [Analysis of what was broken]
+Fix: [Description of solution]
+"""
+
+def apply_fix(target_path: str) -> Dict[str, Any]:
+    """Apply the specific fix with validation."""
+    # Implementation here
+    return {"status": "success", "fixes_applied": [...]}
+
+def validate_fix(target_path: str) -> Dict[str, Any]:
+    """Validate the fix was applied correctly."""
+    # Validation logic here
+    return {"status": "passed", "validation_results": {...}}
+
+if __name__ == "__main__":
+    # CLI interface for applying and validating fixes
+```
+
+This pattern ensures:
+- **Precise specification**: Code shows exactly what needs to be done
+- **Executable validation**: Can verify the fix works
+- **Future reusability**: Other LLMs can run the same fix
+- **No ambiguity**: Implementation is the specificationement system is fully functional THEN the server SHALL enable all engagement endpoints and features automatically
 
 ### Requirement 32: Import Resolution Error Handling
 
@@ -490,11 +646,14 @@ Requirement 25: Placeholder Implementation Strategy
 
 #### Acceptance Criteria
 
-1. WHEN execution starts THEN the system SHALL create unique execution IDs and track progress in Redis
-2. WHEN tasks execute THEN their status SHALL be updated in real-time with timestamps and results
-3. WHEN errors occur THEN they SHALL be logged with full context and stack traces
-4. WHEN execution completes THEN a comprehensive report SHALL be generated with success metrics
-5. WHEN monitoring is requested THEN current execution status SHALL be available via CLI commands
+1. WHEN execution starts THEN the system SHALL create unique execution IDs and track progress in Redis with mandatory connectivity verification
+2. WHEN tasks execute THEN their status SHALL be updated in real-time with timestamps and results, with Redis state persistence validation
+3. WHEN errors occur THEN they SHALL be logged with full context and stack traces, including Redis connectivity status
+4. WHEN execution completes THEN a comprehensive report SHALL be generated with success metrics and Redis state verification
+5. WHEN monitoring is requested THEN current execution status SHALL be available via CLI commands with Redis query validation
+6. WHEN Redis connectivity fails THEN execution monitoring SHALL halt and provide clear diagnostic information
+7. WHEN execution tracking is queried THEN Redis records SHALL be verifiable and match execution log claims
+8. WHEN monitoring health checks are performed THEN Redis DAG state management SHALL be included in health reporting
 
 ### Requirement 29: Development Workflow Integration
 
@@ -506,4 +665,78 @@ Requirement 25: Placeholder Implementation Strategy
 2. WHEN testing individual components THEN they SHALL be testable in isolation with mock dependencies
 3. WHEN debugging issues THEN comprehensive logging SHALL be available at multiple verbosity levels
 4. WHEN development server runs THEN it SHALL provide clear status of which components are real vs placeholder
+
+### Requirement 30: Redis DAG State Management and Validation
+
+**User Story:** As a system administrator and developer, I want comprehensive Redis-based DAG state management with proper validation to ensure all Hounds Protocol executions maintain proper DAG coordination and are verifiable so that DAG orchestration works reliably.
+
+#### Acceptance Criteria
+
+1. WHEN any Hounds Protocol execution begins THEN the system SHALL establish verified Redis connectivity and create DAG state management records with execution tracking, task dependencies, and coordination state
+2. WHEN Redis connectivity is tested THEN the system SHALL validate both local and remote Redis instances without authentication errors, and SHALL fail fast with clear error messages if Redis is unavailable for DAG coordination
+3. WHEN DAG execution state is managed THEN Redis SHALL store task dependencies, execution order, task status (pending/running/completed/failed), and inter-task communication data
+4. WHEN DAG tasks execute THEN Redis state SHALL be updated in real-time with task completion status, dependency satisfaction, and result passing between tasks
+5. WHEN DAG execution completes THEN the system SHALL create a final Redis record with complete DAG execution summary, task completion metrics, and dependency resolution verification
+6. WHEN DAG execution validation is performed THEN the system SHALL provide Redis query commands that can verify DAG state records exist and match claimed execution coordination
+7. WHEN Redis authentication issues occur THEN the system SHALL provide clear diagnostic information about Redis configuration and halt DAG execution to prevent state corruption
+8. WHEN DAG state management fails THEN the system SHALL halt execution and require Redis connectivity before proceeding, preventing broken DAG coordination and task execution failures
+9. WHEN post-execution DAG verification is needed THEN the system SHALL provide automated Redis validation commands that confirm DAG state records match execution logs and task completion claims
+10. WHEN DAG execution auditing is required THEN Redis DAG state records SHALL be exportable with full task dependency resolution, execution coordination lineage, and verification capabilities
+11. WHEN execution claims completion THEN the system SHALL automatically verify that Redis tracking records actually exist and match the claimed execution ID before reporting success
+12. WHEN Redis record verification fails THEN the execution SHALL be marked as UNVERIFIED and require manual investigation and re-execution with proper Redis persistence
+
+### Requirement 31: DAG Execution Verification and Anti-Coordination-Failure Measures
+
+**User Story:** As a quality assurance engineer and system auditor, I want robust DAG execution verification mechanisms to prevent false DAG completion claims and ensure all reported DAG orchestrations are genuine and verifiable with proper task coordination.
+
+#### Acceptance Criteria
+
+1. WHEN DAG execution completion is claimed THEN the system SHALL provide automated verification commands that validate actual DAG state management occurred and task coordination was successful
+2. WHEN Redis DAG tracking is queried THEN execution records SHALL include cryptographic hashes of DAG state transitions, task completion verification, and dependency resolution proof
+3. WHEN DAG execution verification is performed THEN the system SHALL cross-reference Redis DAG state records with actual task execution artifacts, dependency satisfaction, and coordination success
+4. WHEN DAG implementation claims are made THEN the system SHALL provide automated testing commands that validate claimed DAG orchestration actually coordinated tasks as specified
+5. WHEN DAG execution logs are analyzed THEN they SHALL include sufficient detail to reproduce and verify every claimed DAG coordination step and task dependency resolution
+6. WHEN false DAG execution claims are detected THEN the system SHALL flag discrepancies between claimed DAG coordination and verifiable Redis state management with detailed diagnostic reports
+7. WHEN DAG execution integrity is questioned THEN the system SHALL provide comprehensive audit trails linking Redis DAG state records, task execution artifacts, dependency resolution proof, and coordination validation
+8. WHEN permanent corrective action is needed THEN the system SHALL update requirements and validation procedures to prevent recurrence of DAG coordination verification failures
+9. WHEN DAG execution status is reported THEN it SHALL be based on verifiable Redis DAG state records and functional task coordination testing, not just execution log claims
+10. WHEN DAG system readiness is assessed THEN verification SHALL include actual DAG coordination functionality testing, dependency resolution validation, and task execution state management verification
+11. WHEN execution completion is claimed THEN automated post-execution verification SHALL confirm Redis tracking records exist and contain valid DAG state data
+12. WHEN Redis tracking verification fails THEN the system SHALL automatically flag the execution as potentially fraudulent and require comprehensive re-validation
+
+### Requirement 32: Mandatory Redis Connectivity for Distributed DAG Coordination
+
+**User Story:** As a system architect planning for multi-host cluster deployment, I want DAG execution to require Redis connectivity so that coordination works across distributed hosts and provides full operational visibility.
+
+#### Acceptance Criteria
+
+1. WHEN DAG execution begins THEN the system SHALL attempt Redis connectivity and SHALL explicitly declare whether using Redis or in-memory coordination mode
+2. WHEN Redis connectivity fails THEN the system SHALL clearly log the failure and explicitly ask for user confirmation before falling back to in-memory coordination
+3. WHEN in-memory coordination is used THEN the system SHALL display prominent warnings that this mode only works on single host and provides limited visibility
+4. WHEN distributed deployment is planned THEN Redis SHALL be the only supported coordination mechanism to ensure cross-host DAG state management
+5. WHEN operational visibility is required THEN Redis-based coordination SHALL provide complete DAG state inspection, monitoring, and debugging capabilities
+6. WHEN Redis authentication fails THEN the system SHALL provide clear diagnostic information about required credentials and configuration
+7. WHEN Redis connectivity is restored THEN DAG execution SHALL be able to resume from persisted state rather than restarting from scratch
+8. WHEN multi-host clusters are deployed THEN Redis SHALL serve as the central coordination point for DAG execution across all cluster nodes
+9. WHEN DAG monitoring is needed THEN Redis state SHALL provide real-time visibility into task dependencies, execution progress, and coordination status
+10. WHEN production deployment occurs THEN the system SHALL require explicit configuration flag to enable in-memory coordination, defaulting to Redis-required mode for production environments
+11. WHEN development mode is active THEN in-memory coordination SHALL be allowed with clear warnings about its limitations for single-developer scenarios
+12. WHEN coordination mode is selected THEN the system SHALL log prominently which mode is active and what the implications are for scalability and visibility
+
+### Requirement 33: Secure Credential Management
+
+**User Story:** As a security-conscious developer, I want all Redis credentials and sensitive configuration to be managed through environment variables so that passwords are never hardcoded in source code or exposed in git history.
+
+#### Acceptance Criteria
+
+1. WHEN any Redis connection is established THEN credentials SHALL be loaded from environment variables (REDIS_PASSWORD or BEAST_MODE_REDIS_PASSWORD) and NEVER hardcoded in source files
+2. WHEN source code is committed THEN it SHALL NOT contain any hardcoded passwords, API keys, or sensitive credentials
+3. WHEN environment variables are missing THEN the system SHALL provide clear error messages indicating which environment variables need to be set
+4. WHEN credential management is implemented THEN all existing hardcoded passwords SHALL be removed from source code and replaced with environment variable usage
+5. WHEN new Redis connections are added THEN they SHALL use the centralized credential management pattern and SHALL NOT introduce new hardcoded credentials
+6. WHEN development setup is performed THEN clear documentation SHALL be provided for setting up ~/.env file with required credentials
+7. WHEN production deployment occurs THEN credentials SHALL be managed through secure environment variable injection, not hardcoded values
+8. WHEN credential rotation is needed THEN it SHALL only require updating environment variables, not modifying source code
+9. WHEN security audits are performed THEN source code SHALL pass credential scanning without any hardcoded sensitive values
+10. WHEN git history contains hardcoded credentials THEN remediation procedures SHALL be followed to remove sensitive data from version control history
 5. WHEN integration testing occurs THEN it SHALL provide clear pass/fail results with specific failure details
