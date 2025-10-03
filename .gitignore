@@ -159,6 +159,14 @@ assessment_results/
 beast_mode_metrics/
 headless_execution/
 
+# Deployment volatile data - should use Docker volumes instead
+deployment/observatory/prometheus-data/
+deployment/observatory/grafana-data/
+deployment/local/prometheus-data/
+deployment/local/grafana-data/
+deployment/*/prometheus-data/
+deployment/*/grafana-data/
+
 # GCP credentials and secrets
 *.json
 !deployment/gcp/terraform/*.json
