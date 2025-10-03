@@ -34,7 +34,7 @@ services:
     - 3000:3000
     restart: unless-stopped
     volumes:
-    - ${GRAFANA_DATA_PATH:-./grafana-data}:/var/lib/grafana
+    - grafana_data:/var/lib/grafana
     - ./grafana-config:/etc/grafana/provisioning
   observatory:
     build:
@@ -109,7 +109,7 @@ services:
     volumes:
     - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     - ./prometheus-rules:/etc/prometheus/rules:ro
-    - ${PROMETHEUS_DATA_PATH:-./prometheus-data}:/prometheus
+    - prometheus_data:/prometheus
   jaeger:
     image: jaegertracing/all-in-one:latest
     container_name: observatory-jaeger
@@ -189,5 +189,9 @@ volumes:
   engagement_data:
     driver: local
   engagement_logs:
+    driver: local
+  grafana_data:
+    driver: local
+  prometheus_data:
     driver: local
 

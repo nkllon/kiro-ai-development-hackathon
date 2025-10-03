@@ -178,3 +178,12 @@ secrets/
 local_config.py
 .env.local
 observatory.pid
+
+# Deployment data governance - Added by migration script
+**/grafana-data/
+**/prometheus-data/
+*.db
+*.exe
+**/logs/
+**/cache/
+**/tmp/
