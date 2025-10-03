@@ -524,7 +524,10 @@ class EmojiRainWebSocketHandler:
                 await client.send_text(json.dumps(message))  # Use send_text instead of send
                 logger.debug(f"✅ Sent frame to client {i}")
             except Exception as e:
-                logger.warning(f"❌ Failed to send to client {i}: {e}")
+                # Filter out noise errors (like "0" or empty error messages)
+                error_str = str(e).strip()
+                if error_str and error_str != "0":
+                    logger.warning(f"❌ Failed to send to client {i}: {e}")
                 disconnected_clients.append(client)
         
         # Remove disconnected clients

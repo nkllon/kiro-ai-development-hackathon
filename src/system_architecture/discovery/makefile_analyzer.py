@@ -15,7 +15,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 
-from src.rm_ddd.core.unified_reflective_module import ReflectiveModule
+from src.rm_ddd.core.unified_reflective_module import ReflectiveModule, ModuleCapability, GracefulDegradationResult
 
 
 @dataclass
@@ -650,3 +650,52 @@ class MakefileAnalyzer(ReflectiveModule):
             recommendations.append("Add documentation/comments for target expected outcomes")
         
         return recommendations
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information - required by ReflectiveModule."""
+        return {
+            "module_id": self.module_id,
+            "name": "Makefile Analyzer",
+            "version": "1.0.0",
+            "description": "Analyzes Makefile targets and maps automation workflows to infrastructure components",
+            "author": "System Architecture Discovery",
+            "capabilities": [
+                "makefile_parsing",
+                "dependency_analysis",
+                "workflow_mapping",
+                "script_component_mapping"
+            ]
+        }
+    
+    def get_capabilities(self) -> List[ModuleCapability]:
+        """Get module capabilities - required by ReflectiveModule."""
+        return [
+            ModuleCapability.CORE_FUNCTIONALITY,
+            ModuleCapability.VALIDATION,
+            ModuleCapability.ANALYSIS
+        ]
+    
+    def graceful_degradation(self) -> GracefulDegradationResult:
+        """Perform graceful degradation - required by ReflectiveModule."""
+        return GracefulDegradationResult(
+            success=True,
+            message="Makefile analyzer supports graceful degradation",
+            fallback_capabilities=[ModuleCapability.CORE_FUNCTIONALITY],
+            recovery_suggestions=[
+                "Retry with simpler Makefile parsing",
+                "Skip complex dependency analysis if needed",
+                "Use basic target extraction without workflow mapping"
+            ]
+        )
+    
+    def get_health_status(self) -> Dict[str, Any]:
+        """Get health status - required by ReflectiveModule."""
+        return {
+            "module": "MakefileAnalyzer",
+            "status": "healthy",
+            "makefile_path": str(self._makefile_path),
+            "makefile_exists": self._makefile_path.exists(),
+            "targets_parsed": len(self._targets),
+            "script_mappings": len(self._script_mappings),
+            "automation_chains": len(self._automation_chains)
+        }

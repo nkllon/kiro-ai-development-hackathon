@@ -24,4 +24,25 @@ ingress:
       tcpKeepAlive: 30s
       keepAliveConnections: 100
       keepAliveTimeout: 90s
+  - hostname: prometheus.observatory.nkllon.com
+    service: http://localhost:9090
+    originRequest:
+      httpHostHeader: localhost:9090
+      noTLSVerify: false
+      connectTimeout: 30s
+      tlsTimeout: 10s
+      tcpKeepAlive: 30s
+      keepAliveConnections: 100
+      keepAliveTimeout: 90s
+  - hostname: grafana.observatory.nkllon.com
+    service: http://localhost:3000
+    originRequest:
+      httpHostHeader: localhost:3000
+      # WebSocket support for Grafana
+      noTLSVerify: false
+      connectTimeout: 30s
+      tlsTimeout: 10s
+      tcpKeepAlive: 30s
+      keepAliveConnections: 100
+      keepAliveTimeout: 90s
   - service: http_status:404

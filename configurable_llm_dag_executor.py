@@ -144,8 +144,13 @@ class ConfigurableLLMDAGExecutor:
         
         dependencies_text = f"Dependencies: {', '.join(dependencies)}" if dependencies else "Dependencies: None"
         
+        # Get spec name from loaded configuration
+        config = load_system_architecture_tasks()
+        spec_name = config.get("dag_configuration", {}).get("spec_name", "system-architecture-wiring-diagram")
+        spec_title = spec_name.replace("-", " ").title()
+        
         prompt = f"""
-SYSTEM ARCHITECTURE WIRING DIAGRAM IMPLEMENTATION
+{spec_title.upper()} IMPLEMENTATION
 Task ID: {task_id}
 Task: {task_name}
 {dependencies_text}
@@ -153,8 +158,8 @@ Execution ID: {self.execution_id}
 LLM Provider: {self.llm_config.provider.value}
 
 CONTEXT:
-You are implementing the System Architecture Wiring Diagram specification.
-- Spec Location: .kiro/specs/system-architecture-wiring-diagram/
+You are implementing the {spec_title} specification.
+- Spec Location: .kiro/specs/{spec_name}/
 - Use ReflectiveModule pattern from src.rm_ddd.core.unified_reflective_module
 - Follow Beast Mode systematic approaches
 - Create production-ready code with >90% test coverage

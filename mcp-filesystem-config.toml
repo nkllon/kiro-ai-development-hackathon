@@ -1,0 +1,20 @@
+[filesystem]
+# Root directory for filesystem access (can be overridden by MCP_FILESYSTEM_ROOT env var)
+root_path = "."
+
+# Allowed file extensions (empty means all)
+allowed_extensions = []
+
+# Maximum file size in bytes (0 means no limit)
+max_file_size = 10485760  # 10MB
+
+# Disable logging to avoid permission issues
+enable_logging = false
+
+# Log file location (use writable directory)
+log_file = "/tmp/mcp_filesystem.log"
+
+[server]
+# Server configuration
+host = "127.0.0.1"
+port = 8001

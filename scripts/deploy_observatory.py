@@ -1,195 +1,148 @@
 #!/usr/bin/env python3
 """
-Observatory Deployment Script
-Handles containerized deployment with zero-downtime transition.
+Deploy Observatory using Docker containers.
+Fixed to use proper containerization instead of bare Python processes.
 """
 
-import os
-import sys
 import subprocess
+import sys
 import time
-import requests
+import os
 from pathlib import Path
 
-class ObservatoryDeployer:
-    def __init__(self):
-        self.project_root = Path(__file__).parent.parent
-        self.cloudflared_config = Path.home() / '.cloudflared'
-        
-    def check_prerequisites(self):
-        """Check if Docker and required files exist."""
-        print("🔍 Checking prerequisites...")
-        
-        # Check Docker
-        try:
-            subprocess.run(['docker', '--version'], check=True, capture_output=True)
-            subprocess.run(['docker-compose', '--version'], check=True, capture_output=True)
-            print("✅ Docker and Docker Compose are installed")
-        except (subprocess.CalledProcessError, FileNotFoundError):
-            print("❌ Docker or Docker Compose not found. Please install Docker Desktop.")
-            return False
-        
-        # Check cloudflared config
-        if not (self.cloudflared_config / 'config.yml').exists():
-            print("❌ Cloudflared config not found at ~/.cloudflared/config.yml")
-            return False
-        
-        if not (self.cloudflared_config / 'd1e53e43-033f-4994-8f46-c83962ae3785.json').exists():
-            print("❌ Cloudflared credentials not found")
-            return False
-        
-        print("✅ Cloudflared configuration found")
+
+def run_command(cmd, description="", check=True):
+    """Run a command with proper logging."""
+    print(f"🔧 {description}")
+    try:
+        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, check=check)
+        if result.stdout.strip():
+            print(f"✅ {result.stdout.strip()}")
+        return result.returncode == 0
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Error: {e.stderr.strip() if e.stderr else str(e)}")
+        return False
+
+
+def stop_existing_containers():
+    """Stop any existing Observatory containers."""
+    print("🛑 Stopping existing Observatory containers...")
+    
+    containers = [
+        "beast-mode-observatory",
+        "observatory-prometheus", 
+        "observatory-grafana"
+    ]
+    
+    for container in containers:
+        run_command(f"docker stop {container}", f"Stopping {container}", check=False)
+        run_command(f"docker rm {container}", f"Removing {container}", check=False)
+
+
+def load_env_vars():
+    """Load environment variables from ~/.env if it exists."""
+    home_env = Path.home() / ".env"
+    if home_env.exists():
+        print(f"🔧 Loading environment variables from {home_env}")
+        with open(home_env, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    key, value = line.split('=', 1)
+                    os.environ[key.strip()] = value.strip().strip('"').strip("'")
         return True
+    else:
+        print("⚠️ No ~/.env file found - using default configurations")
+        return False
+
+
+def deploy_observatory_containers():
+    """Deploy Observatory using Docker Compose."""
+    print("🚀 Deploying Observatory containers...")
     
-    def stop_existing_processes(self):
-        """Stop existing Observatory and cloudflared processes."""
-        print("🛑 Stopping existing processes...")
-        
-        # Find and stop processes
-        try:
-            # Stop cloudflared
-            result = subprocess.run(['pkill', '-f', 'cloudflared tunnel'], 
-                                  capture_output=True, text=True)
-            if result.returncode == 0:
-                print("✅ Stopped existing cloudflared process")
-            
-            # Stop Observatory (look for Python process on port 8888)
-            result = subprocess.run(['lsof', '-ti:8888'], capture_output=True, text=True)
-            if result.stdout.strip():
-                pids = result.stdout.strip().split('\n')
-                for pid in pids:
-                    subprocess.run(['kill', pid], capture_output=True)
-                print("✅ Stopped existing Observatory process")
-            
-            # Wait a moment for processes to stop
-            time.sleep(2)
-            
-        except Exception as e:
-            print(f"⚠️  Warning: Could not stop some processes: {e}")
+    # Load environment variables
+    load_env_vars()
     
-    def create_directories(self):
-        """Create necessary directories for Docker volumes."""
-        print("📁 Creating directories...")
-        
-        dirs = ['logs', 'data']
-        for dir_name in dirs:
-            dir_path = self.project_root / dir_name
-            dir_path.mkdir(exist_ok=True)
-            print(f"✅ Created {dir_name}/ directory")
-    
-    def build_and_start_container(self):
-        """Build and start the Observatory container."""
-        print("🐳 Building and starting Observatory container...")
-        
-        os.chdir(self.project_root)
-        
-        # Build the container
-        result = subprocess.run(['docker-compose', 'build'], capture_output=True, text=True)
-        if result.returncode != 0:
-            print(f"❌ Docker build failed: {result.stderr}")
-            return False
-        
-        print("✅ Container built successfully")
-        
-        # Start the container
-        result = subprocess.run(['docker-compose', 'up', '-d'], capture_output=True, text=True)
-        if result.returncode != 0:
-            print(f"❌ Container start failed: {result.stderr}")
-            return False
-        
-        print("✅ Container started successfully")
-        return True
-    
-    def wait_for_health_check(self, max_wait=60):
-        """Wait for Observatory to be healthy."""
-        print("⏳ Waiting for Observatory to be healthy...")
-        
-        start_time = time.time()
-        while time.time() - start_time < max_wait:
-            try:
-                response = requests.get('http://localhost:8888/health', timeout=5)
-                if response.status_code == 200:
-                    print("✅ Observatory is healthy!")
-                    return True
-            except requests.RequestException:
-                pass
-            
-            print("⏳ Still waiting...")
-            time.sleep(5)
-        
-        print("❌ Observatory failed to become healthy within timeout")
+    # Change to deployment directory
+    deployment_dir = Path("deployment/observatory")
+    if not deployment_dir.exists():
+        print("❌ Observatory deployment directory not found")
         return False
     
-    def verify_tunnel_connection(self):
-        """Verify the Cloudflare tunnel is working."""
-        print("🌐 Verifying tunnel connection...")
-        
-        try:
-            # Test the public URL
-            response = requests.get('https://observatory.nkllon.com/', timeout=10)
-            if response.status_code == 200:
-                print("✅ Public URL is working: https://observatory.nkllon.com/")
-                return True
-            else:
-                print(f"⚠️  Public URL returned status {response.status_code}")
-        except requests.RequestException as e:
-            print(f"⚠️  Could not reach public URL: {e}")
-        
+    os.chdir(deployment_dir)
+    
+    # Build and start containers
+    if not run_command("docker-compose build", "Building Observatory containers"):
         return False
     
-    def show_status(self):
-        """Show deployment status and useful commands."""
-        print("\n" + "="*60)
-        print("🎉 OBSERVATORY DEPLOYMENT COMPLETE!")
-        print("="*60)
-        
-        print("\n📊 Status:")
-        print("  • Observatory: https://observatory.nkllon.com/")
-        print("  • Local: http://localhost:8888/")
-        print("  • Container: observatory")
-        
-        print("\n🔧 Useful Commands:")
-        print("  • View logs: docker-compose logs -f")
-        print("  • Restart: docker-compose restart")
-        print("  • Stop: docker-compose down")
-        print("  • Rebuild: docker-compose build && docker-compose up -d")
-        
-        print("\n📁 Persistent Data:")
-        print("  • Logs: ./logs/")
-        print("  • Data: ./data/")
-        print("  • Config: ~/.cloudflared/ (mounted read-only)")
-        
-        print("\n🚀 Your Observatory is now running in Docker!")
-        print("   It will automatically restart if it crashes or if you reboot.")
+    if not run_command("docker-compose up -d", "Starting Observatory containers"):
+        return False
     
-    def deploy(self):
-        """Main deployment workflow."""
-        print("🚀 Starting Observatory Deployment")
-        print("="*50)
-        
-        if not self.check_prerequisites():
-            sys.exit(1)
-        
-        self.stop_existing_processes()
-        self.create_directories()
-        
-        if not self.build_and_start_container():
-            sys.exit(1)
-        
-        if not self.wait_for_health_check():
-            print("❌ Deployment failed - Observatory not healthy")
-            print("🔍 Check logs with: docker-compose logs")
-            sys.exit(1)
-        
-        # Give tunnel a moment to connect
-        time.sleep(10)
-        self.verify_tunnel_connection()
-        
-        self.show_status()
+    # Wait for services to be ready
+    print("⏳ Waiting for services to start...")
+    time.sleep(30)
+    
+    # Verify containers are running
+    if not run_command("docker-compose ps", "Checking container status"):
+        return False
+    
+    return True
+
+
+def verify_deployment():
+    """Verify Observatory deployment is working."""
+    print("🔍 Verifying Observatory deployment...")
+    
+    # Test Observatory health endpoint
+    if run_command("curl -f http://localhost:8888/health", "Testing Observatory health", check=False):
+        print("✅ Observatory service is healthy")
+    else:
+        print("❌ Observatory service health check failed")
+        return False
+    
+    # Test Prometheus
+    if run_command("curl -f http://localhost:9090/-/healthy", "Testing Prometheus health", check=False):
+        print("✅ Prometheus service is healthy")
+    else:
+        print("❌ Prometheus service health check failed")
+        return False
+    
+    # Test Grafana
+    if run_command("curl -f http://localhost:3000/api/health", "Testing Grafana health", check=False):
+        print("✅ Grafana service is healthy")
+    else:
+        print("❌ Grafana service health check failed")
+        return False
+    
+    return True
+
 
 def main():
-    deployer = ObservatoryDeployer()
-    deployer.deploy()
+    """Main deployment function."""
+    print("🔭 Observatory Container Deployment")
+    print("=" * 50)
+    
+    # Stop existing containers
+    stop_existing_containers()
+    
+    # Deploy new containers
+    if not deploy_observatory_containers():
+        print("❌ Observatory deployment failed")
+        return 1
+    
+    # Verify deployment
+    if not verify_deployment():
+        print("❌ Observatory verification failed")
+        return 1
+    
+    print("🎉 Observatory deployment completed successfully!")
+    print("📊 Services available at:")
+    print("  - Observatory: http://localhost:8888")
+    print("  - Prometheus: http://localhost:9090") 
+    print("  - Grafana: http://localhost:3000")
+    
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

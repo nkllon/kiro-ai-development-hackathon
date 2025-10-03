@@ -153,18 +153,43 @@ class PrometheusExporter:
             self.performance_monitor = None
             
             # Import the new monitoring client
-            try:
-                from .client import MonitoringClient
-                self.monitoring_client = MonitoringClient(
-                    client_id="prometheus_exporter_legacy",
-                    daemon_port=port,
-                    fallback_mode=True
-                )
-                self.logger.info("Using new daemon-based monitoring system")
-                self._use_daemon = True
-            except ImportError:
-                self.logger.warning("New monitoring client not available, falling back to legacy mode")
+            # Check if daemon mode is explicitly disabled
+            disable_daemon = os.environ.get('BEAST_MODE_DISABLE_DAEMON', '0') == '1'
+
+            if disable_daemon:
+                self.logger.info("Daemon mode explicitly disabled via BEAST_MODE_DISABLE_DAEMON")
                 self._use_daemon = False
+            else:
+                try:
+                    from .client import MonitoringClient
+                    # Try to check if daemon is actually running before committing to daemon mode
+                    try:
+                        import socket
+                        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                        sock.settimeout(1)
+                        result = sock.connect_ex(('localhost', port))
+                        sock.close()
+                        daemon_running = (result == 0)
+                    except:
+                        daemon_running = False
+
+                    if not daemon_running:
+                        self.logger.warning(f"Monitoring daemon not running on port {port}, falling back to legacy mode")
+                        self._use_daemon = False
+                    else:
+                        self.monitoring_client = MonitoringClient(
+                            client_id="prometheus_exporter_legacy",
+                            daemon_port=port,
+                            fallback_mode=True
+                        )
+                        self.logger.info("Using new daemon-based monitoring system")
+                        self._use_daemon = True
+                except ImportError:
+                    self.logger.warning("New monitoring client not available, falling back to legacy mode")
+                    self._use_daemon = False
+                except Exception as e:
+                    self.logger.warning(f"Failed to connect to monitoring daemon: {e}, falling back to legacy mode")
+                    self._use_daemon = False
 
             if not PROMETHEUS_AVAILABLE and not self._use_daemon:
                 self.logger.warning(

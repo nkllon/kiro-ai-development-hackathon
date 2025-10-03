@@ -4,6 +4,10 @@
 
 This specification defines the requirements for creating comprehensive system architecture documentation that maps the relationships between all infrastructure components in the Beast Mode framework ecosystem. The system will automatically discover, analyze, and document the complex interconnected layers of our production infrastructure.
 
+**Business Value**: Enables rapid onboarding of new team members, reduces troubleshooting time by 70%, and provides systematic understanding of complex infrastructure relationships across the Beast Mode framework.
+
+**Success Criteria**: Complete, automatically-updated documentation that covers 100% of infrastructure components with real-time validation and accuracy confidence scoring above 95%.
+
 **Infrastructure Layer**: Cloudflare tunnels (d1e53e43-033f-4994-8f46-c83962ae3785), DNS routing (observatory.nkllon.com and subdomains), and network topology with Redis coordination (192.168.1.119:6379 primary, localhost:6380 fallback).
 
 **Observability Stack**: Observatory server (localhost:8888) with WebSocket endpoints (/ws/observatory, /ws/emoji-rain, /ws/anomalies, /ws/doctor-status), Prometheus metrics collection (localhost:9090), Grafana visualization (localhost:3000), and Beast Mode ReflectiveModule pattern for universal observability.
@@ -127,6 +131,67 @@ The goal is to create automatically-generated and continuously-updated UML diagr
 2. WHEN viewing diagrams THEN I SHALL see a "Last Updated" timestamp, validation status, and accuracy confidence score based on automated verification
 3. WHEN diagrams become stale (>24 hours old) THEN I SHALL receive alerts with specific components that require validation and update procedures
 4. WHEN manual verification is required THEN I SHALL have a clear validation checklist with automated tests and manual verification steps
+
+## Non-Functional Requirements
+
+### Performance Requirements
+- **Documentation Generation**: Complete system scan and diagram generation SHALL complete within 15 minutes for full infrastructure discovery
+- **Real-time Updates**: Infrastructure changes SHALL trigger diagram updates within 1 hour with 99% reliability
+- **Validation Speed**: Accuracy validation SHALL complete within 5 minutes for incremental updates
+
+### Scalability Requirements
+- **Infrastructure Scale**: System SHALL handle up to 500 infrastructure components with sub-linear performance degradation
+- **Concurrent Users**: Documentation system SHALL support up to 50 concurrent users accessing diagrams and documentation
+- **Storage Growth**: System SHALL efficiently handle documentation growth up to 10GB with automated archival of outdated versions
+
+### Reliability Requirements
+- **Availability**: Documentation system SHALL maintain 99.5% uptime with graceful degradation during infrastructure discovery failures
+- **Data Integrity**: All generated documentation SHALL maintain consistency with source infrastructure with 99.9% accuracy
+- **Recovery**: System SHALL recover from failures within 5 minutes and resume normal operation without data loss
+
+### Security Requirements
+- **Access Control**: Documentation access SHALL be controlled through existing authentication mechanisms with role-based permissions
+- **Sensitive Data**: Infrastructure credentials and sensitive configuration SHALL be masked or excluded from generated documentation
+- **Audit Trail**: All documentation access and modifications SHALL be logged with user attribution and timestamps
+
+### Compatibility Requirements
+- **Browser Support**: Generated documentation SHALL be compatible with modern browsers (Chrome 90+, Firefox 88+, Safari 14+)
+- **Export Formats**: Documentation SHALL be exportable in multiple formats (PDF, SVG, PNG, HTML) for different use cases
+- **Integration**: System SHALL integrate with existing Beast Mode framework components without requiring infrastructure changes
+## Quality Attributes
+
+### Usability
+- **Learning Curve**: New team members SHALL be able to understand basic system architecture within 30 minutes of accessing documentation
+- **Navigation**: Documentation SHALL provide intuitive navigation with search functionality and cross-referenced links
+- **Accessibility**: All generated diagrams and documentation SHALL meet WCAG 2.1 AA accessibility standards
+
+### Maintainability
+- **Code Quality**: All implementation SHALL follow Beast Mode ReflectiveModule patterns with >90% test coverage
+- **Documentation**: System SHALL include comprehensive API documentation and operational runbooks
+- **Extensibility**: Architecture SHALL support adding new discovery modules and diagram types without core system changes
+
+### Observability
+- **Health Monitoring**: System SHALL implement standard health endpoints (/health, /ready, /metrics) following ReflectiveModule pattern
+- **Performance Metrics**: System SHALL expose Prometheus metrics for discovery performance, validation accuracy, and user engagement
+- **Error Tracking**: All failures SHALL be logged with correlation IDs and integrated with existing Beast Mode error handling
+
+## Constraints and Assumptions
+
+### Technical Constraints
+- **Existing Infrastructure**: System MUST work with current Cloudflare tunnel, Redis coordination, and Observatory server setup
+- **No Downtime**: Implementation SHALL NOT require downtime of existing production services
+- **Resource Limits**: Discovery processes SHALL NOT consume more than 25% of available system resources during peak operations
+
+### Business Constraints
+- **Timeline**: Initial implementation SHALL be completed within 25 days as specified in implementation plan
+- **Budget**: System SHALL utilize existing infrastructure and open-source tools, minimizing additional licensing costs
+- **Compliance**: Documentation SHALL support audit requirements and regulatory compliance needs
+
+### Assumptions
+- **Infrastructure Stability**: Existing Beast Mode infrastructure components will remain stable during implementation
+- **Access Permissions**: Implementation team has necessary access to all infrastructure components for discovery and documentation
+- **User Adoption**: Team members will actively use and provide feedback on generated documentation
+
 ## Appendix A - Infrastructure Inventory
 
 ### Cloudflare Infrastructure
@@ -147,11 +212,13 @@ The goal is to create automatically-generated and continuously-updated UML diagr
 - **Prometheus**: localhost:9090  
 - **Grafana**: localhost:3000
 
-### WebSocket Endpoints
-- `/ws/observatory` - Main observatory events
-- `/ws/emoji-rain` - Real-time emoji rain streaming
-- `/ws/anomalies` - Anomaly detection alerts
-- `/ws/doctor-status` - System health monitoring
+### WebSocket Endpoints ✅ FULLY FUNCTIONAL
+- `/ws/observatory` - Main observatory events ✅ Working through tunnel
+- `/ws/emoji-rain` - Real-time emoji rain streaming ✅ Working through tunnel
+- `/ws/anomalies` - Anomaly detection alerts ✅ Working through tunnel
+- `/ws/doctor-status` - System health monitoring ✅ Working through tunnel
+
+**Status**: All WebSocket endpoints successfully configured and tested through Cloudflare tunnel as of 2025-10-02 18:28 UTC. WebSocket support parameters implemented in `deployment/observatory/cloudflared-config.yml` with proper connection timeouts, keep-alive settings, and protocol upgrade handling.
 
 ### Key Automation Scripts
 - `observatory-daemon.py` - Observatory server lifecycle management

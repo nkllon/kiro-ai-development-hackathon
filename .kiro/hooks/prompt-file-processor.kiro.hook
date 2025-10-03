@@ -4,10 +4,11 @@
   "description": "Automatically reads prompt files created in the prompts/ directory, executes the requested task by implementing code and creating necessary files, then moves the completed prompt file to prompts/completed/",
   "version": "1",
   "when": {
-    "type": "fileDeleted",
+    "type": "fileEdited",
     "patterns": [
       "prompts/*.txt",
-      "prompts/*.md"
+      "prompts/*.md",
+      "./prompts/*.md"
     ]
   },
   "then": {

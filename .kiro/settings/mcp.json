@@ -4,14 +4,25 @@
       "command": "uvx",
       "args": [
         "mcp-filesystem",
-        "--path",
-        "."
+        "--config",
+        "mcp-filesystem-config.toml",
+        "--stdio"
       ],
-      "env": {},
+      "env": {
+        "PYTHONPATH": ".",
+        "MCP_FILESYSTEM_ROOT": ".",
+        "MCP_FILESYSTEM_LOG_LEVEL": "ERROR",
+        "MCP_FILESYSTEM_ENABLE_LOGGING": "false"
+      },
       "disabled": false,
       "autoApprove": [
         "read_file",
-        "list_directory"
+        "list_directory",
+        "create_directory",
+        "create_directory",
+        "move_file",
+        "check_path_exists",
+        "check_path_exists"
       ],
       "disabledTools": []
     },

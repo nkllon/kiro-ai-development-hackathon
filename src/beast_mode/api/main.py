@@ -4,13 +4,27 @@ This provides a basic web server for testing nginx integration
 """
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import os
 import time
 from datetime import datetime
 from typing import Dict, Any
+
+# Try to import Prometheus client
+try:
+    from prometheus_client import Counter, Gauge, Histogram, generate_latest, CONTENT_TYPE_LATEST, CollectorRegistry
+    PROMETHEUS_AVAILABLE = True
+
+    # Create registry and metrics
+    registry = CollectorRegistry()
+    request_count = Counter('systematic_pdca_requests_total', 'Total request count', ['method', 'endpoint', 'status'], registry=registry)
+    request_duration = Histogram('systematic_pdca_request_duration_seconds', 'Request duration', ['method', 'endpoint'], registry=registry)
+    app_uptime = Gauge('systematic_pdca_uptime_seconds', 'Application uptime in seconds', registry=registry)
+    start_time = time.time()
+except ImportError:
+    PROMETHEUS_AVAILABLE = False
 
 # Create FastAPI app
 app = FastAPI(
@@ -71,7 +85,10 @@ async def root():
                 <strong>GET /api/status</strong> - API status information
             </div>
             <div class="endpoint">
-                <strong>GET /api/metrics</strong> - System metrics
+                <strong>GET /api/metrics</strong> - System metrics (JSON)
+            </div>
+            <div class="endpoint">
+                <strong>GET /metrics</strong> - Prometheus metrics (text format)
             </div>
             <div class="endpoint">
                 <strong>GET /docs</strong> - API documentation (Swagger UI)
@@ -100,10 +117,10 @@ async def api_status():
     }
 
 
-# Metrics endpoint
+# Metrics endpoint (JSON format for API)
 @app.get("/api/metrics")
 async def get_metrics():
-    """Get basic system metrics"""
+    """Get basic system metrics in JSON format"""
     return {
         "timestamp": datetime.utcnow().isoformat(),
         "metrics": {
@@ -113,6 +130,31 @@ async def get_metrics():
             "cpu_usage": "N/A",
         },
     }
+
+
+# Prometheus metrics endpoint
+@app.get("/metrics")
+async def prometheus_metrics():
+    """Prometheus metrics endpoint in text format"""
+    if not PROMETHEUS_AVAILABLE:
+        # Return basic metrics in Prometheus text format even without prometheus_client
+        uptime = time.time() - start_time if 'start_time' in globals() else time.time()
+        metrics_text = f"""# HELP systematic_pdca_uptime_seconds Application uptime in seconds
+# TYPE systematic_pdca_uptime_seconds gauge
+systematic_pdca_uptime_seconds {uptime}
+
+# HELP systematic_pdca_info Application info
+# TYPE systematic_pdca_info gauge
+systematic_pdca_info{{version="1.0.0",service="systematic-pdca-orchestrator"}} 1
+"""
+        return PlainTextResponse(content=metrics_text, media_type="text/plain; version=0.0.4")
+
+    # Update uptime gauge
+    app_uptime.set(time.time() - start_time)
+
+    # Generate Prometheus metrics
+    metrics = generate_latest(registry)
+    return PlainTextResponse(content=metrics, media_type=CONTENT_TYPE_LATEST)
 
 
 # Test endpoint for nginx routing

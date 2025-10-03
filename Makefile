@@ -122,15 +122,31 @@ observatory-deploy: ## Deploy Observatory system
 	$(MAKE) -f makefiles/observatory.mk observatory-deploy
 	@echo '✅ Observatory system deployed'
 
-observatory-start: ## Start Observatory services
-	@echo '🔭 Starting Observatory services...'
-	python scripts/deploy_observatory.py || echo 'Observatory start attempted'
+observatory-start: ## Start Observatory services in Docker containers
+	@echo '🔭 Starting Observatory services in containers...'
+	python scripts/deploy_observatory.py
 	@echo '✅ Observatory services started'
 
-observatory-stop: ## Stop Observatory services
-	@echo '🔭 Stopping Observatory services...'
-	python scripts/stop_observatory.py || echo 'Observatory stop attempted'
+observatory-stop: ## Stop Observatory services and containers
+	@echo '🔭 Stopping Observatory services and containers...'
+	python scripts/stop_observatory.py
 	@echo '✅ Observatory services stopped'
+
+observatory-restart: ## Restart Observatory services
+	@echo '🔭 Restarting Observatory services...'
+	$(MAKE) observatory-stop
+	sleep 5
+	$(MAKE) observatory-start
+	@echo '✅ Observatory services restarted'
+
+observatory-build: ## Build Observatory Docker images
+	@echo '🔭 Building Observatory Docker images...'
+	cd deployment/observatory && docker-compose build
+	@echo '✅ Observatory images built'
+
+observatory-shell: ## Access Observatory container shell
+	@echo '🔭 Accessing Observatory container shell...'
+	docker exec -it beast-mode-observatory /bin/bash
 
 observatory-status: ## Check Observatory status
 	@echo '🔭 Checking Observatory status...'
@@ -139,17 +155,36 @@ observatory-status: ## Check Observatory status
 
 observatory-health: ## Check Observatory health
 	@echo '🔭 Checking Observatory health...'
-	curl -s http://localhost:8888/health || echo 'Observatory health check failed'
-	curl -s http://localhost:9090/-/healthy || echo 'Prometheus health check failed'
-	curl -s http://localhost:3000/api/health || echo 'Grafana health check failed'
+	@echo 'Local services:'
+	@curl -s http://localhost:8888/health || echo '❌ Observatory health check failed'
+	@curl -s http://localhost:9090/-/healthy || echo '❌ Prometheus health check failed'
+	@curl -s http://localhost:3000/api/health || echo '❌ Grafana health check failed'
+	@echo ''
+	@echo 'Tunnel endpoints:'
+	@curl -s https://observatory.nkllon.com/health || echo '❌ Observatory tunnel failed'
+	@curl -s https://prometheus.nkllon.com/-/healthy || echo '❌ Prometheus tunnel failed'
+	@curl -s https://grafana.nkllon.com/api/health || echo '❌ Grafana tunnel failed'
 	@echo '✅ Observatory health check complete'
 
-observatory-logs: ## View Observatory logs
-	@echo '🔭 Observatory System Logs:'
+observatory-restart-services: ## Restart Observatory services (Docker containers)
+	@echo '🔭 Restarting Observatory services...'
+	@docker start prometheus || echo 'Prometheus start failed'
+	@docker start grafana-public || echo 'Grafana start failed'
+	@echo '✅ Observatory services restarted'
+
+observatory-restart-tunnel: ## Restart Cloudflare tunnel
+	@echo '🔭 Restarting Cloudflare tunnel...'
+	@pkill -f "cloudflared tunnel" || echo 'No tunnel to kill'
+	@sleep 2
+	@cloudflared tunnel --config cloudflared-config.yml run &
+	@echo '✅ Cloudflare tunnel restarted'
+
+observatory-logs: ## View Observatory container logs
+	@echo '🔭 Observatory Container Logs:'
 	@echo '============================'
-	@tail -20 logs/observatory.log 2>/dev/null || echo 'No Observatory logs found'
-	@tail -20 logs/prometheus.log 2>/dev/null || echo 'No Prometheus logs found'
-	@tail -20 logs/grafana.log 2>/dev/null || echo 'No Grafana logs found'
+	@docker logs beast-mode-observatory --tail=50 2>/dev/null || echo 'Observatory container not running'
+	@docker logs observatory-prometheus --tail=20 2>/dev/null || echo 'Prometheus container not running'
+	@docker logs observatory-grafana --tail=20 2>/dev/null || echo 'Grafana container not running'
 
 # =============================================================================
 # BEAST MODE FRAMEWORK

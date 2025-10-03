@@ -1,170 +1,173 @@
 #!/usr/bin/env python3
 """
 WebSocket Connectivity Test Script
-
-This script tests WebSocket connectivity through the Cloudflare tunnel
-for all Observatory WebSocket endpoints.
+Tests WebSocket endpoints through Cloudflare tunnel
 """
 
 import asyncio
 import websockets
 import json
-import time
 import sys
-from typing import List, Dict, Any
+from datetime import datetime
+import ssl
 
 # WebSocket endpoints to test
 WEBSOCKET_ENDPOINTS = [
-    "/ws/emoji-rain",
-    "/ws/observatory", 
-    "/ws/anomalies",
-    "/ws/doctor-status"
+    "wss://observatory.nkllon.com/ws/emoji-rain",
+    "wss://observatory.nkllon.com/ws/observatory", 
+    "wss://observatory.nkllon.com/ws/anomalies",
+    "wss://observatory.nkllon.com/ws/doctor-status"
 ]
 
-# Test URLs
-LOCAL_URL = "ws://localhost:8888"
-TUNNEL_URL = "wss://observatory.nkllon.com"
+# Local endpoints for comparison
+LOCAL_ENDPOINTS = [
+    "ws://localhost:8888/ws/emoji-rain",
+    "ws://localhost:8888/ws/observatory",
+    "ws://localhost:8888/ws/anomalies", 
+    "ws://localhost:8888/ws/doctor-status"
+]
 
-class WebSocketTester:
-    """WebSocket connectivity tester."""
-    
-    def __init__(self):
-        self.results = {}
-    
-    async def test_endpoint(self, endpoint: str, base_url: str) -> Dict[str, Any]:
-        """Test a single WebSocket endpoint."""
-        url = f"{base_url}{endpoint}"
-        result = {
-            "endpoint": endpoint,
-            "url": url,
-            "success": False,
-            "error": None,
-            "response_time": None,
-            "message_received": False
+async def test_websocket_endpoint(uri, timeout=10):
+    """Test a single WebSocket endpoint"""
+    try:
+        print(f"🔗 Testing: {uri}")
+        
+        # Create SSL context that doesn't verify certificates for testing
+        ssl_context = ssl.create_default_context()
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
+        
+        # Connect to WebSocket
+        if uri.startswith('wss://'):
+            websocket = await asyncio.wait_for(
+                websockets.connect(uri, ssl=ssl_context), 
+                timeout=timeout
+            )
+        else:
+            websocket = await asyncio.wait_for(
+                websockets.connect(uri), 
+                timeout=timeout
+            )
+        
+        print(f"✅ Connected to {uri}")
+        
+        # Send a test message
+        test_message = {
+            "type": "test",
+            "timestamp": datetime.now().isoformat(),
+            "message": "WebSocket connectivity test"
         }
         
+        await websocket.send(json.dumps(test_message))
+        print(f"📤 Sent test message to {uri}")
+        
+        # Try to receive a response (with timeout)
         try:
-            print(f"🔍 Testing {url}...")
-            start_time = time.time()
-            
-            async with websockets.connect(url, timeout=10) as websocket:
-                result["response_time"] = time.time() - start_time
-                result["success"] = True
-                
-                # Try to receive a message
-                try:
-                    message = await asyncio.wait_for(websocket.recv(), timeout=5)
-                    result["message_received"] = True
-                    result["first_message"] = message[:100] + "..." if len(message) > 100 else message
-                except asyncio.TimeoutError:
-                    result["message_received"] = False
-                    result["note"] = "No message received within 5 seconds"
-                
-        except websockets.exceptions.ConnectionClosed as e:
-            result["error"] = f"Connection closed: {e}"
-        except websockets.exceptions.InvalidURI as e:
-            result["error"] = f"Invalid URI: {e}"
-        except websockets.exceptions.WebSocketException as e:
-            result["error"] = f"WebSocket error: {e}"
+            response = await asyncio.wait_for(websocket.recv(), timeout=5)
+            print(f"📥 Received response from {uri}: {response[:100]}...")
         except asyncio.TimeoutError:
-            result["error"] = "Connection timeout"
-        except Exception as e:
-            result["error"] = f"Unexpected error: {e}"
+            print(f"⏰ No response received from {uri} (timeout)")
         
-        return result
-    
-    async def test_all_endpoints(self, base_url: str) -> List[Dict[str, Any]]:
-        """Test all WebSocket endpoints."""
-        print(f"\n🌐 Testing WebSocket endpoints at {base_url}")
-        print("-" * 50)
+        # Close connection
+        await websocket.close()
+        print(f"🔌 Closed connection to {uri}")
         
-        results = []
-        for endpoint in WEBSOCKET_ENDPOINTS:
-            result = await self.test_endpoint(endpoint, base_url)
-            results.append(result)
-            
-            # Print result
-            if result["success"]:
-                print(f"✅ {endpoint}: Connected ({result['response_time']:.2f}s)")
-                if result["message_received"]:
-                    print(f"   📨 Message received: {result.get('first_message', 'N/A')}")
-                else:
-                    print(f"   ⏳ {result.get('note', 'No message received')}")
-            else:
-                print(f"❌ {endpoint}: Failed - {result['error']}")
+        return True, "Success"
         
-        return results
-    
-    def print_summary(self, local_results: List[Dict[str, Any]], 
-                     tunnel_results: List[Dict[str, Any]]):
-        """Print test summary."""
-        print("\n📊 Test Summary")
-        print("=" * 50)
-        
-        # Local results
-        local_success = sum(1 for r in local_results if r["success"])
-        print(f"🏠 Local WebSocket Tests: {local_success}/{len(local_results)} successful")
-        
-        # Tunnel results  
-        tunnel_success = sum(1 for r in tunnel_results if r["success"])
-        print(f"🌐 Tunnel WebSocket Tests: {tunnel_success}/{len(tunnel_results)} successful")
-        
-        # Detailed comparison
-        print("\n📋 Detailed Results:")
-        for i, endpoint in enumerate(WEBSOCKET_ENDPOINTS):
-            local = local_results[i]
-            tunnel = tunnel_results[i]
-            
-            print(f"\n🔗 {endpoint}:")
-            print(f"   Local:   {'✅' if local['success'] else '❌'} {local.get('error', 'Connected')}")
-            print(f"   Tunnel:  {'✅' if tunnel['success'] else '❌'} {tunnel.get('error', 'Connected')}")
-            
-            if local['success'] and tunnel['success']:
-                print(f"   🎉 Both working! Local: {local['response_time']:.2f}s, Tunnel: {tunnel['response_time']:.2f}s")
-            elif local['success'] and not tunnel['success']:
-                print(f"   ⚠️  Tunnel issue detected - WebSocket proxy may not be configured")
-            elif not local['success'] and tunnel['success']:
-                print(f"   🤔 Unexpected: Tunnel works but local doesn't")
-            else:
-                print(f"   ❌ Both failed - check Observatory server")
-    
-    async def run_tests(self):
-        """Run all WebSocket tests."""
-        print("🧪 WebSocket Connectivity Test")
-        print("=" * 50)
-        
-        # Test local endpoints
-        local_results = await self.test_all_endpoints(LOCAL_URL)
-        
-        # Test tunnel endpoints
-        tunnel_results = await self.test_all_endpoints(TUNNEL_URL)
-        
-        # Print summary
-        self.print_summary(local_results, tunnel_results)
-        
-        # Return success status
-        tunnel_success = sum(1 for r in tunnel_results if r["success"])
-        return tunnel_success == len(WEBSOCKET_ENDPOINTS)
+    except asyncio.TimeoutError:
+        return False, f"Connection timeout after {timeout}s"
+    except websockets.exceptions.InvalidStatusCode as e:
+        return False, f"Invalid status code: {e.status_code}"
+    except websockets.exceptions.ConnectionClosedError as e:
+        return False, f"Connection closed: {e.code} {e.reason}"
+    except Exception as e:
+        return False, f"Error: {str(e)}"
 
-async def main():
-    """Main function."""
-    tester = WebSocketTester()
-    success = await tester.run_tests()
+async def test_all_endpoints():
+    """Test all WebSocket endpoints"""
+    print("🔭 WebSocket Connectivity Test")
+    print("=" * 50)
     
-    if success:
-        print("\n🎉 All WebSocket endpoints are working through the tunnel!")
-        return 0
+    results = {}
+    
+    # Test tunnel endpoints
+    print("\n🌐 Testing Cloudflare Tunnel Endpoints:")
+    print("-" * 40)
+    for endpoint in WEBSOCKET_ENDPOINTS:
+        success, message = await test_websocket_endpoint(endpoint)
+        results[endpoint] = (success, message)
+        if success:
+            print(f"✅ {endpoint}: {message}")
+        else:
+            print(f"❌ {endpoint}: {message}")
+        print()
+    
+    # Test local endpoints for comparison
+    print("\n🏠 Testing Local Endpoints:")
+    print("-" * 30)
+    for endpoint in LOCAL_ENDPOINTS:
+        success, message = await test_websocket_endpoint(endpoint)
+        results[endpoint] = (success, message)
+        if success:
+            print(f"✅ {endpoint}: {message}")
+        else:
+            print(f"❌ {endpoint}: {message}")
+        print()
+    
+    # Summary
+    print("\n📊 Test Summary:")
+    print("=" * 50)
+    
+    tunnel_success = sum(1 for ep in WEBSOCKET_ENDPOINTS if results[ep][0])
+    local_success = sum(1 for ep in LOCAL_ENDPOINTS if results[ep][0])
+    
+    print(f"Tunnel Endpoints: {tunnel_success}/{len(WEBSOCKET_ENDPOINTS)} successful")
+    print(f"Local Endpoints:  {local_success}/{len(LOCAL_ENDPOINTS)} successful")
+    
+    if tunnel_success == len(WEBSOCKET_ENDPOINTS):
+        print("🎉 All tunnel WebSocket endpoints are working!")
+        return True
     else:
-        print("\n⚠️  Some WebSocket endpoints failed. Check the configuration.")
-        return 1
+        print("⚠️  Some tunnel WebSocket endpoints failed")
+        return False
+
+def test_http_endpoints():
+    """Test HTTP endpoints for comparison"""
+    import requests
+    
+    print("\n🌐 Testing HTTP Endpoints:")
+    print("-" * 30)
+    
+    http_endpoints = [
+        "https://observatory.nkllon.com/health",
+        "http://localhost:8888/health"
+    ]
+    
+    for endpoint in http_endpoints:
+        try:
+            response = requests.get(endpoint, timeout=10, verify=False)
+            if response.status_code == 200:
+                print(f"✅ {endpoint}: HTTP {response.status_code}")
+            else:
+                print(f"⚠️  {endpoint}: HTTP {response.status_code}")
+        except Exception as e:
+            print(f"❌ {endpoint}: {str(e)}")
 
 if __name__ == "__main__":
+    print("🔭 Observatory WebSocket Connectivity Test")
+    print(f"⏰ Started at: {datetime.now().isoformat()}")
+    print()
+    
+    # Test HTTP endpoints first
+    test_http_endpoints()
+    
+    # Test WebSocket endpoints
     try:
-        exit_code = asyncio.run(main())
-        sys.exit(exit_code)
+        success = asyncio.run(test_all_endpoints())
+        sys.exit(0 if success else 1)
     except KeyboardInterrupt:
         print("\n⏹️  Test interrupted by user")
         sys.exit(1)
     except Exception as e:
-        print(f"\n❌ Test failed with error: {e}")
+        print(f"\n💥 Test failed with error: {e}")
         sys.exit(1)
