@@ -2,428 +2,483 @@
 
 ## Overview
 
-The anomaly detection flow is a comprehensive monitoring system that continuously analyzes Prometheus metrics, detects performance anomalies and system irregularities, and broadcasts real-time alerts via WebSocket to connected clients. This system provides proactive monitoring and early warning capabilities for the Beast Mode framework infrastructure.
+The anomaly detection flow provides real-time monitoring and alerting for system performance anomalies through integrated Prometheus metrics collection, detection algorithms, and WebSocket-based alert distribution. This workflow demonstrates the systematic approach to proactive system monitoring within the Beast Mode framework.
 
 ## Flow Architecture
 
-```mermaid
-graph TD
-    Prometheus[Prometheus Metrics] --> Collector[Metrics Collector]
-    Collector --> Analyzer[Anomaly Detection Engine]
-    Analyzer --> Classifier[Anomaly Classifier]
-    Classifier --> AlertManager[Alert Manager]
-    AlertManager --> WSBroadcast[WebSocket Broadcaster]
-    WSBroadcast --> Clients[Connected Clients]
+### 1. Metrics Collection Layer
+
+**Component**: Prometheus Server + ReflectiveModule Integration
+**Location**: `localhost:9090`
+**Collection Interval**: 15 seconds (configurable)
+
+#### Metric Sources
+```python
+# ReflectiveModule automatic metrics registration
+class MetricsSources:
+    observatory_metrics = [
+        "observatory_websocket_connections_total",
+        "observatory_request_duration_seconds",
+        "observatory_error_rate_percent",
+        "observatory_memory_usage_bytes",
+        "observatory_cpu_usage_percent"
+    ]
     
-    Analyzer --> |ReflectiveModule Health| HealthMonitor[Health Monitor]
-    HealthMonitor --> |Status Updates| Observatory[Observatory Server]
+    system_metrics = [
+        "node_cpu_usage_percent",
+        "node_memory_usage_percent", 
+        "node_disk_usage_percent",
+        "node_network_throughput_bytes"
+    ]
     
-    AlertManager --> Persistence[Alert Persistence]
-    Persistence --> Analytics[Analytics Engine]
-    
-    Classifier --> |Critical Alerts| Emergency[Emergency Protocol]
-    Emergency --> |Escalation| NotificationSystem[Notification System]
+    application_metrics = [
+        "dag_execution_duration_seconds",
+        "websocket_message_latency_ms",
+        "redis_coordination_latency_ms",
+        "tunnel_response_time_ms"
+    ]
 ```
 
-## Detailed Flow Components
-
-### 1. Metrics Collection Phase
-**Duration:** 15-30 seconds (configurable)  
-**Components:** Prometheus Server, Metrics Collector, ReflectiveModule Exporters
-
-#### Data Sources:
+#### Prometheus Scrape Configuration
 ```yaml
-prometheus_scrape_targets:
-  - job_name: "observatory"
+# prometheus.yml - Anomaly Detection Targets
+scrape_configs:
+  - job_name: 'observatory-server'
     static_configs:
-      - targets: ["localhost:8888"]
+      - targets: ['localhost:8888']
     scrape_interval: 15s
-    metrics_path: "/metrics"
+    metrics_path: '/metrics'
     
-  - job_name: "reflective_modules"
+  - job_name: 'reflective-modules'
     static_configs:
-      - targets: ["localhost:8888", "localhost:9090", "localhost:3000"]
+      - targets: ['localhost:8888', 'localhost:9090', 'localhost:3000']
     scrape_interval: 30s
     
-  - job_name: "system_metrics"
+  - job_name: 'system-metrics'
     static_configs:
-      - targets: ["localhost:9100"]  # Node exporter
+      - targets: ['localhost:9100']  # Node exporter
     scrape_interval: 15s
 ```
 
-#### Key Metrics Monitored:
-- **System Performance**: CPU usage, memory consumption, disk I/O, network throughput
-- **Application Metrics**: Request latency, error rates, throughput, queue depths
-- **WebSocket Metrics**: Connection counts, message rates, disconnection frequency
-- **ReflectiveModule Health**: Component health scores, response times, error counts
-- **Infrastructure Metrics**: Redis coordination health, tunnel connectivity, DNS resolution times
-
 ### 2. Anomaly Detection Engine
-**Duration:** 1-5 seconds per analysis cycle  
-**Components:** Statistical Analyzer, Machine Learning Detector, Threshold Monitor
 
-#### Detection Algorithms:
+**Component**: Observatory Anomaly Detector
+**Location**: `src/observatory_infrastructure/anomaly_detector.py`
+**Algorithm**: Statistical analysis with machine learning enhancement
 
-##### Statistical Anomaly Detection
+#### Detection Algorithms
+
+**Statistical Anomaly Detection**:
 ```python
-class StatisticalAnomalyDetector:
-    def __init__(self):
-        self.baseline_window = 300  # 5 minutes
-        self.sensitivity = 2.5  # Standard deviations
+@dataclass
+class AnomalyDetectionConfig:
+    # Statistical thresholds
+    z_score_threshold: float = 3.0  # Standard deviations from mean
+    percentile_threshold: float = 95.0  # 95th percentile threshold
+    window_size_minutes: int = 30  # Rolling window for analysis
+    
+    # Performance thresholds
+    response_time_threshold_ms: float = 1000.0
+    error_rate_threshold_percent: float = 5.0
+    cpu_usage_threshold_percent: float = 80.0
+    memory_usage_threshold_percent: float = 85.0
+    
+    # WebSocket specific thresholds
+    websocket_latency_threshold_ms: float = 500.0
+    connection_drop_rate_threshold: float = 0.1
+    message_queue_size_threshold: int = 1000
+
+class AnomalyDetector(ReflectiveModule):
+    """Detects performance anomalies using statistical analysis."""
+    
+    def __init__(self, config: AnomalyDetectionConfig):
+        super().__init__()
+        self.module_id = "AnomalyDetector"
+        self._config = config
+        self._metric_history = {}
+        self._anomaly_cache = {}
         
-    def detect_anomalies(self, metric_data: List[float]) -> List[Anomaly]:
-        """Detect statistical anomalies using z-score analysis."""
-        baseline = self.calculate_baseline(metric_data)
+    async def analyze_metrics(self, metrics: Dict[str, float]) -> List[Anomaly]:
+        """Analyze metrics for anomalies using multiple detection methods."""
         anomalies = []
         
-        for value in metric_data[-60:]:  # Last minute
-            z_score = abs((value - baseline.mean) / baseline.std_dev)
-            if z_score > self.sensitivity:
-                anomalies.append(Anomaly(
-                    type="statistical",
-                    severity=self.calculate_severity(z_score),
-                    value=value,
-                    baseline=baseline.mean,
-                    deviation=z_score
-                ))
-        
-        return anomalies
-```
-
-##### Threshold-Based Detection
-```python
-class ThresholdAnomalyDetector:
-    def __init__(self):
-        self.thresholds = {
-            "cpu_usage_percent": {"warning": 80, "critical": 95},
-            "memory_usage_percent": {"warning": 85, "critical": 95},
-            "error_rate_percent": {"warning": 5, "critical": 10},
-            "response_time_ms": {"warning": 1000, "critical": 5000},
-            "websocket_disconnections": {"warning": 10, "critical": 50}
-        }
-    
-    def detect_threshold_violations(self, metrics: Dict[str, float]) -> List[Anomaly]:
-        """Detect threshold violations for critical metrics."""
-        anomalies = []
-        
-        for metric_name, value in metrics.items():
-            if metric_name in self.thresholds:
-                thresholds = self.thresholds[metric_name]
-                
-                if value >= thresholds["critical"]:
-                    anomalies.append(Anomaly(
-                        type="threshold_critical",
-                        metric=metric_name,
-                        value=value,
-                        threshold=thresholds["critical"],
-                        severity="critical"
-                    ))
-                elif value >= thresholds["warning"]:
-                    anomalies.append(Anomaly(
-                        type="threshold_warning",
-                        metric=metric_name,
-                        value=value,
-                        threshold=thresholds["warning"],
-                        severity="warning"
-                    ))
-        
-        return anomalies
-```
-
-##### Pattern-Based Detection
-```python
-class PatternAnomalyDetector:
-    def __init__(self):
-        self.known_patterns = {
-            "memory_leak": {
-                "pattern": "increasing_trend",
-                "duration_minutes": 10,
-                "threshold_increase": 20  # 20% increase over 10 minutes
-            },
-            "connection_storm": {
-                "pattern": "spike_pattern",
-                "spike_multiplier": 5,
-                "duration_seconds": 60
-            },
-            "cascading_failure": {
-                "pattern": "error_propagation",
-                "error_rate_threshold": 15,
-                "affected_services": 3
-            }
-        }
-    
-    def detect_pattern_anomalies(self, time_series_data: Dict[str, List[float]]) -> List[Anomaly]:
-        """Detect complex pattern-based anomalies."""
-        anomalies = []
-        
-        # Memory leak detection
-        memory_data = time_series_data.get("memory_usage_percent", [])
-        if self.detect_memory_leak_pattern(memory_data):
-            anomalies.append(Anomaly(
-                type="pattern_memory_leak",
-                severity="warning",
-                description="Potential memory leak detected - increasing memory usage trend"
-            ))
-        
-        # Connection storm detection
-        connection_data = time_series_data.get("websocket_connections", [])
-        if self.detect_connection_storm(connection_data):
-            anomalies.append(Anomaly(
-                type="pattern_connection_storm",
-                severity="critical",
-                description="Connection storm detected - unusual spike in WebSocket connections"
-            ))
-        
-        return anomalies
-```
-
-### 3. Anomaly Classification and Prioritization
-**Duration:** 100-500 milliseconds  
-**Components:** Anomaly Classifier, Severity Calculator, Impact Assessor
-
-#### Classification Logic:
-```python
-class AnomalyClassifier:
-    def __init__(self):
-        self.classification_rules = {
-            "system_critical": {
-                "conditions": ["cpu_usage > 95%", "memory_usage > 95%", "disk_full > 95%"],
-                "severity": "critical",
-                "escalation": "immediate"
-            },
-            "service_degradation": {
-                "conditions": ["error_rate > 10%", "response_time > 5000ms"],
-                "severity": "high",
-                "escalation": "5_minutes"
-            },
-            "connectivity_issues": {
-                "conditions": ["websocket_disconnections > 50", "tunnel_connectivity_failed"],
-                "severity": "high",
-                "escalation": "2_minutes"
-            },
-            "performance_warning": {
-                "conditions": ["cpu_usage > 80%", "memory_usage > 85%", "response_time > 1000ms"],
-                "severity": "medium",
-                "escalation": "15_minutes"
-            }
-        }
-    
-    def classify_anomaly(self, anomaly: Anomaly, context: Dict[str, Any]) -> ClassifiedAnomaly:
-        """Classify anomaly and determine appropriate response."""
-        classification = self.determine_classification(anomaly, context)
-        
-        return ClassifiedAnomaly(
-            anomaly=anomaly,
-            classification=classification["type"],
-            severity=classification["severity"],
-            escalation_time=classification["escalation"],
-            impact_assessment=self.assess_impact(anomaly, context),
-            recommended_actions=self.get_recommended_actions(classification)
-        )
-```
-
-### 4. Alert Management and Broadcasting
-**Duration:** 50-200 milliseconds  
-**Components:** Alert Manager, WebSocket Broadcaster, Notification Router
-
-#### WebSocket Alert Broadcasting:
-```python
-class AnomalyAlertBroadcaster:
-    def __init__(self, websocket_manager):
-        self.websocket_manager = websocket_manager
-        self.alert_queue = asyncio.Queue()
-        
-    async def broadcast_anomaly_alert(self, classified_anomaly: ClassifiedAnomaly):
-        """Broadcast anomaly alert via WebSocket."""
-        alert_message = {
-            "type": "anomaly_alert",
-            "anomaly_id": classified_anomaly.anomaly.id,
-            "classification": classified_anomaly.classification,
-            "severity": classified_anomaly.severity,
-            "metric": classified_anomaly.anomaly.metric,
-            "current_value": classified_anomaly.anomaly.value,
-            "threshold": classified_anomaly.anomaly.threshold,
-            "impact_assessment": classified_anomaly.impact_assessment,
-            "recommended_actions": classified_anomaly.recommended_actions,
-            "timestamp": datetime.now().isoformat(),
-            "correlation_id": f"anomaly_{classified_anomaly.anomaly.id}"
-        }
-        
-        # Broadcast to /ws/anomalies endpoint
-        await self.websocket_manager.broadcast_to_endpoint(
-            "/ws/anomalies", 
-            alert_message
-        )
-        
-        # Coordinate with other WebSocket endpoints
-        await self.coordinate_with_other_endpoints(alert_message)
-    
-    async def coordinate_with_other_endpoints(self, alert_message: Dict[str, Any]):
-        """Coordinate anomaly alerts with other WebSocket endpoints."""
-        # Notify Observatory endpoint of anomaly
-        observatory_message = {
-            "type": "system_event",
-            "event": "anomaly_detected",
-            "severity": alert_message["severity"],
-            "correlation_id": alert_message["correlation_id"]
-        }
-        await self.websocket_manager.broadcast_to_endpoint("/ws/observatory", observatory_message)
-        
-        # Update doctor status with anomaly information
-        if alert_message["severity"] in ["critical", "high"]:
-            doctor_message = {
-                "type": "health_alert",
-                "component": alert_message["metric"],
-                "status": "degraded" if alert_message["severity"] == "high" else "critical",
-                "correlation_id": alert_message["correlation_id"]
-            }
-            await self.websocket_manager.broadcast_to_endpoint("/ws/doctor-status", doctor_message)
-```
-
-### 5. Emergency Protocol Integration
-**Duration:** Immediate for critical anomalies  
-**Components:** Emergency Protocol Handler, Escalation Manager, Notification System
-
-#### Critical Anomaly Response:
-```python
-class EmergencyAnomalyHandler:
-    def __init__(self, emergency_protocol_system):
-        self.emergency_system = emergency_protocol_system
-        self.escalation_thresholds = {
-            "system_failure": {"cpu": 98, "memory": 98, "error_rate": 25},
-            "service_outage": {"response_time": 10000, "error_rate": 50},
-            "security_incident": {"failed_auth": 100, "suspicious_activity": True}
-        }
-    
-    async def handle_critical_anomaly(self, classified_anomaly: ClassifiedAnomaly):
-        """Handle critical anomalies with emergency protocol integration."""
-        if classified_anomaly.severity == "critical":
-            # Trigger emergency protocol
-            emergency_event = {
-                "event_type": "anomaly_critical",
-                "source": "anomaly_detection_system",
-                "details": classified_anomaly.to_dict(),
-                "automatic_response": True
-            }
+        for metric_name, current_value in metrics.items():
+            # Statistical analysis
+            z_score_anomaly = self._detect_z_score_anomaly(metric_name, current_value)
+            if z_score_anomaly:
+                anomalies.append(z_score_anomaly)
             
-            await self.emergency_system.trigger_emergency_response(emergency_event)
+            # Threshold analysis
+            threshold_anomaly = self._detect_threshold_anomaly(metric_name, current_value)
+            if threshold_anomaly:
+                anomalies.append(threshold_anomaly)
             
-            # Implement automatic mitigation if configured
-            if classified_anomaly.classification in self.auto_mitigation_rules:
-                await self.execute_auto_mitigation(classified_anomaly)
-    
-    async def execute_auto_mitigation(self, classified_anomaly: ClassifiedAnomaly):
-        """Execute automatic mitigation for known anomaly patterns."""
-        mitigation_actions = {
-            "memory_leak": ["restart_affected_service", "clear_caches"],
-            "connection_storm": ["enable_rate_limiting", "scale_websocket_handlers"],
-            "disk_full": ["cleanup_temp_files", "rotate_logs", "alert_administrators"]
-        }
+            # Trend analysis
+            trend_anomaly = self._detect_trend_anomaly(metric_name, current_value)
+            if trend_anomaly:
+                anomalies.append(trend_anomaly)
         
-        actions = mitigation_actions.get(classified_anomaly.classification, [])
-        for action in actions:
-            await self.execute_mitigation_action(action, classified_anomaly)
+        return anomalies
 ```
 
-## Integration with ReflectiveModule Pattern
-
-All anomaly detection components implement the ReflectiveModule pattern:
-
+**Machine Learning Enhancement**:
 ```python
-class AnomalyDetectionEngine(ReflectiveModule):
+class MLAnomalyDetector:
+    """Machine learning-based anomaly detection for complex patterns."""
+    
+    def __init__(self):
+        self._isolation_forest = IsolationForest(contamination=0.1)
+        self._trained = False
+        
+    def train_on_historical_data(self, historical_metrics: pd.DataFrame):
+        """Train ML model on historical normal behavior."""
+        self._isolation_forest.fit(historical_metrics)
+        self._trained = True
+        
+    def detect_anomalies(self, current_metrics: np.array) -> float:
+        """Return anomaly score (-1 = anomaly, 1 = normal)."""
+        if not self._trained:
+            return 1  # Default to normal if not trained
+        
+        return self._isolation_forest.decision_function([current_metrics])[0]
+```
+
+### 3. Alert Classification and Routing
+
+**Component**: Alert Manager Integration
+**Location**: `src/observatory_infrastructure/alert_manager.py`
+
+#### Anomaly Classification
+```python
+@dataclass
+class Anomaly:
+    anomaly_id: str
+    metric_name: str
+    current_value: float
+    expected_range: Tuple[float, float]
+    severity: AnomalySeverity  # LOW, MEDIUM, HIGH, CRITICAL
+    detection_method: str  # z_score, threshold, trend, ml
+    confidence_score: float  # 0.0-1.0
+    timestamp: datetime
+    correlation_id: str
+    metadata: Dict[str, Any]
+
+class AnomalySeverity(Enum):
+    LOW = "low"          # Minor deviation, informational
+    MEDIUM = "medium"    # Moderate deviation, monitoring required
+    HIGH = "high"        # Significant deviation, action recommended
+    CRITICAL = "critical" # Severe deviation, immediate action required
+```
+
+#### Alert Routing Logic
+```python
+class AlertRouter:
+    """Routes anomaly alerts based on severity and type."""
+    
+    def __init__(self):
+        self._routing_rules = {
+            AnomalySeverity.CRITICAL: [
+                "websocket_broadcast",
+                "email_notification", 
+                "slack_alert",
+                "pager_duty"
+            ],
+            AnomalySeverity.HIGH: [
+                "websocket_broadcast",
+                "email_notification",
+                "slack_alert"
+            ],
+            AnomalySeverity.MEDIUM: [
+                "websocket_broadcast",
+                "email_notification"
+            ],
+            AnomalySeverity.LOW: [
+                "websocket_broadcast"
+            ]
+        }
+    
+    async def route_anomaly(self, anomaly: Anomaly):
+        """Route anomaly alert through appropriate channels."""
+        channels = self._routing_rules.get(anomaly.severity, [])
+        
+        for channel in channels:
+            await self._send_alert(channel, anomaly)
+```
+
+### 4. WebSocket Alert Broadcasting
+
+**Component**: Observatory WebSocket Handler
+**Endpoint**: `ws://localhost:8888/ws/anomalies`
+**Message Format**: JSON with anomaly details
+
+#### WebSocket Message Structure
+```json
+{
+  "type": "anomaly_alert",
+  "anomaly": {
+    "id": "cpu_spike_20250103_103000",
+    "metric": "observatory_cpu_usage_percent",
+    "current_value": 95.5,
+    "expected_range": [10.0, 70.0],
+    "severity": "high",
+    "detection_method": "threshold",
+    "confidence": 0.95,
+    "timestamp": "2025-01-03T10:30:00Z"
+  },
+  "context": {
+    "correlation_id": "anomaly-uuid-correlation",
+    "affected_services": ["observatory", "websocket_handler"],
+    "recommended_actions": [
+      "Check process CPU usage",
+      "Review recent deployments",
+      "Monitor memory usage"
+    ]
+  },
+  "metadata": {
+    "detection_latency_ms": 150,
+    "historical_context": "CPU usage typically 20-40%",
+    "related_metrics": ["memory_usage", "request_rate"]
+  }
+}
+```
+
+#### Broadcasting Implementation
+```python
+class AnomalyWebSocketHandler(ReflectiveModule):
+    """Handles WebSocket broadcasting of anomaly alerts."""
+    
     def __init__(self):
         super().__init__()
-        self.module_id = "AnomalyDetectionEngine"
-        self.detectors = [
-            StatisticalAnomalyDetector(),
-            ThresholdAnomalyDetector(),
-            PatternAnomalyDetector()
-        ]
+        self.module_id = "AnomalyWebSocketHandler"
+        self._connected_clients = set()
+        self._alert_history = deque(maxlen=1000)
+        
+    async def broadcast_anomaly(self, anomaly: Anomaly):
+        """Broadcast anomaly alert to all connected WebSocket clients."""
+        message = self._format_anomaly_message(anomaly)
+        
+        # Add to history
+        self._alert_history.append(message)
+        
+        # Broadcast to all connected clients
+        disconnected_clients = set()
+        for client in self._connected_clients:
+            try:
+                await client.send(json.dumps(message))
+            except websockets.exceptions.ConnectionClosed:
+                disconnected_clients.add(client)
+        
+        # Clean up disconnected clients
+        self._connected_clients -= disconnected_clients
+        
+        # Log broadcast
+        self._logger.info(
+            f"Broadcasted anomaly {anomaly.anomaly_id} to {len(self._connected_clients)} clients",
+            extra={"correlation_id": anomaly.correlation_id}
+        )
+```
+
+## Operational Sequence
+
+### Normal Anomaly Detection Flow
+
+```mermaid
+sequenceDiagram
+    participant PROM as Prometheus
+    participant DET as Anomaly Detector
+    participant ROUTE as Alert Router
+    participant WS as WebSocket Handler
+    participant CLIENT as Frontend Client
+    participant LOG as Logging System
+
+    PROM->>DET: Metrics collection (15s interval)
+    Note right of PROM: CPU, memory, response time, error rate
+    
+    DET->>DET: Statistical analysis
+    Note right of DET: Z-score, threshold, trend analysis
+    
+    DET->>DET: Anomaly detected
+    Note right of DET: CPU usage: 95% (threshold: 80%)
+    
+    DET->>ROUTE: Route anomaly alert
+    Note right of DET: Severity: HIGH, Confidence: 0.95
+    
+    ROUTE->>WS: WebSocket broadcast
+    ROUTE->>LOG: Email notification
+    Note right of ROUTE: Multi-channel alerting
+    
+    WS->>CLIENT: Anomaly alert message
+    Note right of WS: Real-time alert delivery
+    
+    CLIENT->>CLIENT: Display alert UI
+    Note right of CLIENT: Visual alert with context
+    
+    DET->>LOG: Log anomaly event
+    Note right of LOG: Correlation ID tracking
+```
+
+### Machine Learning Enhancement Flow
+
+```mermaid
+sequenceDiagram
+    participant HIST as Historical Data
+    participant ML as ML Detector
+    participant DET as Anomaly Detector
+    participant ALERT as Alert System
+
+    HIST->>ML: Train on normal behavior
+    Note right of HIST: 30 days of metrics data
+    
+    ML->>ML: Build behavior model
+    Note right of ML: Isolation Forest algorithm
+    
+    DET->>ML: Current metrics analysis
+    Note right of DET: Real-time metric values
+    
+    ML->>DET: Anomaly score
+    Note right of ML: -1 = anomaly, 1 = normal
+    
+    DET->>DET: Combine with statistical analysis
+    Note right of DET: Multi-method validation
+    
+    DET->>ALERT: Enhanced anomaly detection
+    Note right of DET: Higher confidence, fewer false positives
+```
+
+## Configuration Management
+
+### Detection Thresholds
+```yaml
+# docs/operational-workflows/anomaly-detection-config.yml
+anomaly_detection:
+  statistical:
+    z_score_threshold: 3.0
+    percentile_threshold: 95.0
+    window_size_minutes: 30
+    
+  performance_thresholds:
+    response_time_ms: 1000
+    error_rate_percent: 5.0
+    cpu_usage_percent: 80.0
+    memory_usage_percent: 85.0
+    
+  websocket_thresholds:
+    latency_ms: 500
+    connection_drop_rate: 0.1
+    message_queue_size: 1000
+    
+  machine_learning:
+    enabled: true
+    training_data_days: 30
+    contamination_rate: 0.1
+    retrain_interval_hours: 24
+
+alert_routing:
+  channels:
+    websocket:
+      enabled: true
+      endpoint: "/ws/anomalies"
+    email:
+      enabled: true
+      recipients: ["ops@example.com"]
+    slack:
+      enabled: false
+      webhook_url: ""
+```
+
+### ReflectiveModule Integration
+```python
+class AnomalyDetectionOrchestrator(ReflectiveModule):
+    """Orchestrates anomaly detection with systematic observability."""
     
     def get_health_status(self) -> Dict[str, Any]:
+        """Health endpoint for anomaly detection system."""
         return {
             "status": "healthy",
-            "active_detectors": len(self.detectors),
-            "anomalies_detected_last_hour": self.get_recent_anomaly_count(),
-            "detection_latency_ms": self.get_average_detection_latency(),
-            "prometheus_connectivity": self.check_prometheus_connectivity(),
-            "websocket_broadcast_health": self.check_websocket_health()
+            "active_detectors": len(self._detectors),
+            "anomalies_detected_last_hour": self._get_recent_anomaly_count(),
+            "ml_model_trained": self._ml_detector.is_trained(),
+            "websocket_connections": len(self._websocket_handler.connected_clients)
         }
     
     def get_metrics(self) -> Dict[str, float]:
+        """Prometheus metrics for anomaly detection."""
         return {
-            "anomalies_detected_total": self.total_anomalies_detected,
-            "false_positive_rate": self.calculate_false_positive_rate(),
-            "detection_accuracy": self.calculate_detection_accuracy(),
-            "average_detection_time_seconds": self.get_average_detection_time()
+            "anomaly_detection_alerts_total": self._total_alerts,
+            "anomaly_detection_false_positives": self._false_positives,
+            "anomaly_detection_response_time_ms": self._avg_detection_time,
+            "anomaly_detection_websocket_connections": len(self._websocket_handler.connected_clients)
         }
 ```
 
-## Configuration and Tuning
+## Monitoring and Validation
 
-### Detection Sensitivity Configuration:
-```yaml
-anomaly_detection_config:
-  statistical_detection:
-    baseline_window_minutes: 5
-    sensitivity_std_deviations: 2.5
-    minimum_data_points: 30
-  
-  threshold_detection:
-    cpu_warning: 80
-    cpu_critical: 95
-    memory_warning: 85
-    memory_critical: 95
-    error_rate_warning: 5
-    error_rate_critical: 10
-  
-  pattern_detection:
-    memory_leak_threshold_percent: 20
-    connection_storm_multiplier: 5
-    cascading_failure_services: 3
-  
-  alert_management:
-    rate_limiting_per_minute: 10
-    duplicate_suppression_minutes: 5
-    escalation_delays:
-      warning: 15
-      high: 5
-      critical: 0
-```
+### Health Checks
+- **Prometheus Connectivity**: Verify metrics collection from all sources
+- **Detection Engine**: Test anomaly detection algorithms with synthetic data
+- **WebSocket Broadcasting**: Confirm alert delivery to connected clients
+- **Alert Routing**: Validate multi-channel alert distribution
 
-## Monitoring and Observability
-
-### Key Performance Indicators:
+### Performance Metrics
 - **Detection Latency**: Time from metric collection to anomaly detection
 - **False Positive Rate**: Percentage of false anomaly alerts
-- **Coverage**: Percentage of actual issues detected
-- **Response Time**: Time from detection to WebSocket broadcast
+- **Alert Delivery Time**: WebSocket message delivery latency
+- **System Resource Usage**: CPU and memory usage of detection engine
 
-### Health Monitoring:
-- **Prometheus Connectivity**: Monitor scrape target availability
-- **WebSocket Performance**: Track broadcast success rates
-- **Detection Engine Health**: Monitor detector performance and accuracy
-- **Alert Delivery**: Verify client receipt of anomaly alerts
+### Validation Procedures
+1. **Synthetic Anomaly Injection**: Test detection with known anomalous data
+2. **Alert Delivery Verification**: Confirm WebSocket clients receive alerts
+3. **Threshold Validation**: Verify detection thresholds are appropriate
+4. **ML Model Performance**: Validate machine learning model accuracy
+5. **End-to-End Testing**: Complete flow from metrics to alert delivery
 
-## Success Criteria
+## Integration Points
 
-### Functional Requirements:
-- ✅ Detect anomalies within 30 seconds of occurrence
-- ✅ Broadcast alerts via WebSocket within 200ms of detection
-- ✅ Integrate with emergency protocols for critical anomalies
-- ✅ Maintain <5% false positive rate
-- ✅ Achieve >95% detection accuracy for known anomaly patterns
+### Prometheus Integration
+- **Metrics Collection**: Automated scraping of ReflectiveModule metrics
+- **Alert Rules**: Prometheus alerting rules for critical thresholds
+- **Historical Data**: Long-term storage for trend analysis
 
-### Performance Requirements:
-- ✅ Process 1000+ metrics per minute without degradation
-- ✅ Support 100+ concurrent WebSocket alert subscribers
-- ✅ Maintain <100ms alert broadcast latency
-- ✅ Handle 50+ simultaneous anomalies without performance impact
+### Grafana Integration
+- **Anomaly Dashboards**: Real-time visualization of detected anomalies
+- **Alert Panels**: Visual representation of alert status and history
+- **Correlation Analysis**: Multi-metric correlation visualization
 
-### Integration Requirements:
-- ✅ Seamless integration with Prometheus metrics collection
-- ✅ Coordination with all Observatory WebSocket endpoints
-- ✅ Emergency protocol integration for critical anomalies
-- ✅ ReflectiveModule pattern compliance throughout
+### ACE Reporter Integration
+- **Progress Updates**: Anomaly detection status in progress reports
+- **Performance Metrics**: Detection engine performance reporting
+- **Alert Summaries**: Aggregated anomaly reports
 
-This anomaly detection flow provides comprehensive monitoring and alerting capabilities, ensuring proactive identification and response to system issues within the Beast Mode framework infrastructure.
+## Troubleshooting Guide
+
+### Common Issues
+
+**Missing Anomaly Detection**:
+- Verify Prometheus metrics collection: `curl http://localhost:9090/api/v1/targets`
+- Check detection thresholds in configuration
+- Review anomaly detector logs for processing errors
+
+**False Positive Alerts**:
+- Adjust statistical thresholds (z-score, percentile)
+- Review historical data for baseline establishment
+- Fine-tune machine learning model parameters
+
+**WebSocket Alert Delivery Failures**:
+- Check WebSocket endpoint connectivity: `wscat -c ws://localhost:8888/ws/anomalies`
+- Verify Observatory server health: `curl http://localhost:8888/health`
+- Review WebSocket handler logs for connection issues
+
+**Performance Issues**:
+- Monitor detection engine resource usage
+- Optimize metric collection intervals
+- Review machine learning model complexity
+
+### Recovery Procedures
+
+1. **Restart Detection Engine**: `make dashboard-restart`
+2. **Retrain ML Model**: Force retraining with recent historical data
+3. **Reset Alert Thresholds**: Restore default configuration values
+4. **Clear Alert History**: Administrative command to reset alert cache
+5. **Validate Configuration**: Check anomaly detection configuration file
+
+This anomaly detection flow provides comprehensive monitoring and alerting capabilities that integrate seamlessly with the Beast Mode framework's observability ecosystem, ensuring proactive identification and response to system performance issues.
