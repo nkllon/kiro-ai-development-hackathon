@@ -11,8 +11,9 @@
       "env": {
         "PYTHONPATH": ".",
         "MCP_FILESYSTEM_ROOT": ".",
-        "MCP_FILESYSTEM_LOG_LEVEL": "ERROR",
-        "MCP_FILESYSTEM_ENABLE_LOGGING": "false"
+        "MCP_FILESYSTEM_LOG_LEVEL": "CRITICAL",
+        "MCP_FILESYSTEM_ENABLE_LOGGING": "false",
+        "MCP_FILESYSTEM_LOG_FILE": "/var/folders/cj/jy2bc_mx2yn030n_jwgcrrmr0000gn/T/mcp_filesystem.log"
       },
       "disabled": false,
       "autoApprove": [

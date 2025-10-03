@@ -12,7 +12,7 @@ max_file_size = 10485760  # 10MB
 enable_logging = false
 
 # Log file location (use writable directory)
-log_file = "/tmp/mcp_filesystem.log"
+log_file = "/var/folders/cj/jy2bc_mx2yn030n_jwgcrrmr0000gn/T/mcp_filesystem.log"
 
 [server]
 # Server configuration
