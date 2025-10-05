@@ -195,6 +195,8 @@ observatory.pid
 docker-migration-backup*/
 poe_deployment_*/
 observatory_backup_*/
+.repair_backups*/
+backups/
 *.backup
 *.backup_final
 *.backup_[0-9]*
@@ -202,3 +204,11 @@ observatory_backup_*/
 
 # Task completion markers
 .task-*-complete
+
+# Database files (additional patterns)
+*.db-shm
+*.db-wal
+*.sqlite
+
+# Sent/communication log files
+*.sent
