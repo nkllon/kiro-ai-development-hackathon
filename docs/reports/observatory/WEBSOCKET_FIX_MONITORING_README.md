@@ -215,7 +215,7 @@ If auto-remediation fails:
 
 ## 📚 Documentation
 
-- [Complete Documentation](WEBSOCKET_FIX_MONITORING_AGENT_DOCUMENTATION.md) - Comprehensive technical documentation
+- [Complete Documentation](WEBSOCKET_FIX_MONITORING_AGENT_DOCUMENTATION.md) - Comprehensive technical documentation (in same directory)
 - [Configuration Reference](websocket_fix_monitoring_config.yml) - Configuration file reference
 - [Test Suite](scripts/test_websocket_fix_monitoring.py) - Test validation script
 

@@ -131,8 +131,8 @@ docker logs beast-mode-observatory --tail 50 | grep -E "(WebSocket|accepted|403)
 
 ## Documentation References
 
-- [Local Development Setup](docs/observatory/LOCAL-DEVELOPMENT-SETUP.md)
-- [Fix Summary & Diagnostics](docs/observatory/OBSERVATORY-FIX-SUMMARY.md)
+- [Local Development Setup](../../observatory/LOCAL-DEVELOPMENT-SETUP.md)
+- [Fix Summary & Diagnostics](../../observatory/OBSERVATORY-FIX-SUMMARY.md)
 - [Production Config](deployment/observatory/docker-compose.yml)
 - [Local Dev Config](deployment/observatory/docker-compose.local.yml)
 
