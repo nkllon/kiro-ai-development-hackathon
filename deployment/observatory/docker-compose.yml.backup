@@ -1,0 +1,202 @@
+networks:
+  observatory-network:
+    driver: bridge
+    external: false
+services:
+  grafana:
+    container_name: observatory-grafana
+    depends_on:
+    - prometheus
+    env_file:
+    - ~/.env
+    environment:
+    - GF_SECURITY_ADMIN_PASSWORD=admin
+    - GF_USERS_ALLOW_SIGN_UP=false
+    - GF_AUTH_ANONYMOUS_ENABLED=true
+    - GF_AUTH_ANONYMOUS_ORG_NAME=Main Org.
+    - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+    - GF_AUTH_DISABLE_LOGIN_FORM=true
+    - GF_AUTH_DISABLE_SIGNOUT_MENU=true
+    - GF_USERS_ALLOW_ORG_CREATE=false
+    - GF_USERS_AUTO_ASSIGN_ORG=true
+    - GF_USERS_AUTO_ASSIGN_ORG_ROLE=Viewer
+    - GF_SESSION_PROVIDER=redis
+    - GF_SESSION_PROVIDER_CONFIG=addr=host.docker.internal:6379,pool_size=100,db=1
+    - GF_SECURITY_SECRET_KEY=observatory-secret-key
+    - GF_DATABASE_TYPE=sqlite3
+    - GF_DATABASE_HOST=
+    - GF_DATABASE_NAME=grafana
+    - GF_DATABASE_USER=
+    - GF_DATABASE_PASSWORD=
+    image: grafana/grafana:latest
+    networks:
+    - observatory-network
+    ports:
+    - 3000:3000
+    restart: unless-stopped
+    volumes:
+    - grafana_data:/var/lib/grafana
+    - ./grafana-config:/etc/grafana/provisioning
+  observatory:
+    build:
+      context: ../../
+      dockerfile: deployment/observatory/Dockerfile
+    container_name: beast-mode-observatory
+    deploy:
+      resourcesut:host-gateway"
+    deploy::
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    env_file:
+    - ~/.env
+    environment:
+    - OBSERVATORY_HOST=0.0.0.0
+    - OBSERVATORY_PORT=8888
+    - WEBSOCKET_PORT=8889
+    - HEALTH_MONITOR_PORT=8890
+    - LOG_LEVEL=INFO
+    - REDIS_HOST=host.docker.internal
+    - REDIS_PORT=6379
+    - REDIS_DB=0
+    - PROMETHEUS_URL=http://observatory-prometheus:9090
+    - GRAFANA_URL=http://observatory-grafana:3000
+    - JAEGER_ENDPOINT=http://observatory-jaeger:14268/api/traces
+    - ENGAGEMENT_URL=http://observatory-engagement-manager:8891
+    - CACHE_BACKEND=redis
+    - SESSION_BACKEND=redis
+    - SHARED_STATE_BACKEND=redis
+    - DOCKER_DESKTOP=true
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 60s
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:8888/health
+      timeout: 10s
+    image: beast-mode-observatory:latest
+    networks:
+    - observatory-network
+    ports:
+    - 8888:8888
+    - 8889:8889
+    - 8890:8890
+    restart: unless-stopped
+    volumes:
+    - observatory_data:/app/data
+    - observatory_logs:/app/logs
+    - /etc/localtime:/etc/localtime:ro
+  prometheus:
+    command:
+    - --config.file=/etc/prometheus/prometheus.yml
+    - --storage.tsdb.path=/prometheus
+    - --web.console.libraries=/etc/prometheus/console_libraries
+    - --web.console.templates=/etc/prometheus/consoles
+    - --storage.tsdb.retention.time=7d
+    - --web.enable-lifecycle
+    - --web.enable-remote-write-receiver
+    - --web.external-url=https://prometheus.observatory.nkllon.com
+    container_name: observatory-prometheus
+    image: prom/prometheus:latest
+    networks:
+    - observatory-network
+    ports:
+    - 9090:9090
+    restart: unless-stopped
+    volumes:
+    - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    - ./prometheus-rules:/etc/prometheus/rules:ro
+    - prometheus_data:/prometheus
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: observatory-jaeger
+    restart: unless-stopped
+    environment:
+    - COLLECTOR_OTLP_ENABLED=true
+    - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+    ports:
+    - 16686:16686  # Jaeger UI
+    - 14268:14268  # Jaeger collector HTTP
+    - 14250:14250  # Jaeger collector gRPC
+    - 6831:6831/udp  # Jaeger agent UDP
+    - 6832:6832/udp  # Jaeger agent UDP
+    networks:
+    - observatory-network
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+  engagement-manager:
+    build:
+      context: ../../
+      dockerfile: deployment/engagement/Dockerfile
+    image: beast-mode-engagement:latest
+    container_name: observatory-engagement-manager
+    restart: unless-stopped
+    env_file:
+    - ~/.env
+    environment:
+    - ENGAGEMENT_HOST=0.0.0.0
+    - ENGAGEMENT_PORT=8891
+    - OBSERVATORY_URL=http://beast-mode-observatory:8888
+    - JAEGER_ENDPOINT=http://observatory-jaeger:14268/api/traces
+    - REDIS_HOST=host.docker.internal
+    - REDIS_PORT=6379
+    ports:
+    - 8891:8891
+    volumes:
+    - engagement_data:/app/data
+    - engagement_logs:/app/logs
+    networks:
+    - observatory-network
+    depends_on:
+    - observatory
+    - jaeger
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+  cloudflare-tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: observatory-cloudflare-tunnel
+    restart: unless-stopped
+    env_file:
+    - ~/.env
+    command: tunnel --config /etc/cloudflared/config.yml run
+    volumes:
+    - ./cloudflared-config.yml:/etc/cloudflared/config.yml:ro
+    - ~/.cloudflared:/home/nonroot/.cloudflared:ro
+    networks:
+    - observatory-network
+    depends_on:
+    - observatory
+    - prometheus
+    - grafana
+    - jaeger
+    - engagement-manager
+
+version: '3.8'
+volumes:
+  observatory_data:
+    driver: local
+  observatory_logs:
+    driver: local
+  engagement_data:
+    driver: local
+  engagement_logs:
+    driver: local
+  grafana_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  redis_data:
+    driver: local
+

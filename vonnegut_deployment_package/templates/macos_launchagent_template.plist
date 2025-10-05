@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Service identification -->
+    <key>Label</key>
+    <string>com.yourcompany.yourservice</string>
+    
+    <!-- ALWAYS use shell wrapper, never direct Python -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/full/path/to/your/service_launcher.sh</string>
+    </array>
+    
+    <!-- Set working directory explicitly -->
+    <key>WorkingDirectory</key>
+    <string>/full/path/to/project</string>
+    
+    <!-- Service behavior -->
+    <key>RunAtLoad</key>
+    <true/>
+    
+    <key>KeepAlive</key>
+    <true/>
+    
+    <!-- Logging (always log everything) -->
+    <key>StandardOutPath</key>
+    <string>/full/path/to/project/logs/service.out.log</string>
+    
+    <key>StandardErrorPath</key>
+    <string>/full/path/to/project/logs/service.err.log</string>
+    
+    <!-- Environment variables (minimal but sufficient) -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <key>HOME</key>
+        <string>/Users/username</string>
+        <key>USER</key>
+        <string>username</string>
+    </dict>
+    
+    <!-- Optional: Throttle restart attempts -->
+    <key>ThrottleInterval</key>
+    <integer>10</integer>
+    
+    <!-- Optional: Only run in user session -->
+    <key>LimitLoadToSessionType</key>
+    <string>Aqua</string>
+</dict>
+</plist>

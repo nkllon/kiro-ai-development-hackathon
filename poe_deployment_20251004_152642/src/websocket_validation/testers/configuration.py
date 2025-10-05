@@ -1,0 +1,1 @@
+class ConfigurationTester: pass

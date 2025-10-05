@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+"""
+DevPost CLI - User-Friendly Entry Point
+
+Eliminates the need for 'uv run python src/devpost_integration/cli.py'
+Provides a clean, simple command: devpost-cli
+"""
+
+import sys
+from pathlib import Path
+
+# Add src to path
+sys.path.append(str(Path(__file__).parent / 'src'))
+
+# Import and run the CLI
+from devpost_integration.cli import main
+
+if __name__ == '__main__':
+    sys.exit(main())

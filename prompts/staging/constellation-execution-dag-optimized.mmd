@@ -1,0 +1,185 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#ff6b6b','secondaryColor':'#4ecdc4','tertiaryColor':'#45b7d1'}}}%%
+graph TD
+    subgraph Phase1["Phase 1: Discovery (All Parallel - Wall-clock: 2.5-3.5 hrs)"]
+        P1A[1a: Constellation<br/>Inventory<br/>2-3 hrs]
+
+        P1B1[1b1: Stakeholder<br/>Extraction<br/>60-90 min]
+        P1B2[1b2: Stakeholder<br/>Dimension Analysis<br/>90-120 min]
+        P1B3[1b3: Stakeholder<br/>Journey Mapping<br/>90-120 min]
+
+        P1C1[1c1: CMS Dependency<br/>Scan<br/>75-90 min]
+        P1C2[1c2: CMS Data Model<br/>Extraction<br/>90-120 min]
+        P1C3[1c3: CMS Capability<br/>Analysis<br/>75-90 min]
+
+        P1D1[1d1: Ontology<br/>Batch 1<br/>90-105 min]
+        P1D2[1d2: Ontology<br/>Batch 2<br/>90-120 min]
+        P1D3[1d3: Ontology<br/>Batch 3<br/>90-120 min]
+        P1D4[1d4: Ontology<br/>Batch 4<br/>90-105 min]
+        P1D5[1d5: Ontology<br/>Consolidation<br/>60 min]
+    end
+
+    subgraph Phase2["Phase 2: Requirements (By Layer - Wall-clock with 10 agents: 6-9 hrs)"]
+        P2_L0_B1[Bootstrap Batch 1<br/>3 specs<br/>4-5 hrs]
+
+        P2_L1_B1[Foundation Batch 1<br/>5 specs<br/>6-8 hrs]
+        P2_L1_B2[Foundation Batch 2<br/>5 specs<br/>6-8 hrs]
+
+        P2_L2_B1[Intelligence Batch 1<br/>8 specs<br/>90-120 min]
+        P2_L2_B2[Intelligence Batch 2<br/>8 specs<br/>90-120 min]
+        P2_L2_B3[Intelligence Batch 3<br/>8 specs<br/>90-120 min]
+        P2_L2_B4[Intelligence Batch 4<br/>8 specs<br/>90-120 min]
+
+        P2_L3_B1[Application Batch 1<br/>10 specs<br/>90-120 min]
+        P2_L3_B2[Application Batch 2<br/>10 specs<br/>90-120 min]
+        P2_L3_B3[Application Batch 3<br/>10 specs<br/>90-120 min]
+        P2_L3_B4[Application Batch 4<br/>10 specs<br/>90-120 min]
+    end
+
+    subgraph Phase3["Phase 3: Designs (By Layer - Wall-clock with 10 agents: 7-14 hrs)"]
+        P3_L0_B1[Bootstrap Design<br/>Batch 1<br/>7-11 hrs]
+
+        P3_L1_B1[Foundation Design<br/>Batch 1<br/>90-120 min]
+        P3_L1_B2[Foundation Design<br/>Batch 2<br/>90-120 min]
+
+        P3_L2_B1[Intelligence Design<br/>Batch 1<br/>90-120 min]
+        P3_L2_B2[Intelligence Design<br/>Batch 2<br/>90-120 min]
+        P3_L2_B3[Intelligence Design<br/>Batch 3<br/>90-120 min]
+        P3_L2_B4[Intelligence Design<br/>Batch 4<br/>90-120 min]
+
+        P3_L3_B1[Application Design<br/>Batch 1<br/>90-120 min]
+        P3_L3_B2[Application Design<br/>Batch 2<br/>90-120 min]
+        P3_L3_B3[Application Design<br/>Batch 3<br/>90-120 min]
+        P3_L3_B4[Application Design<br/>Batch 4<br/>90-120 min]
+    end
+
+    subgraph Phase4["Phase 4: Tasks (By Layer - Wall-clock with 10 agents: 7-13 hrs)"]
+        P4_L0_B1[Bootstrap Tasks<br/>Batch 1<br/>7-10 hrs]
+
+        P4_L1_B1[Foundation Tasks<br/>Batch 1<br/>90-120 min]
+        P4_L1_B2[Foundation Tasks<br/>Batch 2<br/>90-120 min]
+
+        P4_L2_B1[Intelligence Tasks<br/>Batch 1<br/>90-120 min]
+        P4_L2_B2[Intelligence Tasks<br/>Batch 2<br/>90-120 min]
+        P4_L2_B3[Intelligence Tasks<br/>Batch 3<br/>90-120 min]
+        P4_L2_B4[Intelligence Tasks<br/>Batch 4<br/>90-120 min]
+
+        P4_L3_B1[Application Tasks<br/>Batch 1<br/>90-120 min]
+        P4_L3_B2[Application Tasks<br/>Batch 2<br/>90-120 min]
+        P4_L3_B3[Application Tasks<br/>Batch 3<br/>90-120 min]
+        P4_L3_B4[Application Tasks<br/>Batch 4<br/>90-120 min]
+    end
+
+    subgraph Phase5["Phase 5: CMS Integration (Wall-clock: 8-10 hrs)"]
+        P5A1[5a1: Search<br/>Consolidation<br/>90-120 min]
+        P5A2[5a2: Content Mgmt<br/>Consolidation<br/>90-120 min]
+        P5A3[5a3: Integration<br/>Consolidation<br/>90-120 min]
+        P5A4[5a4: Analytics<br/>Consolidation<br/>90-120 min]
+        P5A5[5a5: Security<br/>Consolidation<br/>90-120 min]
+        P5A6[5a6: Performance<br/>Consolidation<br/>90-120 min]
+        P5A7[5a7: Merge<br/>Consolidation<br/>90-120 min]
+
+        P5B1[5b1: CMS Req<br/>Update<br/>90-120 min]
+        P5B2[5b2: CMS Design<br/>Update<br/>120-150 min]
+        P5B3[5b3: CMS Tasks<br/>Update<br/>90-120 min]
+
+        P5C[5c: Constellation<br/>CMS Mapping<br/>60-90 min]
+
+        P5D1[5d1: Stakeholder<br/>Validation<br/>90-120 min]
+        P5D2[5d2: Dimension<br/>Validation<br/>90-120 min]
+        P5D3[5d3: CMS<br/>Validation<br/>60-90 min]
+        P5D4[5d4: Final<br/>Roadmap<br/>90-120 min]
+    end
+
+    %% Phase 1 sub-dependencies
+    P1B1 --> P1B2
+    P1B1 --> P1B3
+    P1C1 --> P1C2
+    P1C1 --> P1C3
+    P1D1 --> P1D5
+    P1D2 --> P1D5
+    P1D3 --> P1D5
+    P1D4 --> P1D5
+
+    %% Phase 1 to Phase 2
+    P1A --> P2_L0_B1
+    P1B2 --> P2_L0_B1
+    P1B3 --> P2_L0_B1
+    P1C2 --> P2_L0_B1
+    P1C3 --> P2_L0_B1
+    P1D5 --> P2_L0_B1
+
+    P1A --> P2_L1_B1
+    P1B2 --> P2_L1_B1
+    P1C2 --> P2_L1_B1
+    P1D5 --> P2_L1_B1
+
+    %% Phase 2 layer dependencies
+    P2_L0_B1 --> P2_L1_B1
+    P2_L0_B1 --> P2_L1_B2
+
+    P2_L1_B1 --> P2_L2_B1
+    P2_L1_B2 --> P2_L2_B1
+
+    P2_L2_B1 --> P2_L3_B1
+    P2_L2_B2 --> P2_L3_B1
+
+    %% Phase 2 to Phase 3
+    P2_L0_B1 --> P3_L0_B1
+    P2_L1_B1 --> P3_L1_B1
+    P2_L1_B2 --> P3_L1_B2
+
+    %% Phase 3 layer dependencies
+    P3_L0_B1 --> P3_L1_B1
+    P3_L1_B1 --> P3_L2_B1
+    P3_L2_B1 --> P3_L3_B1
+
+    %% Phase 3 to Phase 4
+    P3_L0_B1 --> P4_L0_B1
+    P3_L1_B1 --> P4_L1_B1
+    P3_L1_B2 --> P4_L1_B2
+
+    %% Phase 4 layer dependencies
+    P4_L0_B1 --> P4_L1_B1
+    P4_L1_B1 --> P4_L2_B1
+    P4_L2_B1 --> P4_L3_B1
+
+    %% Phase 4 to Phase 5
+    P4_L0_B1 --> P5A1
+    P4_L1_B1 --> P5A1
+    P4_L2_B1 --> P5A1
+    P4_L3_B1 --> P5A1
+
+    %% Phase 5 dependencies
+    P5A1 --> P5A7
+    P5A2 --> P5A7
+    P5A3 --> P5A7
+    P5A4 --> P5A7
+    P5A5 --> P5A7
+    P5A6 --> P5A7
+
+    P5A7 --> P5B1
+    P5B1 --> P5B2
+    P5B2 --> P5B3
+
+    P5B3 --> P5C
+
+    P5C --> P5D1
+    P5C --> P5D2
+    P5C --> P5D3
+
+    P5D1 --> P5D4
+    P5D2 --> P5D4
+    P5D3 --> P5D4
+
+    %% Styling
+    classDef phase1 fill:#4ecdc4,stroke:#2a9d8f,stroke-width:2px,color:#000
+    classDef phase2 fill:#95e1d3,stroke:#38ada9,stroke-width:2px,color:#000
+    classDef phase3 fill:#f6e58d,stroke:#f9ca24,stroke-width:2px,color:#000
+    classDef phase4 fill:#ff6b6b,stroke:#ee5a6f,stroke-width:2px,color:#fff
+    classDef phase5 fill:#c44569,stroke:#a5244c,stroke-width:2px,color:#fff
+
+    class P1A,P1B1,P1B2,P1B3,P1C1,P1C2,P1C3,P1D1,P1D2,P1D3,P1D4,P1D5 phase1
+    class P2_L0_B1,P2_L1_B1,P2_L1_B2,P2_L2_B1,P2_L2_B2,P2_L2_B3,P2_L2_B4,P2_L3_B1,P2_L3_B2,P2_L3_B3,P2_L3_B4 phase2
+    class P3_L0_B1,P3_L1_B1,P3_L1_B2,P3_L2_B1,P3_L2_B2,P3_L2_B3,P3_L2_B4,P3_L3_B1,P3_L3_B2,P3_L3_B3,P3_L3_B4 phase3
+    class P4_L0_B1,P4_L1_B1,P4_L1_B2,P4_L2_B1,P4_L2_B2,P4_L2_B3,P4_L2_B4,P4_L3_B1,P4_L3_B2,P4_L3_B3,P4_L3_B4 phase4
+    class P5A1,P5A2,P5A3,P5A4,P5A5,P5A6,P5A7,P5B1,P5B2,P5B3,P5C,P5D1,P5D2,P5D3,P5D4 phase5

@@ -1,0 +1,1 @@
+"""Core data models and validation for patch annotation system."""

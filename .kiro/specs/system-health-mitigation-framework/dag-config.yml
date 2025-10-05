@@ -1,0 +1,964 @@
+# System Health Mitigation Framework DAG Configuration
+# Directed Acyclic Graph for systematic task execution and orchestration
+
+metadata:
+  name: system-health-mitigation-framework
+  version: 1.0
+  description: System Health Mitigation Framework implementation with automated service recovery and systematic health management
+  created: 2025-10-03
+  framework: beast-mode
+  total_tasks: 28
+  total_phases: 8
+  estimated_duration_weeks: 16
+
+# DAG execution configuration
+execution:
+  mode: parallel_phases  # Execute tasks in parallel within phases, phases sequentially
+  max_parallel_tasks: 3
+  timeout_per_task_hours: 168  # 1 week
+  retry_strategy:
+    max_retries: 3
+    backoff_multiplier: 2
+    initial_delay_minutes: 5
+
+# Validation rules
+validation:
+  pre_execution:
+    - check_interface_registry
+    - validate_rm_ddd_compliance
+    - verify_dependencies_installed
+    - check_docker_infrastructure
+    - verify_prometheus_grafana_availability
+
+  per_task:
+    - validate_acceptance_criteria
+    - check_test_coverage
+    - run_linting_checks
+    - verify_documentation
+    - test_health_checks
+    - validate_restart_policies
+
+  post_execution:
+    - validate_dag_completion
+    - run_integration_tests
+    - check_performance_metrics
+    - verify_compliance_requirements
+    - validate_system_health_improvements
+
+# Monitoring configuration
+monitoring:
+  health_checks:
+    enabled: true
+    interval_seconds: 30
+    endpoints:
+      - /health
+      - /metrics
+      - /status
+
+  metrics:
+    - task_execution_time
+    - task_success_rate
+    - service_recovery_rate
+    - health_check_reliability
+    - disk_space_utilization
+    - automated_remediation_success_rate
+
+  alerts:
+    - type: task_failure
+      threshold: 1
+      notify: devops_team
+    - type: service_health_degradation
+      threshold: 0.8
+      notify: operations_team
+    - type: disk_space_critical
+      threshold: 85
+      notify: infrastructure_team
+
+# Task nodes with dependencies
+tasks:
+  # Phase 1: Immediate Critical Issue Resolution
+  - id: task_1_1
+    name: Fix Directus CMS Health Check Configuration
+    phase: 1
+    priority: CRITICAL
+    estimated_effort_weeks: 0.25
+    assignee: devops_team
+    dependencies: []
+    acceptance_criteria:
+      - health_check_uses_ipv4_127_0_0_1
+      - container_shows_healthy_status
+      - health_check_validation_script_created
+      - ipv6_ipv4_issue_documented
+      - restart_applies_new_configuration
+      - health_check_passes_consistently
+    deliverables:
+      - updated_docker_compose_directus_fixed_yml
+      - health_check_validation_script
+      - ipv6_resolution_issue_documentation
+    requirements_mapping:
+      - REQ-2.1
+      - REQ-2.3
+      - REQ-2.6
+      - REQ-7.4
+    validation:
+      - test_health_check_with_ipv4
+      - verify_container_health_status
+      - validate_restart_behavior
+
+  - id: task_1_2
+    name: Implement Cloudflare Tunnel Auto-Recovery System
+    phase: 1
+    priority: CRITICAL
+    estimated_effort_weeks: 1
+    assignee: infrastructure_team
+    dependencies: []
+    acceptance_criteria:
+      - cloudflare_tunnel_manager_implemented
+      - connection_monitoring_operational
+      - automatic_restart_with_backoff
+      - health_check_verifies_4_connections
+      - monitoring_alerts_when_below_2_connections
+      - external_connectivity_verification
+      - systemd_launchagent_monitoring_configured
+    deliverables:
+      - cloudflare_tunnel_manager_class
+      - tunnel_monitoring_service
+      - auto_restart_configuration
+      - external_health_verification
+    requirements_mapping:
+      - REQ-1.1
+      - REQ-1.2
+      - REQ-1.7
+      - REQ-6.2
+    validation:
+      - test_tunnel_failure_detection
+      - verify_automatic_restart
+      - validate_connection_monitoring
+
+  - id: task_1_3
+    name: Fix Observatory Health Scoring Algorithm
+    phase: 1
+    priority: CRITICAL
+    estimated_effort_weeks: 0.5
+    assignee: backend_team
+    dependencies: []
+    acceptance_criteria:
+      - engagement_features_excluded_when_disabled
+      - health_score_differentiates_critical_vs_optional
+      - disabled_features_marked_correctly
+      - configuration_flag_for_optional_features
+      - clear_status_reporting_operational_vs_disabled
+    deliverables:
+      - updated_health_scoring_algorithm
+      - feature_status_configuration
+      - health_report_with_feature_breakdown
+    requirements_mapping:
+      - REQ-3.1
+      - REQ-3.2
+      - REQ-3.4
+      - REQ-3.5
+    validation:
+      - test_health_score_calculation
+      - verify_disabled_feature_handling
+      - validate_health_report_accuracy
+
+  - id: task_1_4
+    name: Deploy Missing Prometheus Exporters
+    phase: 1
+    priority: HIGH
+    estimated_effort_weeks: 0.75
+    assignee: monitoring_team
+    dependencies: []
+    acceptance_criteria:
+      - redis_exporter_deployed_functional
+      - engagement_manager_metrics_endpoint_added
+      - prometheus_scrape_config_updated
+      - all_targets_reachable
+      - exporter_health_monitoring_configured
+      - auto_restart_policies_for_exporters
+    deliverables:
+      - redis_exporter_container_configuration
+      - engagement_manager_metrics_implementation
+      - updated_prometheus_configuration
+      - exporter_monitoring_dashboard
+    requirements_mapping:
+      - REQ-4.1
+      - REQ-4.2
+      - REQ-4.3
+      - REQ-4.4
+      - REQ-4.7
+    validation:
+      - test_redis_exporter_connectivity
+      - verify_metrics_endpoint_functionality
+      - validate_prometheus_scraping
+
+  # Phase 2: Service Auto-Restart and Recovery Automation
+  - id: task_2_1
+    name: Implement Universal Service Auto-Restart Policies
+    phase: 2
+    priority: CRITICAL
+    estimated_effort_weeks: 1
+    assignee: devops_team
+    dependencies: [task_1_1, task_1_2]
+    acceptance_criteria:
+      - restart_unless_stopped_on_all_critical_services
+      - cloudflare_tunnel_auto_restart_configured
+      - google_workspace_mcp_auto_restart
+      - dependency_ordering_prevents_cascade_failures
+      - restart_tracking_with_escalation
+      - startup_verification_through_health_endpoints
+      - monitoring_dashboard_for_restart_events
+    deliverables:
+      - updated_docker_compose_configurations
+      - service_dependency_ordering_documentation
+      - restart_monitoring_dashboard
+    requirements_mapping:
+      - REQ-1.1
+      - REQ-1.2
+      - REQ-1.4
+      - REQ-1.6
+      - REQ-1.8
+    validation:
+      - test_service_restart_policies
+      - verify_dependency_ordering
+      - validate_escalation_triggers
+
+  - id: task_2_2
+    name: Build Automated Service Recovery Framework
+    phase: 2
+    priority: HIGH
+    estimated_effort_weeks: 2
+    assignee: platform_team
+    dependencies: [task_2_1]
+    acceptance_criteria:
+      - service_recovery_manager_implemented
+      - failure_classification_system_operational
+      - recovery_strategy_registry_populated
+      - automated_remediation_procedures_tested
+      - recovery_verification_functional
+      - escalation_to_operators_when_needed
+      - comprehensive_audit_logging
+    deliverables:
+      - service_recovery_manager_implementation
+      - failure_classifier
+      - recovery_strategy_registry
+      - remediation_audit_trail_system
+    requirements_mapping:
+      - REQ-6.1
+      - REQ-6.2
+      - REQ-6.4
+      - REQ-6.5
+      - REQ-7.1
+      - REQ-7.2
+    validation:
+      - test_failure_classification
+      - verify_recovery_procedures
+      - validate_audit_logging
+
+  - id: task_2_3
+    name: Implement Health Check Standardization System
+    phase: 2
+    priority: HIGH
+    estimated_effort_weeks: 1.5
+    assignee: platform_team
+    dependencies: [task_1_1]
+    acceptance_criteria:
+      - health_check_validator_implemented
+      - container_tool_detection_functional
+      - health_check_template_system_with_fallbacks
+      - automatic_testing_in_deployment_environments
+      - ipv6_ipv4_issue_prevention
+      - structured_json_health_endpoint_format
+      - dependency_health_verification
+    deliverables:
+      - health_check_validator_class
+      - health_check_templates
+      - deployment_environment_testing_framework
+    requirements_mapping:
+      - REQ-2.1
+      - REQ-2.2
+      - REQ-2.4
+      - REQ-2.5
+      - REQ-2.6
+      - REQ-2.7
+    validation:
+      - test_health_check_validation
+      - verify_template_system
+      - validate_dependency_checks
+
+  # Phase 3: Disk Space Management and Cleanup Automation
+  - id: task_3_1
+    name: Implement Automated Disk Space Management
+    phase: 3
+    priority: HIGH
+    estimated_effort_weeks: 1
+    assignee: infrastructure_team
+    dependencies: []
+    acceptance_criteria:
+      - disk_space_manager_implemented
+      - monitoring_with_85_percent_threshold
+      - weekly_docker_cache_cleanup
+      - log_rotation_with_retention_policies
+      - temporary_backup_cleanup
+      - predictive_space_exhaustion_alerts
+      - comprehensive_cleanup_reporting
+    deliverables:
+      - disk_space_manager_class
+      - cleanup_scheduling_configuration
+      - predictive_alerting_system
+      - cleanup_reporting_dashboard
+    requirements_mapping:
+      - REQ-5.1
+      - REQ-5.2
+      - REQ-5.3
+      - REQ-5.4
+      - REQ-5.6
+      - REQ-5.7
+    validation:
+      - test_disk_monitoring
+      - verify_cleanup_procedures
+      - validate_predictive_alerts
+
+  - id: task_3_2
+    name: Build Cleanup Policy Management System
+    phase: 3
+    priority: MEDIUM
+    estimated_effort_weeks: 1
+    assignee: infrastructure_team
+    dependencies: [task_3_1]
+    acceptance_criteria:
+      - cleanup_policy_registry_implemented
+      - safe_cleanup_validation
+      - cleanup_policy_testing_framework
+      - cron_job_scheduling_integration
+      - rollback_capabilities
+      - cleanup_impact_analysis
+      - safety_guidelines_documentation
+    deliverables:
+      - cleanup_policy_registry
+      - cleanup_testing_framework
+      - rollback_procedures
+      - cleanup_safety_documentation
+    requirements_mapping:
+      - REQ-5.5
+      - REQ-5.6
+      - REQ-7.6
+      - REQ-10.3
+      - REQ-10.7
+    validation:
+      - test_cleanup_policies
+      - verify_safety_validation
+      - validate_rollback_capability
+
+  - id: task_3_3
+    name: Implement Predictive Space Management
+    phase: 3
+    priority: MEDIUM
+    estimated_effort_weeks: 1.5
+    assignee: ml_infrastructure_team
+    dependencies: [task_3_1]
+    acceptance_criteria:
+      - disk_usage_trend_analysis
+      - early_warning_7_14_days_ahead
+      - intelligent_cleanup_prioritization
+      - space_optimization_recommendations
+      - automated_docker_image_pruning
+      - capacity_planning_reports
+    deliverables:
+      - trend_analysis_implementation
+      - predictive_warning_system
+      - optimization_recommendation_engine
+      - capacity_planning_dashboard
+    requirements_mapping:
+      - REQ-5.7
+      - REQ-8.6
+      - REQ-9.4
+    validation:
+      - test_trend_analysis
+      - verify_predictive_accuracy
+      - validate_recommendations
+
+  # Phase 4: Configuration Management and Drift Prevention
+  - id: task_4_1
+    name: Implement Configuration Drift Detection System
+    phase: 4
+    priority: HIGH
+    estimated_effort_weeks: 2
+    assignee: platform_team
+    dependencies: [task_2_3]
+    acceptance_criteria:
+      - configuration_validator_implemented
+      - baseline_configuration_storage
+      - automated_validation_during_deployment
+      - configuration_change_tracking
+      - automatic_drift_correction
+      - configuration_rollback_capabilities
+      - compliance_reporting_alerting
+    deliverables:
+      - configuration_validator_class
+      - baseline_storage_system
+      - drift_detection_engine
+      - rollback_procedures
+    requirements_mapping:
+      - REQ-7.1
+      - REQ-7.2
+      - REQ-7.3
+      - REQ-7.5
+      - REQ-7.7
+      - REQ-7.8
+    validation:
+      - test_drift_detection
+      - verify_automatic_correction
+      - validate_rollback_procedures
+
+  - id: task_4_2
+    name: Build Docker Compose Configuration Management
+    phase: 4
+    priority: HIGH
+    estimated_effort_weeks: 1.5
+    assignee: devops_team
+    dependencies: [task_4_1]
+    acceptance_criteria:
+      - docker_compose_validation
+      - restart_policy_validation_testing
+      - service_dependency_validation
+      - configuration_template_system
+      - configuration_generation_from_definitions
+      - isolated_environment_testing
+    deliverables:
+      - docker_compose_validator
+      - configuration_templates
+      - testing_environment_setup
+    requirements_mapping:
+      - REQ-2.6
+      - REQ-7.4
+      - REQ-7.5
+      - REQ-10.1
+      - REQ-10.5
+    validation:
+      - test_compose_validation
+      - verify_templates
+      - validate_isolated_testing
+
+  - id: task_4_3
+    name: Implement Service Definition Registry
+    phase: 4
+    priority: MEDIUM
+    estimated_effort_weeks: 1
+    assignee: platform_team
+    dependencies: [task_2_2]
+    acceptance_criteria:
+      - centralized_service_registry
+      - service_dependency_mapping
+      - template_generation
+      - service_lifecycle_management
+      - service_discovery_inventory
+      - configuration_validation_compliance
+    deliverables:
+      - service_registry_implementation
+      - dependency_mapping_system
+      - lifecycle_management_interface
+    requirements_mapping:
+      - REQ-1.5
+      - REQ-4.5
+      - REQ-7.7
+      - REQ-8.4
+    validation:
+      - test_service_registry
+      - verify_dependency_mapping
+      - validate_lifecycle_operations
+
+  # Phase 5: Comprehensive Monitoring and Alerting
+  - id: task_5_1
+    name: Build Advanced System Health Monitoring
+    phase: 5
+    priority: HIGH
+    estimated_effort_weeks: 2
+    assignee: monitoring_team
+    dependencies: [task_1_3, task_1_4]
+    acceptance_criteria:
+      - system_health_monitor_implemented
+      - multi_dimensional_health_scoring
+      - predictive_health_monitoring
+      - health_trend_analysis
+      - correlation_analysis_between_components
+      - health_baseline_deviation_detection
+      - comprehensive_reporting_with_recommendations
+    deliverables:
+      - system_health_monitor_class
+      - health_scoring_engine
+      - predictive_monitoring_system
+      - health_reporting_dashboard
+    requirements_mapping:
+      - REQ-8.1
+      - REQ-8.2
+      - REQ-8.3
+      - REQ-8.4
+      - REQ-8.6
+    validation:
+      - test_health_monitoring
+      - verify_predictive_capabilities
+      - validate_reporting_accuracy
+
+  - id: task_5_2
+    name: Implement Intelligent Alerting System
+    phase: 5
+    priority: HIGH
+    estimated_effort_weeks: 1.5
+    assignee: monitoring_team
+    dependencies: [task_5_1]
+    acceptance_criteria:
+      - alert_classification_reduces_false_positives
+      - alert_correlation_prevents_storms
+      - contextual_alerting_with_remediation_guidance
+      - escalation_policies_by_severity
+      - alert_suppression_during_maintenance
+      - alert_effectiveness_tracking
+      - intelligent_filtering_prevents_fatigue
+    deliverables:
+      - intelligent_alerting_system
+      - alert_correlation_engine
+      - escalation_policy_framework
+      - alert_analytics_dashboard
+    requirements_mapping:
+      - REQ-8.2
+      - REQ-8.5
+      - REQ-8.6
+      - REQ-9.2
+    validation:
+      - test_alert_classification
+      - verify_correlation_engine
+      - validate_escalation_policies
+
+  - id: task_5_3
+    name: Build Prometheus Metrics Enhancement
+    phase: 5
+    priority: MEDIUM
+    estimated_effort_weeks: 1
+    assignee: monitoring_team
+    dependencies: [task_1_4, task_2_2]
+    acceptance_criteria:
+      - service_startup_recovery_metrics
+      - health_check_performance_metrics
+      - disk_space_cleanup_metrics
+      - configuration_drift_metrics
+      - automated_remediation_success_metrics
+      - health_score_trending_metrics
+      - custom_business_logic_metrics
+    deliverables:
+      - enhanced_prometheus_metrics
+      - custom_metric_exporters
+      - grafana_dashboard_enhancements
+    requirements_mapping:
+      - REQ-4.5
+      - REQ-6.3
+      - REQ-8.1
+      - REQ-8.4
+    validation:
+      - test_metric_collection
+      - verify_metric_accuracy
+      - validate_dashboard_integration
+
+  # Phase 6: Automated Remediation and Self-Healing
+  - id: task_6_1
+    name: Implement Comprehensive Automated Remediation
+    phase: 6
+    priority: HIGH
+    estimated_effort_weeks: 2.5
+    assignee: automation_team
+    dependencies: [task_2_2, task_4_1]
+    acceptance_criteria:
+      - automated_remediation_engine_implemented
+      - issue_classification_with_response_mapping
+      - remediation_testing_validation_framework
+      - effectiveness_tracking_optimization
+      - procedure_versioning_rollback
+      - safety_checks_prevent_damage
+      - comprehensive_audit_trails
+    deliverables:
+      - automated_remediation_engine
+      - remediation_procedure_library
+      - testing_framework
+      - audit_trail_system
+    requirements_mapping:
+      - REQ-6.1
+      - REQ-6.2
+      - REQ-6.4
+      - REQ-6.5
+      - REQ-10.3
+      - REQ-10.4
+    validation:
+      - test_remediation_procedures
+      - verify_safety_checks
+      - validate_audit_logging
+
+  - id: task_6_2
+    name: Build Self-Healing System Components
+    phase: 6
+    priority: HIGH
+    estimated_effort_weeks: 2
+    assignee: automation_team
+    dependencies: [task_6_1]
+    acceptance_criteria:
+      - self_healing_service_restart
+      - self_healing_configuration_correction
+      - self_healing_disk_space_management
+      - self_healing_network_connectivity
+      - self_healing_dependency_resolution
+      - self_healing_performance_optimization
+    deliverables:
+      - self_healing_service_framework
+      - automatic_configuration_fixer
+      - network_recovery_system
+      - performance_auto_tuner
+    requirements_mapping:
+      - REQ-1.7
+      - REQ-6.6
+      - REQ-7.1
+      - REQ-7.3
+      - REQ-7.7
+    validation:
+      - test_self_healing_capabilities
+      - verify_configuration_fixes
+      - validate_network_recovery
+
+  - id: task_6_3
+    name: Implement Remediation Procedure Library
+    phase: 6
+    priority: MEDIUM
+    estimated_effort_weeks: 1.5
+    assignee: automation_team
+    dependencies: [task_6_1]
+    acceptance_criteria:
+      - tested_remediation_procedure_library
+      - procedure_parameterization
+      - procedure_composition_for_complex_fixes
+      - testing_framework_with_safety_validation
+      - comprehensive_documentation
+      - procedure_sharing_reuse
+    deliverables:
+      - remediation_procedure_library
+      - procedure_testing_framework
+      - procedure_documentation
+      - sharing_platform
+    requirements_mapping:
+      - REQ-6.6
+      - REQ-9.1
+      - REQ-9.2
+      - REQ-10.7
+    validation:
+      - test_procedure_library
+      - verify_composition_capability
+      - validate_documentation_completeness
+
+  # Phase 7: Documentation and Knowledge Management
+  - id: task_7_1
+    name: Create Comprehensive Documentation System
+    phase: 7
+    priority: MEDIUM
+    estimated_effort_weeks: 2
+    assignee: documentation_team
+    dependencies: [task_6_1]
+    acceptance_criteria:
+      - automated_documentation_generation
+      - interactive_troubleshooting_guides
+      - runbook_generation_step_by_step
+      - documentation_validation_accuracy_verification
+      - version_control_change_tracking
+      - search_discovery_system
+      - usage_analytics_improvement_recommendations
+    deliverables:
+      - documentation_generation_system
+      - interactive_troubleshooting_platform
+      - runbook_library
+      - documentation_search_engine
+    requirements_mapping:
+      - REQ-9.1
+      - REQ-9.2
+      - REQ-9.3
+      - REQ-9.6
+      - REQ-9.7
+    validation:
+      - test_documentation_generation
+      - verify_troubleshooting_guides
+      - validate_runbook_accuracy
+
+  - id: task_7_2
+    name: Build Knowledge Management and Learning System
+    phase: 7
+    priority: MEDIUM
+    estimated_effort_weeks: 1.5
+    assignee: documentation_team
+    dependencies: [task_7_1]
+    acceptance_criteria:
+      - incident_knowledge_capture_system
+      - lessons_learned_integration
+      - pattern_recognition_for_recurring_issues
+      - knowledge_sharing_system
+      - training_material_generation
+      - knowledge_gap_identification
+    deliverables:
+      - knowledge_capture_system
+      - lessons_learned_database
+      - pattern_recognition_engine
+      - training_material_generator
+    requirements_mapping:
+      - REQ-9.4
+      - REQ-9.5
+      - REQ-9.8
+      - REQ-10.8
+    validation:
+      - test_knowledge_capture
+      - verify_pattern_recognition
+      - validate_training_materials
+
+  - id: task_7_3
+    name: Implement Onboarding and Training Framework
+    phase: 7
+    priority: LOW
+    estimated_effort_weeks: 1
+    assignee: documentation_team
+    dependencies: [task_7_2]
+    acceptance_criteria:
+      - role_based_training_materials
+      - hands_on_training_scenarios
+      - competency_validation_certification
+      - training_effectiveness_measurement
+      - continuous_learning_programs
+      - cross_training_programs
+    deliverables:
+      - role_based_training_modules
+      - practice_environment_setup
+      - certification_system
+      - cross_training_curriculum
+    requirements_mapping:
+      - REQ-9.5
+      - REQ-9.8
+    validation:
+      - test_training_scenarios
+      - verify_certification_process
+      - validate_effectiveness_measurement
+
+  # Phase 8: Testing and Validation Framework
+  - id: task_8_1
+    name: Build Comprehensive Testing Framework
+    phase: 8
+    priority: HIGH
+    estimated_effort_weeks: 2
+    assignee: qa_team
+    dependencies: [task_2_3, task_4_2]
+    acceptance_criteria:
+      - automated_health_check_testing
+      - service_recovery_testing_with_failure_simulation
+      - configuration_validation_testing
+      - end_to_end_system_health_testing
+      - performance_testing_monitoring_remediation
+      - chaos_engineering_resilience_validation
+      - regression_testing
+    deliverables:
+      - comprehensive_test_suite
+      - failure_simulation_framework
+      - chaos_engineering_tools
+      - regression_test_automation
+    requirements_mapping:
+      - REQ-10.1
+      - REQ-10.2
+      - REQ-10.3
+      - REQ-10.4
+      - REQ-10.5
+      - REQ-10.6
+      - REQ-10.7
+      - REQ-10.8
+    validation:
+      - verify_test_coverage
+      - validate_simulation_accuracy
+      - check_chaos_testing_effectiveness
+
+  - id: task_8_2
+    name: Implement Continuous Validation System
+    phase: 8
+    priority: HIGH
+    estimated_effort_weeks: 1.5
+    assignee: qa_team
+    dependencies: [task_8_1]
+    acceptance_criteria:
+      - continuous_health_check_validation
+      - continuous_configuration_drift_detection
+      - continuous_recovery_capability_testing
+      - continuous_monitoring_validation_calibration
+      - continuous_remediation_procedure_testing
+      - continuous_documentation_validation
+    deliverables:
+      - continuous_validation_framework
+      - automated_calibration_system
+      - procedure_testing_automation
+    requirements_mapping:
+      - REQ-2.6
+      - REQ-7.8
+      - REQ-9.6
+      - REQ-10.8
+    validation:
+      - test_continuous_validation
+      - verify_automated_calibration
+      - validate_procedure_updates
+
+  - id: task_8_3
+    name: Build System Resilience Testing
+    phase: 8
+    priority: HIGH
+    estimated_effort_weeks: 2
+    assignee: qa_team
+    dependencies: [task_8_1]
+    acceptance_criteria:
+      - comprehensive_failure_scenario_testing
+      - cascading_failure_recovery_validation
+      - load_testing_under_stress
+      - disaster_recovery_testing
+      - security_testing_monitoring_remediation
+      - compliance_testing_audit_requirements
+    deliverables:
+      - resilience_testing_suite
+      - disaster_recovery_procedures
+      - security_testing_framework
+      - compliance_validation_reports
+    requirements_mapping:
+      - REQ-1.8
+      - REQ-7.8
+      - REQ-10.6
+      - REQ-10.8
+    validation:
+      - test_failure_scenarios
+      - verify_recovery_procedures
+      - validate_compliance_requirements
+
+# DAG edges (explicit dependency graph)
+edges:
+  # Phase 1 - No dependencies, all can run in parallel
+
+  # Phase 2 edges
+  - from: task_1_1
+    to: task_2_1
+    type: sequential
+  - from: task_1_2
+    to: task_2_1
+    type: sequential
+  - from: task_2_1
+    to: task_2_2
+    type: sequential
+  - from: task_1_1
+    to: task_2_3
+    type: sequential
+
+  # Phase 3 - Can run in parallel with Phase 2
+
+  # Phase 4 edges
+  - from: task_2_3
+    to: task_4_1
+    type: sequential
+  - from: task_4_1
+    to: task_4_2
+    type: sequential
+  - from: task_2_2
+    to: task_4_3
+    type: sequential
+
+  # Phase 5 edges
+  - from: task_1_3
+    to: task_5_1
+    type: sequential
+  - from: task_1_4
+    to: task_5_1
+    type: sequential
+  - from: task_5_1
+    to: task_5_2
+    type: sequential
+  - from: task_1_4
+    to: task_5_3
+    type: sequential
+  - from: task_2_2
+    to: task_5_3
+    type: sequential
+
+  # Phase 6 edges
+  - from: task_2_2
+    to: task_6_1
+    type: sequential
+  - from: task_4_1
+    to: task_6_1
+    type: sequential
+  - from: task_6_1
+    to: task_6_2
+    type: sequential
+  - from: task_6_1
+    to: task_6_3
+    type: sequential
+
+  # Phase 7 edges
+  - from: task_6_1
+    to: task_7_1
+    type: sequential
+  - from: task_7_1
+    to: task_7_2
+    type: sequential
+  - from: task_7_2
+    to: task_7_3
+    type: sequential
+
+  # Phase 8 edges
+  - from: task_2_3
+    to: task_8_1
+    type: sequential
+  - from: task_4_2
+    to: task_8_1
+    type: sequential
+  - from: task_8_1
+    to: task_8_2
+    type: sequential
+  - from: task_8_1
+    to: task_8_3
+    type: sequential
+
+# Success criteria for DAG completion
+success_criteria:
+  technical:
+    - service_auto_restart_success_above_99_percent
+    - health_check_reliability_above_99_percent
+    - disk_space_alerts_eliminated
+    - configuration_drift_zero_unplanned_changes
+    - automated_issue_resolution_above_90_percent
+
+  operational:
+    - cloudflare_tunnel_maintains_4_connections
+    - directus_health_check_passes_consistently
+    - observatory_health_score_accurate
+    - prometheus_all_targets_reachable
+    - manual_interventions_reduced_80_percent
+
+  business:
+    - system_availability_above_99_9_percent
+    - mean_time_to_recovery_below_5_minutes
+    - incident_volume_reduced_70_percent
+    - team_productivity_increased_50_percent
+    - documentation_completeness_100_percent
+
+# RM-DDD compliance requirements
+rm_ddd_compliance:
+  reflective_module_pattern:
+    required: true
+    components:
+      - health_monitoring
+      - metrics_collection
+      - graceful_degradation
+      - systematic_error_handling
+      - performance_monitoring
+
+  interface_governance:
+    check_registry: true
+    prevent_duplication: true
+    central_registration: true
+
+  quality_gates:
+    linting: true
+    type_checking: true
+    test_coverage_minimum: 90
+    documentation_required: true

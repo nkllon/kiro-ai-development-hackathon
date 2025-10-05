@@ -1,0 +1,271 @@
+name: Observatory Dependency Validation
+
+on:
+  pull_request:
+    paths:
+      - 'pyproject.toml'
+      - 'requirements.txt'
+      - 'scripts/generate_requirements.py'
+      - '.pre-commit-hooks/validate-dependencies.sh'
+  push:
+    branches:
+      - master
+      - main
+      - 'release/**'
+    paths:
+      - 'pyproject.toml'
+      - 'requirements.txt'
+      - 'scripts/generate_requirements.py'
+      - '.pre-commit-hooks/validate-dependencies.sh'
+
+jobs:
+  validate-dependency-sync:
+    name: Validate Dependency Synchronization
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip python3-venv
+
+      - name: Install pip-tools and toml
+        run: |
+          pip install --upgrade pip
+          pip install pip-tools toml
+
+      - name: Make validation script executable
+        run: chmod +x .pre-commit-hooks/validate-dependencies.sh
+
+      - name: Validate dependency sync
+        run: |
+          echo "🔍 Running dependency sync validation..."
+          ./.pre-commit-hooks/validate-dependencies.sh
+
+      - name: Test requirements.txt generation
+        run: |
+          echo "🧪 Testing requirements.txt generation..."
+          python scripts/generate_requirements.py --output requirements-test.txt
+          
+          # Compare generated file with committed file
+          if ! diff requirements.txt requirements-test.txt; then
+            echo "❌ requirements.txt not in sync with pyproject.toml"
+            echo ""
+            echo "Expected content (from pyproject.toml):"
+            echo "========================================"
+            head -20 requirements-test.txt
+            echo ""
+            echo "Actual content (committed):"
+            echo "=========================="
+            head -20 requirements.txt
+            echo ""
+            echo "🔧 Fix with: make requirements"
+            exit 1
+          else
+            echo "✅ requirements.txt is properly synchronized"
+          fi
+
+      - name: Validate critical dependencies
+        run: |
+          echo "🔍 Validating critical ML dependencies..."
+          python scripts/generate_requirements.py --validate-only
+
+      - name: Test Docker build validation (dry run)
+        run: |
+          echo "🐳 Testing Docker import validation logic..."
+          python3 -c "
+          import sys
+          failures = []
+          
+          # Test the same logic that will be in Dockerfile
+          try:
+              import importlib.util
+              
+              # Check if numpy would be available
+              if importlib.util.find_spec('numpy') is None:
+                  failures.append('numpy: module not found')
+              
+              # Check if sklearn would be available  
+              if importlib.util.find_spec('sklearn') is None:
+                  failures.append('sklearn: module not found')
+                  
+              # Check if pandas would be available
+              if importlib.util.find_spec('pandas') is None:
+                  failures.append('pandas: module not found')
+                  
+              # Check if scipy would be available
+              if importlib.util.find_spec('scipy') is None:
+                  failures.append('scipy: module not found')
+          
+          except Exception as e:
+              failures.append(f'validation error: {e}')
+          
+          if failures:
+              print('⚠️  Docker validation would fail with these issues:')
+              for f in failures:
+                  print(f'  - {f}')
+              print('Note: This is expected in CI - validation will work in Docker container')
+          else:
+              print('✅ Docker validation logic is sound')
+          "
+
+  test-dependency-management-scripts:
+    name: Test Dependency Management Scripts
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pip-tools toml
+
+      - name: Test generate_requirements.py script
+        run: |
+          echo "🧪 Testing requirements generation script..."
+          
+          # Test help output
+          python scripts/generate_requirements.py --help
+          
+          # Test validation-only mode
+          python scripts/generate_requirements.py --validate-only || true
+          
+          # Test generation to temporary file
+          python scripts/generate_requirements.py --output test-requirements.txt
+          
+          # Verify output file was created
+          if [ -f "test-requirements.txt" ]; then
+            echo "✅ Requirements generation successful"
+            echo "📊 Generated $(wc -l < test-requirements.txt) lines"
+            head -10 test-requirements.txt
+          else
+            echo "❌ Requirements generation failed"
+            exit 1
+          fi
+          
+          # Cleanup
+          rm -f test-requirements.txt
+
+      - name: Test validation hook
+        run: |
+          echo "🧪 Testing validation hook..."
+          chmod +x .pre-commit-hooks/validate-dependencies.sh
+          
+          # Test the validation hook
+          ./.pre-commit-hooks/validate-dependencies.sh || {
+            echo "⚠️  Validation hook failed - this may be expected if dependencies are out of sync"
+            echo "This test verifies the hook runs, not that it passes"
+          }
+
+  validate-makefile-targets:
+    name: Validate Makefile Dependency Targets
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pip-tools toml
+
+      - name: Test Makefile targets exist
+        run: |
+          echo "🎯 Testing Makefile dependency targets..."
+          
+          # Check that targets are defined
+          if grep -q "^requirements:" Makefile; then
+            echo "✅ requirements target found"
+          else
+            echo "❌ requirements target missing"
+            exit 1
+          fi
+          
+          if grep -q "^requirements-check:" Makefile; then
+            echo "✅ requirements-check target found"
+          else
+            echo "❌ requirements-check target missing"
+            exit 1
+          fi
+          
+          if grep -q "^requirements-upgrade:" Makefile; then
+            echo "✅ requirements-upgrade target found"
+          else
+            echo "❌ requirements-upgrade target missing"
+            exit 1
+          fi
+          
+          if grep -q "^requirements-validate:" Makefile; then
+            echo "✅ requirements-validate target found"
+          else
+            echo "❌ requirements-validate target missing"
+            exit 1
+          fi
+
+      - name: Test make requirements-check
+        run: |
+          echo "🔍 Testing make requirements-check..."
+          chmod +x .pre-commit-hooks/validate-dependencies.sh
+          make requirements-check || {
+            echo "⚠️  requirements-check failed - may indicate sync issues"
+            echo "This is informational in CI"
+          }
+
+  security-scan:
+    name: Security Scan for Dependency Issues
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install security scanning tools
+        run: |
+          pip install --upgrade pip
+          pip install safety bandit
+
+      - name: Scan requirements.txt for known vulnerabilities
+        run: |
+          echo "🔒 Scanning requirements.txt for security vulnerabilities..."
+          if [ -f "requirements.txt" ]; then
+            safety check -r requirements.txt || {
+              echo "⚠️  Security vulnerabilities found in dependencies"
+              echo "Review and update vulnerable packages"
+            }
+          else
+            echo "⚠️  requirements.txt not found - run 'make requirements' first"
+          fi
+
+      - name: Scan for hardcoded secrets in dependency files
+        run: |
+          echo "🔍 Scanning for hardcoded secrets..."
+          bandit -r scripts/generate_requirements.py .pre-commit-hooks/validate-dependencies.sh || {
+            echo "⚠️  Potential security issues found"
+            echo "Review flagged items for false positives"
+          }

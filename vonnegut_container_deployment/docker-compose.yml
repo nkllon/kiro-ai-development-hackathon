@@ -1,0 +1,179 @@
+version: '3.8'
+services:
+  observatory-redis:
+    image: redis:7-alpine
+    container_name: observatory-redis
+    restart: unless-stopped
+    ports:
+    - 6379:6379
+    networks:
+    - observatory-network
+    command:
+    - redis-server
+    - --appendonly
+    - 'yes'
+    - --requirepass
+    - ${REDIS_PASSWORD}
+    volumes:
+    - redis_data:/data
+    healthcheck:
+      test:
+      - CMD
+      - redis-cli
+      - --raw
+      - incr
+      - ping
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  observatory-prometheus:
+    image: prom/prometheus:latest
+    container_name: observatory-prometheus
+    restart: unless-stopped
+    ports:
+    - 9090:9090
+    networks:
+    - observatory-network
+    command:
+    - --config.file=/etc/prometheus/prometheus.yml
+    - --storage.tsdb.path=/prometheus
+    - --web.console.libraries=/etc/prometheus/console_libraries
+    - --web.console.templates=/etc/prometheus/consoles
+    - --storage.tsdb.retention.time=7d
+    - --web.enable-lifecycle
+    - --web.enable-remote-write-receiver
+    - --web.external-url=https://prometheus.observatory.niclon.com
+    volumes:
+    - ./prometheus-vonnegut.yml:/etc/prometheus/prometheus.yml:ro
+    - prometheus_data:/prometheus
+    healthcheck:
+      test:
+      - CMD
+      - wget
+      - --no-verbose
+      - --tries=1
+      - --spider
+      - http://localhost:9090/-/healthy
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  observatory-grafana:
+    image: grafana/grafana:latest
+    container_name: observatory-grafana
+    restart: unless-stopped
+    ports:
+    - 3000:3000
+    networks:
+    - observatory-network
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_AUTH_ANONYMOUS_ENABLED: 'true'
+      GF_AUTH_ANONYMOUS_ORG_NAME: Main Org.
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_SESSION_PROVIDER: redis
+      GF_SESSION_PROVIDER_CONFIG: addr=observatory-redis:6379,pool_size=100,db=1,password=${REDIS_PASSWORD}
+      GF_DATABASE_TYPE: sqlite3
+    volumes:
+    - grafana_data:/var/lib/grafana
+    - ./observatory/grafana-config:/etc/grafana/provisioning
+    depends_on:
+    - observatory-redis
+    - observatory-prometheus
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit
+        1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  observatory-app:
+    build:
+      context: .
+      dockerfile: observatory/Dockerfile
+    image: beast-mode-observatory:vonnegut
+    container_name: observatory-app
+    restart: unless-stopped
+    ports:
+    - 8888:8888
+    - 8889:8889
+    - 8890:8890
+    networks:
+    - observatory-network
+    environment:
+      OBSERVATORY_HOST: 0.0.0.0
+      OBSERVATORY_PORT: '8888'
+      WEBSOCKET_PORT: '8889'
+      HEALTH_MONITOR_PORT: '8890'
+      LOG_LEVEL: INFO
+      REDIS_HOST: observatory-redis
+      REDIS_PORT: '6379'
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_DB: '0'
+      PROMETHEUS_URL: http://observatory-prometheus:9090
+      GRAFANA_URL: http://observatory-grafana:3000
+      CACHE_BACKEND: redis
+      SESSION_BACKEND: redis
+      SHARED_STATE_BACKEND: redis
+      DOCKER_DESKTOP: 'false'
+      PROMETHEUS_ENABLED: 'true'
+      METRICS_EXPORT_ENABLED: 'true'
+    volumes:
+    - observatory_data:/app/data
+    - observatory_logs:/app/logs
+    - /etc/localtime:/etc/localtime:ro
+    depends_on:
+    - observatory-redis
+    - observatory-prometheus
+    healthcheck:
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:8888/health
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+  cloudflare-tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: observatory-tunnel
+    restart: unless-stopped
+    networks:
+    - observatory-network
+    command:
+    - tunnel
+    - --config
+    - /etc/cloudflared/config.yml
+    - run
+    volumes:
+    - ./cloudflared-config.yml:/etc/cloudflared/config.yml:ro
+    - ./tunnel-credentials.json:/etc/cloudflared/credentials.json:ro
+    depends_on:
+    - observatory-app
+    - observatory-grafana
+    - observatory-prometheus
+    healthcheck:
+      test:
+      - CMD
+      - cloudflared
+      - tunnel
+      - info
+      interval: 60s
+      timeout: 10s
+      retries: 3
+networks:
+  observatory-network:
+    driver: bridge
+volumes:
+  observatory_data:
+    driver: local
+  observatory_logs:
+    driver: local
+  grafana_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  redis_data:
+    driver: local

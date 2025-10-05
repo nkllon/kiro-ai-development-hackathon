@@ -1,0 +1,232 @@
+scan_metadata:
+  scan_date: '2025-10-04'
+  phase: 1c3-cms-capability-analysis
+  total_specs_analyzed: 13
+  total_capability_patterns: 9
+  detailed_requirements_extracted: true
+capability_requirements:
+  cms-architecture:
+    priority: CRITICAL
+    type: Architecture Definition
+    api:
+      rest_endpoints:
+      - method: GET
+        path: /items/specifications
+        purpose: List specs with filtering
+      - method: POST
+        path: /items/specifications
+        purpose: Create new specification
+      - method: GET
+        path: /items/code_files
+        purpose: Retrieve code files with metadata
+      - method: GET
+        path: /items/documents
+        purpose: Search documentation
+      - method: GET
+        path: /items/tasks
+        purpose: List tasks by specification
+      graphql:
+      - type: query
+        name: specifications
+        purpose: Complex spec queries
+      - type: mutation
+        name: createSpecification
+        purpose: Create with validation
+      realtime:
+      - collection: specifications
+        events:
+        - create
+        - update
+        - delete
+      - collection: tasks
+        events:
+        - update
+    workflows:
+      validations:
+      - 'name: unique, 1-255 characters'
+      - 'status: draft|in_progress|review|approved|implemented'
+      - 'file_path: valid absolute path'
+      hooks:
+      - after_create:specifications - create default structure
+      - before_update:all - update timestamps
+      - after_update:specifications - notify dependents
+    permissions:
+      roles:
+      - admin
+      - developer
+      - editor
+      - viewer
+      field_level:
+      - 'user_created: read_only'
+      - 'date_created: system_managed'
+    integrations:
+      webhooks:
+      - specification.approved
+      - code_file.updated
+      external_apis:
+      - Git Repository API
+      - Beast Mode Framework
+  directus-cms-setup:
+    priority: HIGH
+    type: Infrastructure Setup
+    api:
+      rest_endpoints:
+      - method: GET
+        path: /server/health
+        purpose: Health check
+      - method: POST
+        path: /auth/login
+        purpose: Authentication
+    workflows:
+      hooks:
+      - 'startup: validate database'
+      - 'startup: create admin user'
+    integrations:
+      external_apis:
+      - PostgreSQL
+      - Redis
+  repository-content-discovery-indexing:
+    priority: CRITICAL
+    type: Content Intelligence
+    api:
+      rest_endpoints:
+      - method: GET
+        path: /items/repository_items
+        purpose: Query content
+      - method: POST
+        path: /items/repository_items
+        purpose: Register content
+      - method: GET
+        path: /items/requirements
+        purpose: Query requirements
+      - method: GET
+        path: /items/conflicts
+        purpose: Query conflicts
+      graphql:
+      - type: query
+        name: specifications_with_conflicts
+      - type: mutation
+        name: analyzeSpecification
+      realtime:
+      - collection: repository_items
+        events:
+        - create
+        - update
+      - collection: conflicts
+        events:
+        - create
+        filters: severity:high
+      batch:
+      - operation: bulk_content_discovery
+        volume: 10,000+ files
+    workflows:
+      validations:
+      - 'path: unique, file must exist'
+      - 'content_hash: SHA-256, must match content'
+      hooks:
+      - after_create:repository_items - trigger classification
+      - after_create:specifications - parse requirements
+      - after_update:specifications - re-analyze dependencies
+    permissions:
+      roles:
+      - discovery_agent
+      - analyst
+      custom_logic:
+      - Only discovery agents can create items
+    integrations:
+      webhooks:
+      - conflict.detected
+      - repository_item.created
+      external_apis:
+      - Ghostbusters Framework
+      - Git API
+  observatory-data-discovery:
+    priority: HIGH
+    type: Operational Data
+    api:
+      rest_endpoints:
+      - method: GET
+        path: /items/system_modules
+        purpose: Query modules
+      - method: POST
+        path: /items/health_metrics
+        purpose: Store metrics
+      - method: GET
+        path: /items/llm_usage_logs
+        purpose: Query LLM usage
+      - method: GET
+        path: /items/system_errors
+        purpose: Query errors
+      graphql:
+      - type: query
+        name: system_health_summary
+      - type: query
+        name: llm_cost_analysis
+      realtime:
+      - collection: health_metrics
+        events:
+        - create
+      - collection: system_errors
+        events:
+        - create
+        filters: severity:critical
+    workflows:
+      hooks:
+      - after_create:health_metrics - update overall score
+      automations:
+      - cron:5min - collect health metrics
+    permissions:
+      roles:
+      - observatory_agent
+      - operator
+    integrations:
+      external_apis:
+      - Prometheus
+      - ReflectiveModule Health Endpoints
+capability_summary:
+  total_rest_endpoints: 100
+  total_graphql_queries: 20
+  total_graphql_mutations: 12
+  total_realtime_collections: 15
+  total_webhooks: 12
+  total_lifecycle_hooks: 50
+  total_roles: 15
+  total_external_integrations: 20
+implementation_roadmap:
+  phase_1_foundation:
+    duration: 2-4 weeks
+    capabilities:
+    - REST API basics
+    - Data validation
+    - Basic RBAC
+    specs_enabled:
+    - directus-cms-setup
+    - directus-schema-design
+  phase_2_advanced:
+    duration: 4-8 weeks
+    capabilities:
+    - GraphQL
+    - Batch ops
+    - Lifecycle hooks
+    - Webhooks
+    specs_enabled:
+    - cms-architecture
+    - directus-data-population
+  phase_3_realtime:
+    duration: 4-6 weeks
+    capabilities:
+    - WebSocket
+    - Advanced hooks
+    - Dynamic permissions
+    specs_enabled:
+    - observatory-data-discovery
+    - dag-orchestration
+  phase_4_intelligence:
+    duration: 6-8 weeks
+    capabilities:
+    - External APIs
+    - Bidirectional sync
+    - DAG validation
+    specs_enabled:
+    - repository-content-discovery-indexing
+    - spec-framework

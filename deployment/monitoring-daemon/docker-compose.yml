@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  monitoring-daemon:
+    build:
+      context: ../../
+      dockerfile: deployment/monitoring-daemon/Dockerfile
+    image: beast-mode-monitoring-daemon:latest
+    container_name: beast-mode-monitoring-daemon
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - monitoring_logs:/app/logs
+      - monitoring_data:/tmp
+    environment:
+      - DAEMON_PORT=8000
+      - DAEMON_HOST=0.0.0.0
+      - LOG_LEVEL=INFO
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+        reservations:
+          memory: 128M
+          cpus: '0.25'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/metrics"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  monitoring_logs:
+    driver: local
+  monitoring_data:
+    driver: local

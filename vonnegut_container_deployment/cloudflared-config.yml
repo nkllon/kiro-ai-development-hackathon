@@ -1,0 +1,10 @@
+credentials-file: /etc/cloudflared/credentials.json
+ingress:
+- hostname: observatory.niclon.com
+  service: http://observatory-app:8888
+- hostname: grafana.observatory.niclon.com
+  service: http://observatory-grafana:3000
+- hostname: prometheus.observatory.niclon.com
+  service: http://observatory-prometheus:9090
+- service: http_status:404
+tunnel: d1e53e43-033f-4994-8f46-c83962ae3785

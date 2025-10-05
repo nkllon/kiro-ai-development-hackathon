@@ -1,0 +1,14 @@
+# Elasticsearch Configuration for CMS Search
+
+cluster.name: cms-search-cluster
+node.name: cms-node-1
+
+network.host: 0.0.0.0
+http.port: 9200
+
+# Index settings
+index.number_of_shards: 1
+index.number_of_replicas: 1
+
+# Memory settings
+bootstrap.memory_lock: true
