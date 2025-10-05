@@ -1,1 +1,0 @@
-"""Core makefile governance components."""

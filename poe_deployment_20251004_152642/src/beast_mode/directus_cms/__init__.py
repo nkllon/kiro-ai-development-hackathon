@@ -1,1 +1,0 @@
-# Directus CMS package for systematic content management

@@ -188,3 +188,17 @@ observatory.pid
 **/cache/
 **/tmp/
 *.tar.gz
+
+# Backup directories and deployment snapshots
+*backup*/
+*_backup_*/
+docker-migration-backup*/
+poe_deployment_*/
+observatory_backup_*/
+*.backup
+*.backup_final
+*.backup_[0-9]*
+*.backup[0-9]
+
+# Task completion markers
+.task-*-complete
