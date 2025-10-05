@@ -187,3 +187,4 @@ observatory.pid
 **/logs/
 **/cache/
 **/tmp/
+*.tar.gz
