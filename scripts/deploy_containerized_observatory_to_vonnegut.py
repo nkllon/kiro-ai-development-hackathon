@@ -383,7 +383,7 @@ class VonnegutContainerDeployer:
 cd {self.remote_path}
 
 # Set environment variables
-export REDIS_PASSWORD="${os.getenv('REDIS_PASSWORD', 'beastmode2025')}"
+export REDIS_PASSWORD="${os.getenv('REDIS_PASSWORD', os.getenv('REDIS_PASSWORD', ''))}"
 
 # Stop any existing containers
 echo "🛑 Stopping existing containers..."

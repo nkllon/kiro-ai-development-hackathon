@@ -27,7 +27,7 @@ services:
     volumes:
       - redis-data:/data
     restart: unless-stopped
-    command: ["redis-server", "--requirepass", "beastmode2025", "--port", "6379"]
+    command: ["redis-server", "--requirepass", os.getenv('REDIS_PASSWORD', ''), "--port", "6379"]
 
   observatory-prometheus:
     image: prom/prometheus:latest

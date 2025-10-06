@@ -194,7 +194,7 @@ sleep 10
 echo "🚀 Starting services in proper order..."
 
 # Set environment
-export REDIS_PASSWORD="${os.getenv('REDIS_PASSWORD', 'beastmode2025')}"
+export REDIS_PASSWORD="${os.getenv('REDIS_PASSWORD', os.getenv('REDIS_PASSWORD', ''))}"
 
 # Start Redis first
 echo "Starting Redis..."

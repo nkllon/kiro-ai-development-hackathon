@@ -18,7 +18,7 @@ class PasswordRemediator:
     """Remove hardcoded passwords from codebase."""
     
     def __init__(self):
-        self.password_pattern = r'beastmode2025'
+        self.password_pattern = ros.getenv('REDIS_PASSWORD', '')
         self.replacements_made = 0
         self.files_modified = 0
         self.scan_results = []

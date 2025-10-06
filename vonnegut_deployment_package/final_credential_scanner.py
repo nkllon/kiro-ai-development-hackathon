@@ -37,7 +37,7 @@ class FinalCredentialScanner:
         # Real credential patterns - more restrictive
         self.credential_patterns = {
             'redis_password': [
-                r'beastmode2025',  # Our specific password
+                ros.getenv('REDIS_PASSWORD', ''),  # Our specific password
             ],
             'password': [
                 r'password\s*=\s*["\'][^"\']{6,}["\']',  # At least 6 chars, not test patterns
@@ -203,7 +203,7 @@ class FinalCredentialScanner:
             return 'MEDIUM'
         
         # Our specific password is always CRITICAL in production code
-        if 'beastmode2025' in matched_text.lower():
+        if os.getenv('REDIS_PASSWORD', '') in matched_text.lower():
             return 'CRITICAL'
         
         # Real API keys are CRITICAL

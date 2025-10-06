@@ -146,7 +146,7 @@ class ConfigManager:
         PATCH_END: PATCH-2024-004
         """
         # Temporary hardcoded URL for development
-        return "postgresql://dev:dev@localhost:5432/devdb"
+        return os.getenv('DATABASE_URL', "postgresql://dev:dev@localhost:5432/devdb")
     
     def get_api_key(self):
         return os.getenv("API_KEY", "default_key")

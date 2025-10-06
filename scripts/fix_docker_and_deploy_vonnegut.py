@@ -30,7 +30,7 @@ services:
     volumes:
       - redis-data:/data
     restart: unless-stopped
-    command: ["redis-server", "--requirepass", "beastmode2025"]
+    command: ["redis-server", "--requirepass", os.getenv('REDIS_PASSWORD', '')]
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s

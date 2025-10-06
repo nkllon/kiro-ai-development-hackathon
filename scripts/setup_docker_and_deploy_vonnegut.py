@@ -110,7 +110,7 @@ echo "✅ Docker setup complete!"
 cd {self.remote_path}
 
 # Set environment variables
-export REDIS_PASSWORD="${os.getenv('REDIS_PASSWORD', 'beastmode2025')}"
+export REDIS_PASSWORD="${os.getenv('REDIS_PASSWORD', os.getenv('REDIS_PASSWORD', ''))}"
 
 # Make sure we're in the right directory
 pwd

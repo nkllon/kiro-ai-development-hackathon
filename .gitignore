@@ -212,3 +212,22 @@ backups/
 
 # Sent/communication log files
 *.sent
+
+# Security - Added by cleanup script
+credentials/
+secrets/
+*.key
+*.pem
+*.p12
+*.pfx
+.env.local
+.env.production
+chrome_cookies.db
+*_backup_*
+*.security_backup
+
+# Scan reports with sensitive data
+*credential*scan*.json
+*security*scan*.json
+credential_scan_report.json
+security_scan_report.json

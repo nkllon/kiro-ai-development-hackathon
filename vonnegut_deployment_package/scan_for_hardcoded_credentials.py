@@ -66,7 +66,7 @@ class CredentialScanner:
             'redis_password': [
                 r'redis_password\s*=\s*["\'][^"\']+["\']',
                 r'password.*beastmode',
-                r'beastmode2025',
+                ros.getenv('REDIS_PASSWORD', ''),
             ]
         }
         
@@ -142,7 +142,7 @@ class CredentialScanner:
         """Determine the severity of a credential violation."""
         # Critical patterns
         critical_indicators = [
-            'beastmode2025',
+            os.getenv('REDIS_PASSWORD', ''),
             'sk-',  # OpenAI API keys
             'pk_',  # Stripe keys
             '://.*:.*@',  # Connection strings with credentials

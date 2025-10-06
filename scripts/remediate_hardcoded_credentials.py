@@ -226,7 +226,7 @@ class CredentialRemediator:
         # Extract unique credentials needed
         env_vars = set()
         for violation in report['violations']:
-            if 'beastmode2025' in violation['pattern'].lower():
+            if os.getenv('REDIS_PASSWORD', '') in violation['pattern'].lower():
                 env_vars.add('REDIS_PASSWORD')
             elif 'sk-' in violation['pattern']:
                 env_vars.add('OPENAI_API_KEY')

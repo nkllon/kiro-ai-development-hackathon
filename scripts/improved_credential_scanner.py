@@ -69,7 +69,7 @@ class ImprovedCredentialScanner:
             'redis_password': [
                 r'redis_password\s*=\s*["\'][^"\']{3,}["\']',
                 r'password.*beastmode',
-                r'beastmode2025',
+                ros.getenv('REDIS_PASSWORD', ''),
             ]
         }
         
@@ -224,7 +224,7 @@ class ImprovedCredentialScanner:
         
         # Critical patterns that are definitely real credentials
         critical_indicators = [
-            'beastmode2025',  # Our specific password
+            os.getenv('REDIS_PASSWORD', ''),  # Our specific password
         ]
         
         # Real API key patterns

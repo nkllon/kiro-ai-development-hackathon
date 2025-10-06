@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class SimpleRedisClient:
     """Basic Redis client using raw sockets."""
     
-    def __init__(self, host='192.168.1.146', port=6379, password='beastmode2025'):
+    def __init__(self, host='192.168.1.146', port=6379, password=os.getenv('REDIS_PASSWORD', '')):
         self.host = host
         self.port = port
         self.password = password

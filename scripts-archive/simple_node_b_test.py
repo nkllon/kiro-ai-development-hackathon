@@ -11,7 +11,7 @@ import redis.asyncio as redis
 NODE_ID = "simple-test-node-b"
 REDIS_HOST = "192.168.1.119"
 REDIS_PORT = 6379
-REDIS_PASSWORD = "beastmode2025"
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD', '')
 CHANNEL = "beast_mode_network"
 
 async def simple_node_b_test():

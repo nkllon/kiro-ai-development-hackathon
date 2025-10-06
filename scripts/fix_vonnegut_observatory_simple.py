@@ -83,7 +83,7 @@ scrape_configs:
 cd /home/lou/observatory
 
 # Set environment variables
-export REDIS_PASSWORD="beastmode2025"
+export REDIS_PASSWORD=os.getenv('REDIS_PASSWORD', '')
 export PROMETHEUS_URL="http://localhost:9090"
 
 # Start Redis
