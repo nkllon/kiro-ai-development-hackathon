@@ -14,7 +14,7 @@ from pathlib import Path
 import uuid
 
 from src.beast_mode.core.beastly_module import BeastlyModule
-from ..tracing.tracer import DistributedTracer
+from .tracing_integration import DistributedTracer
 from .models import ContextEvent, ContextEventType, EventMetadata
 from .context_manager import ContextManager
 

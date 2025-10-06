@@ -1,0 +1,35 @@
+# System Health Report - 2025-10-05T18:46:55.662401
+
+## Overall Status: 🟡 WARNING
+
+## Infrastructure Status
+- **docker_daemon**: 🟢 HEALTHY
+- **containers**: NAMES                                              STATUS                   PORTS
+local-directus-1                                   Up 4 hours (unhealthy)   0.0.0.0:8055->8055/tcp, [::]:8055->8055/tcp
+local-directus-db-1                                Up 4 hours (healthy)     5432/tcp
+telkombe_remote-docker-desktop-extension-service   Up 9 hours               
+local-grafana                                      Up 9 hours               0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+local-prometheus                                   Up 9 hours               0.0.0.0:9090->9090/tcp, [::]:9090->9090/tcp
+local-jaeger                                       Up 9 hours               0.0.0.0:14250->14250/tcp, [::]:14250->14250/tcp, 0.0.0.0:14268->14268/tcp, [::]:14268->14268/tcp, 0.0.0.0:6831-6832->6831-6832/udp, [::]:6831-6832->6831-6832/udp, 0.0.0.0:16686->16686/tcp, [::]:16686->16686/tcp
+beast-mode-monitoring-daemon                       Up 28 hours (healthy)    0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+- **container_summary**: 7/7 containers running
+- **ports**: {'8888': '🔴 Observatory not running', '3000': '🟢 Grafana running', '9090': '🟢 Prometheus running', '6379': '🟢 Redis running'}
+- **internet**: 🟢 CONNECTED
+- **cloudflare_tunnel**: 🟡 NOT RUNNING
+- **disk_space**: /dev/disk3s5   228Gi   171Gi    22Gi    89%    4.6M  233M    2%   /System/Volumes/Data
+
+## Application Status
+- **endpoints**: {'Observatory Health': '🔴 DOWN (HTTP 000)', 'Grafana Health': '🟢 HEALTHY', 'Prometheus Health': '🟢 HEALTHY'}
+
+## Development Environment
+- **python_version**: Python 3.9.6
+- **virtual_env**: 🟢 ACTIVE
+- **imports**: {'ReflectiveModule': '🟢 OK', 'DeploymentAuditor': '🟢 OK'}
+- **recent_files**: ['./mcp-filesystem-config.toml', './cloudflare_tunnel.pid', './test_prometheus_metrics_simple.py', './.task-3.2-complete', './.task-3.3-complete', './simple_health_server.py', './prometheus_integration_fix.py', './smoke_test_node_b.py', './validate_agent_control_governance_dag.py', './break_the_loop.py', './CMS_PHASE_1_COMPLETION_REPORT.md', './test_results_summary.md', './start_observatory_for_testing.py', './test_task_2_3_completion.py', './bulk_archive_documents.sh', './test_cloudflare_integration.py', './dag_task_2_failure_investigation_report.json', './test_ai_memory_palace_drive.py', './test_polling_suite.py', './.cursor/mcp.json']
+- **git_changes**: ['M .kiro/.DS_Store', ' M .kiro/specs/.DS_Store', ' M .kiro/specs/cms-architecture/tasks.md', ' M docs/.DS_Store', ' M google-calendar-mcp', ' M scripts/complete_cms_phase_1.py', ' M scripts/complete_task_1_2_elasticsearch.py', ' M src/.DS_Store', ' M src/beast_mode/.DS_Store', ' M src/cms_platform/.DS_Store', ' M src/cms_platform/phase_1_completion.json', ' M src/cms_platform/sync/webhook_handler.py', ' M src/directus_reconciliation/.DS_Store', ' M src/repository_discovery/.DS_Store', ' M src/rm_ddd/.DS_Store', ' M src/service_auto_start/.DS_Store', ' M tests/.DS_Store', ' M tests/unit/.DS_Store', '?? .kiro/constellation-config.json', '?? .kiro/constellation-execution-config.json', '?? .kiro/constellation-readiness-report.json', '?? .kiro/dag-validation-results.json', '?? .kiro/execution-metadata.json', '?? .kiro/monitoring-config.json', '?? .kiro/task-registry-summary.json', '?? .kiro/task-registry.json', '?? .kiro/test-task-registry.json', '?? AI_MEMORY_PALACE_IMPLEMENTATION_SUMMARY.md', '?? CAPTURE_BEASTMASTER_OUTPUTS_DAG_PREPARATION_SUMMARY.md', '?? CMS_AUDIT_COMPLETION_SUMMARY.md', '?? CMS_IMPLEMENTATION_FINAL_SUMMARY.md', '?? CMS_PHASE_1_COMPLETION_REPORT.md', '?? CMS_PROMPT_EXECUTION_SUMMARY.md', '?? CMS_TASK_AUDIT_COMPREHENSIVE_REPORT.md', '?? CMS_TASK_AUDIT_FINAL_REPORT.md', '?? DAG_ORCHESTRATION_IMPLEMENTATION_SUMMARY.md', '?? DAG_ORCHESTRATION_PROP.md', '?? DAG_ORCHESTRATION_READY.md', '?? DAG_TASK_FAILURE_INVESTIGATION_SUMMARY.md', '?? DEPLOYMENT_AUDITOR_COMPLETION_REPORT.md', '?? Dockerfile.test-reflective', '?? LAUNCH_INSTRUCTIONS.md', '?? RUNTIME_STATE_REGISTRY_PHASE2_IMPLEMENTATION_SUMMARY.md', '?? analyze_staging_prompts.md', '?? auto_registration_test_report.md', '?? bonjour_lab_interoperability_analysis.md', '?? cms_architecture_spec_completion_summary.md', '?? cms_implementation_completion_plan_20251005_182146.md', '?? cms_task_audit_summary_20251005_181838.md', '?? comprehensive_auto_registration_test.py', '?? comprehensive_solution_summary.md', '?? coordination_assessment_report_20250127.md', '?? coordination_completion_summary.md', '?? coordination_recovery_plan_20250127.md', '?? deployment_auditor_dag_launch_commands.md', '?? deployment_report_20251005_104520.md', '?? docker-compose.local-dev.yml', '?? full_system_test.py', '?? full_system_test_summary.md', '?? implementation_complete_summary.md', '?? local_dns_solution_summary.md', '?? port_conflict_resolution_summary.md', '?? prompts/README.md', '?? prompts/completed/DAG-ORCHESTRATION-EXECUTION-PREP.md', '?? prompts/completed/QUICK-START-PARALLEL-EXECUTION-agent-1738012345-xk7m2p-completed-20250127T154522Z.md', '?? prompts/completed/ai-memory-palace-dag-execution.md', '?? prompts/completed/cms_full_task_audit_prompt.md', '?? prompts/completed/complete_cms_architecture_implementation.md', '?? prompts/completed/coordination-monitor.md', '?? prompts/completed/dag-task-failure-investigation-completed-20251005.md', '?? prompts/completed/execute_cms_audit_prompt.md', '?? prompts/completed/option-1-fix-deployment-auditor.md', '?? prompts/completed/option-2-capture-beastmaster-outputs.md', '?? prompts/completed/prepare-cms-architecture-spec.md', '?? prompts/completed/runtime-state-registry-forward-pass.md', '?? prompts/completed/runtime-state-registry-task-implementation.md', '?? prompts/staging/STAGING-COMPLETION-REVIEW.md', '?? prompts/staging/ai_memory_palace_integration_gap_analysis.md', '?? recover_task_2.py', '?? redis_env_profile.sh', '?? reflective_module_implementation_failure_analysis.md', '?? reflective_module_redis_registration_patch.py', '?? runtime_state_registry_dependency_analysis.md', '?? scripts/cms_implementation_completion_plan.py', '?? scripts/complete_cms_phase_1_summary.py', '?? scripts/complete_task_1_2_simple.py', '?? scripts/complete_task_1_3_data_model.py', '?? scripts/complete_task_1_4_repo_sync.py', '?? scripts/system_health_check.py', '?? scripts/update_cms_task_status_based_on_audit.py', '?? set_redis_environment.sh', '?? src/cms_platform/migrations/002_core_data_model.sql', '?? src/cms_platform/search/indexing_service.py', '?? src/cms_platform/sync/content_processor.py', '?? src/cms_platform/sync/monitor.py', '?? src/cms_platform/sync/sync_service.py', '?? test_ai_memory_palace_runtime_state_integration.py', '?? test_containerized_reflective_module.py', '?? test_grafana_intelligence_collector.py', '?? test_results_summary.md']
+
+## 🟡 Warnings
+- Observatory not running on port 8888
+- Observatory Health endpoint not responding
+- Cloudflare tunnel not running
+

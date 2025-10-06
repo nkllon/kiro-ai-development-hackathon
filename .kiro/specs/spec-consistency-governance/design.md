@@ -1,418 +1,389 @@
-# Design Document: Spec Inconsistency Resolution System
+# Spec Consistency Governance Design
 
-## Architecture Overview
+## Overview
 
-The Spec Inconsistency Resolution System is designed as a systematic validation and remediation framework integrated into the Beast Mode ecosystem. It provides automated detection, reporting, and fixing of spec structure issues through CLI tools, git hooks, and continuous monitoring.
+This design document outlines the technical architecture and implementation approach for Spec Consistency Governance, a Foundation Layer (Layer 1) specification that provides core infrastructure and foundational services for the constellation.
 
-### System Context
+## Architecture
 
+### System Architecture
+
+```mermaid
+graph TB
+    A[Service Gateway] --> B[Core Service Layer]
+    A --> C[Data Management Layer]
+    A --> D[Integration Layer]
+    
+    B --> E[Business Logic Services]
+    B --> F[Validation Services]
+    B --> G[Processing Services]
+    
+    C --> H[Data Access Layer]
+    C --> I[Caching Layer]
+    C --> J[Storage Layer]
+    
+    D --> K[External APIs]
+    D --> L[Message Queue]
+    D --> M[Event Bus]
+    
+    E --> N[Health Monitoring]
+    F --> N
+    G --> N
+    H --> N
+    I --> N
+    J --> N
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    Beast Mode Framework                      │
-│  ┌─────────────────────────────────────────────────────────┐│
-│  │      Spec Consistency Governance System                 ││
-│  │                                                          ││
-│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐ ││
-│  │  │   Validator  │  │  Remediator  │  │   Reporter   │ ││
-│  │  └──────────────┘  └──────────────┘  └──────────────┘ ││
-│  │         │                  │                  │         ││
-│  │         └──────────────────┴──────────────────┘         ││
-│  │                           │                              ││
-│  │                    ┌──────────────┐                     ││
-│  │                    │ Spec Registry│                     ││
-│  │                    └──────────────┘                     ││
-│  └─────────────────────────────────────────────────────────┘│
-│                              │                               │
-│                              │                               │
-│           ┌──────────────────┼──────────────────┐           │
-│           │                  │                  │           │
-│  ┌────────▼──────┐  ┌────────▼──────┐  ┌───────▼───────┐  │
-│  │  Git Hooks    │  │  CLI Tools    │  │  Make Targets │  │
-│  └───────────────┘  └───────────────┘  └───────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-```
 
----
+### Component Architecture
 
-## Component Design
+The system follows a layered architecture with clear separation of concerns:
 
-### 1. Spec Validator (`src/spec_governance/validator.py`)
+- **Service Gateway**: Entry point for all requests with routing and authentication
+- **Core Service Layer**: Business logic and processing services
+- **Data Management Layer**: Data access, caching, and storage management
+- **Integration Layer**: External system integration and event handling
 
-**Purpose:** Scans `.kiro/specs/` to detect structural inconsistencies.
+## Components
 
-**Responsibilities:**
-- Scan all spec directories for required files (requirements.md, design.md, tasks.md)
-- Detect extra/non-standard files
-- Calculate name similarity scores for duplicate detection
-- Identify empty or orphaned directories
-- Validate lifecycle state metadata
+### Core Components
 
-**Key Methods:**
+#### 1. Service Gateway
+**Purpose**: Central entry point for all service requests
+**Responsibilities**:
+- Request routing and load balancing
+- Authentication and authorization
+- Rate limiting and throttling
+- Request/response logging and monitoring
+
+**Interface**:
 ```python
-class SpecValidator(ReflectiveModule):
-    def validate_all_specs(self) -> ValidationReport
-    def validate_spec(self, spec_path: Path) -> SpecValidation
-    def check_required_files(self, spec_path: Path) -> FileCompleteness
-    def detect_extra_files(self, spec_path: Path) -> List[ExtraFile]
-    def compute_similarity(self, spec1: str, spec2: str) -> float
-    def find_duplicates(self, threshold: float = 0.75) -> List[SpecPair]
+class ServiceGateway(ReflectiveModule):
+    def route_request(self, request: ServiceRequest) -> ServiceResponse
+    def authenticate_request(self, request: ServiceRequest) -> AuthResult
+    def apply_rate_limiting(self, request: ServiceRequest) -> RateLimitResult
+    def log_request_response(self, request: ServiceRequest, response: ServiceResponse) -> None
 ```
 
-**Output:** `ValidationReport` object with structured findings
+#### 2. Core Service Manager
+**Purpose**: Manages core business logic and processing services
+**Responsibilities**:
+- Service lifecycle management
+- Inter-service communication
+- Service health monitoring
+- Configuration management
 
----
-
-### 2. Spec Remediator (`src/spec_governance/remediator.py`)
-
-**Purpose:** Automatically fix safe inconsistencies and generate remediation scripts.
-
-**Responsibilities:**
-- Create missing stub files for incomplete specs
-- Move extra files to appropriate locations (.kiro/execution-logs/, .kiro/archive/)
-- Rename files to canonical names
-- Remove empty directories
-- Generate interactive consolidation workflows
-
-**Key Methods:**
+**Interface**:
 ```python
-class SpecRemediator(ReflectiveModule):
-    def create_missing_files(self, spec_path: Path, dry_run: bool = True) -> RemediationResult
-    def move_extra_files(self, spec_path: Path, dry_run: bool = True) -> RemediationResult
-    def fix_file_naming(self, spec_path: Path, dry_run: bool = True) -> RemediationResult
-    def remove_empty_dirs(self, dry_run: bool = True) -> RemediationResult
-    def generate_consolidation_script(self, spec1: Path, spec2: Path) -> str
+class CoreServiceManager(ReflectiveModule):
+    def register_service(self, service: Service) -> RegistrationResult
+    def discover_services(self, criteria: ServiceCriteria) -> List[Service]
+    def monitor_service_health(self, service_name: str) -> HealthStatus
+    def update_service_config(self, service_name: str, config: ServiceConfig) -> UpdateResult
 ```
 
-**Safety:** All operations support `dry_run` mode; generates preview before execution
+#### 3. Data Access Layer
+**Purpose**: Provides unified data access across different storage systems
+**Responsibilities**:
+- Database connection management
+- Query optimization and caching
+- Transaction management
+- Data consistency and integrity
 
----
-
-### 3. Spec Reporter (`src/spec_governance/reporter.py`)
-
-**Purpose:** Generate comprehensive reports on spec quality and inconsistencies.
-
-**Responsibilities:**
-- Generate markdown reports with metrics and findings
-- Track quality trends over time
-- Create visualization-friendly data exports
-- Integrate with CI/CD for quality gates
-
-**Key Methods:**
+**Interface**:
 ```python
-class SpecReporter(ReflectiveModule):
-    def generate_report(self, validation: ValidationReport) -> str
-    def compute_metrics(self, validation: ValidationReport) -> SpecMetrics
-    def compare_historical(self, current: ValidationReport, previous: ValidationReport) -> TrendAnalysis
-    def export_for_dashboard(self, validation: ValidationReport) -> Dict[str, Any]
+class DataAccessLayer(ReflectiveModule):
+    def execute_query(self, query: Query) -> QueryResult
+    def begin_transaction(self) -> Transaction
+    def commit_transaction(self, transaction: Transaction) -> CommitResult
+    def rollback_transaction(self, transaction: Transaction) -> RollbackResult
 ```
 
-**Output Formats:** Markdown, JSON, CSV for different consumers
+#### 4. Integration Manager
+**Purpose**: Manages integration with external systems and services
+**Responsibilities**:
+- External API communication
+- Message queue management
+- Event publishing and subscription
+- Integration monitoring and error handling
 
----
+**Interface**:
+```python
+class IntegrationManager(ReflectiveModule):
+    def call_external_api(self, api_call: APICall) -> APIResponse
+    def publish_event(self, event: Event) -> PublishResult
+    def subscribe_to_events(self, subscription: EventSubscription) -> SubscriptionResult
+    def monitor_integrations(self) -> IntegrationStatus
+```
 
-### 4. Spec Registry (`src/spec_governance/registry.py`)
+## Data Models
 
-**Purpose:** Maintain centralized index of all specs with metadata.
+### Core Data Models
 
-**Responsibilities:**
-- Cache spec structure for fast lookups
-- Track lifecycle states (draft, active, completed, deprecated, archived)
-- Store similarity scores and relationships
-- Provide query interface for tooling
-
-**Data Model:**
+#### ServiceRequest
 ```python
 @dataclass
-class SpecMetadata:
+class ServiceRequest:
+    request_id: str
+    service_name: str
+    operation: str
+    parameters: Dict[str, Any]
+    headers: Dict[str, str]
+    timestamp: datetime
+    user_context: UserContext
+```
+
+#### ServiceResponse
+```python
+@dataclass
+class ServiceResponse:
+    request_id: str
+    status_code: int
+    data: Any
+    headers: Dict[str, str]
+    execution_time_ms: float
+    error_message: Optional[str]
+```
+
+#### Service
+```python
+@dataclass
+class Service:
+    service_name: str
     name: str
-    path: Path
-    lifecycle_state: LifecycleState
-    has_requirements: bool
-    has_design: bool
-    has_tasks: bool
-    extra_files: List[str]
-    created_date: datetime
-    last_modified: datetime
-    similar_specs: List[Tuple[str, float]]  # (spec_name, similarity_score)
+    version: str
+    endpoint: str
+    health_check_url: str
+    configuration: ServiceConfig
+    dependencies: List[str]
+    capabilities: List[str]
 ```
 
-**Storage:** JSON file at `.kiro/spec-registry.json` with auto-regeneration
+### Configuration Models
 
----
-
-### 5. Spec Template Generator (`src/spec_governance/template_generator.py`)
-
-**Purpose:** Create new specs with proper structure from the start.
-
-**Responsibilities:**
-- Generate requirements.md with EARS format examples
-- Generate design.md with architecture sections
-- Generate tasks.md with traceability columns
-- Check for name conflicts before creation
-- Initialize lifecycle state
-
-**Key Methods:**
+#### ServiceConfig
 ```python
-class SpecTemplateGenerator(ReflectiveModule):
-    def create_spec(self, name: str, description: str) -> Path
-    def generate_requirements_template(self, spec_name: str, description: str) -> str
-    def generate_design_template(self, spec_name: str) -> str
-    def generate_tasks_template(self, spec_name: str) -> str
-    def check_name_conflict(self, name: str) -> Optional[List[str]]
+@dataclass
+class ServiceConfig:
+    max_connections: int
+    timeout_seconds: int
+    retry_attempts: int
+    circuit_breaker_threshold: int
+    cache_ttl_seconds: int
+    logging_level: str
+    monitoring_enabled: bool
 ```
 
----
-
-## Integration Points
-
-### Git Hooks Integration
-
-**Pre-commit Hook:** `.git/hooks/pre-commit`
-- Runs `spec-validate` on modified spec directories
-- Blocks commits if validation fails
-- Provides clear error messages with remediation guidance
-
-**Implementation:**
+#### DatabaseConfig
 ```python
-# scripts/git_hooks/pre_commit_spec_validate.py
-def validate_modified_specs():
-    modified_files = get_git_modified_files()
-    specs_to_check = extract_spec_dirs(modified_files)
-    validator = SpecValidator()
-
-    for spec in specs_to_check:
-        result = validator.validate_spec(spec)
-        if not result.is_valid:
-            print_error_message(result)
-            sys.exit(1)
+@dataclass
+class DatabaseConfig:
+    connection_string: str
+    pool_size: int
+    connection_timeout: int
+    query_timeout: int
+    retry_policy: RetryPolicy
+    encryption_enabled: bool
 ```
 
----
+## API Design
 
-### Makefile Integration
+### REST API Endpoints
 
-New targets in `makefiles/spec-governance.mk`:
+#### Service Management
+```
+GET /api/v1/services
+- List all registered services
+- Response: List[Service]
 
-```makefile
-.PHONY: spec-validate spec-fix-auto spec-complete-missing spec-report spec-create
+POST /api/v1/services/{service_name}/health
+- Check service health
+- Response: HealthStatus
 
-spec-validate:
-	@python -m spec_governance.cli validate --all
-
-spec-fix-auto:
-	@python -m spec_governance.cli remediate --auto --confirm
-
-spec-complete-missing:
-	@python -m spec_governance.cli remediate --create-stubs
-
-spec-report:
-	@python -m spec_governance.cli report --format markdown --output .kiro/reports/
-
-spec-create:
-	@python -m spec_governance.cli create --name $(NAME) --description "$(DESC)"
+PUT /api/v1/services/{service_name}/config
+- Update service configuration
+- Body: ServiceConfig
+- Response: UpdateResult
 ```
 
----
-
-### CLI Design
-
-**Command Structure:**
+#### Data Operations
 ```
-spec-governance
-├── validate
-│   ├── --all                 # Validate all specs
-│   ├── --spec NAME           # Validate specific spec
-│   └── --ci                  # CI-friendly output
-├── remediate
-│   ├── --auto                # Fix safe issues automatically
-│   ├── --create-stubs        # Create missing files
-│   ├── --move-extras         # Move extra files
-│   └── --dry-run             # Preview changes
-├── report
-│   ├── --format (md|json)    # Output format
-│   ├── --output DIR          # Output directory
-│   └── --compare PREVIOUS    # Compare with previous report
-├── create
-│   ├── --name NAME           # Spec name
-│   └── --description DESC    # Brief description
-└── consolidate
-    ├── --spec1 NAME          # First spec
-    ├── --spec2 NAME          # Second spec
-    └── --interactive         # Interactive merge workflow
+POST /api/v1/data/query
+- Execute data query
+- Body: Query
+- Response: QueryResult
+
+POST /api/v1/data/transaction
+- Begin new transaction
+- Response: Transaction
+
+PUT /api/v1/data/transaction/{transaction_id}/commit
+- Commit transaction
+- Response: CommitResult
 ```
 
----
+### Event-Driven Architecture
 
-## Data Flow
+#### Event Types
+```python
+class ServiceEvent(BaseEvent):
+    service_name: str
+    event_type: str
+    timestamp: datetime
+    data: Dict[str, Any]
 
-### Validation Flow
-```
-1. User runs: make spec-validate
-2. CLI loads SpecValidator
-3. Validator scans .kiro/specs/
-4. For each spec directory:
-   - Check required files
-   - Detect extra files
-   - Validate naming
-   - Check lifecycle metadata
-5. Reporter generates markdown report
-6. Report saved to .kiro/reports/spec-quality-{date}.md
-7. Exit code indicates pass/fail for CI integration
-```
+class DataEvent(BaseEvent):
+    entity_type: str
+    entity_id: str
+    operation: str
+    changes: Dict[str, Any]
 
-### Remediation Flow
-```
-1. User runs: make spec-fix-auto
-2. CLI loads SpecRemediator
-3. Remediator loads validation report
-4. For each fixable issue:
-   - Preview change
-   - Request confirmation (unless --confirm flag)
-   - Execute fix
-   - Log action
-5. Generate summary report of changes
-6. Update spec registry
+class IntegrationEvent(BaseEvent):
+    integration_name: str
+    status: str
+    error_details: Optional[str]
 ```
 
----
+## Implementation Details
 
-## File Organization
+### Technology Stack
 
-```
-src/spec_governance/
-├── __init__.py
-├── validator.py              # Validation logic
-├── remediator.py            # Remediation logic
-├── reporter.py              # Report generation
-├── registry.py              # Spec registry management
-├── template_generator.py    # New spec templates
-├── similarity.py            # Duplicate detection algorithms
-└── cli.py                   # CLI interface
+**Core Framework**: Python 3.9+ with Beast Mode ReflectiveModule pattern
+**Web Framework**: FastAPI for REST APIs
+**Database**: PostgreSQL with SQLAlchemy ORM
+**Caching**: Redis for distributed caching
+**Message Queue**: RabbitMQ for async messaging
+**Monitoring**: Prometheus metrics with Grafana dashboards
 
-scripts/git_hooks/
-├── pre_commit_spec_validate.py
-└── install_hooks.py
+### Key Implementation Patterns
 
-makefiles/
-└── spec-governance.mk       # Make targets
-
-.kiro/
-├── spec-registry.json       # Cached spec metadata
-├── reports/                 # Quality reports
-│   └── spec-quality-YYYYMMDD.md
-├── execution-logs/          # Execution artifacts moved here
-│   └── {spec-name}/
-└── archive/                 # Archived files
-    └── {spec-name}/
+#### 1. Repository Pattern for Data Access
+```python
+class Repository(ABC):
+    @abstractmethod
+    def find_by_id(self, entity_id: str) -> Optional[Entity]
+    
+    @abstractmethod
+    def find_by_criteria(self, criteria: SearchCriteria) -> List[Entity]
+    
+    @abstractmethod
+    def save(self, entity: Entity) -> SaveResult
+    
+    @abstractmethod
+    def delete(self, entity_id: str) -> DeleteResult
 ```
 
----
+#### 2. Circuit Breaker Pattern for External Calls
+```python
+class CircuitBreaker:
+    def __init__(self, failure_threshold: int, recovery_timeout: int):
+        self.failure_threshold = failure_threshold
+        self.recovery_timeout = recovery_timeout
+        self.failure_count = 0
+        self.last_failure_time = None
+        self.state = CircuitState.CLOSED
+    
+    def call(self, func: Callable) -> Any:
+        if self.state == CircuitState.OPEN:
+            if self._should_attempt_reset():
+                self.state = CircuitState.HALF_OPEN
+            else:
+                raise CircuitBreakerOpenException()
+        
+        try:
+            result = func()
+            self._on_success()
+            return result
+        except Exception as e:
+            self._on_failure()
+            raise e
+```
 
-## Error Handling
-
-### Validation Errors
-- **Missing files:** Generate stub creation commands
-- **Extra files:** Provide move/archive commands
-- **Naming issues:** Generate rename commands
-- **Empty dirs:** Generate safe removal commands
-
-### Remediation Errors
-- **File conflicts:** Interactive resolution prompts
-- **Permission issues:** Clear error messages with sudo guidance
-- **Git conflicts:** Abort with rollback instructions
-
-### Rollback Strategy
-All remediation operations:
-1. Create backup in `.kiro/archive/remediation-backup-{timestamp}/`
-2. Log all changes to `.kiro/remediation-log.json`
-3. Provide rollback script: `scripts/rollback_spec_remediation.py --timestamp YYYYMMDDHHMMSS`
-
----
-
-## Performance Considerations
-
-- **Caching:** Spec registry cached in memory, regenerated only when `.kiro/specs/` modified
-- **Incremental validation:** Git hooks only validate changed specs, not all 105
-- **Parallel processing:** Validation can process specs in parallel using multiprocessing
-- **Lazy loading:** Only load full spec content when needed (e.g., similarity analysis)
-
-**Target Performance:**
-- Full validation: <5 seconds for 105 specs
-- Incremental validation: <1 second for single spec
-- Registry rebuild: <2 seconds
-
----
+#### 3. Event Sourcing for Audit Trail
+```python
+class EventStore:
+    def append_event(self, stream_id: str, event: Event) -> None
+    def get_events(self, stream_id: str, from_version: int = 0) -> List[Event]
+    def get_snapshot(self, stream_id: str) -> Optional[Snapshot]
+    def save_snapshot(self, stream_id: str, snapshot: Snapshot) -> None
+```
 
 ## Security Considerations
 
-- **Path traversal:** All file operations validate paths are within `.kiro/specs/`
-- **Command injection:** No shell execution; use subprocess with argument lists
-- **Arbitrary file writes:** Remediation operations limited to approved directories
-- **Git hook bypass:** Document override procedures requiring justification
+### Authentication and Authorization
+- JWT-based authentication with refresh tokens
+- Role-based access control (RBAC) for service operations
+- API key management for service-to-service communication
+- OAuth 2.0 integration for external authentication providers
 
----
+### Data Security
+- Encryption at rest for sensitive data
+- TLS 1.3 for all network communications
+- Database connection encryption
+- Audit logging for all data access operations
+
+### Network Security
+- API gateway with rate limiting and DDoS protection
+- Network segmentation between service layers
+- Firewall rules for service-to-service communication
+- VPN or private network for sensitive operations
+
+## Performance Considerations
+
+### Scalability
+- Horizontal scaling with load balancers
+- Database read replicas for query optimization
+- Distributed caching with Redis cluster
+- Async processing for non-critical operations
+
+### Optimization
+- Connection pooling for database and external services
+- Query optimization with proper indexing
+- Caching strategies for frequently accessed data
+- Batch processing for bulk operations
 
 ## Testing Strategy
 
-### Unit Tests
-- `tests/unit/spec_governance/test_validator.py` - Validation logic
-- `tests/unit/spec_governance/test_remediator.py` - Remediation logic
-- `tests/unit/spec_governance/test_similarity.py` - Duplicate detection
+### Unit Testing
+- Component isolation with dependency injection
+- Mock external dependencies
+- Test coverage >90% for all core components
+- Property-based testing for complex business logic
 
-### Integration Tests
-- `tests/integration/spec_governance/test_full_workflow.py` - End-to-end validation and remediation
-- `tests/integration/spec_governance/test_git_hooks.py` - Pre-commit hook testing
+### Integration Testing
+- Database integration testing with test containers
+- External API integration testing with mock servers
+- Message queue integration testing
+- End-to-end workflow testing
 
-### Test Fixtures
-- `tests/fixtures/specs/` - Sample spec directories (complete, incomplete, with-extras)
+### Performance Testing
+- Load testing with realistic traffic patterns
+- Stress testing to identify breaking points
+- Endurance testing for long-running operations
+- Scalability testing with increasing load
 
----
+## Deployment Strategy
 
-## Monitoring and Observability
+### Containerization
+- Docker containers for all services
+- Multi-stage builds for optimized images
+- Health checks and readiness probes
+- Resource limits and requests
 
-Implements ReflectiveModule for systematic observability:
+### Orchestration
+- Kubernetes deployment with Helm charts
+- Service mesh (Istio) for service communication
+- Auto-scaling based on metrics
+- Rolling updates with zero downtime
 
-**Metrics:**
-- `spec_governance.validation.duration` - Time to validate all specs
-- `spec_governance.validation.failures` - Count of validation failures
-- `spec_governance.remediation.operations` - Count of auto-fix operations
-- `spec_governance.specs.total` - Total spec count
-- `spec_governance.specs.complete` - Complete spec count (%)
-
-**Logging:**
-- Structured logs with spec name, operation, result
-- Integration with Beast Mode logging framework
-
----
-
-## Migration Plan
-
-### Phase 1: Foundation (Days 1-3)
-- Implement Validator, Reporter, Registry
-- Create CLI with validate and report commands
-- Generate initial report on current state
-
-### Phase 2: Remediation (Days 4-6)
-- Implement Remediator
-- Add auto-fix capabilities
-- Test on subset of specs
-
-### Phase 3: Prevention (Days 7-9)
-- Implement Template Generator
-- Add git hooks
-- Update Makefile
-
-### Phase 4: Advanced (Days 10-14)
-- Implement similarity detection
-- Add consolidation workflows
-- Write documentation
+### Monitoring and Observability
+- Distributed tracing with Jaeger
+- Centralized logging with ELK stack
+- Prometheus metrics collection
+- Grafana dashboards for visualization
 
 ---
 
-## Future Enhancements
-
-- **AI-assisted consolidation:** Use LLM to suggest requirement merges
-- **Visual spec browser:** Web UI for exploring spec relationships
-- **Automated archival:** Auto-archive specs with no git activity in 90 days
-- **Spec dependency graph:** Visualize inter-spec dependencies
-- **Quality scoring:** Numeric quality scores based on completeness, freshness, usage
+**Generated:** 2025-10-06T09:44:58.851101
+**Phase:** 3 (Design Development)
+**Layer:** Foundation (Layer 1)
+**Status:** Complete

@@ -1,169 +1,191 @@
 #!/usr/bin/env python3
 """
 Single Prompt Execution Test
-
-Tests end-to-end execution with one prompt to validate:
-- Claude CLI integration
-- Subprocess execution
-- stdin handling
-- stdout/stderr capture
-- Status tracking
-- File logging
-
-Usage: python scripts/test_single_prompt.py
+Tests actual Claude CLI execution with one prompt
 """
 
 import asyncio
-import json
+import subprocess
 import sys
+import time
 from pathlib import Path
-from datetime import datetime
+from typing import Dict, Any
 
-
-async def test_single_prompt():
-    """Execute single prompt and validate results"""
-
-    print("=" * 80)
-    print("SINGLE PROMPT EXECUTION TEST")
-    print("=" * 80)
-
-    # Configuration
-    test_prompt = "phase-1a-constellation-inventory"
-    prompts_dir = Path("prompts/staging")
-    prompt_file = prompts_dir / f"{test_prompt}.md"
-
-    # Output configuration
-    logs_dir = Path(".kiro/test-execution-logs")
-    logs_dir.mkdir(parents=True, exist_ok=True)
-
-    output_file = logs_dir / f"{test_prompt}.out"
-    error_file = logs_dir / f"{test_prompt}.err"
-    status_file = Path(".kiro/test-execution-status.json")
-
-    # Verify prompt exists
+async def test_single_prompt_execution(prompt_path: str) -> Dict[str, Any]:
+    """Test executing a single prompt with Claude CLI"""
+    
+    print(f"🧪 Testing Single Prompt Execution")
+    print(f"📄 Prompt: {prompt_path}")
+    print("=" * 50)
+    
+    # Validate prompt file exists
+    prompt_file = Path(prompt_path)
     if not prompt_file.exists():
-        print(f"❌ Prompt file not found: {prompt_file}")
-        return False
-
-    print(f"\n📝 Test Prompt: {test_prompt}")
-    print(f"📂 Prompt File: {prompt_file}")
-    print(f"📊 Output File: {output_file}")
-    print(f"📊 Error File: {error_file}")
-    print(f"📊 Status File: {status_file}")
-
-    # Initialize status
-    status = {
-        "execution_id": f"test-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
-        "started_at": datetime.now().isoformat(),
-        "status": "running",
-        "prompt": test_prompt,
-        "prompt_file": str(prompt_file),
-        "output_file": str(output_file),
-        "error_file": str(error_file),
-    }
-
-    with open(status_file, 'w') as f:
-        json.dump(status, f, indent=2)
-
-    print("\n🚀 Starting execution...")
-    print("⏱️  This will take 2-3 hours for constellation inventory prompt")
-    print("💡 You can monitor progress by checking the output file:")
-    print(f"   tail -f {output_file}\n")
-
-    start_time = datetime.now()
-
+        print(f"❌ Prompt file not found: {prompt_path}")
+        return {"status": "failed", "error": "File not found"}
+    
+    print(f"✅ Prompt file exists ({prompt_file.stat().st_size} bytes)")
+    
+    # Prepare output files
+    output_dir = Path("logs/test_execution")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    prompt_name = prompt_file.stem
+    stdout_file = output_dir / f"{prompt_name}_stdout.log"
+    stderr_file = output_dir / f"{prompt_name}_stderr.log"
+    
+    print(f"📝 Output will be saved to:")
+    print(f"   stdout: {stdout_file}")
+    print(f"   stderr: {stderr_file}")
+    
+    # Test Claude CLI availability
+    print("\n🔍 Testing Claude CLI availability...")
     try:
-        # Execute Claude with prompt
+        result = subprocess.run(
+            ["claude", "--version"],
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+        if result.returncode == 0:
+            print(f"✅ Claude CLI available: {result.stdout.strip()}")
+        else:
+            print(f"⚠️  Claude CLI version check returned {result.returncode}")
+            print(f"   stderr: {result.stderr}")
+    except subprocess.TimeoutExpired:
+        print("❌ Claude CLI version check timed out")
+        return {"status": "failed", "error": "Claude CLI timeout"}
+    except FileNotFoundError:
+        print("❌ Claude CLI not found in PATH")
+        return {"status": "failed", "error": "Claude CLI not found"}
+    except Exception as e:
+        print(f"❌ Claude CLI test failed: {e}")
+        return {"status": "failed", "error": str(e)}
+    
+    # Execute the prompt
+    print(f"\n🚀 Executing prompt with Claude CLI...")
+    print(f"   Command: claude < {prompt_path}")
+    
+    start_time = time.time()
+    
+    try:
         with open(prompt_file, 'r') as stdin_file:
-            with open(output_file, 'w') as stdout_file:
-                with open(error_file, 'w') as stderr_file:
-                    print(f"🔄 Executing: claude < {prompt_file}")
-                    print(f"⏰ Started: {start_time.strftime('%H:%M:%S')}\n")
-
-                    proc = await asyncio.create_subprocess_exec(
+            with open(stdout_file, 'w') as stdout_f:
+                with open(stderr_file, 'w') as stderr_f:
+                    
+                    process = await asyncio.create_subprocess_exec(
                         "claude",
                         stdin=stdin_file,
-                        stdout=stdout_file,
-                        stderr=stderr_file,
+                        stdout=stdout_f,
+                        stderr=stderr_f
                     )
-
-                    # Wait for completion
-                    returncode = await proc.wait()
-
-        end_time = datetime.now()
-        duration = (end_time - start_time).total_seconds() / 60
-
-        # Update status
-        status["completed_at"] = end_time.isoformat()
-        status["duration_min"] = duration
-        status["returncode"] = returncode
-        status["status"] = "completed" if returncode == 0 else "failed"
-
-        with open(status_file, 'w') as f:
-            json.dump(status, f, indent=2)
-
-        print("\n" + "=" * 80)
-        print("EXECUTION COMPLETE")
-        print("=" * 80)
-        print(f"⏱️  Duration: {duration:.1f} minutes ({duration/60:.1f} hours)")
-        print(f"🔄 Return Code: {returncode}")
-        print(f"📊 Status: {status['status']}")
-
-        # Check outputs
-        output_size = output_file.stat().st_size if output_file.exists() else 0
-        error_size = error_file.stat().st_size if error_file.exists() else 0
-
-        print(f"\n📂 Output File: {output_file} ({output_size:,} bytes)")
-        print(f"📂 Error File: {error_file} ({error_size:,} bytes)")
-
-        if returncode == 0:
-            print("\n✅ TEST PASSED")
-            print("\n📝 Next steps:")
-            print("  1. Review output file to validate content")
-            print("  2. Check that expected artifacts were created")
-            print("  3. If satisfied, proceed with parallel execution")
-            return True
-        else:
-            print("\n❌ TEST FAILED")
-            print("\n📝 Check error file for details:")
-            print(f"   cat {error_file}")
-            return False
-
+                    
+                    print(f"   Process started (PID: {process.pid})")
+                    print("   Waiting for completion...")
+                    
+                    # Wait for completion with timeout
+                    try:
+                        return_code = await asyncio.wait_for(
+                            process.wait(), 
+                            timeout=3600  # 1 hour timeout
+                        )
+                    except asyncio.TimeoutError:
+                        print("❌ Execution timed out (1 hour)")
+                        process.terminate()
+                        await process.wait()
+                        return {"status": "timeout", "error": "Execution timeout"}
+    
     except Exception as e:
-        end_time = datetime.now()
-        duration = (end_time - start_time).total_seconds() / 60
+        print(f"❌ Execution failed: {e}")
+        return {"status": "failed", "error": str(e)}
+    
+    end_time = time.time()
+    execution_time = end_time - start_time
+    
+    # Check results
+    print(f"\n📊 Execution Results:")
+    print(f"   Return code: {return_code}")
+    print(f"   Execution time: {execution_time:.1f}s")
+    
+    # Check output files
+    stdout_size = stdout_file.stat().st_size if stdout_file.exists() else 0
+    stderr_size = stderr_file.stat().st_size if stderr_file.exists() else 0
+    
+    print(f"   stdout size: {stdout_size} bytes")
+    print(f"   stderr size: {stderr_size} bytes")
+    
+    # Show first few lines of output
+    if stdout_size > 0:
+        print(f"\n📄 First 10 lines of stdout:")
+        with open(stdout_file, 'r') as f:
+            lines = f.readlines()[:10]
+            for i, line in enumerate(lines, 1):
+                print(f"   {i:2d}: {line.rstrip()}")
+        
+        if len(lines) == 10:
+            print(f"   ... ({len(open(stdout_file).readlines()) - 10} more lines)")
+    
+    if stderr_size > 0:
+        print(f"\n⚠️  stderr content:")
+        with open(stderr_file, 'r') as f:
+            stderr_content = f.read()
+            print(f"   {stderr_content}")
+    
+    # Determine success
+    if return_code == 0 and stdout_size > 0:
+        print(f"\n✅ SUCCESS: Prompt executed successfully")
+        status = "success"
+    elif return_code != 0:
+        print(f"\n❌ FAILED: Non-zero return code ({return_code})")
+        status = "failed"
+    elif stdout_size == 0:
+        print(f"\n⚠️  WARNING: No output generated")
+        status = "warning"
+    else:
+        print(f"\n❓ UNKNOWN: Unexpected result")
+        status = "unknown"
+    
+    return {
+        "status": status,
+        "return_code": return_code,
+        "execution_time": execution_time,
+        "stdout_file": str(stdout_file),
+        "stderr_file": str(stderr_file),
+        "stdout_size": stdout_size,
+        "stderr_size": stderr_size
+    }
 
-        status["completed_at"] = end_time.isoformat()
-        status["duration_min"] = duration
-        status["status"] = "failed"
-        status["error"] = str(e)
-
-        with open(status_file, 'w') as f:
-            json.dump(status, f, indent=2)
-
-        print(f"\n❌ EXECUTION FAILED: {e}")
-        import traceback
-        traceback.print_exc()
-        return False
-
-
-def main():
-    """Run single prompt test"""
-    print("🧪 Single Prompt Execution Test\n")
-    print("This test will:")
-    print("  1. Execute phase-1a-constellation-inventory.md")
-    print("  2. Capture output to .kiro/test-execution-logs/")
-    print("  3. Track status in .kiro/test-execution-status.json")
-    print("  4. Validate end-to-end execution works\n")
-
-    response = input("⚠️  This will take 2-3 hours. Continue? [y/N]: ")
-    if response.lower() != 'y':
-        print("❌ Test cancelled")
+async def main():
+    """Main test runner"""
+    
+    # Default to a simple existing prompt
+    default_prompt = "prompts/staging/phase-1b1-stakeholder-extraction.md"
+    
+    if len(sys.argv) > 1:
+        prompt_path = sys.argv[1]
+    else:
+        prompt_path = default_prompt
+        print(f"No prompt specified, using default: {prompt_path}")
+    
+    result = await test_single_prompt_execution(prompt_path)
+    
+    print("\n" + "=" * 50)
+    print("🏁 TEST SUMMARY")
+    print("=" * 50)
+    
+    if result["status"] == "success":
+        print("✅ Single prompt execution test PASSED")
+        print("🚀 Ready for parallel execution testing")
+        return 0
+    elif result["status"] == "warning":
+        print("⚠️  Single prompt execution test completed with warnings")
+        print("🔍 Review output files and investigate")
         return 1
-
-    result = asyncio.run(test_single_prompt())
-    return 0 if result else 1
-
+    else:
+        print("❌ Single prompt execution test FAILED")
+        print("🛠️  Fix issues before proceeding")
+        return 2
 
 if __name__ == "__main__":
-    sys.exit(main())
+    exit_code = asyncio.run(main())
+    sys.exit(exit_code)

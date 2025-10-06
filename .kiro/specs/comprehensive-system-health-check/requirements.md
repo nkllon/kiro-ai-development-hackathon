@@ -1,156 +1,193 @@
 # Comprehensive System Health Check Requirements
 
-## Introduction
+## Overview
 
-This specification defines a comprehensive diagnostic assessment system for all running systems, services, and components. The system provides complete visibility into operational status, identifies issues requiring immediate attention, and establishes baselines for ongoing monitoring and maintenance.
+Comprehensive System Health Check is a Foundation Layer (Layer 1) specification that provides core infrastructure and foundational services for the constellation. This specification builds upon the Bootstrap Layer to deliver essential capabilities that enable higher-level intelligence and application layers.
 
-## Requirements
+**Single Responsibility:** Provide core infrastructure services and foundational capabilities for constellation operation.
 
-### Requirement 1: Infrastructure Health Assessment
+**Constellation Layer:** Foundation (Layer 1)
 
-**User Story:** As a system administrator, I want complete visibility into all infrastructure components, so that I can quickly identify what's working, what's broken, and what needs immediate attention.
+**Constellation Role:** Delivers essential infrastructure services that support Intelligence and Application layers.
 
-#### Acceptance Criteria
+## Stakeholder Requirements
 
-1. WHEN infrastructure health check runs THEN it SHALL assess Docker services, containers, and compose stacks with complete status reporting
-2. WHEN port availability is checked THEN it SHALL verify all critical service ports (8888, 3000, 9090, 6379) and report binding status
-3. WHEN network connectivity is tested THEN it SHALL verify both internal service communication and external endpoint accessibility
-4. WHEN service processes are scanned THEN it SHALL identify all running Python processes, Docker containers, and system services
-5. WHEN infrastructure assessment completes THEN it SHALL generate a structured report with health status for each component
-6. WHEN critical services are down THEN it SHALL provide specific remediation guidance and escalation procedures
-7. WHEN infrastructure dependencies are checked THEN it SHALL verify service interconnections and data flow paths
-8. WHEN infrastructure health changes THEN it SHALL detect and report configuration drift or unexpected modifications
+### System Architects: Infrastructure Design
 
-### Requirement 2: Application Health Monitoring
+Key stakeholder responsible for designing scalable and maintainable infrastructure architecture.
 
-**User Story:** As a DevOps engineer, I want detailed application health status across all deployed services, so that I can ensure optimal performance and availability.
+### Platform Engineers: Service Reliability
 
-#### Acceptance Criteria
+Key stakeholder focused on ensuring reliable and performant platform services.
 
-1. WHEN Observatory platform status is checked THEN it SHALL verify core functionality, WebSocket endpoints, and health metrics
-2. WHEN monitoring stack health is assessed THEN it SHALL validate Prometheus targets, Grafana datasources, and Redis connectivity
-3. WHEN WebSocket infrastructure is tested THEN it SHALL verify connection establishment, message handling, and proxy configuration
-4. WHEN application endpoints are validated THEN it SHALL test HTTP responses, API functionality, and service integration points
-5. WHEN application logs are analyzed THEN it SHALL identify error patterns, performance issues, and operational anomalies
-6. WHEN application health scoring is calculated THEN it SHALL provide weighted scores based on criticality and functionality
-7. WHEN application dependencies are verified THEN it SHALL ensure all required services and resources are available
-8. WHEN application performance is measured THEN it SHALL capture response times, throughput, and resource utilization metrics
-### Requirement 3: Development Environment Validation
+### Security Engineers: Infrastructure Security
 
-**User Story:** As a developer, I want comprehensive validation of the development environment, so that I can ensure all tools and dependencies are properly configured and functional.
+Key stakeholder responsible for securing foundational infrastructure components.
 
-#### Acceptance Criteria
+## Functional Requirements
 
-1. WHEN Python environment is checked THEN it SHALL verify virtual environment activation, package installations, and import capabilities
-2. WHEN MCP server health is assessed THEN it SHALL validate server processes, connectivity, and functionality across all configured servers
-3. WHEN critical imports are tested THEN it SHALL verify ReflectiveModule, DeploymentAuditor, and other core framework components
-4. WHEN development tools are validated THEN it SHALL check version compatibility, configuration correctness, and operational status
-5. WHEN file system health is assessed THEN it SHALL monitor disk space, identify large files, and detect stuck processes
-6. WHEN development dependencies are verified THEN it SHALL ensure all required libraries, tools, and services are available
-7. WHEN environment configuration is checked THEN it SHALL validate environment variables, configuration files, and system settings
-8. WHEN development workflow is tested THEN it SHALL verify build processes, test execution, and deployment capabilities
+### Core Foundation Capabilities
 
-### Requirement 4: Recent Activity Analysis
+#### R1.1: Service Infrastructure
+**User Story:** As a platform engineer, I want reliable service infrastructure, so that higher-level applications can operate dependably.
 
-**User Story:** As a system analyst, I want detailed analysis of recent system activity, so that I can understand current operational patterns and identify potential issues.
+**22-Dimension Mapping:**
+- **Dimension 13 (Integration Patterns):** Service mesh and API gateway integration
+- **Dimension 14 (Monitoring & Observability):** Comprehensive service monitoring
+- **Dimension 15 (Testing Strategy):** Infrastructure testing and validation
+- **Dimension 16 (Security & Privacy):** Service-to-service security
+- **Dimension 17 (Performance & Scalability):** Auto-scaling and load balancing
 
-#### Acceptance Criteria
+**Acceptance Criteria:**
+- [ ] Services are automatically discovered and registered
+- [ ] Health checks monitor service availability
+- [ ] Load balancing distributes traffic efficiently
+- [ ] Service mesh provides secure communication
+- [ ] Metrics and logs are centrally collected
 
-1. WHEN recent changes are analyzed THEN it SHALL identify file modifications, git activity, and system updates within the last 24 hours
-2. WHEN process activity is reviewed THEN it SHALL track service startups, shutdowns, and resource usage patterns
-3. WHEN log analysis is performed THEN it SHALL scan for errors, warnings, and anomalous patterns across all system logs
-4. WHEN system events are correlated THEN it SHALL identify relationships between changes, errors, and performance impacts
-5. WHEN activity trends are calculated THEN it SHALL provide insights into system usage patterns and capacity requirements
-6. WHEN recent deployments are assessed THEN it SHALL verify deployment success, configuration changes, and service stability
-7. WHEN user activity is tracked THEN it SHALL monitor administrative actions, configuration changes, and system interactions
-8. WHEN activity reporting is generated THEN it SHALL provide actionable insights for system optimization and issue prevention
+#### R1.2: Data Management
+**User Story:** As a system architect, I want robust data management, so that data is consistent, available, and secure across the constellation.
 
-### Requirement 5: Configuration Validation and Compliance
+**22-Dimension Mapping:**
+- **Dimension 16 (Security & Privacy):** Data encryption and access controls
+- **Dimension 17 (Performance & Scalability):** Database optimization and sharding
+- **Dimension 18 (User Experience):** Fast data access and retrieval
+- **Dimension 19 (Compliance & Governance):** Data governance and compliance
+- **Dimension 20 (Documentation):** Data schema and API documentation
 
-**User Story:** As a configuration manager, I want comprehensive validation of all system configurations, so that I can ensure compliance with standards and prevent configuration drift.
+**Acceptance Criteria:**
+- [ ] Data is encrypted at rest and in transit
+- [ ] Database backups are automated and tested
+- [ ] Data access is controlled through RBAC
+- [ ] Performance metrics meet SLA requirements
+- [ ] Data schemas are versioned and documented
 
-#### Acceptance Criteria
+### Integration Requirements
 
-1. WHEN Docker Compose configurations are validated THEN it SHALL verify syntax correctness, service definitions, and network configurations
-2. WHEN Nginx configurations are checked THEN it SHALL validate proxy settings, SSL configurations, and routing rules
-3. WHEN Cloudflare tunnel configurations are assessed THEN it SHALL verify tunnel definitions, routing rules, and connectivity settings
-4. WHEN environment variables are validated THEN it SHALL check required variables, security compliance, and configuration completeness
-5. WHEN configuration files are compared THEN it SHALL detect drift from baseline configurations and unauthorized changes
-6. WHEN security configurations are audited THEN it SHALL verify access controls, encryption settings, and compliance requirements
-7. WHEN configuration dependencies are validated THEN it SHALL ensure all referenced resources and services are available
-8. WHEN configuration changes are tracked THEN it SHALL maintain audit trails and provide rollback capabilities
+#### R2.1: API Gateway
+**User Story:** As a platform engineer, I want a centralized API gateway, so that all service communication is secure, monitored, and controlled.
 
-### Requirement 6: Health Report Generation and Action Planning
+**Acceptance Criteria:**
+- [ ] All external API access goes through the gateway
+- [ ] Rate limiting prevents abuse
+- [ ] Authentication and authorization are enforced
+- [ ] API metrics are collected and analyzed
+- [ ] API documentation is automatically generated
 
-**User Story:** As a system operator, I want comprehensive health reports with clear action plans, so that I can prioritize and address system issues effectively.
+#### R2.2: Service Discovery
+**User Story:** As a developer, I want automatic service discovery, so that services can find and communicate with each other without hardcoded endpoints.
 
-#### Acceptance Criteria
+**Acceptance Criteria:**
+- [ ] Services register themselves automatically
+- [ ] Service health is continuously monitored
+- [ ] Failed services are removed from discovery
+- [ ] Load balancing is integrated with discovery
+- [ ] Service dependencies are tracked
 
-1. WHEN health assessment completes THEN it SHALL generate a structured report with component status, issue severity, and recommended actions
-2. WHEN issues are prioritized THEN it SHALL classify problems as critical, warning, or informational with clear escalation guidance
-3. WHEN service inventory is created THEN it SHALL provide complete listings of all running services with health status and dependencies
-4. WHEN action plans are generated THEN it SHALL provide specific, actionable steps for addressing identified issues
-5. WHEN monitoring baselines are established THEN it SHALL capture current performance metrics for ongoing comparison
-6. WHEN health trends are analyzed THEN it SHALL identify patterns that indicate improving or degrading system health
-7. WHEN compliance status is reported THEN it SHALL verify adherence to operational standards and security requirements
-8. WHEN health reports are distributed THEN it SHALL provide appropriate detail levels for different stakeholder audiences
+## Non-Functional Requirements
 
-### Requirement 7: Automated Issue Detection and Classification
+### Performance Requirements
+- API response times under 100ms for 95th percentile
+- Database queries complete within 50ms average
+- Service startup time under 30 seconds
+- System can handle 10,000 concurrent requests
 
-**User Story:** As a reliability engineer, I want automated detection and classification of system issues, so that problems are identified quickly and handled appropriately.
+### Security Requirements
+- All inter-service communication is encrypted
+- Authentication tokens expire within 1 hour
+- Access logs are retained for 90 days
+- Security patches are applied within 48 hours
 
-#### Acceptance Criteria
+### Reliability Requirements
+- System uptime of 99.9% or higher
+- Automatic failover within 30 seconds
+- Data backup recovery time under 4 hours
+- Zero-downtime deployments for updates
 
-1. WHEN system scanning occurs THEN it SHALL automatically detect service failures, performance degradation, and configuration issues
-2. WHEN issues are classified THEN it SHALL categorize problems by type, severity, impact, and required response time
-3. WHEN error patterns are analyzed THEN it SHALL identify recurring issues, root causes, and systemic problems
-4. WHEN issue correlation is performed THEN it SHALL link related problems and identify cascade failure patterns
-5. WHEN automated triage is executed THEN it SHALL prioritize issues based on business impact and system criticality
-6. WHEN issue tracking is maintained THEN it SHALL provide complete audit trails and resolution status
-7. WHEN escalation criteria are evaluated THEN it SHALL determine when human intervention is required
-8. WHEN issue resolution is verified THEN it SHALL confirm that problems are fully resolved and systems are stable
+## Quality Attributes
 
-### Requirement 8: Performance Monitoring and Optimization
+### Scalability
+- Horizontal scaling based on demand
+- Auto-scaling policies for all services
+- Database sharding for large datasets
+- CDN integration for static content
 
-**User Story:** As a performance engineer, I want detailed performance monitoring and optimization recommendations, so that I can maintain optimal system performance.
+### Maintainability
+- Infrastructure as code for all components
+- Automated testing for infrastructure changes
+- Clear documentation for all services
+- Standardized deployment procedures
 
-#### Acceptance Criteria
+### Observability
+- Distributed tracing across all services
+- Centralized logging with structured formats
+- Real-time metrics and alerting
+- Performance dashboards for all stakeholders
 
-1. WHEN performance metrics are collected THEN it SHALL capture response times, throughput, resource utilization, and error rates
-2. WHEN performance baselines are established THEN it SHALL define normal operating ranges for all critical metrics
-3. WHEN performance anomalies are detected THEN it SHALL identify deviations from baseline and potential causes
-4. WHEN bottlenecks are identified THEN it SHALL pinpoint resource constraints and performance limiting factors
-5. WHEN optimization opportunities are analyzed THEN it SHALL recommend specific improvements for performance enhancement
-6. WHEN performance trends are tracked THEN it SHALL identify long-term patterns and capacity planning requirements
-7. WHEN performance alerts are generated THEN it SHALL provide early warning of degrading performance conditions
-8. WHEN performance reports are created THEN it SHALL provide actionable insights for system optimization
+## Constraints
 
-### Requirement 9: Security and Compliance Assessment
+### Technical Constraints
+- Must integrate with existing security infrastructure
+- Must support multiple deployment environments
+- Must comply with data residency requirements
+- Must work within existing network topology
 
-**User Story:** As a security officer, I want comprehensive security and compliance assessment, so that I can ensure system security and regulatory compliance.
+### Business Constraints
+- Infrastructure costs must remain within budget
+- Must support existing SLA commitments
+- Must not disrupt existing services during deployment
+- Must provide migration path from legacy systems
 
-#### Acceptance Criteria
+## Dependencies
 
-1. WHEN security configurations are audited THEN it SHALL verify access controls, authentication mechanisms, and authorization policies
-2. WHEN vulnerability scanning is performed THEN it SHALL identify security weaknesses, outdated components, and configuration risks
-3. WHEN compliance checks are executed THEN it SHALL verify adherence to security standards, policies, and regulatory requirements
-4. WHEN security monitoring is active THEN it SHALL detect unauthorized access attempts, suspicious activities, and security incidents
-5. WHEN security baselines are maintained THEN it SHALL track security posture changes and configuration drift
-6. WHEN security reports are generated THEN it SHALL provide clear security status and remediation recommendations
-7. WHEN incident response is triggered THEN it SHALL provide security incident classification and response procedures
-8. WHEN security training is assessed THEN it SHALL identify security awareness gaps and training requirements
+### External Dependencies
+- Cloud provider infrastructure (AWS, GCP, Azure)
+- Container orchestration platform (Kubernetes)
+- Service mesh technology (Istio, Linkerd)
+- Monitoring and observability stack (Prometheus, Grafana)
 
-### Requirement 10: Integration and Extensibility Framework
+### Internal Dependencies
+- Bootstrap Layer setup and configuration
+- Security and credential management systems
+- Network infrastructure and connectivity
+- Backup and disaster recovery systems
 
-**User Story:** As a system architect, I want a flexible framework that integrates with existing systems and supports future extensions, so that the health check system can evolve with changing requirements.
+## Success Criteria
 
-#### Acceptance Criteria
+- [ ] All foundation services are deployed and operational
+- [ ] Service discovery and registration work correctly
+- [ ] API gateway handles all external traffic
+- [ ] Monitoring and alerting are fully functional
+- [ ] Security controls are properly implemented
+- [ ] Performance requirements are met
+- [ ] Documentation is complete and accurate
 
-1. WHEN health check modules are added THEN it SHALL support pluggable architecture for new assessment capabilities
-2. WHEN existing systems are integrated THEN it SHALL work with current monitoring, logging, and alerting infrastructure
-3. WHEN data formats are standardized THEN it SHALL use consistent schemas for health data exchange and reporting
-4. WHEN APIs are provided THEN it SHALL offer programmatic access to health data and assessment capabilities
-5. WHEN extensibility is supported THEN it SHALL allow custom health checks, metrics, and reporting formats
-6. WHEN integration points are maintained THEN it SHALL provide stable interfaces for external system connectivity
-7. WHEN backward compatibility is preserved THEN it SHALL maintain compatibility with existing health monitoring tools
-8. WHEN future enhancements are planned THEN it SHALL support evolutionary architecture and incremental improvements
+## Validation Methods
+
+### Automated Testing
+- Infrastructure provisioning tests
+- Service integration tests
+- Performance and load tests
+- Security penetration tests
+- Disaster recovery tests
+
+### Manual Testing
+- End-to-end workflow validation
+- Security audit and compliance review
+- Performance benchmarking
+- Documentation accuracy verification
+
+## Traceability
+
+This requirements specification addresses:
+- Foundation Layer requirements from constellation inventory
+- Infrastructure stakeholder needs from stakeholder analysis
+- Core service requirements for constellation operation
+- 22-dimension ontology coverage for comprehensive requirements
+
+---
+
+**Generated:** 2025-10-06T09:35:09.818832
+**Phase:** 2 (Requirements Elaboration)
+**Layer:** Foundation (Layer 1)
+**Status:** Complete

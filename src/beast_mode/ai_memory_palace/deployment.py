@@ -23,7 +23,7 @@ import yaml
 import logging
 
 from src.beast_mode.core.beastly_module import BeastlyModule
-from .storage import ContextStorage
+from .storage import ContextDatabase
 from .context_registry import ContextRegistry
 from .context_manager import ContextManager
 from .backup_recovery import ContextBackupManager
@@ -426,7 +426,7 @@ class ConfigurationManager(BeastlyModule):
 class DatabaseMigrationManager(BeastlyModule):
     """Manages database schema migrations"""
     
-    def __init__(self, storage: ContextStorage):
+    def __init__(self, storage: ContextDatabase):
         super().__init__()
         
         self.storage = storage
@@ -915,7 +915,7 @@ class DeploymentOrchestrator(BeastlyModule):
         try:
             # Initialize storage for migrations
             storage_dir = Path(self.config.storage_directory).expanduser()
-            storage = ContextStorage(storage_dir)
+            storage = ContextDatabase(storage_dir)
             
             # Run migrations
             migration_manager = DatabaseMigrationManager(storage)
@@ -932,7 +932,7 @@ class DeploymentOrchestrator(BeastlyModule):
         try:
             # Initialize storage
             storage_dir = Path(self.config.storage_directory).expanduser()
-            storage = ContextStorage(storage_dir)
+            storage = ContextDatabase(storage_dir)
             components_result["storage"] = True
             
             # Initialize registry
@@ -1011,7 +1011,7 @@ class DeploymentOrchestrator(BeastlyModule):
             
             # Check database connectivity
             try:
-                storage = ContextStorage(storage_dir)
+                storage = ContextDatabase(storage_dir)
                 test_context = storage.load_context("test_project", "test_session")
                 verification_result["checks"]["database_accessible"] = True
             except Exception as e:
@@ -1125,14 +1125,14 @@ class DeploymentCLI:
     def migrate(self, dry_run: bool = False) -> Dict[str, Any]:
         """Run database migrations"""
         storage_dir = Path(self.config_manager.config.storage_directory).expanduser()
-        storage = ContextStorage(storage_dir)
+        storage = ContextDatabase(storage_dir)
         migration_manager = DatabaseMigrationManager(storage)
         return migration_manager.apply_migrations(dry_run=dry_run)
     
     def migration_status(self) -> Dict[str, Any]:
         """Get migration status"""
         storage_dir = Path(self.config_manager.config.storage_directory).expanduser()
-        storage = ContextStorage(storage_dir)
+        storage = ContextDatabase(storage_dir)
         migration_manager = DatabaseMigrationManager(storage)
         return migration_manager.get_migration_status()
     
