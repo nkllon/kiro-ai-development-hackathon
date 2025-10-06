@@ -24,7 +24,7 @@ from src.beast_mode.core.beastly_module import BeastlyModule
 from .models import SessionContext, ContextEvent, ContextEventType, Decision, WorkItem
 from .context_manager import ContextManager
 from .context_registry import ContextRegistry
-from .storage import ContextStorage
+from .storage import ContextDatabase
 
 
 class AnalyticsMetricType(Enum):

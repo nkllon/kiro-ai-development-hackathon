@@ -6,6 +6,18 @@ Provides automatic context updates when tasks are marked complete and
 implements spec state synchronization with context registry.
 """
 
+class SystemDiscovery:
+    """Simple system discovery for spec integration"""
+    
+    @staticmethod
+    def discover_project_structure():
+        """Discover basic project structure"""
+        return {
+            'project_root': '.',
+            'specs_dir': '.kiro/specs',
+            'src_dir': 'src'
+        }
+
 import json
 import os
 import re
@@ -20,7 +32,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 from src.beast_mode.core.beastly_module import BeastlyModule
-from .models import SessionContext, ContextEvent, ContextEventType, Decision, WorkItem, SystemDiscovery
+from .models import SessionContext, ContextEvent, ContextEventType, Decision, WorkItem
 from .context_manager import ContextManager
 from .context_registry import ContextRegistry
 from .multi_project_manager import MultiProjectContextManager

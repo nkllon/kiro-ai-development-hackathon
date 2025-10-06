@@ -1,0 +1,167 @@
+{
+  "timestamp": "2025-10-05T21:59:34.975248+00:00",
+  "overall_valid": true,
+  "components": {
+    "dag_structure": {
+      "valid": true,
+      "errors": [],
+      "warnings": [],
+      "statistics": {
+        "max_parallelization": 8,
+        "total_levels": 1,
+        "critical_path_duration_minutes": 1500,
+        "sequential_duration_minutes": 3165,
+        "parallel_duration_minutes": 1500,
+        "time_savings_minutes": 1665,
+        "efficiency_gain_percent": 52.60663507109005
+      },
+      "analysis": {
+        "execution_levels": {
+          "0": [
+            "phase-4-bootstrap-tasks",
+            "phase-5d-stakeholder-validation",
+            "phase-4-foundation-tasks",
+            "phase-1d-ontology-gap-analysis",
+            "phase-1c-cms-dependency-discovery",
+            "phase-4-intelligence-tasks",
+            "phase-1b-stakeholder-landscape-mapping",
+            "phase-4-application-tasks"
+          ]
+        },
+        "critical_path": [
+          "phase-1a-constellation-inventory",
+          "phase-2-bootstrap-requirements",
+          "phase-2-foundation-requirements",
+          "phase-2-intelligence-requirements",
+          "phase-2-application-requirements",
+          "phase-5a-cms-requirements-consolidation",
+          "phase-5b-cms-architecture-update",
+          "phase-5c-constellation-cms-mapping",
+          "phase-5d-stakeholder-validation"
+        ],
+        "phases": {
+          "Phase 1: Discovery": {
+            "tasks": [
+              "phase-1a-constellation-inventory",
+              "phase-1b-stakeholder-landscape-mapping",
+              "phase-1c-cms-dependency-discovery",
+              "phase-1d-ontology-gap-analysis"
+            ],
+            "duration_minutes": 465,
+            "task_count": 4
+          },
+          "Phase 2: Requirements": {
+            "tasks": [
+              "phase-2-bootstrap-requirements",
+              "phase-2-foundation-requirements",
+              "phase-2-intelligence-requirements",
+              "phase-2-application-requirements"
+            ],
+            "duration_minutes": 900,
+            "task_count": 4
+          },
+          "Phase 3: Design": {
+            "tasks": [
+              "phase-3-bootstrap-designs",
+              "phase-3-foundation-designs",
+              "phase-3-intelligence-designs",
+              "phase-3-application-designs"
+            ],
+            "duration_minutes": 750,
+            "task_count": 4
+          },
+          "Phase 4: Tasks": {
+            "tasks": [
+              "phase-4-bootstrap-tasks",
+              "phase-4-foundation-tasks",
+              "phase-4-intelligence-tasks",
+              "phase-4-application-tasks"
+            ],
+            "duration_minutes": 600,
+            "task_count": 4
+          },
+          "Phase 5: Consolidation": {
+            "tasks": [
+              "phase-5a-cms-requirements-consolidation",
+              "phase-5b-cms-architecture-update",
+              "phase-5c-constellation-cms-mapping",
+              "phase-5d-stakeholder-validation"
+            ],
+            "duration_minutes": 450,
+            "task_count": 4
+          }
+        },
+        "resource_utilization": {
+          "average_utilization_percent": 100.0,
+          "max_parallel_tasks": 8,
+          "level_utilization": [
+            {
+              "level": 0,
+              "tasks": 8,
+              "utilization_percent": 100.0
+            }
+          ]
+        }
+      }
+    },
+    "prompt_files": {
+      "valid": true,
+      "missing_files": [],
+      "accessible_files": [
+        "phase-1a-constellation-inventory.md",
+        "phase-1b-stakeholder-landscape-mapping.md",
+        "phase-1c-cms-dependency-discovery.md",
+        "phase-1d-ontology-gap-analysis.md",
+        "phase-2-bootstrap-requirements.md",
+        "phase-2-foundation-requirements.md",
+        "phase-2-intelligence-requirements.md",
+        "phase-2-application-requirements.md",
+        "phase-3-bootstrap-designs.md",
+        "phase-3-foundation-designs.md",
+        "phase-3-intelligence-designs.md",
+        "phase-3-application-designs.md",
+        "phase-4-bootstrap-tasks.md",
+        "phase-4-foundation-tasks.md",
+        "phase-4-intelligence-tasks.md",
+        "phase-4-application-tasks.md",
+        "phase-5a-cms-requirements-consolidation.md",
+        "phase-5b-cms-architecture-update.md",
+        "phase-5c-constellation-cms-mapping.md",
+        "phase-5d-stakeholder-validation.md"
+      ],
+      "file_sizes": {
+        "phase-1a-constellation-inventory.md": 4713,
+        "phase-1b-stakeholder-landscape-mapping.md": 7655,
+        "phase-1c-cms-dependency-discovery.md": 8267,
+        "phase-1d-ontology-gap-analysis.md": 10403,
+        "phase-2-bootstrap-requirements.md": 10191,
+        "phase-2-foundation-requirements.md": 2364,
+        "phase-2-intelligence-requirements.md": 2638,
+        "phase-2-application-requirements.md": 2588,
+        "phase-3-bootstrap-designs.md": 3209,
+        "phase-3-foundation-designs.md": 986,
+        "phase-3-intelligence-designs.md": 1090,
+        "phase-3-application-designs.md": 1074,
+        "phase-4-bootstrap-tasks.md": 2764,
+        "phase-4-foundation-tasks.md": 1141,
+        "phase-4-intelligence-tasks.md": 1090,
+        "phase-4-application-tasks.md": 1106,
+        "phase-5a-cms-requirements-consolidation.md": 6729,
+        "phase-5b-cms-architecture-update.md": 5425,
+        "phase-5c-constellation-cms-mapping.md": 8285,
+        "phase-5d-stakeholder-validation.md": 9276
+      }
+    },
+    "dag_executor": {
+      "valid": true,
+      "errors": [],
+      "warnings": [],
+      "statistics": {
+        "total_tasks": 20,
+        "total_dependencies": 19,
+        "max_parallelization": 4,
+        "execution_levels": 9
+      }
+    }
+  }
+}

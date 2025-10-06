@@ -23,7 +23,9 @@
         "create_directory",
         "move_file",
         "check_path_exists",
-        "check_path_exists"
+        "check_path_exists",
+        "get_directory_tree",
+        "get_directory_tree"
       ],
       "disabledTools": []
     },

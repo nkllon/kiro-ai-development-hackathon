@@ -1,272 +1,389 @@
-# MCP Filesystem Server Fix Design
+# Mcp Filesystem Server Fix Design
 
 ## Overview
 
-This design addresses the systematic resolution of MCP filesystem server configuration issues, focusing on command-line argument compatibility and file system permission handling. The solution ensures full compliance with all four requirements while maintaining compatibility with existing Kiro MCP infrastructure.
-
-## Requirements Alignment
-
-### Requirement 1: Fix Command Line Arguments
-**Design Response**: Configuration Resolver component removes unsupported `--path` argument and implements environment variable-based configuration (MCP_FILESYSTEM_ROOT) to maintain functionality while using supported CLI interface.
-
-### Requirement 2: Resolve File System Permission Issues  
-**Design Response**: Permission Handler component implements multi-tier logging strategy: writable directory locations (/tmp, ~/.cache), graceful degradation to disable file logging, and fallback mechanisms to ensure server functionality regardless of permission constraints.
-
-### Requirement 3: Validate MCP Server Functionality
-**Design Response**: Validation System component provides comprehensive testing of Kiro integration, filesystem operations (list_directory, read_file), and auto-approved tool compatibility through systematic validation procedures.
-
-### Requirement 4: Prevent Configuration Regression
-**Design Response**: Configuration Regression Prevention framework includes documentation templates, compatibility monitoring, diagnostic procedures, and pre-deployment validation to ensure long-term stability and maintainability.
-
-## Root Cause Analysis
-
-### Issue 1: Command Line Arguments
-- **Error**: `unrecognized arguments: --path .`
-- **Cause**: The mcp-filesystem package doesn't support the `--path` argument in the current version
-- **Impact**: Server fails to start, preventing filesystem MCP operations
-
-### Issue 2: File System Permissions
-- **Error**: `OSError: [Errno 30] Read-only file system: '/mcp_filesystem.log'`
-- **Cause**: Server attempts to write log file to root directory which is read-only
-- **Impact**: Server crashes during initialization due to logging setup failure
+This design document outlines the technical architecture and implementation approach for Mcp Filesystem Server Fix, a Foundation Layer (Layer 1) specification that provides core infrastructure and foundational services for the constellation.
 
 ## Architecture
 
-### Configuration Strategy
+### System Architecture
+
+```mermaid
+graph TB
+    A[Service Gateway] --> B[Core Service Layer]
+    A --> C[Data Management Layer]
+    A --> D[Integration Layer]
+    
+    B --> E[Business Logic Services]
+    B --> F[Validation Services]
+    B --> G[Processing Services]
+    
+    C --> H[Data Access Layer]
+    C --> I[Caching Layer]
+    C --> J[Storage Layer]
+    
+    D --> K[External APIs]
+    D --> L[Message Queue]
+    D --> M[Event Bus]
+    
+    E --> N[Health Monitoring]
+    F --> N
+    G --> N
+    H --> N
+    I --> N
+    J --> N
 ```
-MCP Configuration → uvx Execution → mcp-filesystem Server
-                 ↓
-            Environment Variables → Working Directory Setup
-                 ↓
-            Logging Configuration → Writable Directory
+
+### Component Architecture
+
+The system follows a layered architecture with clear separation of concerns:
+
+- **Service Gateway**: Entry point for all requests with routing and authentication
+- **Core Service Layer**: Business logic and processing services
+- **Data Management Layer**: Data access, caching, and storage management
+- **Integration Layer**: External system integration and event handling
+
+## Components
+
+### Core Components
+
+#### 1. Service Gateway
+**Purpose**: Central entry point for all service requests
+**Responsibilities**:
+- Request routing and load balancing
+- Authentication and authorization
+- Rate limiting and throttling
+- Request/response logging and monitoring
+
+**Interface**:
+```python
+class ServiceGateway(ReflectiveModule):
+    def route_request(self, request: ServiceRequest) -> ServiceResponse
+    def authenticate_request(self, request: ServiceRequest) -> AuthResult
+    def apply_rate_limiting(self, request: ServiceRequest) -> RateLimitResult
+    def log_request_response(self, request: ServiceRequest, response: ServiceResponse) -> None
 ```
 
-### Component Design
+#### 2. Core Service Manager
+**Purpose**: Manages core business logic and processing services
+**Responsibilities**:
+- Service lifecycle management
+- Inter-service communication
+- Service health monitoring
+- Configuration management
 
-#### 1. Configuration Resolver
-- **Purpose**: Determine correct mcp-filesystem arguments
-- **Method**: Check package documentation and test valid arguments
-- **Output**: Working MCP server configuration
-
-#### 2. Permission Handler
-- **Purpose**: Ensure logging works within file system constraints
-- **Method**: Use environment variables to control logging location
-- **Output**: Server starts without permission errors
-
-#### 3. Validation System (Requirement 3)
-- **Purpose**: Verify MCP server functionality after fixes and ensure Kiro integration
-- **Method**: Test basic filesystem operations (list_directory, read_file) through MCP interface
-- **Validation Points**: 
-  - Server connection and registration with Kiro (Requirement 3.1)
-  - Filesystem operations execute without connection errors (Requirement 3.2)
-  - Auto-approved tools maintain compatibility (Requirement 3.4)
-- **Output**: Confirmed working filesystem MCP tools with full Kiro integration
-
-## Implementation Strategy
-
-### Phase 1: Research and Fix Arguments
-1. **Investigate mcp-filesystem CLI**: Determine supported arguments
-2. **Test configurations**: Validate working argument combinations
-3. **Update configuration**: Apply correct arguments to mcp.json
-
-### Phase 2: Resolve Permission Issues
-1. **Environment variable approach**: Use env vars to control logging
-2. **Alternative logging setup**: Disable file logging if necessary
-3. **Test permission handling**: Verify no more permission errors
-
-### Phase 3: Validation and Documentation
-1. **Functional testing**: Verify MCP filesystem operations work
-2. **Configuration documentation**: Document working setup
-3. **Troubleshooting guide**: Create diagnostic procedures
-
-## Technical Solutions
-
-**Design Rationale**: These solutions address the core requirements while maintaining compatibility with existing uvx-based execution and preserving auto-approved tools (Requirement 1.4, Technical Constraints).
-
-### Solution 1: Remove Unsupported Arguments (Requirement 1.1, 1.2)
-```json
-{
-  "filesystem": {
-    "command": "uvx",
-    "args": ["mcp-filesystem"],  // Remove --path argument
-    "env": {
-      "MCP_FILESYSTEM_ROOT": "."  // Use environment variable instead
-    }
-  }
-}
+**Interface**:
+```python
+class CoreServiceManager(ReflectiveModule):
+    def register_service(self, service: Service) -> RegistrationResult
+    def discover_services(self, criteria: ServiceCriteria) -> List[Service]
+    def monitor_service_health(self, service_name: str) -> HealthStatus
+    def update_service_config(self, service_name: str, config: ServiceConfig) -> UpdateResult
 ```
-**Rationale**: Eliminates "unrecognized arguments" errors by using supported CLI interface while maintaining functionality through environment variables.
 
-### Solution 2: Control Logging Location (Requirement 2.1, 2.4)
-```json
-{
-  "filesystem": {
-    "command": "uvx",
-    "args": ["mcp-filesystem"],
-    "env": {
-      "MCP_FILESYSTEM_ROOT": ".",
-      "MCP_FILESYSTEM_LOG_FILE": "/tmp/mcp_filesystem.log"  // Writable location
-    }
-  }
-}
+#### 3. Data Access Layer
+**Purpose**: Provides unified data access across different storage systems
+**Responsibilities**:
+- Database connection management
+- Query optimization and caching
+- Transaction management
+- Data consistency and integrity
+
+**Interface**:
+```python
+class DataAccessLayer(ReflectiveModule):
+    def execute_query(self, query: Query) -> QueryResult
+    def begin_transaction(self) -> Transaction
+    def commit_transaction(self, transaction: Transaction) -> CommitResult
+    def rollback_transaction(self, transaction: Transaction) -> RollbackResult
 ```
-**Rationale**: Uses user-writable directories (/tmp, ~/.cache) to prevent permission errors while maintaining logging functionality.
 
-### Solution 3: Graceful Logging Degradation (Requirement 2.2, 2.3)
-```json
-{
-  "filesystem": {
-    "command": "uvx",
-    "args": ["mcp-filesystem"],
-    "env": {
-      "MCP_FILESYSTEM_ROOT": ".",
-      "MCP_FILESYSTEM_NO_LOG_FILE": "true"  // Disable file logging
-    }
-  }
-}
+#### 4. Integration Manager
+**Purpose**: Manages integration with external systems and services
+**Responsibilities**:
+- External API communication
+- Message queue management
+- Event publishing and subscription
+- Integration monitoring and error handling
+
+**Interface**:
+```python
+class IntegrationManager(ReflectiveModule):
+    def call_external_api(self, api_call: APICall) -> APIResponse
+    def publish_event(self, event: Event) -> PublishResult
+    def subscribe_to_events(self, subscription: EventSubscription) -> SubscriptionResult
+    def monitor_integrations(self) -> IntegrationStatus
 ```
-**Rationale**: Ensures server functionality even when file logging is impossible, maintaining core MCP operations without permission dependencies.
 
-### Solution 4: Configuration Validation (Requirement 4.4)
-**Pre-deployment validation script** that:
-- Tests mcp-filesystem CLI arguments before applying
-- Validates environment variable recognition
-- Confirms server startup without errors
-- Verifies filesystem operations work correctly
+## Data Models
 
-## Error Handling
+### Core Data Models
 
-### Configuration Validation
-- Validate MCP server arguments before applying
-- Test server startup in isolation
-- Provide clear error messages for configuration issues
+#### ServiceRequest
+```python
+@dataclass
+class ServiceRequest:
+    request_id: str
+    service_name: str
+    operation: str
+    parameters: Dict[str, Any]
+    headers: Dict[str, str]
+    timestamp: datetime
+    user_context: UserContext
+```
 
-### Permission Fallbacks
-- Try multiple logging locations in order of preference
-- Gracefully disable file logging if all locations fail
-- Maintain server functionality even without file logging
+#### ServiceResponse
+```python
+@dataclass
+class ServiceResponse:
+    request_id: str
+    status_code: int
+    data: Any
+    headers: Dict[str, str]
+    execution_time_ms: float
+    error_message: Optional[str]
+```
 
-### Connection Recovery
-- Implement retry logic for MCP server connections
-- Provide diagnostic information for connection failures
-- Enable manual server restart without full Kiro restart
+#### Service
+```python
+@dataclass
+class Service:
+    service_name: str
+    name: str
+    version: str
+    endpoint: str
+    health_check_url: str
+    configuration: ServiceConfig
+    dependencies: List[str]
+    capabilities: List[str]
+```
+
+### Configuration Models
+
+#### ServiceConfig
+```python
+@dataclass
+class ServiceConfig:
+    max_connections: int
+    timeout_seconds: int
+    retry_attempts: int
+    circuit_breaker_threshold: int
+    cache_ttl_seconds: int
+    logging_level: str
+    monitoring_enabled: bool
+```
+
+#### DatabaseConfig
+```python
+@dataclass
+class DatabaseConfig:
+    connection_string: str
+    pool_size: int
+    connection_timeout: int
+    query_timeout: int
+    retry_policy: RetryPolicy
+    encryption_enabled: bool
+```
+
+## API Design
+
+### REST API Endpoints
+
+#### Service Management
+```
+GET /api/v1/services
+- List all registered services
+- Response: List[Service]
+
+POST /api/v1/services/{service_name}/health
+- Check service health
+- Response: HealthStatus
+
+PUT /api/v1/services/{service_name}/config
+- Update service configuration
+- Body: ServiceConfig
+- Response: UpdateResult
+```
+
+#### Data Operations
+```
+POST /api/v1/data/query
+- Execute data query
+- Body: Query
+- Response: QueryResult
+
+POST /api/v1/data/transaction
+- Begin new transaction
+- Response: Transaction
+
+PUT /api/v1/data/transaction/{transaction_id}/commit
+- Commit transaction
+- Response: CommitResult
+```
+
+### Event-Driven Architecture
+
+#### Event Types
+```python
+class ServiceEvent(BaseEvent):
+    service_name: str
+    event_type: str
+    timestamp: datetime
+    data: Dict[str, Any]
+
+class DataEvent(BaseEvent):
+    entity_type: str
+    entity_id: str
+    operation: str
+    changes: Dict[str, Any]
+
+class IntegrationEvent(BaseEvent):
+    integration_name: str
+    status: str
+    error_details: Optional[str]
+```
+
+## Implementation Details
+
+### Technology Stack
+
+**Core Framework**: Python 3.9+ with Beast Mode ReflectiveModule pattern
+**Web Framework**: FastAPI for REST APIs
+**Database**: PostgreSQL with SQLAlchemy ORM
+**Caching**: Redis for distributed caching
+**Message Queue**: RabbitMQ for async messaging
+**Monitoring**: Prometheus metrics with Grafana dashboards
+
+### Key Implementation Patterns
+
+#### 1. Repository Pattern for Data Access
+```python
+class Repository(ABC):
+    @abstractmethod
+    def find_by_id(self, entity_id: str) -> Optional[Entity]
+    
+    @abstractmethod
+    def find_by_criteria(self, criteria: SearchCriteria) -> List[Entity]
+    
+    @abstractmethod
+    def save(self, entity: Entity) -> SaveResult
+    
+    @abstractmethod
+    def delete(self, entity_id: str) -> DeleteResult
+```
+
+#### 2. Circuit Breaker Pattern for External Calls
+```python
+class CircuitBreaker:
+    def __init__(self, failure_threshold: int, recovery_timeout: int):
+        self.failure_threshold = failure_threshold
+        self.recovery_timeout = recovery_timeout
+        self.failure_count = 0
+        self.last_failure_time = None
+        self.state = CircuitState.CLOSED
+    
+    def call(self, func: Callable) -> Any:
+        if self.state == CircuitState.OPEN:
+            if self._should_attempt_reset():
+                self.state = CircuitState.HALF_OPEN
+            else:
+                raise CircuitBreakerOpenException()
+        
+        try:
+            result = func()
+            self._on_success()
+            return result
+        except Exception as e:
+            self._on_failure()
+            raise e
+```
+
+#### 3. Event Sourcing for Audit Trail
+```python
+class EventStore:
+    def append_event(self, stream_id: str, event: Event) -> None
+    def get_events(self, stream_id: str, from_version: int = 0) -> List[Event]
+    def get_snapshot(self, stream_id: str) -> Optional[Snapshot]
+    def save_snapshot(self, stream_id: str, snapshot: Snapshot) -> None
+```
+
+## Security Considerations
+
+### Authentication and Authorization
+- JWT-based authentication with refresh tokens
+- Role-based access control (RBAC) for service operations
+- API key management for service-to-service communication
+- OAuth 2.0 integration for external authentication providers
+
+### Data Security
+- Encryption at rest for sensitive data
+- TLS 1.3 for all network communications
+- Database connection encryption
+- Audit logging for all data access operations
+
+### Network Security
+- API gateway with rate limiting and DDoS protection
+- Network segmentation between service layers
+- Firewall rules for service-to-service communication
+- VPN or private network for sensitive operations
+
+## Performance Considerations
+
+### Scalability
+- Horizontal scaling with load balancers
+- Database read replicas for query optimization
+- Distributed caching with Redis cluster
+- Async processing for non-critical operations
+
+### Optimization
+- Connection pooling for database and external services
+- Query optimization with proper indexing
+- Caching strategies for frequently accessed data
+- Batch processing for bulk operations
 
 ## Testing Strategy
 
 ### Unit Testing
-- Test configuration parsing and validation
-- Test environment variable handling
-- Test permission checking logic
+- Component isolation with dependency injection
+- Mock external dependencies
+- Test coverage >90% for all core components
+- Property-based testing for complex business logic
 
 ### Integration Testing
-- Test MCP server startup with new configuration
-- Test filesystem operations through MCP interface
-- Test error handling and recovery scenarios
+- Database integration testing with test containers
+- External API integration testing with mock servers
+- Message queue integration testing
+- End-to-end workflow testing
 
-### System Testing
-- Verify full Kiro integration with fixed MCP server
-- Test auto-approved operations work correctly
-- Validate no regression in existing functionality
-
-## Monitoring and Observability
-
-### Success Metrics
-**Aligned with Requirements Success Criteria:**
-- MCP filesystem server starts without errors (Requirement 1)
-- No "unrecognized arguments" messages in logs (Requirement 1)
-- No file system permission errors in logs (Requirement 2)
-- Filesystem MCP tools function correctly in Kiro (Requirement 3)
-- Configuration is documented and maintainable (Requirement 4)
-- MCP server connection success rate: 100%
-- Filesystem operation success rate: >95%
-- Configuration stability over time
-
-### Diagnostic Tools
-**Comprehensive Diagnostic Suite (Requirement 4.3):**
-- **MCP Server Health Check Script**: Automated connectivity and functionality validation
-- **Configuration Validation Tool**: Pre-deployment configuration testing
-- **Filesystem Operation Tester**: Validates read_file and list_directory operations
-- **Environment Variable Validator**: Ensures proper environment setup
-- **Log Analysis Tools**: Automated error pattern detection and troubleshooting guidance
-- **Regression Detection**: Monitors for configuration drift over time
+### Performance Testing
+- Load testing with realistic traffic patterns
+- Stress testing to identify breaking points
+- Endurance testing for long-running operations
+- Scalability testing with increasing load
 
 ## Deployment Strategy
 
-### Rollout Plan
-1. **Development testing**: Validate fixes in development environment
-2. **Configuration backup**: Save current configuration before changes
-3. **Incremental deployment**: Apply fixes one at a time
-4. **Validation testing**: Verify each fix before proceeding
-5. **Documentation update**: Update troubleshooting guides
+### Containerization
+- Docker containers for all services
+- Multi-stage builds for optimized images
+- Health checks and readiness probes
+- Resource limits and requests
 
-### Rollback Plan
-- Restore previous mcp.json configuration
-- Clear any problematic environment variables
-- Restart MCP server connections
-- Validate rollback success
+### Orchestration
+- Kubernetes deployment with Helm charts
+- Service mesh (Istio) for service communication
+- Auto-scaling based on metrics
+- Rolling updates with zero downtime
 
-## Configuration Regression Prevention (Requirement 4)
+### Monitoring and Observability
+- Distributed tracing with Jaeger
+- Centralized logging with ELK stack
+- Prometheus metrics collection
+- Grafana dashboards for visualization
 
-### Documentation Strategy
-**Working Configuration Examples (Requirement 4.1):**
-- Complete mcp.json configuration templates
-- Environment variable setup guides
-- Step-by-step troubleshooting procedures
-- Common error patterns and solutions
+---
 
-### Compatibility Monitoring (Requirement 4.2)
-**Package Update Validation:**
-- Automated testing of configuration with new mcp-filesystem versions
-- CLI argument compatibility checks
-- Environment variable behavior validation
-- Regression test suite for core functionality
-
-### Diagnostic Procedures (Requirement 4.3)
-**Systematic Troubleshooting Guide:**
-1. **Connection Issues**: MCP server registration problems
-2. **Permission Errors**: File system access and logging issues
-3. **Argument Errors**: CLI compatibility problems
-4. **Performance Issues**: Slow or failing filesystem operations
-
-### Validation Framework (Requirement 4.4)
-**Pre-deployment Configuration Testing:**
-- Configuration syntax validation
-- Environment variable completeness checks
-- Server startup simulation
-- Filesystem operation testing
-
-## Future Considerations
-
-### Package Updates
-- Monitor mcp-filesystem package for argument changes
-- Test configuration compatibility with new versions
-- Update documentation as package evolves
-- Maintain backward compatibility where possible
-
-### Alternative Solutions
-- Consider alternative filesystem MCP servers if issues persist
-- Evaluate custom MCP server implementation if needed
-- Plan for migration to different MCP architectures
-- Document migration paths for future flexibility
-
-## Technical Constraints Compliance
-
-**Existing System Compatibility:**
-- ✅ Maintains uvx-based MCP server execution
-- ✅ Preserves auto-approved tools (read_file, list_directory)
-- ✅ Works within macOS file system permission constraints
-- ✅ Requires no root privileges or system-level changes
-
-**Implementation Boundaries:**
-- Must not break existing Kiro MCP integration
-- Must maintain current security model
-- Must work with existing .kiro/settings/mcp.json structure
-- Must support existing auto-approval mechanisms
-
-## Dependencies
-
-- uvx package manager for MCP server execution
-- mcp-filesystem package (current version compatibility)
-- Kiro MCP integration system
-- macOS file system permissions and constraints
-- Environment variable support in mcp-filesystem package
+**Generated:** 2025-10-06T09:44:58.839577
+**Phase:** 3 (Design Development)
+**Layer:** Foundation (Layer 1)
+**Status:** Complete

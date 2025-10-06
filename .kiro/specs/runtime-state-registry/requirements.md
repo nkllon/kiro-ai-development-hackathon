@@ -1,298 +1,194 @@
 # Runtime State Registry Requirements
 
-## Introduction
+## Overview
 
-The system has operational blindness because we're not leveraging our existing observability infrastructure. Redis is constantly screaming with real-time system state information, but we can't hear it. The CMS contains canonical configurations, but we don't know if runtime matches expectations. Prometheus and Grafana have rich service data, but it's not integrated with runtime state queries. The core requirement is to create a unified runtime state registry that bridges the gap between expected state (CMS), actual state (Redis), and observability data (Prometheus/Grafana).
+Runtime State Registry is an Application Layer (Layer 3) specification that provides user-facing functionality and end-user experiences for the constellation. This specification builds upon Foundation and Intelligence layers to deliver complete, production-ready applications and services.
 
-## Requirements
+**Single Responsibility:** Provide complete user-facing applications and end-user experiences.
 
-### Requirement 1: Listen to Redis State Information
+**Constellation Layer:** Application (Layer 3)
 
-**User Story:** As a system operator, I want to hear what Redis is already screaming about system state so that I can instantly understand what's running without manual discovery.
+**Constellation Role:** Delivers complete applications and user interfaces that provide value to end users.
 
-#### Acceptance Criteria
-1. WHEN I query "what's running" THEN Redis existing data SHALL be parsed and presented
-2. WHEN Redis contains execution tracking data THEN it SHALL be interpreted as current operations
-3. WHEN Redis contains service registration data THEN it SHALL be surfaced as active services
-4. WHEN Redis contains health check data THEN it SHALL be displayed as system status
-5. WHEN Redis contains configuration data THEN it SHALL be presented as runtime settings
+## Stakeholder Requirements
 
-### Requirement 2: Decode Redis's Screaming Data
+### End Users: Application Functionality
 
-**User Story:** As a developer, I want Redis's existing data decoded into human-readable system state so that I can understand what the system is telling me.
+Primary stakeholder who uses the application to accomplish their goals and tasks.
 
-#### Acceptance Criteria
-1. WHEN Redis contains DAG execution keys THEN they SHALL be decoded as "X is running on Y"
-2. WHEN Redis contains Celery task data THEN it SHALL be interpreted as active operations
-3. WHEN Redis contains service health keys THEN they SHALL be presented as service status
-4. WHEN Redis contains configuration keys THEN they SHALL be displayed as runtime settings
-5. WHEN Redis contains connection data THEN it SHALL be shown as service topology
+### Product Owners: Business Value
 
-### Requirement 3: Real-Time Redis Listening
+Key stakeholder responsible for ensuring the application delivers business value and meets market needs.
 
-**User Story:** As a system monitor, I want to hear Redis's real-time screaming so that I always know the current system state as it changes.
+### UX Designers: User Experience
 
-#### Acceptance Criteria
-1. WHEN Redis keys change THEN the state reflection SHALL update immediately
-2. WHEN new execution data appears THEN it SHALL be surfaced as new operations
-3. WHEN service data disappears THEN it SHALL be reflected as stopped services
-4. WHEN Redis pub/sub messages occur THEN they SHALL be interpreted as state changes
-5. WHEN querying state THEN Redis timestamps SHALL indicate data freshness
+Key stakeholder focused on creating intuitive and effective user experiences.
 
-### Requirement 4: Unified Reflective Module State Interpretation
+## Functional Requirements
 
-**User Story:** As a system architect, I want to leverage the fact that every ReflectiveModule is already reporting to Redis so that accurate real-time state is guaranteed to be available.
+### Core Application Capabilities
 
-#### Acceptance Criteria
-1. WHEN any ReflectiveModule starts THEN its health, metrics, and status data SHALL already be in Redis via auto-registration
-2. WHEN I query system state THEN ReflectiveModule Redis keys SHALL be the authoritative source for service health and configuration
-3. WHEN services are unhealthy THEN their Redis health data SHALL reflect this immediately with health scores and error counts
-4. WHEN services change configuration THEN their Redis state SHALL be updated automatically within 60 seconds
-5. WHEN services crash THEN their Redis heartbeat SHALL stop updating within 60 seconds, indicating failure
-6. WHEN ReflectiveModule auto-registration is working THEN all active services SHALL have corresponding Redis health keys
+#### R1.1: User Interface
+**User Story:** As an end user, I want an intuitive user interface, so that I can accomplish my tasks efficiently and effectively.
 
-### Requirement 5: Query Interface for Redis State
+**22-Dimension Mapping:**
+- **Dimension 18 (User Experience):** Intuitive and responsive interface design
+- **Dimension 19 (Compliance & Governance):** Accessibility and compliance standards
+- **Dimension 20 (Documentation):** User guides and help documentation
+- **Dimension 21 (Emerging Technologies):** Modern UI frameworks and patterns
+- **Dimension 22 (Innovation Potential):** Novel interaction paradigms
 
-**User Story:** As any system user, I want a simple query interface so that I can understand what Redis is screaming without complex Redis commands.
+**Acceptance Criteria:**
+- [ ] User interface is responsive across all device types
+- [ ] Navigation is intuitive and follows established patterns
+- [ ] Loading times are under 2 seconds for all pages
+- [ ] Accessibility standards (WCAG 2.1 AA) are met
+- [ ] User feedback is collected and incorporated
 
-#### Acceptance Criteria
-1. WHEN I query "what's running" THEN ReflectiveModule Redis keys SHALL be parsed for active services
-2. WHEN I query "where is service X" THEN its Redis registration data SHALL provide location and connection info
-3. WHEN I query "how is service X configured" THEN its Redis configuration keys SHALL be displayed
-4. WHEN I query "what's on port Y" THEN Redis service data SHALL be searched for port bindings
-5. WHEN I query "system health" THEN all ReflectiveModule health keys SHALL be aggregated
+#### R1.2: Business Logic
+**User Story:** As a product owner, I want robust business logic, so that the application delivers the intended business value and functionality.
 
-### Requirement 6: Automatic Stale State Cleanup
+**22-Dimension Mapping:**
+- **Dimension 13 (Integration Patterns):** API and service integration
+- **Dimension 14 (Monitoring & Observability):** Application performance monitoring
+- **Dimension 15 (Testing Strategy):** Comprehensive application testing
+- **Dimension 16 (Security & Privacy):** Application security and data protection
+- **Dimension 17 (Performance & Scalability):** Application performance optimization
 
-**User Story:** As a system administrator, I want stale runtime state automatically cleaned up so that the registry remains accurate.
+**Acceptance Criteria:**
+- [ ] All business rules are implemented correctly
+- [ ] Data validation prevents invalid inputs
+- [ ] Error handling provides meaningful feedback
+- [ ] Business processes are automated where appropriate
+- [ ] Performance meets user expectations
+
+### User Experience Requirements
 
-#### Acceptance Criteria
-1. WHEN a service hasn't updated its state for 60 seconds THEN it SHALL be marked as stale
-2. WHEN a service is marked stale for 300 seconds THEN it SHALL be removed from active registry
-3. WHEN cleanup runs THEN it SHALL verify process existence before removal
-4. WHEN cleanup runs THEN it SHALL log all state changes for audit
-5. WHEN querying state THEN stale services SHALL be clearly marked
+#### R2.1: Responsive Design
+**User Story:** As an end user, I want the application to work well on any device, so that I can use it wherever and whenever I need it.
 
-### Requirement 7: Leverage Existing Redis Data
-
-**User Story:** As a system operator, I want to immediately use the real-time data already in Redis so that I don't wait for new infrastructure to get runtime visibility.
-
-#### Acceptance Criteria
-1. WHEN I query runtime state THEN existing Redis keys SHALL be analyzed and presented
-2. WHEN DAG executions are running THEN their status SHALL be visible from existing execution tracking
-3. WHEN services have registered health data THEN it SHALL be surfaced in runtime queries
-4. WHEN Celery tasks are active THEN their status SHALL be included in runtime state
-5. WHEN existing Redis data contains service information THEN it SHALL be parsed and displayed
-
-### Requirement 8: Redis Data Discovery and Analysis
-
-**User Story:** As a developer, I want to discover what data is already available in Redis so that I can understand the current system state without guessing.
-
-#### Acceptance Criteria
-1. WHEN I run discovery THEN all Redis keys SHALL be scanned and categorized
-2. WHEN analyzing keys THEN data patterns SHALL be identified and documented
-3. WHEN finding service data THEN connection information SHALL be extracted
-4. WHEN finding execution data THEN current operations SHALL be identified
-5. WHEN finding configuration data THEN runtime settings SHALL be surfaced
-
-### Requirement 9: Integration with Existing Services
-
-**User Story:** As a system architect, I want the runtime registry to integrate with existing services so that we get immediate value without major refactoring.
-
-#### Acceptance Criteria
-1. WHEN ReflectiveModule services start THEN they SHALL automatically register runtime state via Redis auto-registration
-2. WHEN Docker containers start THEN their runtime state SHALL be captured via Bonjour service discovery integration
-3. WHEN Prometheus services start THEN their metrics endpoints SHALL be registered via service discovery targets
-4. WHEN Grafana starts THEN its dashboard URLs SHALL be registered and dashboard intelligence extracted
-5. WHEN any Beast Mode service starts THEN its complete observability endpoints SHALL be registered automatically
-6. WHEN Hybrid Service Discovery system is active THEN it SHALL be leveraged for service detection and registration
-
-### Requirement 10: Command Line Interface
-
-**User Story:** As a developer, I want a command-line interface so that I can query runtime state from scripts and manual operations.
-
-#### Acceptance Criteria
-1. WHEN I run `runtime-state list` THEN I SHALL see all active services
-2. WHEN I run `runtime-state show <service>` THEN I SHALL see complete service details
-3. WHEN I run `runtime-state health` THEN I SHALL see system-wide health status
-4. WHEN I run `runtime-state ports` THEN I SHALL see all port bindings
-5. WHEN I run `runtime-state cleanup` THEN stale entries SHALL be removed
-
-### Requirement 11: Web Dashboard Integration
-
-**User Story:** As a system operator, I want runtime state visible in web dashboards so that I can monitor the system visually.
-
-#### Acceptance Criteria
-1. WHEN I access the Admin Dashboard at localhost:8889 THEN runtime state SHALL be displayed in the existing interface
-2. WHEN services change state THEN dashboard SHALL update in real-time via WebSocket connections
-3. WHEN I click on a service THEN I SHALL see detailed runtime information including multi-source data reconciliation
-4. WHEN services are unhealthy THEN dashboard SHALL highlight them clearly with compliance scoring indicators
-5. WHEN I need to debug THEN dashboard SHALL provide direct links to Prometheus metrics and Grafana dashboards
-6. WHEN port conflicts exist THEN dashboard SHALL integrate with Port Conflict Detector for resolution guidance
-
-### Requirement 12: Historical State Tracking
-
-**User Story:** As a system analyst, I want historical runtime state information so that I can analyze system behavior over time.
-
-#### Acceptance Criteria
-1. WHEN services start/stop THEN events SHALL be logged with timestamps
-2. WHEN configuration changes THEN old and new values SHALL be recorded
-3. WHEN querying history THEN I SHALL get timeline of state changes
-4. WHEN analyzing patterns THEN I SHALL have access to service lifecycle data
-5. WHEN troubleshooting THEN I SHALL see what was running when issues occurred
-
-### Requirement 13: CMS Configuration Authority Integration
-
-**User Story:** As a system architect, I want the runtime state registry to use CMS as the authoritative source for canonical configurations so that I can detect configuration drift and ensure compliance.
-
-#### Acceptance Criteria
-1. WHEN querying service configuration THEN CMS SHALL be consulted for canonical/expected configuration
-2. WHEN comparing runtime vs. canonical config THEN drift SHALL be detected and reported
-3. WHEN a service is running but not in CMS THEN it SHALL be flagged as "ORPHANED"
-4. WHEN a service is in CMS but not running THEN it SHALL be flagged as "MISSING"
-5. WHEN configuration drift is detected THEN compliance score SHALL be calculated and remediation actions suggested
-
-### Requirement 14: Configuration Drift Detection and Compliance
-
-**User Story:** As a system operator, I want automatic detection of configuration drift so that I know when runtime configurations differ from canonical CMS definitions.
-
-#### Acceptance Criteria
-1. WHEN runtime config differs from CMS canonical THEN drift SHALL be detected and categorized by severity
-2. WHEN calculating compliance THEN a quantitative score (0.0-1.0) SHALL be provided
-3. WHEN drift is critical THEN automatic remediation SHALL be triggered if configured
-4. WHEN drift is non-critical THEN alerts SHALL be generated for manual review
-5. WHEN querying compliance THEN system-wide compliance metrics SHALL be available
-
-### Requirement 15: Prometheus Integration for Service Discovery
-
-**User Story:** As a system operator, I want the runtime state registry to leverage Prometheus service discovery as an authoritative source so that I don't duplicate service discovery infrastructure.
-
-#### Acceptance Criteria
-1. WHEN discovering services THEN Prometheus targets SHALL be used as primary service discovery source
-2. WHEN determining service health THEN Prometheus 'up' metric SHALL be authoritative health indicator
-3. WHEN querying service metrics THEN Prometheus data SHALL be integrated with runtime state
-4. WHEN analyzing service dependencies THEN Prometheus metric relationships SHALL be parsed
-5. WHEN services are discovered via Prometheus THEN they SHALL be cross-referenced with CMS definitions
-
-### Requirement 16: Grafana Dashboard Intelligence Integration
-
-**User Story:** As a system analyst, I want the runtime state registry to extract service intelligence from existing Grafana dashboards so that service relationships and monitoring patterns are automatically understood.
-
-#### Acceptance Criteria
-1. WHEN analyzing service dependencies THEN Grafana dashboard queries SHALL be parsed for relationships
-2. WHEN discovering new services THEN Grafana dashboards SHALL be auto-provisioned based on service patterns
-3. WHEN querying service observability THEN existing Grafana dashboard links SHALL be provided
-4. WHEN Grafana alerts exist THEN they SHALL be integrated as health indicators
-5. WHEN service topology changes THEN Grafana dashboards SHALL be updated automatically
-
-### Requirement 17: Multi-Source State Reconciliation
-
-**User Story:** As a system architect, I want runtime state reconciled from multiple authoritative sources so that I have a complete and accurate view of system state.
-
-#### Acceptance Criteria
-1. WHEN multiple sources provide conflicting data THEN conflict resolution rules SHALL determine authoritative source
-2. WHEN CMS, Redis, Prometheus, and Grafana data exists THEN it SHALL be merged into unified service state
-3. WHEN sources are unavailable THEN graceful degradation SHALL provide partial state with clear indicators
-4. WHEN data freshness varies THEN timestamps SHALL indicate data currency and reliability
-5. WHEN querying state THEN source attribution SHALL be provided for all data elements
-
-### Requirement 18: Observability-Native Query Interface
-
-**User Story:** As a system operator, I want to query runtime state using observability-native concepts so that I can leverage existing monitoring knowledge and workflows.
-
-#### Acceptance Criteria
-1. WHEN querying services THEN Prometheus metric queries SHALL be supported natively
-2. WHEN requesting dashboards THEN Grafana dashboard links SHALL be provided automatically
-3. WHEN analyzing alerts THEN Alertmanager integration SHALL show firing alerts
-4. WHEN investigating issues THEN observability tool deep-links SHALL be generated
-5. WHEN exploring metrics THEN Prometheus query suggestions SHALL be provided based on service type
-
-### Requirement 19: Configuration Compliance Auditing
-
-**User Story:** As a compliance officer, I want comprehensive auditing of configuration compliance so that I can ensure systems meet governance requirements.
-
-#### Acceptance Criteria
-1. WHEN auditing system compliance THEN percentage of CMS-compliant services SHALL be reported
-2. WHEN identifying orphaned services THEN services running without CMS definitions SHALL be listed
-3. WHEN finding missing services THEN CMS-defined services not running SHALL be identified
-4. WHEN tracking compliance over time THEN historical compliance trends SHALL be available
-5. WHEN generating compliance reports THEN detailed drift analysis SHALL be included
-
-### Requirement 20: Auto-Remediation and Self-Healing
-
-**User Story:** As a system administrator, I want automatic remediation of configuration drift so that systems self-heal when safe to do so.
-
-#### Acceptance Criteria
-1. WHEN critical configuration drift is detected THEN automatic remediation SHALL be triggered if configured
-2. WHEN remediation is unsafe THEN manual intervention SHALL be required with clear guidance
-3. WHEN auto-remediation occurs THEN all actions SHALL be logged for audit
-4. WHEN remediation fails THEN escalation procedures SHALL be triggered
-5. WHEN remediation succeeds THEN compliance scores SHALL be updated automatically
-
-### Requirement 21: Specification State Authority (Spec-State)
-
-**User Story:** As a system architect, I want the runtime state registry to understand what SHOULD be running according to architectural specifications so that I can detect when the system deviates from intended design.
-
-#### Acceptance Criteria
-1. WHEN querying desired state THEN specification definitions SHALL define what services should be running
-2. WHEN comparing actual vs. spec-state THEN deviations SHALL be detected and reported as "SPEC_DRIFT"
-3. WHEN services are running but not in spec THEN they SHALL be flagged as "UNSPECIFIED"
-4. WHEN spec defines services not running THEN they SHALL be flagged as "SPEC_MISSING"
-5. WHEN spec-state changes THEN impact analysis SHALL show what runtime changes are required
-
-### Requirement 22: Three-Layer State Reconciliation
-
-**User Story:** As a system operator, I want to understand the relationship between spec-state (what should run), CMS-state (how it should be configured), and runtime-state (what is actually running) so that I can maintain system integrity.
-
-#### Acceptance Criteria
-1. WHEN querying system state THEN all three layers SHALL be compared: Spec → CMS → Runtime
-2. WHEN spec-state defines a service THEN CMS SHALL have corresponding configuration
-3. WHEN CMS has configuration THEN runtime SHALL have corresponding active service
-4. WHEN any layer is missing THEN the gap SHALL be identified with remediation guidance
-5. WHEN layers conflict THEN conflict resolution SHALL follow hierarchy: Spec > CMS > Runtime
-
-### Requirement 23: Specification Compliance Monitoring
-
-**User Story:** As a system architect, I want continuous monitoring of specification compliance so that architectural drift is detected immediately.
-
-#### Acceptance Criteria
-1. WHEN spec defines required services THEN runtime SHALL be monitored for their presence
-2. WHEN spec defines service relationships THEN runtime topology SHALL be validated against spec
-3. WHEN spec defines performance requirements THEN runtime metrics SHALL be compared to spec SLAs
-4. WHEN spec defines security requirements THEN runtime configuration SHALL be validated for compliance
-5. WHEN spec changes THEN runtime impact analysis SHALL be automatically generated
-
-### Requirement 24: DAG-Driven Spec State Calculation
-
-**User Story:** As a system engineer, I want specification state calculated from DAG dependencies so that the desired system topology is mathematically derived from architectural requirements.
-
-#### Acceptance Criteria
-1. WHEN DAG defines service dependencies THEN spec-state SHALL include all required services
-2. WHEN DAG calculates execution order THEN spec-state SHALL reflect proper service startup sequence
-3. WHEN DAG identifies critical path THEN spec-state SHALL mark essential services for high availability
-4. WHEN DAG detects cycles THEN spec-state SHALL flag architectural inconsistencies
-5. WHEN DAG topology changes THEN spec-state SHALL be recalculated automatically
-
-### Requirement 25: AI Memory Palace Context Integration
-
-**User Story:** As an AI assistant user, I want the runtime state registry to integrate with AI Memory Palace for context-aware queries so that I can get O(1) system state information without expensive discovery operations.
-
-#### Acceptance Criteria
-1. WHEN AI Memory Palace context is available THEN runtime state queries SHALL use cached context for O(1) responses
-2. WHEN runtime state changes THEN context events SHALL be contributed to AI Memory Palace session context
-3. WHEN validating AI context THEN runtime state SHALL be used to verify context accuracy against current system reality
-4. WHEN context is stale THEN runtime state SHALL refresh specific data and update context automatically
-5. WHEN querying "what's running" from context THEN response SHALL be provided in <2 seconds without full system discovery
-6. WHEN context lacks runtime state data THEN fallback to traditional discovery SHALL be seamless and transparent
-
-### Requirement 26: Security and Access Control
-
-**User Story:** As a security administrator, I want runtime state access controlled so that sensitive information is protected appropriately.
-
-#### Acceptance Criteria
-1. WHEN storing runtime state THEN sensitive credentials SHALL be excluded and masked
-2. WHEN querying state THEN access SHALL be logged for audit with user attribution and timestamp
-3. WHEN displaying configuration THEN sensitive values SHALL be masked with configurable reveal options
-4. WHEN accessing remotely THEN authentication SHALL be required with role-based access control
-5. WHEN storing connection strings THEN they SHALL be encrypted at rest using industry-standard encryption
-6. WHEN audit logs are generated THEN they SHALL include correlation IDs for traceability
+**Acceptance Criteria:**
+- [ ] Application works on desktop, tablet, and mobile devices
+- [ ] Touch interactions are optimized for mobile devices
+- [ ] Content adapts to different screen sizes and orientations
+- [ ] Performance is optimized for mobile networks
+- [ ] Offline functionality is available where appropriate
+
+#### R2.2: Personalization
+**User Story:** As an end user, I want personalized experiences, so that the application adapts to my preferences and usage patterns.
+
+**Acceptance Criteria:**
+- [ ] User preferences are saved and applied consistently
+- [ ] Content is personalized based on user behavior
+- [ ] Recommendations improve over time with usage
+- [ ] Customization options are available for key features
+- [ ] Personal data is handled securely and transparently
+
+## Non-Functional Requirements
+
+### Performance Requirements
+- Page load times under 2 seconds for 95th percentile
+- API response times under 500ms for user interactions
+- Application supports 1,000+ concurrent users
+- Database queries complete within 100ms average
+
+### Security Requirements
+- User authentication and authorization are enforced
+- All user data is encrypted in transit and at rest
+- Session management follows security best practices
+- Regular security audits and penetration testing
+
+### Usability Requirements
+- User tasks can be completed with minimal training
+- Error messages are clear and actionable
+- Help documentation is comprehensive and searchable
+- User satisfaction scores are >4.0/5.0
+
+## Quality Attributes
+
+### Reliability
+- Application uptime of 99.9% or higher
+- Graceful error handling and recovery
+- Data consistency and integrity maintained
+- Automated backup and disaster recovery
+
+### Maintainability
+- Code is well-documented and follows standards
+- Automated testing covers >90% of functionality
+- Deployment is automated and repeatable
+- Monitoring and alerting are comprehensive
+
+### Scalability
+- Application scales horizontally with demand
+- Database performance scales with data volume
+- CDN integration for global content delivery
+- Auto-scaling policies handle traffic spikes
+
+## Constraints
+
+### Technical Constraints
+- Must integrate with existing authentication systems
+- Must comply with data privacy regulations (GDPR, CCPA)
+- Must work with existing infrastructure and security policies
+- Must support multiple browsers and devices
+
+### Business Constraints
+- Development timeline must meet market requirements
+- Must provide clear ROI and business value
+- Must not disrupt existing user workflows
+- Must support existing SLA commitments
+
+## Dependencies
+
+### External Dependencies
+- Web frameworks and UI libraries
+- Authentication and authorization services
+- Payment processing systems (if applicable)
+- Third-party APIs and integrations
+
+### Internal Dependencies
+- Foundation Layer APIs and services
+- Intelligence Layer AI capabilities
+- Data management and storage systems
+- Monitoring and observability infrastructure
+
+## Success Criteria
+
+- [ ] All user stories are implemented and tested
+- [ ] User acceptance testing passes with >95% success rate
+- [ ] Performance requirements are met under load
+- [ ] Security requirements pass penetration testing
+- [ ] Accessibility standards are verified and compliant
+- [ ] User satisfaction scores meet target thresholds
+- [ ] Business metrics show positive impact
+
+## Validation Methods
+
+### Automated Testing
+- Unit tests for all business logic components
+- Integration tests for API and service interactions
+- End-to-end tests for critical user workflows
+- Performance tests under expected load
+- Security tests for common vulnerabilities
+
+### Manual Testing
+- User acceptance testing with real users
+- Usability testing and user experience validation
+- Cross-browser and cross-device testing
+- Accessibility testing with assistive technologies
+- Security audit and compliance verification
+
+## Traceability
+
+This requirements specification addresses:
+- Application Layer requirements from constellation inventory
+- End user and business stakeholder needs from stakeholder analysis
+- User-facing functionality and experience requirements
+- 22-dimension ontology coverage with focus on user experience and innovation
+
+---
+
+**Generated:** 2025-10-06T09:37:44.613391
+**Phase:** 2 (Requirements Elaboration)
+**Layer:** Application (Layer 3)
+**Status:** Complete

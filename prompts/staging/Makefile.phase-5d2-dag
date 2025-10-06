@@ -1,0 +1,164 @@
+# Phase 5D2 Gap Mitigation DAG Makefile
+# 
+# This Makefile provides convenient targets for executing the Phase 5D2
+# gap mitigation DAG and managing its lifecycle.
+
+.PHONY: help validate-dag execute-dag status clean logs
+
+# Default target
+help:
+	@echo "Phase 5D2 Gap Mitigation DAG Commands"
+	@echo "===================================="
+	@echo ""
+	@echo "Available targets:"
+	@echo "  validate-dag    - Validate DAG structure and configuration"
+	@echo "  execute-dag     - Execute the complete gap mitigation DAG"
+	@echo "  status          - Check current DAG execution status"
+	@echo "  logs            - View DAG execution logs"
+	@echo "  clean           - Clean up execution artifacts"
+	@echo "  dry-run         - Simulate DAG execution without actual work"
+	@echo ""
+	@echo "DAG Overview:"
+	@echo "  Total Tasks: 6"
+	@echo "  Estimated Time: 60-80 hours (with parallelization)"
+	@echo "  Critical Path: spec-count-reconciliation → missing-dimensions-analysis"
+	@echo ""
+
+# Validate DAG configuration and structure
+validate-dag:
+	@echo "🔍 Validating Phase 5D2 DAG configuration..."
+	@python3 prompts/staging/execute-phase-5d2-dag.py --validate-only
+	@echo "✅ DAG validation complete"
+
+# Execute the complete DAG
+execute-dag: validate-dag
+	@echo "🚀 Starting Phase 5D2 Gap Mitigation DAG execution..."
+	@echo "⏱️  Estimated completion: 60-80 hours with parallel execution"
+	@echo ""
+	@echo "📋 Execution Plan:"
+	@echo "  Phase 1: Foundation (2-4 hours)"
+	@echo "    - Spec count reconciliation"
+	@echo ""
+	@echo "  Phase 2: Parallel Gap Mitigation (40-60 hours wall clock)"
+	@echo "    - Missing dimensions analysis (critical path)"
+	@echo "    - Compliance gaps remediation"
+	@echo "    - Testing strategy enhancement"
+	@echo "    - Innovation potential analysis"
+	@echo ""
+	@echo "  Phase 3: Integration and Orchestration (8-12 hours)"
+	@echo "    - Comprehensive rerun orchestrator"
+	@echo ""
+	@read -p "Continue with execution? [y/N] " confirm && [ "$$confirm" = "y" ]
+	@python3 prompts/staging/execute-phase-5d2-dag.py
+	@echo ""
+	@echo "🎯 DAG execution complete! Check logs for details."
+
+# Dry run - simulate execution without actual work
+dry-run: validate-dag
+	@echo "🧪 Running Phase 5D2 DAG simulation..."
+	@python3 prompts/staging/execute-phase-5d2-dag.py --dry-run
+	@echo "✅ Dry run complete"
+
+# Check current execution status
+status:
+	@echo "📊 Phase 5D2 DAG Execution Status"
+	@echo "================================"
+	@if [ -f .kiro/reports/phase-5d2-gap-mitigation/dag-execution-report.json ]; then \
+		echo "📄 Latest execution report found:"; \
+		python3 -c "import json; report=json.load(open('.kiro/reports/phase-5d2-gap-mitigation/dag-execution-report.json')); print(f'  Status: {\"✅ SUCCESS\" if report[\"execution_summary\"][\"overall_success\"] else \"❌ FAILED\"}'); print(f'  Completed: {report[\"execution_summary\"][\"completed_tasks\"]}/{report[\"execution_summary\"][\"total_tasks\"]} tasks'); print(f'  Duration: {report[\"execution_summary\"][\"total_duration_hours\"]:.1f} hours')"; \
+	else \
+		echo "❓ No execution report found - DAG may not have been executed yet"; \
+	fi
+	@echo ""
+	@if [ -d .kiro/reports/phase-5d2-gap-mitigation/logs ]; then \
+		echo "📝 Recent log files:"; \
+		ls -lt .kiro/reports/phase-5d2-gap-mitigation/logs/ | head -5; \
+	fi
+
+# View execution logs
+logs:
+	@echo "📝 Phase 5D2 DAG Execution Logs"
+	@echo "==============================="
+	@if [ -d .kiro/reports/phase-5d2-gap-mitigation/logs ]; then \
+		echo "Available log files:"; \
+		ls -lt .kiro/reports/phase-5d2-gap-mitigation/logs/; \
+		echo ""; \
+		echo "Showing latest log:"; \
+		echo "-------------------"; \
+		tail -50 $$(ls -t .kiro/reports/phase-5d2-gap-mitigation/logs/*.log | head -1); \
+	else \
+		echo "❓ No log files found"; \
+	fi
+
+# Clean up execution artifacts
+clean:
+	@echo "🧹 Cleaning Phase 5D2 DAG execution artifacts..."
+	@read -p "This will remove all execution reports and logs. Continue? [y/N] " confirm && [ "$$confirm" = "y" ]
+	@rm -rf .kiro/reports/phase-5d2-gap-mitigation/
+	@echo "✅ Cleanup complete"
+
+# Show DAG visualization (requires graphviz)
+visualize:
+	@echo "📊 Generating Phase 5D2 DAG visualization..."
+	@python3 -c "import yaml; import json; from pathlib import Path; config = yaml.safe_load(open('prompts/staging/phase-5d2-dag-config.yaml', 'r')); dot_content = 'digraph Phase5D2DAG {\\n  rankdir=TB;\\n  node [shape=box, style=filled];\\n\\n'; [dot_content := dot_content + f'  \"{task_id}\" [fillcolor={\"red\" if task_config.get(\"priority\") == \"CRITICAL\" else \"orange\" if task_config.get(\"priority\") == \"HIGH\" else \"yellow\"}, label=\"{task_id}\\\\n({task_config.get(\"estimated_hours\", 1)}h)\"];\\n' for task_id, task_config in config['tasks'].items()]; dot_content += '\\n'; [dot_content := dot_content + f'  \"{dep}\" -> \"{task_id}\";\\n' for task_id, task_config in config['tasks'].items() for dep in task_config.get('dependencies', [])]; dot_content += '}\\n'; Path('.kiro/reports/phase-5d2-gap-mitigation').mkdir(parents=True, exist_ok=True); open('.kiro/reports/phase-5d2-gap-mitigation/dag-visualization.dot', 'w').write(dot_content); print('DOT file generated: .kiro/reports/phase-5d2-gap-mitigation/dag-visualization.dot')"
+	@if command -v dot >/dev/null 2>&1; then \
+		cd .kiro/reports/phase-5d2-gap-mitigation && \
+		dot -Tpng dag-visualization.dot -o dag-visualization.png && \
+		echo "✅ DAG visualization saved as dag-visualization.png"; \
+	else \
+		echo "⚠️  Install graphviz to generate PNG visualization"; \
+	fi
+
+# Show detailed task information
+tasks:
+	@echo "📋 Phase 5D2 DAG Task Details"
+	@echo "============================"
+	@python3 -c "import yaml; config = yaml.safe_load(open('prompts/staging/phase-5d2-dag-config.yaml', 'r')); [print(f'\\n🔧 {task_id}\\n   Priority: {task_config.get(\"priority\", \"MEDIUM\")}\\n   Duration: {task_config.get(\"estimated_hours\", 1)} hours\\n   Dependencies: {task_config.get(\"dependencies\", [])}\\n   Parallel Group: {task_config.get(\"parallel_group\", \"default\")}\\n   Resources: {task_config.get(\"resource_requirements\", [])}') for task_id, task_config in config['tasks'].items()]"
+
+# Validate prerequisites
+check-prerequisites:
+	@echo "🔍 Checking Phase 5D2 DAG Prerequisites"
+	@echo "======================================="
+	@echo "✅ Checking Python 3..."
+	@python3 --version
+	@echo "✅ Checking required directories..."
+	@test -d .kiro/specs || (echo "❌ .kiro/specs directory not found" && exit 1)
+	@echo "✅ Checking configuration files..."
+	@test -f prompts/staging/phase-5d2-dag-config.yaml || (echo "❌ DAG config not found" && exit 1)
+	@echo "✅ Checking prompt files..."
+	@for prompt in phase-5d2-spec-count-reconciliation phase-5d2-missing-dimensions-analysis phase-5d2-compliance-gaps-remediation phase-5d2-testing-strategy-enhancement phase-5d2-innovation-potential-analysis phase-5d2-comprehensive-rerun-orchestrator; do \
+		test -f prompts/staging/$$prompt.md || (echo "❌ $$prompt.md not found" && exit 1); \
+	done
+	@echo "✅ All prerequisites satisfied"
+
+# Show execution timeline estimate
+timeline:
+	@echo "⏱️  Phase 5D2 DAG Execution Timeline"
+	@echo "==================================="
+	@echo ""
+	@echo "Sequential Execution (89-111 hours total):"
+	@echo "  Week 1: Foundation + Start Critical Path"
+	@echo "    Day 1-2: Spec count reconciliation (2-4h)"
+	@echo "    Day 3-7: Begin missing dimensions analysis"
+	@echo ""
+	@echo "  Week 2-3: Complete Critical Path + Quality Enhancement"
+	@echo "    Continue missing dimensions analysis (40-60h total)"
+	@echo "    Parallel: Compliance remediation (20-30h)"
+	@echo "    Parallel: Testing enhancement (15-20h)"
+	@echo "    Parallel: Innovation analysis (12-15h)"
+	@echo ""
+	@echo "  Week 4: Integration and Orchestration"
+	@echo "    Integration and orchestration (8-12h)"
+	@echo "    Phase 5D2 rerun validation (2h)"
+	@echo ""
+	@echo "Parallel Execution (60-80 hours wall clock):"
+	@echo "  Week 1: Foundation (2-4h) + Launch Parallel Work"
+	@echo "  Week 2-3: All gap mitigation in parallel"
+	@echo "  Week 4: Integration and validation"
+
+# Emergency stop (if DAG is running)
+stop:
+	@echo "🛑 Emergency stop requested"
+	@echo "This will attempt to gracefully stop the DAG execution"
+	@pkill -f "execute-phase-5d2-dag.py" || echo "No running DAG process found"
+	@echo "✅ Stop signal sent"

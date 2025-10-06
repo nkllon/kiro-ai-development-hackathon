@@ -1,125 +1,193 @@
-# ReflectiveModule-Based Coordinator System Requirements
+# Reflective Coordinator System Requirements
 
 ## Overview
-Create a Python-based coordinator system that manages CLI workers with full observability, health monitoring, and systematic control using the Beast Mode ReflectiveModule pattern.
+
+Reflective Coordinator System is a Foundation Layer (Layer 1) specification that provides core infrastructure and foundational services for the constellation. This specification builds upon the Bootstrap Layer to deliver essential capabilities that enable higher-level intelligence and application layers.
+
+**Single Responsibility:** Provide core infrastructure services and foundational capabilities for constellation operation.
+
+**Constellation Layer:** Foundation (Layer 1)
+
+**Constellation Role:** Delivers essential infrastructure services that support Intelligence and Application layers.
+
+## Stakeholder Requirements
+
+### System Architects: Infrastructure Design
+
+Key stakeholder responsible for designing scalable and maintainable infrastructure architecture.
+
+### Platform Engineers: Service Reliability
+
+Key stakeholder focused on ensuring reliable and performant platform services.
+
+### Security Engineers: Infrastructure Security
+
+Key stakeholder responsible for securing foundational infrastructure components.
 
 ## Functional Requirements
 
-### FR1: ReflectiveModule Coordinator Core
-- **FR1.1**: Implement `CoordinatorModule` inheriting from `ReflectiveModule`
-- **FR1.2**: Provide `/health`, `/ready`, `/metrics` endpoints for system observability
-- **FR1.3**: Support structured logging with correlation IDs for all operations
-- **FR1.4**: Implement graceful shutdown and cleanup procedures
+### Core Foundation Capabilities
 
-### FR2: Worker Lifecycle Management
-- **FR2.1**: Launch CLI workers (Cursor, Claude) with proper process isolation
-- **FR2.2**: Monitor worker process health and resource usage
-- **FR2.3**: Capture and parse worker output in real-time
-- **FR2.4**: Detect worker completion, failure, or hanging states
-- **FR2.5**: Implement worker timeout and termination capabilities
+#### R1.1: Service Infrastructure
+**User Story:** As a platform engineer, I want reliable service infrastructure, so that higher-level applications can operate dependably.
 
-### FR3: Task Orchestration
-- **FR3.1**: Parse task definitions from enhanced prompt files
-- **FR3.2**: Determine optimal worker assignment (Cursor vs Claude vs parallel)
-- **FR3.3**: Track task dependencies and execution order
-- **FR3.4**: Provide task status reporting and progress tracking
-- **FR3.5**: Support task retry and error recovery mechanisms
+**22-Dimension Mapping:**
+- **Dimension 13 (Integration Patterns):** Service mesh and API gateway integration
+- **Dimension 14 (Monitoring & Observability):** Comprehensive service monitoring
+- **Dimension 15 (Testing Strategy):** Infrastructure testing and validation
+- **Dimension 16 (Security & Privacy):** Service-to-service security
+- **Dimension 17 (Performance & Scalability):** Auto-scaling and load balancing
 
-### FR4: Real-Time Observability
-- **FR4.1**: Live worker output streaming via WebSocket endpoints
-- **FR4.2**: Task progress dashboard with real-time updates
-- **FR4.3**: Worker resource monitoring (CPU, memory, execution time)
-- **FR4.4**: Alert system for worker failures or performance issues
-- **FR4.5**: Historical execution metrics and trend analysis
+**Acceptance Criteria:**
+- [ ] Services are automatically discovered and registered
+- [ ] Health checks monitor service availability
+- [ ] Load balancing distributes traffic efficiently
+- [ ] Service mesh provides secure communication
+- [ ] Metrics and logs are centrally collected
 
-### FR5: Configuration Management
-- **FR5.1**: Support multiple worker configurations (local, remote, containerized)
-- **FR5.2**: Dynamic worker scaling based on workload
-- **FR5.3**: Environment-specific settings (development, staging, production)
-- **FR5.4**: Worker capability discovery and matching
+#### R1.2: Data Management
+**User Story:** As a system architect, I want robust data management, so that data is consistent, available, and secure across the constellation.
+
+**22-Dimension Mapping:**
+- **Dimension 16 (Security & Privacy):** Data encryption and access controls
+- **Dimension 17 (Performance & Scalability):** Database optimization and sharding
+- **Dimension 18 (User Experience):** Fast data access and retrieval
+- **Dimension 19 (Compliance & Governance):** Data governance and compliance
+- **Dimension 20 (Documentation):** Data schema and API documentation
+
+**Acceptance Criteria:**
+- [ ] Data is encrypted at rest and in transit
+- [ ] Database backups are automated and tested
+- [ ] Data access is controlled through RBAC
+- [ ] Performance metrics meet SLA requirements
+- [ ] Data schemas are versioned and documented
+
+### Integration Requirements
+
+#### R2.1: API Gateway
+**User Story:** As a platform engineer, I want a centralized API gateway, so that all service communication is secure, monitored, and controlled.
+
+**Acceptance Criteria:**
+- [ ] All external API access goes through the gateway
+- [ ] Rate limiting prevents abuse
+- [ ] Authentication and authorization are enforced
+- [ ] API metrics are collected and analyzed
+- [ ] API documentation is automatically generated
+
+#### R2.2: Service Discovery
+**User Story:** As a developer, I want automatic service discovery, so that services can find and communicate with each other without hardcoded endpoints.
+
+**Acceptance Criteria:**
+- [ ] Services register themselves automatically
+- [ ] Service health is continuously monitored
+- [ ] Failed services are removed from discovery
+- [ ] Load balancing is integrated with discovery
+- [ ] Service dependencies are tracked
 
 ## Non-Functional Requirements
 
-### NFR1: Performance
-- **NFR1.1**: Worker launch time < 5 seconds
-- **NFR1.2**: Real-time output streaming with < 100ms latency
-- **NFR1.3**: Support for 10+ concurrent workers
-- **NFR1.4**: Memory usage < 500MB for coordinator process
+### Performance Requirements
+- API response times under 100ms for 95th percentile
+- Database queries complete within 50ms average
+- Service startup time under 30 seconds
+- System can handle 10,000 concurrent requests
 
-### NFR2: Reliability
-- **NFR2.1**: 99.9% uptime for coordinator service
-- **NFR2.2**: Automatic recovery from worker failures
-- **NFR2.3**: Persistent task state across coordinator restarts
-- **NFR2.4**: Comprehensive error handling and logging
+### Security Requirements
+- All inter-service communication is encrypted
+- Authentication tokens expire within 1 hour
+- Access logs are retained for 90 days
+- Security patches are applied within 48 hours
 
-### NFR3: Security
-- **NFR3.1**: Process isolation between workers
-- **NFR3.2**: Secure handling of API keys and credentials
-- **NFR3.3**: Input validation for all task parameters
-- **NFR3.4**: Audit trail for all coordinator operations
+### Reliability Requirements
+- System uptime of 99.9% or higher
+- Automatic failover within 30 seconds
+- Data backup recovery time under 4 hours
+- Zero-downtime deployments for updates
 
-### NFR4: Maintainability
-- **NFR4.1**: Modular architecture with clear separation of concerns
-- **NFR4.2**: Comprehensive unit and integration test coverage (>90%)
-- **NFR4.3**: Clear documentation and API specifications
-- **NFR4.4**: Extensible plugin system for new worker types
+## Quality Attributes
 
-## Integration Requirements
+### Scalability
+- Horizontal scaling based on demand
+- Auto-scaling policies for all services
+- Database sharding for large datasets
+- CDN integration for static content
 
-### IR1: Beast Mode Framework Integration
-- **IR1.1**: Use existing `ReflectiveModule` base class
-- **IR1.2**: Integrate with Beast Mode logging and metrics systems
-- **IR1.3**: Follow Beast Mode directory structure and naming conventions
-- **IR1.4**: Support Beast Mode health check and monitoring patterns
+### Maintainability
+- Infrastructure as code for all components
+- Automated testing for infrastructure changes
+- Clear documentation for all services
+- Standardized deployment procedures
 
-### IR2: Observatory Integration
-- **IR2.1**: Expose coordinator metrics via Observatory dashboard
-- **IR2.2**: Integrate with existing WebSocket infrastructure
-- **IR2.3**: Support Observatory's real-time monitoring capabilities
-- **IR2.4**: Use Observatory's alerting and notification systems
-
-### IR3: CLI Worker Compatibility
-- **IR3.1**: Support existing Cursor CLI integration
-- **IR3.2**: Support Claude CLI integration (when available)
-- **IR3.3**: Backward compatibility with current shell-based coordination
-- **IR3.4**: Extensible architecture for future CLI tools
-
-## Success Criteria
-
-### SC1: Functional Success
-- All workers can be launched, monitored, and controlled via Python API
-- Real-time visibility into worker status and output
-- Automatic failure detection and recovery
-- Task completion tracking with detailed metrics
-
-### SC2: Operational Success
-- Coordinator runs reliably in production environment
-- Clear observability into system health and performance
-- Easy debugging and troubleshooting capabilities
-- Minimal manual intervention required
-
-### SC3: Development Success
-- Faster iteration cycles for AI coordination experiments
-- Reduced debugging time for worker issues
-- Clear separation between coordination logic and worker execution
-- Extensible foundation for future coordination patterns
+### Observability
+- Distributed tracing across all services
+- Centralized logging with structured formats
+- Real-time metrics and alerting
+- Performance dashboards for all stakeholders
 
 ## Constraints
 
-### C1: Technical Constraints
-- Must work on macOS development environment
-- Python 3.9+ compatibility required
-- Integration with existing Beast Mode codebase
-- Minimal external dependencies
+### Technical Constraints
+- Must integrate with existing security infrastructure
+- Must support multiple deployment environments
+- Must comply with data residency requirements
+- Must work within existing network topology
 
-### C2: Operational Constraints
-- No disruption to existing worker functionality
-- Gradual migration path from shell-based coordination
-- Support for both development and production deployments
-- Backward compatibility with current task definitions
+### Business Constraints
+- Infrastructure costs must remain within budget
+- Must support existing SLA commitments
+- Must not disrupt existing services during deployment
+- Must provide migration path from legacy systems
 
-### C3: Resource Constraints
-- Implementation within 2-week development cycle
-- Reuse existing Beast Mode infrastructure where possible
-- Minimal additional infrastructure requirements
-- Cost-effective solution for development and production use
+## Dependencies
+
+### External Dependencies
+- Cloud provider infrastructure (AWS, GCP, Azure)
+- Container orchestration platform (Kubernetes)
+- Service mesh technology (Istio, Linkerd)
+- Monitoring and observability stack (Prometheus, Grafana)
+
+### Internal Dependencies
+- Bootstrap Layer setup and configuration
+- Security and credential management systems
+- Network infrastructure and connectivity
+- Backup and disaster recovery systems
+
+## Success Criteria
+
+- [ ] All foundation services are deployed and operational
+- [ ] Service discovery and registration work correctly
+- [ ] API gateway handles all external traffic
+- [ ] Monitoring and alerting are fully functional
+- [ ] Security controls are properly implemented
+- [ ] Performance requirements are met
+- [ ] Documentation is complete and accurate
+
+## Validation Methods
+
+### Automated Testing
+- Infrastructure provisioning tests
+- Service integration tests
+- Performance and load tests
+- Security penetration tests
+- Disaster recovery tests
+
+### Manual Testing
+- End-to-end workflow validation
+- Security audit and compliance review
+- Performance benchmarking
+- Documentation accuracy verification
+
+## Traceability
+
+This requirements specification addresses:
+- Foundation Layer requirements from constellation inventory
+- Infrastructure stakeholder needs from stakeholder analysis
+- Core service requirements for constellation operation
+- 22-dimension ontology coverage for comprehensive requirements
+
+---
+
+**Generated:** 2025-10-06T09:35:09.841594
+**Phase:** 2 (Requirements Elaboration)
+**Layer:** Foundation (Layer 1)
+**Status:** Complete

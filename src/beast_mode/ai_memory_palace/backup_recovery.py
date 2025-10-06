@@ -21,10 +21,11 @@ from dataclasses import dataclass
 from enum import Enum
 
 from src.beast_mode.core.beastly_module import BeastlyModule
-from .models import SessionContext, ContextEvent, ValidationSeverity
+from .models import SessionContext, ContextEvent
+from .context_validator import ValidationSeverity
 from .context_registry import ContextRegistry
 from .context_validator import ContextValidator
-from .storage import ContextStorage
+from .storage import ContextDatabase
 
 
 class BackupType(Enum):
@@ -90,7 +91,7 @@ class BackupMetadata:
 class ContextBackupManager(BeastlyModule):
     """Manages automatic context backups and recovery operations"""
     
-    def __init__(self, storage: ContextStorage, validator: ContextValidator, 
+    def __init__(self, storage: ContextDatabase, validator: ContextValidator, 
                  backup_dir: Optional[Path] = None):
         super().__init__()
         

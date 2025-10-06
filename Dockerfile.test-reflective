@@ -1,0 +1,18 @@
+FROM python:3.9-slim
+
+# Install Redis client for testing
+RUN pip install redis prometheus-client
+
+# Copy the entire project
+COPY . /app
+WORKDIR /app
+
+# Set environment variables for Redis connection
+# Note: REDIS_HOST is intentionally NOT set to test smart detection
+ENV REDIS_PORT=6379
+ENV REDIS_PASSWORD=""
+ENV BEAST_MODE_REDIS_ENABLED=true
+ENV PYTHONPATH=/app
+
+# Run the test
+CMD ["python", "test_containerized_reflective_module.py"]

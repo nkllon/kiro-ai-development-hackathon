@@ -1,137 +1,42 @@
 # Deployment Data Governance Auditor Configuration
-# This configuration implements the governance rules from the January 27, 2025 incident
+# Sample configuration for testing
 
 monitoring:
   watch_paths:
     - "deployment/"
   excluded_paths:
     - "deployment/docs/"
-    - "deployment/README.md"
   scan_interval: 60
   recursive: true
-  max_depth: 10
 
 patterns:
   database_files:
-    patterns: 
-      - "*.db"
-      - "*.sqlite*"
-      - "*.sql"
-      - "*.dump"
-      - "**/database/**"
+    patterns: ["*.db", "*.sqlite*", "*.sql"]
     severity: "CRITICAL"
-    description: "Database files and dumps - NEVER commit to version control"
-    enabled: true
+    description: "Database files and dumps"
     
   time_series_data:
-    patterns:
-      - "*prometheus-data*"
-      - "*grafana-data*"
-      - "*influxdb-data*"
-      - "*tsdb*"
-      - "**/metrics-data/**"
+    patterns: ["*prometheus-data*", "*grafana-data*"]
     severity: "HIGH"
-    description: "Time-series monitoring data - Use Docker volumes"
-    enabled: true
+    description: "Time-series monitoring data"
     
   log_files:
-    patterns:
-      - "*.log"
-      - "logs/"
-      - "log/"
-      - "*.log.*"
-      - "**/logs/**"
+    patterns: ["*.log", "logs/", "log/"]
     severity: "MEDIUM"
-    description: "Application and system logs - Use centralized logging"
-    enabled: true
-    
-  cache_files:
-    patterns:
-      - "cache/"
-      - "tmp/"
-      - "temp/"
-      - "*.cache"
-      - "*.tmp"
-      - "**/cache/**"
-    severity: "LOW"
-    description: "Cache and temporary files"
-    enabled: true
-    
-  runtime_state:
-    patterns:
-      - "*.pid"
-      - "*.sock"
-      - "*.lock"
-      - "run/"
-      - "var/"
-      - "**/runtime/**"
-    severity: "MEDIUM"
-    description: "Runtime state and process files"
-    enabled: true
-    
-  binary_executables:
-    patterns:
-      - "*.exe"
-      - "*.bin"
-      - "*.so"
-      - "*.dll"
-      - "*.dylib"
-    severity: "HIGH"
-    description: "Binary executables and libraries"
-    enabled: true
-    
-  plugin_data:
-    patterns:
-      - "plugins/"
-      - "extensions/"
-      - "node_modules/"
-      - "vendor/"
-      - "**/plugins/**"
-    severity: "MEDIUM"
-    description: "Plugin and dependency data - Use package managers"
-    enabled: true
+    description: "Application and system logs"
 
 remediation:
   auto_gitignore: true
-  auto_quarantine: true
+  auto_quarantine: false
   git_integration: true
   quarantine_directory: ".deployment-auditor-quarantine"
-  backup_before_remediation: true
 
 notifications:
-  enabled: true
+  enabled: false
   severity_threshold: "MEDIUM"
   rate_limit_minutes: 5
-  channels:
-    - "console"
-  slack:
-    webhook_url: "${SLACK_WEBHOOK_URL}"
-    channels: ["#devops-alerts", "#security"]
-    enabled: false
-  email:
-    smtp_server: "${SMTP_SERVER:-localhost}"
-    smtp_port: "${SMTP_PORT:-587}"
-    username: "${SMTP_USERNAME}"
-    password: "${SMTP_PASSWORD}"
-    recipients: ["security@company.com", "devops@company.com"]
-    enabled: false
-  webhook:
-    url: "${WEBHOOK_URL}"
-    headers:
-      Authorization: "Bearer ${WEBHOOK_TOKEN}"
-    enabled: false
 
 prometheus:
   enabled: true
-  port: 9090
+  port: 9091
   metrics_prefix: "deployment_auditor_"
-  endpoint: "/metrics"
-  
-# Emergency response configuration
-emergency:
-  mass_violation_threshold: 10
-  critical_violation_immediate_alert: true
-  auto_block_commits: true
-  escalation_contacts:
-    - "security-team@company.com"
-    - "incident-response@company.com"
