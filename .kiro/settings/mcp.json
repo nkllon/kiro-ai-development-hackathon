@@ -44,7 +44,13 @@
         "git_commit",
         "git_diff_staged",
         "git_branch",
-        "git_diff_unstaged"
+        "git_diff_unstaged",
+        "git_create_branch",
+        "git_create_branch",
+        "git_create_branch",
+        "git_checkout",
+        "git_checkout",
+        "git_checkout"
       ],
       "disabledTools": []
     }
