@@ -11,6 +11,7 @@
 .PHONY: beast-test beast-compliance beast-fix beast-metrics beast-deploy beast-validate-all
 .PHONY: dag-validate dag-execute dag-monitor dag-status
 .PHONY: infra-deploy infra-monitor infra-validate infra-backup infra-status infra-health
+.PHONY: dns-install dns-remove dns-show dns-test dns-status
 .PHONY: dev-test dev-lint dev-format dev-validate governance-scan governance-status governance-report
 .PHONY: clean-all backup-all restore-all
 
@@ -56,6 +57,13 @@ help: ## Show available targets and usage information
 	@echo '  make infra-backup           - Backup infrastructure'
 	@echo '  make infra-status           - Check infrastructure status'
 	@echo '  make infra-health           - Check infrastructure health'
+	@echo ''
+	@echo 'Local DNS Management:'
+	@echo '  make dns-install            - Install local DNS entries (grafana.kiro.local, etc.)'
+	@echo '  make dns-remove             - Remove all Kiro DNS entries'
+	@echo '  make dns-show               - Show discovered services and DNS status'
+	@echo '  make dns-test               - Test DNS resolution and connectivity'
+	@echo '  make dns-status             - Show current DNS configuration'
 	@echo ''
 	@echo 'Development Workflow:'
 	@echo '  make dev-test               - Run development tests'
@@ -427,3 +435,37 @@ clean: ## Clean artifacts (legacy compatibility)
 	@echo "🧹 Cleaning artifacts..."
 	$(MAKE) clean-all
 	@echo "✅ Cleaning complete"
+
+# =============================================================================
+# LOCAL DNS MANAGEMENT
+# =============================================================================
+
+dns-install: ## Install local DNS entries for development services
+	@echo '🌐 Installing local DNS entries...'
+	./scripts/setup_local_dns_simple.sh install
+
+dns-remove: ## Remove all Kiro DNS entries
+	@echo '🗑️ Removing local DNS entries...'
+	./scripts/setup_local_dns_simple.sh remove
+
+dns-show: ## Show discovered services and current DNS status
+	@echo '📋 Showing DNS status...'
+	./scripts/setup_local_dns_simple.sh show
+
+dns-test: ## Test DNS resolution and connectivity
+	@echo '🧪 Testing DNS resolution...'
+	./scripts/setup_local_dns_simple.sh test
+
+dns-status: ## Show current DNS configuration
+	@echo '📊 DNS Configuration Status:'
+	@echo '=========================='
+	@if grep -q "kiro.local" /etc/hosts 2>/dev/null; then \
+		echo '✅ DNS entries installed:'; \
+		grep "kiro.local" /etc/hosts | sed 's/^/   /'; \
+	else \
+		echo '❌ No DNS entries found'; \
+		echo '   Run "make dns-install" to add them'; \
+	fi
+	@echo ''
+	@echo '🐳 Running services:'
+	@docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | grep -E "(local-|beast-mode)" | head -10 || echo '   No services running'

@@ -1,0 +1,9 @@
+{
+    "spec_name": "dag-orchestrated-parallel-execution",
+    "phase": "cleanup",
+    "status": "stopping",
+    "details": "Execution interrupted",
+    "timestamp": "2025-10-01T18:03:20-06:00",
+    "pid": "30784",
+    "log_file": "/Users/lou/kiro-2/kiro-ai-development-hackathon/scripts/logs/dag_orchestrated_parallel_execution_execution.log"
+}

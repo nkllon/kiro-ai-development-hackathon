@@ -18,6 +18,7 @@ import logging
 import uuid
 import time
 import threading
+import json
 from contextlib import contextmanager
 
 # Import tracing capabilities
@@ -121,6 +122,17 @@ class ReflectiveModule(ABC):
         if self._enable_prometheus:
             self._initialize_prometheus_metrics()
         
+        # PATCH_START: ReflectiveModule Redis Auto-Registration
+        # Technical Debt: Missing Redis auto-registration in base class
+        # Issue: https://github.com/project/issues/redis-registration-gap
+        # Cleanup Plan: Replace with proper service lifecycle management system
+        # Severity: HIGH - Blocks Runtime State Registry functionality
+        # Estimated Cleanup: 2 weeks after service lifecycle system implemented
+        self._enable_redis = self._should_enable_redis()
+        if self._enable_redis:
+            self._initialize_redis_registration()
+        # PATCH_END
+        
         # Distributed tracing will be initialized on-demand
 
     @abstractmethod
@@ -191,6 +203,201 @@ class ReflectiveModule(ABC):
         except Exception as e:
             self._logger.error(f"Failed to initialize Prometheus metrics: {e}")
             self._enable_prometheus = False
+
+    # PATCH_START: Redis Auto-Registration Methods
+    # Technical Debt: Missing Redis integration in ReflectiveModule base class
+    def _should_enable_redis(self) -> bool:
+        """Check if Redis auto-registration should be enabled."""
+        return os.getenv("BEAST_MODE_REDIS_ENABLED", "true").lower() == "true"
+
+    def _detect_container_environment(self) -> dict:
+        """Detect if running in a container and gather environment info."""
+        container_info = {
+            "is_container": False,
+            "container_type": None,
+            "evidence": []
+        }
+        
+        # Check for Docker container indicators
+        if os.path.exists('/.dockerenv'):
+            container_info["is_container"] = True
+            container_info["container_type"] = "docker"
+            container_info["evidence"].append("/.dockerenv file exists")
+        
+        # Check for container-specific environment variables
+        if os.getenv('HOSTNAME', '').startswith(('docker-', 'k8s-')):
+            container_info["is_container"] = True
+            container_info["evidence"].append(f"Container hostname pattern: {os.getenv('HOSTNAME')}")
+        
+        # Check for Docker-specific cgroup
+        try:
+            with open('/proc/1/cgroup', 'r') as f:
+                cgroup_content = f.read()
+                if 'docker' in cgroup_content or 'containerd' in cgroup_content:
+                    container_info["is_container"] = True
+                    container_info["container_type"] = "docker"
+                    container_info["evidence"].append("Docker cgroup detected")
+        except (FileNotFoundError, PermissionError):
+            pass
+        
+        # Check for Kubernetes
+        if os.getenv('KUBERNETES_SERVICE_HOST'):
+            container_info["is_container"] = True
+            container_info["container_type"] = "kubernetes"
+            container_info["evidence"].append("Kubernetes service host detected")
+        
+        return container_info
+
+    def _resolve_redis_host(self) -> str:
+        """Smart Redis host resolution with container detection and logging."""
+        # Get explicit Redis host from environment
+        explicit_host = os.getenv('REDIS_HOST')
+        
+        # Detect container environment
+        container_info = self._detect_container_environment()
+        
+        # Log detection results
+        if container_info["is_container"]:
+            self._logger.info(f"🐳 Container environment detected: {container_info['container_type']}")
+            for evidence in container_info["evidence"]:
+                self._logger.debug(f"   Evidence: {evidence}")
+        else:
+            self._logger.info("🖥️  Host environment detected (not containerized)")
+        
+        # Resolve Redis host based on environment and explicit configuration
+        if explicit_host:
+            resolved_host = explicit_host
+            self._logger.info(f"📍 Using explicit REDIS_HOST: {resolved_host}")
+        elif container_info["is_container"]:
+            # Smart container defaults
+            if container_info["container_type"] == "docker":
+                resolved_host = "host.docker.internal"
+                self._logger.info(f"🔄 Auto-resolved for Docker container: {resolved_host}")
+            elif container_info["container_type"] == "kubernetes":
+                resolved_host = "redis-service"  # Common k8s service name
+                self._logger.info(f"☸️  Auto-resolved for Kubernetes: {resolved_host}")
+            else:
+                resolved_host = "localhost"
+                self._logger.warning(f"⚠️  Unknown container type, defaulting to: {resolved_host}")
+        else:
+            # Host environment default
+            resolved_host = "localhost"
+            self._logger.info(f"🏠 Auto-resolved for host environment: {resolved_host}")
+        
+        # Final validation and logging
+        self._logger.info(f"✅ Final Redis host resolution: {resolved_host}")
+        
+        return resolved_host
+
+    def _initialize_redis_registration(self):
+        """Initialize Redis auto-registration for this module."""
+        try:
+            import redis
+            import json
+            import threading
+            import time
+            
+            # Smart container detection and Redis host resolution
+            redis_host = self._resolve_redis_host()
+            redis_port = int(os.getenv('REDIS_PORT', '6379'))
+            redis_password = os.getenv('REDIS_PASSWORD', '')
+            
+            self._logger.info(f"Redis connection resolved: {redis_host}:{redis_port}")
+            
+            # Connect to Redis
+            self._redis_client = redis.Redis(
+                host=redis_host,
+                port=redis_port,
+                password=redis_password,
+                decode_responses=True
+            )
+            
+            # Test connection
+            self._redis_client.ping()
+            
+            # Register this module
+            self._register_in_redis()
+            
+            # Start heartbeat
+            self._start_redis_heartbeat()
+            
+            self._logger.info(f"Redis auto-registration enabled for {self.__class__.__name__}")
+            
+        except Exception as e:
+            self._logger.warning(f"Redis auto-registration failed: {e}")
+            self._redis_client = None
+
+    def _register_in_redis(self):
+        """Register this module in Redis."""
+        if not hasattr(self, '_redis_client') or not self._redis_client:
+            return
+            
+        try:
+            module_info = self.get_module_info()
+            health_status = self.get_health_status()
+            capabilities = self.get_capabilities()
+            
+            # Create registration data
+            registration_data = {
+                "module_id": module_info.get("module_id", self.__class__.__name__),
+                "module_type": self.__class__.__name__,
+                "capabilities": [cap.value for cap in capabilities],
+                "registered_at": datetime.now().isoformat(),
+                "status": health_status.status.value,
+                "health_score": health_status.health_score,
+                "host": os.getenv('HOSTNAME', 'localhost'),
+                "pid": os.getpid(),
+                "version": module_info.get("version", "1.0.0")
+            }
+            
+            # Register in multiple Redis patterns for discoverability
+            module_id = registration_data["module_id"]
+            
+            # 1. Health key pattern (for health monitoring)
+            health_key = f"health:{module_id}"
+            self._redis_client.hset(health_key, mapping={
+                "status": str(health_status.status.value),
+                "health_score": str(health_status.health_score),
+                "last_check": datetime.now().isoformat(),
+                "uptime_seconds": str(health_status.uptime_seconds)
+            })
+            self._redis_client.expire(health_key, 300)  # 5 minute TTL
+            
+            # 2. Service registry pattern (for service discovery)
+            service_key = f"service:registry:{module_id}"
+            # Convert all values to strings for Redis
+            redis_data = {k: str(v) if not isinstance(v, str) else v for k, v in registration_data.items()}
+            redis_data["capabilities"] = json.dumps(registration_data["capabilities"])
+            self._redis_client.hset(service_key, mapping=redis_data)
+            self._redis_client.expire(service_key, 300)  # 5 minute TTL
+            
+            # 3. Active modules pattern (for Runtime State Registry)
+            active_key = "beast_mode:active_modules"
+            self._redis_client.hset(active_key, module_id, json.dumps(registration_data))
+            
+            self._logger.debug(f"Registered {module_id} in Redis")
+            
+        except Exception as e:
+            self._logger.error(f"Failed to register in Redis: {e}")
+
+    def _start_redis_heartbeat(self):
+        """Start Redis heartbeat to maintain registration."""
+        if not hasattr(self, '_redis_client') or not self._redis_client:
+            return
+            
+        def heartbeat():
+            while True:
+                try:
+                    time.sleep(60)  # Heartbeat every minute
+                    self._register_in_redis()  # Refresh registration
+                except Exception as e:
+                    self._logger.error(f"Redis heartbeat failed: {e}")
+                    break
+        
+        # Start heartbeat in background thread
+        heartbeat_thread = threading.Thread(target=heartbeat, daemon=True)
+        heartbeat_thread.start()
+    # PATCH_END
 
     def _collect_prometheus_metrics(self):
         """Collect metrics for Prometheus export."""

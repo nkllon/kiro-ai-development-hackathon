@@ -547,3 +547,44 @@ class CloudflareTunnelDiscoverer(ReflectiveModule):
             "successful_connectivity_tests": sum(1 for r in self._discovery_result.connectivity_test_results.values() if r),
             "ingress_rules": len(self._discovery_result.routing_rules),
         }
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information."""
+        return {
+            "module_name": "cloudflare_tunnel_discoverer",
+            "module_type": "infrastructure_discovery",
+            "version": "1.0.0",
+            "description": "Comprehensive Cloudflare tunnel discovery system",
+            "capabilities": [cap.value for cap in self.get_capabilities()],
+            "status": self.get_health_status().status.value,
+            "configuration": {
+                "known_tunnel_id": self._known_tunnel_id,
+                "known_domains": self._known_domains,
+                "websocket_endpoints": self._websocket_endpoints
+            }
+        }
+    
+    def graceful_degradation(self) -> 'DegradationResult':
+        """Handle graceful degradation scenarios."""
+        from src.rm_ddd.core.unified_reflective_module import DegradationResult, ModuleCapability
+        
+        degraded_capabilities = []
+        remaining_capabilities = self.get_capabilities().copy()
+        
+        # If discovery fails, we can still provide basic tunnel information
+        if not self._discovery_result:
+            degraded_capabilities.append(ModuleCapability.MONITORING)
+            if ModuleCapability.MONITORING in remaining_capabilities:
+                remaining_capabilities.remove(ModuleCapability.MONITORING)
+        
+        return DegradationResult(
+            success=True,
+            degraded_capabilities=degraded_capabilities,
+            remaining_capabilities=remaining_capabilities,
+            fallback_mode="static_configuration",
+            recovery_suggestions=[
+                "Check network connectivity",
+                "Verify tunnel configuration files",
+                "Validate DNS resolution"
+            ]
+        )

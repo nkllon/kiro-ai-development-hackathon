@@ -35,9 +35,7 @@ class DeploymentAuditor(ReflectiveModule):
     
     def __init__(self, config_path: Optional[str] = None):
         """Initialize the Deployment Auditor with Beast Mode observability."""
-        super().__init__()
-        
-        # Core configuration
+        # Set required attributes before calling super() for Redis registration
         self.config_path = config_path or "deployment-auditor-config.yml"
         self.config: ConfigurationSchema = ConfigurationSchema.default_config()
         
@@ -48,6 +46,8 @@ class DeploymentAuditor(ReflectiveModule):
             events_processed=0,
             violations_detected=0
         )
+        
+        super().__init__()
         
         # Component references (will be initialized by specific components)
         self.file_monitor = None

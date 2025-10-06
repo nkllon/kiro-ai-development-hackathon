@@ -615,3 +615,44 @@ class MakefileAnalyzer(ReflectiveModule):
             "medium_risk_targets": len([t for t in self._analysis.targets.values() if t.risk_level == "medium"]),
             "low_risk_targets": len([t for t in self._analysis.targets.values() if t.risk_level == "low"]),
         }
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information."""
+        return {
+            "module_name": "makefile_analyzer",
+            "module_type": "automation_analysis",
+            "version": "1.0.0",
+            "description": "Comprehensive Makefile analysis system",
+            "capabilities": [cap.value for cap in self.get_capabilities()],
+            "status": self.get_health_status().status.value,
+            "configuration": {
+                "makefile_path": str(self._makefile_path) if self._makefile_path else None,
+                "category_patterns": len(self._category_patterns),
+                "infrastructure_patterns": len(self._infrastructure_patterns)
+            }
+        }
+    
+    def graceful_degradation(self) -> 'DegradationResult':
+        """Handle graceful degradation scenarios."""
+        from src.rm_ddd.core.unified_reflective_module import DegradationResult, ModuleCapability
+        
+        degraded_capabilities = []
+        remaining_capabilities = self.get_capabilities().copy()
+        
+        # If analysis fails, we can still provide basic file information
+        if not self._analysis:
+            degraded_capabilities.append(ModuleCapability.ANALYSIS)
+            if ModuleCapability.ANALYSIS in remaining_capabilities:
+                remaining_capabilities.remove(ModuleCapability.ANALYSIS)
+        
+        return DegradationResult(
+            success=True,
+            degraded_capabilities=degraded_capabilities,
+            remaining_capabilities=remaining_capabilities,
+            fallback_mode="basic_file_parsing",
+            recovery_suggestions=[
+                "Check Makefile syntax and accessibility",
+                "Verify file permissions",
+                "Validate Makefile structure"
+            ]
+        )

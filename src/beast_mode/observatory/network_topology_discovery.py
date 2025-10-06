@@ -718,3 +718,44 @@ class NetworkTopologyDiscoverer(ReflectiveModule):
             "connectivity_tests": len(self._topology.connectivity_test_results),
             "successful_connectivity_tests": sum(1 for r in self._topology.connectivity_test_results.values() if r),
         }
+    
+    def get_module_info(self) -> Dict[str, Any]:
+        """Get module information."""
+        return {
+            "module_name": "network_topology_discoverer",
+            "module_type": "infrastructure_discovery",
+            "version": "1.0.0",
+            "description": "Comprehensive network topology discovery system",
+            "capabilities": [cap.value for cap in self.get_capabilities()],
+            "status": self.get_health_status().status.value,
+            "configuration": {
+                "known_endpoints": self._known_endpoints,
+                "known_redis_endpoints": self._known_redis_endpoints,
+                "websocket_endpoints": self._websocket_endpoints
+            }
+        }
+    
+    def graceful_degradation(self) -> 'DegradationResult':
+        """Handle graceful degradation scenarios."""
+        from src.rm_ddd.core.unified_reflective_module import DegradationResult, ModuleCapability
+        
+        degraded_capabilities = []
+        remaining_capabilities = self.get_capabilities().copy()
+        
+        # If topology discovery fails, we can still provide basic network information
+        if not self._topology:
+            degraded_capabilities.append(ModuleCapability.NETWORK_ANALYSIS)
+            if ModuleCapability.NETWORK_ANALYSIS in remaining_capabilities:
+                remaining_capabilities.remove(ModuleCapability.NETWORK_ANALYSIS)
+        
+        return DegradationResult(
+            success=True,
+            degraded_capabilities=degraded_capabilities,
+            remaining_capabilities=remaining_capabilities,
+            fallback_mode="static_network_configuration",
+            recovery_suggestions=[
+                "Check network interface availability",
+                "Verify service connectivity",
+                "Validate Redis coordination endpoints"
+            ]
+        )
