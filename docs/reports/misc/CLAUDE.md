@@ -91,7 +91,9 @@ This is an AI-Powered Spec-Driven Development Framework called "Beast Mode Frame
 **Configuration and Specifications:**
 - `.kiro/` - Framework specifications and configuration (100+ feature specs)
   - `.kiro/specs/` - Individual feature specifications with requirements, design, and tasks
-  - `.kiro/settings/` - MCP and other service configurations
+  - `.kiro/steering/` - Production steering files (framework usage patterns)
+  - `.kiro/steering-dev/` - Development steering files (framework development patterns)
+  - `.kiro/settings/` - MCP and other service configurations including steering-config.json
 
 **Docker Services:**
 - `docker/google-workspace-mcp/` - Google Workspace integration
@@ -116,9 +118,39 @@ This is an AI-Powered Spec-Driven Development Framework called "Beast Mode Frame
 
 **Interface Governance:** Centralized interface registry prevents duplication. Always check `src/rm_ddd/core/interface_registry.py` before creating new interfaces.
 
+## Steering System Integration
+
+### Dual-Mode Steering System
+Beast Mode uses a dual-mode steering system to serve different audiences:
+
+**Production Mode** (`.kiro/steering/` only):
+- For developers USING the Beast Mode framework
+- Guides how to use ReflectiveModule, DAG orchestration, AI Memory Palace
+- Deploy with: `./scripts/deploy-production-mode.sh`
+
+**Development Mode** (`.kiro/steering/` + `.kiro/steering-dev/`):
+- For developers BUILDING the Beast Mode framework itself  
+- Additional internal development patterns and architecture guidance
+- Deploy with: `./scripts/deploy-development-mode.sh`
+
+### Steering Files Reference
+- `security-credentials-governance.md` - Zero tolerance for hardcoded secrets
+- `beast-mode-framework-patterns.md` - ReflectiveModule and systematic usage patterns
+- `mathematical-governance-principle.md` - DAG orchestration and mathematical validation
+- `quality-first-development.md` - >90% test coverage and systematic validation
+- `ai-memory-palace-usage.md` - Persistent AI context management
+
+### Using Steering Guidance
+1. **Check current mode**: `cat .kiro/settings/steering-config.json | grep current_mode`
+2. **Switch modes**: Use deployment scripts as needed
+3. **Follow patterns**: Implement according to steering file guidance
+4. **Validate compliance**: Ensure code follows systematic patterns
+
 ## Development Guidelines
 
 ### Critical Development Rules
+
+**🎯 Steering System Compliance:** ALWAYS follow Beast Mode steering files in `.kiro/steering/` for systematic development patterns. Use deployment scripts to switch between production and development modes.
 
 **🚫 ANTI-NO-VERIFY RULE:** NEVER use `--no-verify` or bypass quality gates.
 
@@ -126,7 +158,15 @@ This is an AI-Powered Spec-Driven Development Framework called "Beast Mode Frame
 
 **🔧 Interface Governance:** ALWAYS check interface registry before creating new interfaces to prevent duplication. Run `python src/rm_ddd/core/interface_duplication_detector.py` before interface changes.
 
-**🏗️ Architecture Compliance:** ALL components must implement ReflectiveModule pattern.
+**🏗️ Architecture Compliance:** ALL components must implement ReflectiveModule pattern (see `.kiro/steering/beast-mode-framework-patterns.md`).
+
+**🔒 Security Compliance:** NEVER hardcode credentials - follow `.kiro/steering/security-credentials-governance.md`.
+
+**📊 Mathematical Governance:** Use DAG orchestration and mathematical validation (see `.kiro/steering/mathematical-governance-principle.md`).
+
+**🧪 Quality First:** Maintain >90% test coverage and systematic validation (see `.kiro/steering/quality-first-development.md`).
+
+**🧠 AI Memory Palace:** Use persistent AI context management (see `.kiro/steering/ai-memory-palace-usage.md`).
 
 ### Working with Specifications
 - All new features should have corresponding specs in `.kiro/specs/[feature-name]/`
@@ -254,11 +294,26 @@ The Observatory system provides monitoring, WebSocket management, and system hea
 
 ## Development Workflow Pattern
 
-1. **Requirements First** - Start with spec requirements
-2. **Design Second** - Review/create design documentation
-3. **Code Third** - Implement with proper structure
-4. **Quality Gates** - All code must pass linting, type checking, tests
-5. **Documentation** - Update specs and docs as needed
+1. **Steering Compliance First** - Review applicable steering files in `.kiro/steering/`
+2. **Requirements Second** - Start with spec requirements
+3. **Design Third** - Review/create design documentation following systematic patterns
+4. **Code Fourth** - Implement with proper structure (ReflectiveModule, DAG orchestration, etc.)
+5. **Quality Gates** - All code must pass linting, type checking, tests (>90% coverage)
+6. **Documentation** - Update specs and docs as needed
+
+### Deployment Mode Workflow
+
+**For Framework Usage (Production Mode)**:
+```bash
+./scripts/deploy-production-mode.sh
+# Follow .kiro/steering/ patterns for using Beast Mode
+```
+
+**For Framework Development (Development Mode)**:
+```bash
+./scripts/deploy-development-mode.sh  
+# Follow both .kiro/steering/ and .kiro/steering-dev/ patterns
+```
 
 ## Makefile System
 

@@ -1,0 +1,19 @@
+{
+  "execution_settings": {
+    "max_concurrent_agents": 10,
+    "default_timeout_minutes": 60,
+    "retry_attempts": 3,
+    "log_level": "INFO"
+  },
+  "monitoring": {
+    "progress_update_interval_seconds": 5,
+    "health_check_interval_seconds": 30,
+    "metrics_collection": true
+  },
+  "paths": {
+    "staging_prompts": "prompts/staging",
+    "execution_logs": ".kiro/execution-logs",
+    "status_file": ".kiro/execution-status.json",
+    "reports": "reports/constellation-execution"
+  }
+}

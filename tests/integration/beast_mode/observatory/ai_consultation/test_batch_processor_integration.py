@@ -742,8 +742,8 @@ class TestBatchProcessorLifecycleIntegration:
 if __name__ == "__main__":
     pytest.main([__file__])
 
-class
- TestBatchProcessorRealWorldScenarios:
+
+class TestBatchProcessorRealWorldScenarios:
     """Test batch processor with real-world scenarios"""
     
     @pytest.fixture

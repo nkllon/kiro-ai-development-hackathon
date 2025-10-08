@@ -1,0 +1,52 @@
+{
+  "evidence_id": "9d75b20e-dace-4c08-a078-feeed691cab5",
+  "timestamp": "2025-09-27T05:09:24.741180",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.741170",
+    "data_type": "dict"
+  },
+  "integrity_hash": "1a2eaf0a4f9355ad1cf88c0183594b1a656a8ac9c1bae74e17bee827adde5453",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/response_api_endpoints/endpoints.py",
+    "file_size": 10975,
+    "line_count": 360,
+    "route_analysis": {
+      "total_routes": 10,
+      "websocket_routes": [],
+      "http_routes": [
+        "/v1/responses",
+        "/responses",
+        "/v1/responses/{response_id}",
+        "/responses/{response_id}",
+        "/v1/responses/{response_id}",
+        "/responses/{response_id}",
+        "/v1/responses/{response_id}/input_items",
+        "/responses/{response_id}/input_items",
+        "/v1/responses/{response_id}/cancel",
+        "/responses/{response_id}/cancel"
+      ],
+      "route_handlers": {
+        "/v1/responses": "responses_api",
+        "/responses": "responses_api",
+        "/v1/responses/{response_id}": "delete_response",
+        "/responses/{response_id}": "delete_response",
+        "/v1/responses/{response_id}/input_items": "get_response_input_items",
+        "/responses/{response_id}/input_items": "get_response_input_items",
+        "/v1/responses/{response_id}/cancel": "cancel_response",
+        "/responses/{response_id}/cancel": "cancel_response"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.Response",
+        "fastapi.Request",
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.741160"
+  }
+}

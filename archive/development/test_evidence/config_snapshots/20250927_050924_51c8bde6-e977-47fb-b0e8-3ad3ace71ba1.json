@@ -1,0 +1,29 @@
+{
+  "evidence_id": "51c8bde6-e977-47fb-b0e8-3ad3ace71ba1",
+  "timestamp": "2025-09-27T05:09:24.139335",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.139328",
+    "data_type": "dict"
+  },
+  "integrity_hash": "1933686955b42726163cae0227706ee3d9137c84a4d1172b97b8ac6e087ccad8",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_hooks/azure/text_moderation.py",
+    "file_size": 10782,
+    "line_count": 289,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.HTTPException",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.139320"
+  }
+}

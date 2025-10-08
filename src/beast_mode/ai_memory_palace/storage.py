@@ -16,6 +16,29 @@ from contextlib import contextmanager
 from .models import SessionContext, ContextEvent
 
 
+class ContextStorage:
+    """High-level storage interface for AI Memory Palace"""
+    
+    def __init__(self, db_path: str = ".kiro/context/context.db"):
+        self.db = ContextDatabase(db_path)
+    
+    def store_context(self, context: SessionContext) -> bool:
+        """Store session context"""
+        return self.db.store_session_context(context)
+    
+    def load_context(self, project_id: str, session_id: Optional[str] = None) -> Optional[SessionContext]:
+        """Load session context"""
+        return self.db.load_session_context(project_id, session_id)
+    
+    def store_event(self, event: ContextEvent, session_id: str) -> bool:
+        """Store context event"""
+        return self.db.store_context_event(event, session_id)
+    
+    def get_events(self, session_id: str, limit: Optional[int] = None) -> List[ContextEvent]:
+        """Get context events"""
+        return self.db.get_context_events(session_id, limit)
+
+
 class ContextDatabase:
     """SQLite database for context storage with versioning and migrations"""
     

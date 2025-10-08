@@ -87,7 +87,7 @@ class CMSHealthMonitor(ReflectiveModule):
                 host="localhost",
                 port=5432,
                 user="directus",
-                password="directus",
+                password=os.getenv("DIRECTUS_DB_PASSWORD", ""),
                 database="directus"
             )
             await conn.execute("SELECT 1")

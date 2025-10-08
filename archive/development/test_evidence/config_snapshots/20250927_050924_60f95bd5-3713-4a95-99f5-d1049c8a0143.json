@@ -1,0 +1,29 @@
+{
+  "evidence_id": "60f95bd5-3713-4a95-99f5-d1049c8a0143",
+  "timestamp": "2025-09-27T05:09:24.136562",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.136544",
+    "data_type": "dict"
+  },
+  "integrity_hash": "3f717a34f211d11838a9f45259b7073a2c0a3181fee12f521ee5c1aabdd70d89",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/hooks/prompt_injection_detection.py",
+    "file_size": 10489,
+    "line_count": 283,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.HTTPException",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.136527"
+  }
+}

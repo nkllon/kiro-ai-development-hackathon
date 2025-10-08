@@ -1,0 +1,221 @@
+#!/usr/bin/env python3
+"""
+Hybrid Code Generator - LangGraph workflow combining DeepSeek and Claude
+"""
+
+import os
+from typing import TypedDict, Literal, Annotated
+from langgraph.graph import StateGraph, END
+from langchain_anthropic import ChatAnthropic
+from langchain_community.chat_models import ChatOllama
+from langchain_core.messages import HumanMessage, SystemMessage
+
+
+# State schema for the workflow
+class CodeGenState(TypedDict):
+    """State for code generation workflow"""
+    task_description: str
+    spec_requirements: str
+    generated_code: str
+    review_feedback: str
+    approval_status: Literal["approved", "needs_revision", "pending"]
+    iteration_count: int
+    final_code: str
+
+
+# Initialize the models
+deepseek = ChatOllama(
+    model="deepseek-coder:6.7b",
+    base_url="http://localhost:11435",
+    temperature=0.1
+)
+
+claude = ChatAnthropic(
+    model="claude-sonnet-4-20250514",
+    temperature=0,
+    api_key=os.environ.get("ANTHROPIC_API_KEY")
+)
+
+
+def parse_spec_node(state: CodeGenState) -> CodeGenState:
+    """Parse and prepare the spec for code generation"""
+    print(f"\n📋 Parsing spec task...")
+    # In real implementation, this would extract requirements from Kiro spec format
+    return state
+
+
+def generate_code_node(state: CodeGenState) -> CodeGenState:
+    """Generate code using DeepSeek on GPU"""
+    print(f"\n🤖 Generating code with DeepSeek (iteration {state['iteration_count']})...")
+
+    if state.get("review_feedback"):
+        # Refinement iteration - incorporate feedback
+        prompt = f"""Improve this code based on the review feedback.
+
+Original code:
+{state['generated_code']}
+
+Review feedback:
+{state['review_feedback']}
+
+Task requirements:
+{state['task_description']}
+
+Provide the improved code only, no explanations."""
+    else:
+        # Initial generation
+        prompt = f"""Generate Python code for this task:
+
+{state['task_description']}
+
+Requirements:
+{state.get('spec_requirements', 'Follow Python best practices')}
+
+Provide only the code, no explanations."""
+
+    messages = [HumanMessage(content=prompt)]
+    response = deepseek.invoke(messages)
+
+    state["generated_code"] = response.content
+    state["iteration_count"] = state.get("iteration_count", 0) + 1
+
+    print(f"✅ Code generated ({len(response.content)} chars)")
+    print(f"Preview: {response.content[:150]}...")
+    return state
+
+
+def review_code_node(state: CodeGenState) -> CodeGenState:
+    """Review code using Claude"""
+    print(f"\n👁️  Reviewing code with Claude...")
+
+    prompt = f"""Review this generated Python code for a production system.
+
+Task: {state['task_description']}
+
+Generated Code:
+```python
+{state['generated_code']}
+```
+
+Evaluate:
+1. Correctness - Does it meet requirements?
+2. Security - Any vulnerabilities?
+3. Best practices - Proper error handling, typing, docstrings?
+4. Edge cases - Are they handled?
+5. Performance - Any concerns?
+
+Respond with:
+- APPROVED: [reason] (if code is production-ready)
+- NEEDS_REVISION: [specific improvements needed] (if changes required)
+"""
+
+    messages = [
+        SystemMessage(content="You are a senior code reviewer focused on quality and security."),
+        HumanMessage(content=prompt)
+    ]
+
+    response = claude.invoke(messages)
+    review = response.content
+
+    state["review_feedback"] = review
+
+    # Parse approval status
+    if "APPROVED:" in review.upper():
+        state["approval_status"] = "approved"
+        state["final_code"] = state["generated_code"]
+        print("✅ Code APPROVED!")
+    else:
+        state["approval_status"] = "needs_revision"
+        print("⚠️  Code needs revision")
+        print(f"Feedback: {review[:200]}...")
+
+    return state
+
+
+def should_refine(state: CodeGenState) -> Literal["refine", "end"]:
+    """Routing function - decide whether to refine or finish"""
+    if state["approval_status"] == "approved":
+        return "end"
+    elif state["iteration_count"] >= 5:
+        print("⚠️  Max iterations reached, ending...")
+        state["final_code"] = state["generated_code"]  # Use last attempt
+        return "end"
+    else:
+        return "refine"
+
+
+def create_workflow() -> StateGraph:
+    """Create the LangGraph workflow"""
+    workflow = StateGraph(CodeGenState)
+
+    # Add nodes
+    workflow.add_node("parse_spec", parse_spec_node)
+    workflow.add_node("generate_code", generate_code_node)
+    workflow.add_node("review_code", review_code_node)
+
+    # Define the flow
+    workflow.set_entry_point("parse_spec")
+    workflow.add_edge("parse_spec", "generate_code")
+    workflow.add_edge("generate_code", "review_code")
+
+    # Conditional routing after review
+    workflow.add_conditional_edges(
+        "review_code",
+        should_refine,
+        {
+            "refine": "generate_code",  # Loop back to generate with feedback
+            "end": END
+        }
+    )
+
+    return workflow.compile()
+
+
+def run_code_generation(task_description: str, spec_requirements: str = "") -> dict:
+    """Run the hybrid code generation workflow"""
+    print("=" * 80)
+    print("🚀 HYBRID CODE GENERATOR - DeepSeek + Claude")
+    print("=" * 80)
+
+    # Create workflow
+    app = create_workflow()
+
+    # Initial state
+    initial_state = {
+        "task_description": task_description,
+        "spec_requirements": spec_requirements,
+        "generated_code": "",
+        "review_feedback": "",
+        "approval_status": "pending",
+        "iteration_count": 0,
+        "final_code": ""
+    }
+
+    # Run the workflow
+    final_state = app.invoke(initial_state)
+
+    print("\n" + "=" * 80)
+    print("✨ WORKFLOW COMPLETE")
+    print("=" * 80)
+    print(f"Iterations: {final_state['iteration_count']}")
+    print(f"Status: {final_state['approval_status']}")
+    print(f"\nFinal Code:\n{final_state.get('final_code', final_state['generated_code'])}")
+    print("\n" + "=" * 80)
+
+    return final_state
+
+
+if __name__ == "__main__":
+    # Test with a sample task
+    task = """
+Create a Python class called RateLimitHandler that:
+- Tracks API requests per endpoint
+- Implements a token bucket algorithm
+- Has methods: can_proceed(endpoint: str) -> bool, record_request(endpoint: str), reset(endpoint: str)
+- Default rate: 100 requests per minute per endpoint
+- Thread-safe implementation
+"""
+
+    requirements = "Use threading.Lock for thread safety. Include proper docstrings. Handle edge cases."
+
+    result = run_code_generation(task, requirements)

@@ -1,0 +1,20 @@
+{
+  "evidence_id": "6112c357-1a6f-4d01-888c-8d5e9a6fc1d6",
+  "timestamp": "2025-09-27T04:35:03.569895",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.569887",
+    "data_type": "dict"
+  },
+  "integrity_hash": "1133cc9f58f6bc479d7dd38ecbed86119c8086e2c763fd98a1859692c52dd5ef",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_hooks/noma/noma.py",
+    "file_size": 25923,
+    "line_count": 733,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.569885"
+  }
+}

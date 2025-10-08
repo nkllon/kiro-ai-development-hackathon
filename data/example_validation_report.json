@@ -1,0 +1,600 @@
+{
+  "timestamp": "2025-10-06T21:01:41.172170",
+  "total_examples": 52,
+  "successful_examples": 52,
+  "failed_examples": 0,
+  "security_compliant_examples": 52,
+  "results": [
+    {
+      "example_path": "examples/advanced/automated_correction_workflows_demo.py",
+      "example_name": "automated_correction_workflows_demo",
+      "success": true,
+      "execution_time": 0.011445,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Missing error handling (try/except blocks)"
+      ]
+    },
+    {
+      "example_path": "examples/advanced/basic_constellation_usage.py",
+      "example_name": "basic_constellation_usage",
+      "success": true,
+      "execution_time": 0.009175,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/advanced/beast_mode_collaboration_agents.py",
+      "example_name": "beast_mode_collaboration_agents",
+      "success": true,
+      "execution_time": 0.057037,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/advanced/bus_client_demo.py",
+      "example_name": "bus_client_demo",
+      "success": true,
+      "execution_time": 0.006881,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/advanced/capability_verification_demo.py",
+      "example_name": "capability_verification_demo",
+      "success": true,
+      "execution_time": 0.048499,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/advanced/collaboration_scheduler_demo.py",
+      "example_name": "collaboration_scheduler_demo",
+      "success": true,
+      "execution_time": 0.026668,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/advanced/component_boundary_resolution_demo.py",
+      "example_name": "component_boundary_resolution_demo",
+      "success": true,
+      "execution_time": 0.00976,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Missing error handling (try/except blocks)"
+      ]
+    },
+    {
+      "example_path": "examples/advanced/comprehensive_reporting_demo.py",
+      "example_name": "comprehensive_reporting_demo",
+      "success": true,
+      "execution_time": 0.019608,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Should use os.getenv() for sensitive configuration",
+        "Missing error handling (try/except blocks)"
+      ]
+    },
+    {
+      "example_path": "examples/advanced/enhanced_rm_validator_demo.py",
+      "example_name": "enhanced_rm_validator_demo",
+      "success": true,
+      "execution_time": 0.014637,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/advanced/error_handling_demo.py",
+      "example_name": "error_handling_demo",
+      "success": true,
+      "execution_time": 0.016071,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/advanced/file_change_detection_demo.py",
+      "example_name": "file_change_detection_demo",
+      "success": true,
+      "execution_time": 0.00568,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Missing error handling (try/except blocks)"
+      ]
+    },
+    {
+      "example_path": "examples/advanced/help_system_demo.py",
+      "example_name": "help_system_demo",
+      "success": true,
+      "execution_time": 0.025713,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Missing 'import os' for environment variable usage"
+      ]
+    },
+    {
+      "example_path": "examples/advanced/mailbox_logger_demo.py",
+      "example_name": "mailbox_logger_demo",
+      "success": true,
+      "execution_time": 0.00832,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Missing 'import os' for environment variable usage"
+      ]
+    },
+    {
+      "example_path": "examples/advanced/message_compatibility_demo.py",
+      "example_name": "message_compatibility_demo",
+      "success": true,
+      "execution_time": 0.009,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/advanced/message_history_demo.py",
+      "example_name": "message_history_demo",
+      "success": true,
+      "execution_time": 0.022123,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/advanced/message_type_handling_demo.py",
+      "example_name": "message_type_handling_demo",
+      "success": true,
+      "execution_time": 0.014144,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Missing error handling (try/except blocks)"
+      ]
+    },
+    {
+      "example_path": "examples/advanced/rca_performance_optimization_demo.py",
+      "example_name": "rca_performance_optimization_demo",
+      "success": true,
+      "execution_time": 0.008683,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Missing 'import os' for environment variable usage"
+      ]
+    },
+    {
+      "example_path": "examples/advanced/rca_report_generation_demo.py",
+      "example_name": "rca_report_generation_demo",
+      "success": true,
+      "execution_time": 0.0191,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/advanced/rm_validator_demo.py",
+      "example_name": "rm_validator_demo",
+      "success": true,
+      "execution_time": 0.00487,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/advanced/spec_framework_demo.py",
+      "example_name": "spec_framework_demo",
+      "success": true,
+      "execution_time": 0.004512,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Should use os.getenv() for sensitive configuration",
+        "Missing error handling (try/except blocks)"
+      ]
+    },
+    {
+      "example_path": "examples/advanced/task15_advanced_integration_demo.py",
+      "example_name": "task15_advanced_integration_demo",
+      "success": true,
+      "execution_time": 0.015845,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/advanced/task16_infrastructure_integration_demo.py",
+      "example_name": "task16_infrastructure_integration_demo",
+      "success": true,
+      "execution_time": 0.012118,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Missing error handling (try/except blocks)"
+      ]
+    },
+    {
+      "example_path": "examples/advanced/task17_operational_interfaces_demo.py",
+      "example_name": "task17_operational_interfaces_demo",
+      "success": true,
+      "execution_time": 0.011586,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Missing error handling (try/except blocks)"
+      ]
+    },
+    {
+      "example_path": "examples/advanced/task18_final_validation_assessment_demo.py",
+      "example_name": "task18_final_validation_assessment_demo",
+      "success": true,
+      "execution_time": 0.02918,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Missing error handling (try/except blocks)"
+      ]
+    },
+    {
+      "example_path": "examples/advanced/task_processor_demo.py",
+      "example_name": "task_processor_demo",
+      "success": true,
+      "execution_time": 0.017615,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Missing error handling (try/except blocks)"
+      ]
+    },
+    {
+      "example_path": "examples/basic/cli_usage_examples.py",
+      "example_name": "cli_usage_examples",
+      "success": true,
+      "execution_time": 0.142443,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/basic/quick_start_demo.py",
+      "example_name": "quick_start_demo",
+      "success": true,
+      "execution_time": 0.015817,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/basic/secure_credential_usage.py",
+      "example_name": "secure_credential_usage",
+      "success": true,
+      "execution_time": 0.001865,
+      "output": "Skipped execution - no main guard",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/basic/simple_beast_agent.py",
+      "example_name": "simple_beast_agent",
+      "success": true,
+      "execution_time": 0.007134,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Missing 'import os' for environment variable usage"
+      ]
+    },
+    {
+      "example_path": "examples/basic/simple_hotrod_queue.py",
+      "example_name": "simple_hotrod_queue",
+      "success": true,
+      "execution_time": 0.003661,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/consumption/python_example.py",
+      "example_name": "python_example",
+      "success": true,
+      "execution_time": 0.002456,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Missing error handling (try/except blocks)"
+      ]
+    },
+    {
+      "example_path": "examples/demos/ai_memory_palace_benchmark.py",
+      "example_name": "ai_memory_palace_benchmark",
+      "success": true,
+      "execution_time": 0.088701,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/demos/ai_memory_palace_demo.py",
+      "example_name": "ai_memory_palace_demo",
+      "success": true,
+      "execution_time": 0.021766,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/demos/ai_memory_palace_interactive.py",
+      "example_name": "ai_memory_palace_interactive",
+      "success": true,
+      "execution_time": 0.023822,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/demos/daemon_hotrod.py",
+      "example_name": "daemon_hotrod",
+      "success": true,
+      "execution_time": 0.001665,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/demos/dag_orchestration_demo.py",
+      "example_name": "dag_orchestration_demo",
+      "success": true,
+      "execution_time": 0.040657,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/demos/dag_orchestration_interactive.py",
+      "example_name": "dag_orchestration_interactive",
+      "success": true,
+      "execution_time": 0.067967,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/demos/emoji_rain_demo.py",
+      "example_name": "emoji_rain_demo",
+      "success": true,
+      "execution_time": 0.004032,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/demos/hotrod_agent.py",
+      "example_name": "hotrod_agent",
+      "success": true,
+      "execution_time": 0.002388,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Missing 'import os' for environment variable usage"
+      ]
+    },
+    {
+      "example_path": "examples/demos/monitoring_system_demo.py",
+      "example_name": "monitoring_system_demo",
+      "success": true,
+      "execution_time": 0.007784,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/demos/quick_start_demo.py",
+      "example_name": "quick_start_demo",
+      "success": true,
+      "execution_time": 0.001366,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/demos/reflective_module_demo.py",
+      "example_name": "reflective_module_demo",
+      "success": true,
+      "execution_time": 0.020571,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/demos/reflective_module_interactive.py",
+      "example_name": "reflective_module_interactive",
+      "success": true,
+      "execution_time": 0.056009,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/demos/spore_management_demo.py",
+      "example_name": "spore_management_demo",
+      "success": true,
+      "execution_time": 0.013388,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/integrations/agent_discovery_demo.py",
+      "example_name": "agent_discovery_demo",
+      "success": true,
+      "execution_time": 0.007329,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/integrations/deployment_demo.py",
+      "example_name": "deployment_demo",
+      "success": true,
+      "execution_time": 0.023074,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/integrations/observatory_demo.py",
+      "example_name": "observatory_demo",
+      "success": true,
+      "execution_time": 0.006354,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Should use os.getenv() for sensitive configuration"
+      ]
+    },
+    {
+      "example_path": "examples/integrations/tool_orchestration_demo.py",
+      "example_name": "tool_orchestration_demo",
+      "success": true,
+      "execution_time": 0.022355,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": [
+        "Missing error handling (try/except blocks)"
+      ]
+    },
+    {
+      "example_path": "examples/integrations/unified_client_demo.py",
+      "example_name": "unified_client_demo",
+      "success": true,
+      "execution_time": 0.005443,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/integrations/web_server_demo.py",
+      "example_name": "web_server_demo",
+      "success": true,
+      "execution_time": 0.005977,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/notebooks/run_demo.py",
+      "example_name": "run_demo",
+      "success": true,
+      "execution_time": 0.003875,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    },
+    {
+      "example_path": "examples/notebooks/validate_notebook.py",
+      "example_name": "validate_notebook",
+      "success": true,
+      "execution_time": 0.003064,
+      "output": "Skipped execution - interactive/demo script",
+      "error_message": null,
+      "security_issues": [],
+      "best_practice_violations": []
+    }
+  ],
+  "summary": {
+    "success_rate": 100.0,
+    "security_compliance_rate": 100.0,
+    "average_execution_time": 0.019792942307692303,
+    "total_security_issues": 0,
+    "total_best_practice_violations": 20,
+    "categories": {
+      "advanced": {
+        "total": 25,
+        "successful": 25
+      },
+      "basic": {
+        "total": 5,
+        "successful": 5
+      },
+      "consumption": {
+        "total": 1,
+        "successful": 1
+      },
+      "demos": {
+        "total": 13,
+        "successful": 13
+      },
+      "integrations": {
+        "total": 6,
+        "successful": 6
+      },
+      "notebooks": {
+        "total": 2,
+        "successful": 2
+      }
+    }
+  }
+}

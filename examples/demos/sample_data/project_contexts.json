@@ -1,0 +1,244 @@
+{
+  "description": "Sample project contexts for AI Memory Palace demonstration",
+  "projects": [
+    {
+      "project_name": "beast-mode-framework",
+      "project_type": "spec_driven",
+      "current_spec": "ai-memory-palace-integration",
+      "active_tasks": [
+        "Implement context persistence layer",
+        "Add performance monitoring dashboard",
+        "Create comprehensive documentation",
+        "Build demonstration examples"
+      ],
+      "completed_tasks": [
+        "Design AI Memory Palace architecture",
+        "Implement basic context storage",
+        "Create ReflectiveModule integration"
+      ],
+      "completion_percentage": 75.0,
+      "project_goals": [
+        "Eliminate '50 first dates' problem for AI assistants",
+        "Provide persistent context across sessions",
+        "Enable intelligent optimization suggestions",
+        "Ensure robust error handling and fallbacks"
+      ],
+      "key_technologies": [
+        "Python",
+        "Beast Mode Framework",
+        "ReflectiveModule",
+        "Redis",
+        "AsyncIO"
+      ],
+      "team_members": [
+        "AI Assistant",
+        "Framework Developer",
+        "QA Engineer"
+      ],
+      "deadlines": {
+        "MVP Release": "2025-02-15",
+        "Documentation Complete": "2025-02-10",
+        "Testing Phase": "2025-02-05"
+      },
+      "dependencies": [
+        "Redis server setup",
+        "ReflectiveModule framework",
+        "Beast Mode core components"
+      ]
+    },
+    {
+      "project_name": "hackathon-project-2025",
+      "project_type": "hackathon",
+      "current_spec": null,
+      "active_tasks": [
+        "Build MVP prototype",
+        "Prepare demo presentation",
+        "Create pitch deck",
+        "Test core functionality"
+      ],
+      "completed_tasks": [
+        "Team formation",
+        "Idea validation",
+        "Technology selection"
+      ],
+      "completion_percentage": 45.0,
+      "project_goals": [
+        "Win hackathon competition",
+        "Demonstrate innovative AI application",
+        "Build working prototype in 48 hours",
+        "Impress judges with technical excellence"
+      ],
+      "key_technologies": [
+        "Python",
+        "FastAPI",
+        "React",
+        "OpenAI API",
+        "Docker"
+      ],
+      "team_members": [
+        "Frontend Developer",
+        "Backend Developer",
+        "AI Specialist",
+        "Designer"
+      ],
+      "deadlines": {
+        "Submission Deadline": "2025-01-30",
+        "Demo Presentation": "2025-01-30",
+        "Final Testing": "2025-01-29"
+      },
+      "dependencies": [
+        "API key access",
+        "Cloud deployment setup",
+        "Demo environment preparation"
+      ]
+    },
+    {
+      "project_name": "research-experiment-nlp",
+      "project_type": "research",
+      "current_spec": "nlp-model-evaluation",
+      "active_tasks": [
+        "Collect training dataset",
+        "Implement baseline models",
+        "Design evaluation metrics",
+        "Run comparative analysis"
+      ],
+      "completed_tasks": [
+        "Literature review",
+        "Research proposal",
+        "Environment setup",
+        "Data preprocessing pipeline"
+      ],
+      "completion_percentage": 60.0,
+      "project_goals": [
+        "Advance state-of-the-art in NLP",
+        "Publish research paper",
+        "Validate novel approach",
+        "Contribute to open source community"
+      ],
+      "key_technologies": [
+        "Python",
+        "PyTorch",
+        "Transformers",
+        "Jupyter",
+        "MLflow"
+      ],
+      "team_members": [
+        "Research Lead",
+        "PhD Student",
+        "Data Scientist",
+        "ML Engineer"
+      ],
+      "deadlines": {
+        "Paper Submission": "2025-03-15",
+        "Experiments Complete": "2025-02-28",
+        "Results Analysis": "2025-03-05"
+      },
+      "dependencies": [
+        "GPU cluster access",
+        "Dataset licensing",
+        "Computational resources"
+      ]
+    },
+    {
+      "project_name": "enterprise-integration",
+      "project_type": "general",
+      "current_spec": "system-integration-plan",
+      "active_tasks": [
+        "API integration development",
+        "Security compliance review",
+        "Performance testing",
+        "User acceptance testing"
+      ],
+      "completed_tasks": [
+        "Requirements gathering",
+        "Architecture design",
+        "Development environment setup",
+        "Initial implementation"
+      ],
+      "completion_percentage": 80.0,
+      "project_goals": [
+        "Integrate with legacy systems",
+        "Ensure enterprise security standards",
+        "Achieve 99.9% uptime SLA",
+        "Support 10,000+ concurrent users"
+      ],
+      "key_technologies": [
+        "Java",
+        "Spring Boot",
+        "PostgreSQL",
+        "Kubernetes",
+        "Prometheus"
+      ],
+      "team_members": [
+        "Tech Lead",
+        "Senior Developer",
+        "DevOps Engineer",
+        "Security Specialist",
+        "QA Lead"
+      ],
+      "deadlines": {
+        "Production Deployment": "2025-02-20",
+        "Security Audit": "2025-02-10",
+        "Load Testing": "2025-02-15"
+      },
+      "dependencies": [
+        "Legacy system API access",
+        "Security certificate approval",
+        "Production environment provisioning"
+      ]
+    }
+  ],
+  "session_scenarios": [
+    {
+      "session_id": "morning_dev_session",
+      "user_id": "developer_alice",
+      "session_goals": [
+        "Complete AI Memory Palace integration",
+        "Fix performance bottlenecks",
+        "Update documentation"
+      ],
+      "context_preferences": {
+        "detail_level": "high",
+        "include_metrics": true,
+        "show_dependencies": true,
+        "highlight_blockers": true
+      },
+      "active_projects": ["beast-mode-framework"],
+      "duration_minutes": 240
+    },
+    {
+      "session_id": "hackathon_sprint",
+      "user_id": "team_lead_bob",
+      "session_goals": [
+        "Build MVP prototype",
+        "Prepare demo presentation",
+        "Coordinate team efforts"
+      ],
+      "context_preferences": {
+        "detail_level": "medium",
+        "include_metrics": false,
+        "show_dependencies": false,
+        "highlight_blockers": true
+      },
+      "active_projects": ["hackathon-project-2025"],
+      "duration_minutes": 480
+    },
+    {
+      "session_id": "research_analysis",
+      "user_id": "researcher_carol",
+      "session_goals": [
+        "Analyze experiment results",
+        "Prepare research paper draft",
+        "Review related work"
+      ],
+      "context_preferences": {
+        "detail_level": "high",
+        "include_metrics": true,
+        "show_dependencies": true,
+        "highlight_blockers": false
+      },
+      "active_projects": ["research-experiment-nlp"],
+      "duration_minutes": 180
+    }
+  ]
+}

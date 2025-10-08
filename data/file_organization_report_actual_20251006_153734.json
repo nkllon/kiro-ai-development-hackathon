@@ -1,0 +1,53 @@
+{
+  "timestamp": "2025-10-06T15:37:34.452283",
+  "dry_run": false,
+  "cleanup_plan_file": "cleanup_plan.json",
+  "actions_taken": 10,
+  "execution_log": [
+    {
+      "timestamp": "2025-10-06T15:37:34.451945",
+      "action": "Created directory: src"
+    },
+    {
+      "timestamp": "2025-10-06T15:37:34.452002",
+      "action": "Created directory: docs"
+    },
+    {
+      "timestamp": "2025-10-06T15:37:34.452136",
+      "action": "Created directory: examples"
+    },
+    {
+      "timestamp": "2025-10-06T15:37:34.452152",
+      "action": "Created directory: tests"
+    },
+    {
+      "timestamp": "2025-10-06T15:37:34.452161",
+      "action": "Created directory: scripts"
+    },
+    {
+      "timestamp": "2025-10-06T15:37:34.452168",
+      "action": "Created directory: archive"
+    },
+    {
+      "timestamp": "2025-10-06T15:37:34.452187",
+      "action": "Created directory: archive/development"
+    },
+    {
+      "timestamp": "2025-10-06T15:37:34.452202",
+      "action": "Created directory: archive/backups"
+    },
+    {
+      "timestamp": "2025-10-06T15:37:34.452210",
+      "action": "Created directory: archive/investigation"
+    },
+    {
+      "timestamp": "2025-10-06T15:37:34.452219",
+      "action": "Created directory: archive/migration"
+    }
+  ],
+  "summary": {
+    "files_moved": 0,
+    "files_deleted": 0,
+    "directories_created": 10
+  }
+}

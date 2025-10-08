@@ -1,0 +1,20 @@
+{
+  "evidence_id": "213262d5-2d6d-4ac5-a21f-3e1825e473ad",
+  "timestamp": "2025-09-27T04:35:03.470535",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.470525",
+    "data_type": "dict"
+  },
+  "integrity_hash": "bd0d4f5be6a43be10a50ead3d7eb04213a66ca84f2b146f9b5732a2b332ed611",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_hooks/panw_prisma_airs/panw_prisma_airs.py",
+    "file_size": 11677,
+    "line_count": 354,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.470523"
+  }
+}

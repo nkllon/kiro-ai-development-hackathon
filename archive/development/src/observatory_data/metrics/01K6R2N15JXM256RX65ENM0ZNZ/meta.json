@@ -1,0 +1,17 @@
+{
+	"ulid": "01K6R2N15JXM256RX65ENM0ZNZ",
+	"minTime": 1759586400000,
+	"maxTime": 1759593600000,
+	"stats": {
+		"numSamples": 634766,
+		"numSeries": 1605,
+		"numChunks": 5298
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01K6R2N15JXM256RX65ENM0ZNZ"
+		]
+	},
+	"version": 1
+}

@@ -1,0 +1,20 @@
+{
+  "evidence_id": "818a0aff-e7d6-4d58-a363-66ddac42a269",
+  "timestamp": "2025-09-27T04:35:03.754009",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.754002",
+    "data_type": "dict"
+  },
+  "integrity_hash": "b62ffb3ba10debefa898df1b1df97bad87048a4fa7f469a3fedcf11c18e1eef7",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/_experimental/mcp_server/sse_transport.py",
+    "file_size": 6180,
+    "line_count": 151,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.753999"
+  }
+}

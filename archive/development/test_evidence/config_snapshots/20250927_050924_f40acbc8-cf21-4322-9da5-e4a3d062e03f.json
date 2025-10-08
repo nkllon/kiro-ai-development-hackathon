@@ -1,0 +1,29 @@
+{
+  "evidence_id": "f40acbc8-cf21-4322-9da5-e4a3d062e03f",
+  "timestamp": "2025-09-27T05:09:24.671913",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.671894",
+    "data_type": "dict"
+  },
+  "integrity_hash": "cd74889f77430353140a9aa0b16dba23c820112219a5eca0fe52a87b3078e93e",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_hooks/tool_permission.py",
+    "file_size": 17780,
+    "line_count": 512,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.HTTPException",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.671878"
+  }
+}

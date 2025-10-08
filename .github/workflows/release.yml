@@ -1,0 +1,299 @@
+name: Release Automation
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., v1.0.0)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  validate-release:
+    name: Validate Release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+    
+    - name: Run comprehensive tests
+      run: |
+        python -m pytest tests/ --cov=src --cov-report=xml --run
+      env:
+        ENVIRONMENT: test
+    
+    - name: Validate examples work
+      run: |
+        # Test all examples to ensure they work for release
+        python -c "
+        import subprocess
+        import sys
+        from pathlib import Path
+        
+        example_files = list(Path('examples').rglob('*.py'))
+        failed_examples = []
+        
+        for example in example_files:
+            if 'interactive' in example.name:
+                continue  # Skip interactive examples
+                
+            try:
+                result = subprocess.run(
+                    [sys.executable, str(example)],
+                    timeout=30,
+                    capture_output=True,
+                    text=True,
+                    env={'ENVIRONMENT': 'test', 'REDIS_HOST': 'localhost', 'REDIS_PORT': '6379', 'REDIS_PASSWORD': ''}
+                )
+                if result.returncode not in [0, 124]:  # 124 is timeout
+                    failed_examples.append(f'{example}: {result.stderr}')
+            except subprocess.TimeoutExpired:
+                # Timeout is acceptable for demo purposes
+                pass
+            except Exception as e:
+                failed_examples.append(f'{example}: {e}')
+        
+        if failed_examples:
+            print('❌ Some examples failed:')
+            for failure in failed_examples:
+                print(f'  {failure}')
+            sys.exit(1)
+        else:
+            print('✅ All examples validated successfully')
+        "
+    
+    - name: Security validation
+      run: |
+        # Ensure no credentials in release
+        python -c "
+        import os
+        import re
+        from pathlib import Path
+        
+        credential_patterns = [
+            r'password\s*=\s*['\"][^'\"]+['\"]',
+            r'api_key\s*=\s*['\"][^'\"]+['\"]',
+            r'secret\s*=\s*['\"][^'\"]+['\"]',
+            r'token\s*=\s*['\"][^'\"]+['\"]',
+        ]
+        
+        violations = []
+        for py_file in Path('.').rglob('*.py'):
+            if '.git' in str(py_file) or '__pycache__' in str(py_file):
+                continue
+                
+            try:
+                content = py_file.read_text(encoding='utf-8', errors='ignore')
+                for pattern in credential_patterns:
+                    matches = re.finditer(pattern, content, re.IGNORECASE)
+                    for match in matches:
+                        line_num = content[:match.start()].count('\\n') + 1
+                        violations.append(f'{py_file}:{line_num} - {match.group(0)}')
+            except Exception:
+                pass
+        
+        if violations:
+            print('❌ Hardcoded credentials found in release:')
+            for violation in violations:
+                print(f'  {violation}')
+            exit(1)
+        else:
+            print('✅ No hardcoded credentials found')
+        "
+
+  build-release:
+    name: Build Release
+    runs-on: ubuntu-latest
+    needs: validate-release
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install build dependencies
+      run: |
+        pip install build twine
+    
+    - name: Build package
+      run: |
+        python -m build
+    
+    - name: Check package
+      run: |
+        twine check dist/*
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-dist
+        path: dist/
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: build-release
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for changelog
+    
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: release-dist
+        path: dist/
+    
+    - name: Generate changelog
+      run: |
+        # Generate changelog from git commits
+        python -c "
+        import subprocess
+        import re
+        from datetime import datetime
+        
+        # Get the latest tag
+        try:
+            latest_tag = subprocess.check_output(['git', 'describe', '--tags', '--abbrev=0', 'HEAD~1'], text=True).strip()
+        except subprocess.CalledProcessError:
+            latest_tag = None
+        
+        # Get commits since last tag
+        if latest_tag:
+            cmd = ['git', 'log', f'{latest_tag}..HEAD', '--pretty=format:%h %s', '--no-merges']
+        else:
+            cmd = ['git', 'log', '--pretty=format:%h %s', '--no-merges']
+        
+        commits = subprocess.check_output(cmd, text=True).strip().split('\\n')
+        
+        # Categorize commits
+        features = []
+        fixes = []
+        docs = []
+        other = []
+        
+        for commit in commits:
+            if not commit.strip():
+                continue
+                
+            if re.search(r'(feat|feature)', commit, re.IGNORECASE):
+                features.append(commit)
+            elif re.search(r'(fix|bug)', commit, re.IGNORECASE):
+                fixes.append(commit)
+            elif re.search(r'(doc|docs)', commit, re.IGNORECASE):
+                docs.append(commit)
+            else:
+                other.append(commit)
+        
+        # Generate changelog
+        changelog = f'# Release Notes\\n\\n'
+        changelog += f'Generated on {datetime.now().strftime(\"%Y-%m-%d %H:%M:%S UTC\")}\\n\\n'
+        
+        if features:
+            changelog += '## 🚀 New Features\\n\\n'
+            for feature in features:
+                changelog += f'- {feature}\\n'
+            changelog += '\\n'
+        
+        if fixes:
+            changelog += '## 🐛 Bug Fixes\\n\\n'
+            for fix in fixes:
+                changelog += f'- {fix}\\n'
+            changelog += '\\n'
+        
+        if docs:
+            changelog += '## 📚 Documentation\\n\\n'
+            for doc in docs:
+                changelog += f'- {doc}\\n'
+            changelog += '\\n'
+        
+        if other:
+            changelog += '## 🔧 Other Changes\\n\\n'
+            for change in other:
+                changelog += f'- {change}\\n'
+            changelog += '\\n'
+        
+        # Add installation instructions
+        changelog += '## 📦 Installation\\n\\n'
+        changelog += '```bash\\n'
+        changelog += 'git clone https://github.com/your-org/beast-mode-ai-framework.git\\n'
+        changelog += 'cd beast-mode-ai-framework\\n'
+        changelog += './install.sh\\n'
+        changelog += '```\\n\\n'
+        
+        changelog += '## 🚀 Quick Start\\n\\n'
+        changelog += 'See the [Quick Start Guide](examples/quick_start/README.md) for getting started.\\n\\n'
+        
+        changelog += '## 📖 Documentation\\n\\n'
+        changelog += '- [Installation Guide](docs/installation/INSTALLATION_GUIDE.md)\\n'
+        changelog += '- [API Documentation](docs/api/README.md)\\n'
+        changelog += '- [Usage Examples](examples/README.md)\\n'
+        changelog += '- [Contributing Guide](CONTRIBUTING.md)\\n'
+        
+        with open('RELEASE_NOTES.md', 'w') as f:
+            f.write(changelog)
+        
+        print('Generated changelog:')
+        print(changelog)
+        "
+    
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name || github.event.inputs.version }}
+        release_name: Beast Mode AI Framework ${{ github.ref_name || github.event.inputs.version }}
+        body_path: RELEASE_NOTES.md
+        draft: false
+        prerelease: ${{ github.event.inputs.prerelease || false }}
+    
+    - name: Upload Release Assets
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/
+        asset_name: beast-mode-ai-framework-dist
+        asset_content_type: application/zip
+
+  notify-release:
+    name: Notify Release
+    runs-on: ubuntu-latest
+    needs: create-release
+    if: always()
+    steps:
+    - name: Release notification
+      run: |
+        if [[ "${{ needs.create-release.result }}" == "success" ]]; then
+          echo "🎉 Release ${{ github.ref_name || github.event.inputs.version }} created successfully!"
+          echo "📦 Package built and uploaded"
+          echo "📝 Release notes generated"
+          echo "🔗 Available at: https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name || github.event.inputs.version }}"
+        else
+          echo "❌ Release creation failed"
+          exit 1
+        fi

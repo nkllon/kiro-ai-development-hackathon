@@ -1,0 +1,63 @@
+{
+  "timestamp": "2025-10-06T15:26:57.998403",
+  "results": {
+    "operations_executed": {
+      "delete": 1,
+      "archive": 0,
+      "move": 6
+    },
+    "total_size_freed_mb": 0.023441314697265625,
+    "operations_planned": 7
+  },
+  "operations": [
+    {
+      "operation": "delete",
+      "source_path": ".DS_Store",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.023441314697265625
+    },
+    {
+      "operation": "move",
+      "source_path": "project_structure_analysis.json",
+      "target_path": "data/project_structure_analysis.json",
+      "reason": "Better organization",
+      "size_mb": 6.285086631774902
+    },
+    {
+      "operation": "move",
+      "source_path": "file_organization_report_dry_run_20251006_143103.json",
+      "target_path": "data/file_organization_report_dry_run_20251006_143103.json",
+      "reason": "Better organization",
+      "size_mb": 0.0002384185791015625
+    },
+    {
+      "operation": "move",
+      "source_path": "cleanup_plan.json",
+      "target_path": "data/cleanup_plan.json",
+      "reason": "Better organization",
+      "size_mb": 1.8095312118530273
+    },
+    {
+      "operation": "move",
+      "source_path": "security_scan_report.json",
+      "target_path": "data/security_scan_report.json",
+      "reason": "Better organization",
+      "size_mb": 37.72523021697998
+    },
+    {
+      "operation": "move",
+      "source_path": "security_cleanup_report.json",
+      "target_path": "data/security_cleanup_report.json",
+      "reason": "Better organization",
+      "size_mb": 0.00038623809814453125
+    },
+    {
+      "operation": "move",
+      "source_path": "project_structure_analysis_summary.md",
+      "target_path": "docs/project_structure_analysis_summary.md",
+      "reason": "Better organization",
+      "size_mb": 0.0035753250122070312
+    }
+  ]
+}

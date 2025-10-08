@@ -1,0 +1,66 @@
+{
+  "timestamp": "2025-10-04T14:59:55.670808",
+  "cleanup_results": {
+    "containers_found": [
+      "beast-mode-observatory",
+      "observatory-grafana",
+      "observatory-redis",
+      "observatory-prometheus"
+    ],
+    "containers_stopped": [
+      "beast-mode-observatory",
+      "observatory-grafana",
+      "observatory-redis",
+      "observatory-prometheus"
+    ],
+    "containers_failed_stop": [],
+    "containers_removed": [
+      "beast-mode-observatory",
+      "observatory-grafana",
+      "observatory-redis",
+      "observatory-prometheus"
+    ],
+    "containers_failed_remove": [],
+    "volumes_found": [
+      "observatory_engagement_data",
+      "observatory_engagement_logs",
+      "observatory_grafana_data",
+      "observatory_observatory_data",
+      "observatory_observatory_logs",
+      "observatory_prometheus_data",
+      "observatory_redis_data"
+    ],
+    "volumes_removed": [
+      "observatory_engagement_data",
+      "observatory_engagement_logs",
+      "observatory_grafana_data",
+      "observatory_observatory_data",
+      "observatory_observatory_logs",
+      "observatory_prometheus_data",
+      "observatory_redis_data"
+    ],
+    "volumes_failed_remove": [],
+    "networks_found": [
+      "observatory_observatory"
+    ],
+    "networks_removed": [
+      "observatory_observatory"
+    ],
+    "networks_failed_remove": [],
+    "cleanup_complete": true,
+    "remaining_resources": {
+      "containers": 0,
+      "volumes": 0,
+      "networks": 0
+    }
+  },
+  "summary": {
+    "total_containers_processed": 4,
+    "containers_removed": 4,
+    "total_volumes_processed": 7,
+    "volumes_removed": 7,
+    "total_networks_processed": 1,
+    "networks_removed": 1,
+    "cleanup_successful": true
+  }
+}

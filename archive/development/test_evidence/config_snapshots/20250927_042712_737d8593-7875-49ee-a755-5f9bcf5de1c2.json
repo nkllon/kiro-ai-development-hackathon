@@ -1,0 +1,43 @@
+{
+  "evidence_id": "737d8593-7875-49ee-a755-5f9bcf5de1c2",
+  "timestamp": "2025-09-27T04:27:12.757229",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.757212",
+    "data_type": "dict"
+  },
+  "integrity_hash": "4c63109354ee93f6232764f5bbfb47783cdbcf1ed7dbd99395527c4eb91f9c57",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/common_utils/debug_utils.py",
+    "file_size": 9957,
+    "line_count": 288,
+    "route_analysis": {
+      "total_routes": 5,
+      "websocket_routes": [],
+      "http_routes": [
+        "/debug/asyncio-tasks",
+        "/memory-usage-in-mem-cache",
+        "/memory-usage-in-mem-cache-items",
+        "/otel-spans",
+        "/memory-usage"
+      ],
+      "route_handlers": {
+        "/debug/asyncio-tasks": "get_active_tasks_stats",
+        "/memory-usage-in-mem-cache": "memory_usage_in_mem_cache",
+        "/memory-usage-in-mem-cache-items": "memory_usage_in_mem_cache_items",
+        "/otel-spans": "get_otel_spans",
+        "/memory-usage": "memory_usage"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.Depends",
+        "fastapi",
+        "asyncio",
+        "fastapi.APIRouter"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.757198"
+  }
+}

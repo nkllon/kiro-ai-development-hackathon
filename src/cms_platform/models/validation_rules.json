@@ -1,0 +1,87 @@
+{
+  "projects": {
+    "name": {
+      "required": true,
+      "min_length": 3,
+      "max_length": 255,
+      "pattern": "^[a-zA-Z0-9\\s\\-_]+$"
+    },
+    "status": {
+      "required": true,
+      "enum": [
+        "active",
+        "inactive",
+        "archived"
+      ]
+    },
+    "repository_url": {
+      "format": "url",
+      "optional": true
+    }
+  },
+  "repositories": {
+    "name": {
+      "required": true,
+      "min_length": 1,
+      "max_length": 255
+    },
+    "url": {
+      "required": true,
+      "format": "url"
+    },
+    "branch": {
+      "default": "main",
+      "max_length": 100
+    }
+  },
+  "documents": {
+    "title": {
+      "required": true,
+      "min_length": 1,
+      "max_length": 500
+    },
+    "stakeholder_type": {
+      "enum": [
+        "developer",
+        "devops",
+        "executive",
+        "architect"
+      ],
+      "optional": true
+    },
+    "file_type": {
+      "enum": [
+        "markdown",
+        "text",
+        "json",
+        "yaml",
+        "python",
+        "javascript",
+        "other"
+      ],
+      "optional": true
+    }
+  },
+  "users": {
+    "email": {
+      "required": true,
+      "format": "email",
+      "unique": true
+    },
+    "name": {
+      "required": true,
+      "min_length": 2,
+      "max_length": 255
+    },
+    "role": {
+      "required": true,
+      "enum": [
+        "developer",
+        "devops",
+        "executive",
+        "architect",
+        "admin"
+      ]
+    }
+  }
+}

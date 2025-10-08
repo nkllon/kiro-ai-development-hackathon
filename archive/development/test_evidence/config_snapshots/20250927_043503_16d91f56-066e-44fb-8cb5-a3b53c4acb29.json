@@ -1,0 +1,20 @@
+{
+  "evidence_id": "16d91f56-066e-44fb-8cb5-a3b53c4acb29",
+  "timestamp": "2025-09-27T04:35:03.438711",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.438700",
+    "data_type": "dict"
+  },
+  "integrity_hash": "41c5f398bf3ea4cbcf31f8c72e2885c31ad2455895ae5934f7da58c6d5c9f253",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/caching_routes.py",
+    "file_size": 8327,
+    "line_count": 258,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.438696"
+  }
+}

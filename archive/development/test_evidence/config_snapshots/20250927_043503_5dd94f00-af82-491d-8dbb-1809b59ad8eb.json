@@ -1,0 +1,20 @@
+{
+  "evidence_id": "5dd94f00-af82-491d-8dbb-1809b59ad8eb",
+  "timestamp": "2025-09-27T04:35:03.483171",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.483163",
+    "data_type": "dict"
+  },
+  "integrity_hash": "bd9aa1739d8eb1c7e0cad3509d350444a5c67a52828a960bea6a27e7cdf465ec",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/hooks/batch_redis_get.py",
+    "file_size": 5990,
+    "line_count": 150,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.483161"
+  }
+}

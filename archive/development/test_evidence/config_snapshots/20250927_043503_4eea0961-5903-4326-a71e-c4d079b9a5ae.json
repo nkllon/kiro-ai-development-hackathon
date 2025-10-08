@@ -1,0 +1,31 @@
+{
+  "evidence_id": "4eea0961-5903-4326-a71e-c4d079b9a5ae",
+  "timestamp": "2025-09-27T04:35:03.832238",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.832225",
+    "data_type": "dict"
+  },
+  "integrity_hash": "0c2921c70266f4a8e76df37ed949bc7414c5b63f0687a359aa5ee6dd5bcf21c8",
+  "data": {
+    "file_path": "./scripts/simple_war_room.py",
+    "file_size": 7649,
+    "line_count": 251,
+    "handlers_analyzed": 1,
+    "handler_analyses": [
+      {
+        "handler_name": "websocket_endpoint",
+        "has_accept_logic": true,
+        "has_receive_logic": true,
+        "has_send_logic": false,
+        "has_error_handling": true,
+        "imports_websocket": true,
+        "complexity_score": 2,
+        "line_count": 9
+      }
+    ],
+    "analysis_timestamp": "2025-09-27T04:35:03.832222"
+  }
+}

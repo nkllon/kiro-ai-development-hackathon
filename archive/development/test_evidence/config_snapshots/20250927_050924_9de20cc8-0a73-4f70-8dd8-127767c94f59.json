@@ -1,0 +1,52 @@
+{
+  "evidence_id": "9de20cc8-0a73-4f70-8dd8-127767c94f59",
+  "timestamp": "2025-09-27T05:09:24.666826",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.666779",
+    "data_type": "dict"
+  },
+  "integrity_hash": "697d639edbe1e2b3c9758a93c0437d6f5304651c0a68f72e5709499d64ebfb2d",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/management_endpoints/organization_endpoints.py",
+    "file_size": 34488,
+    "line_count": 971,
+    "route_analysis": {
+      "total_routes": 9,
+      "websocket_routes": [],
+      "http_routes": [
+        "/organization/new",
+        "/organization/update",
+        "/organization/delete",
+        "/organization/list",
+        "/organization/info",
+        "/organization/info",
+        "/organization/member_add",
+        "/organization/member_update",
+        "/organization/member_delete"
+      ],
+      "route_handlers": {
+        "/organization/new": "new_organization",
+        "/organization/update": "update_organization",
+        "/organization/delete": "delete_organization",
+        "/organization/list": "list_organization",
+        "/organization/info": "deprecated_info_organization",
+        "/organization/member_add": "organization_member_add",
+        "/organization/member_update": "organization_member_update",
+        "/organization/member_delete": "organization_member_delete"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.Request",
+        "fastapi.HTTPException",
+        "fastapi.status",
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.666740"
+  }
+}

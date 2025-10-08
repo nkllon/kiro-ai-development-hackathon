@@ -1,0 +1,298 @@
+{
+  "interfaces": [
+    {
+      "name": "ReflectiveModule",
+      "interface_type": "class",
+      "module_path": "src.rm_ddd.core.base_reflective_module",
+      "file_path": "src/rm_ddd/core/base_reflective_module.py",
+      "line_number": 52,
+      "version": "1.0.0",
+      "status": "active",
+      "description": "Base ReflectiveModule class - RDI Compliant Foundation",
+      "docstring": "Base ReflectiveModule class - RDI Compliant\nThis is the SINGLE, CANONICAL base class for all ReflectiveModule implementations.",
+      "rdi_compliant": true,
+      "health_score": 1.0
+    },
+    {
+      "name": "InterfaceRegistry",
+      "interface_type": "class",
+      "module_path": "src.rm_ddd.core.interface_registry",
+      "file_path": "src/rm_ddd/core/interface_registry.py",
+      "line_number": 71,
+      "version": "2.0.0",
+      "status": "active",
+      "description": "Comprehensive interface registry system - RDI Compliant",
+      "docstring": "Comprehensive interface registry system - RDI Compliant\nDiscovers, registers, and manages all interfaces, classes, functions, and enums within the codebase.",
+      "rdi_compliant": true,
+      "health_score": 0.7
+    },
+    {
+      "name": "HealthMonitor",
+      "interface_type": "class",
+      "module_path": "src.rc1.monitoring.health_monitor",
+      "file_path": "src/rc1/monitoring/health_monitor.py",
+      "line_number": 1,
+      "version": "1.0.0",
+      "status": "active",
+      "description": "Health monitoring system for ReflectiveModules",
+      "docstring": "Health monitoring system that tracks and reports on module health status",
+      "rdi_compliant": true,
+      "health_score": 1.0
+    },
+    {
+      "name": "ModuleHealth",
+      "interface_type": "dataclass",
+      "module_path": "src.rm_ddd.core.base_reflective_module",
+      "file_path": "src/rm_ddd/core/base_reflective_module.py",
+      "line_number": 39,
+      "version": "1.0.0",
+      "status": "active",
+      "description": "Module health information - RDI Compliant",
+      "docstring": "Module health information - RDI Compliant",
+      "rdi_compliant": true,
+      "health_score": 1.0
+    },
+    {
+      "name": "RDIComplianceChecker",
+      "interface_type": "class",
+      "module_path": "src.rc1.analysis.rdi_compliance_checker",
+      "file_path": "src/rc1/analysis/rdi_compliance_checker.py",
+      "line_number": 1,
+      "version": "1.0.0",
+      "status": "active",
+      "description": "RDI compliance checking system",
+      "docstring": "System for checking Requirements-Design-Implementation compliance",
+      "rdi_compliant": true,
+      "health_score": 1.0
+    }
+  ],
+  "method_signatures": [
+    {
+      "interface_name": "InterfaceRegistry",
+      "method_name": "get_info",
+      "signature": "(self) -> Dict[str, Any]",
+      "return_type": "typing.Dict[str, typing.Any]",
+      "is_abstract": false,
+      "is_public": true,
+      "is_static": false,
+      "is_classmethod": false,
+      "docstring": "Get module info.",
+      "line_number": 24
+    },
+    {
+      "interface_name": "HealthMonitor",
+      "method_name": "check_health",
+      "signature": "(self, module_id: str) -> ModuleHealth",
+      "return_type": "ModuleHealth",
+      "is_abstract": false,
+      "is_public": true,
+      "is_static": false,
+      "is_classmethod": false,
+      "docstring": "Check health status of a module",
+      "line_number": 1
+    },
+    {
+      "interface_name": "HealthMonitor",
+      "method_name": "get_system_health",
+      "signature": "(self) -> Dict[str, Any]",
+      "return_type": "Dict[str, Any]",
+      "is_abstract": false,
+      "is_public": true,
+      "is_static": false,
+      "is_classmethod": false,
+      "docstring": "Get overall system health status",
+      "line_number": 1
+    },
+    {
+      "interface_name": "RDIComplianceChecker",
+      "method_name": "check_rdi_compliance",
+      "signature": "(self, interface_id: str) -> Dict[str, Any]",
+      "return_type": "Dict[str, Any]",
+      "is_abstract": false,
+      "is_public": true,
+      "is_static": false,
+      "is_classmethod": false,
+      "docstring": "Check RDI compliance for an interface",
+      "line_number": 1
+    },
+    {
+      "interface_name": "RDIComplianceChecker",
+      "method_name": "validate_requirements",
+      "signature": "(self, interface_id: str) -> List[str]",
+      "return_type": "List[str]",
+      "is_abstract": false,
+      "is_public": true,
+      "is_static": false,
+      "is_classmethod": false,
+      "docstring": "Validate requirements for an interface",
+      "line_number": 1
+    }
+  ],
+  "method_parameters": [
+    {
+      "interface_name": "HealthMonitor",
+      "method_name": "check_health",
+      "parameter_name": "module_id",
+      "parameter_type": "str",
+      "default_value": null,
+      "is_required": true,
+      "position": 0
+    },
+    {
+      "interface_name": "RDIComplianceChecker",
+      "method_name": "check_rdi_compliance",
+      "parameter_name": "interface_id",
+      "parameter_type": "str",
+      "default_value": null,
+      "is_required": true,
+      "position": 0
+    },
+    {
+      "interface_name": "RDIComplianceChecker",
+      "method_name": "validate_requirements",
+      "parameter_name": "interface_id",
+      "parameter_type": "str",
+      "default_value": null,
+      "is_required": true,
+      "position": 0
+    }
+  ],
+  "dependencies": [
+    {
+      "interface_name": "InterfaceRegistry",
+      "dependency_type": "inheritance",
+      "dependency_name": "ReflectiveModule",
+      "dependency_module": "src.rm_ddd.core.base_reflective_module",
+      "dependency_path": "",
+      "is_external": false,
+      "is_circular": false,
+      "strength": 1.0
+    },
+    {
+      "interface_name": "HealthMonitor",
+      "dependency_type": "inheritance",
+      "dependency_name": "ReflectiveModule",
+      "dependency_module": "src.rm_ddd.core.base_reflective_module",
+      "dependency_path": "",
+      "is_external": false,
+      "is_circular": false,
+      "strength": 1.0
+    },
+    {
+      "interface_name": "HealthMonitor",
+      "dependency_type": "usage",
+      "dependency_name": "ModuleHealth",
+      "dependency_module": "src.rm_ddd.core.base_reflective_module",
+      "dependency_path": "",
+      "is_external": false,
+      "is_circular": false,
+      "strength": 0.8
+    },
+    {
+      "interface_name": "RDIComplianceChecker",
+      "dependency_type": "inheritance",
+      "dependency_name": "ReflectiveModule",
+      "dependency_module": "src.rm_ddd.core.base_reflective_module",
+      "dependency_path": "",
+      "is_external": false,
+      "is_circular": false,
+      "strength": 1.0
+    },
+    {
+      "interface_name": "RDIComplianceChecker",
+      "dependency_type": "usage",
+      "dependency_name": "InterfaceRegistry",
+      "dependency_module": "src.rm_ddd.core.interface_registry",
+      "dependency_path": "",
+      "is_external": false,
+      "is_circular": false,
+      "strength": 0.9
+    }
+  ],
+  "capabilities": [
+    {
+      "interface_name": "ReflectiveModule",
+      "capability": "core_functionality",
+      "confidence": 1.0,
+      "detected_by": "manual_analysis"
+    },
+    {
+      "interface_name": "ReflectiveModule",
+      "capability": "monitoring",
+      "confidence": 1.0,
+      "detected_by": "manual_analysis"
+    },
+    {
+      "interface_name": "ReflectiveModule",
+      "capability": "validation",
+      "confidence": 1.0,
+      "detected_by": "manual_analysis"
+    },
+    {
+      "interface_name": "InterfaceRegistry",
+      "capability": "core_functionality",
+      "confidence": 1.0,
+      "detected_by": "manual_analysis"
+    },
+    {
+      "interface_name": "InterfaceRegistry",
+      "capability": "data_processing",
+      "confidence": 1.0,
+      "detected_by": "manual_analysis"
+    },
+    {
+      "interface_name": "InterfaceRegistry",
+      "capability": "validation",
+      "confidence": 1.0,
+      "detected_by": "manual_analysis"
+    },
+    {
+      "interface_name": "InterfaceRegistry",
+      "capability": "monitoring",
+      "confidence": 1.0,
+      "detected_by": "manual_analysis"
+    },
+    {
+      "interface_name": "HealthMonitor",
+      "capability": "monitoring",
+      "confidence": 1.0,
+      "detected_by": "manual_analysis"
+    },
+    {
+      "interface_name": "HealthMonitor",
+      "capability": "validation",
+      "confidence": 1.0,
+      "detected_by": "manual_analysis"
+    },
+    {
+      "interface_name": "HealthMonitor",
+      "capability": "core_functionality",
+      "confidence": 1.0,
+      "detected_by": "manual_analysis"
+    },
+    {
+      "interface_name": "ModuleHealth",
+      "capability": "core_functionality",
+      "confidence": 1.0,
+      "detected_by": "manual_analysis"
+    },
+    {
+      "interface_name": "RDIComplianceChecker",
+      "capability": "validation",
+      "confidence": 1.0,
+      "detected_by": "manual_analysis"
+    },
+    {
+      "interface_name": "RDIComplianceChecker",
+      "capability": "compliance_checking",
+      "confidence": 1.0,
+      "detected_by": "manual_analysis"
+    },
+    {
+      "interface_name": "RDIComplianceChecker",
+      "capability": "core_functionality",
+      "confidence": 1.0,
+      "detected_by": "manual_analysis"
+    }
+  ]
+}

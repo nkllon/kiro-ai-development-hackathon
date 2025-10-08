@@ -1,0 +1,35 @@
+{
+  "evidence_id": "7654c684-6cec-417f-bcaf-aaacc2efa355",
+  "timestamp": "2025-09-27T04:27:13.229185",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.229170",
+    "data_type": "dict"
+  },
+  "integrity_hash": "992132ed4948d9f54c25c5f1d578dacdfcc032cf189f88b81249e3670b2094f4",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/common_request_processing.py",
+    "file_size": 30362,
+    "line_count": 788,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.status",
+        "asyncio",
+        "fastapi.responses.Response",
+        "fastapi.responses.StreamingResponse",
+        "fastapi.Request",
+        "fastapi",
+        "fastapi.HTTPException",
+        "fastapi.responses"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.229149"
+  }
+}

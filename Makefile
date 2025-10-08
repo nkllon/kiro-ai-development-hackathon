@@ -6,7 +6,7 @@
 .DEFAULT_GOAL := help
 
 # Phony targets declaration
-.PHONY: help discover-system validate-safety optimize-performance test-system validate-targets lint-makefiles generate-reports
+.PHONY: help install quick-start discover-system validate-safety optimize-performance test-system validate-targets lint-makefiles generate-reports
 .PHONY: observatory-start observatory-stop observatory-status observatory-health observatory-deploy observatory-logs
 .PHONY: beast-test beast-compliance beast-fix beast-metrics beast-deploy beast-validate-all
 .PHONY: dag-validate dag-execute dag-monitor dag-status
@@ -14,6 +14,27 @@
 .PHONY: dns-install dns-remove dns-show dns-test dns-status
 .PHONY: dev-test dev-lint dev-format dev-validate governance-scan governance-status governance-report
 .PHONY: clean-all backup-all restore-all
+
+# =============================================================================
+# QUICK START TARGETS
+# =============================================================================
+
+install: ## 🚀 One-command setup for Beast Mode (recommended for new users)
+	@echo "🐺 Setting up Beast Mode AI Framework..."
+	@echo "📦 Installing Python dependencies..."
+	@pip install -r requirements.txt
+	@echo "⚙️  Setting up environment..."
+	@if [ ! -f .env ]; then cp .env.example .env && echo "📝 Created .env file (please configure as needed)"; fi
+	@echo "✅ Beast Mode setup complete!"
+	@echo ""
+	@echo "🎉 Ready to go! Try these next steps:"
+	@echo "   • Run quick demo: make quick-start"
+	@echo "   • Explore notebooks: jupyter notebook examples/notebook/"
+	@echo "   • Read docs: open docs/guides/quick-start.md"
+
+quick-start: ## 🎯 Run the 2-minute Beast Mode demonstration
+	@echo "🐺 Running Beast Mode Quick Start Demo..."
+	@python examples/quick_start_demo.py
 
 # =============================================================================
 # HELP SYSTEM

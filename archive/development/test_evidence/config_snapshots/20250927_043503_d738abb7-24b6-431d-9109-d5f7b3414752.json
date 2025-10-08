@@ -1,0 +1,20 @@
+{
+  "evidence_id": "d738abb7-24b6-431d-9109-d5f7b3414752",
+  "timestamp": "2025-09-27T04:35:03.544684",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.544671",
+    "data_type": "dict"
+  },
+  "integrity_hash": "4b34ae1c924b70c1bc1223e6984fb21bff9996c907e5b691dc7df2167c938105",
+  "data": {
+    "file_path": "./tests/unit/beast_mode/observatory/test_server.py",
+    "file_size": 15066,
+    "line_count": 436,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.544668"
+  }
+}

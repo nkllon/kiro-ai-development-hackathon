@@ -1,0 +1,29 @@
+{
+  "evidence_id": "1147d117-8326-4a82-a953-5390ae8caa8a",
+  "timestamp": "2025-09-27T05:09:24.030562",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.030549",
+    "data_type": "dict"
+  },
+  "integrity_hash": "e9a2f847a4d480743a0f66b65312caf4d77949593cddf604f96dd616b29433c5",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_hooks/aporia_ai/aporia_ai.py",
+    "file_size": 7848,
+    "line_count": 241,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.HTTPException",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.030538"
+  }
+}

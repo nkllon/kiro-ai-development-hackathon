@@ -1,0 +1,36 @@
+{
+  "evidence_id": "f2635ce5-c6a8-442d-9494-fd996e4ee4a0",
+  "timestamp": "2025-09-27T04:27:13.194978",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.194968",
+    "data_type": "dict"
+  },
+  "integrity_hash": "7497b49387f01f5487963d8b0eb54cb881e008b5548fb8b48be9cfe720358a07",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/huggingface_hub/_oauth.py",
+    "file_size": 18714,
+    "line_count": 461,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 1,
+      "dependencies": [
+        "fastapi.responses.RedirectResponse",
+        "starlette.middleware.sessions.SessionMiddleware",
+        "starlette.datastructures.URL",
+        "starlette.datastructures",
+        "authlib.integrations.starlette_client.OAuth",
+        "starlette.middleware.sessions",
+        "authlib.integrations.starlette_client",
+        "fastapi",
+        "fastapi.responses"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.194955"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "evidence_id": "9d0994b6-8870-40c8-a79f-8e5e25902cff",
+  "timestamp": "2025-09-27T04:35:03.707566",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.707516",
+    "data_type": "dict"
+  },
+  "integrity_hash": "2d070bc794b8f69b8844b590c33f1f20099ac5303ea66e7c202db035e7fe30ca",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_hooks/aim/aim.py",
+    "file_size": 13298,
+    "line_count": 353,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.707499"
+  }
+}

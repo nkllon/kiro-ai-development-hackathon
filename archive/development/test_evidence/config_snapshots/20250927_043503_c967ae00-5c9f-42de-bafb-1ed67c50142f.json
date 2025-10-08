@@ -1,0 +1,20 @@
+{
+  "evidence_id": "c967ae00-5c9f-42de-bafb-1ed67c50142f",
+  "timestamp": "2025-09-27T04:35:03.646662",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.646627",
+    "data_type": "dict"
+  },
+  "integrity_hash": "e33bb2f9b78517fbe56f5bd7bd26a6bf2d971ac59ab1ce2d16a342a0dbac907f",
+  "data": {
+    "file_path": "./tests/unit/test_code_analysis.py",
+    "file_size": 28742,
+    "line_count": 802,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.646616"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "report_id": "executive_20251002_140911",
+  "generated_at": "2025-10-02T14:09:11.807282",
+  "system_health_score": 35.0,
+  "total_technical_debt": 29.0,
+  "debt_trend": "stable",
+  "critical_issues": [
+    "1 critical patches require immediate attention",
+    "1 security-related patches present",
+    "1 patches are overdue for cleanup"
+  ],
+  "top_priorities": [
+    "Execute emergency cleanup for critical patches",
+    "Address critical patches immediately",
+    "Prioritize security-related patches",
+    "Create cleanup plan for overdue patches"
+  ],
+  "cleanup_progress": {
+    "total_cleanup_tasks": 2,
+    "completed_tasks": 0,
+    "in_progress_tasks": 0,
+    "blocked_tasks": 0,
+    "completion_percentage": 0.0,
+    "estimated_completion_date": null,
+    "velocity_metrics": {
+      "patches_per_week": 2.5
+    },
+    "bottlenecks": [
+      "Resource constraints",
+      "Complex dependencies"
+    ]
+  },
+  "roi_metrics": {
+    "estimated_maintenance_cost_reduction": 15000.0,
+    "development_velocity_improvement": 0.15,
+    "risk_reduction_value": 25000.0,
+    "cleanup_investment_cost": 8000.0
+  },
+  "risk_assessment": {
+    "total_patches": 2,
+    "total_debt_score": 29.0,
+    "risk_level": "critical",
+    "top_risk_factors": [
+      "1 critical patches requiring immediate attention",
+      "1 security-related patches present",
+      "1 patches are overdue for cleanup"
+    ],
+    "components_at_risk": [
+      "production_system"
+    ],
+    "recommended_actions": [
+      "Address critical patches immediately",
+      "Prioritize security-related patches",
+      "Create cleanup plan for overdue patches",
+      "Focus cleanup efforts on high-risk components: production_system"
+    ],
+    "assessment_timestamp": "2025-10-02T14:09:11.807274",
+    "trend_direction": "stable",
+    "projected_cleanup_timeline": "1-2 weeks for critical issues, 1-3 months for complete cleanup"
+  },
+  "actionable_insights": [
+    "{'type': 'quick_win', 'title': 'Quick Win Opportunities', 'description': 'Low-effort patches that can be resolved quickly', 'impact': 'medium', 'effort': 'low', 'timeline': '1-2 weeks'}",
+    "{'type': 'resource_allocation', 'title': 'Optimal Resource Allocation', 'description': 'Focus 60% of cleanup effort on critical and high-priority patches', 'impact': 'high', 'effort': 'medium', 'timeline': '1 month'}"
+  ],
+  "success_metrics": {
+    "debt_reduction_percentage": 0.0,
+    "system_stability_improvement": 0.12,
+    "development_velocity_gain": 0.08,
+    "maintenance_cost_savings": 12000.0
+  },
+  "next_review_date": "2025-10-09T14:09:11.807281",
+  "metadata": {
+    "dashboard_version": "1.0",
+    "data_freshness_hours": 0,
+    "confidence_score": 0.27
+  }
+}

@@ -1,0 +1,334 @@
+{
+  "timestamp": "2025-10-06T15:40:55.088445",
+  "operations": [
+    {
+      "action": "archive",
+      "source": ".cleanup-workspace",
+      "target": "archive/development/.cleanup-workspace",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": ".repair_backups",
+      "target": "archive/development/.repair_backups",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": ".repair_backups_phase3d",
+      "target": "archive/development/.repair_backups_phase3d",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": ".task_execution",
+      "target": "archive/development/.task_execution",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "backup_20250915_124042",
+      "target": "archive/development/backup_20250915_124042",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "beast_mode_metrics",
+      "target": "archive/development/beast_mode_metrics",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "brownfield_analysis",
+      "target": "archive/development/brownfield_analysis",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "cloudflare_parallel_logs",
+      "target": "archive/development/cloudflare_parallel_logs",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "deployment",
+      "target": "archive/development/deployment",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docker-migration-backup-20251003_161735",
+      "target": "archive/development/docker-migration-backup-20251003_161735",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "empirical_data",
+      "target": "archive/development/empirical_data",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "generated_diagrams",
+      "target": "archive/development/generated_diagrams",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "generated_docs",
+      "target": "archive/development/generated_docs",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "hackathons",
+      "target": "archive/development/hackathons",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "investigation",
+      "target": "archive/development/investigation",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "kiro_outputs",
+      "target": "archive/development/kiro_outputs",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "kiro_simone_adapter",
+      "target": "archive/development/kiro_simone_adapter",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "learning_patterns",
+      "target": "archive/development/learning_patterns",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "logs",
+      "target": "archive/development/logs",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "makefile_system",
+      "target": "archive/development/makefile_system",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "makefile_system_implemented",
+      "target": "archive/development/makefile_system_implemented",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "makefiles",
+      "target": "archive/development/makefiles",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "metrics_data",
+      "target": "archive/development/metrics_data",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "monitoring",
+      "target": "archive/development/monitoring",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "nginx",
+      "target": "archive/development/nginx",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "observatory_data",
+      "target": "archive/development/observatory_data",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "ontology",
+      "target": "archive/development/ontology",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "packer-systo-go",
+      "target": "archive/development/packer-systo-go",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "packer-systo-python",
+      "target": "archive/development/packer-systo-python",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "parallel_execution_logs",
+      "target": "archive/development/parallel_execution_logs",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "poe_deployment_20251004_152642",
+      "target": "archive/development/poe_deployment_20251004_152642",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "reports",
+      "target": "archive/development/reports",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "requirements",
+      "target": "archive/development/requirements",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "scripts-archive",
+      "target": "archive/development/scripts-archive",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "spores",
+      "target": "archive/development/spores",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "static",
+      "target": "archive/development/static",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "templates",
+      "target": "archive/development/templates",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "test_evidence",
+      "target": "archive/development/test_evidence",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "validation_evidence",
+      "target": "archive/development/validation_evidence",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "var",
+      "target": "archive/development/var",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "vonnegut_container_deployment",
+      "target": "archive/development/vonnegut_container_deployment",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "vonnegut_deployment",
+      "target": "archive/development/vonnegut_deployment",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "vonnegut_deployment_package",
+      "target": "archive/development/vonnegut_deployment_package",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "web",
+      "target": "archive/development/web",
+      "type": "directory"
+    },
+    {
+      "action": "delete",
+      "source": ".coverage",
+      "type": "file"
+    },
+    {
+      "action": "delete",
+      "source": "claude",
+      "type": "file"
+    },
+    {
+      "action": "delete",
+      "source": "file_organization_log.json",
+      "type": "file"
+    },
+    {
+      "action": "delete",
+      "source": "ghostbusters_test_validation.txt",
+      "type": "file"
+    },
+    {
+      "action": "delete",
+      "source": "nohup.out",
+      "type": "file"
+    },
+    {
+      "action": "delete",
+      "source": "test_prompt.txt",
+      "type": "file"
+    },
+    {
+      "action": "delete",
+      "source": "test_write.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "Makefile.deployment-auditor",
+      "target": "archive/development/Makefile.deployment-auditor",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "Makefile.legacy",
+      "target": "archive/development/Makefile.legacy",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "Makefile.services",
+      "target": "archive/development/Makefile.services",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "sample.env.template",
+      "target": "archive/development/sample.env.template",
+      "type": "file"
+    }
+  ],
+  "summary": {
+    "directories_archived": 44,
+    "files_archived": 4,
+    "files_deleted": 7,
+    "total_operations": 55
+  }
+}

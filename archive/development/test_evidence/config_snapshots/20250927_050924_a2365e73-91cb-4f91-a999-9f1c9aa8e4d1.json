@@ -1,0 +1,29 @@
+{
+  "evidence_id": "a2365e73-91cb-4f91-a999-9f1c9aa8e4d1",
+  "timestamp": "2025-09-27T05:09:24.072964",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.072955",
+    "data_type": "dict"
+  },
+  "integrity_hash": "5808035883f17fa1e38e9c759e095d375d1b0becdda88dc363072db9fcc3720b",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/common_utils/openai_endpoint_utils.py",
+    "file_size": 1305,
+    "line_count": 41,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi",
+        "fastapi.Request"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.072951"
+  }
+}

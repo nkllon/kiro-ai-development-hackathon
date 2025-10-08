@@ -1,0 +1,37 @@
+{
+  "evidence_id": "717c3c76-813f-4f35-8315-33dbf43f293e",
+  "timestamp": "2025-09-27T05:09:24.357386",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.357369",
+    "data_type": "dict"
+  },
+  "integrity_hash": "ea8d32519eb57b8bc58ca09e49bd8f9e8767701428d9e6128f9c6da8778df6c8",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/interpreter/computer_use/loop.py",
+    "file_size": 20467,
+    "line_count": 574,
+    "route_analysis": {
+      "total_routes": 1,
+      "websocket_routes": [],
+      "http_routes": [
+        "/openai/chat/completions"
+      ],
+      "route_handlers": {
+        "/openai/chat/completions": "chat_completion"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "uvicorn",
+        "fastapi.responses",
+        "fastapi.responses.StreamingResponse",
+        "fastapi.FastAPI",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.357352"
+  }
+}

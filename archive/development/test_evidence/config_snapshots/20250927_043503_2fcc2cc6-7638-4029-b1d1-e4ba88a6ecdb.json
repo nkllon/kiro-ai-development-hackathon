@@ -1,0 +1,20 @@
+{
+  "evidence_id": "2fcc2cc6-7638-4029-b1d1-e4ba88a6ecdb",
+  "timestamp": "2025-09-27T04:35:03.809290",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.809282",
+    "data_type": "dict"
+  },
+  "integrity_hash": "bc7db17740baf66491f4b136e592265f610f21dfb2933dd371132c8bdd9a42d8",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/fastapi/exceptions.py",
+    "file_size": 4969,
+    "line_count": 177,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.809279"
+  }
+}

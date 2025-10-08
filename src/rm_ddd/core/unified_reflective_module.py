@@ -186,14 +186,19 @@ class ReflectiveModule(ABC):
     def _initialize_prometheus_metrics(self):
         """Initialize Prometheus metrics for this module."""
         try:
+            from src.rm_ddd.core.service_config import get_service_config
             from src.beast_mode.monitoring.prometheus_exporter import PrometheusExporter
 
+            # Get Prometheus config from central service configuration
+            service_config = get_service_config()
+            prometheus_config = service_config.get_prometheus_config()
+            
             self._prometheus_exporter = PrometheusExporter(
-                port=int(os.getenv("BEAST_MODE_PROMETHEUS_PORT", "8000")),
-                enable_http_server=True,
+                prometheus_url=prometheus_config.url,
+                enable_http_server=False,  # Don't start local server, use existing one
             )
             self._logger.info(
-                f"Prometheus metrics enabled for {self.__class__.__name__}"
+                f"Prometheus metrics enabled for {self.__class__.__name__} -> {prometheus_config.url}"
             )
         except ImportError:
             self._logger.warning(

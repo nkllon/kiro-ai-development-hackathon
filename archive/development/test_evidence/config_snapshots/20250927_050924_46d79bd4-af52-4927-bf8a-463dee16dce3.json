@@ -1,0 +1,58 @@
+{
+  "evidence_id": "46d79bd4-af52-4927-bf8a-463dee16dce3",
+  "timestamp": "2025-09-27T05:09:24.341061",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.341041",
+    "data_type": "dict"
+  },
+  "integrity_hash": "df2c84b6fad3b19b345fd613a9737bf333ed001ab36d70bf53fac7bf5a99a2eb",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/batches_endpoints/endpoints.py",
+    "file_size": 18805,
+    "line_count": 550,
+    "route_analysis": {
+      "total_routes": 12,
+      "websocket_routes": [],
+      "http_routes": [
+        "/{provider}/v1/batches",
+        "/v1/batches",
+        "/batches",
+        "/{provider}/v1/batches/{batch_id:path}",
+        "/v1/batches/{batch_id:path}",
+        "/batches/{batch_id:path}",
+        "/{provider}/v1/batches",
+        "/v1/batches",
+        "/batches",
+        "/{provider}/v1/batches/{batch_id:path}/cancel",
+        "/v1/batches/{batch_id:path}/cancel",
+        "/batches/{batch_id:path}/cancel"
+      ],
+      "route_handlers": {
+        "/{provider}/v1/batches": "list_batches",
+        "/v1/batches": "list_batches",
+        "/batches": "list_batches",
+        "/{provider}/v1/batches/{batch_id:path}": "retrieve_batch",
+        "/v1/batches/{batch_id:path}": "retrieve_batch",
+        "/batches/{batch_id:path}": "retrieve_batch",
+        "/{provider}/v1/batches/{batch_id:path}/cancel": "cancel_batch",
+        "/v1/batches/{batch_id:path}/cancel": "cancel_batch",
+        "/batches/{batch_id:path}/cancel": "cancel_batch"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "fastapi.Response",
+        "fastapi.Request",
+        "fastapi.HTTPException",
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi.Path",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.341023"
+  }
+}

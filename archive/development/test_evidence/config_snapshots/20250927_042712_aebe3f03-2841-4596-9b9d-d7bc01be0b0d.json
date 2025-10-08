@@ -1,0 +1,37 @@
+{
+  "evidence_id": "aebe3f03-2841-4596-9b9d-d7bc01be0b0d",
+  "timestamp": "2025-09-27T04:27:12.883206",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.883197",
+    "data_type": "dict"
+  },
+  "integrity_hash": "b11135461ee91e404d8e668aceaed7fad1d44dae6a3853624c7f4b48014d7b61",
+  "data": {
+    "file_path": "./tests/unit/beast_mode/observatory/ai_consultation/test_websocket_handlers.py",
+    "file_size": 25491,
+    "line_count": 543,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "src.beast_mode.observatory.ai_consultation.websocket_handlers.doctor_status_websocket_handler",
+        "asyncio",
+        "src.beast_mode.observatory.ai_consultation.websocket_handlers.WebSocketConnectionManager",
+        "src.beast_mode.observatory.ai_consultation.websocket_handlers",
+        "fastapi.WebSocket",
+        "src.beast_mode.observatory.ai_consultation.websocket_handlers.chat_websocket_handler",
+        "fastapi.websockets.WebSocketState",
+        "src.beast_mode.observatory.ai_consultation.websocket_handlers.get_connection_manager",
+        "fastapi.websockets",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.883182"
+  }
+}

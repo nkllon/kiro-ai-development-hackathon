@@ -40,7 +40,7 @@ class DatabaseConnection:
             'port': int(os.getenv('DB_PORT', '5432')),
             'database': os.getenv('DB_DATABASE', 'directus'),
             'user': os.getenv('DB_USER', 'directus'),
-            'password': os.getenv('DB_PASSWORD', 'directus'),
+            'password': os.getenv("DB_PASSWORD", ""),
             'connect_timeout': int(os.getenv('DB_CONNECT_TIMEOUT', '10'))
         }
     

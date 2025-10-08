@@ -1,0 +1,270 @@
+{
+  "report_metadata": {
+    "generated": "2025-10-03T21:33:00-06:00",
+    "report_type": "service_inventory",
+    "system": "beast-mode-observatory"
+  },
+  "docker_containers": {
+    "running": [
+      {
+        "name": "beast-mode-observatory",
+        "image": "beast-mode-observatory:latest",
+        "status": "Up 5 hours",
+        "health": "healthy",
+        "ports": ["8888-8890"],
+        "service_type": "core_application"
+      },
+      {
+        "name": "observatory-engagement-manager",
+        "image": "beast-mode-engagement:latest",
+        "status": "Up 5 hours",
+        "health": "healthy",
+        "ports": ["8891"],
+        "service_type": "application"
+      },
+      {
+        "name": "observatory-grafana",
+        "image": "grafana/grafana:latest",
+        "status": "Up 5 hours",
+        "health": "unknown",
+        "ports": ["3000"],
+        "service_type": "monitoring"
+      },
+      {
+        "name": "observatory-prometheus",
+        "image": "prom/prometheus:latest",
+        "status": "Up 5 hours",
+        "health": "unknown",
+        "ports": ["9090"],
+        "service_type": "monitoring"
+      },
+      {
+        "name": "observatory-jaeger",
+        "image": "jaegertracing/all-in-one:latest",
+        "status": "Up 5 hours",
+        "health": "unknown",
+        "ports": ["14250", "14268", "6831-6832", "16686"],
+        "service_type": "tracing"
+      },
+      {
+        "name": "observatory-cloudflare-tunnel",
+        "image": "cloudflare/cloudflared:latest",
+        "status": "Up 5 hours",
+        "health": "degraded",
+        "ports": [],
+        "service_type": "networking",
+        "notes": "Container up but tunnel process not detected"
+      },
+      {
+        "name": "directus_cms_fixed",
+        "image": "directus/directus:10.8",
+        "status": "Up 8 hours",
+        "health": "unhealthy",
+        "ports": ["8055"],
+        "service_type": "cms",
+        "notes": "Service functional but health check failing"
+      },
+      {
+        "name": "directus_postgres_fixed",
+        "image": "postgres:15-alpine",
+        "status": "Up 8 hours",
+        "health": "healthy",
+        "ports": ["5433:5432"],
+        "service_type": "database"
+      },
+      {
+        "name": "directus_redis_fixed",
+        "image": "redis:7-alpine",
+        "status": "Up 8 hours",
+        "health": "healthy",
+        "ports": ["6380:6379"],
+        "service_type": "cache"
+      },
+      {
+        "name": "msp-ssl-redis",
+        "image": "redis:7-alpine",
+        "status": "Up 16 hours",
+        "health": "unknown",
+        "ports": ["6379"],
+        "service_type": "cache"
+      },
+      {
+        "name": "local-directus-db-1",
+        "image": "postgres:15",
+        "status": "Up 16 hours",
+        "health": "healthy",
+        "ports": ["5432"],
+        "service_type": "database"
+      }
+    ],
+    "stopped": [
+      {
+        "name": "google_workspace_mcp",
+        "image": "google-workspace-mcp-google-workspace-mcp",
+        "status": "Exited 16 hours ago",
+        "exit_code": 143,
+        "service_type": "mcp_integration"
+      }
+    ]
+  },
+  "active_services": {
+    "web_applications": [
+      {
+        "name": "Beast Mode Observatory",
+        "url": "http://localhost:8888",
+        "status": "operational",
+        "health_endpoint": "/health",
+        "metrics_endpoint": "/metrics",
+        "uptime_seconds": 18737
+      },
+      {
+        "name": "Engagement Manager",
+        "url": "http://localhost:8891",
+        "status": "operational",
+        "health_endpoint": "/health"
+      },
+      {
+        "name": "Grafana",
+        "url": "http://localhost:3000",
+        "status": "operational",
+        "version": "12.1.1",
+        "health_endpoint": "/api/health"
+      },
+      {
+        "name": "Directus CMS",
+        "url": "http://localhost:8055",
+        "status": "degraded",
+        "health_endpoint": "/server/health"
+      },
+      {
+        "name": "Jaeger UI",
+        "url": "http://localhost:16686",
+        "status": "operational"
+      }
+    ],
+    "monitoring_services": [
+      {
+        "name": "Prometheus",
+        "url": "http://localhost:9090",
+        "status": "operational",
+        "health_endpoint": "/-/healthy",
+        "targets": {
+          "total": 6,
+          "up": 3,
+          "down": 3
+        }
+      },
+      {
+        "name": "Jaeger Tracing",
+        "url": "http://localhost:16686",
+        "status": "operational"
+      }
+    ],
+    "data_services": [
+      {
+        "name": "Redis (Main)",
+        "port": 6379,
+        "status": "operational",
+        "connections": 22,
+        "response": "PONG"
+      },
+      {
+        "name": "Redis (Directus)",
+        "port": 6380,
+        "status": "operational",
+        "container": "directus_redis_fixed"
+      },
+      {
+        "name": "PostgreSQL (Directus)",
+        "port": 5433,
+        "status": "operational",
+        "container": "directus_postgres_fixed"
+      },
+      {
+        "name": "PostgreSQL (Local)",
+        "port": 5432,
+        "status": "operational",
+        "container": "local-directus-db-1"
+      }
+    ]
+  },
+  "mcp_servers": {
+    "total_processes": 8,
+    "services": [
+      {
+        "name": "Google Workspace MCP",
+        "status": "stopped",
+        "container": "google_workspace_mcp",
+        "notes": "Exited 16 hours ago with SIGTERM"
+      }
+    ]
+  },
+  "development_environment": {
+    "python": {
+      "version": "3.9.6",
+      "environment": "virtualenv",
+      "location": ".venv/bin/python",
+      "packages": [
+        {
+          "name": "kiro-ai-development-hackathon",
+          "version": "1.0.0",
+          "install_mode": "editable"
+        }
+      ],
+      "critical_imports": {
+        "ReflectiveModule": "OK",
+        "DeploymentDataAuditor": "OK"
+      }
+    },
+    "tools": [
+      "git",
+      "docker",
+      "docker-compose",
+      "pytest",
+      "make"
+    ]
+  },
+  "network_ports": {
+    "http_services": [
+      {"port": 8888, "service": "Observatory", "status": "active"},
+      {"port": 8891, "service": "Engagement Manager", "status": "active"},
+      {"port": 3000, "service": "Grafana", "status": "active"},
+      {"port": 9090, "service": "Prometheus", "status": "active"},
+      {"port": 8055, "service": "Directus CMS", "status": "active"},
+      {"port": 16686, "service": "Jaeger UI", "status": "active"}
+    ],
+    "data_services": [
+      {"port": 6379, "service": "Redis (Main)", "status": "active"},
+      {"port": 6380, "service": "Redis (Directus)", "status": "active"},
+      {"port": 5432, "service": "PostgreSQL (Local)", "status": "active"},
+      {"port": 5433, "service": "PostgreSQL (Directus)", "status": "active"}
+    ],
+    "tracing_services": [
+      {"port": 14250, "service": "Jaeger gRPC", "status": "active"},
+      {"port": 14268, "service": "Jaeger HTTP", "status": "active"},
+      {"port": 6831, "service": "Jaeger UDP (compact)", "status": "active"},
+      {"port": 6832, "service": "Jaeger UDP (binary)", "status": "active"}
+    ]
+  },
+  "system_resources": {
+    "disk_usage": {
+      "total_gb": 228,
+      "used_gb": 184,
+      "available_gb": 19,
+      "usage_percent": 91
+    },
+    "active_processes": {
+      "observatory": 2,
+      "mcp_servers": 8,
+      "redis_connections": 22
+    }
+  },
+  "health_summary": {
+    "total_services": 18,
+    "operational": 14,
+    "degraded": 2,
+    "down": 1,
+    "unknown": 1,
+    "overall_health_percentage": 78
+  }
+}

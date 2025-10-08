@@ -1,0 +1,60 @@
+{
+  "evidence_id": "876d8405-91dd-4d29-9c7f-ee7f89aed4a1",
+  "timestamp": "2025-09-27T05:09:24.682253",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.682222",
+    "data_type": "dict"
+  },
+  "integrity_hash": "889f994b54e947860ee0af8b499ff39a2599c8338d02362d8760b3583dd82193",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/management_endpoints/ui_sso.py",
+    "file_size": 76199,
+    "line_count": 1956,
+    "route_analysis": {
+      "total_routes": 6,
+      "websocket_routes": [],
+      "http_routes": [
+        "/sso/key/generate",
+        "/sso/callback",
+        "/sso/cli/poll/{key_id}",
+        "/sso/get/ui_settings",
+        "/sso/debug/login",
+        "/sso/debug/callback"
+      ],
+      "route_handlers": {
+        "/sso/key/generate": "google_login",
+        "/sso/callback": "auth_callback",
+        "/sso/cli/poll/{key_id}": "cli_poll_key",
+        "/sso/get/ui_settings": "get_ui_settings",
+        "/sso/debug/login": "debug_sso_login",
+        "/sso/debug/callback": "debug_sso_callback"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.HTTPException",
+        "fastapi.status",
+        "fastapi_sso.sso.base",
+        "fastapi.responses.RedirectResponse",
+        "fastapi",
+        "asyncio",
+        "fastapi.Request",
+        "fastapi.responses",
+        "fastapi_sso.sso.base.OpenID",
+        "fastapi_sso.sso.generic",
+        "fastapi.responses.HTMLResponse",
+        "fastapi_sso.sso.microsoft.MicrosoftSSO",
+        "fastapi_sso.sso.google.GoogleSSO",
+        "fastapi_sso.sso.generic.create_provider",
+        "fastapi_sso.sso.base.DiscoveryDocument",
+        "fastapi.APIRouter",
+        "fastapi_sso.sso.microsoft",
+        "fastapi.Depends",
+        "fastapi_sso.sso.google"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.682171"
+  }
+}

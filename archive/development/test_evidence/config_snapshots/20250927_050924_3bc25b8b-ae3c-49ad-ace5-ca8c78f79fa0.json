@@ -1,0 +1,29 @@
+{
+  "evidence_id": "3bc25b8b-ae3c-49ad-ace5-ca8c78f79fa0",
+  "timestamp": "2025-09-27T05:09:24.750302",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.750295",
+    "data_type": "dict"
+  },
+  "integrity_hash": "142cd860d4f23b0acd0303949fd0aec0497feabcc44df1a98be790bfefd11d49",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/hooks/max_budget_limiter.py",
+    "file_size": 1637,
+    "line_count": 50,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.HTTPException",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.750291"
+  }
+}

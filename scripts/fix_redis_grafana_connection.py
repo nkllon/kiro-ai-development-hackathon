@@ -62,7 +62,7 @@ def create_redis_datasource():
         }
     ]
     
-    grafana_password = os.getenv('GRAFANA_PASSWORD', 'admin')
+    grafana_password = os.getenv("GRAFANA_PASSWORD", "")
     
     for i, config in enumerate(configs_to_try):
         print(f"🔧 Trying configuration {i+1}: {config['name']}")
@@ -122,7 +122,7 @@ def list_datasources():
     try:
         response = requests.get(
             'http://localhost:3000/api/datasources',
-            auth=('admin', os.getenv('GRAFANA_PASSWORD', 'admin'))
+            auth=('admin', os.getenv("GRAFANA_PASSWORD", ""))
         )
         
         if response.status_code == 200:

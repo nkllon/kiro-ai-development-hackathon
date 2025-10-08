@@ -1,0 +1,49 @@
+{
+  "name": "beast-mode-framework",
+  "version": "1.0.0",
+  "description": "AI-Powered Spec-Driven Development Framework - Where Requirements ARE the Solution",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/beast-mode/kiro-ai-development-hackathon.git"
+  },
+  "keywords": [
+    "ai-framework",
+    "spec-driven-development",
+    "pdca",
+    "autonomous-development",
+    "python",
+    "machine-learning",
+    "development-framework",
+    "reflective-module",
+    "mcp-integration"
+  ],
+  "author": "Beast Mode Framework Team <beast@mode.dev>",
+  "license": "MIT",
+  "homepage": "https://github.com/beast-mode/kiro-ai-development-hackathon#readme",
+  "bugs": {
+    "url": "https://github.com/beast-mode/kiro-ai-development-hackathon/issues"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Python-based project - use 'make test'\" && exit 0",
+    "lint": "echo \"Python-based project - use 'make lint'\" && exit 0",
+    "build": "echo \"Python-based project - use 'make build'\" && exit 0",
+    "install-python-deps": "pip install -e .",
+    "setup": "python -m venv venv && source venv/bin/activate && pip install -e ."
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.18.1"
+  },
+  "devDependencies": {},
+  "files": [
+    "src/",
+    "README.md",
+    "LICENSE",
+    "pyproject.toml",
+    "setup.py"
+  ]
+}

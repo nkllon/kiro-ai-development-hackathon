@@ -1,0 +1,30 @@
+{
+  "evidence_id": "9c204a12-827c-4e24-9aa0-1ac131577595",
+  "timestamp": "2025-09-27T05:09:24.164932",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.164918",
+    "data_type": "dict"
+  },
+  "integrity_hash": "b7000bdb22ff297729490358f255c88a40e0e1922a98d176ea1591a774dff667",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/management_helpers/utils.py",
+    "file_size": 14295,
+    "line_count": 373,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.HTTPException",
+        "fastapi",
+        "fastapi.Request"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.164906"
+  }
+}

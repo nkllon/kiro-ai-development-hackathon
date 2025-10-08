@@ -1,0 +1,49 @@
+{
+  "execution_id": "kiro-dag-20250930-164217",
+  "total_tasks": 5,
+  "tasks": {
+    "1.1_project_structure_setup": {
+      "status": "completed",
+      "exit_code": 0,
+      "duration_seconds": 20.02934,
+      "stdout": "Reading from stdin via: /var/folders/cj/jy2bc_mx2yn030n_jwgcrrmr0000gn/T/code-stdin-UKh\n",
+      "stderr": "",
+      "log_file": "logs/kiro-dag/kiro-dag-20250930-164217/1.1_project_structure_setup-164217.log"
+    },
+    "1.2_observatory_websocket_integration": {
+      "status": "completed",
+      "exit_code": 0,
+      "duration_seconds": 14.021694,
+      "stdout": "Reading from stdin via: /var/folders/cj/jy2bc_mx2yn030n_jwgcrrmr0000gn/T/code-stdin-uXi\n",
+      "stderr": "",
+      "log_file": "logs/kiro-dag/kiro-dag-20250930-164217/1.2_observatory_websocket_integration-164223.log"
+    },
+    "1.4_cloudflare_tunnel_discovery": {
+      "status": "completed",
+      "exit_code": 0,
+      "duration_seconds": 13.017971,
+      "stdout": "Reading from stdin via: /var/folders/cj/jy2bc_mx2yn030n_jwgcrrmr0000gn/T/code-stdin-C1S\n",
+      "stderr": "",
+      "log_file": "logs/kiro-dag/kiro-dag-20250930-164217/1.4_cloudflare_tunnel_discovery-164224.log"
+    },
+    "1.5_makefile_analysis_system": {
+      "status": "completed",
+      "exit_code": 0,
+      "duration_seconds": 12.008104,
+      "stdout": "Reading from stdin via: /var/folders/cj/jy2bc_mx2yn030n_jwgcrrmr0000gn/T/code-stdin-Rqi\n",
+      "stderr": "",
+      "log_file": "logs/kiro-dag/kiro-dag-20250930-164217/1.5_makefile_analysis_system-164225.log"
+    },
+    "1.3_service_discovery_scanner": {
+      "status": "completed",
+      "exit_code": 0,
+      "duration_seconds": 6.002892,
+      "stdout": "Reading from stdin via: /var/folders/cj/jy2bc_mx2yn030n_jwgcrrmr0000gn/T/code-stdin-oOy\n",
+      "stderr": "",
+      "log_file": "logs/kiro-dag/kiro-dag-20250930-164217/1.3_service_discovery_scanner-164231.log"
+    }
+  },
+  "running_tasks": 0,
+  "completed_tasks": 5,
+  "failed_tasks": 0
+}

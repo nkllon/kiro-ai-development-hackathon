@@ -1,0 +1,75 @@
+{
+  "evidence_id": "e6875ad1-c918-484e-ae7d-3f753bbe24b2",
+  "timestamp": "2025-09-27T05:09:24.088586",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.088558",
+    "data_type": "dict"
+  },
+  "integrity_hash": "e49898f3c138d94da1bccb45589dad50c014eea5a08e380a64bb5929576c0101",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/management_endpoints/team_endpoints.py",
+    "file_size": 113744,
+    "line_count": 3134,
+    "route_analysis": {
+      "total_routes": 19,
+      "websocket_routes": [],
+      "http_routes": [
+        "/team/new",
+        "/team/update",
+        "/team/member_add",
+        "/team/member_delete",
+        "/team/member_update",
+        "/team/bulk_member_add",
+        "/team/delete",
+        "/team/info",
+        "/team/block",
+        "/team/unblock",
+        "/team/available",
+        "/v2/team/list",
+        "/team/list",
+        "/team/filter/ui",
+        "/team/model/add",
+        "/team/model/delete",
+        "/team/permissions_list",
+        "/team/permissions_update",
+        "/team/daily/activity"
+      ],
+      "route_handlers": {
+        "/team/new": "new_team",
+        "/team/update": "update_team",
+        "/team/member_add": "team_member_add",
+        "/team/member_delete": "team_member_delete",
+        "/team/member_update": "team_member_update",
+        "/team/bulk_member_add": "bulk_team_member_add",
+        "/team/delete": "delete_team",
+        "/team/info": "team_info",
+        "/team/block": "block_team",
+        "/team/unblock": "unblock_team",
+        "/team/available": "list_available_teams",
+        "/v2/team/list": "list_team_v2",
+        "/team/list": "list_team",
+        "/team/filter/ui": "ui_view_teams",
+        "/team/model/add": "team_model_add",
+        "/team/model/delete": "team_model_delete",
+        "/team/permissions_list": "team_member_permissions",
+        "/team/permissions_update": "update_team_member_permissions",
+        "/team/daily/activity": "get_team_daily_activity"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "fastapi.Request",
+        "fastapi.Header",
+        "fastapi.HTTPException",
+        "fastapi.status",
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.088487"
+  }
+}

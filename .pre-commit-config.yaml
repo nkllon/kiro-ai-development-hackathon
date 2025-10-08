@@ -1,0 +1,215 @@
+# Pre-commit hooks for Beast Mode AI Development Framework
+# Install with: pre-commit install
+# Run manually with: pre-commit run --all-files
+
+repos:
+  # Security scanning
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: ^(\.secrets\.baseline|tests/fixtures/.*|examples/.*/sample_data/.*)$
+
+  # Python code formatting
+  - repo: https://github.com/psf/black
+    rev: 23.12.1
+    hooks:
+      - id: black
+        language_version: python3.11
+        args: [--line-length=88]
+
+  # Python import sorting
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: [--profile=black, --line-length=88]
+
+  # Python linting
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.1.9
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+
+  # Python type checking
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-requests, types-PyYAML]
+        args: [--ignore-missing-imports, --no-strict-optional]
+
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      # File format checks
+      - id: trailing-whitespace
+        exclude: ^(\.secrets\.baseline|.*\.md)$
+      - id: end-of-file-fixer
+        exclude: ^(\.secrets\.baseline)$
+      - id: check-yaml
+        exclude: ^(\.github/workflows/.*\.yml)$
+      - id: check-json
+        exclude: ^(\.secrets\.baseline|.*\.jsonl)$
+      - id: check-toml
+      - id: check-xml
+
+      # Security checks
+      - id: check-private-key
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+
+      # Python specific
+      - id: check-ast
+      - id: check-builtin-literals
+      - id: check-docstring-first
+      - id: debug-statements
+      - id: name-tests-test
+        args: [--pytest-test-first]
+
+  # Dockerfile linting
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+      - id: hadolint-docker
+        args: [--ignore, DL3008, --ignore, DL3009]
+
+  # Shell script linting
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.9.0.6
+    hooks:
+      - id: shellcheck
+        args: [--severity=warning]
+
+  # Markdown linting
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.38.0
+    hooks:
+      - id: markdownlint
+        args: [--fix, --disable, MD013, MD033, MD041]
+
+  # YAML formatting
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        types: [yaml]
+        exclude: ^(\.github/workflows/.*\.yml|docker-compose.*\.yml)$
+
+  # Custom security validation
+  - repo: local
+    hooks:
+      - id: credential-check
+        name: Check for hardcoded credentials
+        entry: python
+        language: system
+        args:
+          - -c
+          - |
+            import os
+            import re
+            import sys
+            from pathlib import Path
+            
+            # Credential patterns to detect
+            patterns = {
+                'password': r'(?i)(password|passwd|pwd)\s*[:=]\s*[\'"]?([^\'"\\s]{8,})[\'"]?',
+                'api_key': r'(?i)(api[_-]?key|apikey)\s*[:=]\s*[\'"]?([a-zA-Z0-9_-]{20,})[\'"]?',
+                'token': r'(?i)(token|auth[_-]?token)\s*[:=]\s*[\'"]?([a-zA-Z0-9_-]{20,})[\'"]?',
+                'secret': r'(?i)(secret|secret[_-]?key)\s*[:=]\s*[\'"]?([a-zA-Z0-9_-]{20,})[\'"]?',
+            }
+            
+            violations = []
+            for file_path in sys.argv[1:]:
+                if file_path.endswith(('.py', '.yml', '.yaml', '.json', '.sh')):
+                    try:
+                        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                            content = f.read()
+                            for pattern_name, pattern in patterns.items():
+                                matches = re.finditer(pattern, content, re.MULTILINE)
+                                for match in matches:
+                                    line_num = content[:match.start()].count('\n') + 1
+                                    violations.append(f'{file_path}:{line_num} - Potential {pattern_name}: {match.group(0)[:50]}...')
+                    except Exception:
+                        pass
+            
+            if violations:
+                print('❌ Potential hardcoded credentials found:')
+                for violation in violations:
+                    print(f'  {violation}')
+                sys.exit(1)
+        files: \.(py|yml|yaml|json|sh)$
+        exclude: ^(\.secrets\.baseline|tests/fixtures/.*|examples/.*/sample_data/.*)$
+
+      - id: environment-variable-check
+        name: Verify environment variable usage
+        entry: python
+        language: system
+        args:
+          - -c
+          - |
+            import os
+            import re
+            import sys
+            from pathlib import Path
+            
+            violations = []
+            for file_path in sys.argv[1:]:
+                if file_path.endswith('.py'):
+                    try:
+                        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                            content = f.read()
+                            
+                            # Check for hardcoded credential assignments
+                            hardcoded_patterns = [
+                                r'password\s*=\s*[\'"][^\'"]+[\'"]',
+                                r'api_key\s*=\s*[\'"][^\'"]+[\'"]',
+                                r'secret\s*=\s*[\'"][^\'"]+[\'"]',
+                                r'token\s*=\s*[\'"][^\'"]+[\'"]',
+                            ]
+                            
+                            for pattern in hardcoded_patterns:
+                                matches = re.finditer(pattern, content, re.IGNORECASE)
+                                for match in matches:
+                                    # Skip if it's using os.getenv or similar
+                                    line_start = content.rfind('\n', 0, match.start()) + 1
+                                    line_end = content.find('\n', match.end())
+                                    if line_end == -1:
+                                        line_end = len(content)
+                                    line = content[line_start:line_end]
+                                    
+                                    if 'os.getenv' not in line and 'getenv' not in line and 'environ' not in line:
+                                        line_num = content[:match.start()].count('\n') + 1
+                                        violations.append(f'{file_path}:{line_num} - Hardcoded credential: {match.group(0)}')
+                    except Exception:
+                        pass
+            
+            if violations:
+                print('❌ Hardcoded credentials found (should use environment variables):')
+                for violation in violations:
+                    print(f'  {violation}')
+                sys.exit(1)
+        files: \.py$
+        exclude: ^(tests/fixtures/.*|examples/.*/sample_data/.*)$
+
+# Configuration for specific hooks
+default_language_version:
+  python: python3.11
+
+# Global excludes
+exclude: |
+  (?x)^(
+    \.git/.*|
+    \.venv/.*|
+    __pycache__/.*|
+    \.pytest_cache/.*|
+    \.mypy_cache/.*|
+    node_modules/.*|
+    \.secrets\.baseline|
+    tests/fixtures/.*|
+    examples/.*/sample_data/.*
+  )$

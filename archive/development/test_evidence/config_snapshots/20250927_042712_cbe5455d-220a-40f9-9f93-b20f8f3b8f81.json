@@ -1,0 +1,44 @@
+{
+  "evidence_id": "cbe5455d-220a-40f9-9f93-b20f8f3b8f81",
+  "timestamp": "2025-09-27T04:27:12.935539",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.935518",
+    "data_type": "dict"
+  },
+  "integrity_hash": "6932836aa519eee15c0fee64008f2ca912eb029331d7a119bc8f0d87b929830e",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/_experimental/mcp_server/server.py",
+    "file_size": 35658,
+    "line_count": 873,
+    "route_analysis": {
+      "total_routes": 1,
+      "websocket_routes": [],
+      "http_routes": [
+        "/enabled"
+      ],
+      "route_handlers": {
+        "/enabled": "get_mcp_server_enabled"
+      },
+      "middleware_count": 1,
+      "dependencies": [
+        "starlette.types.Send",
+        "asyncio",
+        "starlette.responses",
+        "starlette.responses.JSONResponse",
+        "starlette.types.Scope",
+        "starlette.types.Receive",
+        "starlette.status",
+        "starlette.types",
+        "fastapi.Request",
+        "fastapi",
+        "fastapi.HTTPException",
+        "starlette.status.HTTP_500_INTERNAL_SERVER_ERROR",
+        "fastapi.FastAPI"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.935490"
+  }
+}

@@ -1,0 +1,386 @@
+{
+  "suite_summary": {
+    "total_tests": 8,
+    "suite_execution_time": 4.297595262527466,
+    "workflows_tested": 2,
+    "strategy_combinations_tested": 4
+  },
+  "performance_summary": {
+    "avg_parallelization_efficiency": 0.9197354299036394,
+    "avg_success_rate": 0.9375,
+    "avg_execution_time": 0.5316931307315826,
+    "best_combination": "software_build + conservative + priority",
+    "best_parallelization_efficiency": 1.6487615130418176,
+    "best_success_rate": 1.0
+  },
+  "strategy_performance": {
+    "conservative+priority": {
+      "avg_parallelization": 1.4496691774576749,
+      "avg_success_rate": 0.75,
+      "avg_execution_time": 0.41160809993743896,
+      "test_count": 2
+    },
+    "conservative+adaptive": {
+      "avg_parallelization": 0.7516880290813865,
+      "avg_success_rate": 1.0,
+      "avg_execution_time": 0.5490176677703857,
+      "test_count": 2
+    },
+    "aggressive+priority": {
+      "avg_parallelization": 0.751529447231244,
+      "avg_success_rate": 1.0,
+      "avg_execution_time": 0.5974439382553101,
+      "test_count": 2
+    },
+    "aggressive+adaptive": {
+      "avg_parallelization": 0.7260550658442527,
+      "avg_success_rate": 1.0,
+      "avg_execution_time": 0.5687028169631958,
+      "test_count": 2
+    }
+  },
+  "individual_results": [
+    {
+      "workflow_type": "software_build",
+      "execution_strategy": "conservative",
+      "scheduling_strategy": "priority",
+      "total_tasks": 11,
+      "successful_tasks": 11,
+      "failed_tasks": 0,
+      "skipped_tasks": 0,
+      "execution_time": 0.5667593479156494,
+      "total_task_time": 0.934451,
+      "parallelization_efficiency": 1.6487615130418176,
+      "success_rate": 1.0,
+      "scheduler_statistics": {
+        "strategy": "priority",
+        "total_tasks": 11,
+        "scheduled_tasks": 0,
+        "ready_tasks": 3,
+        "pending_tasks": 11,
+        "total_scheduling_decisions": 0,
+        "average_scheduling_time_ms": 0.0,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 5.0,
+          "average_critical_path_length": 2.4545454545454546
+        }
+      },
+      "engine_statistics": {
+        "total_executions": 1,
+        "successful_executions": 1,
+        "failed_executions": 0,
+        "success_rate": 1.0,
+        "total_tasks_executed": 11,
+        "average_tasks_per_execution": 11.0,
+        "current_execution_active": false,
+        "executor_configuration": {
+          "max_workers": 6,
+          "execution_strategy": "conservative",
+          "executor_active": true
+        }
+      },
+      "timestamp": "2025-09-29T18:15:55.942888"
+    },
+    {
+      "workflow_type": "software_build",
+      "execution_strategy": "conservative",
+      "scheduling_strategy": "adaptive",
+      "total_tasks": 11,
+      "successful_tasks": 11,
+      "failed_tasks": 0,
+      "skipped_tasks": 0,
+      "execution_time": 0.4550602436065674,
+      "total_task_time": 0.43185499999999993,
+      "parallelization_efficiency": 0.9490062163579597,
+      "success_rate": 1.0,
+      "scheduler_statistics": {
+        "strategy": "adaptive",
+        "total_tasks": 11,
+        "scheduled_tasks": 0,
+        "ready_tasks": 3,
+        "pending_tasks": 11,
+        "total_scheduling_decisions": 0,
+        "average_scheduling_time_ms": 0.0,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 5.0,
+          "average_critical_path_length": 2.4545454545454546
+        }
+      },
+      "engine_statistics": {
+        "total_executions": 1,
+        "successful_executions": 1,
+        "failed_executions": 0,
+        "success_rate": 1.0,
+        "total_tasks_executed": 11,
+        "average_tasks_per_execution": 11.0,
+        "current_execution_active": false,
+        "executor_configuration": {
+          "max_workers": 6,
+          "execution_strategy": "conservative",
+          "executor_active": true
+        }
+      },
+      "timestamp": "2025-09-29T18:15:56.398606"
+    },
+    {
+      "workflow_type": "software_build",
+      "execution_strategy": "aggressive",
+      "scheduling_strategy": "priority",
+      "total_tasks": 11,
+      "successful_tasks": 11,
+      "failed_tasks": 0,
+      "skipped_tasks": 0,
+      "execution_time": 0.5385520458221436,
+      "total_task_time": 0.442791,
+      "parallelization_efficiency": 0.8221879453155608,
+      "success_rate": 1.0,
+      "scheduler_statistics": {
+        "strategy": "priority",
+        "total_tasks": 11,
+        "scheduled_tasks": 0,
+        "ready_tasks": 3,
+        "pending_tasks": 11,
+        "total_scheduling_decisions": 0,
+        "average_scheduling_time_ms": 0.0,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 5.0,
+          "average_critical_path_length": 2.4545454545454546
+        }
+      },
+      "engine_statistics": {
+        "total_executions": 1,
+        "successful_executions": 1,
+        "failed_executions": 0,
+        "success_rate": 1.0,
+        "total_tasks_executed": 11,
+        "average_tasks_per_execution": 11.0,
+        "current_execution_active": false,
+        "executor_configuration": {
+          "max_workers": 6,
+          "execution_strategy": "aggressive",
+          "executor_active": true
+        }
+      },
+      "timestamp": "2025-09-29T18:15:56.937620"
+    },
+    {
+      "workflow_type": "software_build",
+      "execution_strategy": "aggressive",
+      "scheduling_strategy": "adaptive",
+      "total_tasks": 11,
+      "successful_tasks": 11,
+      "failed_tasks": 0,
+      "skipped_tasks": 0,
+      "execution_time": 0.5012826919555664,
+      "total_task_time": 0.47533499999999995,
+      "parallelization_efficiency": 0.9482374070121167,
+      "success_rate": 1.0,
+      "scheduler_statistics": {
+        "strategy": "adaptive",
+        "total_tasks": 11,
+        "scheduled_tasks": 0,
+        "ready_tasks": 3,
+        "pending_tasks": 11,
+        "total_scheduling_decisions": 0,
+        "average_scheduling_time_ms": 0.0,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 5.0,
+          "average_critical_path_length": 2.4545454545454546
+        }
+      },
+      "engine_statistics": {
+        "total_executions": 1,
+        "successful_executions": 1,
+        "failed_executions": 0,
+        "success_rate": 1.0,
+        "total_tasks_executed": 11,
+        "average_tasks_per_execution": 11.0,
+        "current_execution_active": false,
+        "executor_configuration": {
+          "max_workers": 6,
+          "execution_strategy": "aggressive",
+          "executor_active": true
+        }
+      },
+      "timestamp": "2025-09-29T18:15:57.439365"
+    },
+    {
+      "workflow_type": "data_pipeline",
+      "execution_strategy": "conservative",
+      "scheduling_strategy": "priority",
+      "total_tasks": 10,
+      "successful_tasks": 5,
+      "failed_tasks": 1,
+      "skipped_tasks": 1,
+      "execution_time": 0.2564568519592285,
+      "total_task_time": 0.320719,
+      "parallelization_efficiency": 1.2505768418735321,
+      "success_rate": 0.5,
+      "scheduler_statistics": {
+        "strategy": "priority",
+        "total_tasks": 10,
+        "scheduled_tasks": 0,
+        "ready_tasks": 3,
+        "pending_tasks": 10,
+        "total_scheduling_decisions": 0,
+        "average_scheduling_time_ms": 0.0,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 6.0,
+          "average_critical_path_length": 2.7
+        }
+      },
+      "engine_statistics": {
+        "total_executions": 1,
+        "successful_executions": 0,
+        "failed_executions": 1,
+        "success_rate": 0.0,
+        "total_tasks_executed": 7,
+        "average_tasks_per_execution": 7.0,
+        "current_execution_active": false,
+        "executor_configuration": {
+          "max_workers": 6,
+          "execution_strategy": "conservative",
+          "executor_active": true
+        }
+      },
+      "timestamp": "2025-09-29T18:15:57.696286"
+    },
+    {
+      "workflow_type": "data_pipeline",
+      "execution_strategy": "conservative",
+      "scheduling_strategy": "adaptive",
+      "total_tasks": 10,
+      "successful_tasks": 10,
+      "failed_tasks": 0,
+      "skipped_tasks": 0,
+      "execution_time": 0.6429750919342041,
+      "total_task_time": 0.35644600000000004,
+      "parallelization_efficiency": 0.5543698418048133,
+      "success_rate": 1.0,
+      "scheduler_statistics": {
+        "strategy": "adaptive",
+        "total_tasks": 10,
+        "scheduled_tasks": 0,
+        "ready_tasks": 3,
+        "pending_tasks": 10,
+        "total_scheduling_decisions": 0,
+        "average_scheduling_time_ms": 0.0,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 6.0,
+          "average_critical_path_length": 2.7
+        }
+      },
+      "engine_statistics": {
+        "total_executions": 1,
+        "successful_executions": 1,
+        "failed_executions": 0,
+        "success_rate": 1.0,
+        "total_tasks_executed": 10,
+        "average_tasks_per_execution": 10.0,
+        "current_execution_active": false,
+        "executor_configuration": {
+          "max_workers": 6,
+          "execution_strategy": "conservative",
+          "executor_active": true
+        }
+      },
+      "timestamp": "2025-09-29T18:15:58.339741"
+    },
+    {
+      "workflow_type": "data_pipeline",
+      "execution_strategy": "aggressive",
+      "scheduling_strategy": "priority",
+      "total_tasks": 10,
+      "successful_tasks": 10,
+      "failed_tasks": 0,
+      "skipped_tasks": 0,
+      "execution_time": 0.6563358306884766,
+      "total_task_time": 0.44687999999999994,
+      "parallelization_efficiency": 0.6808709491469273,
+      "success_rate": 1.0,
+      "scheduler_statistics": {
+        "strategy": "priority",
+        "total_tasks": 10,
+        "scheduled_tasks": 0,
+        "ready_tasks": 3,
+        "pending_tasks": 10,
+        "total_scheduling_decisions": 0,
+        "average_scheduling_time_ms": 0.0,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 6.0,
+          "average_critical_path_length": 2.7
+        }
+      },
+      "engine_statistics": {
+        "total_executions": 1,
+        "successful_executions": 1,
+        "failed_executions": 0,
+        "success_rate": 1.0,
+        "total_tasks_executed": 10,
+        "average_tasks_per_execution": 10.0,
+        "current_execution_active": false,
+        "executor_configuration": {
+          "max_workers": 6,
+          "execution_strategy": "aggressive",
+          "executor_active": true
+        }
+      },
+      "timestamp": "2025-09-29T18:15:58.996673"
+    },
+    {
+      "workflow_type": "data_pipeline",
+      "execution_strategy": "aggressive",
+      "scheduling_strategy": "adaptive",
+      "total_tasks": 10,
+      "successful_tasks": 10,
+      "failed_tasks": 0,
+      "skipped_tasks": 0,
+      "execution_time": 0.6361229419708252,
+      "total_task_time": 0.320525,
+      "parallelization_efficiency": 0.5038727246763888,
+      "success_rate": 1.0,
+      "scheduler_statistics": {
+        "strategy": "adaptive",
+        "total_tasks": 10,
+        "scheduled_tasks": 0,
+        "ready_tasks": 3,
+        "pending_tasks": 10,
+        "total_scheduling_decisions": 0,
+        "average_scheduling_time_ms": 0.0,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 6.0,
+          "average_critical_path_length": 2.7
+        }
+      },
+      "engine_statistics": {
+        "total_executions": 1,
+        "successful_executions": 1,
+        "failed_executions": 0,
+        "success_rate": 1.0,
+        "total_tasks_executed": 10,
+        "average_tasks_per_execution": 10.0,
+        "current_execution_active": false,
+        "executor_configuration": {
+          "max_workers": 6,
+          "execution_strategy": "aggressive",
+          "executor_active": true
+        }
+      },
+      "timestamp": "2025-09-29T18:15:59.633399"
+    }
+  ],
+  "empirical_insights": {
+    "integration_successful": true,
+    "parallelization_effective": false,
+    "system_reliability": false,
+    "optimal_strategy_identified": true
+  }
+}

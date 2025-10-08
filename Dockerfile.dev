@@ -1,0 +1,93 @@
+# Beast Mode AI Development Framework - Development Container
+# ==========================================================
+# Optimized for development with hot reloading and debugging
+
+FROM python:3.11-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PYTHONPATH="/app/src:$PYTHONPATH" \
+    ENVIRONMENT=development \
+    DEBUG=true
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    git \
+    redis-server \
+    redis-tools \
+    vim \
+    htop \
+    procps \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app user with sudo privileges for development
+RUN groupadd -r appuser && \
+    useradd -r -g appuser -s /bin/bash appuser && \
+    mkdir -p /home/appuser && \
+    chown appuser:appuser /home/appuser
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements files
+COPY requirements.txt requirements-dev.txt ./
+
+# Install Python dependencies (including development tools)
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt && \
+    pip install -r requirements-dev.txt
+
+# Install additional development tools
+RUN pip install \
+    ipython \
+    jupyter \
+    debugpy \
+    watchdog
+
+# Copy application code
+COPY . .
+
+# Create necessary directories
+RUN mkdir -p /app/data /app/logs /app/temp /app/.vscode && \
+    chown -R appuser:appuser /app
+
+# Copy development configuration
+COPY docker/dev-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/dev-entrypoint.sh
+
+# Switch to app user
+USER appuser
+
+# Create .env file for development
+RUN echo "# Development Environment Configuration" > /app/.env && \
+    echo "REDIS_HOST=localhost" >> /app/.env && \
+    echo "REDIS_PORT=6379" >> /app/.env && \
+    echo "REDIS_PASSWORD=" >> /app/.env && \
+    echo "ENVIRONMENT=development" >> /app/.env && \
+    echo "DEBUG=true" >> /app/.env && \
+    echo "OBSERVATORY_PORT=8080" >> /app/.env && \
+    echo "PROMETHEUS_PORT=9090" >> /app/.env && \
+    echo "GRAFANA_PORT=3000" >> /app/.env
+
+# Expose ports for development
+EXPOSE 8080 9090 3000 6379 8888 5678
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD python3 scripts/installation_validator.py --quick || exit 1
+
+# Use development entrypoint
+ENTRYPOINT ["/usr/local/bin/dev-entrypoint.sh"]
+
+# Default command for development
+CMD ["python3", "-m", "src.beast_mode.api.main", "--reload"]
+
+# Labels
+LABEL maintainer="Beast Mode Framework Team" \
+      description="Beast Mode AI Development Framework - Development Environment" \
+      version="1.0.0-dev" \
+      environment="development"

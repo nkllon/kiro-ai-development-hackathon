@@ -1,0 +1,20 @@
+{
+  "evidence_id": "4d694854-c065-483d-bc3e-50b01b925c63",
+  "timestamp": "2025-09-27T04:35:03.624469",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.624443",
+    "data_type": "dict"
+  },
+  "integrity_hash": "cca7292442721d807dc1e8f92c9769e22aab47326f283877bc183b55d46b0e52",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/huggingface_hub/_webhooks_server.py",
+    "file_size": 15764,
+    "line_count": 389,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.624436"
+  }
+}

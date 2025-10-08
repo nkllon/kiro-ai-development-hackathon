@@ -1,0 +1,224 @@
+{
+  "timestamp": "2025-10-04T14:15:06.416238",
+  "deployment_type": "monolithic_recovery",
+  "validation_phases": {
+    "Infrastructure Cleanup": {
+      "status": "fail",
+      "details": "Containers: 0, Volumes: 2",
+      "tests": {
+        "remaining_containers": {
+          "count": 0,
+          "containers": [],
+          "status": "pass"
+        },
+        "remaining_volumes": {
+          "count": 2,
+          "volumes": [
+            "observatory_observatory_data",
+            "observatory_observatory_logs"
+          ],
+          "status": "fail"
+        }
+      },
+      "timestamp": "2025-10-04T14:15:09.330608"
+    },
+    "Data Recovery": {
+      "status": "pass",
+      "details": "Directories: 7/7, Data recovered: Yes",
+      "tests": {
+        "data_directories": {
+          "required": [
+            "metrics",
+            "dashboards",
+            "logs",
+            "config",
+            "cache",
+            "uploads",
+            "exports"
+          ],
+          "missing": [],
+          "status": "pass"
+        },
+        "prometheus_recovery": {
+          "files_count": 58,
+          "status": "pass"
+        },
+        "grafana_recovery": {
+          "files_count": 369,
+          "status": "pass"
+        }
+      },
+      "timestamp": "2025-10-04T14:15:09.333636"
+    },
+    "Deployment Scripts": {
+      "status": "pass",
+      "details": "Scripts: 9/9 available",
+      "tests": {
+        "script_availability": {
+          "required": 9,
+          "missing": [],
+          "non_executable": [
+            "scripts/configure_cloudflare_tunnel.py",
+            "scripts/monitor_observatory_health.py",
+            "scripts/rollback_to_docker_deployment.py",
+            "scripts/setup_data_persistence.py",
+            "scripts/validate_observatory_deployment.py",
+            "scripts/final_deployment_validation.py"
+          ],
+          "status": "pass"
+        }
+      },
+      "timestamp": "2025-10-04T14:15:09.333781"
+    },
+    "Documentation": {
+      "status": "pass",
+      "details": "Documentation: 3/3 complete",
+      "tests": {
+        "documentation": {
+          "required": [
+            "docs/observatory_deployment_guide.md",
+            "docs/troubleshooting_runbook.md",
+            "docs/data_recovery_procedures.md"
+          ],
+          "missing": [],
+          "status": "pass"
+        }
+      },
+      "timestamp": "2025-10-04T14:15:09.333809"
+    },
+    "Rollback Capability": {
+      "status": "fail",
+      "details": "Docker Compose: Available, Backups: 1, Script: Ready",
+      "tests": {
+        "docker_compose_available": {
+          "exists": true,
+          "status": "pass"
+        },
+        "backup_availability": {
+          "backup_count": 1,
+          "latest_backup": "observatory_backup_20251004_134955",
+          "status": "pass"
+        },
+        "rollback_script": {
+          "exists": true,
+          "executable": false,
+          "status": "fail"
+        }
+      },
+      "timestamp": "2025-10-04T14:15:09.334946"
+    },
+    "Process Management": {
+      "status": "fail",
+      "details": "Monitor: Ready, Tunnel: Ready, Emergency: Missing",
+      "tests": {
+        "monitor_script": {
+          "exists": true,
+          "executable": false,
+          "status": "fail"
+        },
+        "tunnel_management": {
+          "exists": true,
+          "executable": true,
+          "status": "pass"
+        },
+        "emergency_recovery": {
+          "exists": false,
+          "executable": false,
+          "status": "fail"
+        }
+      },
+      "timestamp": "2025-10-04T14:15:09.335040"
+    }
+  },
+  "summary": {
+    "total_phases": 6,
+    "passed_phases": 3,
+    "failed_phases": 3,
+    "success_rate": 50.0,
+    "overall_status": "partial",
+    "deployment_ready": false,
+    "critical_issues": 3
+  },
+  "recommendations": [
+    {
+      "priority": "high",
+      "category": "cleanup",
+      "issue": "Docker containers or volumes still present",
+      "action": "Run cleanup script again: python scripts/cleanup_observatory_containers.py",
+      "impact": "May cause port conflicts or resource issues"
+    },
+    {
+      "priority": "high",
+      "category": "rollback",
+      "issue": "Rollback capability compromised",
+      "action": "Ensure Docker Compose files and backups are available",
+      "impact": "Cannot rollback if monolithic deployment fails"
+    },
+    {
+      "priority": "medium",
+      "category": "management",
+      "issue": "Process management scripts missing",
+      "action": "Recreate missing management scripts",
+      "impact": "Manual process management required"
+    },
+    {
+      "priority": "high",
+      "category": "observatory",
+      "issue": "Observatory HTTP server not starting properly",
+      "action": "Investigate Observatory startup issue - process runs but doesn't serve HTTP",
+      "impact": "Observatory not accessible via web interface"
+    },
+    {
+      "priority": "medium",
+      "category": "monitoring",
+      "issue": "Set up continuous monitoring",
+      "action": "Configure monitoring script to run continuously: python scripts/monitor_observatory_health.py monitor",
+      "impact": "Manual monitoring required without automation"
+    },
+    {
+      "priority": "low",
+      "category": "automation",
+      "issue": "Set up automated backups",
+      "action": "Add backup script to crontab for daily execution",
+      "impact": "Manual backup management required"
+    }
+  ],
+  "lessons_learned": [
+    {
+      "category": "deployment",
+      "lesson": "Docker Compose complexity can be reduced to monolithic deployment",
+      "impact": "Simplified operations and reduced failure points",
+      "application": "Consider monolithic approach for single-service applications"
+    },
+    {
+      "category": "data_management",
+      "lesson": "Docker volume backup and restore is critical for deployment transitions",
+      "impact": "Preserved 4.25MB of Prometheus data and 53.36MB of Grafana configuration",
+      "application": "Always backup data before major deployment changes"
+    },
+    {
+      "category": "process_management",
+      "lesson": "Systematic cleanup prevents resource conflicts",
+      "impact": "Clean slate deployment without port or resource conflicts",
+      "application": "Implement thorough cleanup procedures for deployment transitions"
+    },
+    {
+      "category": "rollback_strategy",
+      "lesson": "Rollback capability is essential for deployment changes",
+      "impact": "Provides safety net for deployment failures",
+      "application": "Always maintain rollback procedures for critical services"
+    },
+    {
+      "category": "documentation",
+      "lesson": "Comprehensive documentation enables operational continuity",
+      "impact": "Clear procedures for troubleshooting and maintenance",
+      "application": "Document all operational procedures during deployment"
+    },
+    {
+      "category": "validation",
+      "lesson": "Systematic validation identifies issues early",
+      "impact": "35% test pass rate identified specific areas needing attention",
+      "application": "Implement comprehensive validation for all deployments"
+    }
+  ]
+}

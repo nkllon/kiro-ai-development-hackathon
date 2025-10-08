@@ -1,0 +1,13 @@
+{
+  "session_id": "d5f3f9ac-aaf7-4940-ad28-df875c5c9b2a",
+  "start_time": "2025-09-30T00:07:22.600872+00:00",
+  "data_directory": "empirical_data/session_20250930_000722",
+  "collectors_active": 5,
+  "collection_interval_seconds": {
+    "system_metrics": 30,
+    "git_activity": 60,
+    "agent_interactions": 15,
+    "task_completion": 300,
+    "code_quality": 600
+  }
+}

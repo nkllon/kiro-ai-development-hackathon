@@ -1,0 +1,33 @@
+{
+  "evidence_id": "ce62923e-3fa3-4862-b769-0606e82691d8",
+  "timestamp": "2025-09-27T04:27:13.034915",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.034907",
+    "data_type": "dict"
+  },
+  "integrity_hash": "58de86713f08bd5e11ed387bf5d525f578f7c36eea01cca39aeaa6df8cfec119",
+  "data": {
+    "file_path": "./test_fastapi_route_discovery.py",
+    "file_size": 7615,
+    "line_count": 212,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "websocket_validation.testers.code_analysis",
+        "websocket_validation.config.ValidationConfig",
+        "websocket_validation.config",
+        "websocket_validation.collectors.EvidenceCollector",
+        "websocket_validation.testers.code_analysis.CodeAnalysisTester",
+        "websocket_validation.collectors"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.034900"
+  }
+}

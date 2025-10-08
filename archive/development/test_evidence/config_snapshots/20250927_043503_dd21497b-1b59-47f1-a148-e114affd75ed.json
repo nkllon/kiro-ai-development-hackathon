@@ -1,0 +1,20 @@
+{
+  "evidence_id": "dd21497b-1b59-47f1-a148-e114affd75ed",
+  "timestamp": "2025-09-27T04:35:03.452113",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.452089",
+    "data_type": "dict"
+  },
+  "integrity_hash": "43a7da0a51176d075e843bd97d4daeb807ee21a47553e00f3eb213e438d83ea4",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/transformers/commands/serving.py",
+    "file_size": 67183,
+    "line_count": 1628,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.452083"
+  }
+}

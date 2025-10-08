@@ -1,0 +1,35 @@
+{
+  "evidence_id": "5cfe04ce-c23f-4b41-ae4e-5abc8b50f8a4",
+  "timestamp": "2025-09-27T03:58:56.235087",
+  "evidence_type": "http_response",
+  "source_test": "production_websocket_endpoints",
+  "metadata": {
+    "url": "https://observatory.nkllon.com/ws/health",
+    "method": "GET",
+    "status_code": 403,
+    "response_size": 0,
+    "response_time": 0.17531418800354004
+  },
+  "integrity_hash": "f6253d74bfa1ff3dd7d9b4201205b74366d56c80e5de613c55845b2c95752924",
+  "data": {
+    "url": "https://observatory.nkllon.com/ws/health",
+    "method": "GET",
+    "status_code": 403,
+    "headers": {
+      "Date": "Sat, 27 Sep 2025 03:58:56 GMT",
+      "Content-Type": "text/plain",
+      "Content-Length": "0",
+      "Connection": "keep-alive",
+      "Upgrade": "websocket",
+      "cf-cache-status": "DYNAMIC",
+      "Report-To": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v4?s=rJc%2BPhdm0rUUMxSUjN1%2BobciM7XgkJZlf%2FNTqn%2Fut6QPsqA2oh7QlcRa5a0q%2FP%2BZwlYMaRAOhkIBiCYcikbfhlQLgw2kHPT3Okl3rI6aWHPFtmROh3R9EY5jK9SpOfi7uSr%2B54Y8TeP5ojcGWVaQZPT33Dc%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+      "NEL": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}",
+      "Server": "cloudflare",
+      "CF-RAY": "985815e17f011f45-DEN",
+      "server-timing": "cfL4;desc=\"?proto=TCP&rtt=17185&min_rtt=14245&rtt_var=6464&sent=6&recv=9&lost=0&retrans=0&sent_bytes=2968&recv_bytes=597&delivery_rate=138190&cwnd=253&unsent_bytes=0&cid=cfe4816518d04cc9&ts=131&x=0\""
+    },
+    "body": "",
+    "response_time": 0.17531418800354004,
+    "timestamp": "2025-09-27T03:58:56.235036"
+  }
+}

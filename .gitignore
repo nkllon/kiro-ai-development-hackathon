@@ -1,8 +1,20 @@
-# Python
+# =============================================================================
+# Beast Mode AI Development Framework - .gitignore
+# =============================================================================
+# This file prevents unwanted files from being committed to version control.
+# Organized by category for maintainability and comprehensive coverage.
+
+# =============================================================================
+# PYTHON DEVELOPMENT
+# =============================================================================
+
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
+
+# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -23,7 +35,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# PyInstaller
+# PyInstaller - creates standalone executables
 *.manifest
 *.spec
 
@@ -44,6 +56,8 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+test-results/
+test-reports/
 
 # Virtual environments
 .env
@@ -53,181 +67,323 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.python-version
 
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# Python package management
+Pipfile.lock
+poetry.lock
+__pypackages__/
 
-# OS
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Logs
-*.log
-
-# Temporary files
-*.tmp
-*.temp
-
-# Node modules (if any)
-node_modules/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+*.ipynb_checkpoints/
 
 # IPython
 profile_default/
 ipython_config.py
 
-# pyenv
-.python-version
+# =============================================================================
+# DEVELOPMENT TOOLS & IDEs
+# =============================================================================
 
-# pipenv
-Pipfile.lock
+# Visual Studio Code
+.vscode/
+*.code-workspace
 
-# PEP 582
-__pypackages__/
+# PyCharm / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
 
-# Celery
-celerybeat-schedule
-celerybeat.pid
+# Vim/Neovim
+*.swp
+*.swo
+*~
+.netrwhist
 
-# SageMath parsed files
-*.sage.py
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
 
-# Environments
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Atom
+.atom/
+
+# =============================================================================
+# OPERATING SYSTEM FILES
+# =============================================================================
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+.AppleDouble
+.LSOverride
+Icon?
+
+# Windows
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# =============================================================================
+# SECURITY & CREDENTIALS (CRITICAL)
+# =============================================================================
+
+# Environment files with secrets
 .env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# Beast Mode specific ignores
-# Large metrics and data files
-metrics_data/
-assessment_results/
-beast_mode_metrics/
-headless_execution/
-
-# Deployment volatile data - should use Docker volumes instead
-deployment/observatory/prometheus-data/
-deployment/observatory/grafana-data/
-deployment/local/prometheus-data/
-deployment/local/grafana-data/
-deployment/*/prometheus-data/
-deployment/*/grafana-data/
-
-# GCP credentials and secrets
-*.json
-!deployment/gcp/terraform/*.json
-!.kiro/**/*.json
-credentials/
-secrets/
-
-# Local configuration
-local_config.py
 .env.local
-observatory.pid
+.env.production
+.env.staging
+.env.development
+.env.test
+.env.*
 
-# Deployment data governance - Added by migration script
-**/grafana-data/
-**/prometheus-data/
-*.db
-*.exe
-**/logs/
-**/cache/
-**/tmp/
-*.tar.gz
-
-# Backup directories and deployment snapshots
-*backup*/
-*_backup_*/
-docker-migration-backup*/
-poe_deployment_*/
-observatory_backup_*/
-.repair_backups*/
-backups/
-*.backup
-*.backup_final
-*.backup_[0-9]*
-*.backup[0-9]
-
-# Task completion markers
-.task-*-complete
-
-# Database files (additional patterns)
-*.db-shm
-*.db-wal
-*.sqlite
-
-# Sent/communication log files
-*.sent
-
-# Security - Added by cleanup script
+# Credential files
 credentials/
 secrets/
 *.key
 *.pem
 *.p12
 *.pfx
-.env.local
-.env.production
-chrome_cookies.db
-*_backup_*
-*.security_backup
+*.crt
+*.cer
+*.der
+auth.json
+service-account*.json
+gcp-credentials*.json
+aws-credentials*
+azure-credentials*
 
-# Scan reports with sensitive data
+# SSH keys
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+*.pub
+
+# Security scan reports (may contain sensitive data)
 *credential*scan*.json
 *security*scan*.json
 credential_scan_report.json
 security_scan_report.json
+vulnerability_report.*
+security_audit.*
+
+# =============================================================================
+# LOGS & TEMPORARY FILES
+# =============================================================================
+
+# Log files
+*.log
+logs/
+log/
+*.log.*
+*.out
+*.err
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+temp/
+tmp/
+.tmp/
+
+# Process IDs
+*.pid
+*.lock
+observatory.pid
+
+# =============================================================================
+# DATABASE FILES
+# =============================================================================
+
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Other database files
+*.mdb
+*.accdb
+
+# =============================================================================
+# BUILD ARTIFACTS & DEPENDENCIES
+# =============================================================================
+
+# Node.js (if any JavaScript components)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# Docker
+.dockerignore.bak
+docker-compose.override.yml
+
+# Compiled binaries
+*.exe
+*.dll
+*.dylib
+*.so.*
+
+# Archives
+*.tar.gz
+*.zip
+*.rar
+*.7z
+
+# =============================================================================
+# BEAST MODE SPECIFIC
+# =============================================================================
+
+# Runtime data and metrics
+metrics_data/
+assessment_results/
+beast_mode_metrics/
+headless_execution/
+execution_logs/
+performance_data/
+
+# Observatory and monitoring data (use Docker volumes instead)
+**/grafana-data/
+**/prometheus-data/
+deployment/*/grafana-data/
+deployment/*/prometheus-data/
+monitoring-data/
+
+# Task execution tracking
+.task-*-complete
+.task-*-running
+task_status/
+execution_status/
+
+# AI Memory Palace data
+memory_palace_data/
+context_cache/
+embedding_cache/
+
+# DAG execution artifacts
+dag_execution_logs/
+orchestration_state/
+constellation_data/
+
+# =============================================================================
+# BACKUP & ARCHIVE DIRECTORIES
+# =============================================================================
+
+# Backup directories (should be in separate backup systems)
+*backup*/
+*_backup_*/
+*.backup
+*.backup_final
+*.backup_[0-9]*
+*.backup[0-9]
+backups/
+archive_*/
+.repair_backups*/
+
+# Deployment snapshots
+docker-migration-backup*/
+poe_deployment_*/
+observatory_backup_*/
+deployment_snapshots/
+
+# =============================================================================
+# DOCUMENTATION BUILD ARTIFACTS
+# =============================================================================
+
+# Sphinx documentation
+docs/_build/
+docs/build/
+_build/
+.doctrees/
+
+# MkDocs
+/site
+site/
+
+# =============================================================================
+# TESTING & CI/CD ARTIFACTS
+# =============================================================================
+
+# Test artifacts
+.coverage
+htmlcov/
+.pytest_cache/
+test_results/
+test_reports/
+.tox/
+
+# CI/CD artifacts
+.github/workflows/artifacts/
+ci_artifacts/
+build_artifacts/
+
+# =============================================================================
+# COMMUNICATION & INTEGRATION FILES
+# =============================================================================
+
+# Email/notification logs
+*.sent
+communication_logs/
+
+# Integration artifacts
+integration_cache/
+webhook_logs/
+
+# =============================================================================
+# EXCEPTIONS (Files to keep despite patterns above)
+# =============================================================================
+
+# Keep specific JSON configuration files
+!.kiro/**/*.json
+!examples/**/*.json
+!docs/**/*.json
+!config/**/*.json
+
+# Keep example environment files
+!.env.example
+!.env.template
+
+# Keep documentation assets
+!docs/**/*.db
+!examples/**/*.db
+
+# Keep test fixtures
+!tests/fixtures/**/*
+!tests/data/**/*

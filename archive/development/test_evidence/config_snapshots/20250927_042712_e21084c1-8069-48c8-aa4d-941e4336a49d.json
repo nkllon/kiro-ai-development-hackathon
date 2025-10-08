@@ -1,0 +1,31 @@
+{
+  "evidence_id": "e21084c1-8069-48c8-aa4d-941e4336a49d",
+  "timestamp": "2025-09-27T04:27:12.819728",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.819716",
+    "data_type": "dict"
+  },
+  "integrity_hash": "e7f2b0a96998596295c6b8f0c13d00c3674a22b23446e54a629f41e46034dcfc",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/fastapi/dependencies/models.py",
+    "file_size": 1507,
+    "line_count": 38,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.security.base",
+        "fastapi._compat.ModelField",
+        "fastapi._compat",
+        "fastapi.security.base.SecurityBase"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.819710"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "evidence_id": "df3169fc-27a1-4600-841d-f9dd070eaca8",
+  "timestamp": "2025-09-27T05:09:24.212059",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.212037",
+    "data_type": "dict"
+  },
+  "integrity_hash": "e1ff3513657f4537678e6dc0ce279bd11d3819c4f8ff4bd30715982cbb7aa823",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_hooks/lasso/lasso.py",
+    "file_size": 7473,
+    "line_count": 222,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.HTTPException",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.212022"
+  }
+}

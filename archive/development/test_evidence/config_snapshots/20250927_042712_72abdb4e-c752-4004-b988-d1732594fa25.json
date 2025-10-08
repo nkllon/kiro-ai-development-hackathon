@@ -1,0 +1,53 @@
+{
+  "evidence_id": "72abdb4e-c752-4004-b988-d1732594fa25",
+  "timestamp": "2025-09-27T04:27:12.846191",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.846182",
+    "data_type": "dict"
+  },
+  "integrity_hash": "94346a30374f1001100c3000b65b2844120ebd06c6ef8fbc4f228ee13c571c48",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/management_endpoints/mcp_management_endpoints.py",
+    "file_size": 22185,
+    "line_count": 568,
+    "route_analysis": {
+      "total_routes": 9,
+      "websocket_routes": [],
+      "http_routes": [
+        "/tools",
+        "/access_groups",
+        "/server/{server_id}/health",
+        "/server/health",
+        "/server",
+        "/server/{server_id}",
+        "/server",
+        "/server/{server_id}",
+        "/server"
+      ],
+      "route_handlers": {
+        "/tools": "get_mcp_tools",
+        "/access_groups": "get_mcp_access_groups",
+        "/server/{server_id}/health": "health_check_mcp_server",
+        "/server/health": "health_check_all_mcp_servers",
+        "/server": "edit_mcp_server",
+        "/server/{server_id}": "remove_mcp_server"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.responses.JSONResponse",
+        "fastapi.status",
+        "fastapi.Depends",
+        "fastapi.Response",
+        "fastapi.APIRouter",
+        "fastapi.Header",
+        "fastapi",
+        "fastapi.HTTPException",
+        "fastapi.responses"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.846168"
+  }
+}

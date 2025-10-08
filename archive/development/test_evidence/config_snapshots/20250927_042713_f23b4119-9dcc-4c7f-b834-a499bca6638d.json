@@ -1,0 +1,33 @@
+{
+  "evidence_id": "f23b4119-9dcc-4c7f-b834-a499bca6638d",
+  "timestamp": "2025-09-27T04:27:13.116900",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.116893",
+    "data_type": "dict"
+  },
+  "integrity_hash": "f4bd337d06117f8deb25d37ca85fcff9027c17e739d9875cf6b24181e9c15869",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/middleware/prometheus_auth_middleware.py",
+    "file_size": 2200,
+    "line_count": 73,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.responses.JSONResponse",
+        "starlette.middleware.base.BaseHTTPMiddleware",
+        "starlette.middleware.base",
+        "fastapi.Request",
+        "fastapi",
+        "fastapi.responses"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.116888"
+  }
+}

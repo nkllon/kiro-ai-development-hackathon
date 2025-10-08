@@ -86,7 +86,7 @@ def configure_redis_datasource():
         response = requests.post(
             'http://localhost:3000/api/datasources',
             json=datasource_config,
-            auth=('admin', os.getenv('GRAFANA_PASSWORD', 'admin')),
+            auth=('admin', os.getenv("GRAFANA_PASSWORD", "")),
             headers={'Content-Type': 'application/json'}
         )
         
@@ -130,7 +130,7 @@ def check_dashboards():
     try:
         response = requests.get(
             'http://localhost:3000/api/search?type=dash-db',
-            auth=('admin', os.getenv('GRAFANA_PASSWORD', 'admin'))
+            auth=('admin', os.getenv("GRAFANA_PASSWORD", ""))
         )
         
         if response.status_code == 200:

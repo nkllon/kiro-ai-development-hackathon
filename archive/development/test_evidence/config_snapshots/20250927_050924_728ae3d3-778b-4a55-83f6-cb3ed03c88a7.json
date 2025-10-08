@@ -1,0 +1,32 @@
+{
+  "evidence_id": "728ae3d3-778b-4a55-83f6-cb3ed03c88a7",
+  "timestamp": "2025-09-27T05:09:24.568472",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.568403",
+    "data_type": "dict"
+  },
+  "integrity_hash": "73efe54bf3524722e3171d46362bb5c08a54abb1af22d39eac3a309a3dffb655",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/litellm_pre_call_utils.py",
+    "file_size": 45233,
+    "line_count": 1230,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "fastapi.Request",
+        "starlette.datastructures.Headers",
+        "starlette.datastructures",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.567631"
+  }
+}

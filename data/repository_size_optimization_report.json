@@ -1,0 +1,3813 @@
+{
+  "timestamp": "Mon Oct  6 20:50:43 MDT 2025",
+  "dry_run": false,
+  "repository_analysis": {
+    "total_files_analyzed": 750,
+    "large_files_found": 31,
+    "cleanup_files_found": 719,
+    "estimated_size_reduction": "2.1GB",
+    "estimated_size_reduction_bytes": 2221494560,
+    "size_before": "3.5GB",
+    "size_after": "2.1GB",
+    "actual_reduction": "1.4GB"
+  },
+  "actions_summary": {
+    "delete": {
+      "count": 729,
+      "total_size": "2.0GB",
+      "total_size_bytes": 2098486429
+    },
+    "archive_external": {
+      "count": 1,
+      "total_size": "117.3MB",
+      "total_size_bytes": 123008131
+    },
+    "review": {
+      "count": 20,
+      "total_size": "396.5MB",
+      "total_size_bytes": 415712201
+    }
+  },
+  "detailed_files": {
+    "delete": {
+      "count": 729,
+      "size": 2098486429,
+      "files": [
+        {
+          "path": ".venv/lib/python3.9/site-packages/torch/lib/libtorch_cpu.dylib",
+          "size": "203.4MB",
+          "reason": "Virtual environment should be recreated from requirements"
+        },
+        {
+          "path": "security_scan_report.json",
+          "size": "138.2MB",
+          "reason": "Security scan reports are temporary and can be regenerated"
+        },
+        {
+          "path": ".venv/lib/python3.9/site-packages/playwright/driver/node",
+          "size": "105.5MB",
+          "reason": "Virtual environment should be recreated from requirements"
+        },
+        {
+          "path": ".venv/lib/python3.9/site-packages/pyarrow/libarrow.2100.dylib",
+          "size": "37.8MB",
+          "reason": "Virtual environment should be recreated from requirements"
+        },
+        {
+          "path": ".venv/lib/python3.9/site-packages/grpc/_cython/cygrpc.cpython-39-darwin.so",
+          "size": "34.6MB",
+          "reason": "Virtual environment should be recreated from requirements"
+        },
+        {
+          "path": ".venv/lib/python3.9/site-packages/torch/lib/libtorch_python.dylib",
+          "size": "25.1MB",
+          "reason": "Virtual environment should be recreated from requirements"
+        },
+        {
+          "path": ".venv/lib/python3.9/site-packages/cryptography/hazmat/bindings/_rust.abi3.so",
+          "size": "21.0MB",
+          "reason": "Virtual environment should be recreated from requirements"
+        },
+        {
+          "path": ".venv/lib/python3.9/site-packages/scipy/.dylibs/libopenblas.0.dylib",
+          "size": "18.8MB",
+          "reason": "Virtual environment should be recreated from requirements"
+        },
+        {
+          "path": ".venv/lib/python3.9/site-packages/pyarrow/libarrow_compute.2100.dylib",
+          "size": "15.3MB",
+          "reason": "Virtual environment should be recreated from requirements"
+        },
+        {
+          "path": ".venv/lib/python3.9/site-packages/pyarrow/libarrow_flight.2100.dylib",
+          "size": "14.9MB",
+          "reason": "Virtual environment should be recreated from requirements"
+        },
+        {
+          "path": ".venv",
+          "size": "1.3GB",
+          "reason": "Directory .venv should be recreated"
+        },
+        {
+          "path": "src/spec_governance/__pycache__",
+          "size": "64.6KB",
+          "reason": "Directory __pycache__ should be recreated"
+        },
+        {
+          "path": ".pytest_cache",
+          "size": "590.9KB",
+          "reason": "Directory .pytest_cache should be recreated"
+        },
+        {
+          "path": ".ruff_cache",
+          "size": "217.4KB",
+          "reason": "Directory .ruff_cache should be recreated"
+        },
+        {
+          "path": "archive/development/node_modules",
+          "size": "16.0MB",
+          "reason": "Directory node_modules should be recreated"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/json-maintenance/node_modules",
+          "size": "8.2MB",
+          "reason": "Directory node_modules should be recreated"
+        },
+        {
+          "path": "scripts/json-maintenance/node_modules",
+          "size": "8.2MB",
+          "reason": "Directory node_modules should be recreated"
+        },
+        {
+          "path": "archive/development/cloudflare_parallel_logs/track_b.log",
+          "size": "232.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/cloudflare_parallel_logs/track_a.log",
+          "size": "354.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/cloudflare_parallel_logs/orchestration_start.log",
+          "size": "419.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/logs/requirements-refinement-20250930-064021.log",
+          "size": "92.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/logs/live_dashboard_engagement_system_execution.log",
+          "size": "15.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/logs/dag_orchestrated_parallel_execution_execution.log",
+          "size": "665.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/logs/llm_powered_engagement_engines_execution.log",
+          "size": "742.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/logs/requirements-review-20250930-065322.log",
+          "size": "1.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/logs/requirements-review-20250930-065153.log",
+          "size": "0.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/parallel_execution_logs/track_b2.log",
+          "size": "472.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/parallel_execution_logs/track_b1.log",
+          "size": "215.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/parallel_execution_logs/track_c.log",
+          "size": "674.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/parallel_execution_logs/completion_report.log",
+          "size": "2.7KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/parallel_execution_logs/launch.log",
+          "size": "375.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/parallel_execution_logs/track_a.log",
+          "size": "210.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/parallel_execution_logs/status_check.log",
+          "size": "987.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/parallel_execution_logs/final_report.log",
+          "size": "1.7KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/parallel_execution_logs/dashboard.log",
+          "size": "3.6KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/var/log/observatory.log",
+          "size": "724.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/live-dashboard-direct-launch-20251001-193602.log",
+          "size": "1.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/progress_check_20250930_175403.log",
+          "size": "79.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/fix-task-wrapper-20251001-180457.log",
+          "size": "394.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_8_3.log",
+          "size": "391.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag-monitor-20250930-100558.log",
+          "size": "771.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/live-dashboard-fixed-launch-20251001-193757.log",
+          "size": "2.3KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_8_2.log",
+          "size": "994.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-coordination-20251003-212526.log",
+          "size": "4.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag_execution_20250930_174741.log",
+          "size": "51.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/progress_check_20250930_175358.log",
+          "size": "56.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/LIVE_FIRE_20250929_125336.log",
+          "size": "7.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/final-recovery-launch-20251001-194735.log",
+          "size": "4.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/spec_creation_dag_compliance_20251001_101112.log",
+          "size": "9.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/orchestration_20250929_122547.log",
+          "size": "2.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_8_1.log",
+          "size": "1004.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag-launch-20250930-100536.log",
+          "size": "2.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/production-deployment-20251001-180518.log",
+          "size": "606.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag-execution-20250930-100208.log",
+          "size": "2.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/phase1_complete_20250930_180502.log",
+          "size": "66.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-task-1.2-execution-20250930-095125.log",
+          "size": "278.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/websocket_monitoring.log",
+          "size": "1.8MB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/latest-report-20250930-100618.log",
+          "size": "100.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/create-atomic-spec-cursor-20251001-181259.log",
+          "size": "527.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-task-1.1-execution-20250930-095117.log",
+          "size": "280.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_15_1_20250930_174735.log",
+          "size": "66.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag_execution_20250930_174747.log",
+          "size": "42.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/coordination.log",
+          "size": "949.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/stress_test_20250929_124930.log",
+          "size": "6.3KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-progress-20250930-100610.log",
+          "size": "310.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-status-check-20250930-100604.log",
+          "size": "85.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/coordination-fixed3.log",
+          "size": "3.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/test_task.log",
+          "size": "58.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-option-1-20251003-212502.log",
+          "size": "3.6KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/orchestration_20250929_122541.log",
+          "size": "2.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag_infrastructure_check_20250930_175427.log",
+          "size": "713.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag_status_report_20250930_174806.log",
+          "size": "370.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/implement-missing-components-20251001-180508.log",
+          "size": "653.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/coordination-fixed2.log",
+          "size": "650.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/phase1_complete_20250930_180514.log",
+          "size": "835.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-option-3-20251003-212514.log",
+          "size": "7.6KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-systematic-execution-20251001-194344.log",
+          "size": "483.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/live-dashboard-direct-launch-20251001-193517.log",
+          "size": "213.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/beastmaster-launch-20250930-102354.log",
+          "size": "1.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_9_1.log",
+          "size": "500.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_9_3.log",
+          "size": "395.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/observer-instruction-20251001-180404.log",
+          "size": "74.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/repository_setup_execution.log",
+          "size": "0.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/coordination-restart.log",
+          "size": "472.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/service.out.log",
+          "size": "0.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/active_tasks_20250930_180124.log",
+          "size": "1.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/active_tasks_20250930_180130.log",
+          "size": "43.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag_task_definitions_20250930_174705.log",
+          "size": "11.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/comprehensive-docs-20251001-180528.log",
+          "size": "686.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_9_2.log",
+          "size": "1002.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/test_results_20250929_122411.log",
+          "size": "5.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_13_1_20250930_174724.log",
+          "size": "56.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/system_architecture_background_20251001_123445.log",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/create-atomic-spec-cursor-fixed-20251001-181309.log",
+          "size": "522.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/velocity_analysis_20250930_175603.log",
+          "size": "70.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/simple-recovery-20251001-194658.log",
+          "size": "131.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/velocity_analysis_20250930_175616.log",
+          "size": "528.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/recovery-execution-20251001-194642.log",
+          "size": "574.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/final_demo_20250929_124945.log",
+          "size": "5.6KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag_execution_20250930_174718.log",
+          "size": "68.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag_analysis_20250930_174713.log",
+          "size": "191.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/spec_creation_dag_compliance_20251001_101407.log",
+          "size": "165.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/observatory.log",
+          "size": "804.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/live-dashboard-background-20251001-193903.log",
+          "size": "4.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/orchestration_fixed_20250929_124817.log",
+          "size": "7.6KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/active_tasks_20250930_180137.log",
+          "size": "978.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/live-dashboard-launch-20251001-193855.log",
+          "size": "2.3KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-task-1.3-execution-20250930-095131.log",
+          "size": "256.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/minimal-status-check-20251001-181557.log",
+          "size": "1.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_5_4.log",
+          "size": "400.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_3_2.log",
+          "size": "2.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_1_1.log",
+          "size": "514.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_3_3.log",
+          "size": "399.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-monitor-20250930-094310.log",
+          "size": "1.7KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_14_1_20250930_174730.log",
+          "size": "79.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/comprehensive_test_20250929_124937.log",
+          "size": "11.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/velocity_analysis_20250930_175627.log",
+          "size": "919.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_3_1.log",
+          "size": "2.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_1_3.log",
+          "size": "407.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_1_2.log",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/beast-mode-dag-launch-20251001-180641.log",
+          "size": "100.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/active_tasks_20250930_180110.log",
+          "size": "1.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/active_tasks_20250930_180104.log",
+          "size": "61.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-test-execution.log",
+          "size": "26.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/execution-status-check.log",
+          "size": "415.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/systematic-execution-restart-20251001-194410.log",
+          "size": "4.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_5_2.log",
+          "size": "1.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/minimal-prepare-20251001-181603.log",
+          "size": "1.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/demo_output_20250929_122526.log",
+          "size": "5.6KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/production_run_20250929_124923.log",
+          "size": "7.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag_execution_20250930_174659.log",
+          "size": "74.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/cloudflared.log",
+          "size": "0.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_5_3.log",
+          "size": "1004.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_7_1.log",
+          "size": "500.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/velocity_analysis_20250930_175541.log",
+          "size": "63.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/live-dashboard-engagement-launch-20251001-193438.log",
+          "size": "2.8KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/velocity_analysis_20250930_175557.log",
+          "size": "498.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_7_3.log",
+          "size": "393.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/spec_creation_dag_compliance_20251001_100738.log",
+          "size": "8.8KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_5_1.log",
+          "size": "1.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/orchestration_full_20250929_122600.log",
+          "size": "7.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-orchestration-launch-20250930-094240.log",
+          "size": "2.8KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_7_2.log",
+          "size": "497.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag_status_report_20250930_174758.log",
+          "size": "55.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/service.err.log",
+          "size": "20.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag_execution_ai-memory-palace_20251005_130036.log",
+          "size": "13.7KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_2_1.log",
+          "size": "1010.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/live-dashboard-direct-launch-20251001-193541.log",
+          "size": "230.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-task-1.5-execution-20250930-095138.log",
+          "size": "240.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/execution_audit_20250930_174753.log",
+          "size": "640.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-test-1.log",
+          "size": "555.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/spec_creation_dag_compliance_20251001_101119.log",
+          "size": "9.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag_validation_20250929_122533.log",
+          "size": "2.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_10_1.log",
+          "size": "403.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/create-atomic-spec-20251001-181033.log",
+          "size": "520.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/progress_check_20250930_175421.log",
+          "size": "891.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/progress_check_20250930_175347.log",
+          "size": "771.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/spec_creation_dag_compliance_20251001_101127.log",
+          "size": "10.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_10_3.log",
+          "size": "404.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_2_2.log",
+          "size": "502.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/coordinator.log",
+          "size": "41.7KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_4_4.log",
+          "size": "396.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-test-2.log",
+          "size": "555.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_4_5.log",
+          "size": "1.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-executor-launch-20251001-194325.log",
+          "size": "524.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_2_3.log",
+          "size": "401.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_10_2.log",
+          "size": "398.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/progress_check_20250930_175352.log",
+          "size": "231.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/analyze-staging-prompts-20251005-125755.log",
+          "size": "2.4KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/progress_check_20250930_175408.log",
+          "size": "66.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-status-check-20250930-094906.log",
+          "size": "1.7KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_4_1.log",
+          "size": "1.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_6_3.log",
+          "size": "395.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_6_2.log",
+          "size": "501.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/cursor-test.log",
+          "size": "10.7KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag_execution_ai-memory-palace_20251005_132829.log",
+          "size": "13.7KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/post-recovery-launch-20251001-194706.log",
+          "size": "2.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/progress_check_20250930_175341.log",
+          "size": "60.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/progress_check_20250930_175433.log",
+          "size": "82.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_4_2.log",
+          "size": "1.4KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/test_results_20250929_122519.log",
+          "size": "11.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_6_1.log",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/coordination-fixed.log",
+          "size": "310.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_4_3.log",
+          "size": "1.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-option-2-20251003-212508.log",
+          "size": "5.4KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/task_10_4.log",
+          "size": "403.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/status-check-20251001-180413.log",
+          "size": "57.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/mcp_health.log",
+          "size": "138.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/vocabulary_projector/background_execution_vocab_proj_20251001_072325.log",
+          "size": "7.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/vocabulary_projector/background_execution_vocab_proj_20251001_072837.log",
+          "size": "7.4KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/test_execution/phase-1b1-stakeholder-extraction_stderr.log",
+          "size": "0.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/test_execution/phase-1b1-stakeholder-extraction_stdout.log",
+          "size": "1.6KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/coordination/coordinator-20250927.log",
+          "size": "174.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/coordination/coordinator-20250927-094642.log",
+          "size": "63.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/beastmaster-dag/beastmaster-20250930-102354/1.5_makefile_analysis_system-beastmaster-102354.log",
+          "size": "3.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/beastmaster-dag/beastmaster-20250930-102354/1.6_network_topology_discovery-beastmaster-102354.log",
+          "size": "2.8KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/beastmaster-dag/beastmaster-20250930-102354/1.4_cloudflare_tunnel_discovery-beastmaster-102354.log",
+          "size": "2.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/test_parallel/agent3_phase-1d-ontology-gap-analysis_stdout.log",
+          "size": "2.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/test_parallel/agent1_phase-1b1-stakeholder-extraction_stdout.log",
+          "size": "133.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/test_parallel/agent2_phase-1c-cms-dependency-discovery_stderr.log",
+          "size": "0.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/test_parallel/agent3_phase-1d-ontology-gap-analysis_stderr.log",
+          "size": "0.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/test_parallel/agent1_phase-1b1-stakeholder-extraction_stderr.log",
+          "size": "0.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/test_parallel/agent2_phase-1c-cms-dependency-discovery_stdout.log",
+          "size": "0.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-164217/1.2_observatory_websocket_integration-164223.log",
+          "size": "1.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-164217/1.1_project_structure_setup-164217.log",
+          "size": "1.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-164217/1.4_cloudflare_tunnel_discovery-164224.log",
+          "size": "1.8KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-164217/1.5_makefile_analysis_system-164225.log",
+          "size": "2.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-164217/1.3_service_discovery_scanner-164231.log",
+          "size": "1.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-100536/1.3_service_discovery_scanner-100550.log",
+          "size": "1.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-100536/1.1_project_structure_setup-100536.log",
+          "size": "1.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-100536/1.4_cloudflare_tunnel_discovery-100543.log",
+          "size": "1.8KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-100536/1.5_makefile_analysis_system-100544.log",
+          "size": "2.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-100536/1.2_observatory_websocket_integration-100542.log",
+          "size": "1.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-100209/1.2_observatory_websocket_integration-100215.log",
+          "size": "1.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-100209/1.1_project_structure_setup-100209.log",
+          "size": "1.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-100209/1.3_service_discovery_scanner-100223.log",
+          "size": "1.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-100209/1.5_makefile_analysis_system-100217.log",
+          "size": "2.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-100209/1.4_cloudflare_tunnel_discovery-100216.log",
+          "size": "1.8KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-155836/1.5_makefile_analysis_system-155844.log",
+          "size": "2.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-155836/1.4_cloudflare_tunnel_discovery-155843.log",
+          "size": "1.8KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-155836/1.2_observatory_websocket_integration-155842.log",
+          "size": "1.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-155836/1.3_service_discovery_scanner-155850.log",
+          "size": "1.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/kiro-dag/kiro-dag-20250930-155836/1.1_project_structure_setup-155836.log",
+          "size": "1.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/documentation-index-20251001-093827/launch.log",
+          "size": "1.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/documentation-index-20251001-093827/orchestrator.log",
+          "size": "0.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/documentation-index-20251001-094457/launch.log",
+          "size": "2.4KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/documentation-index-20251001-094457/orchestrator.log",
+          "size": "3.8KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-6.1-claude.log",
+          "size": "980.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/diagnostic-3.1.log",
+          "size": "555.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-1-claude.log",
+          "size": "555.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-1.1-claude.log",
+          "size": "555.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/diagnostic-1.log",
+          "size": "555.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/diagnostic-3.2.log",
+          "size": "555.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-2.2-claude.log",
+          "size": "969.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-2.1-worker.log",
+          "size": "0.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-7.1-claude.log",
+          "size": "974.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/diagnostic-7.1.log",
+          "size": "555.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/diagnostic-2.1.log",
+          "size": "555.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-7.1-cursor.log",
+          "size": "562.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-1.1-claude-20250927-094725.log",
+          "size": "555.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-2.2-cursor.log",
+          "size": "336.4KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/diagnostic-6.1.log",
+          "size": "555.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/test-probe-cursor.log",
+          "size": "3.8KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/diagnostic-4.1.log",
+          "size": "555.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-3.2-cursor.log",
+          "size": "390.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/diagnostic-6.2.log",
+          "size": "555.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-1-cursor.log",
+          "size": "439.8KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-6.1-cursor.log",
+          "size": "678.3KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/diagnostic-8.1.log",
+          "size": "555.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-6.2-cursor.log",
+          "size": "269.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-4.1-cursor.log",
+          "size": "392.3KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-3.1-cursor.log",
+          "size": "326.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-2.1-cursor.log",
+          "size": "392.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-5.1-cursor.log",
+          "size": "430.3KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-7.2-cursor.log",
+          "size": "593.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-5.1-claude.log",
+          "size": "978.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-2.1-claude.log",
+          "size": "555.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-8.1-cursor.log",
+          "size": "275.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-1.1-cursor-20250927-094740.log",
+          "size": "4.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-3.1-claude.log",
+          "size": "985.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-4.1-claude.log",
+          "size": "982.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-1-worker.log",
+          "size": "0.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/workers/task-2.3-cursor.log",
+          "size": "341.3KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-orchestration/execution-20251001-152235.log",
+          "size": "5.6KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-orchestration/execution-20251001-163317.log",
+          "size": "955.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-orchestration/execution-20251001-163100.log",
+          "size": "5.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-orchestration/execution-20251001-152916.log",
+          "size": "5.6KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-orchestration/prereq-check-20251001-173224.log",
+          "size": "4.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-orchestration/execution-20251001-180130.log",
+          "size": "2.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-orchestration/execution-20251001-152148.log",
+          "size": "1.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/dag-orchestration/execution-20251001-163009.log",
+          "size": "1.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-parallel-execution/20250930-130538/task-2.2-data-flow.log",
+          "size": "351.6KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-parallel-execution/20250930-130538/task-3.1-diagram-generation.log",
+          "size": "265.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-parallel-execution/20250930-130538/task-3.3-network-visualization.log",
+          "size": "183.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-parallel-execution/20250930-130538/task-2.4-error-propagation.log",
+          "size": "562.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-parallel-execution/20250930-130538/task-3.4-real-time-updates.log",
+          "size": "213.6KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-parallel-execution/20250930-130538/task-2.3-automation-chain.log",
+          "size": "222.7KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-parallel-execution/20250930-130538/task-1.6-network-topology.log",
+          "size": "545.0KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-parallel-execution/20250930-130538/task-2.1-dag-analysis.log",
+          "size": "151.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-parallel-execution/20250930-130538/task-1.4-cloudflare-tunnel.log",
+          "size": "231.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/claude-parallel-execution/20250930-130538/task-3.2-observatory-sequences.log",
+          "size": "341.8KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/system-architecture-dag/20250930-155534/1.5_makefile_analysis_system-20250930-155534.log",
+          "size": "1.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/system-architecture-dag/20250930-155534/1.2_observatory_websocket_integration-20250930-155534.log",
+          "size": "1.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/system-architecture-dag/20250930-155534/1.6_network_topology_discovery-20250930-155534.log",
+          "size": "1.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/system-architecture-dag/20250930-155534/1.1_project_structure_setup-20250930-155534.log",
+          "size": "1.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/system-architecture-dag/20250930-155534/1.3_service_discovery_scanner-20250930-155534.log",
+          "size": "1.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/system-architecture-dag/20250930-155534/1.4_cloudflare_tunnel_discovery-20250930-155534.log",
+          "size": "1.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/system-architecture-dag/20250930-094240/1.5_makefile_analysis_system-20250930-094240.log",
+          "size": "1.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/system-architecture-dag/20250930-094240/1.2_observatory_websocket_integration-20250930-094240.log",
+          "size": "1.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/system-architecture-dag/20250930-094240/1.6_network_topology_discovery-20250930-094240.log",
+          "size": "1.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/system-architecture-dag/20250930-094240/1.4_cloudflare_tunnel_discovery-20250930-094240.log",
+          "size": "1.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/system-architecture-dag/20250930-094240/1.3_service_discovery_scanner-20250930-094240.log",
+          "size": "1.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/system-architecture-dag/20250930-094240/1.1_project_structure_setup-20250930-094240.log",
+          "size": "1.2KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/documentation-index-20251001-093923/launch.log",
+          "size": "2.8KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "archive/development/logs/documentation-index-20251001-093923/orchestrator.log",
+          "size": "1010.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "scripts/logs/live_dashboard_engagement_system_execution.log",
+          "size": "15.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "scripts/logs/dag_orchestrated_parallel_execution_execution.log",
+          "size": "665.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": "scripts/logs/llm_powered_engagement_engines_execution.log",
+          "size": "742.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/logs/requirements-refinement-20250930-064021.log",
+          "size": "92.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/logs/requirements-review-20250930-065322.log",
+          "size": "1.5KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/logs/requirements-review-20250930-065153.log",
+          "size": "0.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/reports/phase-5d2-gap-mitigation/complete-specs-count.log",
+          "size": "9.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/reports/phase-5d2-gap-mitigation/reconciliation-summary.log",
+          "size": "1.8KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/reports/phase-5d2-gap-mitigation/hounds-released.log",
+          "size": "67.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/reports/phase-5d2-gap-mitigation/actual-spec-count.log",
+          "size": "9.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/reports/phase-5d2-gap-mitigation/missing-dimensions-execution.log",
+          "size": "5.7KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/reports/phase-5d2-gap-mitigation/compliance-remediation-execution.log",
+          "size": "6.7KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/reports/phase-5d2-gap-mitigation/orchestration-execution.log",
+          "size": "1.7KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/reports/phase-5d2-gap-mitigation/hounds-execution.log",
+          "size": "280.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/reports/phase-5d2-gap-mitigation/testing-enhancement-execution.log",
+          "size": "6.4KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/reports/phase-5d2-gap-mitigation/missing-dimensions-summary.log",
+          "size": "1.7KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/reports/phase-5d2-gap-mitigation/spec-completeness-analysis.log",
+          "size": "6.8KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/reports/phase-5d2-gap-mitigation/all-spec-directories.log",
+          "size": "4.8KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/reports/phase-5d2-gap-mitigation/innovation-analysis-execution.log",
+          "size": "6.7KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/reports/phase-5d2-gap-mitigation/logs/dag-execution-20251006-070112.log",
+          "size": "206.0B",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/reports/phase-5d2-gap-mitigation/logs/dag-execution-20251006-070234.log",
+          "size": "3.9KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".kiro/reports/phase-5d2-gap-mitigation/logs/dag-execution-20251006-070146.log",
+          "size": "4.1KB",
+          "reason": "Matches cleanup pattern *.log"
+        },
+        {
+          "path": ".security_cleanup_backup/.env.backup",
+          "size": "1.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": ".security_cleanup_backup/sample.env.backup",
+          "size": "673.0B",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/mdc-linter.py.backup",
+          "size": "11.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/cypher_validator.py.backup",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/start-observatory.py.backup",
+          "size": "1.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/auto_format_all.py.backup",
+          "size": "2.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/monitor_jupyter_logs.py.backup",
+          "size": "3.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/simple_calculator.py.backup",
+          "size": "1.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/type_assertion_enforcer.py.backup",
+          "size": "4.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/recursive_linter_improver.py.backup",
+          "size": "25.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/beast_mode/observatory/server.py.backup",
+          "size": "44.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/rm_ddd/core/health_part_1.py.backup",
+          "size": "1.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/backup_20250915_124042/sophisticated_indirect_verification.py.backup",
+          "size": "23.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/vonnegut_container_deployment/observatory/docker-compose.yml.backup",
+          "size": "5.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/vonnegut_container_deployment/src/beast_mode/observatory/server.py.backup",
+          "size": "44.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/vonnegut_container_deployment/src/rm_ddd/core/health_part_1.py.backup",
+          "size": "1.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/deployment/observatory/docker-compose.yml.backup",
+          "size": "5.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/poe_deployment_20251004_152642/observatory/docker-compose.yml.backup",
+          "size": "5.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/poe_deployment_20251004_152642/src/beast_mode/observatory/server.py.backup",
+          "size": "44.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/poe_deployment_20251004_152642/src/rm_ddd/core/health_part_1.py.backup",
+          "size": "1.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/.repair_backups_phase3d/makefile_health_manager_services_part_15.py.backup",
+          "size": "845.0B",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/.repair_backups_phase3d/makefile_health_manager_services_part_18.py.backup",
+          "size": "1.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/.repair_backups_phase3d/makefile_health_manager_services_part_7.py.backup",
+          "size": "1.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/.repair_backups_phase3d/makefile_health_manager_services_part_14.py.backup",
+          "size": "802.0B",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/.repair_backups_phase3d/makefile_health_manager_services_part_6.py.backup",
+          "size": "1.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/.repair_backups_phase3d/makefile_health_manager_services_part_8.py.backup",
+          "size": "770.0B",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/.repair_backups_phase3d/makefile_health_manager_services_part_17.py.backup",
+          "size": "2.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/.repair_backups_phase3d/makefile_health_manager_services_part_5.py.backup",
+          "size": "1.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/.repair_backups_phase3d/makefile_health_manager_services_part_11.py.backup",
+          "size": "4.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/.repair_backups_phase3d/makefile_health_manager_services_part_3.py.backup",
+          "size": "1.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/.repair_backups_phase3d/makefile_health_manager_services_part_16.py.backup",
+          "size": "1.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/.repair_backups_phase3d/makefile_health_manager_services_part_9.py.backup",
+          "size": "1.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/.repair_backups_phase3d/makefile_health_manager_services_part_4.py.backup",
+          "size": "1005.0B",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "archive/development/.repair_backups_phase3d/makefile_health_manager_services_part_10.py.backup",
+          "size": "805.0B",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_integration_validation.py.backup",
+          "size": "49.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_tool_orchestrator.py.backup",
+          "size": "24.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_component_boundary_integration.py.backup",
+          "size": "16.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_rca_integration.py.backup",
+          "size": "23.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_git_analyzer.py.backup",
+          "size": "17.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_test_pattern_library.py.backup",
+          "size": "21.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_format_router.py.backup",
+          "size": "10.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_rca_integration_with_patterns.py.backup",
+          "size": "13.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_comprehensive_unit_coverage.py.backup",
+          "size": "27.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_comprehensive_working.py.backup",
+          "size": "11.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_path_normalization_integration.py.backup",
+          "size": "19.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_rca_integration_integration.py.backup",
+          "size": "10.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_standard_git_integration.py.backup",
+          "size": "10.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_backlog_management_rm.py.backup",
+          "size": "14.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_rca_error_handling.py.backup",
+          "size": "29.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_data_models.py.backup",
+          "size": "25.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_test_safety_configuration.py.backup",
+          "size": "12.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_spec_reconciliation.py.backup",
+          "size": "127.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_test_coverage_validator.py.backup",
+          "size": "19.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_tool_orchestrator_optimization.py.backup",
+          "size": "16.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_rca_compatibility_validation.py.backup",
+          "size": "37.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_dag_analysis_comprehensive.py.backup",
+          "size": "18.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_rm_rdi_analysis_basic.py.backup",
+          "size": "8.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_rdi_compliance.py.backup",
+          "size": "13.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_unit.py.backup",
+          "size": "1.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_health_report_enum_serialization.py.backup",
+          "size": "15.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_performance_validation.py.backup",
+          "size": "34.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_beast_mode_core.py.backup",
+          "size": "20.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_rca_error_integration.py.backup",
+          "size": "22.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_design_validator.py.backup",
+          "size": "21.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_dependency_analyzer.py.backup",
+          "size": "27.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_competitive_launch.py.backup",
+          "size": "23.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_health_reporter.py.backup",
+          "size": "21.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_devpost_preview_generator.py.backup",
+          "size": "26.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_phase3_readiness_assessor.py.backup",
+          "size": "34.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_cli_integration.py.backup",
+          "size": "32.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_task17_components.py.backup",
+          "size": "26.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_requirement_tracer.py.backup",
+          "size": "14.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_rm_validator.py.backup",
+          "size": "33.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_regression_prevention_comprehensive.py.backup",
+          "size": "30.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_integration.py.backup",
+          "size": "1.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_advanced_query_engine.py.backup",
+          "size": "100.0B",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_final_validation_assessment.py.backup",
+          "size": "18.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_multi_failure_analysis.py.backup",
+          "size": "28.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_health_alert_constructor.py.backup",
+          "size": "9.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_backlog_dependency_manager.py.backup",
+          "size": "31.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_hackathon_controller.py.backup",
+          "size": "9.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_branch_management_integration.py.backup",
+          "size": "11.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_remediation_guide.py.backup",
+          "size": "26.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_document_management_rm.py.backup",
+          "size": "13.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_hackathon_functionality_validator.py.backup",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_contrast_analyzer.py.backup",
+          "size": "10.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_analysis_orchestrator.py.backup",
+          "size": "19.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_dag_orchestration_comprehensive.py.backup",
+          "size": "21.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_analysis_safety.py.backup",
+          "size": "12.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_rca_performance_validation.py.backup",
+          "size": "23.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_protocol_models.py.backup",
+          "size": "11.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_rca_integration_comprehensive.py.backup",
+          "size": "34.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_png_utils.py.backup",
+          "size": "5.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_rca_integration_validation_suite.py.backup",
+          "size": "28.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_enum_json_serialization.py.backup",
+          "size": "13.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_beast_mode_comprehensive_system.py.backup",
+          "size": "29.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_branch_management.py.backup",
+          "size": "16.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_automatic_rca_triggering.py.backup",
+          "size": "17.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_hackathon_presentation_components.py.backup",
+          "size": "25.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_compliance_orchestrator.py.backup",
+          "size": "7.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_git_provider_interface.py.backup",
+          "size": "13.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_beast_mode_cli_command_history.py.backup",
+          "size": "12.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_rca_performance_optimization.py.backup",
+          "size": "22.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_tool_orchestration_engine.py.backup",
+          "size": "23.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_beast_readiness_validator.py.backup",
+          "size": "24.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_protocol_handler.py.backup",
+          "size": "16.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_utilities.py.backup",
+          "size": "17.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_devpost_file_monitor.py.backup",
+          "size": "26.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_mpm_dashboard_fixed.py.backup",
+          "size": "6.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_integration_components.py.backup",
+          "size": "26.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_governance_framework.py.backup",
+          "size": "19.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_hackathon_demo_framework.py.backup",
+          "size": "23.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_reflective_module.py.backup",
+          "size": "10.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_rca_engine_test_specific.py.backup",
+          "size": "18.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_rca_report_generator.py.backup",
+          "size": "25.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_evidence_package_constructor.py.backup",
+          "size": "7.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_decision_context_confidence.py.backup",
+          "size": "14.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_file_change_detector.py.backup",
+          "size": "43.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_consolidated_functionality.py.backup",
+          "size": "62.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_orchestration_controller.py.backup",
+          "size": "20.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_devpost_sync_manager.py.backup",
+          "size": "63.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_path_normalizer.py.backup",
+          "size": "16.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_hackathon_integration.py.backup",
+          "size": "4.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_basic.py.backup",
+          "size": "3.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_baseline_metrics_engine.py.backup",
+          "size": "12.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_consolidated_functionality_enhanced.py.backup",
+          "size": "38.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_hackathon_models.py.backup",
+          "size": "7.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_validation_engine.py.backup",
+          "size": "31.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_hackathon_validation_components.py.backup",
+          "size": "22.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_standard_git_provider.py.backup",
+          "size": "19.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/test_dag_models_simple.py.backup",
+          "size": "13.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_deployment_validator.py.backup",
+          "size": "18.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_system_monitor.py.backup",
+          "size": "19.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_redis_foundation.py.backup",
+          "size": "11.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_message_models.py.backup",
+          "size": "14.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_unified_client.py.backup",
+          "size": "12.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_ghostbusters_agents.py.backup",
+          "size": "17.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_multi_project_manager.py.backup",
+          "size": "23.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_beast_mode_core_comprehensive.py.backup",
+          "size": "23.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_devpost_deadline_api.py.backup",
+          "size": "24.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_model_registry_learning.py.backup",
+          "size": "17.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_ghostbusters_api.py.backup",
+          "size": "19.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_all_message_types.py.backup",
+          "size": "22.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_recovery.py.backup",
+          "size": "17.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_message_history.py.backup",
+          "size": "27.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_collaboration_scheduler.py.backup",
+          "size": "33.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_model_registry.py.backup",
+          "size": "14.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_capability_verifier.py.backup",
+          "size": "20.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_help_system.py.backup",
+          "size": "25.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_shared_state.py.backup",
+          "size": "8.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_cli_comprehensive.py.backup",
+          "size": "18.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_alerting.py.backup",
+          "size": "15.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_pdca_models.py.backup",
+          "size": "13.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_deployment_manager.py.backup",
+          "size": "13.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_health_monitor.py.backup",
+          "size": "11.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_agent_registry.py.backup",
+          "size": "19.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_message_handlers.py.backup",
+          "size": "25.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_mailbox_logger.py.backup",
+          "size": "25.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_deployment_config.py.backup",
+          "size": "10.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_redis_transport.py.backup",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_service_monitor.py.backup",
+          "size": "18.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_metrics_collector.py.backup",
+          "size": "12.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_devpost_models.py.backup",
+          "size": "23.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_project_file_monitor.py.backup",
+          "size": "25.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_spore_manager.py.backup",
+          "size": "24.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_ghostbusters_models.py.backup",
+          "size": "20.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_message_compatibility.py.backup",
+          "size": "22.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/test_messaging_models.py.backup",
+          "size": "12.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/domain_index/test_domain_validator.py.backup",
+          "size": "23.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/domain_index/test_domain_cache.py.backup",
+          "size": "15.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/domain_index/test_query_engine.py.backup",
+          "size": "41.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/domain_index/test_infrastructure.py.backup",
+          "size": "11.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/domain_index/test_registry_manager_enhanced.py.backup",
+          "size": "18.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/domain_index/test_registry_manager.py.backup",
+          "size": "10.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/domain_index/test_domain_index.py.backup",
+          "size": "17.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/domain_index/test_registry_manager_validation.py.backup",
+          "size": "19.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/test_templates.py.backup",
+          "size": "15.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_11.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_24.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_24.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_30.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_30.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_29.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_3.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_22.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_17.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_3.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_5.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_4.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_10.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_10.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_31.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_25.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_25.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core.py.backup",
+          "size": "2.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_28.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_28.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_23.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_2.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core.py.backup",
+          "size": "2.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_16.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_4.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_26.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_32.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_13.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_7.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_1.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_15.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_15.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_1.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_20.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_20.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_18.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_18.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_7.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_27.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_6.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_12.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_14.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_14.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_21.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_21.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_services_core_part_19.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/beast_mode/organization/test_systematic_cleanup_engine_services_core_core_part_19.py.backup",
+          "size": "2.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/hubris_prevention/test_emergency_validator.py.backup",
+          "size": "9.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/hubris_prevention/test_models.py.backup",
+          "size": "7.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/integration/devpost/test_config.py.backup",
+          "size": "26.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/integration/devpost/test_api_client.py.backup",
+          "size": "66.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/integration/devpost/test_models.py.backup",
+          "size": "23.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/integration/devpost/test_validation.py.backup",
+          "size": "9.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/integration/devpost/test_file_monitor_timeout.py.backup",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/integration/devpost/test_project_manager.py.backup",
+          "size": "49.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/integration/devpost/monitoring/test_file_monitor.py.backup",
+          "size": "19.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/unit/integration/devpost/monitoring/test_change_detector.py.backup",
+          "size": "21.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/beast_mode/test_unit.py.backup",
+          "size": "2.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/beast_mode/test_integration.py.backup",
+          "size": "2.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/competitive_launch/test_unit.py.backup",
+          "size": "2.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/competitive_launch/test_integration.py.backup",
+          "size": "1.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/rm_ddd/test_unit.py.backup",
+          "size": "2.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/rm_ddd/test_integration.py.backup",
+          "size": "2.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_message_history_integration.py.backup",
+          "size": "30.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_mailbox_logger_integration.py.backup",
+          "size": "17.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_pdca_orchestrator_fixes.py.backup",
+          "size": "12.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_performance_benchmarks.py.backup",
+          "size": "16.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_help_system_integration.py.backup",
+          "size": "19.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_bus_client.py.backup",
+          "size": "15.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_devpost_integration_e2e.py.backup",
+          "size": "21.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_cross_platform_compatibility.py.backup",
+          "size": "25.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_gke_terraform_validation.py.backup",
+          "size": "19.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_system_integration_comprehensive.py.backup",
+          "size": "26.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_simone_adapter.py.backup",
+          "size": "10.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_comprehensive_beast_mode_integration.py.backup",
+          "size": "63.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_message_routing.py.backup",
+          "size": "29.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_collaboration_scheduler_integration.py.backup",
+          "size": "31.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_agent_discovery.py.backup",
+          "size": "23.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_monitoring_integration.py.backup",
+          "size": "16.5KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_backward_compatibility.py.backup",
+          "size": "19.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_cross_version_compatibility.py.backup",
+          "size": "22.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_deployment_integration.py.backup",
+          "size": "19.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_multi_service_gcp_billing.py.backup",
+          "size": "13.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_spore_management_integration.py.backup",
+          "size": "23.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/integration/test_capability_verification_integration.py.backup",
+          "size": "18.7KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/devpost_integration/test_unit.py.backup",
+          "size": "2.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/devpost_integration/test_integration.py.backup",
+          "size": "2.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/fixtures/test_rca_failure_scenarios.py.backup",
+          "size": "38.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/performance/test_performance_comprehensive.py.backup",
+          "size": "25.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/multi_instance_orchestration/test_unit.py.backup",
+          "size": "2.3KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "tests/multi_instance_orchestration/test_integration.py.backup",
+          "size": "1.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "scripts/mdc-linter.py.backup",
+          "size": "11.4KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "scripts/cypher_validator.py.backup",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "scripts/start-observatory.py.backup",
+          "size": "1.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "scripts/auto_format_all.py.backup",
+          "size": "2.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "scripts/monitor_jupyter_logs.py.backup",
+          "size": "3.9KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "scripts/simple_calculator.py.backup",
+          "size": "1.8KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "scripts/type_assertion_enforcer.py.backup",
+          "size": "4.6KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "scripts/recursive_linter_improver.py.backup",
+          "size": "25.2KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "src/beast_mode/observatory/server.py.backup",
+          "size": "44.1KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": "src/rm_ddd/core/health_part_1.py.backup",
+          "size": "1.0KB",
+          "reason": "Matches cleanup pattern *.backup"
+        },
+        {
+          "path": ".DS_Store",
+          "size": "14.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/.DS_Store",
+          "size": "18.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/docker/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/empirical_data/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/.DS_Store",
+          "size": "32.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/design/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/beast_mode/.DS_Store",
+          "size": "18.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/json-maintenance/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/directus_reconciliation/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/visual_diagram_validation/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/simone-integration/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/observatory_infrastructure/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/images/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/specs/.DS_Store",
+          "size": "52.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/rm_ddd/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/web/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/other/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/requirements/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/technical_debt_patch_annotation/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/readme/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/rc1/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/spec_scrub/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/architecture/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/hackathon/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/logs/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/task/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/makefile_governance/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/system_architecture/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/repository_discovery/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/dag-orchestration/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/ghostbusters/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/msp_ssl_chaos_tamer/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/websocket_validation/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/service_auto_start/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/multi_instance_orchestration/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/dag_orchestration/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_deployment_package/summary/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/diagrams/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/docs/.DS_Store",
+          "size": "20.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/docs/vonnegut_deployment_package/.DS_Store",
+          "size": "18.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/docs/logs/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/docs/deployment/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/docs/prompts/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/docs/observatory_data/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/docs/.kiro/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/makefile_system_implemented/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_container_deployment/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_container_deployment/observatory/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/vonnegut_container_deployment/src/.DS_Store",
+          "size": "18.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/logs/.DS_Store",
+          "size": "14.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/logs/llm-dag/.DS_Store",
+          "size": "14.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/deployment/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/deployment/observatory/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/deployment/local/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/examples/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/examples/demo_spores/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/examples/vonnegut_deployment_package/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/examples/vonnegut_deployment_package/hackathon_demo_framework/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/examples/.kiro/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/examples/demo_project/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/poe_deployment_20251004_152642/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/poe_deployment_20251004_152642/observatory/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/poe_deployment_20251004_152642/src/.DS_Store",
+          "size": "18.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/generated_docs/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/prompts/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/observatory_data/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/observatory_data/metrics/.DS_Store",
+          "size": "10.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/observatory_data/dashboards/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/docker-migration-backup-20251003_161735/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/docker-migration-backup-20251003_161735/host-grafana-data/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/docker-migration-backup-20251003_161735/host-prometheus-data/.DS_Store",
+          "size": "10.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/packer-systo-python/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/reports/.DS_Store",
+          "size": "10.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/src/.DS_Store",
+          "size": "26.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/src/.task_execution/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/src/vonnegut_container_deployment/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/src/logs/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/src/deployment/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/src/poe_deployment_20251004_152642/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/src/observatory_data/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/src/.kiro/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/development/src/docker-migration-backup-20251003_161735/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/backups/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "archive/backups/migration_backups/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "config/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "tests/.DS_Store",
+          "size": "14.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "tests/vonnegut_deployment_package/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "tests/integration/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "tests/makefile_system_implemented/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "tests/.kiro/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "docs/.DS_Store",
+          "size": "22.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "docs/requirements/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "docs/api/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "docs/reports/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "examples/.DS_Store",
+          "size": "10.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "examples/notebooks/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "examples/demos/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "scripts/.DS_Store",
+          "size": "14.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "scripts/vonnegut_deployment_package/.DS_Store",
+          "size": "10.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "scripts/vonnegut_deployment_package/python_scripts/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "scripts/makefile_system_implemented/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "scripts/deployment/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": ".github/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": ".kiro/.DS_Store",
+          "size": "14.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": ".kiro/simone-integration/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": ".kiro/specs/.DS_Store",
+          "size": "54.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": ".kiro/reports/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": ".kiro/execution-logs/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": ".simone/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": ".simone/prompts/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": ".git/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": ".git/objects/.DS_Store",
+          "size": "34.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": ".git/logs/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": ".git/refs/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "~/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": ".make-tasks/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/.DS_Store",
+          "size": "26.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/beast_mode/.DS_Store",
+          "size": "14.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/observatory_infrastructure/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/ai_memory_palace/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/cms_platform/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/spec_framework/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/technical_debt_patch_annotation/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/repository_content_discovery_indexing/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/phase_5d2_enhancement/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/constellation_orchestrator/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/makefile_governance/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/system_architecture/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/msp_ssl_chaos_tamer/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/runtime_state_registry/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/websocket_validation/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/dag_orchestration/.DS_Store",
+          "size": "8.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        },
+        {
+          "path": "src/spec_scrub_rdi_consistency/.DS_Store",
+          "size": "6.0KB",
+          "reason": "Matches cleanup pattern .DS_Store"
+        }
+      ]
+    },
+    "archive_external": {
+      "count": 1,
+      "size": 123008131,
+      "files": [
+        {
+          "path": "archive/backups/observatory-poe-deployment-20251004_152642.tar.gz",
+          "size": "117.3MB",
+          "reason": "Large backup files should be stored externally"
+        }
+      ]
+    },
+    "review": {
+      "count": 20,
+      "size": 415712201,
+      "files": [
+        {
+          "path": "archive/backups/observatory_backup_20251004_134955/observatory_grafana_data.tar.gz",
+          "size": "53.4MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "data/security_scan_report.json",
+          "size": "37.7MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "data/project_cleanup_analysis.json",
+          "size": "28.0MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "archive/development/src/data/project_cleanup_analysis.json",
+          "size": "27.5MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "data/dag_task_2_failure_investigation_report.json",
+          "size": "20.8MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "archive/development/docker-migration-backup-20251003_161735/docker-grafana-data.tar.gz",
+          "size": "18.8MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "archive/development/observatory_data/dashboards/plugins/redis-datasource/redis-datasource_darwin_amd64",
+          "size": "16.9MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "archive/development/docker-migration-backup-20251003_161735/host-grafana-data/plugins/redis-datasource/redis-datasource_darwin_amd64",
+          "size": "16.9MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "archive/development/observatory_data/dashboards/plugins/redis-datasource/redis-datasource_darwin_arm64",
+          "size": "16.8MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "archive/development/docker-migration-backup-20251003_161735/host-grafana-data/plugins/redis-datasource/redis-datasource_darwin_arm64",
+          "size": "16.8MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "archive/development/observatory_data/dashboards/plugins/redis-datasource/redis-datasource_windows_amd64.exe",
+          "size": "15.5MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "archive/development/docker-migration-backup-20251003_161735/host-grafana-data/plugins/redis-datasource/redis-datasource_windows_amd64.exe",
+          "size": "15.5MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "archive/development/observatory_data/dashboards/plugins/redis-datasource/redis-datasource_linux_amd64",
+          "size": "15.1MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "archive/development/docker-migration-backup-20251003_161735/host-grafana-data/plugins/redis-datasource/redis-datasource_linux_amd64",
+          "size": "15.1MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "archive/development/observatory_data/dashboards/plugins/redis-datasource/redis-datasource_linux_arm64",
+          "size": "14.6MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "archive/development/docker-migration-backup-20251003_161735/host-grafana-data/plugins/redis-datasource/redis-datasource_linux_arm64",
+          "size": "14.6MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "archive/development/observatory_data/dashboards/plugins/redis-datasource/redis-datasource_linux_arm",
+          "size": "14.3MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "archive/development/docker-migration-backup-20251003_161735/host-grafana-data/plugins/redis-datasource/redis-datasource_linux_arm",
+          "size": "14.3MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "archive/development/patterns/test_pattern_learning.json",
+          "size": "12.2MB",
+          "reason": "File needs manual review for optimization"
+        },
+        {
+          "path": "archive/development/src/patterns/rca_patterns.json",
+          "size": "11.7MB",
+          "reason": "File needs manual review for optimization"
+        }
+      ]
+    }
+  },
+  "git_optimization": {
+    "size_before": "436M",
+    "size_after": "438M"
+  },
+  "git_lfs_recommendations": [],
+  "next_steps": [
+    "Review files marked for manual review",
+    "Set up Git LFS for large binary files",
+    "Update .gitignore to prevent future accumulation",
+    "Consider external storage for large backup files",
+    "Recreate virtual environment from requirements.txt"
+  ]
+}

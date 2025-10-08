@@ -1,0 +1,20 @@
+{
+  "evidence_id": "fad42112-7d45-446a-97a3-a5958756b643",
+  "timestamp": "2025-09-27T04:35:03.722815",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.722783",
+    "data_type": "dict"
+  },
+  "integrity_hash": "75701b2f4e16c8452fc44eb308005d6cde9a080a36bac623173ba383437855a8",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/interpreter/computer_use/loop.py",
+    "file_size": 20467,
+    "line_count": 574,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.722759"
+  }
+}

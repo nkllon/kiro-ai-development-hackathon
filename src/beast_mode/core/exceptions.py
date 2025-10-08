@@ -17,16 +17,19 @@ from datetime import datetime
 class BeastModeError(Exception):
     """Base exception for Beast Mode Framework."""
     
-    def __init__(self, message: str, error_code: str = None):
+    def __init__(self, message: str, error_code: str = None, **context):
         super().__init__(message)
         self.message = message
         self.error_code = error_code
+        self.context = context
         self.timestamp = datetime.now()
     
     def __str__(self):
-        if self.error_code:
-            return f"[{self.error_code}] {self.message}"
-        return self.message
+        base_msg = f"[{self.error_code}] {self.message}" if self.error_code else self.message
+        if self.context:
+            context_str = ", ".join(f"{k}={v}" for k, v in self.context.items())
+            return f"{base_msg} ({context_str})"
+        return base_msg
 
 
 class BeastModeConfigurationError(BeastModeError):

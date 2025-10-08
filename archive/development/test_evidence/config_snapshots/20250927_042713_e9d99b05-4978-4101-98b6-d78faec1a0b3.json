@@ -1,0 +1,42 @@
+{
+  "evidence_id": "e9d99b05-4978-4101-98b6-d78faec1a0b3",
+  "timestamp": "2025-09-27T04:27:13.008248",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.008240",
+    "data_type": "dict"
+  },
+  "integrity_hash": "5521672431f8031086edf47af1a33598d7f0bc7f2bf8995b7a213f43ae0e903c",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/caching_routes.py",
+    "file_size": 8327,
+    "line_count": 258,
+    "route_analysis": {
+      "total_routes": 4,
+      "websocket_routes": [],
+      "http_routes": [
+        "/ping",
+        "/delete",
+        "/redis/info",
+        "/flushall"
+      ],
+      "route_handlers": {
+        "/ping": "cache_ping",
+        "/delete": "cache_delete",
+        "/redis/info": "cache_redis_info",
+        "/flushall": "cache_flushall"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi.Request",
+        "fastapi",
+        "fastapi.HTTPException"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.008232"
+  }
+}

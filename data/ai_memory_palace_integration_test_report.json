@@ -1,0 +1,66 @@
+{
+  "test_summary": {
+    "total_tests": 9,
+    "passed_tests": 2,
+    "failed_tests": 7,
+    "success_rate": 22.22222222222222,
+    "integration_ready": false
+  },
+  "test_results": [
+    {
+      "test_name": "context_manager_init",
+      "passed": true,
+      "details": "Context Manager initialized successfully",
+      "timestamp": "2025-10-05T08:56:41.751831"
+    },
+    {
+      "test_name": "system_state_storage",
+      "passed": false,
+      "details": "'NoneType' object has no attribute 'record_exception'",
+      "timestamp": "2025-10-05T08:56:41.751939"
+    },
+    {
+      "test_name": "runtime_event_contribution",
+      "passed": false,
+      "details": "'NoneType' object has no attribute 'record_exception'",
+      "timestamp": "2025-10-05T08:56:41.751980"
+    },
+    {
+      "test_name": "context_query_support",
+      "passed": false,
+      "details": "'NoneType' object has no attribute 'record_exception'",
+      "timestamp": "2025-10-05T08:56:41.752005"
+    },
+    {
+      "test_name": "service_discovery",
+      "passed": false,
+      "details": "'NoneType' object has no attribute 'record_exception'",
+      "timestamp": "2025-10-05T08:56:41.752027"
+    },
+    {
+      "test_name": "historical_tracking",
+      "passed": false,
+      "details": "'NoneType' object has no attribute 'record_exception'",
+      "timestamp": "2025-10-05T08:56:41.752058"
+    },
+    {
+      "test_name": "context_validation",
+      "passed": true,
+      "details": "Context validation working: {'valid': False, 'error_count': 0, 'has_validation_timestamp': False}",
+      "timestamp": "2025-10-05T08:56:41.752066"
+    },
+    {
+      "test_name": "o1_performance",
+      "passed": false,
+      "details": "'NoneType' object has no attribute 'record_exception'",
+      "timestamp": "2025-10-05T08:56:41.752110"
+    },
+    {
+      "test_name": "context_size_management",
+      "passed": false,
+      "details": "'NoneType' object has no attribute 'record_exception'",
+      "timestamp": "2025-10-05T08:56:41.752132"
+    }
+  ],
+  "timestamp": "2025-10-05T08:56:41.753112"
+}

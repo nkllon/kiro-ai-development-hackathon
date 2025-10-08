@@ -1,0 +1,34 @@
+{
+  "evidence_id": "74d8c80c-644a-40dd-aa0c-6232f435dbbc",
+  "timestamp": "2025-09-27T05:09:24.778699",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.778690",
+    "data_type": "dict"
+  },
+  "integrity_hash": "4e7c7ffa02000fc100529ffe018708668d4c798372788bd4def8556d3b0291ae",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/management_endpoints/callback_management_endpoints.py",
+    "file_size": 720,
+    "line_count": 27,
+    "route_analysis": {
+      "total_routes": 1,
+      "websocket_routes": [],
+      "http_routes": [
+        "/callbacks/list"
+      ],
+      "route_handlers": {
+        "/callbacks/list": "list_callbacks"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.APIRouter",
+        "fastapi.Depends",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.778685"
+  }
+}

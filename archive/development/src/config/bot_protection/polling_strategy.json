@@ -1,0 +1,30 @@
+{
+  "base_interval": 5.0,
+  "max_interval": 60.0,
+  "backoff_multiplier": 1.5,
+  "jitter_factor": 0.1,
+  "max_retries": 3,
+  "endpoints": {
+    "/api/emoji-rain/stats": {
+      "interval": 5.0,
+      "priority": "high",
+      "fallback": true
+    },
+    "/api/dashboard/all-data": {
+      "interval": 10.0,
+      "priority": "medium",
+      "fallback": true
+    },
+    "/api/observatory/status": {
+      "interval": 15.0,
+      "priority": "low",
+      "fallback": true
+    }
+  },
+  "bot_avoidance": {
+    "randomize_intervals": true,
+    "batch_requests": true,
+    "respect_rate_limits": true,
+    "exponential_backoff": true
+  }
+}

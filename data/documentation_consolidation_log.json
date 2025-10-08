@@ -1,0 +1,413 @@
+{
+  "timestamp": "2025-10-06T16:01:12.168688",
+  "operations": [
+    {
+      "action": "archive",
+      "source": "docs/.cleanup-workspace",
+      "target": "archive/development/docs/.cleanup-workspace",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/.kiro",
+      "target": "archive/development/docs/.kiro",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/.simone",
+      "target": "archive/development/docs/.simone",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/assessment-results",
+      "target": "archive/development/docs/assessment-results",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/brownfield_analysis",
+      "target": "archive/development/docs/brownfield_analysis",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/cloudflare",
+      "target": "archive/development/docs/cloudflare",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/demo_project",
+      "target": "archive/development/docs/demo_project",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/deployment",
+      "target": "archive/development/docs/deployment",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/docker-migration-backup-20251003_161735",
+      "target": "archive/development/docs/docker-migration-backup-20251003_161735",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/hackathon",
+      "target": "archive/development/docs/hackathon",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/html-samples",
+      "target": "archive/development/docs/html-samples",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/implementation_guides_20250930-130220",
+      "target": "archive/development/docs/implementation_guides_20250930-130220",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/logs",
+      "target": "archive/development/docs/logs",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/makefile_system",
+      "target": "archive/development/docs/makefile_system",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/makefile_system_implemented",
+      "target": "archive/development/docs/makefile_system_implemented",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/monitoring",
+      "target": "archive/development/docs/monitoring",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/observatory_data",
+      "target": "archive/development/docs/observatory_data",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/ontology",
+      "target": "archive/development/docs/ontology",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/poe_deployment_20251004_152642",
+      "target": "archive/development/docs/poe_deployment_20251004_152642",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/prompts",
+      "target": "archive/development/docs/prompts",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/python_scripts",
+      "target": "archive/development/docs/python_scripts",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/rc1",
+      "target": "archive/development/docs/rc1",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/rms",
+      "target": "archive/development/docs/rms",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/screenshots",
+      "target": "archive/development/docs/screenshots",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/scripts",
+      "target": "archive/development/docs/scripts",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/spores",
+      "target": "archive/development/docs/spores",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/summaries",
+      "target": "archive/development/docs/summaries",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/vonnegut_container_deployment",
+      "target": "archive/development/docs/vonnegut_container_deployment",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/vonnegut_deployment_package",
+      "target": "archive/development/docs/vonnegut_deployment_package",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/web",
+      "target": "archive/development/docs/web",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "docs/.DS_Store",
+      "target": "archive/development/docs/.DS_Store",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/agent_control_governance_dag_validation_report.txt",
+      "target": "archive/development/docs/agent_control_governance_dag_validation_report.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/agent_coordination_log.txt",
+      "target": "archive/development/docs/agent_coordination_log.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/agent-spawn-test.txt",
+      "target": "archive/development/docs/agent-spawn-test.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/ARCHIVE_SOLUTION_SUMMARY.txt",
+      "target": "archive/development/docs/ARCHIVE_SOLUTION_SUMMARY.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/branch-state-before-cleanup.txt",
+      "target": "archive/development/docs/branch-state-before-cleanup.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/dag_execution_claude_log.txt",
+      "target": "archive/development/docs/dag_execution_claude_log.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/dag_execution_corrected_log.txt",
+      "target": "archive/development/docs/dag_execution_corrected_log.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/dag_execution_cursor_log.txt",
+      "target": "archive/development/docs/dag_execution_cursor_log.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/dag_execution_log.txt",
+      "target": "archive/development/docs/dag_execution_log.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/documentation-agent-log.txt",
+      "target": "archive/development/docs/documentation-agent-log.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/FILES_CREATED.txt",
+      "target": "archive/development/docs/FILES_CREATED.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/finalization_body_20250915_023229.txt",
+      "target": "archive/development/docs/finalization_body_20250915_023229.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/ghostbusters_domain_triage.txt",
+      "target": "archive/development/docs/ghostbusters_domain_triage.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/ghostbusters_framework_dag.mmd",
+      "target": "archive/development/docs/ghostbusters_framework_dag.mmd",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/ghostbusters_git_status.txt",
+      "target": "archive/development/docs/ghostbusters_git_status.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/ghostbusters_phase1_report.txt",
+      "target": "archive/development/docs/ghostbusters_phase1_report.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/git_status_sample.txt",
+      "target": "archive/development/docs/git_status_sample.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/git-graph-before-cleanup.txt",
+      "target": "archive/development/docs/git-graph-before-cleanup.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/integration_log.txt",
+      "target": "archive/development/docs/integration_log.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/link_scan_results.txt",
+      "target": "archive/development/docs/link_scan_results.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/my_projects_body_20250915_023413.txt",
+      "target": "archive/development/docs/my_projects_body_20250915_023413.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/opensource-agent-log.txt",
+      "target": "archive/development/docs/opensource-agent-log.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/persistent_dag_registry.mmd",
+      "target": "archive/development/docs/persistent_dag_registry.mmd",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/redis_env_template.txt",
+      "target": "archive/development/docs/redis_env_template.txt",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/ubiquitous_language_vocabulary.json",
+      "target": "archive/development/docs/ubiquitous_language_vocabulary.json",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "docs/Analytics & logs _ HTTP Traffic _ nkllon.com _ Lou@louspringer.com's Account _ Cloudflare.pdf",
+      "target": "archive/development/docs/Analytics & logs _ HTTP Traffic _ nkllon.com _ Lou@louspringer.com's Account _ Cloudflare.pdf",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "docs/INSTALLATION.md",
+      "target": "docs/getting-started/installation.md",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "docs/USER_GUIDE.md",
+      "target": "docs/user-guide/index.md",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "docs/CONTRIBUTING.md",
+      "target": "docs/developer-guide/contributing.md",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "docs/README.md",
+      "target": "docs/index.md",
+      "type": "file"
+    },
+    {
+      "action": "remove_empty",
+      "source": "docs/infrastructure/troubleshooting",
+      "type": "directory"
+    },
+    {
+      "action": "remove_empty",
+      "source": "docs/infrastructure/operations",
+      "type": "directory"
+    },
+    {
+      "action": "remove_empty",
+      "source": "docs/infrastructure/architecture",
+      "type": "directory"
+    },
+    {
+      "action": "remove_empty",
+      "source": "docs/api-reference",
+      "type": "directory"
+    },
+    {
+      "action": "remove_empty",
+      "source": "docs/deployment",
+      "type": "directory"
+    },
+    {
+      "action": "remove_empty",
+      "source": "docs/api",
+      "type": "directory"
+    },
+    {
+      "action": "remove_empty",
+      "source": "docs/infrastructure",
+      "type": "directory"
+    }
+  ],
+  "summary": {
+    "directories_archived": 30,
+    "files_archived": 27,
+    "files_moved": 4,
+    "empty_dirs_removed": 7,
+    "total_operations": 68
+  }
+}

@@ -241,3 +241,24 @@ class VisualRegressionError(ConsultationError):
             details=details,
             retry_possible=True  # Visual tests can usually be retried
         )
+
+
+class ProcessingError(ConsultationError):
+    """Raised when processing operations fail"""
+    
+    def __init__(
+        self, 
+        message: str = "Processing operation failed", 
+        operation: Optional[str] = None,
+        stage: Optional[str] = None
+    ):
+        details = {
+            "operation": operation,
+            "stage": stage
+        }
+        super().__init__(
+            message=message,
+            error_code="PROCESSING_ERROR",
+            details=details,
+            retry_possible=True  # Processing can usually be retried
+        )

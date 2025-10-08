@@ -1,0 +1,23 @@
+{
+  "evidence_id": "237c1448-1734-4f32-838e-115c82baf2fe",
+  "timestamp": "2025-09-27T03:58:34.180358",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handshake_configuration",
+  "metadata": {
+    "config_type": "websocket_handshake",
+    "snapshot_timestamp": "2025-09-27T03:58:34.180344",
+    "data_type": "dict"
+  },
+  "integrity_hash": "ff99a915da08ee045baa9d2b4cb1692a7e22c7297854bc7793f5c7d179b4a07b",
+  "data": {
+    "endpoint_url": "wss://observatory.nkllon.com/ws/status",
+    "handshake_success": false,
+    "upgrade_header": null,
+    "connection_header": null,
+    "websocket_accept": null,
+    "websocket_protocol": null,
+    "response_time": 0.0010478496551513672,
+    "error_message": "WebSocket connection failed: create_connection() got an unexpected keyword argument 'timeout'",
+    "timestamp": "2025-09-27T03:58:34.180335"
+  }
+}

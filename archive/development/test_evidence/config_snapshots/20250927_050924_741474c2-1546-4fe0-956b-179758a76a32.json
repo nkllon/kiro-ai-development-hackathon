@@ -1,0 +1,48 @@
+{
+  "evidence_id": "741474c2-1546-4fe0-956b-179758a76a32",
+  "timestamp": "2025-09-27T05:09:24.063726",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.063717",
+    "data_type": "dict"
+  },
+  "integrity_hash": "9d945c8cb089c05972e308297ff0e7757f1d70b5051e0fe634f01add6748a26c",
+  "data": {
+    "file_path": "src/beast_mode/api/main.py",
+    "file_size": 4488,
+    "line_count": 156,
+    "route_analysis": {
+      "total_routes": 5,
+      "websocket_routes": [],
+      "http_routes": [
+        "/health",
+        "/",
+        "/api/status",
+        "/api/metrics",
+        "/api/test"
+      ],
+      "route_handlers": {
+        "/health": "health_check",
+        "/": "root",
+        "/api/status": "api_status",
+        "/api/metrics": "get_metrics",
+        "/api/test": "test_endpoint"
+      },
+      "middleware_count": 1,
+      "dependencies": [
+        "uvicorn",
+        "fastapi.middleware.cors",
+        "fastapi.HTTPException",
+        "fastapi.responses.JSONResponse",
+        "fastapi.responses",
+        "fastapi.middleware.cors.CORSMiddleware",
+        "fastapi.responses.HTMLResponse",
+        "fastapi.FastAPI",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.063711"
+  }
+}

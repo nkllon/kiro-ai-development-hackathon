@@ -1,0 +1,432 @@
+{
+  "suite_summary": {
+    "total_tests": 15,
+    "suite_execution_time": 0.12271308898925781,
+    "strategies_tested": 5,
+    "scenarios_tested": 3
+  },
+  "strategy_performance": {
+    "fifo": {
+      "avg_execution_time": 0.0032019615173339844,
+      "avg_scheduling_quality": 0.8045674132630655,
+      "avg_priority_score": 1.0,
+      "test_count": 3
+    },
+    "priority": {
+      "avg_execution_time": 0.001943031946818034,
+      "avg_scheduling_quality": 0.9077733860342555,
+      "avg_priority_score": 3.208695652173913,
+      "test_count": 3
+    },
+    "critical_path": {
+      "avg_execution_time": 0.001935402552286784,
+      "avg_scheduling_quality": 0.7913921826965306,
+      "avg_priority_score": 1.820384889522452,
+      "test_count": 3
+    },
+    "resource_aware": {
+      "avg_execution_time": 0.001111904780069987,
+      "avg_scheduling_quality": 0.7913921826965306,
+      "avg_priority_score": 1.0000000000000004,
+      "test_count": 3
+    },
+    "adaptive": {
+      "avg_execution_time": 0.0018866856892903645,
+      "avg_scheduling_quality": 0.9077733860342555,
+      "avg_priority_score": 1.974773105250654,
+      "test_count": 3
+    }
+  },
+  "best_strategies": {
+    "overall": "priority",
+    "fastest": "resource_aware",
+    "highest_priority": "priority"
+  },
+  "performance_improvements": {
+    "scheduling_quality_improvement_percent": 12.827510917030551,
+    "baseline_strategy": "fifo",
+    "best_strategy": "priority"
+  },
+  "individual_results": [
+    {
+      "strategy": "fifo",
+      "scenario": "simple_priority",
+      "total_tasks": 4,
+      "scheduling_decisions": 10,
+      "execution_time": 0.001344919204711914,
+      "total_estimated_duration": 4.0,
+      "avg_priority_score": 1.0,
+      "scheduling_order_quality": 0.6666666666666666,
+      "scheduler_statistics": {
+        "strategy": "fifo",
+        "total_tasks": 4,
+        "scheduled_tasks": 4,
+        "ready_tasks": 5,
+        "pending_tasks": 0,
+        "total_scheduling_decisions": 10,
+        "average_scheduling_time_ms": 0.029500000000000002,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 1.0,
+          "average_critical_path_length": 1.0
+        }
+      },
+      "timestamp": "2025-09-29T18:14:14.671197"
+    },
+    {
+      "strategy": "fifo",
+      "scenario": "complex_dependencies",
+      "total_tasks": 9,
+      "scheduling_decisions": 23,
+      "execution_time": 0.003476858139038086,
+      "total_estimated_duration": 18.0,
+      "avg_priority_score": 1.0,
+      "scheduling_order_quality": 0.7470355731225297,
+      "scheduler_statistics": {
+        "strategy": "fifo",
+        "total_tasks": 9,
+        "scheduled_tasks": 9,
+        "ready_tasks": 0,
+        "pending_tasks": 0,
+        "total_scheduling_decisions": 23,
+        "average_scheduling_time_ms": 0.016478260869565216,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 8.0,
+          "average_critical_path_length": 3.888888888888889
+        }
+      },
+      "timestamp": "2025-09-29T18:14:14.675060"
+    },
+    {
+      "strategy": "fifo",
+      "scenario": "resource_intensive",
+      "total_tasks": 8,
+      "scheduling_decisions": 61,
+      "execution_time": 0.004784107208251953,
+      "total_estimated_duration": 10.5,
+      "avg_priority_score": 1.0,
+      "scheduling_order_quality": 1.0,
+      "scheduler_statistics": {
+        "strategy": "fifo",
+        "total_tasks": 8,
+        "scheduled_tasks": 8,
+        "ready_tasks": 0,
+        "pending_tasks": 0,
+        "total_scheduling_decisions": 61,
+        "average_scheduling_time_ms": 0.018196721311475414,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 5.0,
+          "average_critical_path_length": 1.6875
+        }
+      },
+      "timestamp": "2025-09-29T18:14:14.680393"
+    },
+    {
+      "strategy": "priority",
+      "scenario": "simple_priority",
+      "total_tasks": 4,
+      "scheduling_decisions": 10,
+      "execution_time": 0.0006859302520751953,
+      "total_estimated_duration": 4.0,
+      "avg_priority_score": 4.8,
+      "scheduling_order_quality": 1.0,
+      "scheduler_statistics": {
+        "strategy": "priority",
+        "total_tasks": 4,
+        "scheduled_tasks": 4,
+        "ready_tasks": 5,
+        "pending_tasks": 0,
+        "total_scheduling_decisions": 10,
+        "average_scheduling_time_ms": 0.011799999999999998,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 1.0,
+          "average_critical_path_length": 1.0
+        }
+      },
+      "timestamp": "2025-09-29T18:14:14.681325"
+    },
+    {
+      "strategy": "priority",
+      "scenario": "complex_dependencies",
+      "total_tasks": 9,
+      "scheduling_decisions": 23,
+      "execution_time": 0.0030510425567626953,
+      "total_estimated_duration": 18.0,
+      "avg_priority_score": 4.826086956521739,
+      "scheduling_order_quality": 0.7233201581027668,
+      "scheduler_statistics": {
+        "strategy": "priority",
+        "total_tasks": 9,
+        "scheduled_tasks": 9,
+        "ready_tasks": 0,
+        "pending_tasks": 0,
+        "total_scheduling_decisions": 23,
+        "average_scheduling_time_ms": 0.017043478260869563,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 8.0,
+          "average_critical_path_length": 3.888888888888889
+        }
+      },
+      "timestamp": "2025-09-29T18:14:14.684557"
+    },
+    {
+      "strategy": "priority",
+      "scenario": "resource_intensive",
+      "total_tasks": 8,
+      "scheduling_decisions": 61,
+      "execution_time": 0.002092123031616211,
+      "total_estimated_duration": 10.5,
+      "avg_priority_score": 0.0,
+      "scheduling_order_quality": 1.0,
+      "scheduler_statistics": {
+        "strategy": "priority",
+        "total_tasks": 8,
+        "scheduled_tasks": 8,
+        "ready_tasks": 0,
+        "pending_tasks": 0,
+        "total_scheduling_decisions": 61,
+        "average_scheduling_time_ms": 0.008819672131147541,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 5.0,
+          "average_critical_path_length": 1.6875
+        }
+      },
+      "timestamp": "2025-09-29T18:14:14.687020"
+    },
+    {
+      "strategy": "critical_path",
+      "scenario": "simple_priority",
+      "total_tasks": 4,
+      "scheduling_decisions": 10,
+      "execution_time": 0.00030517578125,
+      "total_estimated_duration": 4.0,
+      "avg_priority_score": 1.0,
+      "scheduling_order_quality": 0.6666666666666666,
+      "scheduler_statistics": {
+        "strategy": "critical_path",
+        "total_tasks": 4,
+        "scheduled_tasks": 4,
+        "ready_tasks": 5,
+        "pending_tasks": 0,
+        "total_scheduling_decisions": 10,
+        "average_scheduling_time_ms": 0.0068000000000000005,
+        "critical_path_optimizations": 10,
+        "critical_path_analysis": {
+          "max_critical_path_length": 1.0,
+          "average_critical_path_length": 1.0
+        }
+      },
+      "timestamp": "2025-09-29T18:14:14.687409"
+    },
+    {
+      "strategy": "critical_path",
+      "scenario": "complex_dependencies",
+      "total_tasks": 9,
+      "scheduling_decisions": 23,
+      "execution_time": 0.0013811588287353516,
+      "total_estimated_duration": 18.0,
+      "avg_priority_score": 3.608695652173913,
+      "scheduling_order_quality": 0.7075098814229249,
+      "scheduler_statistics": {
+        "strategy": "critical_path",
+        "total_tasks": 9,
+        "scheduled_tasks": 9,
+        "ready_tasks": 0,
+        "pending_tasks": 0,
+        "total_scheduling_decisions": 23,
+        "average_scheduling_time_ms": 0.008782608695652172,
+        "critical_path_optimizations": 23,
+        "critical_path_analysis": {
+          "max_critical_path_length": 8.0,
+          "average_critical_path_length": 3.888888888888889
+        }
+      },
+      "timestamp": "2025-09-29T18:14:14.688884"
+    },
+    {
+      "strategy": "critical_path",
+      "scenario": "resource_intensive",
+      "total_tasks": 8,
+      "scheduling_decisions": 61,
+      "execution_time": 0.004119873046875,
+      "total_estimated_duration": 10.5,
+      "avg_priority_score": 0.8524590163934426,
+      "scheduling_order_quality": 1.0,
+      "scheduler_statistics": {
+        "strategy": "critical_path",
+        "total_tasks": 8,
+        "scheduled_tasks": 8,
+        "ready_tasks": 0,
+        "pending_tasks": 0,
+        "total_scheduling_decisions": 61,
+        "average_scheduling_time_ms": 0.015868852459016397,
+        "critical_path_optimizations": 61,
+        "critical_path_analysis": {
+          "max_critical_path_length": 5.0,
+          "average_critical_path_length": 1.6875
+        }
+      },
+      "timestamp": "2025-09-29T18:14:14.693386"
+    },
+    {
+      "strategy": "resource_aware",
+      "scenario": "simple_priority",
+      "total_tasks": 4,
+      "scheduling_decisions": 10,
+      "execution_time": 0.00037598609924316406,
+      "total_estimated_duration": 4.0,
+      "avg_priority_score": 1.0,
+      "scheduling_order_quality": 0.6666666666666666,
+      "scheduler_statistics": {
+        "strategy": "resource_aware",
+        "total_tasks": 4,
+        "scheduled_tasks": 4,
+        "ready_tasks": 5,
+        "pending_tasks": 0,
+        "total_scheduling_decisions": 10,
+        "average_scheduling_time_ms": 0.005600000000000001,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 1.0,
+          "average_critical_path_length": 1.0
+        }
+      },
+      "timestamp": "2025-09-29T18:14:14.693938"
+    },
+    {
+      "strategy": "resource_aware",
+      "scenario": "complex_dependencies",
+      "total_tasks": 9,
+      "scheduling_decisions": 23,
+      "execution_time": 0.0012769699096679688,
+      "total_estimated_duration": 18.0,
+      "avg_priority_score": 1.0,
+      "scheduling_order_quality": 0.7075098814229249,
+      "scheduler_statistics": {
+        "strategy": "resource_aware",
+        "total_tasks": 9,
+        "scheduled_tasks": 9,
+        "ready_tasks": 0,
+        "pending_tasks": 0,
+        "total_scheduling_decisions": 23,
+        "average_scheduling_time_ms": 0.007043478260869566,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 8.0,
+          "average_critical_path_length": 3.888888888888889
+        }
+      },
+      "timestamp": "2025-09-29T18:14:14.695315"
+    },
+    {
+      "strategy": "resource_aware",
+      "scenario": "resource_intensive",
+      "total_tasks": 8,
+      "scheduling_decisions": 61,
+      "execution_time": 0.0016827583312988281,
+      "total_estimated_duration": 10.5,
+      "avg_priority_score": 1.0000000000000013,
+      "scheduling_order_quality": 1.0,
+      "scheduler_statistics": {
+        "strategy": "resource_aware",
+        "total_tasks": 8,
+        "scheduled_tasks": 8,
+        "ready_tasks": 0,
+        "pending_tasks": 0,
+        "total_scheduling_decisions": 61,
+        "average_scheduling_time_ms": 0.007918032786885243,
+        "critical_path_optimizations": 0,
+        "critical_path_analysis": {
+          "max_critical_path_length": 5.0,
+          "average_critical_path_length": 1.6875
+        }
+      },
+      "timestamp": "2025-09-29T18:14:14.697264"
+    },
+    {
+      "strategy": "adaptive",
+      "scenario": "simple_priority",
+      "total_tasks": 4,
+      "scheduling_decisions": 10,
+      "execution_time": 0.0007128715515136719,
+      "total_estimated_duration": 4.0,
+      "avg_priority_score": 2.04,
+      "scheduling_order_quality": 1.0,
+      "scheduler_statistics": {
+        "strategy": "adaptive",
+        "total_tasks": 4,
+        "scheduled_tasks": 4,
+        "ready_tasks": 5,
+        "pending_tasks": 0,
+        "total_scheduling_decisions": 10,
+        "average_scheduling_time_ms": 0.013699999999999999,
+        "critical_path_optimizations": 10,
+        "critical_path_analysis": {
+          "max_critical_path_length": 1.0,
+          "average_critical_path_length": 1.0
+        }
+      },
+      "timestamp": "2025-09-29T18:14:14.698166"
+    },
+    {
+      "strategy": "adaptive",
+      "scenario": "complex_dependencies",
+      "total_tasks": 9,
+      "scheduling_decisions": 23,
+      "execution_time": 0.002686023712158203,
+      "total_estimated_duration": 18.0,
+      "avg_priority_score": 3.1695652173913054,
+      "scheduling_order_quality": 0.7233201581027668,
+      "scheduler_statistics": {
+        "strategy": "adaptive",
+        "total_tasks": 9,
+        "scheduled_tasks": 9,
+        "ready_tasks": 0,
+        "pending_tasks": 0,
+        "total_scheduling_decisions": 23,
+        "average_scheduling_time_ms": 0.014434782608695657,
+        "critical_path_optimizations": 23,
+        "critical_path_analysis": {
+          "max_critical_path_length": 8.0,
+          "average_critical_path_length": 3.888888888888889
+        }
+      },
+      "timestamp": "2025-09-29T18:14:14.701115"
+    },
+    {
+      "strategy": "adaptive",
+      "scenario": "resource_intensive",
+      "total_tasks": 8,
+      "scheduling_decisions": 61,
+      "execution_time": 0.0022611618041992188,
+      "total_estimated_duration": 10.5,
+      "avg_priority_score": 0.7147540983606566,
+      "scheduling_order_quality": 1.0,
+      "scheduler_statistics": {
+        "strategy": "adaptive",
+        "total_tasks": 8,
+        "scheduled_tasks": 8,
+        "ready_tasks": 0,
+        "pending_tasks": 0,
+        "total_scheduling_decisions": 61,
+        "average_scheduling_time_ms": 0.010065573770491804,
+        "critical_path_optimizations": 61,
+        "critical_path_analysis": {
+          "max_critical_path_length": 5.0,
+          "average_critical_path_length": 1.6875
+        }
+      },
+      "timestamp": "2025-09-29T18:14:14.703713"
+    }
+  ],
+  "empirical_insights": {
+    "adaptive_strategy_effective": true,
+    "critical_path_optimization_working": false,
+    "resource_awareness_beneficial": false
+  }
+}

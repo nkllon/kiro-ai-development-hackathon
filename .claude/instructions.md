@@ -15,8 +15,12 @@ Demonstrate systematic development excellence through:
 - **Secondary Language**: TypeScript (Simone MCP server)
 - **Package Management**: UV (Python), npm (TypeScript)
 - **Build System**: Makefile orchestration
-- **Database**: SQLite (activity logging)
+- **Database**: SQLite (activity logging), PostgreSQL (Directus CMS)
 - **Integration**: GitHub CLI, MCP protocol
+- **Observability**: Jaeger (distributed tracing), Grafana (dashboards), Prometheus (metrics)
+- **CMS**: Directus (running at localhost:8055)
+- **LLM**: Ollama (localhost:11434), Claude API, OpenAI API
+- **Caching/State**: Redis (localhost:6379)
 
 ## Project Structure
 ```
@@ -199,6 +203,80 @@ You have access to the `log_activity` tool. Use it to record your activities aft
 - **Audit Trail**: Track development decisions and changes
 - **Collaboration**: Share progress with team members
 - **Analysis**: Analyze development patterns and efficiency
+
+## Development Infrastructure (ALWAYS RUNNING)
+
+### 🔍 Observability Stack (CRITICAL - DON'T FORGET!)
+**Jaeger** - Distributed Tracing
+- ✅ **Running**: `docker ps | grep jaeger` → `local-jaeger` container
+- ✅ **UI**: http://localhost:16686
+- ✅ **Ports**: 14250, 14268, 6831-6832, 16686
+- ✅ **Integration**: ReflectiveModule auto-includes Jaeger tracing via `src/beast_mode/tracing/tracer.py`
+- ✅ **Usage**: All classes extending ReflectiveModule get `trace_operation()` context manager
+- 📝 **Env**: `OTEL_EXPORTER_JAEGER_ENDPOINT=http://localhost:14268/api/traces`
+
+**Grafana** - Monitoring Dashboards
+- ✅ **Running**: `docker ps | grep grafana` → `local-grafana` container
+- ✅ **UI**: http://localhost:3000 (admin/admin)
+- ✅ **Port**: 3000
+- 📝 **Purpose**: Visualize Prometheus metrics, system health
+
+**Prometheus** - Metrics Collection
+- ✅ **Integration**: ReflectiveModule auto-enables Prometheus metrics in dev mode
+- 📝 **Purpose**: System metrics, performance monitoring
+
+### 💾 Data & Storage
+**Redis** - Caching and State
+- ✅ **Running**: `ps aux | grep redis` → host process
+- ✅ **Port**: 6379
+- ✅ **URL**: redis://localhost:6379/0
+- 📝 **Purpose**: Runtime State Registry, caching, task queues
+
+**Directus CMS** - Content Management
+- ⚠️ **Status**: Running but unhealthy (needs investigation)
+- ✅ **UI**: http://localhost:8055
+- ✅ **Database**: PostgreSQL in `local-directus-db-1` container
+- 📝 **Purpose**: Specs, documentation, knowledge base management
+
+### 🤖 LLM Infrastructure
+**Ollama** - Local LLM Inference
+- ✅ **Running**: `docker ps | grep ollama` → `awesome_jemison` container
+- ✅ **Port**: 11434
+- ✅ **API**: http://localhost:11434
+- 📝 **Models**: DeepSeek Coder, others
+
+**OpenWebUI** - LLM Interface
+- ✅ **Running**: `docker ps | grep openwebui`
+- ✅ **Port**: 8090
+- ✅ **UI**: http://localhost:8090
+
+### 🔗 AI Collaboration (for LangChain/LangGraph)
+**LangSmith** - LangChain Tracing (needs setup)
+- ❌ **Not configured yet**
+- 📝 **Setup**: `pip install langsmith`
+- 📝 **Env**: `LANGCHAIN_TRACING_V2=true`, `LANGCHAIN_API_KEY=<key>`, `LANGCHAIN_PROJECT=kiro-development`
+- 📝 **Purpose**: LangChain/LangGraph specific debugging (complements Jaeger)
+
+### 🚨 CRITICAL REMINDERS
+1. **Jaeger is ALWAYS available** - Use it! ReflectiveModule gives it for free.
+2. **LangSmith + Jaeger together** - Jaeger for infrastructure, LangSmith for LLM chains
+3. **ReflectiveModule = Built-in Observability** - Jaeger, Prometheus, Redis auto-registration
+4. **Check status**: See `docs/DEVELOPMENT_INFRASTRUCTURE_STATUS.md` for details
+
+### Quick Status Check
+```bash
+# See all running services
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+
+# Check Jaeger
+curl http://localhost:16686/api/services
+
+# Check Directus health
+curl http://localhost:8055/server/health
+
+# Check Redis
+redis-cli ping
+```
 
 ## Emergency Procedures
 

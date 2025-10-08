@@ -1,0 +1,36 @@
+{
+  "evidence_id": "5d29138a-b754-432f-a9ce-7fdef278dc39",
+  "timestamp": "2025-09-27T04:27:12.976402",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.976392",
+    "data_type": "dict"
+  },
+  "integrity_hash": "3c2a1eb1b3c9bdec5954ddc0b051183eec148f1b75c5377d23980756c4a164fd",
+  "data": {
+    "file_path": "./tests/unit/test_code_analysis.py",
+    "file_size": 19071,
+    "line_count": 538,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "src.websocket_validation.config.ValidationConfig",
+        "src.websocket_validation.collectors.EvidenceCollector",
+        "src.websocket_validation.models",
+        "src.websocket_validation.models.RouteAnalysis",
+        "src.websocket_validation.testers.code_analysis",
+        "src.websocket_validation.collectors",
+        "src.websocket_validation.models.TestStatus",
+        "src.websocket_validation.config",
+        "src.websocket_validation.testers.code_analysis.CodeAnalysisTester"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.976379"
+  }
+}

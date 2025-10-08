@@ -1,0 +1,31 @@
+{
+  "evidence_id": "bae4e550-b2c1-4d74-9e6e-3294588ea1d6",
+  "timestamp": "2025-09-27T04:27:12.969873",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.969861",
+    "data_type": "dict"
+  },
+  "integrity_hash": "9222aee70b0ffd2f3b36b0ad78907dd46d157e778d2983c9f8a6150be967d7cc",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/vertex_ai_endpoints/langfuse_endpoints.py",
+    "file_size": 4417,
+    "line_count": 140,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.Request",
+        "fastapi",
+        "fastapi.Response",
+        "fastapi.APIRouter"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.969840"
+  }
+}

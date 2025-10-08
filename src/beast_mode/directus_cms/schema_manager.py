@@ -109,7 +109,7 @@ class SchemaManager(ReflectiveModule):
         self.module_id = "directus_schema_manager"
         self.database_url = database_url or os.getenv(
             "DATABASE_URL", 
-            "postgresql://directus:directus@localhost:5432/directus"
+            "        os.getenv('DIRECTUS_DATABASE_URL', 'postgresql://directus:directus@localhost:5432/directus')"
         )
         self.database_type = database_type
         self.connection = None

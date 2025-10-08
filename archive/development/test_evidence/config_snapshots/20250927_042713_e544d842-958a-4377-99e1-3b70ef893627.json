@@ -1,0 +1,35 @@
+{
+  "evidence_id": "e544d842-958a-4377-99e1-3b70ef893627",
+  "timestamp": "2025-09-27T04:27:13.102964",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.102957",
+    "data_type": "dict"
+  },
+  "integrity_hash": "dd69d85cd071dbea17cd1229949b11d825635ced0a610a0faa3f877e619dc558",
+  "data": {
+    "file_path": "./demo_project/src/main.py",
+    "file_size": 305,
+    "line_count": 15,
+    "route_analysis": {
+      "total_routes": 2,
+      "websocket_routes": [],
+      "http_routes": [
+        "/",
+        "/health"
+      ],
+      "route_handlers": {
+        "/": "root",
+        "/health": "health"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi",
+        "fastapi.FastAPI"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.102953"
+  }
+}

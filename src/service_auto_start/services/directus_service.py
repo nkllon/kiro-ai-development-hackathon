@@ -101,8 +101,8 @@ class DirectusServiceConfig(ReflectiveModule):
         try:
             # Base environment variables
             environment = {
-                "KEY": os.getenv("DIRECTUS_KEY", "replace-with-random-value"),
-                "SECRET": os.getenv("DIRECTUS_SECRET", "replace-with-random-value"),
+                "KEY": os.getenv("DIRECTUS_KEY", ""),
+                "SECRET": os.getenv("DIRECTUS_SECRET", ""),
                 "DB_CLIENT": os.getenv("DIRECTUS_DB_CLIENT", "sqlite3"),
                 "DB_FILENAME": os.getenv("DIRECTUS_DB_FILENAME", "./data/database.db"),
                 "CACHE_ENABLED": "false",

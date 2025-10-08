@@ -60,7 +60,7 @@ class AuthService:
         PATCH_END: PATCH-2024-001
         """
         # Temporary local authentication fallback
-        if username == "admin" and password == "temp_password":
+        if username == "admin" and password == os.getenv('DEMO_PASSWORD', 'temp_password'):
             return {"user_id": "admin", "role": "admin"}
         
         # Normal authentication logic

@@ -1,0 +1,41 @@
+{
+  "evidence_id": "50fc9ee0-5ccd-4e92-ac8f-4419c0a8e507",
+  "timestamp": "2025-09-27T04:27:12.850083",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.850076",
+    "data_type": "dict"
+  },
+  "integrity_hash": "594a7dba6fd079a98389d1f66c23b2755c0e815290ab9729d077d7b664769fdd",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/management_endpoints/team_callback_endpoints.py",
+    "file_size": 12740,
+    "line_count": 347,
+    "route_analysis": {
+      "total_routes": 3,
+      "websocket_routes": [],
+      "http_routes": [
+        "/team/{team_id:path}/callback",
+        "/team/{team_id}/disable_logging",
+        "/team/{team_id:path}/callback"
+      ],
+      "route_handlers": {
+        "/team/{team_id:path}/callback": "get_team_callbacks",
+        "/team/{team_id}/disable_logging": "disable_team_logging"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.status",
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi.Header",
+        "fastapi.Request",
+        "fastapi",
+        "fastapi.HTTPException"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.850067"
+  }
+}

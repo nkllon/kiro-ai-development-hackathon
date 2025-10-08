@@ -1,0 +1,63 @@
+{
+  "evidence_id": "13e3fbec-cd4e-4405-93d1-c7f428e26e95",
+  "timestamp": "2025-09-27T05:09:24.744866",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.744846",
+    "data_type": "dict"
+  },
+  "integrity_hash": "f9f73931f3212bc5f244d88974259198c2cb42b4e50490bef92699840029cf36",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/management_endpoints/customer_endpoints.py",
+    "file_size": 24206,
+    "line_count": 693,
+    "route_analysis": {
+      "total_routes": 14,
+      "websocket_routes": [],
+      "http_routes": [
+        "/end_user/block",
+        "/customer/block",
+        "/end_user/unblock",
+        "/customer/unblock",
+        "/end_user/new",
+        "/customer/new",
+        "/customer/info",
+        "/end_user/info",
+        "/customer/update",
+        "/end_user/update",
+        "/customer/delete",
+        "/end_user/delete",
+        "/customer/list",
+        "/end_user/list"
+      ],
+      "route_handlers": {
+        "/end_user/block": "block_user",
+        "/customer/block": "block_user",
+        "/end_user/unblock": "unblock_user",
+        "/customer/unblock": "unblock_user",
+        "/end_user/new": "new_end_user",
+        "/customer/new": "new_end_user",
+        "/customer/info": "end_user_info",
+        "/end_user/info": "end_user_info",
+        "/customer/update": "update_end_user",
+        "/end_user/update": "update_end_user",
+        "/customer/delete": "delete_end_user",
+        "/end_user/delete": "delete_end_user",
+        "/customer/list": "list_end_user",
+        "/end_user/list": "list_end_user"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.Request",
+        "fastapi.HTTPException",
+        "fastapi.status",
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.744826"
+  }
+}

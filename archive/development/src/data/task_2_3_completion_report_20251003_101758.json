@@ -1,0 +1,4813 @@
+{
+  "analysis_timestamp": "2025-10-03T10:17:58.649777",
+  "module_id": "AutomationChainAnalyzer",
+  "task_id": "2.3",
+  "task_description": "Automation Chain Analysis",
+  "summary": {
+    "makefile_targets_analyzed": 55,
+    "parameter_mappings": 59,
+    "websocket_endpoints": 4,
+    "metrics_pipelines": 6,
+    "integration_flows": 5,
+    "dependency_graph_nodes": 68,
+    "dependency_graph_edges": 267,
+    "execution_order_length": 157,
+    "critical_path_length": 4,
+    "parallel_groups": 4
+  },
+  "makefile_dependencies": {
+    "target_dependencies": {
+      ".DEFAULT_GOAL": {
+        "dependencies": [
+          "=",
+          "help"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [],
+        "expected_outcomes": []
+      },
+      ".PHONY": {
+        "dependencies": [
+          "clean-all",
+          "backup-all",
+          "restore-all"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [],
+        "expected_outcomes": []
+      },
+      "help": {
+        "dependencies": [
+          "##",
+          "Show",
+          "available",
+          "targets",
+          "and",
+          "usage",
+          "information"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo 'Comprehensive Makefile System - Available Targets:'",
+          "@echo ''",
+          "@echo 'System Discovery & Validation:'",
+          "@echo '  make discover-system         - Discover all system capabilities'",
+          "@echo '  make validate-safety         - Validate system safety'",
+          "@echo '  make validate-targets        - Validate all Makefile targets'",
+          "@echo '  make test-system            - Run comprehensive system tests'",
+          "@echo ''",
+          "@echo 'Observatory System:'",
+          "@echo '  make observatory-deploy      - Deploy Observatory system'",
+          "@echo '  make observatory-start       - Start Observatory services'",
+          "@echo '  make observatory-stop        - Stop Observatory services'",
+          "@echo '  make observatory-status      - Check Observatory status'",
+          "@echo '  make observatory-health      - Check Observatory health'",
+          "@echo '  make observatory-logs        - View Observatory logs'",
+          "@echo ''",
+          "@echo 'Beast Mode Framework:'",
+          "@echo '  make beast-deploy           - Deploy Beast Mode framework'",
+          "@echo '  make beast-test             - Run Beast Mode tests'",
+          "@echo '  make beast-compliance       - Check Beast Mode compliance'",
+          "@echo '  make beast-fix              - Fix Beast Mode issues'",
+          "@echo '  make beast-metrics          - Generate Beast Mode metrics'",
+          "@echo '  make beast-validate-all     - Validate Beast Mode framework'",
+          "@echo ''",
+          "@echo 'DAG Orchestration:'",
+          "@echo '  make dag-validate           - Validate DAG structure'",
+          "@echo '  make dag-execute            - Execute DAG workflow'",
+          "@echo '  make dag-monitor            - Monitor DAG execution'",
+          "@echo '  make dag-status             - Check DAG status'",
+          "@echo ''",
+          "@echo 'Infrastructure Management:'",
+          "@echo '  make infra-deploy           - Deploy infrastructure'",
+          "@echo '  make infra-monitor          - Monitor infrastructure'",
+          "@echo '  make infra-validate         - Validate infrastructure'",
+          "@echo '  make infra-backup           - Backup infrastructure'",
+          "@echo '  make infra-status           - Check infrastructure status'",
+          "@echo '  make infra-health           - Check infrastructure health'",
+          "@echo ''",
+          "@echo 'Development Workflow:'",
+          "@echo '  make dev-test               - Run development tests'",
+          "@echo '  make dev-lint               - Lint code'",
+          "@echo '  make dev-format             - Format code'",
+          "@echo '  make dev-validate           - Validate development setup'",
+          "@echo ''",
+          "@echo 'Governance & Quality:'",
+          "@echo '  make governance-scan        - Scan for orphaned solutions'",
+          "@echo '  make governance-status      - Check governance status'",
+          "@echo '  make governance-report      - Generate governance report'",
+          "@echo '  make lint-makefiles         - Lint all Makefiles'",
+          "@echo ''",
+          "@echo 'System Operations:'",
+          "@echo '  make generate-reports       - Generate all system reports'",
+          "@echo '  make optimize-performance   - Optimize system performance'",
+          "@echo '  make clean-all              - Clean all artifacts'",
+          "@echo '  make backup-all             - Backup all data'",
+          "@echo '  make restore-all            - Restore from backup'",
+          "@echo ''",
+          "@echo 'For more information, see: docs/makefile_system_guide.md'"
+        ],
+        "expected_outcomes": [
+          "Validation results",
+          "Validation results",
+          "Test execution",
+          "Deployment completion",
+          "Service startup",
+          "Service shutdown",
+          "Status report",
+          "Health check",
+          "Deployment completion",
+          "Test execution",
+          "Validation results",
+          "Validation results",
+          "Status report",
+          "Deployment completion",
+          "Validation results",
+          "Status report",
+          "Health check",
+          "Test execution",
+          "Validation results",
+          "Status report"
+        ]
+      },
+      "discover-system": {
+        "dependencies": [
+          "##",
+          "Discover",
+          "all",
+          "system",
+          "capabilities"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\ufffd Disctovering system capabilities...'",
+          "python scripts/makefile_system_discovery.py --verbose",
+          "@echo '\u2705 System discovery complete'"
+        ],
+        "expected_outcomes": []
+      },
+      "validate-safety": {
+        "dependencies": [
+          "##",
+          "Validate",
+          "system",
+          "safety"
+        ],
+        "affected_components": [],
+        "category": "testing",
+        "commands": [
+          "@echo '\ud83d\udee1\ufe0f Validating system safety...'",
+          "python scripts/makefile_safety_validator.py system",
+          "@echo '\u2705 Safety validation complete'"
+        ],
+        "expected_outcomes": []
+      },
+      "validate-targets": {
+        "dependencies": [
+          "##",
+          "Validate",
+          "all",
+          "Makefile",
+          "targets"
+        ],
+        "affected_components": [],
+        "category": "testing",
+        "commands": [
+          "@echo '\ud83c\udfaf Validating Makefile targets...'",
+          "python scripts/validate_makefile_targets.py",
+          "@echo '\u2705 Target validation complete'"
+        ],
+        "expected_outcomes": [
+          "Validation results"
+        ]
+      },
+      "test-system": {
+        "dependencies": [
+          "##",
+          "Run",
+          "comprehensive",
+          "system",
+          "tests"
+        ],
+        "affected_components": [],
+        "category": "testing",
+        "commands": [
+          "@echo '\ud83e\uddea Running comprehensive system tests...'",
+          "python scripts/test_makefile_system.py",
+          "@echo '\u2705 System tests complete'"
+        ],
+        "expected_outcomes": [
+          "Test execution",
+          "Test execution",
+          "Test execution"
+        ]
+      },
+      "optimize-performance": {
+        "dependencies": [
+          "##",
+          "Optimize",
+          "system",
+          "performance"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\u26a1 Optimizing system performance...'",
+          "python scripts/makefile_performance_optimizer.py --report",
+          "@echo '\u2705 Performance optimization complete'"
+        ],
+        "expected_outcomes": []
+      },
+      "lint-makefiles": {
+        "dependencies": [
+          "##",
+          "Lint",
+          "all",
+          "Makefiles"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83d\udccb Linting all Makefiles...'",
+          "python scripts/lint_makefile.py",
+          "@echo '\u2705 Makefile linting complete'"
+        ],
+        "expected_outcomes": []
+      },
+      "observatory-deploy": {
+        "dependencies": [
+          "##",
+          "Deploy",
+          "Observatory",
+          "system"
+        ],
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "category": "deployment",
+        "commands": [
+          "@echo '\ud83d\udd2d Deploying Observatory system...'",
+          "python src/makefile_governance/integration/observatory_integration.py --generate-makefile makefiles/observatory.mk",
+          "$(MAKE) -f makefiles/observatory.mk observatory-deploy",
+          "@echo '\u2705 Observatory system deployed'"
+        ],
+        "expected_outcomes": [
+          "Deployment completion",
+          "Deployment completion",
+          "Deployment completion"
+        ]
+      },
+      "observatory-start": {
+        "dependencies": [
+          "##",
+          "Start",
+          "Observatory",
+          "services",
+          "in",
+          "Docker",
+          "containers"
+        ],
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "category": "lifecycle",
+        "commands": [
+          "@echo '\ud83d\udd2d Starting Observatory services in containers...'",
+          "python scripts/deploy_observatory.py",
+          "@echo '\u2705 Observatory services started'"
+        ],
+        "expected_outcomes": [
+          "Service startup",
+          "Deployment completion",
+          "Service startup"
+        ]
+      },
+      "observatory-stop": {
+        "dependencies": [
+          "##",
+          "Stop",
+          "Observatory",
+          "services",
+          "and",
+          "containers"
+        ],
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "category": "lifecycle",
+        "commands": [
+          "@echo '\ud83d\udd2d Stopping Observatory services and containers...'",
+          "python scripts/stop_observatory.py",
+          "@echo '\u2705 Observatory services stopped'"
+        ],
+        "expected_outcomes": [
+          "Service shutdown",
+          "Service shutdown",
+          "Service shutdown"
+        ]
+      },
+      "observatory-restart": {
+        "dependencies": [
+          "##",
+          "Restart",
+          "Observatory",
+          "services"
+        ],
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "category": "lifecycle",
+        "commands": [
+          "@echo '\ud83d\udd2d Restarting Observatory services...'",
+          "$(MAKE) observatory-stop",
+          "sleep 5",
+          "$(MAKE) observatory-start",
+          "@echo '\u2705 Observatory services restarted'"
+        ],
+        "expected_outcomes": [
+          "Service startup",
+          "Service restart",
+          "Service shutdown",
+          "Service startup",
+          "Service startup",
+          "Service restart"
+        ]
+      },
+      "observatory-build": {
+        "dependencies": [
+          "##",
+          "Build",
+          "Observatory",
+          "Docker",
+          "images"
+        ],
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83d\udd2d Building Observatory Docker images...'",
+          "cd deployment/observatory && docker-compose build",
+          "@echo '\u2705 Observatory images built'"
+        ],
+        "expected_outcomes": [
+          "Deployment completion"
+        ]
+      },
+      "observatory-shell": {
+        "dependencies": [
+          "##",
+          "Access",
+          "Observatory",
+          "container",
+          "shell"
+        ],
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83d\udd2d Accessing Observatory container shell...'",
+          "docker exec -it beast-mode-observatory /bin/bash"
+        ],
+        "expected_outcomes": []
+      },
+      "observatory-status": {
+        "dependencies": [
+          "##",
+          "Check",
+          "Observatory",
+          "status"
+        ],
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "category": "monitoring",
+        "commands": [
+          "@echo '\ud83d\udd2d Checking Observatory status...'",
+          "python src/makefile_governance/integration/observatory_integration.py --status",
+          "@echo '\u2705 Observatory status check complete'"
+        ],
+        "expected_outcomes": [
+          "Status report",
+          "Status report",
+          "Status report"
+        ]
+      },
+      "observatory-health": {
+        "dependencies": [
+          "##",
+          "Check",
+          "Observatory",
+          "health"
+        ],
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "category": "monitoring",
+        "commands": [
+          "@echo '\ud83d\udd2d Checking Observatory health...'",
+          "@echo 'Local services:'",
+          "@curl -s http://localhost:8888/health || echo '\u274c Observatory health check failed'",
+          "@curl -s http://localhost:9090/-/healthy || echo '\u274c Prometheus health check failed'",
+          "@curl -s http://localhost:3000/api/health || echo '\u274c Grafana health check failed'",
+          "@echo ''",
+          "@echo 'Tunnel endpoints:'",
+          "@curl -s https://observatory.nkllon.com/health || echo '\u274c Observatory tunnel failed'",
+          "@curl -s https://prometheus.nkllon.com/-/healthy || echo '\u274c Prometheus tunnel failed'",
+          "@curl -s https://grafana.nkllon.com/api/health || echo '\u274c Grafana tunnel failed'",
+          "@echo '\u2705 Observatory health check complete'"
+        ],
+        "expected_outcomes": [
+          "Health check",
+          "Health check",
+          "Health check",
+          "Health check",
+          "Health check",
+          "Health check",
+          "Health check",
+          "Health check"
+        ]
+      },
+      "observatory-restart-services": {
+        "dependencies": [
+          "##",
+          "Restart",
+          "Observatory",
+          "services",
+          "(Docker",
+          "containers)"
+        ],
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "category": "lifecycle",
+        "commands": [
+          "@echo '\ud83d\udd2d Restarting Observatory services...'",
+          "@docker start prometheus || echo 'Prometheus start failed'",
+          "@docker start grafana-public || echo 'Grafana start failed'",
+          "@echo '\u2705 Observatory services restarted'"
+        ],
+        "expected_outcomes": [
+          "Service startup",
+          "Service restart",
+          "Service startup",
+          "Service startup",
+          "Service startup",
+          "Service restart"
+        ]
+      },
+      "observatory-restart-tunnel": {
+        "dependencies": [
+          "##",
+          "Restart",
+          "Cloudflare",
+          "tunnel"
+        ],
+        "affected_components": [
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints",
+          "DNS Routing",
+          "Observatory Server",
+          "Cloudflare Tunnel (d1e53e43-033f-4994-8f46-c83962ae3785)"
+        ],
+        "category": "tunnel",
+        "commands": [
+          "@echo '\ud83d\udd2d Restarting Cloudflare tunnel...'",
+          "@pkill -f \"cloudflared tunnel\" || echo 'No tunnel to kill'",
+          "@sleep 2",
+          "@cloudflared tunnel --config cloudflared-config.yml run &",
+          "@echo '\u2705 Cloudflare tunnel restarted'"
+        ],
+        "expected_outcomes": [
+          "Service startup",
+          "Service restart",
+          "Service startup",
+          "Service restart"
+        ]
+      },
+      "observatory-logs": {
+        "dependencies": [
+          "##",
+          "View",
+          "Observatory",
+          "container",
+          "logs"
+        ],
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83d\udd2d Observatory Container Logs:'",
+          "@echo '============================'",
+          "@docker logs beast-mode-observatory --tail=50 2>/dev/null || echo 'Observatory container not running'",
+          "@docker logs observatory-prometheus --tail=20 2>/dev/null || echo 'Prometheus container not running'",
+          "@docker logs observatory-grafana --tail=20 2>/dev/null || echo 'Grafana container not running'"
+        ],
+        "expected_outcomes": []
+      },
+      "beast-deploy": {
+        "dependencies": [
+          "##",
+          "Deploy",
+          "Beast",
+          "Mode",
+          "framework"
+        ],
+        "affected_components": [],
+        "category": "deployment",
+        "commands": [
+          "@echo '\ud83d\udc3a Deploying Beast Mode framework...'",
+          "python src/makefile_governance/integration/beast_mode_integration.py --generate-makefile makefiles/beast_mode.mk",
+          "$(MAKE) -f makefiles/beast_mode.mk beast-deploy",
+          "@echo '\u2705 Beast Mode framework deployed'"
+        ],
+        "expected_outcomes": [
+          "Deployment completion",
+          "Deployment completion",
+          "Deployment completion"
+        ]
+      },
+      "beast-test": {
+        "dependencies": [
+          "##",
+          "Run",
+          "Beast",
+          "Mode",
+          "tests"
+        ],
+        "affected_components": [],
+        "category": "testing",
+        "commands": [
+          "@echo '\ud83d\udc3a Running Beast Mode tests...'",
+          "python -m pytest tests/unit/beast_mode/ -v --tb=short",
+          "@echo '\u2705 Beast Mode tests complete'"
+        ],
+        "expected_outcomes": [
+          "Test execution",
+          "Test execution",
+          "Test execution"
+        ]
+      },
+      "beast-compliance": {
+        "dependencies": [
+          "##",
+          "Check",
+          "Beast",
+          "Mode",
+          "compliance"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83d\udc3a Running Beast Mode compliance checks...'",
+          "python scripts/check_reflective_module_compliance.py || echo 'Compliance check attempted'",
+          "python scripts/check_beast_mode_patterns.py || echo 'Pattern check attempted'",
+          "@echo '\u2705 Beast Mode compliance check complete'"
+        ],
+        "expected_outcomes": []
+      },
+      "beast-fix": {
+        "dependencies": [
+          "##",
+          "Fix",
+          "Beast",
+          "Mode",
+          "issues"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\ufffd Fixling Beast Mode issues...'",
+          "python scripts/auto_fix_beast_mode_issues.py || echo 'Auto-fix attempted'",
+          "$(MAKE) beast-validate-all",
+          "@echo '\u2705 Beast Mode issues fixed'"
+        ],
+        "expected_outcomes": [
+          "Validation results"
+        ]
+      },
+      "beast-metrics": {
+        "dependencies": [
+          "##",
+          "Generate",
+          "Beast",
+          "Mode",
+          "metrics"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83d\udc3a Generating Beast Mode metrics...'",
+          "python scripts/generate_beast_mode_dashboard.py || echo 'Metrics generation attempted'",
+          "@echo '\u2705 Beast Mode metrics generated'"
+        ],
+        "expected_outcomes": []
+      },
+      "beast-validate-all": {
+        "dependencies": [
+          "##",
+          "Validate",
+          "Beast",
+          "Mode",
+          "framework"
+        ],
+        "affected_components": [],
+        "category": "testing",
+        "commands": [
+          "@echo '\ud83d\udc3a Validating Beast Mode framework...'",
+          "python scripts/validate_beast_mode_framework.py || echo 'Validation attempted'",
+          "@echo '\u2705 Beast Mode framework validation complete'"
+        ],
+        "expected_outcomes": [
+          "Validation results"
+        ]
+      },
+      "dag-validate": {
+        "dependencies": [
+          "##",
+          "Validate",
+          "DAG",
+          "structure"
+        ],
+        "affected_components": [],
+        "category": "testing",
+        "commands": [
+          "@echo '\ud83d\udd04 Validating DAG structure...'",
+          "python scripts/infrastructure_task_dag_validator.py || echo 'DAG validation attempted'",
+          "@echo '\u2705 DAG validation complete'"
+        ],
+        "expected_outcomes": []
+      },
+      "dag-execute": {
+        "dependencies": [
+          "##",
+          "Execute",
+          "DAG",
+          "workflow"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83d\udd04 Executing DAG workflow...'",
+          "python scripts/infrastructure_governance_orchestrator.py --execute-next || echo 'DAG execution attempted'",
+          "@echo '\u2705 DAG workflow execution complete'"
+        ],
+        "expected_outcomes": []
+      },
+      "dag-monitor": {
+        "dependencies": [
+          "##",
+          "Monitor",
+          "DAG",
+          "execution"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83d\udd04 Monitoring DAG execution...'",
+          "python scripts/dag_execution_monitor.py || echo 'DAG monitoring attempted'",
+          "@echo '\u2705 DAG monitoring complete'"
+        ],
+        "expected_outcomes": []
+      },
+      "dag-status": {
+        "dependencies": [
+          "##",
+          "Check",
+          "DAG",
+          "status"
+        ],
+        "affected_components": [],
+        "category": "monitoring",
+        "commands": [
+          "@echo '\ud83d\udd04 Checking DAG status...'",
+          "python scripts/check_dag_status.py || echo 'DAG status check attempted'",
+          "@echo '\u2705 DAG status check complete'"
+        ],
+        "expected_outcomes": [
+          "Status report",
+          "Status report",
+          "Status report"
+        ]
+      },
+      "infra-deploy": {
+        "dependencies": [
+          "##",
+          "Deploy",
+          "infrastructure"
+        ],
+        "affected_components": [],
+        "category": "deployment",
+        "commands": [
+          "@echo '\ud83c\udfd7\ufe0f Deploying infrastructure...'",
+          "python src/makefile_governance/integration/infrastructure_integration.py --generate-makefile makefiles/infrastructure.mk",
+          "$(MAKE) -f makefiles/infrastructure.mk infra-deploy-all",
+          "@echo '\u2705 Infrastructure deployment complete'"
+        ],
+        "expected_outcomes": [
+          "Deployment completion",
+          "Deployment completion",
+          "Deployment completion"
+        ]
+      },
+      "infra-monitor": {
+        "dependencies": [
+          "##",
+          "Monitor",
+          "infrastructure"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83c\udfd7\ufe0f Starting infrastructure monitoring...'",
+          "python scripts/start_infrastructure_monitoring.py || echo 'Infrastructure monitoring attempted'",
+          "@echo '\u2705 Infrastructure monitoring started'"
+        ],
+        "expected_outcomes": [
+          "Service startup",
+          "Service startup",
+          "Service startup"
+        ]
+      },
+      "infra-validate": {
+        "dependencies": [
+          "##",
+          "Validate",
+          "infrastructure"
+        ],
+        "affected_components": [],
+        "category": "testing",
+        "commands": [
+          "@echo '\ud83c\udfd7\ufe0f Validating infrastructure configuration...'",
+          "python scripts/validate_infrastructure_config.py || echo 'Infrastructure validation attempted'",
+          "@echo '\u2705 Infrastructure validation complete'"
+        ],
+        "expected_outcomes": [
+          "Validation results"
+        ]
+      },
+      "infra-backup": {
+        "dependencies": [
+          "##",
+          "Backup",
+          "infrastructure"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83c\udfd7\ufe0f Backing up infrastructure data...'",
+          "python scripts/backup_infrastructure_configs.py || echo 'Infrastructure backup attempted'",
+          "@echo '\u2705 Infrastructure backup complete'"
+        ],
+        "expected_outcomes": []
+      },
+      "infra-status": {
+        "dependencies": [
+          "##",
+          "Check",
+          "infrastructure",
+          "status"
+        ],
+        "affected_components": [],
+        "category": "monitoring",
+        "commands": [
+          "@echo '\ud83c\udfd7\ufe0f Checking infrastructure status...'",
+          "python src/makefile_governance/integration/infrastructure_integration.py --status",
+          "@echo '\u2705 Infrastructure status check complete'"
+        ],
+        "expected_outcomes": [
+          "Status report",
+          "Status report",
+          "Status report"
+        ]
+      },
+      "infra-health": {
+        "dependencies": [
+          "##",
+          "Check",
+          "infrastructure",
+          "health"
+        ],
+        "affected_components": [],
+        "category": "monitoring",
+        "commands": [
+          "@echo '\ud83c\udfd7\ufe0f Checking infrastructure health...'",
+          "@lsof -i:6379 >/dev/null 2>&1 && echo '\u2705 Redis is running' || echo '\u274c Redis is not running'",
+          "@lsof -i:5432 >/dev/null 2>&1 && echo '\u2705 PostgreSQL is running' || echo '\u274c PostgreSQL is not running'",
+          "@lsof -i:9090 >/dev/null 2>&1 && echo '\u2705 Prometheus is running' || echo '\u274c Prometheus is not running'",
+          "@echo '\u2705 Infrastructure health check complete'"
+        ],
+        "expected_outcomes": [
+          "Health check",
+          "Health check"
+        ]
+      },
+      "dev-test": {
+        "dependencies": [
+          "##",
+          "Run",
+          "development",
+          "tests"
+        ],
+        "affected_components": [],
+        "category": "testing",
+        "commands": [
+          "@echo '\ud83e\uddea Running development tests...'",
+          "python -m pytest tests/ -v --tb=short",
+          "@echo '\u2705 Development tests complete'"
+        ],
+        "expected_outcomes": [
+          "Test execution",
+          "Test execution",
+          "Test execution"
+        ]
+      },
+      "dev-lint": {
+        "dependencies": [
+          "##",
+          "Lint",
+          "code"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83d\udccb Linting code...'",
+          "python -m flake8 src/ --max-line-length=120",
+          "python -m mypy src/ --ignore-missing-imports",
+          "@echo '\u2705 Code linting complete'"
+        ],
+        "expected_outcomes": []
+      },
+      "dev-format": {
+        "dependencies": [
+          "##",
+          "Format",
+          "code"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83d\udc85 Formatting code...'",
+          "python -m black src/ --line-length=120",
+          "python -m isort src/",
+          "@echo '\u2705 Code formatting complete'"
+        ],
+        "expected_outcomes": []
+      },
+      "dev-validate": {
+        "dependencies": [
+          "##",
+          "Validate",
+          "development",
+          "setup"
+        ],
+        "affected_components": [],
+        "category": "testing",
+        "commands": [
+          "@echo '\ud83d\udd0d Validating development setup...'",
+          "python scripts/validate_development_environment.py || echo 'Development validation attempted'",
+          "@echo '\u2705 Development setup validation complete'"
+        ],
+        "expected_outcomes": [
+          "Validation results"
+        ]
+      },
+      "governance-scan": {
+        "dependencies": [
+          "##",
+          "Scan",
+          "for",
+          "orphaned",
+          "solutions"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83d\udd0d Running semantic orphaned solution scan...'",
+          "python scripts/semantic_orphaned_scanner.py",
+          "@echo '\u2705 Governance scan complete'"
+        ],
+        "expected_outcomes": []
+      },
+      "governance-status": {
+        "dependencies": [
+          "##",
+          "Check",
+          "governance",
+          "status"
+        ],
+        "affected_components": [],
+        "category": "monitoring",
+        "commands": [
+          "@echo '\ud83d\udcca Checking governance system status...'",
+          "python scripts/background_governance_scheduler.py --status",
+          "@echo '\u2705 Governance status check complete'"
+        ],
+        "expected_outcomes": [
+          "Status report",
+          "Status report",
+          "Status report"
+        ]
+      },
+      "governance-report": {
+        "dependencies": [
+          "##",
+          "Generate",
+          "governance",
+          "report"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83d\udccb Generating governance report...'",
+          "python scripts/background_governance_scheduler.py --run orphaned_solution_scan",
+          "@echo '\u2705 Governance report generated'"
+        ],
+        "expected_outcomes": []
+      },
+      "generate-reports": {
+        "dependencies": [
+          "##",
+          "Generate",
+          "all",
+          "system",
+          "reports"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83d\udcca Generating all system reports...'",
+          "python scripts/makefile_system_discovery.py --output reports/discovery.json",
+          "python scripts/test_makefile_system.py --report reports/test_results.json",
+          "python scripts/validate_makefile_targets.py --report reports/validation.json",
+          "python scripts/lint_makefile.py --report reports/lint.json",
+          "@echo '\u2705 All reports generated'"
+        ],
+        "expected_outcomes": [
+          "Test execution",
+          "Validation results"
+        ]
+      },
+      "clean-all": {
+        "dependencies": [
+          "##",
+          "Clean",
+          "all",
+          "artifacts"
+        ],
+        "affected_components": [],
+        "category": "maintenance",
+        "commands": [
+          "@echo '\ud83e\uddf9 Cleaning all artifacts...'",
+          "rm -rf build/ dist/ *.egg-info/",
+          "rm -rf .pytest_cache/ .coverage htmlcov/",
+          "rm -rf reports/*.json reports/*.html",
+          "find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true",
+          "find . -type f -name \"*.pyc\" -delete",
+          "@echo '\u2705 All artifacts cleaned'"
+        ],
+        "expected_outcomes": [
+          "Test execution"
+        ]
+      },
+      "backup-all": {
+        "dependencies": [
+          "##",
+          "Backup",
+          "all",
+          "data"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83d\udcbe Backing up all data...'",
+          "mkdir -p backups/$(shell date +%Y%m%d_%H%M%S)",
+          "cp -r .kiro/ backups/$(shell date +%Y%m%d_%H%M%S)/",
+          "cp -r config/ backups/$(shell date +%Y%m%d_%H%M%S)/ 2>/dev/null || true",
+          "cp -r data/ backups/$(shell date +%Y%m%d_%H%M%S)/ 2>/dev/null || true",
+          "@echo '\u2705 All data backed up'"
+        ],
+        "expected_outcomes": []
+      },
+      "restore-all": {
+        "dependencies": [
+          "##",
+          "Restore",
+          "from",
+          "backup"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo '\ud83d\udd04 Restoring from backup...'",
+          "python scripts/restore_system_backup.py || echo 'Restore attempted'",
+          "@echo '\u2705 System restore complete'"
+        ],
+        "expected_outcomes": []
+      },
+      "test-makefile-quick": {
+        "dependencies": [
+          "##",
+          "Quick",
+          "smoke",
+          "test",
+          "for",
+          "Makefile",
+          "system"
+        ],
+        "affected_components": [],
+        "category": "testing",
+        "commands": [
+          "@echo '\ud83d\udca8 Running quick Makefile smoke tests...'",
+          "python scripts/test_makefile_system.py --type unit",
+          "@echo '\u2705 Quick tests complete'"
+        ],
+        "expected_outcomes": [
+          "Test execution",
+          "Test execution",
+          "Test execution"
+        ]
+      },
+      "test-makefile-comprehensive": {
+        "dependencies": [
+          "##",
+          "Run",
+          "comprehensive",
+          "Makefile",
+          "tests"
+        ],
+        "affected_components": [],
+        "category": "testing",
+        "commands": [
+          "@echo '\ud83e\uddea Running comprehensive Makefile tests...'",
+          "python scripts/orchestrate_makefile_unit_tests.py",
+          "@echo '\u2705 Comprehensive tests complete'"
+        ],
+        "expected_outcomes": [
+          "Test execution",
+          "Test execution",
+          "Test execution"
+        ]
+      },
+      "test-makefile-parallel": {
+        "dependencies": [
+          "##",
+          "Run",
+          "tests",
+          "in",
+          "parallel",
+          "with",
+          "detailed",
+          "output"
+        ],
+        "affected_components": [],
+        "category": "testing",
+        "commands": [
+          "@echo '\u26a1 Running parallel Makefile tests...'",
+          "python -m pytest tests/unit/makefile_governance/ -v -n auto --tb=short",
+          "@echo '\u2705 Parallel tests complete'"
+        ],
+        "expected_outcomes": [
+          "Test execution",
+          "Test execution",
+          "Test execution"
+        ]
+      },
+      "install": {
+        "dependencies": [
+          "##",
+          "Install",
+          "dependencies",
+          "(legacy",
+          "compatibility)"
+        ],
+        "affected_components": [],
+        "category": "deployment",
+        "commands": [
+          "@echo \"\ud83d\udd27 Installing dependencies...\"",
+          "pip install -r requirements.txt",
+          "@echo \"\u2705 Installation complete\""
+        ],
+        "expected_outcomes": []
+      },
+      "deploy": {
+        "dependencies": [
+          "##",
+          "Deploy",
+          "system",
+          "(legacy",
+          "compatibility)"
+        ],
+        "affected_components": [],
+        "category": "deployment",
+        "commands": [
+          "@echo \"\ud83d\ude80 Deploying system...\"",
+          "$(MAKE) observatory-deploy",
+          "$(MAKE) beast-deploy",
+          "$(MAKE) infra-deploy",
+          "@echo \"\u2705 System deployment complete\""
+        ],
+        "expected_outcomes": [
+          "Deployment completion",
+          "Deployment completion",
+          "Deployment completion",
+          "Deployment completion",
+          "Deployment completion"
+        ]
+      },
+      "verify": {
+        "dependencies": [
+          "##",
+          "Verify",
+          "system",
+          "(legacy",
+          "compatibility)"
+        ],
+        "affected_components": [],
+        "category": "general",
+        "commands": [
+          "@echo \"\ud83d\udd0d Verifying system...\"",
+          "$(MAKE) validate-targets",
+          "$(MAKE) test-system",
+          "@echo \"\u2705 System verification complete\""
+        ],
+        "expected_outcomes": [
+          "Validation results",
+          "Test execution"
+        ]
+      },
+      "test": {
+        "dependencies": [
+          "##",
+          "Run",
+          "tests",
+          "(legacy",
+          "compatibility)"
+        ],
+        "affected_components": [],
+        "category": "testing",
+        "commands": [
+          "@echo \"\ud83e\uddea Running tests...\"",
+          "$(MAKE) test-system",
+          "@echo \"\u2705 Tests complete\""
+        ],
+        "expected_outcomes": [
+          "Test execution",
+          "Test execution",
+          "Test execution"
+        ]
+      },
+      "clean": {
+        "dependencies": [
+          "##",
+          "Clean",
+          "artifacts",
+          "(legacy",
+          "compatibility)"
+        ],
+        "affected_components": [],
+        "category": "maintenance",
+        "commands": [
+          "@echo \"\ud83e\uddf9 Cleaning artifacts...\"",
+          "$(MAKE) clean-all",
+          "@echo \"\u2705 Cleaning complete\""
+        ],
+        "expected_outcomes": []
+      }
+    },
+    "dependency_patterns": {
+      "task_dependencies": {},
+      "phase_dependencies": {},
+      "service_dependencies": {},
+      "sequential_patterns": [],
+      "parallel_opportunities": []
+    },
+    "execution_chains": [],
+    "circular_dependencies": [],
+    "critical_path": [],
+    "analysis_timestamp": "2025-10-03T10:17:58.647982"
+  },
+  "parameter_mappings": [
+    {
+      "source": "observatory-daemon.py",
+      "target": "WebSocket Endpoints",
+      "parameter_name": "port",
+      "parameter_type": "int",
+      "required": true,
+      "default_value": "8888",
+      "environment_variable": "OBSERVATORY_PORT"
+    },
+    {
+      "source": "observatory-daemon.py",
+      "target": "WebSocket Endpoints",
+      "parameter_name": "host",
+      "parameter_type": "str",
+      "required": true,
+      "default_value": "localhost",
+      "environment_variable": "OBSERVATORY_HOST"
+    },
+    {
+      "source": "observatory-daemon.py",
+      "target": "WebSocket Endpoints",
+      "parameter_name": "websocket_endpoints",
+      "parameter_type": "list",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "observatory-daemon.py",
+      "target": "WebSocket Endpoints",
+      "parameter_name": "redis_url",
+      "parameter_type": "str",
+      "required": true,
+      "default_value": null,
+      "environment_variable": "REDIS_URL"
+    },
+    {
+      "source": "tunnel management scripts",
+      "target": "Cloudflare Tunnel",
+      "parameter_name": "tunnel_id",
+      "parameter_type": "str",
+      "required": true,
+      "default_value": null,
+      "environment_variable": "CLOUDFLARE_TUNNEL_ID"
+    },
+    {
+      "source": "tunnel management scripts",
+      "target": "Cloudflare Tunnel",
+      "parameter_name": "credentials_file",
+      "parameter_type": "str",
+      "required": true,
+      "default_value": null,
+      "environment_variable": "TUNNEL_CREDENTIALS"
+    },
+    {
+      "source": "tunnel management scripts",
+      "target": "Cloudflare Tunnel",
+      "parameter_name": "config_file",
+      "parameter_type": "str",
+      "required": true,
+      "default_value": "cloudflared-config.yml",
+      "environment_variable": null
+    },
+    {
+      "source": "tunnel management scripts",
+      "target": "Cloudflare Tunnel",
+      "parameter_name": "ingress_rules",
+      "parameter_type": "dict",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "prometheus integration scripts",
+      "target": "Prometheus Server",
+      "parameter_name": "prometheus_url",
+      "parameter_type": "str",
+      "required": true,
+      "default_value": "http://localhost:9090",
+      "environment_variable": "PROMETHEUS_URL"
+    },
+    {
+      "source": "prometheus integration scripts",
+      "target": "Prometheus Server",
+      "parameter_name": "scrape_configs",
+      "parameter_type": "list",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "prometheus integration scripts",
+      "target": "Prometheus Server",
+      "parameter_name": "alert_rules",
+      "parameter_type": "list",
+      "required": false,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "prometheus integration scripts",
+      "target": "Prometheus Server",
+      "parameter_name": "retention_period",
+      "parameter_type": "str",
+      "required": true,
+      "default_value": "15d",
+      "environment_variable": "PROMETHEUS_RETENTION"
+    },
+    {
+      "source": "grafana configuration scripts",
+      "target": "Grafana Dashboard",
+      "parameter_name": "grafana_url",
+      "parameter_type": "str",
+      "required": true,
+      "default_value": "http://localhost:3000",
+      "environment_variable": "GRAFANA_URL"
+    },
+    {
+      "source": "grafana configuration scripts",
+      "target": "Grafana Dashboard",
+      "parameter_name": "admin_password",
+      "parameter_type": "str",
+      "required": true,
+      "default_value": null,
+      "environment_variable": "GRAFANA_ADMIN_PASSWORD"
+    },
+    {
+      "source": "grafana configuration scripts",
+      "target": "Grafana Dashboard",
+      "parameter_name": "datasource_config",
+      "parameter_type": "dict",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "grafana configuration scripts",
+      "target": "Grafana Dashboard",
+      "parameter_name": "dashboard_configs",
+      "parameter_type": "list",
+      "required": false,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:discover-system",
+      "target": "scripts/makefile_system_discovery.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:validate-safety",
+      "target": "scripts/makefile_safety_validator.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:validate-targets",
+      "target": "scripts/validate_makefile_targets.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:test-system",
+      "target": "scripts/test_makefile_system.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:optimize-performance",
+      "target": "scripts/makefile_performance_optimizer.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:lint-makefiles",
+      "target": "scripts/lint_makefile.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:observatory-deploy",
+      "target": "src/makefile_governance/integration/observatory_integration.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:observatory-start",
+      "target": "scripts/deploy_observatory.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:observatory-stop",
+      "target": "scripts/stop_observatory.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:observatory-status",
+      "target": "src/makefile_governance/integration/observatory_integration.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:beast-deploy",
+      "target": "src/makefile_governance/integration/beast_mode_integration.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:beast-test",
+      "target": "-m",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:beast-compliance",
+      "target": "scripts/check_reflective_module_compliance.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:beast-compliance",
+      "target": "scripts/check_beast_mode_patterns.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:beast-fix",
+      "target": "scripts/auto_fix_beast_mode_issues.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:beast-metrics",
+      "target": "scripts/generate_beast_mode_dashboard.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:beast-validate-all",
+      "target": "scripts/validate_beast_mode_framework.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:dag-validate",
+      "target": "scripts/infrastructure_task_dag_validator.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:dag-execute",
+      "target": "scripts/infrastructure_governance_orchestrator.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:dag-monitor",
+      "target": "scripts/dag_execution_monitor.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:dag-status",
+      "target": "scripts/check_dag_status.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:infra-deploy",
+      "target": "src/makefile_governance/integration/infrastructure_integration.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:infra-monitor",
+      "target": "scripts/start_infrastructure_monitoring.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:infra-validate",
+      "target": "scripts/validate_infrastructure_config.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:infra-backup",
+      "target": "scripts/backup_infrastructure_configs.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:infra-status",
+      "target": "src/makefile_governance/integration/infrastructure_integration.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:dev-test",
+      "target": "-m",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:dev-lint",
+      "target": "-m",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:dev-lint",
+      "target": "-m",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:dev-format",
+      "target": "-m",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:dev-format",
+      "target": "-m",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:dev-validate",
+      "target": "scripts/validate_development_environment.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:governance-scan",
+      "target": "scripts/semantic_orphaned_scanner.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:governance-status",
+      "target": "scripts/background_governance_scheduler.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:governance-report",
+      "target": "scripts/background_governance_scheduler.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:generate-reports",
+      "target": "scripts/makefile_system_discovery.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:generate-reports",
+      "target": "scripts/test_makefile_system.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:generate-reports",
+      "target": "scripts/validate_makefile_targets.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:generate-reports",
+      "target": "scripts/lint_makefile.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:restore-all",
+      "target": "scripts/restore_system_backup.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:test-makefile-quick",
+      "target": "scripts/test_makefile_system.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:test-makefile-comprehensive",
+      "target": "scripts/orchestrate_makefile_unit_tests.py",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    },
+    {
+      "source": "Makefile:test-makefile-parallel",
+      "target": "-m",
+      "parameter_name": "script_execution",
+      "parameter_type": "command",
+      "required": true,
+      "default_value": null,
+      "environment_variable": null
+    }
+  ],
+  "websocket_dependencies": [
+    {
+      "endpoint_path": "/ws/observatory",
+      "service_name": "Observatory Server",
+      "dependencies": [
+        "Observatory Server startup",
+        "ReflectiveModule initialization"
+      ],
+      "initialization_order": 1,
+      "health_check_endpoint": "/health",
+      "message_types": [
+        "system_events",
+        "service_status",
+        "metrics_updates"
+      ]
+    },
+    {
+      "endpoint_path": "/ws/emoji-rain",
+      "service_name": "Observatory Server",
+      "dependencies": [
+        "Observatory Server startup",
+        "/ws/observatory registration"
+      ],
+      "initialization_order": 2,
+      "health_check_endpoint": "/health",
+      "message_types": [
+        "coordination_events",
+        "achievement_notifications",
+        "celebration_triggers"
+      ]
+    },
+    {
+      "endpoint_path": "/ws/anomalies",
+      "service_name": "Observatory Server",
+      "dependencies": [
+        "Observatory Server startup",
+        "Prometheus integration"
+      ],
+      "initialization_order": 3,
+      "health_check_endpoint": "/health",
+      "message_types": [
+        "anomaly_alerts",
+        "performance_warnings",
+        "threshold_breaches"
+      ]
+    },
+    {
+      "endpoint_path": "/ws/doctor-status",
+      "service_name": "Observatory Server",
+      "dependencies": [
+        "Observatory Server startup",
+        "Health monitoring system"
+      ],
+      "initialization_order": 4,
+      "health_check_endpoint": "/health",
+      "message_types": [
+        "health_updates",
+        "diagnostic_results",
+        "system_status"
+      ]
+    }
+  ],
+  "metrics_dependencies": [
+    {
+      "source_component": "ReflectiveModule Components",
+      "target_component": "Observatory Server",
+      "metric_types": [
+        "health_status",
+        "performance_counters",
+        "error_rates",
+        "request_latency"
+      ],
+      "collection_interval": 30,
+      "aggregation_rules": [
+        "avg",
+        "max",
+        "count"
+      ],
+      "alert_thresholds": {
+        "error_rate_threshold": 0.05,
+        "latency_threshold": 1000
+      }
+    },
+    {
+      "source_component": "Observatory Server",
+      "target_component": "Prometheus Server",
+      "metric_types": [
+        "observatory_requests",
+        "websocket_connections",
+        "system_metrics"
+      ],
+      "collection_interval": 15,
+      "aggregation_rules": [
+        "rate",
+        "histogram"
+      ],
+      "alert_thresholds": {
+        "connection_threshold": 1000,
+        "request_rate_threshold": 100
+      }
+    },
+    {
+      "source_component": "Prometheus Server",
+      "target_component": "Grafana Dashboard",
+      "metric_types": [
+        "all_collected_metrics"
+      ],
+      "collection_interval": 5,
+      "aggregation_rules": [
+        "visualization",
+        "alerting"
+      ],
+      "alert_thresholds": {
+        "dashboard_availability": true
+      }
+    },
+    {
+      "source_component": "WebSocket Endpoints",
+      "target_component": "Observatory Server",
+      "metric_types": [
+        "message_rates",
+        "connection_counts",
+        "error_counts"
+      ],
+      "collection_interval": 10,
+      "aggregation_rules": [
+        "sum",
+        "rate"
+      ],
+      "alert_thresholds": {
+        "message_rate_threshold": 1000,
+        "error_threshold": 10
+      }
+    },
+    {
+      "source_component": "ACE Reporter",
+      "target_component": "AI Memory Palace",
+      "metric_types": [
+        "progress_updates",
+        "completion_status",
+        "coordination_events"
+      ],
+      "collection_interval": 60,
+      "aggregation_rules": [
+        "latest",
+        "count"
+      ],
+      "alert_thresholds": {
+        "coordination_failure": true
+      }
+    },
+    {
+      "source_component": "AI Memory Palace",
+      "target_component": "DAG Registry",
+      "metric_types": [
+        "context_storage",
+        "retrieval_performance",
+        "validation_results"
+      ],
+      "collection_interval": 120,
+      "aggregation_rules": [
+        "avg",
+        "success_rate"
+      ],
+      "alert_thresholds": {
+        "validation_failure_threshold": 0.1
+      }
+    }
+  ],
+  "integration_coordination": [
+    {
+      "integration_name": "ACE Reporter to AI Memory Palace",
+      "source_system": "ACE Reporter",
+      "target_system": "AI Memory Palace",
+      "coordination_method": "websocket",
+      "data_flow_direction": "source_to_target",
+      "dependencies": [
+        "Observatory WebSocket",
+        "ACE Reporter initialization"
+      ],
+      "validation_endpoints": [
+        "/ws/observatory",
+        "/health"
+      ]
+    },
+    {
+      "integration_name": "AI Memory Palace to DAG Registry",
+      "source_system": "AI Memory Palace",
+      "target_system": "DAG Registry",
+      "coordination_method": "direct",
+      "data_flow_direction": "bidirectional",
+      "dependencies": [
+        "AI Memory Palace startup",
+        "DAG Registry availability"
+      ],
+      "validation_endpoints": [
+        "/health",
+        "/ready"
+      ]
+    },
+    {
+      "integration_name": "DAG Registry to Execution Engine",
+      "source_system": "DAG Registry",
+      "target_system": "Execution Engine",
+      "coordination_method": "queue",
+      "data_flow_direction": "source_to_target",
+      "dependencies": [
+        "Redis coordination",
+        "DAG validation"
+      ],
+      "validation_endpoints": [
+        "Redis connectivity",
+        "DAG structure validation"
+      ]
+    },
+    {
+      "integration_name": "Observatory to Prometheus",
+      "source_system": "Observatory Server",
+      "target_system": "Prometheus Server",
+      "coordination_method": "direct",
+      "data_flow_direction": "source_to_target",
+      "dependencies": [
+        "Observatory metrics endpoint",
+        "Prometheus scrape config"
+      ],
+      "validation_endpoints": [
+        "/metrics",
+        "Prometheus targets"
+      ]
+    },
+    {
+      "integration_name": "Prometheus to Grafana",
+      "source_system": "Prometheus Server",
+      "target_system": "Grafana Dashboard",
+      "coordination_method": "direct",
+      "data_flow_direction": "source_to_target",
+      "dependencies": [
+        "Prometheus availability",
+        "Grafana datasource config"
+      ],
+      "validation_endpoints": [
+        "Prometheus API",
+        "Grafana datasource test"
+      ]
+    }
+  ],
+  "dependency_graph": {
+    "nodes": [
+      {
+        "id": ".DEFAULT_GOAL",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": []
+      },
+      {
+        "id": ".PHONY",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": []
+      },
+      {
+        "id": "help",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo 'Comprehensive Makefile System - Available Targets:'",
+          "@echo ''",
+          "@echo 'System Discovery & Validation:'",
+          "@echo '  make discover-system         - Discover all system capabilities'",
+          "@echo '  make validate-safety         - Validate system safety'",
+          "@echo '  make validate-targets        - Validate all Makefile targets'",
+          "@echo '  make test-system            - Run comprehensive system tests'",
+          "@echo ''",
+          "@echo 'Observatory System:'",
+          "@echo '  make observatory-deploy      - Deploy Observatory system'",
+          "@echo '  make observatory-start       - Start Observatory services'",
+          "@echo '  make observatory-stop        - Stop Observatory services'",
+          "@echo '  make observatory-status      - Check Observatory status'",
+          "@echo '  make observatory-health      - Check Observatory health'",
+          "@echo '  make observatory-logs        - View Observatory logs'",
+          "@echo ''",
+          "@echo 'Beast Mode Framework:'",
+          "@echo '  make beast-deploy           - Deploy Beast Mode framework'",
+          "@echo '  make beast-test             - Run Beast Mode tests'",
+          "@echo '  make beast-compliance       - Check Beast Mode compliance'",
+          "@echo '  make beast-fix              - Fix Beast Mode issues'",
+          "@echo '  make beast-metrics          - Generate Beast Mode metrics'",
+          "@echo '  make beast-validate-all     - Validate Beast Mode framework'",
+          "@echo ''",
+          "@echo 'DAG Orchestration:'",
+          "@echo '  make dag-validate           - Validate DAG structure'",
+          "@echo '  make dag-execute            - Execute DAG workflow'",
+          "@echo '  make dag-monitor            - Monitor DAG execution'",
+          "@echo '  make dag-status             - Check DAG status'",
+          "@echo ''",
+          "@echo 'Infrastructure Management:'",
+          "@echo '  make infra-deploy           - Deploy infrastructure'",
+          "@echo '  make infra-monitor          - Monitor infrastructure'",
+          "@echo '  make infra-validate         - Validate infrastructure'",
+          "@echo '  make infra-backup           - Backup infrastructure'",
+          "@echo '  make infra-status           - Check infrastructure status'",
+          "@echo '  make infra-health           - Check infrastructure health'",
+          "@echo ''",
+          "@echo 'Development Workflow:'",
+          "@echo '  make dev-test               - Run development tests'",
+          "@echo '  make dev-lint               - Lint code'",
+          "@echo '  make dev-format             - Format code'",
+          "@echo '  make dev-validate           - Validate development setup'",
+          "@echo ''",
+          "@echo 'Governance & Quality:'",
+          "@echo '  make governance-scan        - Scan for orphaned solutions'",
+          "@echo '  make governance-status      - Check governance status'",
+          "@echo '  make governance-report      - Generate governance report'",
+          "@echo '  make lint-makefiles         - Lint all Makefiles'",
+          "@echo ''",
+          "@echo 'System Operations:'",
+          "@echo '  make generate-reports       - Generate all system reports'",
+          "@echo '  make optimize-performance   - Optimize system performance'",
+          "@echo '  make clean-all              - Clean all artifacts'",
+          "@echo '  make backup-all             - Backup all data'",
+          "@echo '  make restore-all            - Restore from backup'",
+          "@echo ''",
+          "@echo 'For more information, see: docs/makefile_system_guide.md'"
+        ]
+      },
+      {
+        "id": "discover-system",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ufffd Disctovering system capabilities...'",
+          "python scripts/makefile_system_discovery.py --verbose",
+          "@echo '\u2705 System discovery complete'"
+        ]
+      },
+      {
+        "id": "validate-safety",
+        "type": "makefile_target",
+        "category": "testing",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udee1\ufe0f Validating system safety...'",
+          "python scripts/makefile_safety_validator.py system",
+          "@echo '\u2705 Safety validation complete'"
+        ]
+      },
+      {
+        "id": "validate-targets",
+        "type": "makefile_target",
+        "category": "testing",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83c\udfaf Validating Makefile targets...'",
+          "python scripts/validate_makefile_targets.py",
+          "@echo '\u2705 Target validation complete'"
+        ]
+      },
+      {
+        "id": "test-system",
+        "type": "makefile_target",
+        "category": "testing",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83e\uddea Running comprehensive system tests...'",
+          "python scripts/test_makefile_system.py",
+          "@echo '\u2705 System tests complete'"
+        ]
+      },
+      {
+        "id": "optimize-performance",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\u26a1 Optimizing system performance...'",
+          "python scripts/makefile_performance_optimizer.py --report",
+          "@echo '\u2705 Performance optimization complete'"
+        ]
+      },
+      {
+        "id": "lint-makefiles",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udccb Linting all Makefiles...'",
+          "python scripts/lint_makefile.py",
+          "@echo '\u2705 Makefile linting complete'"
+        ]
+      },
+      {
+        "id": "observatory-deploy",
+        "type": "makefile_target",
+        "category": "deployment",
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "commands": [
+          "@echo '\ud83d\udd2d Deploying Observatory system...'",
+          "python src/makefile_governance/integration/observatory_integration.py --generate-makefile makefiles/observatory.mk",
+          "$(MAKE) -f makefiles/observatory.mk observatory-deploy",
+          "@echo '\u2705 Observatory system deployed'"
+        ]
+      },
+      {
+        "id": "observatory-start",
+        "type": "makefile_target",
+        "category": "lifecycle",
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "commands": [
+          "@echo '\ud83d\udd2d Starting Observatory services in containers...'",
+          "python scripts/deploy_observatory.py",
+          "@echo '\u2705 Observatory services started'"
+        ]
+      },
+      {
+        "id": "observatory-stop",
+        "type": "makefile_target",
+        "category": "lifecycle",
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "commands": [
+          "@echo '\ud83d\udd2d Stopping Observatory services and containers...'",
+          "python scripts/stop_observatory.py",
+          "@echo '\u2705 Observatory services stopped'"
+        ]
+      },
+      {
+        "id": "observatory-restart",
+        "type": "makefile_target",
+        "category": "lifecycle",
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "commands": [
+          "@echo '\ud83d\udd2d Restarting Observatory services...'",
+          "$(MAKE) observatory-stop",
+          "sleep 5",
+          "$(MAKE) observatory-start",
+          "@echo '\u2705 Observatory services restarted'"
+        ]
+      },
+      {
+        "id": "observatory-build",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "commands": [
+          "@echo '\ud83d\udd2d Building Observatory Docker images...'",
+          "cd deployment/observatory && docker-compose build",
+          "@echo '\u2705 Observatory images built'"
+        ]
+      },
+      {
+        "id": "observatory-shell",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "commands": [
+          "@echo '\ud83d\udd2d Accessing Observatory container shell...'",
+          "docker exec -it beast-mode-observatory /bin/bash"
+        ]
+      },
+      {
+        "id": "observatory-status",
+        "type": "makefile_target",
+        "category": "monitoring",
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "commands": [
+          "@echo '\ud83d\udd2d Checking Observatory status...'",
+          "python src/makefile_governance/integration/observatory_integration.py --status",
+          "@echo '\u2705 Observatory status check complete'"
+        ]
+      },
+      {
+        "id": "observatory-health",
+        "type": "makefile_target",
+        "category": "monitoring",
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "commands": [
+          "@echo '\ud83d\udd2d Checking Observatory health...'",
+          "@echo 'Local services:'",
+          "@curl -s http://localhost:8888/health || echo '\u274c Observatory health check failed'",
+          "@curl -s http://localhost:9090/-/healthy || echo '\u274c Prometheus health check failed'",
+          "@curl -s http://localhost:3000/api/health || echo '\u274c Grafana health check failed'",
+          "@echo ''",
+          "@echo 'Tunnel endpoints:'",
+          "@curl -s https://observatory.nkllon.com/health || echo '\u274c Observatory tunnel failed'",
+          "@curl -s https://prometheus.nkllon.com/-/healthy || echo '\u274c Prometheus tunnel failed'",
+          "@curl -s https://grafana.nkllon.com/api/health || echo '\u274c Grafana tunnel failed'",
+          "@echo '\u2705 Observatory health check complete'"
+        ]
+      },
+      {
+        "id": "observatory-restart-services",
+        "type": "makefile_target",
+        "category": "lifecycle",
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "commands": [
+          "@echo '\ud83d\udd2d Restarting Observatory services...'",
+          "@docker start prometheus || echo 'Prometheus start failed'",
+          "@docker start grafana-public || echo 'Grafana start failed'",
+          "@echo '\u2705 Observatory services restarted'"
+        ]
+      },
+      {
+        "id": "observatory-restart-tunnel",
+        "type": "makefile_target",
+        "category": "tunnel",
+        "affected_components": [
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints",
+          "DNS Routing",
+          "Observatory Server",
+          "Cloudflare Tunnel (d1e53e43-033f-4994-8f46-c83962ae3785)"
+        ],
+        "commands": [
+          "@echo '\ud83d\udd2d Restarting Cloudflare tunnel...'",
+          "@pkill -f \"cloudflared tunnel\" || echo 'No tunnel to kill'",
+          "@sleep 2",
+          "@cloudflared tunnel --config cloudflared-config.yml run &",
+          "@echo '\u2705 Cloudflare tunnel restarted'"
+        ]
+      },
+      {
+        "id": "observatory-logs",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [
+          "Observatory Server",
+          "ReflectiveModule Integration",
+          "WebSocket Endpoints"
+        ],
+        "commands": [
+          "@echo '\ud83d\udd2d Observatory Container Logs:'",
+          "@echo '============================'",
+          "@docker logs beast-mode-observatory --tail=50 2>/dev/null || echo 'Observatory container not running'",
+          "@docker logs observatory-prometheus --tail=20 2>/dev/null || echo 'Prometheus container not running'",
+          "@docker logs observatory-grafana --tail=20 2>/dev/null || echo 'Grafana container not running'"
+        ]
+      },
+      {
+        "id": "beast-deploy",
+        "type": "makefile_target",
+        "category": "deployment",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udc3a Deploying Beast Mode framework...'",
+          "python src/makefile_governance/integration/beast_mode_integration.py --generate-makefile makefiles/beast_mode.mk",
+          "$(MAKE) -f makefiles/beast_mode.mk beast-deploy",
+          "@echo '\u2705 Beast Mode framework deployed'"
+        ]
+      },
+      {
+        "id": "beast-test",
+        "type": "makefile_target",
+        "category": "testing",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udc3a Running Beast Mode tests...'",
+          "python -m pytest tests/unit/beast_mode/ -v --tb=short",
+          "@echo '\u2705 Beast Mode tests complete'"
+        ]
+      },
+      {
+        "id": "beast-compliance",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udc3a Running Beast Mode compliance checks...'",
+          "python scripts/check_reflective_module_compliance.py || echo 'Compliance check attempted'",
+          "python scripts/check_beast_mode_patterns.py || echo 'Pattern check attempted'",
+          "@echo '\u2705 Beast Mode compliance check complete'"
+        ]
+      },
+      {
+        "id": "beast-fix",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ufffd Fixling Beast Mode issues...'",
+          "python scripts/auto_fix_beast_mode_issues.py || echo 'Auto-fix attempted'",
+          "$(MAKE) beast-validate-all",
+          "@echo '\u2705 Beast Mode issues fixed'"
+        ]
+      },
+      {
+        "id": "beast-metrics",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udc3a Generating Beast Mode metrics...'",
+          "python scripts/generate_beast_mode_dashboard.py || echo 'Metrics generation attempted'",
+          "@echo '\u2705 Beast Mode metrics generated'"
+        ]
+      },
+      {
+        "id": "beast-validate-all",
+        "type": "makefile_target",
+        "category": "testing",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udc3a Validating Beast Mode framework...'",
+          "python scripts/validate_beast_mode_framework.py || echo 'Validation attempted'",
+          "@echo '\u2705 Beast Mode framework validation complete'"
+        ]
+      },
+      {
+        "id": "dag-validate",
+        "type": "makefile_target",
+        "category": "testing",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udd04 Validating DAG structure...'",
+          "python scripts/infrastructure_task_dag_validator.py || echo 'DAG validation attempted'",
+          "@echo '\u2705 DAG validation complete'"
+        ]
+      },
+      {
+        "id": "dag-execute",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udd04 Executing DAG workflow...'",
+          "python scripts/infrastructure_governance_orchestrator.py --execute-next || echo 'DAG execution attempted'",
+          "@echo '\u2705 DAG workflow execution complete'"
+        ]
+      },
+      {
+        "id": "dag-monitor",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udd04 Monitoring DAG execution...'",
+          "python scripts/dag_execution_monitor.py || echo 'DAG monitoring attempted'",
+          "@echo '\u2705 DAG monitoring complete'"
+        ]
+      },
+      {
+        "id": "dag-status",
+        "type": "makefile_target",
+        "category": "monitoring",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udd04 Checking DAG status...'",
+          "python scripts/check_dag_status.py || echo 'DAG status check attempted'",
+          "@echo '\u2705 DAG status check complete'"
+        ]
+      },
+      {
+        "id": "infra-deploy",
+        "type": "makefile_target",
+        "category": "deployment",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83c\udfd7\ufe0f Deploying infrastructure...'",
+          "python src/makefile_governance/integration/infrastructure_integration.py --generate-makefile makefiles/infrastructure.mk",
+          "$(MAKE) -f makefiles/infrastructure.mk infra-deploy-all",
+          "@echo '\u2705 Infrastructure deployment complete'"
+        ]
+      },
+      {
+        "id": "infra-monitor",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83c\udfd7\ufe0f Starting infrastructure monitoring...'",
+          "python scripts/start_infrastructure_monitoring.py || echo 'Infrastructure monitoring attempted'",
+          "@echo '\u2705 Infrastructure monitoring started'"
+        ]
+      },
+      {
+        "id": "infra-validate",
+        "type": "makefile_target",
+        "category": "testing",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83c\udfd7\ufe0f Validating infrastructure configuration...'",
+          "python scripts/validate_infrastructure_config.py || echo 'Infrastructure validation attempted'",
+          "@echo '\u2705 Infrastructure validation complete'"
+        ]
+      },
+      {
+        "id": "infra-backup",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83c\udfd7\ufe0f Backing up infrastructure data...'",
+          "python scripts/backup_infrastructure_configs.py || echo 'Infrastructure backup attempted'",
+          "@echo '\u2705 Infrastructure backup complete'"
+        ]
+      },
+      {
+        "id": "infra-status",
+        "type": "makefile_target",
+        "category": "monitoring",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83c\udfd7\ufe0f Checking infrastructure status...'",
+          "python src/makefile_governance/integration/infrastructure_integration.py --status",
+          "@echo '\u2705 Infrastructure status check complete'"
+        ]
+      },
+      {
+        "id": "infra-health",
+        "type": "makefile_target",
+        "category": "monitoring",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83c\udfd7\ufe0f Checking infrastructure health...'",
+          "@lsof -i:6379 >/dev/null 2>&1 && echo '\u2705 Redis is running' || echo '\u274c Redis is not running'",
+          "@lsof -i:5432 >/dev/null 2>&1 && echo '\u2705 PostgreSQL is running' || echo '\u274c PostgreSQL is not running'",
+          "@lsof -i:9090 >/dev/null 2>&1 && echo '\u2705 Prometheus is running' || echo '\u274c Prometheus is not running'",
+          "@echo '\u2705 Infrastructure health check complete'"
+        ]
+      },
+      {
+        "id": "dev-test",
+        "type": "makefile_target",
+        "category": "testing",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83e\uddea Running development tests...'",
+          "python -m pytest tests/ -v --tb=short",
+          "@echo '\u2705 Development tests complete'"
+        ]
+      },
+      {
+        "id": "dev-lint",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udccb Linting code...'",
+          "python -m flake8 src/ --max-line-length=120",
+          "python -m mypy src/ --ignore-missing-imports",
+          "@echo '\u2705 Code linting complete'"
+        ]
+      },
+      {
+        "id": "dev-format",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udc85 Formatting code...'",
+          "python -m black src/ --line-length=120",
+          "python -m isort src/",
+          "@echo '\u2705 Code formatting complete'"
+        ]
+      },
+      {
+        "id": "dev-validate",
+        "type": "makefile_target",
+        "category": "testing",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udd0d Validating development setup...'",
+          "python scripts/validate_development_environment.py || echo 'Development validation attempted'",
+          "@echo '\u2705 Development setup validation complete'"
+        ]
+      },
+      {
+        "id": "governance-scan",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udd0d Running semantic orphaned solution scan...'",
+          "python scripts/semantic_orphaned_scanner.py",
+          "@echo '\u2705 Governance scan complete'"
+        ]
+      },
+      {
+        "id": "governance-status",
+        "type": "makefile_target",
+        "category": "monitoring",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udcca Checking governance system status...'",
+          "python scripts/background_governance_scheduler.py --status",
+          "@echo '\u2705 Governance status check complete'"
+        ]
+      },
+      {
+        "id": "governance-report",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udccb Generating governance report...'",
+          "python scripts/background_governance_scheduler.py --run orphaned_solution_scan",
+          "@echo '\u2705 Governance report generated'"
+        ]
+      },
+      {
+        "id": "generate-reports",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udcca Generating all system reports...'",
+          "python scripts/makefile_system_discovery.py --output reports/discovery.json",
+          "python scripts/test_makefile_system.py --report reports/test_results.json",
+          "python scripts/validate_makefile_targets.py --report reports/validation.json",
+          "python scripts/lint_makefile.py --report reports/lint.json",
+          "@echo '\u2705 All reports generated'"
+        ]
+      },
+      {
+        "id": "clean-all",
+        "type": "makefile_target",
+        "category": "maintenance",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83e\uddf9 Cleaning all artifacts...'",
+          "rm -rf build/ dist/ *.egg-info/",
+          "rm -rf .pytest_cache/ .coverage htmlcov/",
+          "rm -rf reports/*.json reports/*.html",
+          "find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true",
+          "find . -type f -name \"*.pyc\" -delete",
+          "@echo '\u2705 All artifacts cleaned'"
+        ]
+      },
+      {
+        "id": "backup-all",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udcbe Backing up all data...'",
+          "mkdir -p backups/$(shell date +%Y%m%d_%H%M%S)",
+          "cp -r .kiro/ backups/$(shell date +%Y%m%d_%H%M%S)/",
+          "cp -r config/ backups/$(shell date +%Y%m%d_%H%M%S)/ 2>/dev/null || true",
+          "cp -r data/ backups/$(shell date +%Y%m%d_%H%M%S)/ 2>/dev/null || true",
+          "@echo '\u2705 All data backed up'"
+        ]
+      },
+      {
+        "id": "restore-all",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udd04 Restoring from backup...'",
+          "python scripts/restore_system_backup.py || echo 'Restore attempted'",
+          "@echo '\u2705 System restore complete'"
+        ]
+      },
+      {
+        "id": "test-makefile-quick",
+        "type": "makefile_target",
+        "category": "testing",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83d\udca8 Running quick Makefile smoke tests...'",
+          "python scripts/test_makefile_system.py --type unit",
+          "@echo '\u2705 Quick tests complete'"
+        ]
+      },
+      {
+        "id": "test-makefile-comprehensive",
+        "type": "makefile_target",
+        "category": "testing",
+        "affected_components": [],
+        "commands": [
+          "@echo '\ud83e\uddea Running comprehensive Makefile tests...'",
+          "python scripts/orchestrate_makefile_unit_tests.py",
+          "@echo '\u2705 Comprehensive tests complete'"
+        ]
+      },
+      {
+        "id": "test-makefile-parallel",
+        "type": "makefile_target",
+        "category": "testing",
+        "affected_components": [],
+        "commands": [
+          "@echo '\u26a1 Running parallel Makefile tests...'",
+          "python -m pytest tests/unit/makefile_governance/ -v -n auto --tb=short",
+          "@echo '\u2705 Parallel tests complete'"
+        ]
+      },
+      {
+        "id": "install",
+        "type": "makefile_target",
+        "category": "deployment",
+        "affected_components": [],
+        "commands": [
+          "@echo \"\ud83d\udd27 Installing dependencies...\"",
+          "pip install -r requirements.txt",
+          "@echo \"\u2705 Installation complete\""
+        ]
+      },
+      {
+        "id": "deploy",
+        "type": "makefile_target",
+        "category": "deployment",
+        "affected_components": [],
+        "commands": [
+          "@echo \"\ud83d\ude80 Deploying system...\"",
+          "$(MAKE) observatory-deploy",
+          "$(MAKE) beast-deploy",
+          "$(MAKE) infra-deploy",
+          "@echo \"\u2705 System deployment complete\""
+        ]
+      },
+      {
+        "id": "verify",
+        "type": "makefile_target",
+        "category": "general",
+        "affected_components": [],
+        "commands": [
+          "@echo \"\ud83d\udd0d Verifying system...\"",
+          "$(MAKE) validate-targets",
+          "$(MAKE) test-system",
+          "@echo \"\u2705 System verification complete\""
+        ]
+      },
+      {
+        "id": "test",
+        "type": "makefile_target",
+        "category": "testing",
+        "affected_components": [],
+        "commands": [
+          "@echo \"\ud83e\uddea Running tests...\"",
+          "$(MAKE) test-system",
+          "@echo \"\u2705 Tests complete\""
+        ]
+      },
+      {
+        "id": "clean",
+        "type": "makefile_target",
+        "category": "maintenance",
+        "affected_components": [],
+        "commands": [
+          "@echo \"\ud83e\uddf9 Cleaning artifacts...\"",
+          "$(MAKE) clean-all",
+          "@echo \"\u2705 Cleaning complete\""
+        ]
+      },
+      {
+        "id": "/ws/observatory",
+        "type": "websocket_endpoint",
+        "service": "Observatory Server",
+        "initialization_order": 1,
+        "message_types": [
+          "system_events",
+          "service_status",
+          "metrics_updates"
+        ]
+      },
+      {
+        "id": "/ws/emoji-rain",
+        "type": "websocket_endpoint",
+        "service": "Observatory Server",
+        "initialization_order": 2,
+        "message_types": [
+          "coordination_events",
+          "achievement_notifications",
+          "celebration_triggers"
+        ]
+      },
+      {
+        "id": "/ws/anomalies",
+        "type": "websocket_endpoint",
+        "service": "Observatory Server",
+        "initialization_order": 3,
+        "message_types": [
+          "anomaly_alerts",
+          "performance_warnings",
+          "threshold_breaches"
+        ]
+      },
+      {
+        "id": "/ws/doctor-status",
+        "type": "websocket_endpoint",
+        "service": "Observatory Server",
+        "initialization_order": 4,
+        "message_types": [
+          "health_updates",
+          "diagnostic_results",
+          "system_status"
+        ]
+      },
+      {
+        "id": "ReflectiveModule Components",
+        "type": "metrics_component",
+        "category": "observability"
+      },
+      {
+        "id": "Observatory Server",
+        "type": "metrics_component",
+        "category": "observability"
+      },
+      {
+        "id": "Prometheus Server",
+        "type": "metrics_component",
+        "category": "observability"
+      },
+      {
+        "id": "Grafana Dashboard",
+        "type": "metrics_component",
+        "category": "observability"
+      },
+      {
+        "id": "WebSocket Endpoints",
+        "type": "metrics_component",
+        "category": "observability"
+      },
+      {
+        "id": "ACE Reporter",
+        "type": "metrics_component",
+        "category": "observability"
+      },
+      {
+        "id": "AI Memory Palace",
+        "type": "metrics_component",
+        "category": "observability"
+      },
+      {
+        "id": "DAG Registry",
+        "type": "metrics_component",
+        "category": "observability"
+      },
+      {
+        "id": "Execution Engine",
+        "type": "integration_system",
+        "category": "integration"
+      }
+    ],
+    "edges": [
+      {
+        "source": "=",
+        "target": ".DEFAULT_GOAL",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "help",
+        "target": ".DEFAULT_GOAL",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "clean-all",
+        "target": ".PHONY",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "backup-all",
+        "target": ".PHONY",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "restore-all",
+        "target": ".PHONY",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "help",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Show",
+        "target": "help",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "available",
+        "target": "help",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "targets",
+        "target": "help",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "and",
+        "target": "help",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "usage",
+        "target": "help",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "information",
+        "target": "help",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "discover-system",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Discover",
+        "target": "discover-system",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "all",
+        "target": "discover-system",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "system",
+        "target": "discover-system",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "capabilities",
+        "target": "discover-system",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "validate-safety",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Validate",
+        "target": "validate-safety",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "system",
+        "target": "validate-safety",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "safety",
+        "target": "validate-safety",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "validate-targets",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Validate",
+        "target": "validate-targets",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "all",
+        "target": "validate-targets",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Makefile",
+        "target": "validate-targets",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "targets",
+        "target": "validate-targets",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "test-system",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Run",
+        "target": "test-system",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "comprehensive",
+        "target": "test-system",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "system",
+        "target": "test-system",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "tests",
+        "target": "test-system",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "optimize-performance",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Optimize",
+        "target": "optimize-performance",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "system",
+        "target": "optimize-performance",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "performance",
+        "target": "optimize-performance",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "lint-makefiles",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Lint",
+        "target": "lint-makefiles",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "all",
+        "target": "lint-makefiles",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Makefiles",
+        "target": "lint-makefiles",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "observatory-deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Deploy",
+        "target": "observatory-deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Observatory",
+        "target": "observatory-deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "system",
+        "target": "observatory-deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "observatory-start",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Start",
+        "target": "observatory-start",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Observatory",
+        "target": "observatory-start",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "services",
+        "target": "observatory-start",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "in",
+        "target": "observatory-start",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Docker",
+        "target": "observatory-start",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "containers",
+        "target": "observatory-start",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "observatory-stop",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Stop",
+        "target": "observatory-stop",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Observatory",
+        "target": "observatory-stop",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "services",
+        "target": "observatory-stop",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "and",
+        "target": "observatory-stop",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "containers",
+        "target": "observatory-stop",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "observatory-restart",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Restart",
+        "target": "observatory-restart",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Observatory",
+        "target": "observatory-restart",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "services",
+        "target": "observatory-restart",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "observatory-build",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Build",
+        "target": "observatory-build",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Observatory",
+        "target": "observatory-build",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Docker",
+        "target": "observatory-build",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "images",
+        "target": "observatory-build",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "observatory-shell",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Access",
+        "target": "observatory-shell",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Observatory",
+        "target": "observatory-shell",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "container",
+        "target": "observatory-shell",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "shell",
+        "target": "observatory-shell",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "observatory-status",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Check",
+        "target": "observatory-status",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Observatory",
+        "target": "observatory-status",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "status",
+        "target": "observatory-status",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "observatory-health",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Check",
+        "target": "observatory-health",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Observatory",
+        "target": "observatory-health",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "health",
+        "target": "observatory-health",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "observatory-restart-services",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Restart",
+        "target": "observatory-restart-services",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Observatory",
+        "target": "observatory-restart-services",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "services",
+        "target": "observatory-restart-services",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "(Docker",
+        "target": "observatory-restart-services",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "containers)",
+        "target": "observatory-restart-services",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "observatory-restart-tunnel",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Restart",
+        "target": "observatory-restart-tunnel",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Cloudflare",
+        "target": "observatory-restart-tunnel",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "tunnel",
+        "target": "observatory-restart-tunnel",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "observatory-logs",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "View",
+        "target": "observatory-logs",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Observatory",
+        "target": "observatory-logs",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "container",
+        "target": "observatory-logs",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "logs",
+        "target": "observatory-logs",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "beast-deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Deploy",
+        "target": "beast-deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Beast",
+        "target": "beast-deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Mode",
+        "target": "beast-deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "framework",
+        "target": "beast-deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "beast-test",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Run",
+        "target": "beast-test",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Beast",
+        "target": "beast-test",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Mode",
+        "target": "beast-test",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "tests",
+        "target": "beast-test",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "beast-compliance",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Check",
+        "target": "beast-compliance",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Beast",
+        "target": "beast-compliance",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Mode",
+        "target": "beast-compliance",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "compliance",
+        "target": "beast-compliance",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "beast-fix",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Fix",
+        "target": "beast-fix",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Beast",
+        "target": "beast-fix",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Mode",
+        "target": "beast-fix",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "issues",
+        "target": "beast-fix",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "beast-metrics",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Generate",
+        "target": "beast-metrics",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Beast",
+        "target": "beast-metrics",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Mode",
+        "target": "beast-metrics",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "metrics",
+        "target": "beast-metrics",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "beast-validate-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Validate",
+        "target": "beast-validate-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Beast",
+        "target": "beast-validate-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Mode",
+        "target": "beast-validate-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "framework",
+        "target": "beast-validate-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "dag-validate",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Validate",
+        "target": "dag-validate",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "DAG",
+        "target": "dag-validate",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "structure",
+        "target": "dag-validate",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "dag-execute",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Execute",
+        "target": "dag-execute",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "DAG",
+        "target": "dag-execute",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "workflow",
+        "target": "dag-execute",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "dag-monitor",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Monitor",
+        "target": "dag-monitor",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "DAG",
+        "target": "dag-monitor",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "execution",
+        "target": "dag-monitor",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "dag-status",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Check",
+        "target": "dag-status",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "DAG",
+        "target": "dag-status",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "status",
+        "target": "dag-status",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "infra-deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Deploy",
+        "target": "infra-deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "infrastructure",
+        "target": "infra-deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "infra-monitor",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Monitor",
+        "target": "infra-monitor",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "infrastructure",
+        "target": "infra-monitor",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "infra-validate",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Validate",
+        "target": "infra-validate",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "infrastructure",
+        "target": "infra-validate",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "infra-backup",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Backup",
+        "target": "infra-backup",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "infrastructure",
+        "target": "infra-backup",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "infra-status",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Check",
+        "target": "infra-status",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "infrastructure",
+        "target": "infra-status",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "status",
+        "target": "infra-status",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "infra-health",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Check",
+        "target": "infra-health",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "infrastructure",
+        "target": "infra-health",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "health",
+        "target": "infra-health",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "dev-test",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Run",
+        "target": "dev-test",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "development",
+        "target": "dev-test",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "tests",
+        "target": "dev-test",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "dev-lint",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Lint",
+        "target": "dev-lint",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "code",
+        "target": "dev-lint",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "dev-format",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Format",
+        "target": "dev-format",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "code",
+        "target": "dev-format",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "dev-validate",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Validate",
+        "target": "dev-validate",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "development",
+        "target": "dev-validate",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "setup",
+        "target": "dev-validate",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "governance-scan",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Scan",
+        "target": "governance-scan",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "for",
+        "target": "governance-scan",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "orphaned",
+        "target": "governance-scan",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "solutions",
+        "target": "governance-scan",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "governance-status",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Check",
+        "target": "governance-status",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "governance",
+        "target": "governance-status",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "status",
+        "target": "governance-status",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "governance-report",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Generate",
+        "target": "governance-report",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "governance",
+        "target": "governance-report",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "report",
+        "target": "governance-report",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "generate-reports",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Generate",
+        "target": "generate-reports",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "all",
+        "target": "generate-reports",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "system",
+        "target": "generate-reports",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "reports",
+        "target": "generate-reports",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "clean-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Clean",
+        "target": "clean-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "all",
+        "target": "clean-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "artifacts",
+        "target": "clean-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "backup-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Backup",
+        "target": "backup-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "all",
+        "target": "backup-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "data",
+        "target": "backup-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "restore-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Restore",
+        "target": "restore-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "from",
+        "target": "restore-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "backup",
+        "target": "restore-all",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "test-makefile-quick",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Quick",
+        "target": "test-makefile-quick",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "smoke",
+        "target": "test-makefile-quick",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "test",
+        "target": "test-makefile-quick",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "for",
+        "target": "test-makefile-quick",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Makefile",
+        "target": "test-makefile-quick",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "system",
+        "target": "test-makefile-quick",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "test-makefile-comprehensive",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Run",
+        "target": "test-makefile-comprehensive",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "comprehensive",
+        "target": "test-makefile-comprehensive",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Makefile",
+        "target": "test-makefile-comprehensive",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "tests",
+        "target": "test-makefile-comprehensive",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "test-makefile-parallel",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Run",
+        "target": "test-makefile-parallel",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "tests",
+        "target": "test-makefile-parallel",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "in",
+        "target": "test-makefile-parallel",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "parallel",
+        "target": "test-makefile-parallel",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "with",
+        "target": "test-makefile-parallel",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "detailed",
+        "target": "test-makefile-parallel",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "output",
+        "target": "test-makefile-parallel",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "install",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Install",
+        "target": "install",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "dependencies",
+        "target": "install",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "(legacy",
+        "target": "install",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "compatibility)",
+        "target": "install",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Deploy",
+        "target": "deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "system",
+        "target": "deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "(legacy",
+        "target": "deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "compatibility)",
+        "target": "deploy",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "verify",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Verify",
+        "target": "verify",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "system",
+        "target": "verify",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "(legacy",
+        "target": "verify",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "compatibility)",
+        "target": "verify",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "test",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Run",
+        "target": "test",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "tests",
+        "target": "test",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "(legacy",
+        "target": "test",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "compatibility)",
+        "target": "test",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "##",
+        "target": "clean",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Clean",
+        "target": "clean",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "artifacts",
+        "target": "clean",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "(legacy",
+        "target": "clean",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "compatibility)",
+        "target": "clean",
+        "type": "makefile_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Observatory Server startup",
+        "target": "/ws/observatory",
+        "type": "websocket_dependency",
+        "weight": 1
+      },
+      {
+        "source": "ReflectiveModule initialization",
+        "target": "/ws/observatory",
+        "type": "websocket_dependency",
+        "weight": 1
+      },
+      {
+        "source": "Observatory Server startup",
+        "target": "/ws/emoji-rain",
+        "type": "websocket_dependency",
+        "weight": 2
+      },
+      {
+        "source": "/ws/observatory registration",
+        "target": "/ws/emoji-rain",
+        "type": "websocket_dependency",
+        "weight": 2
+      },
+      {
+        "source": "Observatory Server startup",
+        "target": "/ws/anomalies",
+        "type": "websocket_dependency",
+        "weight": 3
+      },
+      {
+        "source": "Prometheus integration",
+        "target": "/ws/anomalies",
+        "type": "websocket_dependency",
+        "weight": 3
+      },
+      {
+        "source": "Observatory Server startup",
+        "target": "/ws/doctor-status",
+        "type": "websocket_dependency",
+        "weight": 4
+      },
+      {
+        "source": "Health monitoring system",
+        "target": "/ws/doctor-status",
+        "type": "websocket_dependency",
+        "weight": 4
+      },
+      {
+        "source": "ReflectiveModule Components",
+        "target": "Observatory Server",
+        "type": "metrics_pipeline",
+        "metrics": [
+          "health_status",
+          "performance_counters",
+          "error_rates",
+          "request_latency"
+        ],
+        "interval": 30,
+        "weight": 1
+      },
+      {
+        "source": "Observatory Server",
+        "target": "Prometheus Server",
+        "type": "metrics_pipeline",
+        "metrics": [
+          "observatory_requests",
+          "websocket_connections",
+          "system_metrics"
+        ],
+        "interval": 15,
+        "weight": 1
+      },
+      {
+        "source": "Prometheus Server",
+        "target": "Grafana Dashboard",
+        "type": "metrics_pipeline",
+        "metrics": [
+          "all_collected_metrics"
+        ],
+        "interval": 5,
+        "weight": 1
+      },
+      {
+        "source": "WebSocket Endpoints",
+        "target": "Observatory Server",
+        "type": "metrics_pipeline",
+        "metrics": [
+          "message_rates",
+          "connection_counts",
+          "error_counts"
+        ],
+        "interval": 10,
+        "weight": 1
+      },
+      {
+        "source": "ACE Reporter",
+        "target": "AI Memory Palace",
+        "type": "metrics_pipeline",
+        "metrics": [
+          "progress_updates",
+          "completion_status",
+          "coordination_events"
+        ],
+        "interval": 60,
+        "weight": 1
+      },
+      {
+        "source": "AI Memory Palace",
+        "target": "DAG Registry",
+        "type": "metrics_pipeline",
+        "metrics": [
+          "context_storage",
+          "retrieval_performance",
+          "validation_results"
+        ],
+        "interval": 120,
+        "weight": 1
+      },
+      {
+        "source": "ACE Reporter",
+        "target": "AI Memory Palace",
+        "type": "integration_coordination",
+        "method": "websocket",
+        "direction": "source_to_target",
+        "weight": 1
+      },
+      {
+        "source": "AI Memory Palace",
+        "target": "DAG Registry",
+        "type": "integration_coordination",
+        "method": "direct",
+        "direction": "bidirectional",
+        "weight": 1
+      },
+      {
+        "source": "DAG Registry",
+        "target": "Execution Engine",
+        "type": "integration_coordination",
+        "method": "queue",
+        "direction": "source_to_target",
+        "weight": 1
+      },
+      {
+        "source": "Observatory Server",
+        "target": "Prometheus Server",
+        "type": "integration_coordination",
+        "method": "direct",
+        "direction": "source_to_target",
+        "weight": 1
+      },
+      {
+        "source": "Prometheus Server",
+        "target": "Grafana Dashboard",
+        "type": "integration_coordination",
+        "method": "direct",
+        "direction": "source_to_target",
+        "weight": 1
+      }
+    ],
+    "execution_order": [
+      "=",
+      "##",
+      "Show",
+      "available",
+      "targets",
+      "and",
+      "usage",
+      "information",
+      "Discover",
+      "all",
+      "system",
+      "capabilities",
+      "Validate",
+      "safety",
+      "Makefile",
+      "Run",
+      "comprehensive",
+      "tests",
+      "Optimize",
+      "performance",
+      "Lint",
+      "Makefiles",
+      "Deploy",
+      "Observatory",
+      "Start",
+      "services",
+      "in",
+      "Docker",
+      "containers",
+      "Stop",
+      "Restart",
+      "Build",
+      "images",
+      "Access",
+      "container",
+      "shell",
+      "Check",
+      "status",
+      "health",
+      "(Docker",
+      "containers)",
+      "Cloudflare",
+      "tunnel",
+      "View",
+      "logs",
+      "Beast",
+      "Mode",
+      "framework",
+      "compliance",
+      "Fix",
+      "issues",
+      "Generate",
+      "metrics",
+      "DAG",
+      "structure",
+      "Execute",
+      "workflow",
+      "Monitor",
+      "execution",
+      "infrastructure",
+      "Backup",
+      "development",
+      "code",
+      "Format",
+      "setup",
+      "Scan",
+      "for",
+      "orphaned",
+      "solutions",
+      "governance",
+      "report",
+      "reports",
+      "Clean",
+      "artifacts",
+      "data",
+      "Restore",
+      "from",
+      "backup",
+      "Quick",
+      "smoke",
+      "parallel",
+      "with",
+      "detailed",
+      "output",
+      "Install",
+      "dependencies",
+      "(legacy",
+      "compatibility)",
+      "Verify",
+      "/ws/observatory",
+      "/ws/emoji-rain",
+      "/ws/anomalies",
+      "/ws/doctor-status",
+      "ReflectiveModule Components",
+      "WebSocket Endpoints",
+      "ACE Reporter",
+      "help",
+      "discover-system",
+      "validate-safety",
+      "validate-targets",
+      "test-system",
+      "test-makefile-comprehensive",
+      "optimize-performance",
+      "lint-makefiles",
+      "observatory-deploy",
+      "observatory-start",
+      "observatory-stop",
+      "observatory-restart",
+      "observatory-build",
+      "observatory-shell",
+      "observatory-status",
+      "observatory-health",
+      "observatory-restart-services",
+      "observatory-restart-tunnel",
+      "observatory-logs",
+      "beast-test",
+      "beast-deploy",
+      "beast-validate-all",
+      "beast-compliance",
+      "beast-fix",
+      "beast-metrics",
+      "dag-status",
+      "dag-validate",
+      "dag-execute",
+      "dag-monitor",
+      "infra-deploy",
+      "infra-monitor",
+      "infra-validate",
+      "infra-status",
+      "infra-health",
+      "infra-backup",
+      "dev-test",
+      "dev-lint",
+      "dev-format",
+      "dev-validate",
+      "governance-scan",
+      "governance-status",
+      "governance-report",
+      "generate-reports",
+      "clean-all",
+      "backup-all",
+      "restore-all",
+      "test-makefile-parallel",
+      "install",
+      "deploy",
+      "test",
+      "clean",
+      "verify",
+      "Observatory Server",
+      "AI Memory Palace",
+      ".DEFAULT_GOAL",
+      ".PHONY",
+      "test-makefile-quick",
+      "Prometheus Server",
+      "DAG Registry",
+      "Grafana Dashboard",
+      "Execution Engine"
+    ],
+    "critical_path": [
+      "ReflectiveModule Components",
+      "Observatory Server",
+      "Prometheus Server",
+      "Grafana Dashboard"
+    ],
+    "parallel_groups": [
+      [
+        "=",
+        "##",
+        "Show",
+        "available",
+        "targets",
+        "and",
+        "usage",
+        "information",
+        "Discover",
+        "all",
+        "system",
+        "capabilities",
+        "Validate",
+        "safety",
+        "Makefile",
+        "Run",
+        "comprehensive",
+        "tests",
+        "Optimize",
+        "performance",
+        "Lint",
+        "Makefiles",
+        "Deploy",
+        "Observatory",
+        "Start",
+        "services",
+        "in",
+        "Docker",
+        "containers",
+        "Stop",
+        "Restart",
+        "Build",
+        "images",
+        "Access",
+        "container",
+        "shell",
+        "Check",
+        "status",
+        "health",
+        "(Docker",
+        "containers)",
+        "Cloudflare",
+        "tunnel",
+        "View",
+        "logs",
+        "Beast",
+        "Mode",
+        "framework",
+        "compliance",
+        "Fix",
+        "issues",
+        "Generate",
+        "metrics",
+        "DAG",
+        "structure",
+        "Execute",
+        "workflow",
+        "Monitor",
+        "execution",
+        "infrastructure",
+        "Backup",
+        "development",
+        "code",
+        "Format",
+        "setup",
+        "Scan",
+        "for",
+        "orphaned",
+        "solutions",
+        "governance",
+        "report",
+        "reports",
+        "Clean",
+        "artifacts",
+        "data",
+        "Restore",
+        "from",
+        "backup",
+        "Quick",
+        "smoke",
+        "parallel",
+        "with",
+        "detailed",
+        "output",
+        "Install",
+        "dependencies",
+        "(legacy",
+        "compatibility)",
+        "Verify",
+        "/ws/observatory",
+        "/ws/emoji-rain",
+        "/ws/anomalies",
+        "/ws/doctor-status",
+        "ReflectiveModule Components",
+        "WebSocket Endpoints",
+        "ACE Reporter"
+      ],
+      [
+        "help",
+        "discover-system",
+        "validate-safety",
+        "validate-targets",
+        "test-system",
+        "test-makefile-comprehensive",
+        "optimize-performance",
+        "lint-makefiles",
+        "observatory-deploy",
+        "observatory-start",
+        "observatory-stop",
+        "observatory-restart",
+        "observatory-build",
+        "observatory-shell",
+        "observatory-status",
+        "observatory-health",
+        "observatory-restart-services",
+        "observatory-restart-tunnel",
+        "observatory-logs",
+        "beast-test",
+        "beast-deploy",
+        "beast-validate-all",
+        "beast-compliance",
+        "beast-fix",
+        "beast-metrics",
+        "dag-status",
+        "dag-validate",
+        "dag-execute",
+        "dag-monitor",
+        "infra-deploy",
+        "infra-monitor",
+        "infra-validate",
+        "infra-status",
+        "infra-health",
+        "infra-backup",
+        "dev-test",
+        "dev-lint",
+        "dev-format",
+        "dev-validate",
+        "governance-scan",
+        "governance-status",
+        "governance-report",
+        "generate-reports",
+        "clean-all",
+        "backup-all",
+        "restore-all",
+        "test-makefile-parallel",
+        "install",
+        "deploy",
+        "test",
+        "clean",
+        "verify",
+        "Observatory Server",
+        "AI Memory Palace"
+      ],
+      [
+        ".DEFAULT_GOAL",
+        ".PHONY",
+        "test-makefile-quick",
+        "Prometheus Server",
+        "DAG Registry"
+      ],
+      [
+        "Grafana Dashboard",
+        "Execution Engine"
+      ]
+    ]
+  },
+  "networkx_graph_info": {
+    "number_of_nodes": 157,
+    "number_of_edges": 255,
+    "is_directed_acyclic_graph": true,
+    "number_of_weakly_connected_components": 7
+  },
+  "recommendations": [
+    "Review isolated components that may need integration: /ws/observatory, /ws/emoji-rain, /ws/anomalies, /ws/doctor-status",
+    "Complete environment variable mapping for all script parameters"
+  ]
+}

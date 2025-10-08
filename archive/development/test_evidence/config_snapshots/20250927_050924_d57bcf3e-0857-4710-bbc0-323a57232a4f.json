@@ -1,0 +1,40 @@
+{
+  "evidence_id": "d57bcf3e-0857-4710-bbc0-323a57232a4f",
+  "timestamp": "2025-09-27T05:09:24.604057",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.604035",
+    "data_type": "dict"
+  },
+  "integrity_hash": "54b2839e1c7ba21ef5091504af6350730f8ac70a87b86df1eda317d94243d611",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/fastapi/utils.py",
+    "file_size": 8032,
+    "line_count": 222,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi._compat",
+        "fastapi._compat.Validator",
+        "fastapi._compat.BaseConfig",
+        "fastapi.datastructures",
+        "fastapi._compat.PYDANTIC_V2",
+        "fastapi._compat.UndefinedType",
+        "fastapi.datastructures.DefaultType",
+        "fastapi._compat.Undefined",
+        "fastapi._compat.lenient_issubclass",
+        "fastapi._compat.PydanticSchemaGenerationError",
+        "fastapi.datastructures.DefaultPlaceholder",
+        "fastapi._compat.ModelField",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.604021"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "timestamp": "2025-10-04T15:32:18.921469",
+  "tests": {
+    "observatory_health": {
+      "status": "pass",
+      "details": "Healthy - healthy"
+    },
+    "grafana_access": {
+      "status": "pass",
+      "details": "Grafana interface accessible"
+    },
+    "prometheus_api": {
+      "status": "pass",
+      "details": "Prometheus API responding"
+    },
+    "websocket_endpoints": {
+      "status": "fail",
+      "details": "0/3 endpoints working"
+    }
+  },
+  "ready_for_migration": false,
+  "test_summary": {
+    "passed": 3,
+    "total": 4,
+    "success_rate": 75.0
+  }
+}

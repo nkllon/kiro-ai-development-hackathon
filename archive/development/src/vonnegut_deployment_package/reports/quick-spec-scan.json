@@ -1,0 +1,1293 @@
+[
+  {
+    "name": "ace-reporter-ai-memory-palace-integration",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "agent-control-governance",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "ai-coordination-meta-programming",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "ai-memory-palace",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "ai-memory-palace-beastly-migration",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "anti-duplication-system",
+    "has_requirements": true,
+    "has_design": false,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "artifact-classification-transfer-learning",
+    "has_requirements": true,
+    "has_design": false,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "artifact-driven-beast-mode",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "async-task-lifecycle-management",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "atomic-spec-execution-pattern",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "beast-mode-coordination-observatory",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "beast-mode-deployment-architecture",
+    "has_requirements": true,
+    "has_design": false,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "beast-mode-interface-governance",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "beast-mode-rebuild",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "beast-mode-reliability-requirements",
+    "has_requirements": true,
+    "has_design": false,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "failure-mode-analysis.md",
+      "performance-targets.md",
+      "requirements.md",
+      "risk-analysis.md"
+    ]
+  },
+  {
+    "name": "beast-mode-system-documentation",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "bot-defense-command-center",
+    "has_requirements": false,
+    "has_design": false,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "claude-code-redis-task-queue",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "architecture.md",
+      "design.md",
+      "requirements.md",
+      "risk-mitigation.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "clean-chart-update-architecture",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "cloudflare-custom-error-pages",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "CONSOLIDATION_SUMMARY.md",
+      "design.md",
+      "original-research.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "cloudflare-websocket-tunnel-fix",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "cms-architecture",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "dag-config.yml",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "competitive-launch-strategy",
+    "has_requirements": false,
+    "has_design": false,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "comprehensive-makefile-system",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "dag-orchestrated-parallel-execution",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "dag-orchestration-constellation",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "decentralized-ai-coordination-network",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "deployment-data-auditor",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "devpost-hackathon-integration",
+    "has_requirements": false,
+    "has_design": false,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "browser_automation_analysis.md",
+      "design_backpropagated.md",
+      "design_fixed.md",
+      "requirements_backpropagated.md",
+      "requirements_fixed.md",
+      "tasks_fixed.md"
+    ]
+  },
+  {
+    "name": "directus-ai-memory-palace-integration",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "directus-cms-setup",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "directus-cms-systematic-implementation",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "directus-data-population",
+    "has_requirements": true,
+    "has_design": false,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "directus-reconciliation-systematic",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "directus-schema-design",
+    "has_requirements": true,
+    "has_design": false,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "directus-ui-configuration",
+    "has_requirements": true,
+    "has_design": false,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "discord-bot-framework-oss",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "discord-bot-integration-fix",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "discord-community-monitoring",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "doctor-is-in-ai-consultation",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "documentation-index-generator",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "DAG_TASKS.md",
+      "LAUNCH_READINESS.md",
+      "PARALLEL_DAG_LAUNCH.md",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "emoji-rain-system",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "example-complex-system",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "example-simple-api",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "executable-patch-code-governance",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "ghostbusters-productivity-triage",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "google-calendar-mcp-integration",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "NEXT_STEPS.md",
+      "RECONCILIATION_ANALYSIS.md",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "google-calendar-mcp-quota-project-fix",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "information-exhaust-preservation",
+    "has_requirements": true,
+    "has_design": false,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "live-dashboard-engagement-system",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "EXECUTION_ISSUES_LOG.md",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "llm-cli-discovery-and-integration",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "llm-powered-engagement-engines",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "makefile-syntax-repair-governance",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "mcp-development-framework",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "mcp-filesystem-server-fix",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "mcp-server-configuration-standardization",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "meta-monitoring-experiment",
+    "has_requirements": true,
+    "has_design": false,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "meta-observatory-streaming",
+    "has_requirements": true,
+    "has_design": false,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "msp-ssl-chaos-tamer",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "job-queue-config.json",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "msp-ssl-integration-governance",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "multi-dimensional-vocabulary-projector",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "multi-perspective-ghostbusters",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "observatory-cloudflare-infrastructure-governance",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "observatory-data-discovery",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "observatory-deployment-procedures",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "observatory-deployment-system",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "observatory-editorial-intelligence",
+    "has_requirements": true,
+    "has_design": false,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "observatory-emergency-repair",
+    "has_requirements": true,
+    "has_design": false,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "observatory-health-chart-implementation",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "observatory-live-coordination-feed",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "observatory-performance-chart",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "observatory-security-review",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "observatory-server-deployment-fix",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "observatory-social-authentication",
+    "has_requirements": true,
+    "has_design": false,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "observatory-system-recovery",
+    "has_requirements": true,
+    "has_design": false,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "observatory-token-tracking-chart",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "practical-repository-cleanup",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "prepare-spec-for-execution",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "prometheus-monitoring-system-repair",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "prompt-file-processor-hook",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "recursive-dag-orchestrated-spec-execution",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "redis-dag-registry",
+    "has_requirements": true,
+    "has_design": false,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "reflective-coordinator-system",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "reflective-module-architecture-consolidation",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "release-the-hounds-execution",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "release-v1-master-consolidation",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "ontological-analysis.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "repository-constellation",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "repository-content-discovery-indexing",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "DAG_TASKS.md",
+      "LAUNCH_READINESS.md",
+      "LAUNCH_SUMMARY.md",
+      "PARALLEL_DAG_LAUNCH.md",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "repository-discovery-resumption",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "repository-setup-and-installation",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "DAG_TASKS.md",
+      "LAUNCH_READINESS.md",
+      "PARALLEL_DAG_LAUNCH.md",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "repository-synchronization-cleanup",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "service-auto-start-governance",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "DAG_EXECUTION_PLAN.md",
+      "README.md",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "spec-consistency-governance",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "README.md",
+      "dag-execution-plan.md",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "spec-consistency-reconciliation",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "spec-creation-dag-compliance",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "CONCURRENT_EXECUTION_ANALYSIS.md",
+      "DAG_TASKS.md",
+      "LAUNCH_ISSUES_LOG.md",
+      "LAUNCH_READINESS.md",
+      "LAUNCH_SCRIPT_ROOT_CAUSE_ANALYSIS.md",
+      "LAUNCH_SUMMARY.md",
+      "PARALLEL_DAG_LAUNCH.md",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "spec-framework",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "spec-mode-framework",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "spec-scrub-rdi-consistency",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.backup.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "spec-theater-remediation",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "subprocess-safety-requirements",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": false,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md"
+    ]
+  },
+  {
+    "name": "system-architecture-wiring-diagram",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "DAG_TASKS.md",
+      "LAUNCH_SUMMARY.md",
+      "PARALLEL_DAG_LAUNCH.md",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "system-health-mitigation-framework",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "DAG_TASKS.md",
+      "LAUNCH_READINESS.md",
+      "dag-config.yml",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "technical-debt-patch-annotation-system",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "ubiquitous-language-monitoring-platform",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "unified-dag-registry",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "dag-registry-inventory.md",
+      "design.md",
+      "execution_preparation_results.json",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "universal-artifact-classification",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  },
+  {
+    "name": "websocket-implementation-validation",
+    "has_requirements": true,
+    "has_design": true,
+    "has_tasks": true,
+    "all_files": [
+      ".spec-state",
+      "design.md",
+      "requirements.md",
+      "tasks.md"
+    ]
+  }
+]

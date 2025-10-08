@@ -1,0 +1,59 @@
+{
+  "evidence_id": "4d419a9b-4ff5-46c0-8024-33da20995efc",
+  "timestamp": "2025-09-27T05:09:24.381216",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.381181",
+    "data_type": "dict"
+  },
+  "integrity_hash": "3ad637ccbbc8059dffd00fa56ab7bfbb013db7e03dfc0e5170943cda7bcc7297",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/health_endpoints/_health_endpoints.py",
+    "file_size": 34600,
+    "line_count": 965,
+    "route_analysis": {
+      "total_routes": 11,
+      "websocket_routes": [],
+      "http_routes": [
+        "/test",
+        "/health/services",
+        "/health",
+        "/health/history",
+        "/health/latest",
+        "/settings",
+        "/active/callbacks",
+        "/health/readiness",
+        "/health/liveliness",
+        "/health/liveness",
+        "/health/test_connection"
+      ],
+      "route_handlers": {
+        "/test": "test_endpoint",
+        "/health/services": "health_services_endpoint",
+        "/health": "health_endpoint",
+        "/health/history": "health_check_history_endpoint",
+        "/health/latest": "latest_health_checks_endpoint",
+        "/settings": "active_callbacks",
+        "/active/callbacks": "active_callbacks",
+        "/health/readiness": "health_readiness",
+        "/health/liveliness": "health_liveliness",
+        "/health/liveness": "health_liveliness",
+        "/health/test_connection": "test_model_connection"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "fastapi.Response",
+        "fastapi.Request",
+        "fastapi.HTTPException",
+        "fastapi.status",
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.381151"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "evidence_id": "7b99f83e-84ee-423d-af8f-47a996411e2e",
+  "timestamp": "2025-09-27T03:58:56.252341",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handshake_configuration",
+  "metadata": {
+    "config_type": "websocket_handshake",
+    "snapshot_timestamp": "2025-09-27T03:58:56.252316",
+    "data_type": "dict"
+  },
+  "integrity_hash": "61746d9eab966056a8233b2c28a89880bc3797bce32b49d0adc9fd864fc1db0a",
+  "data": {
+    "endpoint_url": "wss://observatory.nkllon.com/ws/emoji-rain",
+    "handshake_success": false,
+    "upgrade_header": null,
+    "connection_header": null,
+    "websocket_accept": null,
+    "websocket_protocol": null,
+    "response_time": 0.015024900436401367,
+    "error_message": "WebSocket connection failed: create_connection() got an unexpected keyword argument 'extra_headers'",
+    "timestamp": "2025-09-27T03:58:56.252299"
+  }
+}

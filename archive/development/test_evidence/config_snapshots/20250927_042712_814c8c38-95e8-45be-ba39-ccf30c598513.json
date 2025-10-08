@@ -1,0 +1,29 @@
+{
+  "evidence_id": "814c8c38-95e8-45be-ba39-ccf30c598513",
+  "timestamp": "2025-09-27T04:27:12.829092",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.829085",
+    "data_type": "dict"
+  },
+  "integrity_hash": "983657551abee52fc0875c57c01dc4f01f3de4a56479b6f08cb258176427df75",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/health_endpoints/health_app_factory.py",
+    "file_size": 264,
+    "line_count": 7,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi",
+        "fastapi.FastAPI"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.829081"
+  }
+}

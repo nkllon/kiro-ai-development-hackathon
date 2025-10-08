@@ -1,0 +1,52 @@
+{
+  "evidence_id": "bc126996-d06a-4817-aadd-4b623c28d4e5",
+  "timestamp": "2025-09-27T04:27:01.872081",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:01.872069",
+    "data_type": "dict"
+  },
+  "integrity_hash": "f97e609b2f51a9fa04fc893eb52b9e04800083af76b7d517424f0d15e54cff98",
+  "data": {
+    "file_path": "/var/folders/cj/jy2bc_mx2yn030n_jwgcrrmr0000gn/T/tmpuffquxk1.py",
+    "file_size": 1488,
+    "line_count": 56,
+    "route_analysis": {
+      "total_routes": 8,
+      "websocket_routes": [
+        "/ws/emoji-rain",
+        "/ws/status",
+        "/ws/health"
+      ],
+      "http_routes": [
+        "/api/health",
+        "/api/status",
+        "/api/data",
+        "/api/data/{item_id}",
+        "/api/data/{item_id}"
+      ],
+      "route_handlers": {
+        "/ws/emoji-rain": "emoji_rain_websocket",
+        "/ws/status": "status_websocket",
+        "/ws/health": "health_websocket",
+        "/api/health": "health_check",
+        "/api/status": "get_status",
+        "/api/data": "create_data",
+        "/api/data/{item_id}": "delete_data"
+      },
+      "middleware_count": 1,
+      "dependencies": [
+        "asyncio",
+        "fastapi.WebSocket",
+        "fastapi.WebSocketDisconnect",
+        "fastapi.middleware.cors.CORSMiddleware",
+        "fastapi",
+        "fastapi.middleware.cors",
+        "fastapi.FastAPI"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:01.872063"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "evidence_id": "672321b7-f04d-4c34-a54b-307c2dab43f7",
+  "timestamp": "2025-09-27T05:09:24.233959",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.233931",
+    "data_type": "dict"
+  },
+  "integrity_hash": "ab1eccb04b55df564d9fa5d830c6ce98581e25fd01091b63637c65d902e0ee4f",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/pass_through_endpoints/pass_through_endpoints.py",
+    "file_size": 55010,
+    "line_count": 1539,
+    "route_analysis": {
+      "total_routes": 4,
+      "websocket_routes": [],
+      "http_routes": [
+        "/config/pass_through_endpoint",
+        "/config/pass_through_endpoint/{endpoint_id}",
+        "/config/pass_through_endpoint",
+        "/config/pass_through_endpoint"
+      ],
+      "route_handlers": {
+        "/config/pass_through_endpoint": "delete_pass_through_endpoints",
+        "/config/pass_through_endpoint/{endpoint_id}": "update_pass_through_endpoints"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "fastapi.Response",
+        "fastapi.Request",
+        "fastapi.HTTPException",
+        "fastapi.status",
+        "fastapi.responses",
+        "fastapi.UploadFile",
+        "starlette.datastructures.UploadFile",
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi.responses.StreamingResponse",
+        "starlette.datastructures",
+        "fastapi.FastAPI",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.233891"
+  }
+}

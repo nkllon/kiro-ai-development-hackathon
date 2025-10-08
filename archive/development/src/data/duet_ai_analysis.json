@@ -1,0 +1,96 @@
+{
+  "timestamp": "2025-09-22T19:43:04.680647",
+  "project_info": {
+    "project_id": "ghostbusters-hackathon-2025",
+    "billing_account_id": "01F112-E73FD5-795507"
+  },
+  "duet_ai_services": {
+    "aiplatform.googleapis.com": {
+      "description": "Vertex AI (Duet AI ML)",
+      "enabled": false,
+      "status": "disabled"
+    },
+    "cloudaicompanion.googleapis.com": {
+      "description": "Duet AI Companion",
+      "enabled": false,
+      "status": "disabled"
+    },
+    "cloudfunctions.googleapis.com": {
+      "description": "Cloud Functions (Duet AI Code)",
+      "enabled": false,
+      "status": "disabled"
+    },
+    "run.googleapis.com": {
+      "description": "Cloud Run (Duet AI Deploy)",
+      "enabled": false,
+      "status": "disabled"
+    },
+    "firestore.googleapis.com": {
+      "description": "Firestore (Duet AI Data)",
+      "enabled": false,
+      "status": "disabled"
+    },
+    "pubsub.googleapis.com": {
+      "description": "Pub/Sub (Duet AI Events)",
+      "enabled": false,
+      "status": "disabled"
+    },
+    "cloudbuild.googleapis.com": {
+      "description": "Cloud Build (Duet AI CI/CD)",
+      "enabled": false,
+      "status": "disabled"
+    },
+    "logging.googleapis.com": {
+      "description": "Cloud Logging (Duet AI Monitor)",
+      "enabled": false,
+      "status": "disabled"
+    },
+    "monitoring.googleapis.com": {
+      "description": "Cloud Monitoring (Duet AI Observability)",
+      "enabled": false,
+      "status": "disabled"
+    },
+    "speech.googleapis.com": {
+      "description": "Speech-to-Text (Duet AI Voice)",
+      "enabled": false,
+      "status": "disabled"
+    },
+    "bigquery.googleapis.com": {
+      "description": "BigQuery (Duet AI Analytics)",
+      "enabled": false,
+      "status": "disabled"
+    },
+    "storage.googleapis.com": {
+      "description": "Cloud Storage (Duet AI Files)",
+      "enabled": false,
+      "status": "disabled"
+    }
+  },
+  "duet_ai_features": {
+    "duet_ai_companion": {
+      "enabled": false
+    }
+  },
+  "billing_data": {
+    "has_billing_data": false,
+    "error": "No billing budgets found"
+  },
+  "analysis": {
+    "total_duet_ai_services": 0,
+    "enabled_duet_ai_services": [],
+    "duet_ai_usage_level": "none",
+    "estimated_duet_ai_cost": {
+      "vertex_ai": 0.0,
+      "cloud_functions": 0.0,
+      "cloud_run": 0.0,
+      "firestore": 0.0,
+      "pubsub": 0.0,
+      "storage": 0.0,
+      "total": 0.0
+    },
+    "recommendations": [
+      "Consider enabling Duet AI services for AI-powered development",
+      "Start with Cloud Functions and Firestore for basic AI integration"
+    ]
+  }
+}

@@ -1,0 +1,366 @@
+{
+  "timestamp": "2025-10-06T16:09:27.180847",
+  "operations": [
+    {
+      "action": "archive",
+      "source": "examples/.kiro",
+      "target": "archive/development/examples/.kiro",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "examples/demo_project",
+      "target": "archive/development/examples/demo_project",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "examples/demo_spores",
+      "target": "archive/development/examples/demo_spores",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "examples/poe_deployment_20251004_152642",
+      "target": "archive/development/examples/poe_deployment_20251004_152642",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "examples/vonnegut_container_deployment",
+      "target": "archive/development/examples/vonnegut_container_deployment",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "examples/vonnegut_deployment_package",
+      "target": "archive/development/examples/vonnegut_deployment_package",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "examples/.DS_Store",
+      "target": "archive/development/examples/.DS_Store",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "examples/cli_usage_results.json",
+      "target": "archive/development/examples/cli_usage_results.json",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "examples/quick_start_results.json",
+      "target": "archive/development/examples/quick_start_results.json",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/quick_start_demo.py",
+      "target": "examples/basic/quick_start_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/simple_beast_agent.py",
+      "target": "examples/basic/simple_beast_agent.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/simple_hotrod_queue.py",
+      "target": "examples/basic/simple_hotrod_queue.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/secure_credential_usage.py",
+      "target": "examples/basic/secure_credential_usage.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/cli_usage_examples.py",
+      "target": "examples/basic/cli_usage_examples.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/beast_mode_collaboration_agents.py",
+      "target": "examples/advanced/beast_mode_collaboration_agents.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/comprehensive_reporting_demo.py",
+      "target": "examples/advanced/comprehensive_reporting_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/enhanced_rm_validator_demo.py",
+      "target": "examples/advanced/enhanced_rm_validator_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/rca_performance_optimization_demo.py",
+      "target": "examples/advanced/rca_performance_optimization_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/rca_report_generation_demo.py",
+      "target": "examples/advanced/rca_report_generation_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/spec_framework_demo.py",
+      "target": "examples/advanced/spec_framework_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/agent_discovery_demo.py",
+      "target": "examples/integrations/agent_discovery_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/deployment_demo.py",
+      "target": "examples/integrations/deployment_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/observatory_demo.py",
+      "target": "examples/integrations/observatory_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/tool_orchestration_demo.py",
+      "target": "examples/integrations/tool_orchestration_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/unified_client_demo.py",
+      "target": "examples/integrations/unified_client_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/web_server_demo.py",
+      "target": "examples/integrations/web_server_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/emoji_rain_demo.py",
+      "target": "examples/demos/emoji_rain_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/daemon_hotrod.py",
+      "target": "examples/demos/daemon_hotrod.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/hotrod_agent.py",
+      "target": "examples/demos/hotrod_agent.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/monitoring_system_demo.py",
+      "target": "examples/demos/monitoring_system_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/spore_management_demo.py",
+      "target": "examples/demos/spore_management_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/notebook",
+      "target": "examples/notebooks",
+      "type": "directory"
+    },
+    {
+      "action": "organize",
+      "source": "examples/message_compatibility_demo.py",
+      "target": "examples/advanced/message_compatibility_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/test_rca_integration_demo.py",
+      "target": "examples/advanced/test_rca_integration_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/message_type_handling_demo.py",
+      "target": "examples/advanced/message_type_handling_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/collaboration_scheduler_demo.py",
+      "target": "examples/advanced/collaboration_scheduler_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/file_change_detection_demo.py",
+      "target": "examples/advanced/file_change_detection_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/message_history_demo.py",
+      "target": "examples/advanced/message_history_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/component_boundary_resolution_demo.py",
+      "target": "examples/advanced/component_boundary_resolution_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/task15_advanced_integration_demo.py",
+      "target": "examples/advanced/task15_advanced_integration_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/basic_constellation_usage.py",
+      "target": "examples/advanced/basic_constellation_usage.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/test_rca_usage_examples.py",
+      "target": "examples/advanced/test_rca_usage_examples.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/task18_final_validation_assessment_demo.py",
+      "target": "examples/advanced/task18_final_validation_assessment_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/task_processor_demo.py",
+      "target": "examples/advanced/task_processor_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/task17_operational_interfaces_demo.py",
+      "target": "examples/advanced/task17_operational_interfaces_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/test_rca_engine_demo.py",
+      "target": "examples/advanced/test_rca_engine_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/automated_correction_workflows_demo.py",
+      "target": "examples/advanced/automated_correction_workflows_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/mailbox_logger_demo.py",
+      "target": "examples/advanced/mailbox_logger_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/rm_validator_demo.py",
+      "target": "examples/advanced/rm_validator_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/task16_infrastructure_integration_demo.py",
+      "target": "examples/advanced/task16_infrastructure_integration_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/help_system_demo.py",
+      "target": "examples/advanced/help_system_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/error_handling_demo.py",
+      "target": "examples/advanced/error_handling_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/bus_client_demo.py",
+      "target": "examples/advanced/bus_client_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "organize",
+      "source": "examples/capability_verification_demo.py",
+      "target": "examples/advanced/capability_verification_demo.py",
+      "type": "file"
+    },
+    {
+      "action": "create_readme",
+      "target": "examples/basic/README.md",
+      "type": "file"
+    },
+    {
+      "action": "create_readme",
+      "target": "examples/advanced/README.md",
+      "type": "file"
+    },
+    {
+      "action": "create_readme",
+      "target": "examples/integrations/README.md",
+      "type": "file"
+    },
+    {
+      "action": "create_readme",
+      "target": "examples/demos/README.md",
+      "type": "file"
+    },
+    {
+      "action": "create_readme",
+      "target": "examples/notebooks/README.md",
+      "type": "file"
+    },
+    {
+      "action": "create_readme",
+      "target": "examples/README.md",
+      "type": "file"
+    }
+  ],
+  "summary": {
+    "directories_archived": 6,
+    "files_archived": 3,
+    "files_organized": 45,
+    "readmes_created": 6,
+    "total_operations": 60
+  }
+}

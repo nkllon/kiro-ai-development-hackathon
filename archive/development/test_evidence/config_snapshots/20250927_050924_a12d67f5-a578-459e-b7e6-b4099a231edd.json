@@ -1,0 +1,37 @@
+{
+  "evidence_id": "a12d67f5-a578-459e-b7e6-b4099a231edd",
+  "timestamp": "2025-09-27T05:09:24.739776",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.739769",
+    "data_type": "dict"
+  },
+  "integrity_hash": "752b461f1d657e324a9b23dbca2be014dfd022632eb4aa83e7c56665c3f7a31d",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/_experimental/mcp_server/sse_transport.py",
+    "file_size": 6180,
+    "line_count": 151,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "starlette.types.Receive",
+        "starlette.types.Send",
+        "fastapi.responses.Response",
+        "sse_starlette.EventSourceResponse",
+        "sse_starlette",
+        "starlette.types",
+        "fastapi.responses",
+        "starlette.types.Scope",
+        "fastapi.requests",
+        "fastapi.requests.Request"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.739763"
+  }
+}

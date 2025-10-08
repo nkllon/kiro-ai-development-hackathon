@@ -1,0 +1,36 @@
+{
+  "execution_id": "llm-dag-20251001-142023",
+  "llm_provider": "claude",
+  "execution_mode": "parallel",
+  "total_tasks": 28,
+  "completed_tasks": 0,
+  "failed_tasks": 1,
+  "tasks": {
+    "1.1": {
+      "task_id": "1.1",
+      "status": "failed",
+      "exit_code": 1,
+      "duration_seconds": 4.590305,
+      "output": "Credit balance is too low\n",
+      "error": "",
+      "prompt_file": "logs/llm-dag/llm-dag-20251001-142023/1.1-prompt.txt",
+      "output_file": "logs/llm-dag/llm-dag-20251001-142023/1.1-output.txt",
+      "llm_provider": "claude",
+      "output_analysis": {
+        "length": 26,
+        "has_code": false,
+        "code_blocks": 0,
+        "has_imports": false,
+        "has_classes": false,
+        "has_functions": false,
+        "mentions_reflective_module": false,
+        "mentions_beast_mode": false,
+        "has_error_handling": false,
+        "has_logging": false,
+        "quality_score": 0.0
+      }
+    }
+  },
+  "log_directory": "logs/llm-dag/llm-dag-20251001-142023",
+  "timestamp": "2025-10-01T14:20:28.049932"
+}

@@ -1,0 +1,81 @@
+{
+  "system_name": "simple_calculator",
+  "description": "A simple calculator system for demonstrating the model-driven workflow",
+  "purpose": "Demonstrate JSON model → Python generator → auto-format → test → fix model → regenerate code workflow",
+  "graph_api_level": 1,
+  "projection_system": "test_system",
+  "design_patterns": {
+    "separation_of_concerns": "Calculator handles math, UI handles interaction",
+    "single_responsibility": "Each class has one clear purpose",
+    "dependency_inversion": "UI depends on Calculator interface, not implementation"
+  },
+  "error_handling": {
+    "division_by_zero": "Return None or raise ValueError for division by zero",
+    "invalid_input": "Validate numeric input before processing",
+    "user_cancellation": "Handle Ctrl+C gracefully"
+  },
+  "testing_strategy": {
+    "unit_tests": "Test each Calculator method independently",
+    "integration_tests": "Test Calculator + UI interaction",
+    "edge_cases": "Test division by zero, negative numbers, very large numbers"
+  },
+  "performance_considerations": {
+    "memory": "Minimal memory footprint for simple operations",
+    "speed": "Fast calculation for real-time user interaction",
+    "scalability": "Easy to extend with new operations"
+  },
+  "components": {
+    "Calculator": {
+      "responsibility": "Perform basic mathematical operations",
+      "methods": [
+        "add(self, a: float, b: float) -> float",
+        "subtract(self, a: float, b: float) -> float",
+        "multiply(self, a: float, b: float) -> float",
+        "divide(self, a: float, b: float) -> float"
+      ],
+      "implementation_status": "unimplemented",
+      "notes": "Basic calculator operations - implement actual math logic",
+      "validation_rules": {
+        "inputs": "Must be numeric (int or float)",
+        "outputs": "Always return float for consistency",
+        "error_handling": "Return None for invalid operations"
+      },
+      "example_usage": {
+        "add": "calc.add(5.5, 3.2) returns 8.7",
+        "divide": "calc.divide(10, 2) returns 5.0"
+      }
+    },
+    "CalculatorUI": {
+      "responsibility": "Provide user interface for calculator operations",
+      "methods": [
+        "display_result(self, result: float) -> None",
+        "get_user_input(self) -> str",
+        "run_calculator(self) -> None"
+      ],
+      "implementation_status": "unimplemented",
+      "notes": "UI layer - implement user interaction and display logic",
+      "user_experience": {
+        "input_format": "Accept both '5 + 3' and '5+3' formats",
+        "display_format": "Show results with 2 decimal places",
+        "error_messages": "Clear, helpful error messages for invalid input"
+      },
+      "interaction_flow": {
+        "welcome": "Display welcome message and available operations",
+        "input": "Prompt for operation and numbers",
+        "calculation": "Perform calculation and show result",
+        "continue": "Ask if user wants to continue"
+      }
+    }
+  },
+  "future_enhancements": {
+    "scientific_functions": "Add sin, cos, log, power functions",
+    "memory_features": "Store and recall previous results",
+    "history_tracking": "Keep calculation history",
+    "unit_conversion": "Convert between different units"
+  },
+  "deployment_notes": {
+    "requirements": "Python 3.8+, no external dependencies",
+    "installation": "Copy file and run directly",
+    "usage": "python simple_calculator.py"
+  }
+}

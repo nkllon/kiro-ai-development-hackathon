@@ -1,0 +1,26 @@
+{
+  "evidence_id": "416b71d8-aabc-4894-ab6a-e0effecf6915",
+  "timestamp": "2025-09-27T04:27:12.884791",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.884779",
+    "data_type": "dict"
+  },
+  "integrity_hash": "8652a9728799e9dbb44a14471c47ae65ec37d6bb70bb524abe14feb99ae8df22",
+  "data": {
+    "file_path": "./backups/templates.py",
+    "file_size": 17069,
+    "line_count": 678,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": []
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.884764"
+  }
+}

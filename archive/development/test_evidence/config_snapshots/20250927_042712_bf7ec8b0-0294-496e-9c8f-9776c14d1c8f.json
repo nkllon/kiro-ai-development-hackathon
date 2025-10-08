@@ -1,0 +1,33 @@
+{
+  "evidence_id": "bf7ec8b0-0294-496e-9c8f-9776c14d1c8f",
+  "timestamp": "2025-09-27T04:27:12.926613",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.926600",
+    "data_type": "dict"
+  },
+  "integrity_hash": "1a144c2a9c400db509c90ee519c999daa81a5f1452a57754d7ebdcd873b39977",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_hooks/aim/aim.py",
+    "file_size": 13298,
+    "line_count": 353,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "websockets.asyncio.client.connect",
+        "websockets.asyncio.client",
+        "fastapi",
+        "fastapi.HTTPException",
+        "websockets.asyncio.client.ClientConnection"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.926587"
+  }
+}

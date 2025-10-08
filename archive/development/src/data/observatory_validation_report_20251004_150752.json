@@ -1,0 +1,132 @@
+{
+  "timestamp": "2025-10-04T15:07:51.923697",
+  "tests": {
+    "Local Health endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 0.012217044830322266,
+      "timestamp": "2025-10-04T15:07:51.936038"
+    },
+    "Local Readiness endpoint": {
+      "status": "fail",
+      "details": "Status 404",
+      "duration": 0.004341840744018555,
+      "timestamp": "2025-10-04T15:07:51.940422"
+    },
+    "Local Metrics endpoint": {
+      "status": "fail",
+      "details": "Status 404",
+      "duration": 0.0034492015838623047,
+      "timestamp": "2025-10-04T15:07:51.943931"
+    },
+    "Local Dashboard endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 0.0035359859466552734,
+      "timestamp": "2025-10-04T15:07:51.947503"
+    },
+    "External Health endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 0.36882781982421875,
+      "timestamp": "2025-10-04T15:07:52.316533"
+    },
+    "External Dashboard endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 0.4138312339782715,
+      "timestamp": "2025-10-04T15:07:52.730399"
+    },
+    "Data Directory metrics": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:07:52.732234"
+    },
+    "Data Directory dashboards": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:07:52.732267"
+    },
+    "Data Directory logs": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:07:52.732318"
+    },
+    "Data Directory config": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:07:52.732345"
+    },
+    "Data Write Permissions": {
+      "status": "pass",
+      "details": "Can write to data directories",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:07:52.732791"
+    },
+    "Process Running": {
+      "status": "pass",
+      "details": "Observatory process found (PIDs: 74077)",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:07:52.771156"
+    },
+    "Process Resources PID 74077": {
+      "status": "pass",
+      "details": "74077   1.1  0.1   0:00.51",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:07:52.778580"
+    },
+    "Tunnel Process": {
+      "status": "pass",
+      "details": "Cloudflare tunnel running (PIDs: 75730, 75880)",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:07:52.809022"
+    },
+    "Performance /health": {
+      "status": "pass",
+      "details": "Avg response time: 0.01s (target: <1.0s)",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:07:52.839158"
+    },
+    "Performance /metrics": {
+      "status": "pass",
+      "details": "Avg response time: 0.00s (target: <2.0s)",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:07:52.860529"
+    },
+    "Performance /": {
+      "status": "pass",
+      "details": "Avg response time: 0.00s (target: <3.0s)",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:07:52.874686"
+    },
+    "WebSocket /ws/observatory": {
+      "status": "fail",
+      "details": "create_connection() got an unexpected keyword argument 'timeout'",
+      "duration": 0.018903017044067383,
+      "timestamp": "2025-10-04T15:07:52.893635"
+    },
+    "WebSocket /ws/emoji-rain": {
+      "status": "fail",
+      "details": "create_connection() got an unexpected keyword argument 'timeout'",
+      "duration": 0.0007228851318359375,
+      "timestamp": "2025-10-04T15:07:52.894394"
+    },
+    "WebSocket /ws/anomalies": {
+      "status": "fail",
+      "details": "create_connection() got an unexpected keyword argument 'timeout'",
+      "duration": 0.0003948211669921875,
+      "timestamp": "2025-10-04T15:07:52.894810"
+    }
+  },
+  "summary": {
+    "total_tests": 20,
+    "passed_tests": 15,
+    "failed_tests": 5,
+    "success_rate": 75.0,
+    "overall_status": "fail"
+  }
+}

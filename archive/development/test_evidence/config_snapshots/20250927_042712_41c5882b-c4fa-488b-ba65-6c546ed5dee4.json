@@ -1,0 +1,43 @@
+{
+  "evidence_id": "41c5882b-c4fa-488b-ba65-6c546ed5dee4",
+  "timestamp": "2025-09-27T04:27:12.790977",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.790967",
+    "data_type": "dict"
+  },
+  "integrity_hash": "4dfaf20e751ff0dcc507ed3d49e52466977027431bafab9fd707265e7114be37",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/fastapi/security/oauth2.py",
+    "file_size": 22036,
+    "line_count": 654,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "starlette.requests",
+        "fastapi.security.utils.get_authorization_scheme_param",
+        "fastapi.security.base.SecurityBase",
+        "fastapi.exceptions.HTTPException",
+        "fastapi.param_functions",
+        "starlette.status.HTTP_403_FORBIDDEN",
+        "fastapi.security.utils",
+        "fastapi.param_functions.Form",
+        "starlette.status.HTTP_401_UNAUTHORIZED",
+        "fastapi.security.base",
+        "starlette.status",
+        "fastapi.openapi.models.OAuthFlows",
+        "fastapi.openapi.models",
+        "starlette.requests.Request",
+        "fastapi.exceptions",
+        "fastapi.openapi.models.OAuth2"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.790949"
+  }
+}

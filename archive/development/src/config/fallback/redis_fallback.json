@@ -1,0 +1,14 @@
+{
+  "mode": "redis_fallback",
+  "activated_at": "2025-10-01T13:25:11.943651",
+  "fallback_endpoint": "localhost:6380",
+  "capabilities": {
+    "coordination": true,
+    "caching": true,
+    "pub_sub": true
+  },
+  "limitations": [
+    "Single node (no clustering)",
+    "Local network only"
+  ]
+}

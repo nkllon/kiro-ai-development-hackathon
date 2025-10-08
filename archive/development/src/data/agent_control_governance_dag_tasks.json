@@ -1,0 +1,685 @@
+{
+  "execution_plan": {
+    "plan_id": "agent_control_governance_dag_orchestrated",
+    "created_at": "2025-01-27T20:30:00Z",
+    "description": "Agent Control Governance system implementation with DAG orchestrated parallel execution",
+    "total_tasks": 32,
+    "parallelization_strategy": "phase_based_dependency_aware",
+    "max_parallel_tasks_per_phase": 4,
+    "estimated_total_duration_hours": 24,
+    "critical_path_phases": 8
+  },
+  "task_definitions": [
+    {
+      "id": "1.1",
+      "name": "Create core directory structure and base models",
+      "description": "Create directory structure: `src/agent_control_governance/`, Create base models for Order, Agent, and TaskResult using existing dataclass patterns, Set up module initialization and imports",
+      "dependencies": [],
+      "phase": 1,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 30
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "foundation"
+      },
+      "requirements_refs": ["1.1", "1.2"]
+    },
+    {
+      "id": "1.2",
+      "name": "Implement mathematical constraint validation foundation",
+      "description": "Implement mathematical constraint validation leveraging existing DAG registry from `src/rm_ddd/core/dag_registry.py`, Create constraint validation interfaces and base classes, Integrate with existing mathematical governance patterns",
+      "dependencies": [],
+      "phase": 1,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 45
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "foundation"
+      },
+      "requirements_refs": ["2.1", "2.2"]
+    },
+    {
+      "id": "1.3",
+      "name": "Set up Redis infrastructure integration",
+      "description": "Set up Redis-based order queue using existing Redis infrastructure (192.168.1.119:6379), Create Redis connection management and configuration, Implement Redis-based storage patterns",
+      "dependencies": [],
+      "phase": 1,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 30
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "foundation"
+      },
+      "requirements_refs": ["1.1", "1.2"]
+    },
+    {
+      "id": "1.4",
+      "name": "Integrate ReflectiveModule pattern",
+      "description": "Integrate with existing ReflectiveModule pattern from `src/rm_ddd/core/unified_reflective_module.py`, Create base classes inheriting from ReflectiveModule, Set up observability and health monitoring foundations",
+      "dependencies": [],
+      "phase": 1,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 30
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "foundation"
+      },
+      "requirements_refs": ["1.1", "1.2"]
+    },
+    {
+      "id": "2.1",
+      "name": "Create Order model and validation",
+      "description": "Write Order model with cryptographic authority validation using dataclass patterns from existing code, Implement OrderValidator class leveraging existing DAG validation algorithms from `src/rm_ddd/core/dag_registry.py`, Integrate with Redis for order storage using existing Redis configuration (192.168.1.119:6379)",
+      "dependencies": ["1.1", "1.2", "1.3", "1.4"],
+      "phase": 2,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 45
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "core_system"
+      },
+      "requirements_refs": ["1.1", "1.2", "3.1", "3.2"]
+    },
+    {
+      "id": "2.2",
+      "name": "Create Agent model and registry",
+      "description": "Write Agent model with capability metadata and resource limits using existing dataclass patterns, Code AgentRegistry class inheriting from ReflectiveModule with Redis-backed storage, Create agent discovery and capability matching algorithms using existing Redis infrastructure",
+      "dependencies": ["1.1", "1.2", "1.3", "1.4"],
+      "phase": 2,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 45
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "core_system"
+      },
+      "requirements_refs": ["4.1", "4.2", "4.3"]
+    },
+    {
+      "id": "2.3",
+      "name": "Create base WorkerAgent interface",
+      "description": "Define standardized TaskResult and AgentResponse data models using existing dataclass patterns, Implement uniform interface contract for all agent types with ReflectiveModule inheritance, Create base WorkerAgent class inheriting from ReflectiveModule for consistent observability",
+      "dependencies": ["1.1", "1.2", "1.3", "1.4"],
+      "phase": 2,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 30
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "core_system"
+      },
+      "requirements_refs": ["6.1", "6.2", "6.3"]
+    },
+    {
+      "id": "2.4",
+      "name": "Implement mathematical constraint enforcement",
+      "description": "Leverage existing DAG compliance validation from `src/rm_ddd/core/dag_registry.py`, Create constraint propagation system for mathematical invariants using existing patterns, Integrate with existing DAG Registry for dependency validation",
+      "dependencies": ["1.1", "1.2", "1.3", "1.4"],
+      "phase": 2,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 45
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "core_system"
+      },
+      "requirements_refs": ["2.1", "2.2", "2.3"]
+    },
+    {
+      "id": "3.1",
+      "name": "Implement MicroWorker sandboxing",
+      "description": "Implement MicroWorker class with sandboxed Python script execution environment, Code resource limits enforcement (CPU, memory, I/O quotas) using existing patterns, Create security isolation and process management with ReflectiveModule health monitoring",
+      "dependencies": ["2.1", "2.2", "2.3", "2.4"],
+      "phase": 3,
+      "resource_requirements": {
+        "cpu_cores": 2,
+        "memory_mb": 1024,
+        "disk_mb": 200,
+        "estimated_duration_minutes": 60
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "worker_agents"
+      },
+      "requirements_refs": ["5.1", "5.2", "11.1", "11.2"]
+    },
+    {
+      "id": "3.2",
+      "name": "Implement StandardWorker LLM integration",
+      "description": "Code StandardWorker class with lightweight LLM integration and task-specific prompting, Implement context limits and bounded input/output handling using existing patterns, Create domain-specific expertise routing with capability matching from AgentRegistry",
+      "dependencies": ["2.1", "2.2", "2.3", "2.4"],
+      "phase": 3,
+      "resource_requirements": {
+        "cpu_cores": 2,
+        "memory_mb": 1024,
+        "disk_mb": 200,
+        "estimated_duration_minutes": 60
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "worker_agents"
+      },
+      "requirements_refs": ["6.1", "6.2", "10.2"]
+    },
+    {
+      "id": "3.3",
+      "name": "Implement HeavyWorker tool access",
+      "description": "Implement HeavyWorker class with full LLM integration and comprehensive tool access, Code enhanced sandboxing and monitoring for complex operations using ReflectiveModule, Create file access and external API security controls with existing security patterns",
+      "dependencies": ["2.1", "2.2", "2.3", "2.4"],
+      "phase": 3,
+      "resource_requirements": {
+        "cpu_cores": 2,
+        "memory_mb": 1024,
+        "disk_mb": 200,
+        "estimated_duration_minutes": 75
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "worker_agents"
+      },
+      "requirements_refs": ["6.3", "11.1", "11.2", "11.3"]
+    },
+    {
+      "id": "3.4",
+      "name": "Build order lifecycle management",
+      "description": "Code order creation, authorization, and expiration handling with Redis persistence, Implement order traceability using existing correlation ID infrastructure from ReflectiveModule, Create OrderManager class inheriting from ReflectiveModule for observability",
+      "dependencies": ["2.1", "2.2", "2.3", "2.4"],
+      "phase": 3,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 45
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "worker_agents"
+      },
+      "requirements_refs": ["1.3", "3.3", "7.1", "7.2"]
+    },
+    {
+      "id": "4.1",
+      "name": "Implement AgentLifecycleManager",
+      "description": "Implement AgentLifecycleManager inheriting from `src/rm_ddd/core/unified_reflective_module.py`, Code agent spawn, cleanup, and resource management functions with existing patterns, Integrate with existing Prometheus metrics from ReflectiveModule",
+      "dependencies": ["3.1", "3.2", "3.3", "3.4"],
+      "phase": 4,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 45
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "management_orchestration"
+      },
+      "requirements_refs": ["4.4", "5.1", "5.2"]
+    },
+    {
+      "id": "4.2",
+      "name": "Create AgentControlOrchestrator coordination hub",
+      "description": "Create AgentControlOrchestrator inheriting from `src/rm_ddd/core/unified_reflective_module.py`, Code order validation and authorization enforcement using OrderValidator, Implement delegation routing to appropriate worker types using AgentRegistry",
+      "dependencies": ["3.1", "3.2", "3.3", "3.4"],
+      "phase": 4,
+      "resource_requirements": {
+        "cpu_cores": 2,
+        "memory_mb": 1024,
+        "disk_mb": 200,
+        "estimated_duration_minutes": 60
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "management_orchestration"
+      },
+      "requirements_refs": ["1.1", "1.2", "4.1", "6.1"]
+    },
+    {
+      "id": "4.3",
+      "name": "Implement task delegation and routing system",
+      "description": "Implement intelligent task routing based on agent capabilities from AgentRegistry, Code load balancing and resource optimization algorithms using existing patterns, Create parallel execution coordination leveraging `src/dag_orchestration/execution/parallel_execution_engine.py`",
+      "dependencies": ["3.1", "3.2", "3.3", "3.4"],
+      "phase": 4,
+      "resource_requirements": {
+        "cpu_cores": 2,
+        "memory_mb": 1024,
+        "disk_mb": 200,
+        "estimated_duration_minutes": 60
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "management_orchestration"
+      },
+      "requirements_refs": ["4.2", "4.3", "6.2", "10.1"]
+    },
+    {
+      "id": "4.4",
+      "name": "Build coordination oversight and monitoring",
+      "description": "Implement observation-first leadership patterns with ReflectiveModule health monitoring, Code systematic coordination monitoring and reporting using existing Prometheus integration, Create coordination metrics and performance tracking leveraging existing ReflectiveModule capabilities",
+      "dependencies": ["3.1", "3.2", "3.3", "3.4"],
+      "phase": 4,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 45
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "medium",
+        "can_run_parallel": true,
+        "phase_group": "management_orchestration"
+      },
+      "requirements_refs": ["1.3", "8.1", "8.2"]
+    },
+    {
+      "id": "5.1",
+      "name": "Create failure detection and isolation system",
+      "description": "Implement FailureRecoveryManager inheriting from ReflectiveModule with existing graceful degradation patterns, Code failure detection algorithms and isolation mechanisms using existing health monitoring, Create independent task continuation during partial failures leveraging existing parallel execution patterns",
+      "dependencies": ["4.1", "4.2", "4.3", "4.4"],
+      "phase": 5,
+      "resource_requirements": {
+        "cpu_cores": 2,
+        "memory_mb": 1024,
+        "disk_mb": 200,
+        "estimated_duration_minutes": 60
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "resilience_security"
+      },
+      "requirements_refs": ["9.1", "9.2", "9.3"]
+    },
+    {
+      "id": "5.2",
+      "name": "Build graceful degradation mechanisms",
+      "description": "Implement automatic fallback to simpler agent types using existing graceful degradation from ReflectiveModule, Code sequential execution fallback when parallel coordination fails using existing patterns, Create partial functionality maintenance during system stress with existing health monitoring",
+      "dependencies": ["4.1", "4.2", "4.3", "4.4"],
+      "phase": 5,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 45
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "resilience_security"
+      },
+      "requirements_refs": ["9.4", "9.5", "10.3"]
+    },
+    {
+      "id": "5.3",
+      "name": "Create cryptographic order authority validation",
+      "description": "Implement cryptographic verification of order authority using existing security patterns, Code message authentication and integrity verification with Redis secure channels, Create secure communication channels between agents using existing Redis infrastructure",
+      "dependencies": ["4.1", "4.2", "4.3", "4.4"],
+      "phase": 5,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 45
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "resilience_security"
+      },
+      "requirements_refs": ["3.1", "3.2", "11.1"]
+    },
+    {
+      "id": "5.4",
+      "name": "Build comprehensive agent isolation",
+      "description": "Implement process and container isolation for all agent types using existing security patterns, Code network isolation and controlled communication channels with Redis pub/sub, Create file system access restrictions and resource quotas using existing resource management",
+      "dependencies": ["4.1", "4.2", "4.3", "4.4"],
+      "phase": 5,
+      "resource_requirements": {
+        "cpu_cores": 2,
+        "memory_mb": 1024,
+        "disk_mb": 200,
+        "estimated_duration_minutes": 60
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "resilience_security"
+      },
+      "requirements_refs": ["5.1", "5.2", "11.2", "11.3"]
+    },
+    {
+      "id": "6.1",
+      "name": "Create systematic recovery and retry logic",
+      "description": "Implement exponential backoff retry mechanisms using existing patterns from parallel execution engine, Code systematic recovery procedures for different failure types with ReflectiveModule error handling, Create recovery path optimization and success tracking using existing performance metrics",
+      "dependencies": ["5.1", "5.2", "5.3", "5.4"],
+      "phase": 6,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 45
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "performance_recovery"
+      },
+      "requirements_refs": ["9.1", "9.2", "9.5"]
+    },
+    {
+      "id": "6.2",
+      "name": "Implement mathematical optimization algorithms",
+      "description": "Code linear programming for agent resource allocation using existing mathematical patterns, Implement constraint satisfaction for configuration optimization leveraging DAG Registry, Create performance bounds enforcement and monitoring using existing ReflectiveModule metrics",
+      "dependencies": ["5.1", "5.2", "5.3", "5.4"],
+      "phase": 6,
+      "resource_requirements": {
+        "cpu_cores": 2,
+        "memory_mb": 1024,
+        "disk_mb": 200,
+        "estimated_duration_minutes": 60
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "medium",
+        "can_run_parallel": true,
+        "phase_group": "performance_recovery"
+      },
+      "requirements_refs": ["2.3", "10.1", "10.2"]
+    },
+    {
+      "id": "6.3",
+      "name": "Create horizontal scaling and load management",
+      "description": "Implement dynamic agent pool management and scaling using existing parallel execution patterns, Code intelligent load balancing across available agents leveraging existing resource management, Create resource optimization and capacity planning with existing performance tracking",
+      "dependencies": ["5.1", "5.2", "5.3", "5.4"],
+      "phase": 6,
+      "resource_requirements": {
+        "cpu_cores": 2,
+        "memory_mb": 1024,
+        "disk_mb": 200,
+        "estimated_duration_minutes": 60
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "medium",
+        "can_run_parallel": true,
+        "phase_group": "performance_recovery"
+      },
+      "requirements_refs": ["10.1", "10.2", "10.3"]
+    },
+    {
+      "id": "6.4",
+      "name": "Create performance monitoring and resource tracking",
+      "description": "Implement performance metrics using existing Prometheus integration from ReflectiveModule, Code resource usage tracking leveraging existing ReflectiveModule capabilities, Integrate with existing health monitoring and observability patterns",
+      "dependencies": ["5.1", "5.2", "5.3", "5.4"],
+      "phase": 6,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 30
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "medium",
+        "can_run_parallel": true,
+        "phase_group": "performance_recovery"
+      },
+      "requirements_refs": ["8.1", "8.2", "10.1"]
+    },
+    {
+      "id": "7.1",
+      "name": "Build caching and optimization systems",
+      "description": "Implement result caching for similar requests using Redis infrastructure, Code connection pooling and resource reuse leveraging existing Redis patterns, Create batch processing and lazy loading optimizations using existing parallel execution engine",
+      "dependencies": ["6.1", "6.2", "6.3", "6.4"],
+      "phase": 7,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 45
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "medium",
+        "can_run_parallel": true,
+        "phase_group": "optimization_audit"
+      },
+      "requirements_refs": ["10.2", "10.3"]
+    },
+    {
+      "id": "7.2",
+      "name": "Create audit trail and compliance monitoring",
+      "description": "Implement complete traceability using existing correlation ID infrastructure from ReflectiveModule, Code audit log generation and secure storage leveraging existing structured logging, Create compliance monitoring and violation detection using existing health monitoring patterns",
+      "dependencies": ["6.1", "6.2", "6.3", "6.4"],
+      "phase": 7,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 45
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "optimization_audit"
+      },
+      "requirements_refs": ["3.3", "7.1", "7.2"]
+    },
+    {
+      "id": "7.3",
+      "name": "Implement monitoring and observability",
+      "description": "Configure Prometheus metrics collection using existing ReflectiveModule infrastructure, Set up health endpoints and readiness checks via existing ReflectiveModule patterns, Create distributed tracing using existing correlation ID system from ReflectiveModule, Build operational dashboards and alerting leveraging existing monitoring infrastructure",
+      "dependencies": ["6.1", "6.2", "6.3", "6.4"],
+      "phase": 7,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 45
+      },
+      "execution_context": {
+        "task_type": "implementation",
+        "priority": "high",
+        "can_run_parallel": true,
+        "phase_group": "optimization_audit"
+      },
+      "requirements_refs": ["8.1", "8.2", "7.1", "7.2"]
+    },
+    {
+      "id": "8.1",
+      "name": "Integrate with existing Beast Mode infrastructure",
+      "description": "Connect to existing Redis infrastructure (192.168.1.119:6379) using existing connection patterns, Integrate with ReflectiveModule observability patterns from `src/rm_ddd/core/unified_reflective_module.py`, Leverage existing DAG orchestration system from `src/dag_orchestration/` for mathematical validation, Ensure compatibility with existing parallel execution engine and infrastructure validator",
+      "dependencies": ["7.1", "7.2", "7.3"],
+      "phase": 8,
+      "resource_requirements": {
+        "cpu_cores": 2,
+        "memory_mb": 1024,
+        "disk_mb": 200,
+        "estimated_duration_minutes": 60
+      },
+      "execution_context": {
+        "task_type": "integration",
+        "priority": "high",
+        "can_run_parallel": false,
+        "phase_group": "integration_finalization"
+      },
+      "requirements_refs": ["All requirements (system integration)"]
+    }
+  ],
+  "optional_tasks": [
+    {
+      "id": "9.1",
+      "name": "Build unit test coverage for all components",
+      "description": "Write unit tests for all order validation scenarios using existing testing patterns, Create mathematical constraint validation tests leveraging existing DAG Registry tests, Implement agent lifecycle operation tests using existing ReflectiveModule test patterns, Achieve >90% code coverage requirement following existing testing standards",
+      "dependencies": [],
+      "phase": 9,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 120
+      },
+      "execution_context": {
+        "task_type": "testing",
+        "priority": "low",
+        "can_run_parallel": true,
+        "phase_group": "testing_documentation",
+        "optional": true
+      },
+      "requirements_refs": ["All requirements (validation)"]
+    },
+    {
+      "id": "9.2",
+      "name": "Implement integration and system tests",
+      "description": "Create multi-agent coordination scenario tests using existing parallel execution test patterns, Write failure isolation and recovery validation tests leveraging existing graceful degradation tests, Implement security boundary and permission tests using existing security test patterns, Build end-to-end workflow validation using existing integration test frameworks",
+      "dependencies": [],
+      "phase": 9,
+      "resource_requirements": {
+        "cpu_cores": 2,
+        "memory_mb": 1024,
+        "disk_mb": 200,
+        "estimated_duration_minutes": 120
+      },
+      "execution_context": {
+        "task_type": "testing",
+        "priority": "low",
+        "can_run_parallel": true,
+        "phase_group": "testing_documentation",
+        "optional": true
+      },
+      "requirements_refs": ["All requirements (integration validation)"]
+    },
+    {
+      "id": "9.3",
+      "name": "Create performance and chaos engineering tests",
+      "description": "Implement stress testing under high load conditions using existing performance test patterns, Write chaos engineering tests with random failure injection leveraging existing failure testing, Create performance regression testing with automated benchmarks using existing metrics, Build mathematical property validation using property-based testing frameworks",
+      "dependencies": [],
+      "phase": 9,
+      "resource_requirements": {
+        "cpu_cores": 2,
+        "memory_mb": 1024,
+        "disk_mb": 200,
+        "estimated_duration_minutes": 90
+      },
+      "execution_context": {
+        "task_type": "testing",
+        "priority": "low",
+        "can_run_parallel": true,
+        "phase_group": "testing_documentation",
+        "optional": true
+      },
+      "requirements_refs": ["8.1", "8.2", "9.1-9.5", "10.1-10.3"]
+    },
+    {
+      "id": "9.4",
+      "name": "Create comprehensive documentation and examples",
+      "description": "Write API documentation for all agent interfaces using existing documentation patterns, Create usage examples and integration guides following existing documentation structure, Document security best practices and configuration using existing security documentation, Build troubleshooting guides and operational procedures leveraging existing operational docs",
+      "dependencies": [],
+      "phase": 9,
+      "resource_requirements": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 100,
+        "estimated_duration_minutes": 90
+      },
+      "execution_context": {
+        "task_type": "documentation",
+        "priority": "low",
+        "can_run_parallel": true,
+        "phase_group": "testing_documentation",
+        "optional": true
+      },
+      "requirements_refs": ["All requirements (documentation)"]
+    }
+  ],
+  "dag_validation": {
+    "is_valid_dag": true,
+    "has_cycles": false,
+    "cycle_errors": [],
+    "topological_order": [
+      "1.1", "1.2", "1.3", "1.4",
+      "2.1", "2.2", "2.3", "2.4",
+      "3.1", "3.2", "3.3", "3.4",
+      "4.1", "4.2", "4.3", "4.4",
+      "5.1", "5.2", "5.3", "5.4",
+      "6.1", "6.2", "6.3", "6.4",
+      "7.1", "7.2", "7.3",
+      "8.1"
+    ],
+    "critical_path": ["1.1", "2.1", "3.1", "4.1", "5.1", "6.1", "7.1", "8.1"],
+    "parallelization_summary": {
+      "total_phases": 8,
+      "max_parallel_tasks_per_phase": 4,
+      "total_implementation_tasks": 32,
+      "total_optional_tasks": 4,
+      "estimated_sequential_duration_hours": 48,
+      "estimated_parallel_duration_hours": 12,
+      "parallelization_efficiency": "75%"
+    }
+  }
+}

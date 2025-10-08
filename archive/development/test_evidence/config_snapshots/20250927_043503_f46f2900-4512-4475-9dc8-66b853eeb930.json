@@ -1,0 +1,31 @@
+{
+  "evidence_id": "f46f2900-4512-4475-9dc8-66b853eeb930",
+  "timestamp": "2025-09-27T04:35:03.443608",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.443599",
+    "data_type": "dict"
+  },
+  "integrity_hash": "d9538d5a8175b845d793f21caadc23e98dcc718c3504a822c0710ecdbacf75b6",
+  "data": {
+    "file_path": "./scripts/hackathon_command_center.py",
+    "file_size": 25541,
+    "line_count": 711,
+    "handlers_analyzed": 1,
+    "handler_analyses": [
+      {
+        "handler_name": "websocket_endpoint",
+        "has_accept_logic": true,
+        "has_receive_logic": true,
+        "has_send_logic": false,
+        "has_error_handling": true,
+        "imports_websocket": true,
+        "complexity_score": 3,
+        "line_count": 10
+      }
+    ],
+    "analysis_timestamp": "2025-09-27T04:35:03.443597"
+  }
+}

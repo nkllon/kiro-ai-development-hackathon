@@ -1,0 +1,30 @@
+{
+  "evidence_id": "a054e17d-cc2f-4377-a9b8-f3a604cb2f4b",
+  "timestamp": "2025-09-27T05:09:24.137503",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.137496",
+    "data_type": "dict"
+  },
+  "integrity_hash": "33e3a2589e8e6eecb6353ea89465b232410620d0d46b64f68b5bfb896ff9a08b",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/fastapi/exceptions.py",
+    "file_size": 4969,
+    "line_count": 177,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "starlette.exceptions.WebSocketException",
+        "starlette.exceptions",
+        "starlette.exceptions.HTTPException"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.137490"
+  }
+}

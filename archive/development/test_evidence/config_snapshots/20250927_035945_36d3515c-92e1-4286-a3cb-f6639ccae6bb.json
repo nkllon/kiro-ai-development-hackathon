@@ -1,0 +1,23 @@
+{
+  "evidence_id": "36d3515c-92e1-4286-a3cb-f6639ccae6bb",
+  "timestamp": "2025-09-27T03:59:45.375900",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handshake_configuration",
+  "metadata": {
+    "config_type": "websocket_handshake",
+    "snapshot_timestamp": "2025-09-27T03:59:45.375865",
+    "data_type": "dict"
+  },
+  "integrity_hash": "a206aa51bbd0c4f29d6beb6ef1ffc03122c9a5ec94ce63df9dd51337adc4b879",
+  "data": {
+    "endpoint_url": "wss://observatory.nkllon.com/ws/status",
+    "handshake_success": false,
+    "upgrade_header": null,
+    "connection_header": null,
+    "websocket_accept": null,
+    "websocket_protocol": null,
+    "response_time": 0.370621919631958,
+    "error_message": "WebSocket handshake failed: server rejected WebSocket connection: HTTP 403",
+    "timestamp": "2025-09-27T03:59:45.375844"
+  }
+}

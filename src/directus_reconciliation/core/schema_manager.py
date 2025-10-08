@@ -100,7 +100,7 @@ class SchemaManager(ReflectiveModule):
             'port': int(os.getenv('DB_PORT', '5432')),
             'database': os.getenv('DB_DATABASE', 'directus'),
             'user': os.getenv('DB_USER', 'directus'),
-            'password': os.getenv('DB_PASSWORD', 'directus')
+            'password': os.getenv("DB_PASSWORD", "")
         }
     
     def _get_table_definitions(self) -> Dict[str, str]:

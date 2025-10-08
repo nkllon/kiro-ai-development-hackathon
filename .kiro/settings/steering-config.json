@@ -1,0 +1,54 @@
+{
+  "steering_modes": {
+    "production": {
+      "description": "For developers using the Beast Mode framework",
+      "steering_directories": [
+        ".kiro/steering"
+      ],
+      "target_audience": "framework_users",
+      "purpose": "Guide AI assistants to use Beast Mode patterns correctly",
+      "active_files": [
+        "security-credentials-governance.md",
+        "beast-mode-framework-patterns.md", 
+        "mathematical-governance-principle.md",
+        "quality-first-development.md",
+        "ai-memory-palace-usage.md"
+      ]
+    },
+    "development": {
+      "description": "For developers working on the Beast Mode framework itself",
+      "steering_directories": [
+        ".kiro/steering",
+        ".kiro/steering-dev"
+      ],
+      "target_audience": "framework_developers",
+      "purpose": "Guide development of the Beast Mode framework",
+      "active_files": [
+        "security-credentials-governance.md",
+        "beast-mode-framework-patterns.md",
+        "mathematical-governance-principle.md", 
+        "quality-first-development.md",
+        "ai-memory-palace-usage.md",
+        "systematic-development-governance.md",
+        "hounds-protocol-implementation.md",
+        "infrastructure-first-implementation.md"
+      ]
+    }
+  },
+  "current_mode": "production",
+  "mode_detection": {
+    "environment_variable": "BEAST_MODE_ENV",
+    "default_mode": "production",
+    "auto_detect_dev_indicators": [
+      "src/beast_mode/",
+      "src/rm_ddd/",
+      "src/dag_orchestration/",
+      ".kiro/steering-dev/"
+    ]
+  },
+  "deployment": {
+    "production_script": "scripts/deploy-production-mode.sh",
+    "development_script": "scripts/deploy-development-mode.sh",
+    "validation_required": true
+  }
+}

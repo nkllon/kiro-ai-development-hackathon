@@ -1,0 +1,61 @@
+{
+  "evidence_id": "69653ed5-dca1-4358-ad79-78ebece11d70",
+  "timestamp": "2025-09-27T04:35:03.663292",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.663267",
+    "data_type": "dict"
+  },
+  "integrity_hash": "18fc86010c8b711860e963378f03d0675939680d28318e563e4071d764d041f3",
+  "data": {
+    "file_path": "src/beast_mode/observatory/server.py",
+    "file_size": 45160,
+    "line_count": 992,
+    "handlers_analyzed": 4,
+    "handler_analyses": [
+      {
+        "handler_name": "emoji_rain_websocket",
+        "has_accept_logic": true,
+        "has_receive_logic": true,
+        "has_send_logic": true,
+        "has_error_handling": true,
+        "imports_websocket": true,
+        "complexity_score": 3,
+        "line_count": 36
+      },
+      {
+        "handler_name": "observatory_websocket",
+        "has_accept_logic": true,
+        "has_receive_logic": false,
+        "has_send_logic": true,
+        "has_error_handling": true,
+        "imports_websocket": true,
+        "complexity_score": 3,
+        "line_count": 36
+      },
+      {
+        "handler_name": "anomalies_websocket",
+        "has_accept_logic": true,
+        "has_receive_logic": false,
+        "has_send_logic": true,
+        "has_error_handling": true,
+        "imports_websocket": true,
+        "complexity_score": 3,
+        "line_count": 28
+      },
+      {
+        "handler_name": "doctor_status_websocket",
+        "has_accept_logic": true,
+        "has_receive_logic": true,
+        "has_send_logic": true,
+        "has_error_handling": true,
+        "imports_websocket": true,
+        "complexity_score": 6,
+        "line_count": 43
+      }
+    ],
+    "analysis_timestamp": "2025-09-27T04:35:03.663262"
+  }
+}

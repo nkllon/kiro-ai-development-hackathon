@@ -1,0 +1,38 @@
+{
+  "timestamp": "2025-10-02T08:17:26.980702",
+  "total_executions_checked": 1,
+  "verified_executions": 1,
+  "unverified_executions": 0,
+  "execution_results": [
+    {
+      "execution_id": "live-dashboard-engagement-system_20251002_075945_c3fd43",
+      "redis_records_found": false,
+      "tracking_keys": [
+        "execution:live-dashboard-engagement-system_20251002_075945_c3fd43",
+        "execution:live-dashboard-engagement-system_20251002_075945_c3fd43",
+        "execution:live-dashboard-engagement-system_20251001_193855_04b901",
+        "execution:live-dashboard-engagement-system_20251001_194423_0b3f4b",
+        "execution:live-dashboard-engagement-system_20251002_063231_5f465c",
+        "execution:live-dashboard-engagement-system_20251002_073723_fe9595",
+        "execution:live-dashboard-engagement-system_20251002_062240_c094fa",
+        "execution:live-dashboard-engagement-system_20251001_193757_0e535d",
+        "execution:live-dashboard-engagement-system_20251002_061242_2329f7",
+        "execution:live-dashboard-engagement-system_20251001_193904_8654c7",
+        "execution:live-dashboard-engagement-system_20251002_062148_a6cfdd",
+        "execution:live-dashboard-engagement-system_20251001_194435_fdd89d",
+        "execution:live-dashboard-engagement-system_20251002_061853_b5fd09"
+      ],
+      "validation_status": "VERIFIED",
+      "issues": [
+        "Missing exact execution record: live-dashboard-engagement-system_20251002_075945_c3fd43"
+      ]
+    }
+  ],
+  "redis_health": {
+    "connection_status": "connected",
+    "total_keys": 135,
+    "memory_usage": "1012.41K",
+    "redis_version": "6.0.16"
+  },
+  "recommendations": []
+}

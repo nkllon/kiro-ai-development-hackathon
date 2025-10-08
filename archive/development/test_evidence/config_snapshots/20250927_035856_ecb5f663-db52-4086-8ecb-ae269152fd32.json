@@ -1,0 +1,23 @@
+{
+  "evidence_id": "ecb5f663-db52-4086-8ecb-ae269152fd32",
+  "timestamp": "2025-09-27T03:58:56.256124",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handshake_configuration",
+  "metadata": {
+    "config_type": "websocket_handshake",
+    "snapshot_timestamp": "2025-09-27T03:58:56.256086",
+    "data_type": "dict"
+  },
+  "integrity_hash": "035d32f64d3826c63be1266956bc1abae06a47a96fdbfc7c92e0b9f51a623471",
+  "data": {
+    "endpoint_url": "wss://observatory.nkllon.com/ws/health",
+    "handshake_success": false,
+    "upgrade_header": null,
+    "connection_header": null,
+    "websocket_accept": null,
+    "websocket_protocol": null,
+    "response_time": 0.0015943050384521484,
+    "error_message": "WebSocket connection failed: create_connection() got an unexpected keyword argument 'extra_headers'",
+    "timestamp": "2025-09-27T03:58:56.256021"
+  }
+}

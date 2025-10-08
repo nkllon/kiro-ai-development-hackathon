@@ -1,0 +1,70 @@
+{
+  "timestamp": "2025-09-29 16:24:14",
+  "total_tests": 11,
+  "passed_tests": 4,
+  "failed_tests": 7,
+  "success_rate": 0.36363636363636365,
+  "overall_status": "FAIL",
+  "test_results": [
+    {
+      "test": "Local Prometheus",
+      "passed": true,
+      "details": "Found 5 metrics"
+    },
+    {
+      "test": "Local Grafana",
+      "passed": true,
+      "details": "Health check passed"
+    },
+    {
+      "test": "Metrics Collection Process",
+      "passed": true,
+      "details": "Process is running"
+    },
+    {
+      "test": "Cloudflare Tunnel Process",
+      "passed": true,
+      "details": "Tunnel is running"
+    },
+    {
+      "test": "DAG Orchestration Metrics",
+      "passed": false,
+      "details": "No Beast Mode metrics found"
+    },
+    {
+      "test": "Public Prometheus Connectivity",
+      "passed": false,
+      "details": "HTTP 530"
+    },
+    {
+      "test": "Public Grafana",
+      "passed": false,
+      "details": "HTTP 530"
+    },
+    {
+      "test": "Public Prometheus Connectivity",
+      "passed": false,
+      "details": "HTTP 530"
+    },
+    {
+      "test": "Public Grafana",
+      "passed": false,
+      "details": "HTTP 530"
+    },
+    {
+      "test": "Public Prometheus Connectivity",
+      "passed": false,
+      "details": "HTTP 530"
+    },
+    {
+      "test": "Public Grafana",
+      "passed": false,
+      "details": "HTTP 530"
+    }
+  ],
+  "recommendations": [
+    "Wait 2-3 minutes for Cloudflare tunnel to fully propagate",
+    "Check tunnel configuration and credentials",
+    "Run DAG orchestration tests to generate metrics"
+  ]
+}

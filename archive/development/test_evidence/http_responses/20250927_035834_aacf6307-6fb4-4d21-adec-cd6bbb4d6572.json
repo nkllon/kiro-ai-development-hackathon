@@ -1,0 +1,34 @@
+{
+  "evidence_id": "aacf6307-6fb4-4d21-adec-cd6bbb4d6572",
+  "timestamp": "2025-09-27T03:58:34.167327",
+  "evidence_type": "http_response",
+  "source_test": "production_websocket_endpoints",
+  "metadata": {
+    "url": "https://observatory.nkllon.com/ws/emoji-rain",
+    "method": "GET",
+    "status_code": 101,
+    "response_size": 0,
+    "response_time": 0.34168219566345215
+  },
+  "integrity_hash": "bf9aa3b30fab79ec5cb3b061965ea2955cf0afc945325752c353343d8bf4cfcc",
+  "data": {
+    "url": "https://observatory.nkllon.com/ws/emoji-rain",
+    "method": "GET",
+    "status_code": 101,
+    "headers": {
+      "Date": "Sat, 27 Sep 2025 03:58:34 GMT",
+      "Connection": "upgrade",
+      "Sec-WebSocket-Accept": "s3pPLMBiTxaQ9kYGzzhZRbK+xOo=",
+      "Upgrade": "websocket",
+      "cf-cache-status": "DYNAMIC",
+      "Report-To": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v4?s=6Zik7JIQQpFfpvtE3p1FCkSwT0J1swONTj0xDdq1od7OPHkHDr0aYb5OflpWfYT2Y%2FbEEF5n3vbdl5vwH058VZs5sEuxw049nyOclLa7pUZLBKuLcRMnttINiYwq0o%2FLz3%2FVDEEdP5qECWJcqVIUSx4%2FGIM%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+      "NEL": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}",
+      "Server": "cloudflare",
+      "CF-RAY": "985815569ce51f3d-DEN",
+      "server-timing": "cfL4;desc=\"?proto=TCP&rtt=26639&min_rtt=14603&rtt_var=7166&sent=6&recv=9&lost=0&retrans=0&sent_bytes=2968&recv_bytes=601&delivery_rate=141349&cwnd=253&unsent_bytes=0&cid=3e012931d736d51f&ts=291&x=0\""
+    },
+    "body": "",
+    "response_time": 0.34168219566345215,
+    "timestamp": "2025-09-27T03:58:34.167295"
+  }
+}

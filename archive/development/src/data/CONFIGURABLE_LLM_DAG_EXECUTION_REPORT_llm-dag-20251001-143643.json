@@ -1,0 +1,11 @@
+{
+  "execution_id": "llm-dag-20251001-143643",
+  "llm_provider": "claude",
+  "execution_mode": "parallel",
+  "total_tasks": 4,
+  "completed_tasks": 0,
+  "failed_tasks": 0,
+  "tasks": {},
+  "log_directory": "logs/llm-dag/llm-dag-20251001-143643",
+  "timestamp": "2025-10-01T14:36:43.243790"
+}

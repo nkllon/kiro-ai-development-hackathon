@@ -54,7 +54,7 @@ class ConnectionConfig:
     port: int = 5432
     database: str = "directus"
     username: str = "directus"
-    password: str = "directus"
+    password: str = field(default_factory=lambda: os.getenv("DIRECTUS_DB_PASSWORD", ""))
     connection_url: str = None
     pool_size: int = 5
     max_overflow: int = 10
@@ -512,7 +512,7 @@ def create_connection_manager(
     if not database_url:
         database_url = os.getenv(
             "DATABASE_URL",
-            "postgresql://directus:directus@localhost:5432/directus"
+            "        os.getenv('DIRECTUS_DATABASE_URL', 'postgresql://directus:directus@localhost:5432/directus')"
         )
     
     # Create configuration

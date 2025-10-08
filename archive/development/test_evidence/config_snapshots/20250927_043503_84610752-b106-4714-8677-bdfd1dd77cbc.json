@@ -1,0 +1,20 @@
+{
+  "evidence_id": "84610752-b106-4714-8677-bdfd1dd77cbc",
+  "timestamp": "2025-09-27T04:35:03.566957",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.566945",
+    "data_type": "dict"
+  },
+  "integrity_hash": "283f796aa5a353860457e33ef673ede5fdac3c8f62e5c81e5a15502f97ff7303",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_hooks/lakera_ai.py",
+    "file_size": 13295,
+    "line_count": 369,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.566941"
+  }
+}

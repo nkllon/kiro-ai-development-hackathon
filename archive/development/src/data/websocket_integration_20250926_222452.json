@@ -1,0 +1,51 @@
+{
+  "timestamp": "2025-09-26T22:24:52.311115",
+  "domain": "observatory.nkllon.com",
+  "test_duration": 38.067994117736816,
+  "endpoint_results": [
+    {
+      "endpoint": "/ws/emoji-rain",
+      "connection_successful": true,
+      "messages_sent": 3,
+      "messages_received": 3,
+      "integration_score": 1.0,
+      "errors": []
+    },
+    {
+      "endpoint": "/ws/observatory",
+      "connection_successful": true,
+      "messages_sent": 3,
+      "messages_received": 2,
+      "integration_score": 0.6666666666666666,
+      "errors": [
+        "Response timeout"
+      ]
+    },
+    {
+      "endpoint": "/ws/anomalies",
+      "connection_successful": true,
+      "messages_sent": 3,
+      "messages_received": 0,
+      "integration_score": 0.0,
+      "errors": [
+        "Response timeout",
+        "Response timeout",
+        "Response timeout"
+      ]
+    },
+    {
+      "endpoint": "/ws/doctor-status",
+      "connection_successful": true,
+      "messages_sent": 3,
+      "messages_received": 2,
+      "integration_score": 0.6666666666666666,
+      "errors": [
+        "Response timeout"
+      ]
+    }
+  ],
+  "successful_endpoints": 4,
+  "total_endpoints": 4,
+  "average_integration_score": 0.5833333333333333,
+  "overall_status": "passed"
+}

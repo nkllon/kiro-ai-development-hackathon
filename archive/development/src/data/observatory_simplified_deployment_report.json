@@ -1,0 +1,63 @@
+{
+  "timestamp": "2025-10-04T15:04:47.948980",
+  "deployment_type": "simplified_minimal",
+  "observatory_port": 8888,
+  "process_pid": 70763,
+  "deployment_log": [
+    {
+      "timestamp": "2025-10-04T15:04:42.929342",
+      "action": "Port Check",
+      "status": "success",
+      "details": "Port 8888 is available"
+    },
+    {
+      "timestamp": "2025-10-04T15:04:42.929382",
+      "action": "Script Check",
+      "status": "success",
+      "details": "start_observatory_minimal.py found"
+    },
+    {
+      "timestamp": "2025-10-04T15:04:42.930831",
+      "action": "Process Start",
+      "status": "success",
+      "details": "Minimal Observatory started with PID 70763"
+    },
+    {
+      "timestamp": "2025-10-04T15:04:47.932307",
+      "action": "Process Health",
+      "status": "success",
+      "details": "Minimal Observatory process is running"
+    },
+    {
+      "timestamp": "2025-10-04T15:04:47.944381",
+      "action": "Startup Wait",
+      "status": "success",
+      "details": "Observatory is healthy: {'status': 'ok', 'mode': 'emergency', 'message': 'Observatory running in minimal mode'}"
+    },
+    {
+      "timestamp": "2025-10-04T15:04:47.945875",
+      "action": "Endpoint Validation",
+      "status": "success",
+      "details": "Health endpoint is working"
+    },
+    {
+      "timestamp": "2025-10-04T15:04:47.947373",
+      "action": "Endpoint Validation",
+      "status": "success",
+      "details": "Status endpoint is working"
+    },
+    {
+      "timestamp": "2025-10-04T15:04:47.948627",
+      "action": "Endpoint Validation",
+      "status": "success",
+      "details": "Root endpoint is working"
+    },
+    {
+      "timestamp": "2025-10-04T15:04:47.948972",
+      "action": "Upgrade Script",
+      "status": "success",
+      "details": "Created upgrade script: scripts/upgrade_observatory.py"
+    }
+  ],
+  "notes": "Deployed in minimal mode to avoid dependency loops"
+}

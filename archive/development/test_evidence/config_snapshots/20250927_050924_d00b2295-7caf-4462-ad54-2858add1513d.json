@@ -1,0 +1,43 @@
+{
+  "evidence_id": "d00b2295-7caf-4462-ad54-2858add1513d",
+  "timestamp": "2025-09-27T05:09:24.684602",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.684587",
+    "data_type": "dict"
+  },
+  "integrity_hash": "ff5fce45838edabe3f89259333a2e6217c36954687aadb9995781b89a02cf1c3",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/_experimental/mcp_server/rest_endpoints.py",
+    "file_size": 12852,
+    "line_count": 336,
+    "route_analysis": {
+      "total_routes": 4,
+      "websocket_routes": [],
+      "http_routes": [
+        "/tools/list",
+        "/tools/call",
+        "/test/connection",
+        "/test/tools/list"
+      ],
+      "route_handlers": {
+        "/tools/list": "list_tool_rest_api",
+        "/tools/call": "call_tool_rest_api",
+        "/test/connection": "test_connection",
+        "/test/tools/list": "test_tools_list"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.Request",
+        "fastapi.HTTPException",
+        "fastapi.Query",
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.684572"
+  }
+}

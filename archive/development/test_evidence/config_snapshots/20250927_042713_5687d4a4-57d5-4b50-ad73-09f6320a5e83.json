@@ -1,0 +1,46 @@
+{
+  "evidence_id": "5687d4a4-57d5-4b50-ad73-09f6320a5e83",
+  "timestamp": "2025-09-27T04:27:13.131009",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.131001",
+    "data_type": "dict"
+  },
+  "integrity_hash": "eaa8c1211919bca5d88fbb8354ae5dd498c2fddc85b0b0d296fabdf6a0a1f0e0",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/google_endpoints/endpoints.py",
+    "file_size": 7596,
+    "line_count": 222,
+    "route_analysis": {
+      "total_routes": 6,
+      "websocket_routes": [],
+      "http_routes": [
+        "/v1beta/models/{model_name}:generateContent",
+        "/models/{model_name}:generateContent",
+        "/v1beta/models/{model_name}:streamGenerateContent",
+        "/models/{model_name}:streamGenerateContent",
+        "/v1beta/models/{model_name}:countTokens",
+        "/models/{model_name}:countTokens"
+      ],
+      "route_handlers": {
+        "/v1beta/models/{model_name}:generateContent": "google_generate_content",
+        "/models/{model_name}:generateContent": "google_generate_content",
+        "/v1beta/models/{model_name}:streamGenerateContent": "google_stream_generate_content",
+        "/models/{model_name}:streamGenerateContent": "google_stream_generate_content",
+        "/v1beta/models/{model_name}:countTokens": "google_count_tokens",
+        "/models/{model_name}:countTokens": "google_count_tokens"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.Depends",
+        "fastapi.Response",
+        "fastapi.APIRouter",
+        "fastapi.Request",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.130994"
+  }
+}

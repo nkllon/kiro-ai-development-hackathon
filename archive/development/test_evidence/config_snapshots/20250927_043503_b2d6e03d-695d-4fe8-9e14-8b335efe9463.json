@@ -1,0 +1,31 @@
+{
+  "evidence_id": "b2d6e03d-695d-4fe8-9e14-8b335efe9463",
+  "timestamp": "2025-09-27T04:35:03.388292",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.388269",
+    "data_type": "dict"
+  },
+  "integrity_hash": "338908201ee3086be792b1464cc06e51f2e65536279f5a438aff851b07658999",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/interpreter/core/archived_server_1.py",
+    "file_size": 6525,
+    "line_count": 163,
+    "handlers_analyzed": 1,
+    "handler_analyses": [
+      {
+        "handler_name": "i_test",
+        "has_accept_logic": true,
+        "has_receive_logic": true,
+        "has_send_logic": true,
+        "has_error_handling": true,
+        "imports_websocket": true,
+        "complexity_score": 9,
+        "line_count": 42
+      }
+    ],
+    "analysis_timestamp": "2025-09-27T04:35:03.388263"
+  }
+}

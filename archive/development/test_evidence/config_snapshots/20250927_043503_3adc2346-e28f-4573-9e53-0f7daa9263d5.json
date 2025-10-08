@@ -1,0 +1,20 @@
+{
+  "evidence_id": "3adc2346-e28f-4573-9e53-0f7daa9263d5",
+  "timestamp": "2025-09-27T04:35:03.591751",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.591744",
+    "data_type": "dict"
+  },
+  "integrity_hash": "677263b41f3708dab6845a33f4e81e755e0bb9135558f1850187711d7727fdcd",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/integrations/custom_sso_handler.py",
+    "file_size": 921,
+    "line_count": 29,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.591743"
+  }
+}

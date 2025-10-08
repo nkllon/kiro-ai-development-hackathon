@@ -26,8 +26,28 @@ Demonstrate systematic development excellence through:
 ├── scripts/                  # Utility scripts and demos
 ├── .simone/                  # Simone configuration and prompts
 ├── .kiro/                    # Kiro-specific documentation
+│   ├── steering/             # Production steering (framework usage patterns)
+│   ├── steering-dev/         # Development steering (framework development)
+│   └── settings/             # Configuration including steering-config.json
 └── Makefile                  # Build orchestration
 ```
+
+## Steering System
+Beast Mode uses a **dual-mode steering system** for systematic AI guidance:
+
+### Production Steering (`.kiro/steering/`)
+**For developers USING Beast Mode framework:**
+- Security governance (zero hardcoded credentials)
+- Framework patterns (ReflectiveModule usage)
+- Mathematical governance (DAG orchestration)
+- Quality-first development (>90% test coverage)
+- AI Memory Palace usage (persistent context)
+
+### Development Steering (`.kiro/steering-dev/`)
+**For developers BUILDING Beast Mode framework:**
+- Internal development methodology
+- Architecture patterns and decisions
+- Systematic development governance
 
 ## Essential Commands
 - **Run Beast Mode**: `make beast-mode`
@@ -37,6 +57,9 @@ Demonstrate systematic development excellence through:
 - **Build Simone**: `cd kiro_simone_adapter/mcp-server && npm run build`
 
 ## Critical Development Rules
+
+### 🎯 Steering System Compliance
+**ALWAYS follow Beast Mode steering files in `.kiro/steering/` for systematic development patterns**
 
 ### 🚫 ANTI-NO-VERIFY RULE
 **NEVER use `--no-verify` or bypass quality gates. EVER.**
@@ -51,7 +74,19 @@ Demonstrate systematic development excellence through:
 **UV ONLY - No pip, poetry, or pipenv**
 
 ### 🏗️ Architecture Compliance
-**ALL components must implement ReflectiveModule pattern**
+**ALL components must implement ReflectiveModule pattern (see `.kiro/steering/beast-mode-framework-patterns.md`)**
+
+### 🔒 Security Compliance
+**NEVER hardcode credentials - follow `.kiro/steering/security-credentials-governance.md`**
+
+### 📊 Mathematical Governance
+**Use DAG orchestration and mathematical validation (see `.kiro/steering/mathematical-governance-principle.md`)**
+
+### 🧪 Quality First
+**Maintain >90% test coverage and systematic validation (see `.kiro/steering/quality-first-development.md`)**
+
+### 🧠 AI Memory Palace
+**Use persistent AI context management (see `.kiro/steering/ai-memory-palace-usage.md`)**
 
 ### 🚀 Velocity Advantage
 **Demonstrate 10x faster development through systematic approach**
@@ -93,20 +128,39 @@ The project includes Claude Simone MCP server integration for AI-assisted projec
 
 ## Development Workflow
 
-### 1. Requirements First
+### 1. Steering Compliance First
+Review applicable steering files in `.kiro/steering/` for systematic patterns
+
+### 2. Requirements Second
 Always start with requirements analysis and documentation
 
-### 2. Design Second
+### 3. Design Third
 Create comprehensive design before implementation
 
-### 3. Code Third
+### 4. Code Fourth
 Implement with logging and profiling before functional code
 
-### 4. Quality Gates
-All code must pass quality gates before commit
+### 5. Quality Gates
+All code must pass quality gates before commit (follow quality-first-development.md)
 
-### 5. Git Sync
+### 6. Git Sync
 Run `git sync` at end of each PDCA loop
+
+## Deployment Modes
+
+### Production Mode (Framework Users)
+```bash
+./scripts/deploy-production-mode.sh
+```
+- Use when building applications WITH Beast Mode
+- Steering files guide framework usage patterns
+
+### Development Mode (Framework Developers)  
+```bash
+./scripts/deploy-development-mode.sh
+```
+- Use when building the Beast Mode framework itself
+- Additional development steering files active
 
 ## Competitive Advantages
 

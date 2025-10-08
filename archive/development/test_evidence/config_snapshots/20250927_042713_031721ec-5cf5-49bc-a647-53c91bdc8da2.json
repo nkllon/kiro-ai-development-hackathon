@@ -1,0 +1,30 @@
+{
+  "evidence_id": "031721ec-5cf5-49bc-a647-53c91bdc8da2",
+  "timestamp": "2025-09-27T04:27:13.102483",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.102469",
+    "data_type": "dict"
+  },
+  "integrity_hash": "7e2938f6a27f804ddb056d887b7147ec78e8287f3123cf242f7fab0e23c053db",
+  "data": {
+    "file_path": "./tests/unit/beast_mode/observatory/test_web_interface.py",
+    "file_size": 25524,
+    "line_count": 669,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.testclient",
+        "asyncio",
+        "fastapi.testclient.TestClient"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.102451"
+  }
+}

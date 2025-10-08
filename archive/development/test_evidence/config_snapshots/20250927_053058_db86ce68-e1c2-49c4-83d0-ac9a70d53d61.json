@@ -1,0 +1,20 @@
+{
+  "evidence_id": "db86ce68-e1c2-49c4-83d0-ac9a70d53d61",
+  "timestamp": "2025-09-27T05:30:58.960910",
+  "evidence_type": "config_snapshot",
+  "source_test": "cloudflare_zone_info_configuration",
+  "metadata": {
+    "config_type": "cloudflare_zone_info",
+    "snapshot_timestamp": "2025-09-27T05:30:58.960881",
+    "data_type": "dict"
+  },
+  "integrity_hash": "684281591bbe90fb02d96d6c6a8a8401e23d35f88b1bfca2675c84a00b41870a",
+  "data": {
+    "domain": "google.com",
+    "zone_info": {
+      "status_code": 403,
+      "response_time": 0.207604
+    },
+    "test_timestamp": "2025-09-27T05:30:58.960862"
+  }
+}
