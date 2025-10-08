@@ -14,6 +14,6 @@ When creating a pull request:
 
 1. Target the `rc1-patch` branch unless explicitly coordinating a different destination.
 2. Include a short summary of the change and any validation steps performed.
-3. Use the existing pull-request template in `PULL_REQUEST_TEMPLATE.md` to highlight testing and impact.
+3. Use the existing pull request template in `PULL_REQUEST_TEMPLATE.md` to highlight testing and impact.
 
 Keeping these conventions ensures that the release candidate remains stable while we continue preparing the repository for publication.
