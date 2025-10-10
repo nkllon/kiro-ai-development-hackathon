@@ -109,6 +109,22 @@ jobs:
         REDIS_PASSWORD: ""
         ENVIRONMENT: test
     
+    - name: 🛡️ Validate safety
+      run: make validate-safety
+
+    - name: 🎯 Validate targets
+      run: make validate-targets
+
+    - name: 📦 Upload validator logs
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: make-validators-logs
+        path: |
+          logs/validate-safety-run.log
+          logs/validate-targets-run.log
+        if-no-files-found: ignore
+
     - name: Run integration tests
       run: python -m pytest tests/integration/ --run
       env:

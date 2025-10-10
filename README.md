@@ -24,8 +24,10 @@ Transform your AI development workflow in under 2 minutes:
 git clone https://github.com/your-org/beast-mode-ai-framework.git
 cd beast-mode-ai-framework
 
-# 2. One-command setup
+# 2. One-command setup (adds venv, Redis config, optional Docker stack)
 make install
+# To bootstrap the Observatory Docker stack automatically:
+# make INSTALL_ARGS="--bootstrap-stack" install
 
 # 3. Run your first Beast Mode agent
 python examples/quick_start_demo.py
@@ -324,6 +326,7 @@ pytest tests/performance/   # Performance tests
 - **[Architecture Guide](docs/architecture/)** - System design and patterns
 - **[User Guide](docs/guides/)** - Step-by-step tutorials
 - **[Project Structure](docs/PROJECT_STRUCTURE.md)** - Codebase organization
+- **[Makefile Toolkit](docs/developer-guide/makefile_toolkit.md)** - Modular test, safety, and performance tools
 
 ### Specialized Guides
 
@@ -342,7 +345,7 @@ We welcome contributions! Beast Mode is designed to be **systematic and collabor
 
 1. **Fork** the repository
 2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
-3. **Follow** our coding standards (see [CONTRIBUTING.md](docs/CONTRIBUTING.md))
+3. **Review** the [Repository Guidelines](AGENTS.md) for agent workflows
 4. **Add tests** for new functionality
 5. **Submit** a pull request
 
@@ -353,7 +356,7 @@ We welcome contributions! Beast Mode is designed to be **systematic and collabor
 - **Documentation**: All public APIs must be documented
 - **ReflectiveModule**: All new components inherit from ReflectiveModule
 
-See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed guidelines.
+See [CONTRIBUTING.md](docs/CONTRIBUTING.md) and [AGENTS.md](AGENTS.md) for detailed guidelines.
 
 ---
 

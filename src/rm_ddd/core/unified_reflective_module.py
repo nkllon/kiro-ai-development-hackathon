@@ -309,16 +309,27 @@ class ReflectiveModule(ABC):
             
             self._logger.info(f"Redis connection resolved: {redis_host}:{redis_port}")
             
-            # Connect to Redis
-            self._redis_client = redis.Redis(
-                host=redis_host,
-                port=redis_port,
-                password=redis_password,
-                decode_responses=True
-            )
-            
-            # Test connection
-            self._redis_client.ping()
+            import redis.exceptions
+
+            # Connect to Redis (retry without password if AUTH not required)
+            redis_kwargs = {
+                "host": redis_host,
+                "port": redis_port,
+                "password": redis_password or None,
+                "decode_responses": True,
+            }
+            self._redis_client = redis.Redis(**redis_kwargs)
+
+            try:
+                self._redis_client.ping()
+            except redis.exceptions.AuthenticationError as auth_error:
+                if redis_password:
+                    self._logger.info("Redis rejected provided password (AUTH not required); retrying without authentication")
+                    redis_kwargs["password"] = None
+                    self._redis_client = redis.Redis(**redis_kwargs)
+                    self._redis_client.ping()
+                else:
+                    raise
             
             # Register this module
             self._register_in_redis()

@@ -182,11 +182,15 @@ class PerformanceMonitoringSystem:
         """Initialize Prometheus integration."""
         try:
             from beast_mode.monitoring.prometheus_exporter import PrometheusExporter
-            import os
+            from src.rm_ddd.core.service_config import get_service_config
+
+            service_config = get_service_config()
+            prometheus_config = service_config.get_prometheus_config()
 
             self._prometheus_exporter = PrometheusExporter(
-                port=int(os.getenv("BEAST_MODE_PROMETHEUS_PORT", "8000")),
-                enable_http_server=True,
+                port=prometheus_config.port,
+                prometheus_url=prometheus_config.url,
+                enable_http_server=False,
             )
             self.logger.info(
                 "Prometheus integration enabled for PerformanceMonitoringSystem"

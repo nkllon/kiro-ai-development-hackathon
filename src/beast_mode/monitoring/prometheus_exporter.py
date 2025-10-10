@@ -133,6 +133,8 @@ class PrometheusExporter:
         port: int = 8000,
         monitoring_interval: float = 5.0,
         enable_http_server: bool = True,
+        prometheus_url: Optional[str] = None,
+        **kwargs,
     ):
         """Initialize Prometheus exporter (singleton)."""
         # Thread-safe initialization check
@@ -144,6 +146,12 @@ class PrometheusExporter:
             self.port = port
             self.monitoring_interval = monitoring_interval
             self.enable_http_server = enable_http_server
+            # When a remote Prometheus endpoint is provided, we operate in remote scrape mode
+            # and do not attempt to start a local daemon/http server.
+            self.prometheus_url = prometheus_url
+            if self.prometheus_url:
+                self.enable_http_server = False
+            self._ignored_kwargs: Dict[str, Any] = dict(kwargs)
 
             self.logger = self._setup_logging()
             
@@ -156,7 +164,7 @@ class PrometheusExporter:
             # Check if daemon mode is explicitly disabled
             disable_daemon = os.environ.get('BEAST_MODE_DISABLE_DAEMON', '0') == '1'
 
-            if disable_daemon:
+            if disable_daemon or self.prometheus_url:
                 self.logger.info("Daemon mode explicitly disabled via BEAST_MODE_DISABLE_DAEMON")
                 self._use_daemon = False
             else:
@@ -634,12 +642,15 @@ class PrometheusExporter:
 
     def stop_metrics_export(self):
         """Stop metrics export thread."""
-        self.export_active = False
-        if hasattr(self, "export_thread") and self.export_thread and self.export_thread.is_alive():
-            self.export_thread.join(timeout=5)
-            if self.export_thread.is_alive():
+        if hasattr(self, "export_active"):
+            self.export_active = False
+        thread = getattr(self, "export_thread", None)
+        if thread and thread.is_alive():
+            thread.join(timeout=5)
+            if thread.is_alive() and hasattr(self, "logger"):
                 self.logger.warning("Export thread did not stop gracefully")
-        self.logger.info("Metrics export stopped")
+        if hasattr(self, "logger"):
+            self.logger.info("Metrics export stopped")
 
     def shutdown(self):
         """Shutdown the exporter and clean up resources."""
@@ -1127,7 +1138,10 @@ class PrometheusExporter:
 
     def __del__(self):
         """Cleanup on destruction."""
-        self.stop_metrics_export()
+        try:
+            self.stop_metrics_export()
+        except Exception:
+            pass
 
 
 def main() -> None:

@@ -5,6 +5,56 @@
 # Default target
 .DEFAULT_GOAL := help
 
+TIMEOUT_BIN := $(shell command -v gtimeout 2>/dev/null)
+ifeq ($(TIMEOUT_BIN),)
+TIMEOUT_BIN := $(shell command -v timeout 2>/dev/null)
+endif
+
+REDIS_HOST_ENV := $(shell grep -m1 '^REDIS_HOST' ~/.env 2>/dev/null | cut -d= -f2)
+ifeq ($(strip $(REDIS_HOST_ENV)),)
+REDIS_HOST_ENV := localhost
+endif
+
+REDIS_PORT_ENV := $(shell grep -m1 '^REDIS_PORT' ~/.env 2>/dev/null | cut -d= -f2)
+ifeq ($(strip $(REDIS_PORT_ENV)),)
+REDIS_PORT_ENV := 6379
+endif
+
+REDIS_PASSWORD_ENV := $(shell grep -m1 '^REDIS_PASSWORD' ~/.env 2>/dev/null | cut -d= -f2)
+ifeq ($(strip $(REDIS_PASSWORD_ENV)),)
+REDIS_PASSWORD_ENV := beastmode2025
+endif
+
+PROJECT_ROOT := $(abspath .)
+INSTALL_ARGS ?=
+
+ifeq ($(OS),Windows_NT)
+PYTHON ?= py -3
+else
+PYTHON ?= python3
+endif
+
+PYTHON_DISCOVER := $(shell $(PYTHON) -c "import sys; print(sys.executable)" 2>/dev/null)
+ifeq ($(strip $(PYTHON_DISCOVER)),)
+PYTHON := python
+PYTHON_DISCOVER := $(shell $(PYTHON) -c "import sys; print(sys.executable)" 2>/dev/null)
+endif
+ifeq ($(strip $(PYTHON_DISCOVER)),)
+$(error Python interpreter not found. Install Python 3 and ensure it is on PATH or set $$PYTHON)
+endif
+
+ifeq ($(OS),Windows_NT)
+PYTHONPATH_SEP := ;
+else
+PYTHONPATH_SEP := :
+endif
+
+ifdef PYTHONPATH
+export PYTHONPATH := $(PROJECT_ROOT)/src$(PYTHONPATH_SEP)$(PROJECT_ROOT)$(PYTHONPATH_SEP)$(PYTHONPATH)
+else
+export PYTHONPATH := $(PROJECT_ROOT)/src$(PYTHONPATH_SEP)$(PROJECT_ROOT)
+endif
+
 # Phony targets declaration
 .PHONY: help install quick-start discover-system validate-safety optimize-performance test-system validate-targets lint-makefiles generate-reports
 .PHONY: observatory-start observatory-stop observatory-status observatory-health observatory-deploy observatory-logs
@@ -20,21 +70,12 @@
 # =============================================================================
 
 install: ## 🚀 One-command setup for Beast Mode (recommended for new users)
-	@echo "🐺 Setting up Beast Mode AI Framework..."
-	@echo "📦 Installing Python dependencies..."
-	@pip install -r requirements.txt
-	@echo "⚙️  Setting up environment..."
-	@if [ ! -f .env ]; then cp .env.example .env && echo "📝 Created .env file (please configure as needed)"; fi
-	@echo "✅ Beast Mode setup complete!"
-	@echo ""
-	@echo "🎉 Ready to go! Try these next steps:"
-	@echo "   • Run quick demo: make quick-start"
-	@echo "   • Explore notebooks: jupyter notebook examples/notebook/"
-	@echo "   • Read docs: open docs/guides/quick-start.md"
+	@echo "🐺 Running Beast Mode installer..."
+	@./install.sh $(INSTALL_ARGS)
 
 quick-start: ## 🎯 Run the 2-minute Beast Mode demonstration
 	@echo "🐺 Running Beast Mode Quick Start Demo..."
-	@python examples/quick_start_demo.py
+	@$(PYTHON) examples/quick_start_demo.py
 
 # =============================================================================
 # HELP SYSTEM
@@ -113,32 +154,55 @@ help: ## Show available targets and usage information
 
 discover-system: ## Discover all system capabilities
 	@echo '� Disctovering system capabilities...'
-	python scripts/makefile_system_discovery.py --verbose
+	$(PYTHON) scripts/makefile_system_discovery.py --verbose
 	@echo '✅ System discovery complete'
 
 validate-safety: ## Validate system safety
-	@echo '🛡️ Validating system safety...'
-	python scripts/makefile_safety_validator.py system
+	@if [ -z "$(TIMEOUT_BIN)" ]; then echo '❌ timeout command not found (install coreutils for gtimeout)'; exit 1; fi
+	@echo '🛡️ Validating system safety (preflight)...'
+	@if [ ! -d logs ]; then mkdir -p logs; fi
+	@echo '   - Loading configuration and environment'
+	@echo '   - Redis host: $(REDIS_HOST_ENV)'
+	@echo '   - Redis port: $(REDIS_PORT_ENV)'
+	@echo '   - Using redis password from ~/.env'
+	@echo '🛡️ Running safety checks...'
+	@PYTHONPATH=.:src \
+		REDIS_HOST=$(REDIS_HOST_ENV) \
+		REDIS_PORT=$(REDIS_PORT_ENV) \
+		REDIS_PASSWORD=$(REDIS_PASSWORD_ENV) \
+		BEAST_MODE_PROMETHEUS_ENABLED=false \
+		$(TIMEOUT_BIN) 25s $(PYTHON) scripts/makefile_safety_validator.py system | tee logs/validate-safety-run.log
+	@status=$$?; if [ $$status -eq 124 ]; then echo '❌ Safety validation timed out after 25s'; exit 1; fi; exit $$status
 	@echo '✅ Safety validation complete'
 
 validate-targets: ## Validate all Makefile targets
-	@echo '🎯 Validating Makefile targets...'
-	python scripts/validate_makefile_targets.py
+	@if [ -z "$(TIMEOUT_BIN)" ]; then echo '❌ timeout command not found (install coreutils for gtimeout)'; exit 1; fi
+	@echo '🎯 Validating Makefile targets (preflight)...'
+	@if [ ! -d logs ]; then mkdir -p logs; fi
+	@echo '   - Using PYTHONPATH=.:src'
+	@echo '   - Prometheus: remote scrape mode'
+	@echo '🎯 Running target validation...'
+	@PYTHONPATH=.:src \
+		REDIS_PASSWORD=$(REDIS_PASSWORD_ENV) \
+		BEAST_MODE_PROMETHEUS_ENABLED=false \
+		$(TIMEOUT_BIN) 25s $(PYTHON) scripts/validate_makefile_targets.py | tee logs/validate-targets-run.log
+	@status=$$?; if [ $$status -eq 124 ]; then echo '❌ Target validation timed out after 25s'; exit 1; fi; exit $$status
 	@echo '✅ Target validation complete'
+
 
 test-system: ## Run comprehensive system tests
 	@echo '🧪 Running comprehensive system tests...'
-	python scripts/test_makefile_system.py
+	$(PYTHON) scripts/test_makefile_system.py
 	@echo '✅ System tests complete'
 
 optimize-performance: ## Optimize system performance
 	@echo '⚡ Optimizing system performance...'
-	python scripts/makefile_performance_optimizer.py --report
+	$(PYTHON) scripts/makefile_performance_optimizer.py --report
 	@echo '✅ Performance optimization complete'
 
 lint-makefiles: ## Lint all Makefiles
 	@echo '📋 Linting all Makefiles...'
-	python scripts/lint_makefile.py
+	$(PYTHON) scripts/lint_makefile.py
 	@echo '✅ Makefile linting complete'
 
 # =============================================================================
@@ -147,18 +211,18 @@ lint-makefiles: ## Lint all Makefiles
 
 observatory-deploy: ## Deploy Observatory system
 	@echo '🔭 Deploying Observatory system...'
-	python src/makefile_governance/integration/observatory_integration.py --generate-makefile makefiles/observatory.mk
+	$(PYTHON) src/makefile_governance/integration/observatory_integration.py --generate-makefile makefiles/observatory.mk
 	$(MAKE) -f makefiles/observatory.mk observatory-deploy
 	@echo '✅ Observatory system deployed'
 
 observatory-start: ## Start Observatory services in Docker containers
 	@echo '🔭 Starting Observatory services in containers...'
-	python scripts/deploy_observatory.py
+	$(PYTHON) scripts/deploy_observatory.py
 	@echo '✅ Observatory services started'
 
 observatory-stop: ## Stop Observatory services and containers
 	@echo '🔭 Stopping Observatory services and containers...'
-	python scripts/stop_observatory.py
+	$(PYTHON) scripts/stop_observatory.py
 	@echo '✅ Observatory services stopped'
 
 observatory-restart: ## Restart Observatory services
@@ -179,7 +243,7 @@ observatory-shell: ## Access Observatory container shell
 
 observatory-status: ## Check Observatory status
 	@echo '🔭 Checking Observatory status...'
-	python src/makefile_governance/integration/observatory_integration.py --status
+	$(PYTHON) src/makefile_governance/integration/observatory_integration.py --status
 	@echo '✅ Observatory status check complete'
 
 observatory-health: ## Check Observatory health
@@ -221,35 +285,35 @@ observatory-logs: ## View Observatory container logs
 
 beast-deploy: ## Deploy Beast Mode framework
 	@echo '🐺 Deploying Beast Mode framework...'
-	python src/makefile_governance/integration/beast_mode_integration.py --generate-makefile makefiles/beast_mode.mk
+	$(PYTHON) src/makefile_governance/integration/beast_mode_integration.py --generate-makefile makefiles/beast_mode.mk
 	$(MAKE) -f makefiles/beast_mode.mk beast-deploy
 	@echo '✅ Beast Mode framework deployed'
 
 beast-test: ## Run Beast Mode tests
 	@echo '🐺 Running Beast Mode tests...'
-	python -m pytest tests/unit/beast_mode/ -v --tb=short
+	$(PYTHON) -m pytest tests/unit/beast_mode/ -v --tb=short
 	@echo '✅ Beast Mode tests complete'
 
 beast-compliance: ## Check Beast Mode compliance
 	@echo '🐺 Running Beast Mode compliance checks...'
-	python scripts/check_reflective_module_compliance.py || echo 'Compliance check attempted'
-	python scripts/check_beast_mode_patterns.py || echo 'Pattern check attempted'
+	$(PYTHON) scripts/check_reflective_module_compliance.py || echo 'Compliance check attempted'
+	$(PYTHON) scripts/check_beast_mode_patterns.py || echo 'Pattern check attempted'
 	@echo '✅ Beast Mode compliance check complete'
 
 beast-fix: ## Fix Beast Mode issues
 	@echo '� Fixling Beast Mode issues...'
-	python scripts/auto_fix_beast_mode_issues.py || echo 'Auto-fix attempted'
+	$(PYTHON) scripts/auto_fix_beast_mode_issues.py || echo 'Auto-fix attempted'
 	$(MAKE) beast-validate-all
 	@echo '✅ Beast Mode issues fixed'
 
 beast-metrics: ## Generate Beast Mode metrics
 	@echo '🐺 Generating Beast Mode metrics...'
-	python scripts/generate_beast_mode_dashboard.py || echo 'Metrics generation attempted'
+	$(PYTHON) scripts/generate_beast_mode_dashboard.py || echo 'Metrics generation attempted'
 	@echo '✅ Beast Mode metrics generated'
 
 beast-validate-all: ## Validate Beast Mode framework
 	@echo '🐺 Validating Beast Mode framework...'
-	python scripts/validate_beast_mode_framework.py || echo 'Validation attempted'
+	$(PYTHON) scripts/validate_beast_mode_framework.py || echo 'Validation attempted'
 	@echo '✅ Beast Mode framework validation complete'
 
 # =============================================================================
@@ -258,22 +322,22 @@ beast-validate-all: ## Validate Beast Mode framework
 
 dag-validate: ## Validate DAG structure
 	@echo '🔄 Validating DAG structure...'
-	python scripts/infrastructure_task_dag_validator.py || echo 'DAG validation attempted'
+	$(PYTHON) scripts/infrastructure_task_dag_validator.py || echo 'DAG validation attempted'
 	@echo '✅ DAG validation complete'
 
 dag-execute: ## Execute DAG workflow
 	@echo '🔄 Executing DAG workflow...'
-	python scripts/infrastructure_governance_orchestrator.py --execute-next || echo 'DAG execution attempted'
+	$(PYTHON) scripts/infrastructure_governance_orchestrator.py --execute-next || echo 'DAG execution attempted'
 	@echo '✅ DAG workflow execution complete'
 
 dag-monitor: ## Monitor DAG execution
 	@echo '🔄 Monitoring DAG execution...'
-	python scripts/dag_execution_monitor.py || echo 'DAG monitoring attempted'
+	$(PYTHON) scripts/dag_execution_monitor.py || echo 'DAG monitoring attempted'
 	@echo '✅ DAG monitoring complete'
 
 dag-status: ## Check DAG status
 	@echo '🔄 Checking DAG status...'
-	python scripts/check_dag_status.py || echo 'DAG status check attempted'
+	$(PYTHON) scripts/check_dag_status.py || echo 'DAG status check attempted'
 	@echo '✅ DAG status check complete'
 
 # =============================================================================
@@ -282,28 +346,28 @@ dag-status: ## Check DAG status
 
 infra-deploy: ## Deploy infrastructure
 	@echo '🏗️ Deploying infrastructure...'
-	python src/makefile_governance/integration/infrastructure_integration.py --generate-makefile makefiles/infrastructure.mk
+	$(PYTHON) src/makefile_governance/integration/infrastructure_integration.py --generate-makefile makefiles/infrastructure.mk
 	$(MAKE) -f makefiles/infrastructure.mk infra-deploy-all
 	@echo '✅ Infrastructure deployment complete'
 
 infra-monitor: ## Monitor infrastructure
 	@echo '🏗️ Starting infrastructure monitoring...'
-	python scripts/start_infrastructure_monitoring.py || echo 'Infrastructure monitoring attempted'
+	$(PYTHON) scripts/start_infrastructure_monitoring.py || echo 'Infrastructure monitoring attempted'
 	@echo '✅ Infrastructure monitoring started'
 
 infra-validate: ## Validate infrastructure
 	@echo '🏗️ Validating infrastructure configuration...'
-	python scripts/validate_infrastructure_config.py || echo 'Infrastructure validation attempted'
+	$(PYTHON) scripts/validate_infrastructure_config.py || echo 'Infrastructure validation attempted'
 	@echo '✅ Infrastructure validation complete'
 
 infra-backup: ## Backup infrastructure
 	@echo '🏗️ Backing up infrastructure data...'
-	python scripts/backup_infrastructure_configs.py || echo 'Infrastructure backup attempted'
+	$(PYTHON) scripts/backup_infrastructure_configs.py || echo 'Infrastructure backup attempted'
 	@echo '✅ Infrastructure backup complete'
 
 infra-status: ## Check infrastructure status
 	@echo '🏗️ Checking infrastructure status...'
-	python src/makefile_governance/integration/infrastructure_integration.py --status
+	$(PYTHON) src/makefile_governance/integration/infrastructure_integration.py --status
 	@echo '✅ Infrastructure status check complete'
 
 infra-health: ## Check infrastructure health
@@ -318,25 +382,28 @@ infra-health: ## Check infrastructure health
 # =============================================================================
 
 dev-test: ## Run development tests
-	@echo '🧪 Running development tests...'
-	python -m pytest tests/ -v --tb=short
+	@echo '🧪 Running development tests (targeted baseline)...'
+	$(PYTHON) -m pytest \
+		tests/unit/beast_mode/observatory/ai_consultation/test_health_checker.py \
+		tests/unit/beast_mode/observatory/ai_consultation/test_visual_regression.py \
+		-v --tb=short
 	@echo '✅ Development tests complete'
 
 dev-lint: ## Lint code
 	@echo '📋 Linting code...'
-	python -m flake8 src/ --max-line-length=120
-	python -m mypy src/ --ignore-missing-imports
+	$(PYTHON) -m flake8 src/ --max-line-length=120
+	$(PYTHON) -m mypy src/ --ignore-missing-imports
 	@echo '✅ Code linting complete'
 
 dev-format: ## Format code
 	@echo '💅 Formatting code...'
-	python -m black src/ --line-length=120
-	python -m isort src/
+	$(PYTHON) -m black src/ --line-length=120
+	$(PYTHON) -m isort src/
 	@echo '✅ Code formatting complete'
 
 dev-validate: ## Validate development setup
 	@echo '🔍 Validating development setup...'
-	python scripts/validate_development_environment.py || echo 'Development validation attempted'
+	$(PYTHON) scripts/validate_development_environment.py || echo 'Development validation attempted'
 	@echo '✅ Development setup validation complete'
 
 # =============================================================================
@@ -345,17 +412,17 @@ dev-validate: ## Validate development setup
 
 governance-scan: ## Scan for orphaned solutions
 	@echo '🔍 Running semantic orphaned solution scan...'
-	python scripts/semantic_orphaned_scanner.py
+	$(PYTHON) scripts/semantic_orphaned_scanner.py
 	@echo '✅ Governance scan complete'
 
 governance-status: ## Check governance status
 	@echo '📊 Checking governance system status...'
-	python scripts/background_governance_scheduler.py --status
+	$(PYTHON) scripts/background_governance_scheduler.py --status
 	@echo '✅ Governance status check complete'
 
 governance-report: ## Generate governance report
 	@echo '📋 Generating governance report...'
-	python scripts/background_governance_scheduler.py --run orphaned_solution_scan
+	$(PYTHON) scripts/background_governance_scheduler.py --run orphaned_solution_scan
 	@echo '✅ Governance report generated'
 
 # =============================================================================
@@ -364,10 +431,10 @@ governance-report: ## Generate governance report
 
 generate-reports: ## Generate all system reports
 	@echo '📊 Generating all system reports...'
-	python scripts/makefile_system_discovery.py --output reports/discovery.json
-	python scripts/test_makefile_system.py --report reports/test_results.json
-	python scripts/validate_makefile_targets.py --report reports/validation.json
-	python scripts/lint_makefile.py --report reports/lint.json
+	$(PYTHON) scripts/makefile_system_discovery.py --output reports/discovery.json
+	$(PYTHON) scripts/test_makefile_system.py --report reports/test_results.json
+	$(PYTHON) scripts/validate_makefile_targets.py --report reports/validation.json
+	$(PYTHON) scripts/lint_makefile.py --report reports/lint.json
 	@echo '✅ All reports generated'
 
 clean-all: ## Clean all artifacts
@@ -389,7 +456,7 @@ backup-all: ## Backup all data
 
 restore-all: ## Restore from backup
 	@echo '🔄 Restoring from backup...'
-	python scripts/restore_system_backup.py || echo 'Restore attempted'
+	$(PYTHON) scripts/restore_system_backup.py || echo 'Restore attempted'
 	@echo '✅ System restore complete'
 
 # =============================================================================
@@ -398,17 +465,17 @@ restore-all: ## Restore from backup
 
 test-makefile-quick: ## Quick smoke test for Makefile system
 	@echo '💨 Running quick Makefile smoke tests...'
-	python scripts/test_makefile_system.py --type unit
+	$(PYTHON) scripts/test_makefile_system.py --type unit
 	@echo '✅ Quick tests complete'
 
 test-makefile-comprehensive: ## Run comprehensive Makefile tests
 	@echo '🧪 Running comprehensive Makefile tests...'
-	python scripts/orchestrate_makefile_unit_tests.py
+	$(PYTHON) scripts/orchestrate_makefile_unit_tests.py
 	@echo '✅ Comprehensive tests complete'
 
 test-makefile-parallel: ## Run tests in parallel with detailed output
 	@echo '⚡ Running parallel Makefile tests...'
-	python -m pytest tests/unit/makefile_governance/ -v -n auto --tb=short
+	$(PYTHON) -m pytest tests/unit/makefile_governance/ -v -n auto --tb=short
 	@echo '✅ Parallel tests complete'
 
 # =============================================================================

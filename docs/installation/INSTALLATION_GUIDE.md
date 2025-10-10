@@ -46,6 +46,10 @@ cd beast-mode-ai-framework
 # 2. One-command setup (installs everything you need)
 make install
 
+# Optional flags
+# make INSTALL_ARGS="--bootstrap-stack" install   # bring up Docker services after install
+# make INSTALL_ARGS="--dev" install               # include development dependencies
+
 # 3. Run the 2-minute demo
 make quick-start
 ```
@@ -58,6 +62,22 @@ make quick-start
 - ✅ Production-ready observability and monitoring
 
 **Next:** Jump to [Verify Installation](#-verify-installation) to confirm everything works.
+
+### Installer Flags
+
+The installer script exposed through `make install` accepts additional options via `INSTALL_ARGS`:
+
+- `--bootstrap-stack` – automatically run `docker compose up -d` after installation (requires Docker)
+- `--dev` – install `requirements-dev.txt` inside the created virtual environment
+- `--with-demo` – execute the quick start demo when installation completes
+- `--install-docker` – attempt to install Docker/Compose on supported Linux distributions (requires sudo)
+- `--non-interactive` – suppress guidance output; useful for CI environments
+
+Example:
+
+```bash
+make INSTALL_ARGS="--bootstrap-stack --dev" install
+```
 
 ---
 

@@ -16,6 +16,14 @@ PYTHON_MIN_VERSION="3.9"
 REDIS_DEFAULT_PORT="6379"
 PROJECT_NAME="Beast Mode AI Development Framework"
 
+BOOTSTRAP_STACK=false
+INSTALL_DOCKER=false
+NON_INTERACTIVE=false
+DOCKER_AVAILABLE=false
+COMPOSE_CMD=""
+RUN_DEMO=false
+INSTALL_DEV=false
+
 # Logging functions
 log_info() {
     echo -e "${BLUE}[INFO]${NC} $1"
@@ -31,6 +39,183 @@ log_warning() {
 
 log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
+}
+
+show_help() {
+    cat <<EOF
+${PROJECT_NAME} Installer
+Usage: ./install.sh [options]
+
+Options:
+  --bootstrap-stack        Start the Docker stack (docker compose up -d) after installation
+  --install-docker         Attempt Docker/Compose installation when missing (Linux only, requires sudo)
+  --non-interactive        Suppress guidance prompts; fail fast if prerequisites missing
+  --with-demo              Run the quick start demo after installation completes
+  -h, --help               Show this help message
+EOF
+}
+
+parse_args() {
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --bootstrap-stack|--with-stack|--start-stack)
+                BOOTSTRAP_STACK=true
+                ;;
+            --install-docker)
+                INSTALL_DOCKER=true
+                ;;
+            --non-interactive)
+                NON_INTERACTIVE=true
+                ;;
+            --with-demo)
+                RUN_DEMO=true
+                ;;
+            --dev)
+                INSTALL_DEV=true
+                ;;
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            *)
+                log_warning "Unknown option: $1"
+                ;;
+        esac
+        shift
+    done
+}
+
+# Ensure an environment file contains the default Redis password to prevent mismatches
+ensure_redis_password_entry() {
+    local env_file="$1"
+    if [[ -z "$env_file" ]] || [[ ! -f "$env_file" ]]; then
+        return 0
+    fi
+
+    "$PYTHON_CMD" - "$env_file" <<'PY'
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+content = path.read_text().splitlines()
+updated = False
+
+for idx, line in enumerate(content):
+    if line.startswith("REDIS_PASSWORD="):
+        if line.strip() == "REDIS_PASSWORD=":
+            content[idx] = "REDIS_PASSWORD=beastmode2025"
+            updated = True
+        break
+else:
+    content.append("REDIS_PASSWORD=beastmode2025")
+    updated = True
+
+if updated:
+    path.write_text("\n".join(content) + ("\n" if content and content[-1] else ""))
+PY
+}
+
+ensure_docker_available() {
+    if command_exists docker; then
+        DOCKER_AVAILABLE=true
+        log_success "Docker detected: $(docker --version | head -n1)"
+        return 0
+    fi
+
+    if [[ "$INSTALL_DOCKER" == true ]]; then
+        case $OS in
+            "debian")
+                log_info "Installing Docker (requires sudo)..."
+                sudo apt update
+                sudo apt install -y ca-certificates curl gnupg lsb-release
+                sudo install -m 0755 -d /etc/apt/keyrings
+                curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+                sudo chmod a+r /etc/apt/keyrings/docker.gpg
+                echo \
+"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+                sudo apt update
+                sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+                sudo usermod -aG docker "$USER" || true
+                sudo systemctl enable docker
+                sudo systemctl start docker
+                DOCKER_AVAILABLE=true
+                log_success "Docker installed successfully."
+                ;;
+            "redhat")
+                log_info "Installing Docker (requires sudo)..."
+                sudo yum install -y yum-utils
+                sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+                sudo yum install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+                sudo systemctl enable docker
+                sudo systemctl start docker
+                sudo usermod -aG docker "$USER" || true
+                DOCKER_AVAILABLE=true
+                log_success "Docker installed successfully."
+                ;;
+            "arch")
+                log_info "Installing Docker (requires sudo)..."
+                sudo pacman -Sy --noconfirm docker docker-compose
+                sudo systemctl enable docker
+                sudo systemctl start docker
+                sudo usermod -aG docker "$USER" || true
+                DOCKER_AVAILABLE=true
+                log_success "Docker installed successfully."
+                ;;
+            *)
+                log_warning "Automatic Docker installation is not supported on this OS. Please install Docker manually."
+                ;;
+        esac
+    fi
+
+    if [[ "$DOCKER_AVAILABLE" == false ]]; then
+        log_warning "Docker not detected. Install Docker/Compose to run containerized services."
+        if [[ "$NON_INTERACTIVE" == false ]]; then
+            log_info "Reference: https://docs.docker.com/engine/install/"
+        fi
+    fi
+}
+
+ensure_compose_command() {
+    if [[ "$DOCKER_AVAILABLE" == false ]]; then
+        return 0
+    fi
+
+    if docker compose version >/dev/null 2>&1; then
+        COMPOSE_CMD="docker compose"
+    elif command_exists docker-compose; then
+        COMPOSE_CMD="docker-compose"
+    else
+        log_warning "Docker Compose not detected. Install the Compose plugin or docker-compose binary."
+    fi
+}
+
+bootstrap_observatory_stack() {
+    if [[ "$BOOTSTRAP_STACK" != true ]]; then
+        return 0
+    fi
+
+    if [[ "$DOCKER_AVAILABLE" != true ]] || [[ -z "$COMPOSE_CMD" ]]; then
+        log_error "Cannot bootstrap stack: Docker/Compose unavailable."
+        return 0
+    fi
+
+    log_info "Starting Observatory stack via Docker..."
+    $COMPOSE_CMD up -d --build
+    log_success "Observatory stack started."
+}
+
+install_dev_dependencies() {
+    if [[ "$INSTALL_DEV" != true ]]; then
+        return 0
+    fi
+
+    log_info "Installing development dependencies..."
+    if [[ -z "$VIRTUAL_ENV" ]]; then
+        source .venv/bin/activate
+    fi
+    pip install -r requirements-dev.txt
+    log_success "Development dependencies installed."
 }
 
 # Detect operating system
@@ -210,6 +395,12 @@ install_python_dependencies() {
 configure_environment() {
     log_info "Configuring environment..."
     
+    # Load home-level environment file if present so that POINT installs inherit passwords
+    if [[ -f "$HOME/.env" ]]; then
+        # shellcheck disable=SC1090
+        source "$HOME/.env"
+    fi
+
     # Create .env file if it doesn't exist
     if [[ ! -f ".env" ]]; then
         log_info "Creating .env file from template..."
@@ -224,7 +415,8 @@ configure_environment() {
 # Redis Configuration
 REDIS_HOST=localhost
 REDIS_PORT=6379
-REDIS_PASSWORD=
+# Default Redis password matches Vonnegut deployment
+REDIS_PASSWORD=beastmode2025
 
 # API Keys (set your actual keys)
 OPENAI_API_KEY=
@@ -247,10 +439,20 @@ EOF
         log_warning "Please edit .env file and set your API keys and configuration"
     fi
     
+    # Ensure Redis password is present locally
+    if [[ -f ".env" ]]; then
+        ensure_redis_password_entry ".env"
+    fi
+
     # Copy .env to home directory for global access
     if [[ -f ".env" ]] && [[ ! -f "$HOME/.env" ]]; then
         log_info "Copying .env to home directory for global access..."
         cp .env "$HOME/.env"
+    fi
+
+    # Ensure Redis password is present in the home-level environment file
+    if [[ -f "$HOME/.env" ]]; then
+        ensure_redis_password_entry "$HOME/.env"
     fi
 }
 
@@ -385,15 +587,15 @@ print_summary() {
 
 # Main installation process
 main() {
+    parse_args "$@"
     echo "🚀 Installing $PROJECT_NAME..."
     echo
-    
+
     # Check if we're in the project directory
     if [[ ! -f "requirements.txt" ]]; then
         log_error "requirements.txt not found. Please run this script from the project root directory."
         exit 1
     fi
-    
     detect_os
     check_python_version
     install_system_dependencies
@@ -402,43 +604,17 @@ main() {
     configure_environment
     start_redis_service
     validate_installation
+    ensure_docker_available
+    ensure_compose_command
+    bootstrap_observatory_stack
+    install_dev_dependencies
     
     # Optional: run quick start
-    if [[ "$1" == "--with-demo" ]]; then
+    if [[ "$RUN_DEMO" == true ]]; then
         run_quick_start
     fi
     
     print_summary
 }
 
-# Handle command line arguments
-case "$1" in
-    "--help"|"-h")
-        echo "Beast Mode AI Development Framework - Installation Script"
-        echo
-        echo "Usage: $0 [OPTIONS]"
-        echo
-        echo "Options:"
-        echo "  --help, -h        Show this help message"
-        echo "  --with-demo       Run quick start demo after installation"
-        echo "  --dev             Install development dependencies"
-        echo
-        echo "Examples:"
-        echo "  $0                Install core framework"
-        echo "  $0 --with-demo    Install and run demo"
-        echo "  $0 --dev          Install with development tools"
-        echo
-        exit 0
-        ;;
-    "--dev")
-        # Install development dependencies after main installation
-        main
-        log_info "Installing development dependencies..."
-        source .venv/bin/activate
-        pip install -r requirements-dev.txt
-        log_success "Development dependencies installed"
-        ;;
-    *)
-        main "$@"
-        ;;
-esac
+main "$@"
