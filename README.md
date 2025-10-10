@@ -330,6 +330,7 @@ pytest tests/performance/   # Performance tests
 - **[Project Structure](docs/PROJECT_STRUCTURE.md)** - Codebase organization
 - **[Makefile Toolkit](docs/developer-guide/makefile_toolkit.md)** - Modular test, safety, and performance tools
 - **[Mailbox Network](docs/operational-workflows/beast-mailbox-network.md)** - Redis-backed cross-node messaging
+- PyPI package: `beast-mailbox-core` (Redis mailbox utilities)
 
 ### Specialized Guides
 
