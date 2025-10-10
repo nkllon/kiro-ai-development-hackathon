@@ -1,0 +1,292 @@
+{
+  "collections": {
+    "projects": {
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "primary_key": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "unique": true
+        },
+        {
+          "name": "description",
+          "type": "text"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "enum": [
+            "active",
+            "inactive",
+            "archived"
+          ]
+        },
+        {
+          "name": "repository_url",
+          "type": "string"
+        },
+        {
+          "name": "created_by",
+          "type": "uuid",
+          "foreign_key": "users.id"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "default": "now()"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "default": "now()"
+        }
+      ],
+      "relationships": [
+        {
+          "type": "one_to_many",
+          "related": "repositories",
+          "foreign_key": "project_id"
+        },
+        {
+          "type": "many_to_many",
+          "related": "users",
+          "junction": "project_users"
+        }
+      ]
+    },
+    "repositories": {
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "primary_key": true
+        },
+        {
+          "name": "project_id",
+          "type": "uuid",
+          "foreign_key": "projects.id"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "branch",
+          "type": "string",
+          "default": "main"
+        },
+        {
+          "name": "last_sync",
+          "type": "timestamp"
+        },
+        {
+          "name": "sync_status",
+          "type": "string",
+          "enum": [
+            "pending",
+            "syncing",
+            "completed",
+            "failed"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "default": "now()"
+        }
+      ],
+      "relationships": [
+        {
+          "type": "many_to_one",
+          "related": "projects",
+          "foreign_key": "project_id"
+        },
+        {
+          "type": "one_to_many",
+          "related": "documents",
+          "foreign_key": "repository_id"
+        }
+      ]
+    },
+    "documents": {
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "primary_key": true
+        },
+        {
+          "name": "repository_id",
+          "type": "uuid",
+          "foreign_key": "repositories.id"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "content",
+          "type": "text"
+        },
+        {
+          "name": "file_path",
+          "type": "string"
+        },
+        {
+          "name": "file_type",
+          "type": "string"
+        },
+        {
+          "name": "stakeholder_type",
+          "type": "string",
+          "enum": [
+            "developer",
+            "devops",
+            "executive",
+            "architect"
+          ]
+        },
+        {
+          "name": "tags",
+          "type": "json"
+        },
+        {
+          "name": "metadata",
+          "type": "json"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "default": "now()"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "default": "now()"
+        }
+      ],
+      "relationships": [
+        {
+          "type": "many_to_one",
+          "related": "repositories",
+          "foreign_key": "repository_id"
+        }
+      ]
+    },
+    "users": {
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "primary_key": true
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "required": true,
+          "unique": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "role",
+          "type": "string",
+          "enum": [
+            "developer",
+            "devops",
+            "executive",
+            "architect",
+            "admin"
+          ]
+        },
+        {
+          "name": "preferences",
+          "type": "json"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "default": "now()"
+        },
+        {
+          "name": "last_login",
+          "type": "timestamp"
+        }
+      ]
+    }
+  },
+  "indexes": [
+    {
+      "collection": "projects",
+      "fields": [
+        "name"
+      ],
+      "unique": true
+    },
+    {
+      "collection": "projects",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "collection": "repositories",
+      "fields": [
+        "project_id",
+        "name"
+      ]
+    },
+    {
+      "collection": "repositories",
+      "fields": [
+        "sync_status"
+      ]
+    },
+    {
+      "collection": "documents",
+      "fields": [
+        "repository_id"
+      ]
+    },
+    {
+      "collection": "documents",
+      "fields": [
+        "stakeholder_type"
+      ]
+    },
+    {
+      "collection": "documents",
+      "fields": [
+        "file_type"
+      ]
+    },
+    {
+      "collection": "users",
+      "fields": [
+        "email"
+      ],
+      "unique": true
+    },
+    {
+      "collection": "users",
+      "fields": [
+        "role"
+      ]
+    }
+  ]
+}

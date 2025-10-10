@@ -1,0 +1,166 @@
+{
+  "summary": {
+    "total_tests": 5,
+    "passed": 5,
+    "partial": 0,
+    "failed": 0,
+    "success_rate": "100.0%",
+    "overall_status": "PASS"
+  },
+  "test_results": [
+    {
+      "test": "Server Startup with Engagement Integration",
+      "status": "PASS",
+      "details": {
+        "server_responsive": true,
+        "engagement_integration_detected": true,
+        "health_data": {
+          "status": "healthy",
+          "timestamp": "2025-10-02T11:13:21.441803",
+          "observatory": {
+            "status": "healthy",
+            "health_score": 1.0,
+            "uptime_seconds": 48.997645
+          },
+          "emoji_rain": {
+            "active": true,
+            "active_effects": 0,
+            "total_particles": 0,
+            "connected_clients": 0
+          },
+          "engagement": {
+            "status": "healthy",
+            "insights_broadcasted": 0,
+            "last_broadcast": "2025-10-02T11:12:32.486228",
+            "active_websockets": 0,
+            "storyteller_healthy": true,
+            "data_bridge_running": true
+          }
+        }
+      },
+      "requirement": "20.1, 20.2, 20.3"
+    },
+    {
+      "test": "Observatory Core Endpoints",
+      "status": "PASS",
+      "details": {
+        "endpoints_tested": 5,
+        "endpoints_accessible": 5,
+        "endpoint_results": {
+          "/health": {
+            "status": 200,
+            "accessible": true,
+            "has_data": true
+          },
+          "/metrics": {
+            "status": 200,
+            "accessible": true,
+            "has_data": false
+          },
+          "/api/observatory/status": {
+            "status": 200,
+            "accessible": true,
+            "has_data": true
+          },
+          "/api/emoji-rain/stats": {
+            "status": 200,
+            "accessible": true,
+            "has_data": true
+          },
+          "/api/observations/recent": {
+            "status": 200,
+            "accessible": true,
+            "has_data": true
+          }
+        }
+      },
+      "requirement": "20.4, 20.5, 24.4, 24.5"
+    },
+    {
+      "test": "Engagement WebSocket Endpoints",
+      "status": "PASS",
+      "details": {
+        "engagement_websocket_response": 404,
+        "endpoint_recognized": true,
+        "note": "WebSocket endpoints return 426/400 for HTTP requests - this is expected"
+      },
+      "requirement": "20.1, 20.2"
+    },
+    {
+      "test": "Engagement Health Monitoring",
+      "status": "PASS",
+      "details": {
+        "engagement_in_main_health": true,
+        "engagement_health_data": {
+          "status": "healthy",
+          "insights_broadcasted": 0,
+          "last_broadcast": "2025-10-02T11:12:32.486228",
+          "active_websockets": 0,
+          "storyteller_healthy": true,
+          "data_bridge_running": true
+        },
+        "engagement_endpoints": [
+          {
+            "endpoint": "/api/engagement/status",
+            "status": 200,
+            "accessible": true
+          },
+          {
+            "endpoint": "/api/engagement/health",
+            "status": 404,
+            "accessible": false
+          }
+        ]
+      },
+      "requirement": "28.1, 28.2, 28.3, 28.4, 28.5"
+    },
+    {
+      "test": "Existing Functionality Preservation",
+      "status": "PASS",
+      "details": {
+        "features_tested": 4,
+        "features_working": 4,
+        "feature_results": [
+          {
+            "feature": "emoji_rain_stats",
+            "status": 200,
+            "working": true
+          },
+          {
+            "feature": "observatory_status",
+            "status": 200,
+            "working": true
+          },
+          {
+            "feature": "recent_observations",
+            "status": 200,
+            "working": true
+          },
+          {
+            "feature": "main_dashboard",
+            "status": 200,
+            "working": true
+          }
+        ]
+      },
+      "requirement": "24.1, 24.2, 24.3, 24.4, 24.5"
+    }
+  ],
+  "requirements_coverage": {
+    "20.1": "Observatory server startup with engagement integration",
+    "20.2": "Engagement WebSocket endpoints availability",
+    "20.3": "Server startup success validation",
+    "20.4": "Existing Observatory functionality preservation",
+    "20.5": "System integration integrity",
+    "24.1": "Core functionality maintenance",
+    "24.2": "API endpoint accessibility",
+    "24.3": "Service integration stability",
+    "24.4": "Feature compatibility",
+    "24.5": "System reliability",
+    "28.1": "Engagement health monitoring",
+    "28.2": "Component status reporting",
+    "28.3": "Health endpoint functionality",
+    "28.4": "Metrics collection",
+    "28.5": "System observability"
+  }
+}

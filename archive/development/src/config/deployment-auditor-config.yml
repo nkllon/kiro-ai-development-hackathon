@@ -1,0 +1,42 @@
+# Deployment Data Governance Auditor Configuration
+# Sample configuration for testing
+
+monitoring:
+  watch_paths:
+    - "deployment/"
+  excluded_paths:
+    - "deployment/docs/"
+  scan_interval: 60
+  recursive: true
+
+patterns:
+  database_files:
+    patterns: ["*.db", "*.sqlite*", "*.sql"]
+    severity: "CRITICAL"
+    description: "Database files and dumps"
+    
+  time_series_data:
+    patterns: ["*prometheus-data*", "*grafana-data*"]
+    severity: "HIGH"
+    description: "Time-series monitoring data"
+    
+  log_files:
+    patterns: ["*.log", "logs/", "log/"]
+    severity: "MEDIUM"
+    description: "Application and system logs"
+
+remediation:
+  auto_gitignore: true
+  auto_quarantine: false
+  git_integration: true
+  quarantine_directory: ".deployment-auditor-quarantine"
+
+notifications:
+  enabled: false
+  severity_threshold: "MEDIUM"
+  rate_limit_minutes: 5
+
+prometheus:
+  enabled: true
+  port: 9091
+  metrics_prefix: "deployment_auditor_"

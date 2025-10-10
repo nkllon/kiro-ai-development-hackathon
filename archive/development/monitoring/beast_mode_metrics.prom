@@ -1,0 +1,28 @@
+# HELP beast_mode_features_completed_per_day Features completed per day
+# TYPE beast_mode_features_completed_per_day gauge
+beast_mode_features_completed_per_day{phase="before"} 1.428571428571507
+beast_mode_features_completed_per_day{phase="after"} 2.428600895803689
+
+# HELP beast_mode_bugs_fixed_per_day Bugs fixed per day
+# TYPE beast_mode_bugs_fixed_per_day gauge
+beast_mode_bugs_fixed_per_day{phase="before"} 2.0
+beast_mode_bugs_fixed_per_day{phase="after"} 3.1432107496462267
+
+# HELP beast_mode_code_quality_score Code quality score
+# TYPE beast_mode_code_quality_score gauge
+beast_mode_code_quality_score{phase="before"} 6.5
+beast_mode_code_quality_score{phase="after"} 8.5
+
+# HELP beast_mode_rework_percentage Rework percentage
+# TYPE beast_mode_rework_percentage gauge
+beast_mode_rework_percentage{phase="before"} 35.0
+beast_mode_rework_percentage{phase="after"} 15.0
+
+# HELP beast_mode_time_to_resolution_hours Time to resolution in hours
+# TYPE beast_mode_time_to_resolution_hours gauge
+beast_mode_time_to_resolution_hours{phase="before"} 8.5
+beast_mode_time_to_resolution_hours{phase="after"} 4.5
+
+# HELP beast_mode_improvement_factor Overall improvement factor
+# TYPE beast_mode_improvement_factor gauge
+beast_mode_improvement_factor {} 1.700020627062489

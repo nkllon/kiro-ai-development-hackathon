@@ -1,0 +1,41 @@
+{
+  "evidence_id": "20dc13e6-3299-4688-8bd1-15a74a7017a1",
+  "timestamp": "2025-09-27T05:09:24.132137",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.132129",
+    "data_type": "dict"
+  },
+  "integrity_hash": "fb0e6c5fc7f53b20850cc070f3d4a66d7c0b8577bd27e22802fda192ce440046",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/fastapi/security/http.py",
+    "file_size": 13606,
+    "line_count": 424,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.exceptions",
+        "fastapi.security.base",
+        "fastapi.security.utils",
+        "starlette.requests.Request",
+        "fastapi.security.utils.get_authorization_scheme_param",
+        "starlette.requests",
+        "fastapi.openapi.models.HTTPBearer",
+        "fastapi.openapi.models",
+        "starlette.status",
+        "fastapi.security.base.SecurityBase",
+        "starlette.status.HTTP_403_FORBIDDEN",
+        "fastapi.exceptions.HTTPException",
+        "starlette.status.HTTP_401_UNAUTHORIZED",
+        "fastapi.openapi.models.HTTPBase"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.132119"
+  }
+}

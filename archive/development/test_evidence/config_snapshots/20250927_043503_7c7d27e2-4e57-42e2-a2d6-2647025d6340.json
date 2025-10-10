@@ -1,0 +1,20 @@
+{
+  "evidence_id": "7c7d27e2-4e57-42e2-a2d6-2647025d6340",
+  "timestamp": "2025-09-27T04:35:03.552951",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.552944",
+    "data_type": "dict"
+  },
+  "integrity_hash": "bad46042b83590cd23dd2e8a72fb3fa280476f4b41f6686706234234bbdbcb8a",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/huggingface_hub/_oauth.py",
+    "file_size": 18714,
+    "line_count": 461,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.552942"
+  }
+}

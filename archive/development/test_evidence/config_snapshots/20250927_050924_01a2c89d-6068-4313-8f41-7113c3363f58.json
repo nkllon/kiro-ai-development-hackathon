@@ -1,0 +1,53 @@
+{
+  "evidence_id": "01a2c89d-6068-4313-8f41-7113c3363f58",
+  "timestamp": "2025-09-27T05:09:24.615888",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.615874",
+    "data_type": "dict"
+  },
+  "integrity_hash": "6af08eb1a925b99f3cf2dcc4513412de29818bd406a591322fc449015409e09e",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/image_endpoints/endpoints.py",
+    "file_size": 9440,
+    "line_count": 282,
+    "route_analysis": {
+      "total_routes": 6,
+      "websocket_routes": [],
+      "http_routes": [
+        "/v1/images/generations",
+        "/images/generations",
+        "/openai/deployments/{model:path}/images/generations",
+        "/v1/images/edits",
+        "/images/edits",
+        "/openai/deployments/{model:path}/images/edits"
+      ],
+      "route_handlers": {
+        "/v1/images/generations": "image_generation",
+        "/images/generations": "image_generation",
+        "/openai/deployments/{model:path}/images/generations": "image_generation",
+        "/v1/images/edits": "image_edit_api",
+        "/images/edits": "image_edit_api",
+        "/openai/deployments/{model:path}/images/edits": "image_edit_api"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "fastapi.responses.ORJSONResponse",
+        "fastapi.Response",
+        "fastapi.Request",
+        "fastapi.HTTPException",
+        "fastapi.File",
+        "fastapi.status",
+        "fastapi.responses",
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi.UploadFile",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.615864"
+  }
+}

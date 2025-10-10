@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  directus_cms_fixed:
+    image: directus/directus:10.8
+    container_name: directus_cms_fixed
+    restart: unless-stopped
+    ports:
+      - "8055:8055"
+    environment:
+      KEY: "replace-with-random-value"
+      SECRET: "replace-with-random-value"
+      DB_CLIENT: "pg"
+      DB_HOST: "directus_postgres_fixed"
+      DB_PORT: "5432"
+      DB_DATABASE: "directus_beast_mode"
+      DB_USER: "directus"
+      DB_PASSWORD: "directus_secure_password"
+      CACHE_ENABLED: "true"
+      CACHE_STORE: "redis"
+      REDIS: "redis://directus_redis_fixed:6379"
+      ADMIN_EMAIL: "admin@example.com"
+      ADMIN_PASSWORD: "d1r3ctu5"
+    healthcheck:
+      # CRITICAL: Use IPv4 localhost (127.0.0.1) not localhost to avoid IPv6 issues
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:8055/server/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - directus_postgres_fixed
+      - directus_redis_fixed
+    networks:
+      - beast_mode_directus_network
+
+  directus_postgres_fixed:
+    image: postgres:15-alpine
+    container_name: directus_postgres_fixed
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: "directus_beast_mode"
+      POSTGRES_USER: "directus"
+      POSTGRES_PASSWORD: "directus_secure_password"
+    volumes:
+      - directus_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U directus"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - beast_mode_directus_network
+
+  directus_redis_fixed:
+    image: redis:7-alpine
+    container_name: directus_redis_fixed
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - directus_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - beast_mode_directus_network
+
+volumes:
+  directus_postgres_data:
+  directus_redis_data:
+
+networks:
+  beast_mode_directus_network:
+    external: true

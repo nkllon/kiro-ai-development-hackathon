@@ -1,0 +1,93 @@
+{
+  "title": "Cloudflare Dashboard Setup for Observatory WebSocket Support",
+  "timestamp": "2025-09-26T17:54:54.112364",
+  "domain": "observatory.nkllon.com",
+  "tunnel_id": "d1e53e43-033f-4994-8f46-c83962ae3785",
+  "steps": [
+    {
+      "step": 1,
+      "title": "Enable WebSockets",
+      "description": "Enable WebSocket support in Cloudflare dashboard",
+      "location": "Network \u2192 WebSockets",
+      "action": "Toggle WebSockets to ON",
+      "reason": "Required for WebSocket connections through tunnel",
+      "expected_result": "WebSocket connections will work through tunnel",
+      "verification": "Test WebSocket connection to wss://observatory.nkllon.com/ws/emoji-rain"
+    },
+    {
+      "step": 2,
+      "title": "Configure Bot Protection",
+      "description": "Set up bot protection rules for Observatory",
+      "location": "Security \u2192 Bot Fight Mode",
+      "action": "Disable Bot Fight Mode for observatory.nkllon.com",
+      "reason": "Prevents false positives on legitimate polling",
+      "expected_result": "HTTP polling fallback will not trigger bot protection",
+      "verification": "Check that HTTP polling requests are not blocked"
+    },
+    {
+      "step": 3,
+      "title": "Create WAF Rules",
+      "description": "Create custom WAF rules for Observatory polling",
+      "location": "Security \u2192 WAF \u2192 Custom Rules",
+      "action": "Create rule with Observatory polling conditions",
+      "reason": "Whitelist legitimate polling patterns",
+      "rule_expression": "\n                    (http.host eq \"observatory.nkllon.com\" and\n                     http.request.uri.path starts_with \"/api/\" and\n                     http.request.headers.x-observatory-client eq \"internal-polling\")\n                ",
+      "rule_action": "Allow",
+      "expected_result": "Observatory polling requests are whitelisted",
+      "verification": "Check WAF logs for allowed requests"
+    },
+    {
+      "step": 4,
+      "title": "Configure Rate Limiting",
+      "description": "Set appropriate rate limits for Observatory",
+      "location": "Security \u2192 Rate Limiting",
+      "action": "Create rate limit rule for /api/* endpoints",
+      "reason": "Prevent abuse while allowing legitimate polling",
+      "rate_limit_config": {
+        "requests_per_minute": 60,
+        "burst_size": 10,
+        "action": "Block",
+        "duration": "1 minute"
+      },
+      "expected_result": "Reasonable rate limits prevent abuse",
+      "verification": "Test rate limiting with multiple requests"
+    },
+    {
+      "step": 5,
+      "title": "Firewall Rules",
+      "description": "Create firewall rules for Observatory traffic",
+      "location": "Security \u2192 Firewall Rules",
+      "action": "Allow Observatory polling traffic",
+      "reason": "Ensure Observatory traffic is not blocked",
+      "rule_expression": "\n                    (http.host eq \"observatory.nkllon.com\" and\n                     http.request.uri.path starts_with \"/api/\" and\n                     http.request.headers.x-polling-reason eq \"websocket-fallback\")\n                ",
+      "rule_action": "Allow",
+      "expected_result": "Observatory traffic is not blocked by firewall",
+      "verification": "Check firewall logs for allowed traffic"
+    }
+  ],
+  "troubleshooting": {
+    "websocket_404": {
+      "symptom": "WebSocket connections return HTTP/2 404",
+      "cause": "WebSockets not enabled in Cloudflare dashboard",
+      "solution": "Enable WebSockets in Network \u2192 WebSockets",
+      "verification": "Test WebSocket connection after enabling"
+    },
+    "bot_protection_error": {
+      "symptom": "HTTP polling triggers Error 1033",
+      "cause": "Bot protection blocking legitimate requests",
+      "solution": "Disable Bot Fight Mode and create WAF rules",
+      "verification": "Check bot protection logs"
+    },
+    "rate_limiting": {
+      "symptom": "Requests blocked by rate limiting",
+      "cause": "Rate limits too restrictive",
+      "solution": "Adjust rate limit rules for Observatory",
+      "verification": "Test with expected polling frequency"
+    }
+  },
+  "testing_commands": {
+    "websocket_test": "curl -I -N -H 'Connection: Upgrade' -H 'Upgrade: websocket' -H 'Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==' -H 'Sec-WebSocket-Version: 13' https://observatory.nkllon.com/ws/emoji-rain",
+    "http_polling_test": "curl -H 'X-Observatory-Client: internal-polling' -H 'X-Polling-Reason: websocket-fallback' https://observatory.nkllon.com/api/emoji-rain/stats",
+    "health_check": "curl -I https://observatory.nkllon.com/health"
+  }
+}

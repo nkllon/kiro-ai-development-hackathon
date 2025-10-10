@@ -1,0 +1,48 @@
+tunnel: d1e53e43-033f-4994-8f46-c83962ae3785
+credentials-file: /Users/lou/.cloudflared/d1e53e43-033f-4994-8f46-c83962ae3785.json
+
+ingress:
+  - hostname: observatory.nkllon.com
+    service: http://POE_SERVER_IP:8888
+    originRequest:
+      httpHostHeader: localhost:8888
+      # WebSocket support configuration
+      noTLSVerify: false
+      connectTimeout: 30s
+      tlsTimeout: 10s
+      tcpKeepAlive: 30s
+      keepAliveConnections: 100
+      keepAliveTimeout: 90s
+  - hostname: observatory-container.nkllon.com  
+    service: http://localhost:8889
+    originRequest:
+      httpHostHeader: localhost:8889
+      # WebSocket support configuration
+      noTLSVerify: false
+      connectTimeout: 30s
+      tlsTimeout: 10s
+      tcpKeepAlive: 30s
+      keepAliveConnections: 100
+      keepAliveTimeout: 90s
+  - hostname: prometheus.observatory.nkllon.com
+    service: http://POE_SERVER_IP:9090
+    originRequest:
+      httpHostHeader: localhost:9090
+      noTLSVerify: false
+      connectTimeout: 30s
+      tlsTimeout: 10s
+      tcpKeepAlive: 30s
+      keepAliveConnections: 100
+      keepAliveTimeout: 90s
+  - hostname: grafana.observatory.nkllon.com
+    service: http://POE_SERVER_IP:3000
+    originRequest:
+      httpHostHeader: localhost:3000
+      # WebSocket support for Grafana
+      noTLSVerify: false
+      connectTimeout: 30s
+      tlsTimeout: 10s
+      tcpKeepAlive: 30s
+      keepAliveConnections: 100
+      keepAliveTimeout: 90s
+  - service: http_status:404

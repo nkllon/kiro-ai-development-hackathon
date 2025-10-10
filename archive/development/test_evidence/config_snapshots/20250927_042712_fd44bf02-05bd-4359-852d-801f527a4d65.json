@@ -1,0 +1,51 @@
+{
+  "evidence_id": "fd44bf02-05bd-4359-852d-801f527a4d65",
+  "timestamp": "2025-09-27T04:27:12.747719",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.747710",
+    "data_type": "dict"
+  },
+  "integrity_hash": "09123d4a7a9386b00c9803e2f0fd9242b76aee4c559ae1eb755bbc9ddf80d0b3",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/fine_tuning_endpoints/endpoints.py",
+    "file_size": 23506,
+    "line_count": 663,
+    "route_analysis": {
+      "total_routes": 8,
+      "websocket_routes": [],
+      "http_routes": [
+        "/v1/fine_tuning/jobs",
+        "/fine_tuning/jobs",
+        "/v1/fine_tuning/jobs/{fine_tuning_job_id:path}",
+        "/fine_tuning/jobs/{fine_tuning_job_id:path}",
+        "/v1/fine_tuning/jobs",
+        "/fine_tuning/jobs",
+        "/v1/fine_tuning/jobs/{fine_tuning_job_id:path}/cancel",
+        "/fine_tuning/jobs/{fine_tuning_job_id:path}/cancel"
+      ],
+      "route_handlers": {
+        "/v1/fine_tuning/jobs": "list_fine_tuning_jobs",
+        "/fine_tuning/jobs": "list_fine_tuning_jobs",
+        "/v1/fine_tuning/jobs/{fine_tuning_job_id:path}": "retrieve_fine_tuning_job",
+        "/fine_tuning/jobs/{fine_tuning_job_id:path}": "retrieve_fine_tuning_job",
+        "/v1/fine_tuning/jobs/{fine_tuning_job_id:path}/cancel": "cancel_fine_tuning_job",
+        "/fine_tuning/jobs/{fine_tuning_job_id:path}/cancel": "cancel_fine_tuning_job"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "fastapi.Depends",
+        "fastapi.Response",
+        "fastapi.APIRouter",
+        "fastapi.Query",
+        "fastapi.Request",
+        "fastapi",
+        "fastapi.HTTPException"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.747695"
+  }
+}

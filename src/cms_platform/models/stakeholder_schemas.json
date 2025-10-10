@@ -1,0 +1,174 @@
+{
+  "developers": {
+    "collection": "developers",
+    "fields": [
+      {
+        "field": "id",
+        "type": "integer",
+        "primary_key": true
+      },
+      {
+        "field": "name",
+        "type": "string",
+        "required": true
+      },
+      {
+        "field": "email",
+        "type": "string",
+        "required": true
+      },
+      {
+        "field": "role",
+        "type": "string",
+        "default": "developer"
+      },
+      {
+        "field": "skills",
+        "type": "json"
+      },
+      {
+        "field": "projects",
+        "type": "json"
+      },
+      {
+        "field": "created_at",
+        "type": "timestamp",
+        "default": "now()"
+      },
+      {
+        "field": "updated_at",
+        "type": "timestamp",
+        "default": "now()"
+      }
+    ]
+  },
+  "devops": {
+    "collection": "devops",
+    "fields": [
+      {
+        "field": "id",
+        "type": "integer",
+        "primary_key": true
+      },
+      {
+        "field": "name",
+        "type": "string",
+        "required": true
+      },
+      {
+        "field": "email",
+        "type": "string",
+        "required": true
+      },
+      {
+        "field": "role",
+        "type": "string",
+        "default": "devops"
+      },
+      {
+        "field": "infrastructure",
+        "type": "json"
+      },
+      {
+        "field": "monitoring_tools",
+        "type": "json"
+      },
+      {
+        "field": "created_at",
+        "type": "timestamp",
+        "default": "now()"
+      },
+      {
+        "field": "updated_at",
+        "type": "timestamp",
+        "default": "now()"
+      }
+    ]
+  },
+  "executives": {
+    "collection": "executives",
+    "fields": [
+      {
+        "field": "id",
+        "type": "integer",
+        "primary_key": true
+      },
+      {
+        "field": "name",
+        "type": "string",
+        "required": true
+      },
+      {
+        "field": "email",
+        "type": "string",
+        "required": true
+      },
+      {
+        "field": "role",
+        "type": "string",
+        "default": "executive"
+      },
+      {
+        "field": "department",
+        "type": "string"
+      },
+      {
+        "field": "kpis",
+        "type": "json"
+      },
+      {
+        "field": "created_at",
+        "type": "timestamp",
+        "default": "now()"
+      },
+      {
+        "field": "updated_at",
+        "type": "timestamp",
+        "default": "now()"
+      }
+    ]
+  },
+  "architects": {
+    "collection": "architects",
+    "fields": [
+      {
+        "field": "id",
+        "type": "integer",
+        "primary_key": true
+      },
+      {
+        "field": "name",
+        "type": "string",
+        "required": true
+      },
+      {
+        "field": "email",
+        "type": "string",
+        "required": true
+      },
+      {
+        "field": "role",
+        "type": "string",
+        "default": "architect"
+      },
+      {
+        "field": "specialization",
+        "type": "string"
+      },
+      {
+        "field": "design_patterns",
+        "type": "json"
+      },
+      {
+        "field": "created_at",
+        "type": "timestamp",
+        "default": "now()"
+      },
+      {
+        "field": "updated_at",
+        "type": "timestamp",
+        "default": "now()"
+      }
+    ]
+  }
+}

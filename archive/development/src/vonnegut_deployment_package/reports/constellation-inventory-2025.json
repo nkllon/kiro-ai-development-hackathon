@@ -1,0 +1,2597 @@
+{
+  "metadata": {
+    "generated_at": "2025-10-04T09:17:27.880853",
+    "total_specs": 107,
+    "analyzer_version": "1.0.0"
+  },
+  "summary": {
+    "total_specs": 107,
+    "overall_completion": 84.9,
+    "critical_path_completion": 98.1,
+    "layer_stats": {
+      "0": 0,
+      "1": 0,
+      "2": 6,
+      "3": 101
+    },
+    "missing_artifacts": {
+      "requirements": 3,
+      "design": 18,
+      "tasks": 20
+    },
+    "priority_distribution": {
+      "NORMAL": 98,
+      "CRITICAL_PATH": 9
+    }
+  },
+  "specifications": [
+    {
+      "name": "ace-reporter-ai-memory-palace-integration",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 11492,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 22557,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 16564,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "agent-control-governance",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 10352,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 17497,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 12070,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "ai-coordination-meta-programming",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 9049,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 16120,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 7459,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "ai-memory-palace",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 7105,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 13726,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 8840,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "ai-memory-palace-beastly-migration",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 2699,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 4408,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 1954,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "anti-duplication-system",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 4238,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 33.3,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "artifact-classification-transfer-learning",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 0.0,
+      "layer": 2,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "artifact-driven-beast-mode",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 9816,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 14484,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 14292,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "async-task-lifecycle-management",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 9968,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 18565,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 18627,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "atomic-spec-execution-pattern",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 5302,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 17153,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 14818,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "beast-mode-coordination-observatory",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 20682,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 26417,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 8834,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "beast-mode-deployment-architecture",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 24967,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 33.3,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "beast-mode-interface-governance",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 7764,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 8895,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 9756,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "beast-mode-rebuild",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 4505,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 9110,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 66.7,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "beast-mode-reliability-requirements",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 10426,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 33.3,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "beast-mode-system-documentation",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 7970,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 6669,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 6101,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "CRITICAL_PATH",
+      "dependencies": []
+    },
+    {
+      "name": "bot-defense-command-center",
+      "artifacts": {
+        "requirements": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 9221,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 33.3,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "claude-code-redis-task-queue",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 12478,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 27890,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 8786,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "clean-chart-update-architecture",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 3326,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 7226,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 2319,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "cloudflare-custom-error-pages",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 16301,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 26039,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 21595,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "cloudflare-websocket-tunnel-fix",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 15647,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 35751,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 9985,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "cms-architecture",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 13486,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 21282,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 22097,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "CRITICAL_PATH",
+      "dependencies": []
+    },
+    {
+      "name": "competitive-launch-strategy",
+      "artifacts": {
+        "requirements": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 17007,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 33.3,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "comprehensive-makefile-system",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 12246,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 38372,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 14462,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "dag-orchestrated-parallel-execution",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 31604,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 156015,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 32115,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "dag-orchestration-constellation",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 7017,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 9809,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 6588,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "decentralized-ai-coordination-network",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 15068,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 52261,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 14583,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "deployment-data-auditor",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 8760,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 13586,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 11694,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "devpost-hackathon-integration",
+      "artifacts": {
+        "requirements": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 0.0,
+      "layer": 2,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "directus-ai-memory-palace-integration",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 5638,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 11421,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 19642,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "directus-cms-setup",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 8624,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 23902,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 12421,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "directus-cms-systematic-implementation",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 9840,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 20379,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 66.7,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "directus-data-population",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 4377,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 33.3,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "directus-reconciliation-systematic",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 14613,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 21174,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 13955,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "directus-schema-design",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 4249,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 33.3,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "directus-ui-configuration",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 4245,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 33.3,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "discord-bot-framework-oss",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 7739,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 13427,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 13041,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "discord-bot-integration-fix",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 6793,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 5990,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 10139,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "discord-community-monitoring",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 7385,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 12682,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 9547,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "doctor-is-in-ai-consultation",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 11098,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 15197,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 18709,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "documentation-index-generator",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 7391,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 13506,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 14090,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "emoji-rain-system",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 9412,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 14537,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 10035,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "example-complex-system",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 3785,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 11150,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 11950,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "example-simple-api",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 2366,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 5028,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 6413,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "executable-patch-code-governance",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 12266,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 11852,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 10950,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "ghostbusters-productivity-triage",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 5446,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 10817,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 7937,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "google-calendar-mcp-integration",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 12818,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 14684,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 8694,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "google-calendar-mcp-quota-project-fix",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 5690,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 8244,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 3824,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "information-exhaust-preservation",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 7738,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 33.3,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "live-dashboard-engagement-system",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 54819,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 51445,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 27240,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "llm-cli-discovery-and-integration",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 7815,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 4880,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 66.7,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "llm-powered-engagement-engines",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 22147,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 38197,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 19252,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "makefile-syntax-repair-governance",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 4258,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 11988,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 7465,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "mcp-development-framework",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 15279,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 19427,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 15970,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "mcp-filesystem-server-fix",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 6567,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 11036,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 5081,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "mcp-server-configuration-standardization",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 6362,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 20871,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 7996,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "meta-monitoring-experiment",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 8184,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 33.3,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "meta-observatory-streaming",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 0.0,
+      "layer": 2,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "msp-ssl-chaos-tamer",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 8786,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 13632,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 12915,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "msp-ssl-integration-governance",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 7907,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 16408,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 9500,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "multi-dimensional-vocabulary-projector",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 7813,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 20467,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 11923,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "multi-perspective-ghostbusters",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 11714,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 25964,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 9408,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "observatory-cloudflare-infrastructure-governance",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 16859,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 21706,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 10780,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "observatory-data-discovery",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 6433,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 12002,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 4026,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "observatory-deployment-procedures",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 5889,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 16283,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 11336,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "observatory-deployment-system",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 3695,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 14011,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 8473,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "observatory-editorial-intelligence",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 7267,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 33.3,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "observatory-emergency-repair",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 0.0,
+      "layer": 2,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "observatory-health-chart-implementation",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 8638,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 9205,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 2096,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "observatory-live-coordination-feed",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 9426,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 23303,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 9901,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "observatory-performance-chart",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 6494,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 5892,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 5327,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "observatory-security-review",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 8264,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 8165,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 2506,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "observatory-server-deployment-fix",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 3719,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 4166,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 2933,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "observatory-social-authentication",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 7904,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 33.3,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "observatory-system-recovery",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 0.0,
+      "layer": 2,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "observatory-token-tracking-chart",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 9214,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 10979,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 2590,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "practical-repository-cleanup",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 9695,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 12521,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 16791,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "prepare-spec-for-execution",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 17581,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 20583,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 18564,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "prometheus-monitoring-system-repair",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 7154,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 8489,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 4107,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "prompt-file-processor-hook",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 8295,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 13708,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 5277,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "recursive-dag-orchestrated-spec-execution",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 10152,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 23327,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 16894,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "redis-dag-registry",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "design": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 0.0,
+      "layer": 2,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "reflective-coordinator-system",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 5431,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 33.3,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "reflective-module-architecture-consolidation",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 8170,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 15571,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 8559,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "CRITICAL_PATH",
+      "dependencies": []
+    },
+    {
+      "name": "release-the-hounds-execution",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 7840,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 8194,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 8216,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "release-v1-master-consolidation",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 9804,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 22523,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 22754,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "repository-constellation",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 11106,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 17205,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 14590,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "CRITICAL_PATH",
+      "dependencies": []
+    },
+    {
+      "name": "repository-content-discovery-indexing",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 57426,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 80249,
+          "quality": "PARTIAL"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 18739,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 83.3,
+      "layer": 3,
+      "priority": "CRITICAL_PATH",
+      "dependencies": []
+    },
+    {
+      "name": "repository-discovery-resumption",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 3081,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 7278,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 2411,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "repository-setup-and-installation",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 4084,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 11128,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 12375,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "CRITICAL_PATH",
+      "dependencies": []
+    },
+    {
+      "name": "repository-synchronization-cleanup",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 13548,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 18691,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 15722,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "service-auto-start-governance",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 9609,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 17873,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 63111,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "CRITICAL_PATH",
+      "dependencies": []
+    },
+    {
+      "name": "spec-consistency-governance",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 13519,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 15149,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 16412,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "CRITICAL_PATH",
+      "dependencies": []
+    },
+    {
+      "name": "spec-consistency-reconciliation",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 15153,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 17532,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 10417,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "spec-creation-dag-compliance",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 8094,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 16361,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 10909,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "spec-framework",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 5498,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 15173,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 6724,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "spec-mode-framework",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 11732,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 34814,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 24978,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "spec-scrub-rdi-consistency",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 10748,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 24566,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 22208,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "spec-theater-remediation",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 3107,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 6180,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 2017,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "subprocess-safety-requirements",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 2463,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 3879,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": false,
+          "size_bytes": 0,
+          "quality": "MISSING"
+        }
+      },
+      "completion_percentage": 66.7,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "system-architecture-wiring-diagram",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 22814,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 127509,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 27491,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "system-health-mitigation-framework",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 13045,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 25229,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 19013,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "CRITICAL_PATH",
+      "dependencies": []
+    },
+    {
+      "name": "technical-debt-patch-annotation-system",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 6020,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 29038,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 6685,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "ubiquitous-language-monitoring-platform",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 11071,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 18405,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 5340,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "unified-dag-registry",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 9654,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 14153,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 9506,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "universal-artifact-classification",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 3385,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 12771,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 5598,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    },
+    {
+      "name": "websocket-implementation-validation",
+      "artifacts": {
+        "requirements": {
+          "exists": true,
+          "size_bytes": 8447,
+          "quality": "COMPLETE"
+        },
+        "design": {
+          "exists": true,
+          "size_bytes": 15735,
+          "quality": "COMPLETE"
+        },
+        "tasks": {
+          "exists": true,
+          "size_bytes": 14731,
+          "quality": "COMPLETE"
+        }
+      },
+      "completion_percentage": 100.0,
+      "layer": 3,
+      "priority": "NORMAL",
+      "dependencies": []
+    }
+  ]
+}

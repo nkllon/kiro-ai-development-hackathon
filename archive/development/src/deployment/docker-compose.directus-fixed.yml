@@ -1,0 +1,139 @@
+services:
+  # PostgreSQL Database for Directus
+  directus-postgres:
+    image: postgres:15-alpine
+    container_name: directus_postgres_fixed
+    environment:
+      POSTGRES_DB: directus_beast_mode
+      POSTGRES_USER: directus
+      POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD:-directus_secure_password}
+    volumes:
+      - directus_postgres_data:/var/lib/postgresql/data
+      - ./scripts/directus-init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5433:5432"  # Use different port to avoid conflicts
+    networks:
+      - beast_mode_directus_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U directus -d directus_beast_mode"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  # Directus CMS
+  directus:
+    image: directus/directus:10.8
+    container_name: directus_cms_fixed
+    ports:
+      - "8055:8055"
+    environment:
+      # Security Configuration
+      KEY: ${DIRECTUS_KEY:-directus-beast-mode-key-change-in-production}
+      SECRET: ${DIRECTUS_SECRET:-directus-beast-mode-secret-change-in-production}
+      
+      # Database Configuration
+      DB_CLIENT: pg
+      DB_HOST: directus-postgres
+      DB_PORT: 5432
+      DB_DATABASE: directus_beast_mode
+      DB_USER: directus
+      DB_PASSWORD: ${DIRECTUS_DB_PASSWORD:-directus_secure_password}
+      
+      # Admin User Configuration
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL:-admin@beast-mode.local}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD:-beast_mode_admin_secure}
+      
+      # API Configuration
+      PUBLIC_URL: ${DIRECTUS_PUBLIC_URL:-http://localhost:8055}
+      CORS_ENABLED: true
+      CORS_ORIGIN: true
+      
+      # File Storage Configuration
+      STORAGE_LOCATIONS: local
+      STORAGE_LOCAL_DRIVER: local
+      STORAGE_LOCAL_ROOT: ./uploads
+      
+      # Email Configuration (disabled for development)
+      # EMAIL_FROM: no-reply@beast-mode.local
+      # EMAIL_TRANSPORT: disabled
+      
+      # Logging Configuration
+      LOG_LEVEL: ${DIRECTUS_LOG_LEVEL:-info}
+      LOG_STYLE: pretty
+      
+      # Cache Configuration
+      CACHE_ENABLED: true
+      CACHE_STORE: memory
+      CACHE_TTL: 30m
+      
+      # Rate Limiting
+      RATE_LIMITER_ENABLED: true
+      RATE_LIMITER_STORE: memory
+      RATE_LIMITER_POINTS: 50
+      RATE_LIMITER_DURATION: 1
+      
+      # WebSocket Configuration
+      WEBSOCKETS_ENABLED: true
+      
+      # Beast Mode Integration
+      BEAST_MODE_INTEGRATION: true
+      AI_MEMORY_PALACE_ENABLED: true
+      
+    volumes:
+      - directus_uploads:/directus/uploads
+      - ./directus/snapshots:/directus/snapshots:ro
+    depends_on:
+      directus-postgres:
+        condition: service_healthy
+    networks:
+      - beast_mode_directus_net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8055/server/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+  # Redis for caching and sessions (optional but recommended for production)
+  directus-redis:
+    image: redis:7-alpine
+    container_name: directus_redis_fixed
+    ports:
+      - "6380:6379"  # Use different port to avoid conflicts
+    volumes:
+      - directus_redis_data:/data
+    networks:
+      - beast_mode_directus_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+
+volumes:
+  directus_postgres_data:
+    driver: local
+    name: beast_mode_directus_postgres_data
+  directus_uploads:
+    driver: local
+    name: beast_mode_directus_uploads
+  directus_extensions:
+    driver: local
+    name: beast_mode_directus_extensions
+  directus_redis_data:
+    driver: local
+    name: beast_mode_directus_redis_data
+
+networks:
+  beast_mode_directus_net:
+    driver: bridge
+    name: beast_mode_directus_network
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16
+          gateway: 172.30.0.1

@@ -1,0 +1,21 @@
+{
+  "evidence_id": "7cf79f6c-7fcc-462b-8e5e-94b7a9bd87a2",
+  "timestamp": "2025-09-27T05:30:59.236652",
+  "evidence_type": "config_snapshot",
+  "source_test": "cloudflare_ssl_settings_configuration",
+  "metadata": {
+    "config_type": "cloudflare_ssl_settings",
+    "snapshot_timestamp": "2025-09-27T05:30:59.236627",
+    "data_type": "dict"
+  },
+  "integrity_hash": "ff825bc958c0642968936c078c79cc85d8e4d2ac98244c9741b859bc44615f92",
+  "data": {
+    "domain": "example.com",
+    "zone_id": "mock-zone-id",
+    "ssl_info": {
+      "status_code": 404,
+      "response_time": 0.126586
+    },
+    "test_timestamp": "2025-09-27T05:30:59.236621"
+  }
+}

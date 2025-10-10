@@ -133,6 +133,8 @@ class PrometheusExporter:
         port: int = 8000,
         monitoring_interval: float = 5.0,
         enable_http_server: bool = True,
+        prometheus_url: Optional[str] = None,
+        **kwargs,
     ):
         """Initialize Prometheus exporter (singleton)."""
         # Thread-safe initialization check
@@ -144,6 +146,12 @@ class PrometheusExporter:
             self.port = port
             self.monitoring_interval = monitoring_interval
             self.enable_http_server = enable_http_server
+            # When a remote Prometheus endpoint is provided, we operate in remote scrape mode
+            # and do not attempt to start a local daemon/http server.
+            self.prometheus_url = prometheus_url
+            if self.prometheus_url:
+                self.enable_http_server = False
+            self._ignored_kwargs: Dict[str, Any] = dict(kwargs)
 
             self.logger = self._setup_logging()
             
@@ -153,18 +161,43 @@ class PrometheusExporter:
             self.performance_monitor = None
             
             # Import the new monitoring client
-            try:
-                from .client import MonitoringClient
-                self.monitoring_client = MonitoringClient(
-                    client_id="prometheus_exporter_legacy",
-                    daemon_port=port,
-                    fallback_mode=True
-                )
-                self.logger.info("Using new daemon-based monitoring system")
-                self._use_daemon = True
-            except ImportError:
-                self.logger.warning("New monitoring client not available, falling back to legacy mode")
+            # Check if daemon mode is explicitly disabled
+            disable_daemon = os.environ.get('BEAST_MODE_DISABLE_DAEMON', '0') == '1'
+
+            if disable_daemon or self.prometheus_url:
+                self.logger.info("Daemon mode explicitly disabled via BEAST_MODE_DISABLE_DAEMON")
                 self._use_daemon = False
+            else:
+                try:
+                    from .client import MonitoringClient
+                    # Try to check if daemon is actually running before committing to daemon mode
+                    try:
+                        import socket
+                        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                        sock.settimeout(1)
+                        result = sock.connect_ex(('localhost', port))
+                        sock.close()
+                        daemon_running = (result == 0)
+                    except:
+                        daemon_running = False
+
+                    if not daemon_running:
+                        self.logger.warning(f"Monitoring daemon not running on port {port}, falling back to legacy mode")
+                        self._use_daemon = False
+                    else:
+                        self.monitoring_client = MonitoringClient(
+                            client_id="prometheus_exporter_legacy",
+                            daemon_port=port,
+                            fallback_mode=True
+                        )
+                        self.logger.info("Using new daemon-based monitoring system")
+                        self._use_daemon = True
+                except ImportError:
+                    self.logger.warning("New monitoring client not available, falling back to legacy mode")
+                    self._use_daemon = False
+                except Exception as e:
+                    self.logger.warning(f"Failed to connect to monitoring daemon: {e}, falling back to legacy mode")
+                    self._use_daemon = False
 
             if not PROMETHEUS_AVAILABLE and not self._use_daemon:
                 self.logger.warning(
@@ -609,12 +642,15 @@ class PrometheusExporter:
 
     def stop_metrics_export(self):
         """Stop metrics export thread."""
-        self.export_active = False
-        if hasattr(self, "export_thread") and self.export_thread and self.export_thread.is_alive():
-            self.export_thread.join(timeout=5)
-            if self.export_thread.is_alive():
+        if hasattr(self, "export_active"):
+            self.export_active = False
+        thread = getattr(self, "export_thread", None)
+        if thread and thread.is_alive():
+            thread.join(timeout=5)
+            if thread.is_alive() and hasattr(self, "logger"):
                 self.logger.warning("Export thread did not stop gracefully")
-        self.logger.info("Metrics export stopped")
+        if hasattr(self, "logger"):
+            self.logger.info("Metrics export stopped")
 
     def shutdown(self):
         """Shutdown the exporter and clean up resources."""
@@ -1102,7 +1138,10 @@ class PrometheusExporter:
 
     def __del__(self):
         """Cleanup on destruction."""
-        self.stop_metrics_export()
+        try:
+            self.stop_metrics_export()
+        except Exception:
+            pass
 
 
 def main() -> None:

@@ -1,0 +1,20 @@
+{
+  "evidence_id": "b51862eb-0e98-4118-8551-824768e34a13",
+  "timestamp": "2025-09-27T04:35:03.810596",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.810590",
+    "data_type": "dict"
+  },
+  "integrity_hash": "328fb0c7dff84b8d828178a4367d0c727830263e13565ddda1ff0fe1b1fde72e",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/hooks/azure_content_safety.py",
+    "file_size": 5640,
+    "line_count": 157,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.810588"
+  }
+}

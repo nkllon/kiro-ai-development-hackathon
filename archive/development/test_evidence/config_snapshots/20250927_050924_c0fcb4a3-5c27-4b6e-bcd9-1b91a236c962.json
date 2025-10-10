@@ -1,0 +1,62 @@
+{
+  "evidence_id": "c0fcb4a3-5c27-4b6e-bcd9-1b91a236c962",
+  "timestamp": "2025-09-27T05:09:24.544140",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.544091",
+    "data_type": "dict"
+  },
+  "integrity_hash": "3d63a293ddeacfd8a1372d7bb1bb9ebabf30a600e9d4cee963df38370090217e",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/management_endpoints/key_management_endpoints.py",
+    "file_size": 123810,
+    "line_count": 3236,
+    "route_analysis": {
+      "total_routes": 12,
+      "websocket_routes": [],
+      "http_routes": [
+        "/key/generate",
+        "/key/service-account/generate",
+        "/key/update",
+        "/key/delete",
+        "/v2/key/info",
+        "/key/info",
+        "/key/{key:path}/regenerate",
+        "/key/regenerate",
+        "/key/list",
+        "/key/block",
+        "/key/unblock",
+        "/key/health"
+      ],
+      "route_handlers": {
+        "/key/generate": "generate_key_fn",
+        "/key/service-account/generate": "generate_service_account_key_fn",
+        "/key/update": "update_key_fn",
+        "/key/delete": "delete_key_fn",
+        "/v2/key/info": "info_key_fn_v2",
+        "/key/info": "info_key_fn",
+        "/key/{key:path}/regenerate": "regenerate_key_fn",
+        "/key/regenerate": "regenerate_key_fn",
+        "/key/list": "list_keys",
+        "/key/block": "block_key",
+        "/key/unblock": "unblock_key",
+        "/key/health": "key_health"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "fastapi.Request",
+        "fastapi.Header",
+        "fastapi.HTTPException",
+        "fastapi.Query",
+        "fastapi.status",
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.544010"
+  }
+}

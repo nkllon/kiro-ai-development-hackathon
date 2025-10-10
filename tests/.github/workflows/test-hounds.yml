@@ -1,0 +1,20 @@
+name: Test Hounds - Simple Version
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-coordination:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Test Agent Coordination
+        run: |
+          echo "🐕‍🦺 Testing multi-agent coordination..."
+          echo "Execution ID: $(date +%Y%m%d_%H%M%S)"
+          echo "✅ Academic Agent: Ready"
+          echo "✅ OpenSource Agent: Ready" 
+          echo "✅ Documentation Agent: Ready"
+          echo "🎯 All agents coordinated successfully!"

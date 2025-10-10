@@ -1,0 +1,61 @@
+{
+  "timestamp": "2025-09-26T22:23:39.314268",
+  "domain": "observatory.nkllon.com",
+  "upgrade_tests": [
+    {
+      "endpoint": "/ws/emoji-rain",
+      "response_time": 0.34206318855285645,
+      "status_code": "404",
+      "success": false,
+      "error": null
+    },
+    {
+      "endpoint": "/ws/observatory",
+      "response_time": 0.3190948963165283,
+      "status_code": "404",
+      "success": false,
+      "error": null
+    },
+    {
+      "endpoint": "/ws/anomalies",
+      "response_time": 0.4835541248321533,
+      "status_code": "404",
+      "success": false,
+      "error": null
+    },
+    {
+      "endpoint": "/ws/doctor-status",
+      "response_time": 0.6809229850769043,
+      "status_code": "404",
+      "success": false,
+      "error": null
+    }
+  ],
+  "connection_tests": [
+    {
+      "endpoint": "/ws/emoji-rain",
+      "connection_time": null,
+      "success": false,
+      "error": "create_connection() got an unexpected keyword argument 'timeout'"
+    },
+    {
+      "endpoint": "/ws/observatory",
+      "connection_time": null,
+      "success": false,
+      "error": "create_connection() got an unexpected keyword argument 'timeout'"
+    },
+    {
+      "endpoint": "/ws/anomalies",
+      "connection_time": null,
+      "success": false,
+      "error": "create_connection() got an unexpected keyword argument 'timeout'"
+    },
+    {
+      "endpoint": "/ws/doctor-status",
+      "connection_time": null,
+      "success": false,
+      "error": "create_connection() got an unexpected keyword argument 'timeout'"
+    }
+  ],
+  "overall_status": "non_functional"
+}

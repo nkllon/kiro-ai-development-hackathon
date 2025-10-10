@@ -1,0 +1,36 @@
+{
+  "evidence_id": "83b17bf5-fc73-49e4-91d4-943305902494",
+  "timestamp": "2025-09-27T04:27:13.120604",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.120581",
+    "data_type": "dict"
+  },
+  "integrity_hash": "6a4030810460111280e8da37c6d1cfe75a8662dbd25dd8c8270e975b0a09fb1a",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/fastapi/openapi/models.py",
+    "file_size": 15625,
+    "line_count": 452,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi._compat.PYDANTIC_V2",
+        "fastapi._compat.GetJsonSchemaHandler",
+        "fastapi._compat.with_info_plain_validator_function",
+        "fastapi.logger",
+        "fastapi._compat.CoreSchema",
+        "fastapi.logger.logger",
+        "fastapi._compat.JsonSchemaValue",
+        "fastapi._compat._model_rebuild",
+        "fastapi._compat"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.120560"
+  }
+}

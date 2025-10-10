@@ -1,0 +1,23 @@
+{
+  "evidence_id": "14239164-f3e0-4e20-a163-f1792cd0776c",
+  "timestamp": "2025-09-27T03:58:56.253993",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handshake_configuration",
+  "metadata": {
+    "config_type": "websocket_handshake",
+    "snapshot_timestamp": "2025-09-27T03:58:56.253972",
+    "data_type": "dict"
+  },
+  "integrity_hash": "303720603dcebb80e69798db702d77d9c2f4d3fb8723bc3c29f2f0bf1bbf3c6e",
+  "data": {
+    "endpoint_url": "wss://observatory.nkllon.com/ws/status",
+    "handshake_success": false,
+    "upgrade_header": null,
+    "connection_header": null,
+    "websocket_accept": null,
+    "websocket_protocol": null,
+    "response_time": 0.0011887550354003906,
+    "error_message": "WebSocket connection failed: create_connection() got an unexpected keyword argument 'extra_headers'",
+    "timestamp": "2025-09-27T03:58:56.253961"
+  }
+}

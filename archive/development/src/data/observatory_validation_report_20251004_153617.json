@@ -1,0 +1,138 @@
+{
+  "timestamp": "2025-10-04T15:36:10.743089",
+  "tests": {
+    "Local Health endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 1.745352029800415,
+      "timestamp": "2025-10-04T15:36:12.488590"
+    },
+    "Local Readiness endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 0.0033960342407226562,
+      "timestamp": "2025-10-04T15:36:12.492012"
+    },
+    "Local Metrics endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 0.0068280696868896484,
+      "timestamp": "2025-10-04T15:36:12.498855"
+    },
+    "Local Dashboard endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 0.033532142639160156,
+      "timestamp": "2025-10-04T15:36:12.532413"
+    },
+    "External Health endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 0.21737909317016602,
+      "timestamp": "2025-10-04T15:36:12.749937"
+    },
+    "External Dashboard endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 0.47154712677001953,
+      "timestamp": "2025-10-04T15:36:13.221518"
+    },
+    "Data Directory metrics": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:13.222576"
+    },
+    "Data Directory dashboards": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:13.222632"
+    },
+    "Data Directory logs": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:13.222658"
+    },
+    "Data Directory config": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:13.222685"
+    },
+    "Data Write Permissions": {
+      "status": "pass",
+      "details": "Can write to data directories",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:13.223196"
+    },
+    "Process Running": {
+      "status": "pass",
+      "details": "Observatory process found (PIDs: 76994)",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:13.265335"
+    },
+    "Process Resources PID 76994": {
+      "status": "pass",
+      "details": "76994  12.1  0.6   0:28.24",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:13.273314"
+    },
+    "Tunnel Process": {
+      "status": "pass",
+      "details": "Cloudflare tunnel running (PIDs: 82792)",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:13.298174"
+    },
+    "Performance /health": {
+      "status": "pass",
+      "details": "Avg response time: 0.01s (target: <1.0s)",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:13.330974"
+    },
+    "Performance /metrics": {
+      "status": "pass",
+      "details": "Avg response time: 0.00s (target: <2.0s)",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:13.353479"
+    },
+    "Performance /": {
+      "status": "pass",
+      "details": "Avg response time: 0.82s (target: <3.0s)",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:17.470649"
+    },
+    "WebSocket /ws/observatory": {
+      "status": "fail",
+      "details": "create_connection() got an unexpected keyword argument 'timeout'",
+      "duration": 0.024240970611572266,
+      "timestamp": "2025-10-04T15:36:17.494942"
+    },
+    "WebSocket /ws/emoji-rain": {
+      "status": "fail",
+      "details": "create_connection() got an unexpected keyword argument 'timeout'",
+      "duration": 0.0005500316619873047,
+      "timestamp": "2025-10-04T15:36:17.495527"
+    },
+    "WebSocket /ws/anomalies": {
+      "status": "fail",
+      "details": "create_connection() got an unexpected keyword argument 'timeout'",
+      "duration": 0.0005099773406982422,
+      "timestamp": "2025-10-04T15:36:17.496060"
+    },
+    "WebSocket /ws/doctor-status": {
+      "status": "fail",
+      "details": "create_connection() got an unexpected keyword argument 'timeout'",
+      "duration": 0.00046896934509277344,
+      "timestamp": "2025-10-04T15:36:17.496547"
+    }
+  },
+  "summary": {
+    "total_tests": 21,
+    "passed_tests": 17,
+    "failed_tests": 4,
+    "success_rate": 80.95238095238095,
+    "overall_status": "fail"
+  }
+}

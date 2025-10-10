@@ -1,0 +1,15 @@
+{
+  "name": "sample-enhancement-spec",
+  "dimensions": {
+    "functional_completeness": 0.85,
+    "technical_depth": 0.78,
+    "integration_clarity": 0.92,
+    "error_handling": 0.73,
+    "performance_requirements": 0.81
+  },
+  "enhancement_recommendations": [
+    "Improve error handling coverage",
+    "Add performance benchmarks",
+    "Enhance technical documentation"
+  ]
+}

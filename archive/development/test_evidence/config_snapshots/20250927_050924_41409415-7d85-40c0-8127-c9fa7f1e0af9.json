@@ -1,0 +1,30 @@
+{
+  "evidence_id": "41409415-7d85-40c0-8127-c9fa7f1e0af9",
+  "timestamp": "2025-09-27T05:09:24.630325",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.630302",
+    "data_type": "dict"
+  },
+  "integrity_hash": "ad4c7410ed73cd9266ee3f04911621893fcbf2acd5aa2fad1b544656c8b28f33",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_hooks/noma/noma.py",
+    "file_size": 25923,
+    "line_count": 733,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "fastapi.HTTPException",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.630280"
+  }
+}

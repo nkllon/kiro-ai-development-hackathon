@@ -1,0 +1,22 @@
+[project]
+name = "beast-mailbox-core"
+version = "0.2.0"
+description = "Redis-backed mailbox utilities from Beast Mode"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+dependencies = [
+  "redis>=5.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/nkllon/beast-mailbox-core"
+Repository = "https://github.com/nkllon/beast-mailbox-core"
+
+[project.scripts]
+beast-mailbox-service = "beast_mailbox_core.cli:run_service"
+beast-mailbox-send = "beast_mailbox_core.cli:send_message"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

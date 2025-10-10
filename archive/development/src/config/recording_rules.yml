@@ -1,0 +1,236 @@
+# MSP SSL Chaos Tamer - Prometheus Recording Rules
+# Pre-computed metrics for improved dashboard performance and complex calculations
+
+groups:
+- name: msp_ssl_certificate_aggregations
+  interval: 30s
+  rules:
+  # Certificate status aggregations
+  - record: msp_ssl:certificate_status_count
+    expr: count by (status, client_id) (msp_ssl_certificate_status)
+
+  - record: msp_ssl:certificates_expiring_7d
+    expr: count by (client_id) (msp_ssl_certificate_expiry_days < 7 and msp_ssl_certificate_expiry_days > 0)
+
+  - record: msp_ssl:certificates_expiring_30d
+    expr: count by (client_id) (msp_ssl_certificate_expiry_days < 30 and msp_ssl_certificate_expiry_days > 0)
+
+  - record: msp_ssl:certificates_expired
+    expr: count by (client_id) (msp_ssl_certificate_expiry_days < 0)
+
+  - record: msp_ssl:certificates_total_by_client
+    expr: count by (client_id) (msp_ssl_certificate_status)
+
+  - record: msp_ssl:certificates_total_by_ca
+    expr: count by (ca_provider) (msp_ssl_certificate_status)
+
+- name: msp_ssl_renewal_aggregations
+  interval: 60s
+  rules:
+  # Renewal success rates
+  - record: msp_ssl:renewal_success_rate_5m
+    expr: |
+      (
+        rate(msp_ssl_renewals_successful_total[5m]) /
+        (rate(msp_ssl_renewals_successful_total[5m]) + rate(msp_ssl_renewal_failures_total[5m]))
+      ) * 100
+
+  - record: msp_ssl:renewal_success_rate_1h
+    expr: |
+      (
+        rate(msp_ssl_renewals_successful_total[1h]) /
+        (rate(msp_ssl_renewals_successful_total[1h]) + rate(msp_ssl_renewal_failures_total[1h]))
+      ) * 100
+
+  - record: msp_ssl:renewal_success_rate_24h
+    expr: |
+      (
+        rate(msp_ssl_renewals_successful_total[24h]) /
+        (rate(msp_ssl_renewals_successful_total[24h]) + rate(msp_ssl_renewal_failures_total[24h]))
+      ) * 100
+
+  # Renewal throughput
+  - record: msp_ssl:renewal_throughput_5m
+    expr: rate(msp_ssl_renewals_total[5m]) * 60
+
+  - record: msp_ssl:renewal_throughput_1h
+    expr: rate(msp_ssl_renewals_total[1h]) * 3600
+
+  # Average renewal duration
+  - record: msp_ssl:renewal_duration_avg_5m
+    expr: rate(msp_ssl_renewal_duration_seconds_sum[5m]) / rate(msp_ssl_renewal_duration_seconds_count[5m])
+
+- name: msp_ssl_ca_provider_aggregations
+  interval: 60s
+  rules:
+  # CA provider health scores
+  - record: msp_ssl:ca_provider_health_score
+    expr: |
+      (
+        msp_ssl_ca_provider_health * 0.4 +
+        (1 - msp_ssl_ca_rate_limit_usage) * 0.3 +
+        msp_ssl:ca_provider_success_rate_1h * 0.01 * 0.3
+      )
+
+  # CA provider success rates
+  - record: msp_ssl:ca_provider_success_rate_1h
+    expr: |
+      (
+        rate(msp_ssl_ca_requests_successful_total[1h]) /
+        rate(msp_ssl_ca_requests_total[1h])
+      ) * 100
+
+  - record: msp_ssl:ca_provider_success_rate_24h
+    expr: |
+      (
+        rate(msp_ssl_ca_requests_successful_total[24h]) /
+        rate(msp_ssl_ca_requests_total[24h])
+      ) * 100
+
+  # CA provider response times
+  - record: msp_ssl:ca_provider_response_time_avg_5m
+    expr: rate(msp_ssl_ca_request_duration_seconds_sum[5m]) / rate(msp_ssl_ca_request_duration_seconds_count[5m])
+
+- name: msp_ssl_system_aggregations
+  interval: 30s
+  rules:
+  # System performance metrics
+  - record: msp_ssl:error_rate_5m
+    expr: rate(msp_ssl_errors_total[5m])
+
+  - record: msp_ssl:error_rate_1h
+    expr: rate(msp_ssl_errors_total[1h])
+
+  - record: msp_ssl:request_rate_5m
+    expr: rate(msp_ssl_requests_total[5m])
+
+  - record: msp_ssl:request_rate_1h
+    expr: rate(msp_ssl_requests_total[1h])
+
+  # Response time percentiles
+  - record: msp_ssl:response_time_p50_5m
+    expr: histogram_quantile(0.50, rate(msp_ssl_request_duration_seconds_bucket[5m]))
+
+  - record: msp_ssl:response_time_p95_5m
+    expr: histogram_quantile(0.95, rate(msp_ssl_request_duration_seconds_bucket[5m]))
+
+  - record: msp_ssl:response_time_p99_5m
+    expr: histogram_quantile(0.99, rate(msp_ssl_request_duration_seconds_bucket[5m]))
+
+  # Database performance
+  - record: msp_ssl:database_query_rate_5m
+    expr: rate(msp_ssl_database_queries_total[5m])
+
+  - record: msp_ssl:database_query_duration_avg_5m
+    expr: rate(msp_ssl_database_query_duration_seconds_sum[5m]) / rate(msp_ssl_database_query_duration_seconds_count[5m])
+
+- name: msp_ssl_business_metrics
+  interval: 300s  # 5 minutes
+  rules:
+  # Client-specific business metrics
+  - record: msp_ssl:client_certificate_health_score
+    expr: |
+      (
+        (msp_ssl:certificates_total_by_client - msp_ssl:certificates_expired - msp_ssl:certificates_expiring_7d) /
+        msp_ssl:certificates_total_by_client
+      ) * 100
+
+  - record: msp_ssl:client_renewal_efficiency
+    expr: |
+      (
+        rate(msp_ssl_renewals_successful_total[24h]) /
+        rate(msp_ssl_renewals_total[24h])
+      ) * 100
+
+  # Cost tracking (if cost metrics are available)
+  - record: msp_ssl:daily_certificate_cost
+    expr: increase(msp_ssl_certificate_cost_total[24h])
+
+  - record: msp_ssl:monthly_certificate_cost
+    expr: increase(msp_ssl_certificate_cost_total[30d])
+
+  # Operational efficiency
+  - record: msp_ssl:automation_rate
+    expr: |
+      (
+        rate(msp_ssl_automated_operations_total[24h]) /
+        rate(msp_ssl_operations_total[24h])
+      ) * 100
+
+  - record: msp_ssl:manual_intervention_rate
+    expr: |
+      (
+        rate(msp_ssl_manual_operations_total[24h]) /
+        rate(msp_ssl_operations_total[24h])
+      ) * 100
+
+- name: msp_ssl_capacity_planning
+  interval: 300s  # 5 minutes
+  rules:
+  # Capacity and growth metrics
+  - record: msp_ssl:certificate_growth_rate_7d
+    expr: |
+      (
+        (msp_ssl:certificates_total_by_client - msp_ssl:certificates_total_by_client offset 7d) /
+        msp_ssl:certificates_total_by_client offset 7d
+      ) * 100
+
+  - record: msp_ssl:certificate_growth_rate_30d
+    expr: |
+      (
+        (msp_ssl:certificates_total_by_client - msp_ssl:certificates_total_by_client offset 30d) /
+        msp_ssl:certificates_total_by_client offset 30d
+      ) * 100
+
+  # Queue depth and processing capacity
+  - record: msp_ssl:queue_processing_rate_5m
+    expr: rate(msp_ssl_queue_processed_total[5m])
+
+  - record: msp_ssl:queue_efficiency
+    expr: |
+      (
+        msp_ssl:queue_processing_rate_5m /
+        (msp_ssl_renewal_queue_size + msp_ssl:queue_processing_rate_5m)
+      ) * 100
+
+  # Resource utilization predictions
+  - record: msp_ssl:predicted_queue_size_1h
+    expr: |
+      msp_ssl_renewal_queue_size +
+      (rate(msp_ssl_queue_additions_total[5m]) - msp_ssl:queue_processing_rate_5m) * 3600
+
+- name: msp_ssl_sla_metrics
+  interval: 60s
+  rules:
+  # SLA compliance metrics
+  - record: msp_ssl:uptime_percentage_24h
+    expr: |
+      (
+        1 - (
+          increase(msp_ssl_downtime_seconds_total[24h]) / 86400
+        )
+      ) * 100
+
+  - record: msp_ssl:uptime_percentage_30d
+    expr: |
+      (
+        1 - (
+          increase(msp_ssl_downtime_seconds_total[30d]) / 2592000
+        )
+      ) * 100
+
+  # Certificate SLA compliance
+  - record: msp_ssl:certificate_sla_compliance
+    expr: |
+      (
+        (msp_ssl:certificates_total_by_client - msp_ssl:certificates_expired) /
+        msp_ssl:certificates_total_by_client
+      ) * 100
+
+  # Response time SLA compliance (assuming 2 second SLA)
+  - record: msp_ssl:response_time_sla_compliance_5m
+    expr: |
+      (
+        rate(msp_ssl_request_duration_seconds_bucket{le="2.0"}[5m]) /
+        rate(msp_ssl_request_duration_seconds_count[5m])
+      ) * 100

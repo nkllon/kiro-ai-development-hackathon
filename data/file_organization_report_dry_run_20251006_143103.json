@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-10-06T14:31:03.204778",
+  "dry_run": true,
+  "cleanup_plan_file": "cleanup_plan.json",
+  "actions_taken": 0,
+  "execution_log": [],
+  "summary": {
+    "files_moved": 0,
+    "files_deleted": 0,
+    "directories_created": 0
+  }
+}

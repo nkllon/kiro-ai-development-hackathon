@@ -1,0 +1,37 @@
+# AppArmor profile for pytest - Make-only execution
+# This profile restricts pytest to only run when called by make
+
+#include <tunables/global>
+
+profile pytest_make_only {
+  #include <abstractions/base>
+  #include <abstractions/python>
+  
+  # Allow pytest executable
+  /home/lou/.local/bin/pytest r,
+  /usr/bin/python3 r,
+  /usr/bin/python3.* r,
+  
+  # Allow Python libraries
+  /usr/lib/python3/** r,
+  /usr/local/lib/python3/** r,
+  /home/lou/.local/lib/python3/** r,
+  
+  # Allow reading project files
+  /home/lou/Documents/OpenFlow-Playground/** r,
+  
+  # Allow writing test artifacts
+  /tmp/** w,
+  /home/lou/Documents/OpenFlow-Playground/.pytest_cache/** w,
+  
+  # Deny direct execution - only allow through make
+  # This is enforced by checking parent process
+  deny /home/lou/.local/bin/pytest x,
+  
+  # Allow execution only if parent is make
+  /home/lou/.local/bin/pytest x -> /usr/bin/make,
+  
+  # Network access for test reporting (if needed)
+  network inet tcp,
+  network inet udp,
+} 

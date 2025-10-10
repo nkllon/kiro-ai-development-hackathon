@@ -1,0 +1,30 @@
+{
+  "evidence_id": "8dc1986a-c808-4551-9abe-ab93b01f0e1f",
+  "timestamp": "2025-09-27T04:27:12.898403",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.898396",
+    "data_type": "dict"
+  },
+  "integrity_hash": "9c0053d062fd95e0ebd57f16a2bd60a11ae72918b20ba27923301094839e42d4",
+  "data": {
+    "file_path": "./test_websocket_message_handling.py",
+    "file_size": 3484,
+    "line_count": 109,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi",
+        "asyncio",
+        "fastapi.WebSocketDisconnect"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.898391"
+  }
+}

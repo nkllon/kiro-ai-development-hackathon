@@ -1,0 +1,23 @@
+{
+  "evidence_id": "f5a2e1e8-3230-48f0-bf19-24df6997059d",
+  "timestamp": "2025-09-27T03:59:45.607161",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handshake_configuration",
+  "metadata": {
+    "config_type": "websocket_handshake",
+    "snapshot_timestamp": "2025-09-27T03:59:45.607124",
+    "data_type": "dict"
+  },
+  "integrity_hash": "c0e38393e06d666851a37d7c2d5e7990085c1ea89ecf3b15d2b7865d317133b5",
+  "data": {
+    "endpoint_url": "wss://observatory.nkllon.com/ws/health",
+    "handshake_success": false,
+    "upgrade_header": null,
+    "connection_header": null,
+    "websocket_accept": null,
+    "websocket_protocol": null,
+    "response_time": 0.23076605796813965,
+    "error_message": "WebSocket handshake failed: server rejected WebSocket connection: HTTP 403",
+    "timestamp": "2025-09-27T03:59:45.607106"
+  }
+}

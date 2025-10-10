@@ -1,0 +1,31 @@
+{
+  "evidence_id": "2fe2b78c-8bde-4f4a-b5a6-48fc208f01b9",
+  "timestamp": "2025-09-27T05:09:24.637954",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.637944",
+    "data_type": "dict"
+  },
+  "integrity_hash": "1f0fe775ad9c3ef3899106948edaee0f681558df87b4ed578279cc353a2bdad4",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/custom_hooks/custom_ui_sso_hook.py",
+    "file_size": 1118,
+    "line_count": 32,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi_sso.sso.base.OpenID",
+        "fastapi",
+        "fastapi.Request",
+        "fastapi_sso.sso.base"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.637939"
+  }
+}

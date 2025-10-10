@@ -21,7 +21,7 @@ from src.beast_mode.messaging.transport import TransportFactory
 def redis_transport():
     """Create Redis transport for testing"""
     with patch('src.beast_mode.messaging.redis_transport.BeastModeDaemon') as mock_daemon_class:
-        mock_daemon = Mock()
+        mock_daemon = AsyncMock()
         mock_daemon.start_daemon.return_value = True
         mock_daemon.send_message.return_value = None
         mock_daemon.check_mail.return_value = []
@@ -187,6 +187,9 @@ def test_backward_compatibility_methods(redis_transport):
 
 def test_transport_factory_registration():
     """Test that Redis transport is registered with factory"""
+    # Ensure redis transport is imported to trigger registration
+    from src.beast_mode.messaging.redis_transport import RedisTransport
+    
     available_transports = TransportFactory.get_available_transports()
     assert 'redis' in available_transports
 
@@ -225,8 +228,7 @@ async def test_async_handler_support(redis_transport):
     # Mock a message
     from src.beast_mode.messaging.daemon_client import QueuedMessage
     from datetime import datetime
-from src.rm_ddd.core.health import ModuleHealth
-
+    from src.rm_ddd.core.health import ModuleHealth
 
     test_message = BeastModeMessage(
         type=MessageType.SIMPLE_MESSAGE,

@@ -1,0 +1,1 @@
+"""Makefile governance test package."""

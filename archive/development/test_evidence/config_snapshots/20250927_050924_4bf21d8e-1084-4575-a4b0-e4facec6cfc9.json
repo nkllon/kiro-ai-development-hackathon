@@ -1,0 +1,41 @@
+{
+  "evidence_id": "4bf21d8e-1084-4575-a4b0-e4facec6cfc9",
+  "timestamp": "2025-09-27T05:09:24.348279",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.348271",
+    "data_type": "dict"
+  },
+  "integrity_hash": "74ab4ebf3a4af09f768ee82037ebcad598357ad0f6ade7636b1c09267b225682",
+  "data": {
+    "file_path": "./scripts/simple_war_room.py",
+    "file_size": 7649,
+    "line_count": 251,
+    "route_analysis": {
+      "total_routes": 2,
+      "websocket_routes": [
+        "/ws"
+      ],
+      "http_routes": [
+        "/"
+      ],
+      "route_handlers": {
+        "/": "dashboard",
+        "/ws": "websocket_endpoint"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "uvicorn",
+        "fastapi.responses",
+        "fastapi.WebSocket",
+        "fastapi.responses.HTMLResponse",
+        "fastapi.FastAPI",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.348264"
+  }
+}

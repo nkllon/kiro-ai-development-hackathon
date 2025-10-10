@@ -1,0 +1,39 @@
+{
+  "evidence_id": "dd96ea25-af0b-41df-a297-3532de6b2f94",
+  "timestamp": "2025-09-27T04:27:13.225140",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.225125",
+    "data_type": "dict"
+  },
+  "integrity_hash": "b59df51a949b6b12b1f8bf3396b304b671b0af5cf556d30a843ec3be7b1ea202",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/fastapi/_compat.py",
+    "file_size": 24274,
+    "line_count": 666,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.params",
+        "fastapi.openapi.constants",
+        "fastapi.types.IncEx",
+        "fastapi.types.ModelNameMap",
+        "starlette.datastructures",
+        "starlette.datastructures.UploadFile",
+        "fastapi.openapi.constants.REF_PREFIX",
+        "fastapi.exceptions.RequestErrorModel",
+        "fastapi",
+        "fastapi.types.UnionType",
+        "fastapi.types",
+        "fastapi.exceptions"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.225106"
+  }
+}

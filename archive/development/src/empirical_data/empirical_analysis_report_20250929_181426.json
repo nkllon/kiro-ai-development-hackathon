@@ -1,0 +1,146 @@
+{
+  "analysis_summary": {
+    "total_sessions": 2,
+    "successfully_analyzed": 2,
+    "analysis_timestamp": "2025-09-29T18:14:26.182136",
+    "data_directory": "empirical_data"
+  },
+  "individual_sessions": {
+    "session_20250929_231430": {
+      "session_id": "session_20250929_231430",
+      "analysis_timestamp": "2025-09-29T18:14:26.172597",
+      "system_performance": {
+        "data_points": 95,
+        "duration_minutes": 47.5,
+        "cpu_usage": {
+          "mean": 43.91684210526316,
+          "max": 93.5,
+          "min": 20.4,
+          "median": 39.9
+        },
+        "memory_usage": {
+          "mean": 82.42842105263158,
+          "max": 84.9,
+          "min": 76.3,
+          "median": 82.9
+        },
+        "kiro_processes": {
+          "mean": 10,
+          "max": 10,
+          "min": 10
+        }
+      },
+      "development_velocity": {
+        "data_points": 50,
+        "total_commits_observed": 1,
+        "total_file_modifications": 8666,
+        "average_commits_per_observation": 0.02,
+        "average_modifications_per_observation": 173.32,
+        "active_development_periods": 1
+      },
+      "agent_effectiveness": {
+        "data_points": 196,
+        "agent_usage_frequency": 0.0,
+        "max_concurrent_agents": 0,
+        "average_active_agents": 0
+      },
+      "task_completion": {
+        "total_tasks": 1677,
+        "completed_tasks": 221,
+        "in_progress_tasks": 3,
+        "completion_rate": 0.13178294573643412,
+        "task_files_monitored": 56,
+        "tasks_completed_during_session": 0
+      },
+      "code_quality": {
+        "python_files": 2223,
+        "lines_of_code": 12915,
+        "average_file_size": 5.809716599190283,
+        "test_files": 2644,
+        "test_coverage_ratio": 1.189383715699505
+      }
+    },
+    "session_20250930_000722": {
+      "session_id": "session_20250930_000722",
+      "analysis_timestamp": "2025-09-29T18:14:26.179645",
+      "system_performance": {
+        "data_points": 14,
+        "duration_minutes": 7.0,
+        "cpu_usage": {
+          "mean": 47.385714285714286,
+          "max": 78.2,
+          "min": 27.1,
+          "median": 43.099999999999994
+        },
+        "memory_usage": {
+          "mean": 80.28571428571428,
+          "max": 83.3,
+          "min": 76.9,
+          "median": 80.6
+        },
+        "kiro_processes": {
+          "mean": 10,
+          "max": 10,
+          "min": 10
+        }
+      },
+      "development_velocity": {
+        "data_points": 8,
+        "total_commits_observed": 0,
+        "total_file_modifications": 1433,
+        "average_commits_per_observation": 0,
+        "average_modifications_per_observation": 179.125,
+        "active_development_periods": 0
+      },
+      "agent_effectiveness": {
+        "data_points": 29,
+        "agent_usage_frequency": 0.0,
+        "max_concurrent_agents": 0,
+        "average_active_agents": 0
+      },
+      "task_completion": {
+        "total_tasks": 1677,
+        "completed_tasks": 221,
+        "in_progress_tasks": 3,
+        "completion_rate": 0.13178294573643412,
+        "task_files_monitored": 56,
+        "tasks_completed_during_session": 0
+      },
+      "code_quality": {
+        "python_files": 2223,
+        "lines_of_code": 12915,
+        "average_file_size": 5.809716599190283,
+        "test_files": 2644,
+        "test_coverage_ratio": 1.189383715699505
+      }
+    }
+  },
+  "cross_session_analysis": {
+    "system_performance_trends": {
+      "average_cpu_usage": 45.65127819548872,
+      "cpu_usage_variance": 6.016537102153885,
+      "average_memory_usage": 81.35706766917292,
+      "memory_usage_variance": 2.295596144496594,
+      "average_kiro_processes": 10
+    },
+    "development_trends": {
+      "average_completion_rate": 0.13178294573643412,
+      "completion_rate_variance": 0.0,
+      "average_total_tasks": 1677
+    },
+    "sessions_analyzed": 2
+  },
+  "empirical_insights": {
+    "system_performance_insights": [
+      "High memory usage detected: 81.4% average"
+    ],
+    "development_velocity_insights": [],
+    "agent_effectiveness_insights": [
+      "Low agent usage rate: 0.0%"
+    ],
+    "recommendations": [
+      "Monitor memory usage and consider memory optimization strategies",
+      "Consider increasing agent utilization for development tasks"
+    ]
+  }
+}

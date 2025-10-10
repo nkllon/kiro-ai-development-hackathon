@@ -1,0 +1,45 @@
+{
+  "evidence_id": "2a05fb93-69bb-4309-8fa0-9b9724b35458",
+  "timestamp": "2025-09-27T04:27:13.006927",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.006918",
+    "data_type": "dict"
+  },
+  "integrity_hash": "29510fa7097e76d75b8f6f966acde42fd78f534907040572f499979a5b79cc57",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/fastapi/exception_handlers.py",
+    "file_size": 1275,
+    "line_count": 35,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "starlette.requests",
+        "fastapi.encoders",
+        "starlette.responses",
+        "fastapi.encoders.jsonable_encoder",
+        "fastapi.utils",
+        "starlette.responses.JSONResponse",
+        "fastapi.exceptions.WebSocketRequestValidationError",
+        "fastapi.exceptions.RequestValidationError",
+        "starlette.exceptions",
+        "fastapi.websockets",
+        "fastapi.websockets.WebSocket",
+        "starlette.responses.Response",
+        "starlette.status",
+        "starlette.exceptions.HTTPException",
+        "fastapi.utils.is_body_allowed_for_status_code",
+        "starlette.status.WS_1008_POLICY_VIOLATION",
+        "starlette.requests.Request",
+        "fastapi.exceptions"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.006914"
+  }
+}

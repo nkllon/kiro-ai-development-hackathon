@@ -1,0 +1,39 @@
+# SELinux Policy for pytest Make-only execution
+# This policy restricts pytest to only run when called by make
+
+module pytest_make_only 1.0;
+
+require {
+    type make_t;
+    type user_home_t;
+    type user_tmp_t;
+    type bin_t;
+    type lib_t;
+    type python_exec_t;
+    class file { read write execute };
+    class process { transition };
+}
+
+# Define pytest domain
+type pytest_t;
+type pytest_exec_t;
+
+# Allow make to transition to pytest domain
+can_exec(make_t, pytest_exec_t);
+domain_auto_trans(make_t, pytest_exec_t, pytest_t);
+
+# Allow pytest to read its own executable
+can_read(pytest_t, pytest_exec_t);
+
+# Allow pytest to read Python libraries
+can_read(pytest_t, lib_t);
+
+# Allow pytest to read user home directory (for tests)
+can_read(pytest_t, user_home_t);
+
+# Allow pytest to write to tmp for test artifacts
+can_write(pytest_t, user_tmp_t);
+
+# Deny direct execution by user shell
+# This prevents direct pytest execution
+neverallow user_t pytest_exec_t:file execute; 

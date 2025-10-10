@@ -1,0 +1,86 @@
+# Deployment Automation Configuration
+# This file configures the deployment automation system
+
+# Environment configurations
+environments:
+  dev:
+    url: "http://localhost:8888"
+    websocket_url: "ws://localhost:8888/ws"
+    health_endpoint: "/health"
+    tunnel_config: "cloudflare-tunnel-config-websocket.yml"
+    replicas: 1
+    expected_response_time_ms: 500
+    
+  staging:
+    url: "https://staging-observatory.nkllon.com"
+    websocket_url: "wss://staging-observatory.nkllon.com/ws"
+    health_endpoint: "/health"
+    tunnel_config: "cloudflare-tunnel-config-websocket-staging.yml"
+    replicas: 2
+    expected_response_time_ms: 1000
+    
+  production:
+    url: "https://observatory.nkllon.com"
+    websocket_url: "wss://observatory.nkllon.com/ws"
+    health_endpoint: "/health"
+    tunnel_config: "cloudflare-tunnel-config-websocket.yml"
+    replicas: 3
+    expected_response_time_ms: 1500
+
+# Health check settings
+health_check_timeout: 300  # 5 minutes
+health_check_interval: 10  # 10 seconds
+max_health_check_retries: 30
+
+# Rollback settings
+rollback_timeout: 180  # 3 minutes
+auto_rollback_threshold: 0.8  # 80% health threshold
+
+# Deployment settings
+zero_downtime: true
+max_parallel_deployments: 1
+deployment_timeout: 600  # 10 minutes
+
+# Monitoring settings
+metrics_collection_interval: 5
+alert_thresholds:
+  error_rate: 0.05
+  latency_ms: 1000
+  connection_failure_rate: 0.1
+
+# Validation thresholds
+validation_thresholds:
+  max_latency_ms: 1000
+  max_error_rate: 0.05
+  min_throughput_msgs_per_sec: 1.0
+  max_connection_failure_rate: 0.1
+  min_health_score: 0.8
+  max_response_time_ms: 2000
+
+# Rollback triggers
+rollback_triggers:
+  health_threshold:
+    enabled: true
+    threshold: 0.7
+    check_interval: 30
+  error_rate:
+    enabled: true
+    threshold: 0.1
+    check_interval: 60
+  latency_threshold:
+    enabled: true
+    threshold_ms: 2000
+    check_interval: 30
+  connection_failure:
+    enabled: true
+    threshold: 0.2
+    check_interval: 60
+
+# Backup settings
+backup_retention_days: 7
+backup_validation: true
+
+# Reporting settings
+generate_report: true
+report_format: "json"  # json, html, text
+alert_on_failure: true

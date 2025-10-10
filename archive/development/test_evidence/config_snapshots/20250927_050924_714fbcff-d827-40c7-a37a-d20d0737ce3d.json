@@ -1,0 +1,56 @@
+{
+  "evidence_id": "714fbcff-d827-40c7-a37a-d20d0737ce3d",
+  "timestamp": "2025-09-27T05:09:24.762662",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.762646",
+    "data_type": "dict"
+  },
+  "integrity_hash": "32f9c17da449cc4273dbe5d30b649b998a13140f37fb26cc0924a38971920605",
+  "data": {
+    "file_path": "./backups/war_room_server.py",
+    "file_size": 29674,
+    "line_count": 856,
+    "route_analysis": {
+      "total_routes": 7,
+      "websocket_routes": [
+        "/ws/{user_id}"
+      ],
+      "http_routes": [
+        "/",
+        "/api/health",
+        "/api/metrics",
+        "/api/events",
+        "/api/incidents",
+        "/api/incidents"
+      ],
+      "route_handlers": {
+        "/": "dashboard_home",
+        "/api/health": "health_check",
+        "/api/metrics": "get_metrics",
+        "/api/events": "get_events",
+        "/api/incidents": "create_incident",
+        "/ws/{user_id}": "websocket_endpoint"
+      },
+      "middleware_count": 1,
+      "dependencies": [
+        "asyncio",
+        "uvicorn",
+        "fastapi.middleware.cors",
+        "fastapi.HTTPException",
+        "fastapi.responses",
+        "fastapi.WebSocket",
+        "fastapi.middleware.cors.CORSMiddleware",
+        "fastapi.WebSocketDisconnect",
+        "fastapi.responses.HTMLResponse",
+        "fastapi.staticfiles.StaticFiles",
+        "fastapi.FastAPI",
+        "fastapi.staticfiles",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.762625"
+  }
+}

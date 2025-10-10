@@ -1,0 +1,242 @@
+{
+  "cleanup_timestamp": "2025-10-06T14:00:00",
+  "project_root": ".",
+  "summary": {
+    "files_removed": [
+      "credential_scan_report.json",
+      "security_scan_report.json",
+      "final_credential_scan_report.json",
+      "improved_credential_scan_report.json"
+    ],
+    "directories_cleaned": [],
+    "credential_fixes": 37,
+    "files_processed": 14765,
+    "fixes_by_type": {
+      "redis_password_beastmode2025": 37
+    }
+  },
+  "fixes_applied": [
+    {
+      "file_path": "scripts-archive/poe_simple_monitor.py",
+      "line_number": 23,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts-archive/poe_redis_monitor.py",
+      "line_number": 21,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts-archive/simple_node_b_test.py",
+      "line_number": 14,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "vonnegut_deployment_package/final_credential_scanner.py",
+      "line_number": 40,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "vonnegut_deployment_package/final_credential_scanner.py",
+      "line_number": 206,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "vonnegut_deployment_package/scan_for_hardcoded_credentials.py",
+      "line_number": 69,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "vonnegut_deployment_package/scan_for_hardcoded_credentials.py",
+      "line_number": 145,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "vonnegut_deployment_package/remediate_hardcoded_credentials.py",
+      "line_number": 229,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "vonnegut_deployment_package/fix_redis_grafana_connection.py",
+      "line_number": 45,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "vonnegut_deployment_package/deploy_to_vonnegut.py",
+      "line_number": 247,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "vonnegut_deployment_package/improved_credential_scanner.py",
+      "line_number": 72,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "vonnegut_deployment_package/improved_credential_scanner.py",
+      "line_number": 227,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "vonnegut_deployment_package/remove_hardcoded_redis_passwords.py",
+      "line_number": 21,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "vonnegut_deployment_package/deploy_native_to_vonnegut.py",
+      "line_number": 42,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "vonnegut_deployment_package/vonnegut_redis_exporter.py",
+      "line_number": 19,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "vonnegut_deployment_package/vonnegut_redis_exporter.py",
+      "line_number": 173,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/install_docker_and_deploy_vonnegut.py",
+      "line_number": 33,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/deploy_containerized_observatory_to_vonnegut.py",
+      "line_number": 386,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/deploy_full_observatory_container.py",
+      "line_number": 30,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/final_credential_scanner.py",
+      "line_number": 40,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/final_credential_scanner.py",
+      "line_number": 206,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/scan_for_hardcoded_credentials.py",
+      "line_number": 69,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/scan_for_hardcoded_credentials.py",
+      "line_number": 145,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/fix_networking_and_deploy_vonnegut.py",
+      "line_number": 30,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/remediate_hardcoded_credentials.py",
+      "line_number": 229,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/fix_redis_grafana_connection.py",
+      "line_number": 45,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/setup_docker_and_deploy_vonnegut.py",
+      "line_number": 113,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/fix_vonnegut_prometheus_config.py",
+      "line_number": 197,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/deploy_to_vonnegut.py",
+      "line_number": 247,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/improved_credential_scanner.py",
+      "line_number": 72,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/improved_credential_scanner.py",
+      "line_number": 227,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/remove_hardcoded_redis_passwords.py",
+      "line_number": 21,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/deploy_native_to_vonnegut.py",
+      "line_number": 42,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/fix_docker_and_deploy_vonnegut.py",
+      "line_number": 33,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/fix_vonnegut_observatory_simple.py",
+      "line_number": 86,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/vonnegut_redis_exporter.py",
+      "line_number": 19,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    },
+    {
+      "file_path": "scripts/vonnegut_redis_exporter.py",
+      "line_number": 173,
+      "fix_type": "redis_password_beastmode2025",
+      "description": "Fixed redis_password_beastmode2025"
+    }
+  ]
+}

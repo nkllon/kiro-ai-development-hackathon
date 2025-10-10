@@ -1,0 +1,207 @@
+# Cloudflare Custom Error Pages - Makefile
+# ========================================
+
+.PHONY: help install deploy verify test clean dashboard status info
+
+# Default target
+help:
+	@echo "Cloudflare Custom Error Pages - Available Commands:"
+	@echo ""
+	@echo "  make install     - Install dependencies and setup CLI"
+	@echo "  make deploy      - Deploy error pages interactively"
+	@echo "  make deploy-ci   - Deploy error pages for CI/CD (silent)"
+	@echo "  make verify      - Verify deployment"
+	@echo "  make test        - Run full test suite"
+	@echo "  make rollback    - Rollback to previous version"
+	@echo "  make clean       - Clean up temporary files"
+	@echo ""
+	@echo "Environment Variables:"
+	@echo "  CLOUDFLARE_API_TOKEN - Cloudflare API token (required)"
+	@echo "  CLOUDFLARE_ZONE      - Zone name (default: nkllon.com)"
+	@echo ""
+
+# Install dependencies
+install:
+	@echo "🔧 Installing dependencies..."
+	pip install -r requirements.txt
+	chmod +x cloudflare-error-pages-cli.py
+	@echo "✅ Installation complete"
+
+# Interactive deployment
+deploy:
+	@echo "🚀 Starting interactive deployment..."
+	./cloudflare-error-pages-cli.py deploy --interactive
+
+# CI/CD deployment (silent with JSON output)
+deploy-ci:
+	@echo "🤖 Starting CI/CD deployment..."
+	./cloudflare-error-pages-cli.py deploy --silent --output json
+
+# Deploy with custom configuration
+deploy-config:
+	@echo "⚙️ Deploying with custom configuration..."
+	./cloudflare-error-pages-cli.py deploy --config cloudflare-config.yaml --interactive
+
+# Verify deployment
+verify:
+	@echo "🔍 Verifying deployment..."
+	./cloudflare-error-pages-cli.py verify
+
+# Run verification with detailed output
+verify-detailed:
+	@echo "🔍 Running detailed verification..."
+	./cloudflare-error-pages-cli.py verify --output json | jq '.'
+
+# Test deployment (includes tunnel stop/start)
+test:
+	@echo "🧪 Running full test suite..."
+	python3 verify_deployment.py
+
+# Rollback deployment
+rollback:
+	@echo "⏪ Rolling back deployment..."
+	./cloudflare-error-pages-cli.py rollback
+
+# Development commands
+dev-validate:
+	@echo "✅ Validating HTML content..."
+	python3 -c "\
+import sys; \
+from pathlib import Path; \
+html_file = Path('cloudflare/error-pages/1033-enhanced.html'); \
+print('❌ HTML file not found') if not html_file.exists() else None; \
+sys.exit(1) if not html_file.exists() else None; \
+size = html_file.stat().st_size; \
+print(f'📊 File size: {size/1024:.1f} KB'); \
+print('❌ File too large (>50KB)') if size > 50*1024 else None; \
+sys.exit(1) if size > 50*1024 else None; \
+print('✅ Validation passed')"
+
+dev-preview:
+	@echo "👀 Opening HTML preview..."
+	open cloudflare/error-pages/1033-enhanced.html
+
+# Monitoring commands
+monitor-logs:
+	@echo "📊 Monitoring deployment logs..."
+	tail -f logs/deployment.log
+
+monitor-analytics:
+	@echo "📈 Checking Cloudflare Analytics..."
+	./cloudflare-error-pages-cli.py analytics --zone $(CLOUDFLARE_ZONE)
+
+# Maintenance commands
+backup:
+	@echo "💾 Creating backup..."
+	mkdir -p backups/$(shell date +%Y%m%d_%H%M%S)
+	cp cloudflare/error-pages/1033-enhanced.html backups/$(shell date +%Y%m%d_%H%M%S)/
+
+update-content:
+	@echo "🔄 Updating error page content..."
+	# Add logic to update dynamic content (tunnel ID, contact info, etc.)
+	@echo "✅ Content updated"
+
+# Cleanup
+clean:
+	@echo "🧹 Cleaning up..."
+	rm -rf __pycache__/
+	rm -rf .pytest_cache/
+	rm -rf logs/*.log
+	rm -rf temp/
+	@echo "✅ Cleanup complete"
+
+# Docker commands
+docker-build:
+	@echo "🐳 Building Docker image..."
+	docker build -t cloudflare-error-pages-cli .
+
+docker-deploy:
+	@echo "🐳 Deploying via Docker..."
+	docker run --rm \
+		-e CLOUDFLARE_API_TOKEN=$(CLOUDFLARE_API_TOKEN) \
+		-v $(PWD):/workspace \
+		cloudflare-error-pages-cli deploy --silent --output json
+
+# CI/CD integration
+ci-validate:
+	@echo "🤖 CI validation..."
+	./cloudflare-error-pages-cli.py deploy --verify-only --silent --output json
+
+ci-deploy:
+	@echo "🤖 CI deployment..."
+	./cloudflare-error-pages-cli.py deploy --silent --output json
+
+ci-test:
+	@echo "🤖 CI testing..."
+	./cloudflare-error-pages-cli.py verify --silent --output json
+
+# GitHub Actions helpers
+gh-setup:
+	@echo "⚙️ Setting up GitHub Actions..."
+	mkdir -p .github/workflows
+	cp templates/github-actions.yml .github/workflows/deploy-error-pages.yml
+	@echo "✅ GitHub Actions workflow created"
+
+# Dashboard - Comprehensive system overview
+dashboard:
+	@echo "🎯 CLOUDFLARE ERROR PAGES DASHBOARD"
+	@echo "=================================="
+	@echo ""
+	@echo "📊 System Status:"
+	@echo "  Zone: $(if $(CLOUDFLARE_ZONE),$(CLOUDFLARE_ZONE),❌ Not set)"
+	@echo "  API Token: $(if $(CLOUDFLARE_API_TOKEN),✅ Set,❌ Not set)"
+	@echo "  HTML File: cloudflare/error-pages/1033-enhanced.html"
+	@echo "  File Size: $(shell wc -c < cloudflare/error-pages/1033-enhanced.html 2>/dev/null || echo 0) bytes"
+	@echo "  Last Modified: $(shell stat -f %Sm cloudflare/error-pages/1033-enhanced.html 2>/dev/null || echo 'File not found')"
+	@echo ""
+	@echo "🔧 Available Commands:"
+	@echo "  make deploy      - Deploy error pages"
+	@echo "  make verify      - Verify deployment"
+	@echo "  make test        - Run tests"
+	@echo "  make monitor-logs - Monitor logs"
+	@echo "  make status      - Quick status check"
+	@echo ""
+	@echo "📈 Quick Health Check:"
+	@python3 -c "import os; print('  ✅ Python available')" 2>/dev/null || echo "  ❌ Python not available"
+	@test -f cloudflare/error-pages/1033-enhanced.html && echo "  ✅ HTML file exists" || echo "  ❌ HTML file missing"
+	@test -f cloudflare-error-pages-cli.py && echo "  ✅ CLI script exists" || echo "  ❌ CLI script missing"
+	@echo ""
+	@echo "🚀 Quick Actions:"
+	@echo "  Run 'make deploy' to deploy error pages"
+	@echo "  Run 'make verify' to check deployment"
+	@echo "  Run 'make help' for all commands"
+
+# Status and info
+status:
+	@echo "📊 Deployment Status:"
+	@echo "Zone: $(CLOUDFLARE_ZONE)"
+	@echo "HTML File: cloudflare/error-pages/1033-enhanced.html"
+	@echo "Size: $(shell wc -c < cloudflare/error-pages/1033-enhanced.html) bytes"
+	@echo "API Token: $(if $(CLOUDFLARE_API_TOKEN),✅ Set,❌ Not set)"
+
+info:
+	@echo "ℹ️ Cloudflare Custom Error Pages CLI"
+	@echo "Version: 1.0.0"
+	@echo "Author: Kiro AI Assistant"
+	@echo "Repository: https://github.com/nkllon/observatory"
+	@echo ""
+	@echo "Features:"
+	@echo "  • Automated CLI deployment with progress indicators"
+	@echo "  • Interactive and silent modes for CI/CD"
+	@echo "  • JSON output for machine parsing"
+	@echo "  • Comprehensive validation and testing"
+	@echo "  • Rollback capabilities"
+	@echo "  • Monitoring and analytics integration"
+
+# Environment setup
+setup-env:
+	@echo "🔧 Setting up environment..."
+	@echo "Creating .env file template..."
+	@echo "CLOUDFLARE_API_TOKEN=your_api_token_here" > .env.template
+	@echo "CLOUDFLARE_ZONE=nkllon.com" >> .env.template
+	@echo "SLACK_WEBHOOK_URL=your_slack_webhook_here" >> .env.template
+	@echo "EMAIL_USERNAME=your_email_here" >> .env.template
+	@echo "EMAIL_PASSWORD=your_password_here" >> .env.template
+	@echo ""
+	@echo "✅ Environment template created (.env.template)"
+	@echo "📝 Copy to .env and fill in your values"

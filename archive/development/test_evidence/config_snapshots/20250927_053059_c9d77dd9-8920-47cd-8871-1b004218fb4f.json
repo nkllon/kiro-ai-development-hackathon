@@ -1,0 +1,21 @@
+{
+  "evidence_id": "c9d77dd9-8920-47cd-8871-1b004218fb4f",
+  "timestamp": "2025-09-27T05:30:59.107516",
+  "evidence_type": "config_snapshot",
+  "source_test": "cloudflare_websocket_support_configuration",
+  "metadata": {
+    "config_type": "cloudflare_websocket_support",
+    "snapshot_timestamp": "2025-09-27T05:30:59.107490",
+    "data_type": "dict"
+  },
+  "integrity_hash": "8a8d9f999508da6f475eca6d6341c06066a302de0c1606ac1040a6b5b9244d14",
+  "data": {
+    "domain": "example.com",
+    "zone_id": "mock-zone-id",
+    "websocket_info": {
+      "status_code": 404,
+      "response_time": 0.1438
+    },
+    "test_timestamp": "2025-09-27T05:30:59.107483"
+  }
+}

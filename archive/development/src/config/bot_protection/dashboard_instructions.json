@@ -1,0 +1,45 @@
+{
+  "title": "Cloudflare Dashboard Configuration for Observatory",
+  "steps": [
+    {
+      "step": 1,
+      "title": "Enable WebSockets",
+      "description": "Enable WebSocket support in Cloudflare dashboard",
+      "location": "Network \u2192 WebSockets",
+      "action": "Toggle WebSockets to ON",
+      "reason": "Required for WebSocket connections through tunnel"
+    },
+    {
+      "step": 2,
+      "title": "Configure Bot Protection",
+      "description": "Set up bot protection rules for Observatory",
+      "location": "Security \u2192 Bot Fight Mode",
+      "action": "Disable Bot Fight Mode for observatory.nkllon.com",
+      "reason": "Prevents false positives on legitimate polling"
+    },
+    {
+      "step": 3,
+      "title": "Create WAF Rules",
+      "description": "Create custom WAF rules for Observatory polling",
+      "location": "Security \u2192 WAF \u2192 Custom Rules",
+      "action": "Create rule with Observatory polling conditions",
+      "reason": "Whitelist legitimate polling patterns"
+    },
+    {
+      "step": 4,
+      "title": "Configure Rate Limiting",
+      "description": "Set appropriate rate limits for Observatory",
+      "location": "Security \u2192 Rate Limiting",
+      "action": "Create rate limit rule for /api/* endpoints",
+      "reason": "Prevent abuse while allowing legitimate polling"
+    },
+    {
+      "step": 5,
+      "title": "Firewall Rules",
+      "description": "Create firewall rules for Observatory traffic",
+      "location": "Security \u2192 Firewall Rules",
+      "action": "Allow Observatory polling traffic",
+      "reason": "Ensure Observatory traffic is not blocked"
+    }
+  ]
+}

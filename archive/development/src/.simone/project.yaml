@@ -1,0 +1,43 @@
+project:
+  name: "kiro-ai-development-hackathon"
+  description: "Beast Mode systematic development framework with AI-assisted project management"
+  type: "monorepo"
+  riskLevel: 7
+
+contexts:
+  - name: "beast-mode-core"
+    path: "src/beast_mode"
+    stack:
+      language: "python"
+      framework: "beast-mode"
+      database: "sqlite"
+    tooling:
+      build: "make"
+      test: "make test"
+      lint: "make lint"
+    methodology: "systematic-development"
+
+  - name: "simone-integration"
+    path: "kiro_simone_adapter"
+    stack:
+      language: "typescript"
+      framework: "mcp-server"
+      database: "sqlite"
+    tooling:
+      build: "npm run build"
+      test: "npm test"
+      dev: "npm run dev"
+    methodology: "ai-assisted-development"
+
+github:
+  repository: "nkllon/kiro-ai-development-hackathon"
+  tool: "cli"
+
+features:
+  pr_review_wait:
+    enabled: true
+    initial_wait: 30
+    poll_interval: 30
+    timeout: 600
+    auto_merge: false
+

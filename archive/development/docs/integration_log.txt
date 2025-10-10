@@ -1,0 +1,30 @@
+A  .kiro/specs/ghostbusters-productivity-triage/design.md
+A  .kiro/specs/ghostbusters-productivity-triage/requirements.md
+A  .kiro/specs/ghostbusters-productivity-triage/tasks.md
+A  src/beast_mode/ghostbusters/productivity_triage/__init__.py
+A  src/beast_mode/ghostbusters/productivity_triage/content_discovery.py
+A  src/beast_mode/ghostbusters/productivity_triage/interfaces.py
+A  src/beast_mode/ghostbusters/productivity_triage/models.py
+A  src/beast_mode/ghostbusters/productivity_triage/orchestrator.py
+A  tests/unit/beast_mode/ghostbusters/__init__.py
+A  tests/unit/beast_mode/ghostbusters/productivity_triage/__init__.py
+A  tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py
+A  tests/unit/beast_mode/ghostbusters/productivity_triage/test_orchestrator.py
+?? ghostbusters_domain_triage.txt
+?? ghostbusters_git_status.txt
+?? ghostbusters_phase1_report.txt
+?? ghostbusters_test_validation.txt
+[feat/claude-code-redis-task-queue-spec 941f0e71] feat: Add Ghostbusters Productivity Triage system
+ 12 files changed, 3031 insertions(+)
+ create mode 100644 .kiro/specs/ghostbusters-productivity-triage/design.md
+ create mode 100644 .kiro/specs/ghostbusters-productivity-triage/requirements.md
+ create mode 100644 .kiro/specs/ghostbusters-productivity-triage/tasks.md
+ create mode 100644 src/beast_mode/ghostbusters/productivity_triage/__init__.py
+ create mode 100644 src/beast_mode/ghostbusters/productivity_triage/content_discovery.py
+ create mode 100644 src/beast_mode/ghostbusters/productivity_triage/interfaces.py
+ create mode 100644 src/beast_mode/ghostbusters/productivity_triage/models.py
+ create mode 100644 src/beast_mode/ghostbusters/productivity_triage/orchestrator.py
+ create mode 100644 tests/unit/beast_mode/ghostbusters/__init__.py
+ create mode 100644 tests/unit/beast_mode/ghostbusters/productivity_triage/__init__.py
+ create mode 100644 tests/unit/beast_mode/ghostbusters/productivity_triage/test_content_discovery.py
+ create mode 100644 tests/unit/beast_mode/ghostbusters/productivity_triage/test_orchestrator.py

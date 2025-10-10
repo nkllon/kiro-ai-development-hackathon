@@ -1,0 +1,119 @@
+# Beast Mode AI Development Framework - Development Docker Compose
+# ================================================================
+
+version: '3.8'
+
+services:
+  # Development application service
+  beast-mode-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: beast-mode-dev
+    ports:
+      - "8080:8080"  # Observatory
+      - "8888:8888"  # Jupyter
+      - "5678:5678"  # Debugger
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - PYTHONPATH=/app/src
+    depends_on:
+      - redis
+    volumes:
+      # Mount source code for hot reloading
+      - ./src:/app/src
+      - ./examples:/app/examples
+      - ./docs:/app/docs
+      - ./scripts:/app/scripts
+      - ./tests:/app/tests
+      - ./data:/app/data
+      - ./logs:/app/logs
+      # Mount configuration files
+      - ./.env:/app/.env
+      - ./pyproject.toml:/app/pyproject.toml
+    networks:
+      - beast-mode-dev-network
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+  # Redis service for development
+  redis:
+    image: redis:7-alpine
+    container_name: beast-mode-redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-dev-data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - beast-mode-dev-network
+    restart: unless-stopped
+
+  # Jupyter notebook service
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: beast-mode-jupyter
+    ports:
+      - "8888:8888"
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    volumes:
+      - ./src:/app/src
+      - ./examples:/app/examples
+      - ./notebooks:/app/notebooks
+      - ./data:/app/data
+    networks:
+      - beast-mode-dev-network
+    command: jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''
+    restart: unless-stopped
+    depends_on:
+      - redis
+
+  # Development database (PostgreSQL for advanced features)
+  postgres:
+    image: postgres:15-alpine
+    container_name: beast-mode-postgres-dev
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=beast_mode_dev
+      - POSTGRES_USER=beast_mode
+      - POSTGRES_PASSWORD=development
+    volumes:
+      - postgres-dev-data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    networks:
+      - beast-mode-dev-network
+    restart: unless-stopped
+
+  # Mailhog for email testing
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: beast-mode-mailhog
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+    networks:
+      - beast-mode-dev-network
+    restart: unless-stopped
+
+volumes:
+  redis-dev-data:
+    driver: local
+  postgres-dev-data:
+    driver: local
+
+networks:
+  beast-mode-dev-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16

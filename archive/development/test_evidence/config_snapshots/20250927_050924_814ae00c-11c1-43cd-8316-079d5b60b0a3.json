@@ -1,0 +1,55 @@
+{
+  "evidence_id": "814ae00c-11c1-43cd-8316-079d5b60b0a3",
+  "timestamp": "2025-09-27T05:09:24.133907",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.133893",
+    "data_type": "dict"
+  },
+  "integrity_hash": "d35f178d36d3872273c4c3816bf29c27de177ce7dc9eb4ee97d4ee4374a74425",
+  "data": {
+    "file_path": "./src/beast_mode/observatory/web_interface.py",
+    "file_size": 23534,
+    "line_count": 650,
+    "route_analysis": {
+      "total_routes": 6,
+      "websocket_routes": [
+        "/ws/emoji-rain"
+      ],
+      "http_routes": [
+        "/",
+        "/health",
+        "/api/emoji-rain/stats",
+        "/api/emoji-rain/effects",
+        "/api/emoji-rain/trigger"
+      ],
+      "route_handlers": {
+        "/": "dashboard",
+        "/health": "health_check",
+        "/api/emoji-rain/stats": "emoji_rain_stats",
+        "/api/emoji-rain/effects": "active_effects",
+        "/api/emoji-rain/trigger": "trigger_emoji_rain",
+        "/ws/emoji-rain": "emoji_rain_websocket"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "fastapi.Request",
+        "fastapi.templating",
+        "fastapi.responses.FileResponse",
+        "fastapi.responses",
+        "fastapi.WebSocket",
+        "fastapi.templating.Jinja2Templates",
+        "fastapi.WebSocketDisconnect",
+        "fastapi.responses.HTMLResponse",
+        "fastapi.staticfiles.StaticFiles",
+        "fastapi.FastAPI",
+        "fastapi.staticfiles",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.133874"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "evidence_id": "72354d0f-58aa-422d-ab12-7c34e8eec38a",
+  "timestamp": "2025-09-27T05:09:24.368613",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.368604",
+    "data_type": "dict"
+  },
+  "integrity_hash": "bb1864604142f53d3cf93e4b658681f36ffacb9b48c83145be00823f6748e516",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/management_endpoints/user_agent_analytics_endpoints.py",
+    "file_size": 28281,
+    "line_count": 754,
+    "route_analysis": {
+      "total_routes": 6,
+      "websocket_routes": [],
+      "http_routes": [
+        "/tag/distinct",
+        "/tag/dau",
+        "/tag/wau",
+        "/tag/mau",
+        "/tag/summary",
+        "/tag/user-agent/per-user-analytics"
+      ],
+      "route_handlers": {
+        "/tag/distinct": "get_distinct_user_agent_tags",
+        "/tag/dau": "get_daily_active_users",
+        "/tag/wau": "get_weekly_active_users",
+        "/tag/mau": "get_monthly_active_users",
+        "/tag/summary": "get_tag_summary",
+        "/tag/user-agent/per-user-analytics": "get_per_user_analytics"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.HTTPException",
+        "fastapi.Query",
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.368587"
+  }
+}

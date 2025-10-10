@@ -1,0 +1,573 @@
+{
+  "AI Orchestration": {
+    "term": "AI Orchestration",
+    "definition": "Coordination and management of multiple AI agents to work together on complex tasks.",
+    "category": "AI Automation",
+    "context": "AI coordination",
+    "related_terms": [
+      "AI Agent",
+      "Coordination",
+      "Task Management"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Ghostbusters Agent": {
+    "term": "Ghostbusters Agent",
+    "definition": "AI agent that specializes in identifying and resolving specific types of problems or tasks.",
+    "category": "AI Automation",
+    "context": "AI agent specialization",
+    "related_terms": [
+      "AI Agent",
+      "Problem Resolution",
+      "Specialization"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Intelligence Engine": {
+    "term": "Intelligence Engine",
+    "definition": "Core system that processes domain knowledge and provides intelligent decision support.",
+    "category": "AI Automation",
+    "context": "AI decision support",
+    "related_terms": [
+      "Domain Knowledge",
+      "Decision Support",
+      "AI Processing"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Model-Driven Decision": {
+    "term": "Model-Driven Decision",
+    "definition": "Decision making process based on data models and domain knowledge rather than intuition.",
+    "category": "AI Automation",
+    "context": "AI-assisted decision making",
+    "related_terms": [
+      "Data Model",
+      "Domain Knowledge",
+      "Decision Making"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Competitive Intelligence": {
+    "term": "Competitive Intelligence",
+    "definition": "Information about competitors and market conditions used for strategic decision making.",
+    "category": "Competitive Strategy",
+    "context": "Strategic planning",
+    "related_terms": [
+      "Market Analysis",
+      "Competitor Analysis",
+      "Strategic Planning"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Market Domination": {
+    "term": "Market Domination",
+    "definition": "Achieving superior market position through systematic competitive advantages.",
+    "category": "Competitive Strategy",
+    "context": "Competitive positioning",
+    "related_terms": [
+      "Competitive Advantage",
+      "Market Position",
+      "Superiority"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Systematic Advantage": {
+    "term": "Systematic Advantage",
+    "definition": "Competitive advantage gained through systematic processes and methodologies.",
+    "category": "Competitive Strategy",
+    "context": "Competitive differentiation",
+    "related_terms": [
+      "Systematic Superiority",
+      "Competitive Advantage",
+      "Methodology"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Ad-hoc Approach": {
+    "term": "Ad-hoc Approach",
+    "definition": "Unstructured development methodology that relies on guesswork, workarounds, and reactive problem-solving without systematic planning or measurement.",
+    "category": "Core Framework",
+    "context": "The approach Beast Mode systematically replaces",
+    "related_terms": [
+      "Workaround",
+      "Guesswork",
+      "Reactive Development"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": [
+      "Systematic Superiority",
+      "Beast Mode Framework"
+    ]
+  },
+  "Beast Mode Framework": {
+    "term": "Beast Mode Framework",
+    "definition": "A systematic development engine that transforms regular hackathons into structured domination through PDCA cycles, tool health management, and model-driven decision making.",
+    "category": "Core Framework",
+    "context": "The foundational systematic approach to development",
+    "related_terms": [
+      "PDCA Orchestrator",
+      "Tool Health Manager",
+      "Project Registry"
+    ],
+    "examples": [
+      "Beast Mode methodology",
+      "Beast Mode systematic approach"
+    ],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Fix Tools First": {
+    "term": "Fix Tools First",
+    "definition": "Core principle of repairing actual problems systematically rather than implementing workarounds.",
+    "category": "Core Framework",
+    "context": "Primary principle of Beast Mode methodology",
+    "related_terms": [
+      "Systematic Repair",
+      "Root Cause Analysis",
+      "Tool Health"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": [
+      "Workaround"
+    ]
+  },
+  "Model-Driven Intelligence": {
+    "term": "Model-Driven Intelligence",
+    "definition": "Using project registry data and domain knowledge instead of guesswork for decision making.",
+    "category": "Core Framework",
+    "context": "Decision making approach in Beast Mode",
+    "related_terms": [
+      "Project Registry",
+      "Domain Knowledge",
+      "Intelligence Engine"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": [
+      "Guesswork"
+    ]
+  },
+  "Systematic Superiority": {
+    "term": "Systematic Superiority",
+    "definition": "Demonstrable performance advantages over ad-hoc approaches through measurable metrics and systematic validation.",
+    "category": "Core Framework",
+    "context": "The primary goal of Beast Mode methodology",
+    "related_terms": [
+      "Ad-hoc Approach",
+      "Metrics Collection",
+      "Comparative Analysis"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": [
+      "Ad-hoc Approach"
+    ]
+  },
+  "AggregateRoot": {
+    "term": "AggregateRoot",
+    "definition": "An entity that controls access to a set of related objects and ensures consistency within the aggregate boundary.",
+    "category": "Domain-Driven Design",
+    "context": "Tactical design pattern",
+    "related_terms": [
+      "Entity",
+      "Value Object",
+      "Domain Event"
+    ],
+    "examples": [
+      "Order AggregateRoot",
+      "User AggregateRoot"
+    ],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "BoundedContext": {
+    "term": "BoundedContext",
+    "definition": "A boundary within which a particular domain model is defined and applicable.",
+    "category": "Domain-Driven Design",
+    "context": "Strategic design pattern",
+    "related_terms": [
+      "Domain Model",
+      "Ubiquitous Language",
+      "Context Map"
+    ],
+    "examples": [
+      "User Management BoundedContext",
+      "Order Processing BoundedContext"
+    ],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "DomainEvent": {
+    "term": "DomainEvent",
+    "definition": "An event that represents something significant that happened in the domain.",
+    "category": "Domain-Driven Design",
+    "context": "Event-driven architecture",
+    "related_terms": [
+      "AggregateRoot",
+      "Event Sourcing",
+      "Domain Service"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "DomainService": {
+    "term": "DomainService",
+    "definition": "A service that represents a domain concept that doesn't naturally fit as an entity or value object.",
+    "category": "Domain-Driven Design",
+    "context": "Domain logic organization",
+    "related_terms": [
+      "Domain Model",
+      "Business Logic",
+      "Stateless Service"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Entity": {
+    "term": "Entity",
+    "definition": "An object that has a distinct identity that runs through time and different states.",
+    "category": "Domain-Driven Design",
+    "context": "Tactical design pattern",
+    "related_terms": [
+      "ValueObject",
+      "AggregateRoot",
+      "Identity"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Ubiquitous Language": {
+    "term": "Ubiquitous Language",
+    "definition": "A common language used by all team members to connect all activities of the team with the software.",
+    "category": "Domain-Driven Design",
+    "context": "Team communication and modeling",
+    "related_terms": [
+      "Domain Expert",
+      "BoundedContext",
+      "Domain Model"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "ValueObject": {
+    "term": "ValueObject",
+    "definition": "An object that is defined by its attributes rather than its identity and is immutable.",
+    "category": "Domain-Driven Design",
+    "context": "Tactical design pattern",
+    "related_terms": [
+      "Entity",
+      "AggregateRoot",
+      "Immutability"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Governance": {
+    "term": "Governance",
+    "definition": "Framework of rules, practices, and processes used to direct and control an organization.",
+    "category": "Governance",
+    "context": "Organizational control",
+    "related_terms": [
+      "Framework",
+      "Rules",
+      "Control",
+      "Management"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Deployment": {
+    "term": "Deployment",
+    "definition": "Process of making software available for use in a specific environment.",
+    "category": "Infrastructure",
+    "context": "Software delivery",
+    "related_terms": [
+      "Release",
+      "Environment",
+      "Software Delivery"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Health Monitoring": {
+    "term": "Health Monitoring",
+    "definition": "Continuous monitoring of system and component health status.",
+    "category": "Infrastructure",
+    "context": "System monitoring",
+    "related_terms": [
+      "ModuleHealth",
+      "Status Monitoring",
+      "System Health"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Project Registry": {
+    "term": "Project Registry",
+    "definition": "Centralized repository of project information, capabilities, and relationships.",
+    "category": "Infrastructure",
+    "context": "Project information management",
+    "related_terms": [
+      "Repository",
+      "Project Information",
+      "Centralized Storage"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Service Interface": {
+    "term": "Service Interface",
+    "definition": "Contract that defines how services interact with each other.",
+    "category": "Infrastructure",
+    "context": "Service communication",
+    "related_terms": [
+      "API",
+      "Contract",
+      "Service Communication"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Compliance": {
+    "term": "Compliance",
+    "definition": "Adherence to established standards, rules, or requirements.",
+    "category": "Quality Assurance",
+    "context": "Standards adherence",
+    "related_terms": [
+      "Standards",
+      "Requirements",
+      "Adherence"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Metrics": {
+    "term": "Metrics",
+    "definition": "Quantifiable measures used to track and assess performance, quality, or progress.",
+    "category": "Quality Assurance",
+    "context": "Performance measurement",
+    "related_terms": [
+      "Measurement",
+      "Performance",
+      "Assessment"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Quality Gate": {
+    "term": "Quality Gate",
+    "definition": "A checkpoint in the development process where quality criteria must be met before proceeding.",
+    "category": "Quality Assurance",
+    "context": "Quality control mechanism",
+    "related_terms": [
+      "Quality Criteria",
+      "Validation",
+      "Checkpoint"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Validation": {
+    "term": "Validation",
+    "definition": "Process of checking that something meets specified requirements and quality standards.",
+    "category": "Quality Assurance",
+    "context": "Quality assurance process",
+    "related_terms": [
+      "Quality Gate",
+      "Requirements",
+      "Verification"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Capability Discovery": {
+    "term": "Capability Discovery",
+    "definition": "Process by which modules automatically discover and register their capabilities at runtime.",
+    "category": "Reflective Architecture",
+    "context": "Dynamic capability management",
+    "related_terms": [
+      "ReflectiveModule",
+      "ModuleCapability",
+      "Runtime Adaptation"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "ModuleCapability": {
+    "term": "ModuleCapability",
+    "definition": "Enumeration of capabilities that a module can provide, enabling dynamic capability discovery.",
+    "category": "Reflective Architecture",
+    "context": "Module capability definition",
+    "related_terms": [
+      "ReflectiveModule",
+      "Capability Discovery",
+      "Module Interface"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "ModuleHealth": {
+    "term": "ModuleHealth",
+    "definition": "Health status of a module including healthy, degraded, unhealthy, and unknown states.",
+    "category": "Reflective Architecture",
+    "context": "Module health monitoring",
+    "related_terms": [
+      "HealthStatus",
+      "ModuleStatus",
+      "Health Monitoring"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "ModuleStatus": {
+    "term": "ModuleStatus",
+    "definition": "Operational status of a module including healthy, warning, error, and unknown states.",
+    "category": "Reflective Architecture",
+    "context": "Module operational status",
+    "related_terms": [
+      "ModuleHealth",
+      "Status Monitoring",
+      "Module State"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "ReflectiveModule": {
+    "term": "ReflectiveModule",
+    "definition": "Base class for all modules that can discover their own capabilities, monitor their health, and adapt at runtime.",
+    "category": "Reflective Architecture",
+    "context": "Core architectural pattern",
+    "related_terms": [
+      "ModuleCapability",
+      "ModuleHealth",
+      "ModuleStatus"
+    ],
+    "examples": [
+      "ReflectiveModule base class",
+      "ReflectiveModule pattern"
+    ],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Act": {
+    "term": "Act",
+    "definition": "Fourth phase of PDCA cycle where improvements are standardized and next cycle is planned.",
+    "category": "Systematic Development",
+    "context": "PDCA cycle phase",
+    "related_terms": [
+      "PDCA Cycle",
+      "Standardization",
+      "Improvement"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Check": {
+    "term": "Check",
+    "definition": "Third phase of PDCA cycle where results are measured and compared against expected outcomes.",
+    "category": "Systematic Development",
+    "context": "PDCA cycle phase",
+    "related_terms": [
+      "PDCA Cycle",
+      "Measurement",
+      "Validation",
+      "Metrics"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Do": {
+    "term": "Do",
+    "definition": "Second phase of PDCA cycle where the plan is implemented on a small scale.",
+    "category": "Systematic Development",
+    "context": "PDCA cycle phase",
+    "related_terms": [
+      "PDCA Cycle",
+      "Implementation",
+      "Pilot Testing"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "PDCA Cycle": {
+    "term": "PDCA Cycle",
+    "definition": "Plan-Do-Check-Act cycle for continuous improvement and systematic problem solving.",
+    "category": "Systematic Development",
+    "context": "Continuous improvement methodology",
+    "related_terms": [
+      "Plan",
+      "Do",
+      "Check",
+      "Act",
+      "Continuous Improvement"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Plan": {
+    "term": "Plan",
+    "definition": "First phase of PDCA cycle where objectives and processes are established.",
+    "category": "Systematic Development",
+    "context": "PDCA cycle phase",
+    "related_terms": [
+      "PDCA Cycle",
+      "Objectives",
+      "Process Design"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  },
+  "Root Cause Analysis": {
+    "term": "Root Cause Analysis",
+    "definition": "Systematic process of identifying the underlying causes of problems rather than just symptoms.",
+    "category": "Systematic Development",
+    "context": "Problem solving methodology",
+    "related_terms": [
+      "Problem Solving",
+      "Systematic Analysis",
+      "Root Cause"
+    ],
+    "examples": [],
+    "synonyms": [],
+    "antonyms": []
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "evidence_id": "f503ab0b-aa32-456e-ac32-d86f1e671e87",
+  "timestamp": "2025-09-27T05:09:24.575078",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.575053",
+    "data_type": "dict"
+  },
+  "integrity_hash": "f5bd8bfdbcacd86c1e91d61bb24f8f3fcf07de20a4a4e73e01e5998f4673b30e",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/interpreter/core/archived_server_2.py",
+    "file_size": 9539,
+    "line_count": 257,
+    "route_analysis": {
+      "total_routes": 2,
+      "websocket_routes": [
+        "/"
+      ],
+      "http_routes": [
+        "/settings"
+      ],
+      "route_handlers": {
+        "/settings": "settings",
+        "/": "websocket_endpoint"
+      },
+      "middleware_count": 1,
+      "dependencies": [
+        "asyncio",
+        "uvicorn",
+        "fastapi.middleware.cors",
+        "fastapi.Header",
+        "fastapi.WebSocket",
+        "fastapi.middleware.cors.CORSMiddleware",
+        "uvicorn.Server",
+        "uvicorn.Config",
+        "fastapi.FastAPI",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.575036"
+  }
+}

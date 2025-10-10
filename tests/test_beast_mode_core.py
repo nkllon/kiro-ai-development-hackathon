@@ -399,7 +399,7 @@ class TestHealthMonitor:
 
         assert health_result["total_components"] == 3
         assert health_result["healthy_components"] == 2
-        assert health_result["health_percentage"] == 66.67  # 2/3 * 100
+        assert abs(health_result["health_percentage"] - 66.67) < 0.01  # 2/3 * 100
         assert health_result["overall_status"] == "degraded"
 
     def test_health_check_error_handling(self):

@@ -1,0 +1,2 @@
+# Cloudflare Dashboard Automation Dependencies
+playwright>=1.40.0

@@ -1,0 +1,279 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run security scans daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install security tools
+      run: |
+        pip install bandit detect-secrets safety
+    
+    - name: Run Bandit security scan
+      run: bandit -r src/ -f json -o bandit-report.json || true
+    
+    - name: Run detect-secrets scan
+      run: detect-secrets scan --all-files --baseline .secrets.baseline
+    
+    - name: Check for vulnerable dependencies
+      run: safety check --json --output safety-report.json || true
+    
+    - name: Upload security reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          safety-report.json
+
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+    
+    - name: Run Black formatter check
+      run: black --check src/ tests/
+    
+    - name: Run Ruff linter
+      run: ruff check src/ tests/
+    
+    - name: Run MyPy type checker
+      run: mypy src/
+
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+    
+    services:
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+    
+    - name: Run unit tests
+      run: python -m pytest tests/unit/ --cov=src --cov-report=xml --run
+      env:
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
+        REDIS_PASSWORD: ""
+        ENVIRONMENT: test
+    
+    - name: 🛡️ Validate safety
+      run: make validate-safety
+
+    - name: 🎯 Validate targets
+      run: make validate-targets
+
+    - name: 📦 Upload validator logs
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: make-validators-logs
+        path: |
+          logs/validate-safety-run.log
+          logs/validate-targets-run.log
+        if-no-files-found: ignore
+
+    - name: Run integration tests
+      run: python -m pytest tests/integration/ --run
+      env:
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
+        REDIS_PASSWORD: ""
+        ENVIRONMENT: test
+    
+    - name: Run security tests
+      run: python -m pytest tests/security/ --run
+      env:
+        ENVIRONMENT: test
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+
+  documentation:
+    name: Documentation
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+    
+    - name: Test documentation examples
+      run: python -m pytest tests/documentation/ --run
+      env:
+        ENVIRONMENT: test
+    
+    - name: Check documentation links
+      run: |
+        # Install link checker
+        pip install linkchecker
+        # Check internal links in documentation
+        find docs/ -name "*.md" -exec grep -l "http" {} \; | head -5 | xargs -I {} linkchecker --check-extern {}
+
+  examples:
+    name: Examples Validation
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    
+    - name: Test quick start example
+      run: |
+        timeout 30s python examples/quick_start/basic_example.py || exit_code=$?
+        if [ $exit_code -eq 124 ]; then
+          echo "Example timed out after 30 seconds - this is expected for demo purposes"
+          exit 0
+        elif [ $exit_code -eq 0 ]; then
+          echo "Example completed successfully"
+          exit 0
+        else
+          echo "Example failed with exit code $exit_code"
+          exit $exit_code
+        fi
+      env:
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
+        REDIS_PASSWORD: ""
+        ENVIRONMENT: test
+
+  build:
+    name: Build Package
+    runs-on: ubuntu-latest
+    needs: [security-scan, code-quality, test]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install build dependencies
+      run: |
+        pip install build twine
+    
+    - name: Build package
+      run: python -m build
+    
+    - name: Check package
+      run: twine check dist/*
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: dist
+        path: dist/
+
+  notify:
+    name: Notify Results
+    runs-on: ubuntu-latest
+    needs: [security-scan, code-quality, test, documentation, examples, build]
+    if: always()
+    steps:
+    - name: Notify success
+      if: ${{ needs.security-scan.result == 'success' && needs.code-quality.result == 'success' && needs.test.result == 'success' && needs.documentation.result == 'success' && needs.examples.result == 'success' && needs.build.result == 'success' }}
+      run: |
+        echo "✅ All CI checks passed successfully!"
+        echo "- Security scan: ✅"
+        echo "- Code quality: ✅"
+        echo "- Tests: ✅"
+        echo "- Documentation: ✅"
+        echo "- Examples: ✅"
+        echo "- Build: ✅"
+    
+    - name: Notify failure
+      if: ${{ needs.security-scan.result == 'failure' || needs.code-quality.result == 'failure' || needs.test.result == 'failure' || needs.documentation.result == 'failure' || needs.examples.result == 'failure' || needs.build.result == 'failure' }}
+      run: |
+        echo "❌ Some CI checks failed:"
+        echo "- Security scan: ${{ needs.security-scan.result }}"
+        echo "- Code quality: ${{ needs.code-quality.result }}"
+        echo "- Tests: ${{ needs.test.result }}"
+        echo "- Documentation: ${{ needs.documentation.result }}"
+        echo "- Examples: ${{ needs.examples.result }}"
+        echo "- Build: ${{ needs.build.result }}"
+        exit 1

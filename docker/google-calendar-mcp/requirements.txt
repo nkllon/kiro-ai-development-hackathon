@@ -1,5 +1,0 @@
-# Google Calendar MCP Integration - Using Existing MCP Server
-# We'll use an existing, proven Google Calendar MCP server instead of building from scratch
-
-# Node.js will be installed in the Docker container
-# The MCP server will be installed via npm inside the container

@@ -1,0 +1,68 @@
+{
+  "evidence_id": "b109ec44-07dc-4355-871f-f36c0ecada02",
+  "timestamp": "2025-09-27T04:27:13.043513",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.043491",
+    "data_type": "dict"
+  },
+  "integrity_hash": "19387b655a8bb0a7aad0449a5ea29262252ea99935d75445abb04eaf98e7d504",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/interpreter/core/async_core.py",
+    "file_size": 41904,
+    "line_count": 1036,
+    "route_analysis": {
+      "total_routes": 10,
+      "websocket_routes": [
+        "/"
+      ],
+      "http_routes": [
+        "/heartbeat",
+        "/",
+        "/",
+        "/settings",
+        "/settings/{setting}",
+        "/openai/chat/completions",
+        "/run",
+        "/upload",
+        "/download/{filename}"
+      ],
+      "route_handlers": {
+        "/heartbeat": "heartbeat",
+        "/": "post_input",
+        "/settings": "set_settings",
+        "/settings/{setting}": "get_setting",
+        "/openai/chat/completions": "chat_completion",
+        "/run": "run_code",
+        "/upload": "upload_file",
+        "/download/{filename}": "download_file"
+      },
+      "middleware_count": 1,
+      "dependencies": [
+        "fastapi.APIRouter",
+        "fastapi.File",
+        "socket",
+        "fastapi.responses",
+        "fastapi.responses.JSONResponse",
+        "asyncio",
+        "starlette.status",
+        "fastapi.Form",
+        "fastapi.responses.StreamingResponse",
+        "fastapi.Request",
+        "fastapi",
+        "fastapi.responses.PlainTextResponse",
+        "fastapi.FastAPI",
+        "starlette.websockets",
+        "fastapi.WebSocket",
+        "uvicorn",
+        "starlette.websockets.WebSocketState",
+        "fastapi.UploadFile",
+        "fastapi.HTTPException",
+        "starlette.status.HTTP_403_FORBIDDEN"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.043462"
+  }
+}

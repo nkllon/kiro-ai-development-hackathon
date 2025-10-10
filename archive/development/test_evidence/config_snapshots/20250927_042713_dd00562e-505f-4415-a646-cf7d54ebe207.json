@@ -1,0 +1,41 @@
+{
+  "evidence_id": "dd00562e-505f-4415-a646-cf7d54ebe207",
+  "timestamp": "2025-09-27T04:27:13.015757",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.015750",
+    "data_type": "dict"
+  },
+  "integrity_hash": "71caeeb7ffcfcbe34218f94c8ca763b7db1cb29ee271b65b3c771a4ff39dea5c",
+  "data": {
+    "file_path": "./scripts/hackathon_command_center.py",
+    "file_size": 25541,
+    "line_count": 711,
+    "route_analysis": {
+      "total_routes": 2,
+      "websocket_routes": [
+        "/ws"
+      ],
+      "http_routes": [
+        "/"
+      ],
+      "route_handlers": {
+        "/": "command_center",
+        "/ws": "websocket_endpoint"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "fastapi.responses.HTMLResponse",
+        "fastapi.WebSocket",
+        "uvicorn",
+        "fastapi",
+        "fastapi.FastAPI",
+        "fastapi.responses"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.015736"
+  }
+}

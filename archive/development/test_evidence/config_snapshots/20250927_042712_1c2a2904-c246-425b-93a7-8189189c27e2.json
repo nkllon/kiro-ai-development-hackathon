@@ -1,0 +1,46 @@
+{
+  "evidence_id": "1c2a2904-c246-425b-93a7-8189189c27e2",
+  "timestamp": "2025-09-27T04:27:12.739010",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.738980",
+    "data_type": "dict"
+  },
+  "integrity_hash": "11ba355047c83e8c528c5df65c1ebf8666e332cc4e6e1b96b729d6d7d6f679f7",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/management_endpoints/tag_management_endpoints.py",
+    "file_size": 15397,
+    "line_count": 483,
+    "route_analysis": {
+      "total_routes": 6,
+      "websocket_routes": [],
+      "http_routes": [
+        "/tag/new",
+        "/tag/update",
+        "/tag/info",
+        "/tag/list",
+        "/tag/delete",
+        "/tag/daily/activity"
+      ],
+      "route_handlers": {
+        "/tag/new": "new_tag",
+        "/tag/update": "update_tag",
+        "/tag/info": "info_tag",
+        "/tag/list": "list_tags",
+        "/tag/delete": "delete_tag",
+        "/tag/daily/activity": "get_tag_daily_activity"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi",
+        "fastapi.HTTPException"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.738954"
+  }
+}

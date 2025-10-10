@@ -1,0 +1,138 @@
+{
+  "timestamp": "2025-10-04T15:36:31.460349",
+  "tests": {
+    "Local Health endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 5.769522190093994,
+      "timestamp": "2025-10-04T15:36:37.230025"
+    },
+    "Local Readiness endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 0.007075071334838867,
+      "timestamp": "2025-10-04T15:36:37.237126"
+    },
+    "Local Metrics endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 0.00438690185546875,
+      "timestamp": "2025-10-04T15:36:37.241533"
+    },
+    "Local Dashboard endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 0.026074886322021484,
+      "timestamp": "2025-10-04T15:36:37.267627"
+    },
+    "External Health endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 0.18628597259521484,
+      "timestamp": "2025-10-04T15:36:37.453973"
+    },
+    "External Dashboard endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 0.34958314895629883,
+      "timestamp": "2025-10-04T15:36:37.803580"
+    },
+    "Data Directory metrics": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:37.803987"
+    },
+    "Data Directory dashboards": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:37.804002"
+    },
+    "Data Directory logs": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:37.804013"
+    },
+    "Data Directory config": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:37.804022"
+    },
+    "Data Write Permissions": {
+      "status": "pass",
+      "details": "Can write to data directories",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:37.804276"
+    },
+    "Process Running": {
+      "status": "pass",
+      "details": "Observatory process found (PIDs: 76994)",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:37.818422"
+    },
+    "Process Resources PID 76994": {
+      "status": "pass",
+      "details": "76994  12.7  0.5   0:28.73",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:37.821233"
+    },
+    "Tunnel Process": {
+      "status": "pass",
+      "details": "Cloudflare tunnel running (PIDs: 82792)",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:37.832938"
+    },
+    "Performance /health": {
+      "status": "pass",
+      "details": "Avg response time: 0.00s (target: <1.0s)",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:37.843766"
+    },
+    "Performance /metrics": {
+      "status": "pass",
+      "details": "Avg response time: 0.00s (target: <2.0s)",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:37.857236"
+    },
+    "Performance /": {
+      "status": "pass",
+      "details": "Avg response time: 0.02s (target: <3.0s)",
+      "duration": 0,
+      "timestamp": "2025-10-04T15:36:37.958301"
+    },
+    "WebSocket /ws/observatory": {
+      "status": "pass",
+      "details": "Connection and message exchange successful",
+      "duration": 0.015326976776123047,
+      "timestamp": "2025-10-04T15:36:37.973687"
+    },
+    "WebSocket /ws/emoji-rain": {
+      "status": "pass",
+      "details": "Connection and message exchange successful",
+      "duration": 0.0022487640380859375,
+      "timestamp": "2025-10-04T15:36:37.976222"
+    },
+    "WebSocket /ws/anomalies": {
+      "status": "pass",
+      "details": "Connection and message exchange successful",
+      "duration": 0.0026979446411132812,
+      "timestamp": "2025-10-04T15:36:37.979274"
+    },
+    "WebSocket /ws/doctor-status": {
+      "status": "pass",
+      "details": "Connection and message exchange successful",
+      "duration": 0.004704713821411133,
+      "timestamp": "2025-10-04T15:36:37.984605"
+    }
+  },
+  "summary": {
+    "total_tests": 21,
+    "passed_tests": 21,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "overall_status": "pass"
+  }
+}

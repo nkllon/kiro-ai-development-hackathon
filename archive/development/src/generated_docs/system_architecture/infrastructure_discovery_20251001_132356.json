@@ -1,0 +1,4096 @@
+{
+  "discovery_timestamp": "2025-10-01T13:23:56.756854",
+  "services": {
+    "observatory": {
+      "name": "observatory",
+      "process_id": 4902,
+      "port": 8888,
+      "host": "localhost",
+      "protocol": "http",
+      "config_files": [],
+      "dependencies": [],
+      "health_endpoint": "/health",
+      "websocket_endpoints": [
+        "/ws/observatory",
+        "/ws/emoji-rain",
+        "/ws/anomalies",
+        "/ws/doctor-status"
+      ],
+      "created_at": "2025-10-01T13:23:56.547755",
+      "updated_at": "2025-10-01T13:23:56.547755",
+      "version": "1.0.0",
+      "last_validated": "2025-10-01T13:23:56.547745",
+      "validation_status": "valid",
+      "validation_errors": [],
+      "changed_by": "infrastructure_discoverer",
+      "change_reason": null
+    },
+    "prometheus": {
+      "name": "prometheus",
+      "process_id": 822,
+      "port": 9090,
+      "host": "localhost",
+      "protocol": "http",
+      "config_files": [],
+      "dependencies": [],
+      "health_endpoint": "/api/v1/status/config",
+      "websocket_endpoints": [],
+      "created_at": "2025-10-01T13:23:56.658884",
+      "updated_at": "2025-10-01T13:23:56.658885",
+      "version": "1.0.0",
+      "last_validated": "2025-10-01T13:23:56.658878",
+      "validation_status": "valid",
+      "validation_errors": [],
+      "changed_by": "infrastructure_discoverer",
+      "change_reason": null
+    },
+    "grafana": {
+      "name": "grafana",
+      "process_id": 822,
+      "port": 3000,
+      "host": "localhost",
+      "protocol": "http",
+      "config_files": [],
+      "dependencies": [],
+      "health_endpoint": "/api/health",
+      "websocket_endpoints": [],
+      "created_at": "2025-10-01T13:23:56.689345",
+      "updated_at": "2025-10-01T13:23:56.689345",
+      "version": "1.0.0",
+      "last_validated": "2025-10-01T13:23:56.689338",
+      "validation_status": "valid",
+      "validation_errors": [],
+      "changed_by": "infrastructure_discoverer",
+      "change_reason": null
+    },
+    "directus": {
+      "name": "directus",
+      "process_id": 822,
+      "port": 8055,
+      "host": "localhost",
+      "protocol": "http",
+      "config_files": [],
+      "dependencies": [],
+      "health_endpoint": "/server/ping",
+      "websocket_endpoints": [],
+      "created_at": "2025-10-01T13:23:56.704749",
+      "updated_at": "2025-10-01T13:23:56.704749",
+      "version": "1.0.0",
+      "last_validated": "2025-10-01T13:23:56.704742",
+      "validation_status": "valid",
+      "validation_errors": [],
+      "changed_by": "infrastructure_discoverer",
+      "change_reason": null
+    },
+    "redis": {
+      "name": "redis",
+      "process_id": 2584,
+      "port": 6379,
+      "host": "localhost",
+      "protocol": "http",
+      "config_files": [],
+      "dependencies": [],
+      "health_endpoint": null,
+      "websocket_endpoints": [],
+      "created_at": "2025-10-01T13:23:56.736537",
+      "updated_at": "2025-10-01T13:23:56.736537",
+      "version": "1.0.0",
+      "last_validated": "2025-10-01T13:23:56.736528",
+      "validation_status": "valid",
+      "validation_errors": [],
+      "changed_by": "infrastructure_discoverer",
+      "change_reason": null
+    },
+    "redis-fallback": {
+      "name": "redis-fallback",
+      "process_id": 822,
+      "port": 6380,
+      "host": "localhost",
+      "protocol": "http",
+      "config_files": [],
+      "dependencies": [],
+      "health_endpoint": null,
+      "websocket_endpoints": [],
+      "created_at": "2025-10-01T13:23:56.745947",
+      "updated_at": "2025-10-01T13:23:56.745947",
+      "version": "1.0.0",
+      "last_validated": "2025-10-01T13:23:56.745939",
+      "validation_status": "valid",
+      "validation_errors": [],
+      "changed_by": "infrastructure_discoverer",
+      "change_reason": null
+    }
+  },
+  "network_topology": {
+    "services": [
+      {
+        "name": "observatory",
+        "process_id": 4902,
+        "port": 8888,
+        "host": "localhost",
+        "protocol": "http",
+        "config_files": [],
+        "dependencies": [],
+        "health_endpoint": "/health",
+        "websocket_endpoints": [
+          "/ws/observatory",
+          "/ws/emoji-rain",
+          "/ws/anomalies",
+          "/ws/doctor-status"
+        ],
+        "created_at": "2025-10-01T13:23:56.547755",
+        "updated_at": "2025-10-01T13:23:56.547755",
+        "version": "1.0.0",
+        "last_validated": "2025-10-01T13:23:56.547745",
+        "validation_status": "valid",
+        "validation_errors": [],
+        "changed_by": "infrastructure_discoverer",
+        "change_reason": null
+      },
+      {
+        "name": "prometheus",
+        "process_id": 822,
+        "port": 9090,
+        "host": "localhost",
+        "protocol": "http",
+        "config_files": [],
+        "dependencies": [],
+        "health_endpoint": "/api/v1/status/config",
+        "websocket_endpoints": [],
+        "created_at": "2025-10-01T13:23:56.658884",
+        "updated_at": "2025-10-01T13:23:56.658885",
+        "version": "1.0.0",
+        "last_validated": "2025-10-01T13:23:56.658878",
+        "validation_status": "valid",
+        "validation_errors": [],
+        "changed_by": "infrastructure_discoverer",
+        "change_reason": null
+      },
+      {
+        "name": "grafana",
+        "process_id": 822,
+        "port": 3000,
+        "host": "localhost",
+        "protocol": "http",
+        "config_files": [],
+        "dependencies": [],
+        "health_endpoint": "/api/health",
+        "websocket_endpoints": [],
+        "created_at": "2025-10-01T13:23:56.689345",
+        "updated_at": "2025-10-01T13:23:56.689345",
+        "version": "1.0.0",
+        "last_validated": "2025-10-01T13:23:56.689338",
+        "validation_status": "valid",
+        "validation_errors": [],
+        "changed_by": "infrastructure_discoverer",
+        "change_reason": null
+      },
+      {
+        "name": "directus",
+        "process_id": 822,
+        "port": 8055,
+        "host": "localhost",
+        "protocol": "http",
+        "config_files": [],
+        "dependencies": [],
+        "health_endpoint": "/server/ping",
+        "websocket_endpoints": [],
+        "created_at": "2025-10-01T13:23:56.704749",
+        "updated_at": "2025-10-01T13:23:56.704749",
+        "version": "1.0.0",
+        "last_validated": "2025-10-01T13:23:56.704742",
+        "validation_status": "valid",
+        "validation_errors": [],
+        "changed_by": "infrastructure_discoverer",
+        "change_reason": null
+      },
+      {
+        "name": "redis",
+        "process_id": 2584,
+        "port": 6379,
+        "host": "localhost",
+        "protocol": "http",
+        "config_files": [],
+        "dependencies": [],
+        "health_endpoint": null,
+        "websocket_endpoints": [],
+        "created_at": "2025-10-01T13:23:56.736537",
+        "updated_at": "2025-10-01T13:23:56.736537",
+        "version": "1.0.0",
+        "last_validated": "2025-10-01T13:23:56.736528",
+        "validation_status": "valid",
+        "validation_errors": [],
+        "changed_by": "infrastructure_discoverer",
+        "change_reason": null
+      },
+      {
+        "name": "redis-fallback",
+        "process_id": 822,
+        "port": 6380,
+        "host": "localhost",
+        "protocol": "http",
+        "config_files": [],
+        "dependencies": [],
+        "health_endpoint": null,
+        "websocket_endpoints": [],
+        "created_at": "2025-10-01T13:23:56.745947",
+        "updated_at": "2025-10-01T13:23:56.745947",
+        "version": "1.0.0",
+        "last_validated": "2025-10-01T13:23:56.745939",
+        "validation_status": "valid",
+        "validation_errors": [],
+        "changed_by": "infrastructure_discoverer",
+        "change_reason": null
+      }
+    ],
+    "network_range": "192.168.1.0/24",
+    "dns_servers": [],
+    "routing_rules": [
+      {
+        "type": "default_gateway",
+        "destination": "0.0.0.0/0",
+        "gateway": "192.168.1.1"
+      }
+    ],
+    "created_at": "2025-10-01T13:23:56.745983",
+    "updated_at": "2025-10-01T13:23:56.745983",
+    "version": "1.0.0",
+    "last_validated": "2025-10-01T13:23:56.746201",
+    "validation_status": "valid",
+    "accuracy_score": 0.8
+  },
+  "websocket_endpoints": [
+    {
+      "service": "observatory",
+      "endpoint": "/ws/observatory",
+      "url": "ws://localhost:8888/ws/observatory",
+      "port": 8888,
+      "status": "available",
+      "discovered_at": "2025-10-01T13:23:56.746213"
+    },
+    {
+      "service": "observatory",
+      "endpoint": "/ws/emoji-rain",
+      "url": "ws://localhost:8888/ws/emoji-rain",
+      "port": 8888,
+      "status": "available",
+      "discovered_at": "2025-10-01T13:23:56.746217"
+    },
+    {
+      "service": "observatory",
+      "endpoint": "/ws/anomalies",
+      "url": "ws://localhost:8888/ws/anomalies",
+      "port": 8888,
+      "status": "available",
+      "discovered_at": "2025-10-01T13:23:56.746219"
+    },
+    {
+      "service": "observatory",
+      "endpoint": "/ws/doctor-status",
+      "url": "ws://localhost:8888/ws/doctor-status",
+      "port": 8888,
+      "status": "available",
+      "discovered_at": "2025-10-01T13:23:56.746220"
+    }
+  ],
+  "automation_scripts": [
+    {
+      "name": "regenerate_ghostbusters_code.py",
+      "path": "scripts/regenerate_ghostbusters_code.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.746770"
+    },
+    {
+      "name": "fix_cloudflared_websocket.py",
+      "path": "scripts/fix_cloudflared_websocket.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.746782"
+    },
+    {
+      "name": "beast_mode_hybrid_error_resolution_engine.py",
+      "path": "scripts/beast_mode_hybrid_error_resolution_engine.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.746790"
+    },
+    {
+      "name": "lint_makefile.py",
+      "path": "scripts/lint_makefile.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.746798"
+    },
+    {
+      "name": "run_live_smoke_test_1password_flexible.sh",
+      "path": "scripts/run_live_smoke_test_1password_flexible.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.746806"
+    },
+    {
+      "name": "beast_mode_phase1_completion_report.py",
+      "path": "scripts/beast_mode_phase1_completion_report.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.746814"
+    },
+    {
+      "name": "claude_parallel_execution_20250930-130538.sh",
+      "path": "scripts/claude_parallel_execution_20250930-130538.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.746821"
+    },
+    {
+      "name": "gcp_cloud_workflows_setup.yaml",
+      "path": "scripts/gcp_cloud_workflows_setup.yaml",
+      "type": "yaml",
+      "discovered_at": "2025-10-01T13:23:56.746829"
+    },
+    {
+      "name": "auto_format_all_model.json",
+      "path": "scripts/auto_format_all_model.json",
+      "type": "unknown",
+      "discovered_at": "2025-10-01T13:23:56.746837"
+    },
+    {
+      "name": "ai_memory_palace_spec_integration.py",
+      "path": "scripts/ai_memory_palace_spec_integration.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.746847"
+    },
+    {
+      "name": "check_status.sh",
+      "path": "scripts/check_status.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.746854"
+    },
+    {
+      "name": "delete_all_cloud_functions.py",
+      "path": "scripts/delete_all_cloud_functions.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.746861"
+    },
+    {
+      "name": "documentation_index_background_launch_v2.sh",
+      "path": "scripts/documentation_index_background_launch_v2.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.746881"
+    },
+    {
+      "name": "test_dag_orchestration.py",
+      "path": "scripts/test_dag_orchestration.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.746898"
+    },
+    {
+      "name": "setup_project.py",
+      "path": "scripts/setup_project.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.746907"
+    },
+    {
+      "name": "health-check-directus.sh",
+      "path": "scripts/health-check-directus.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.746915"
+    },
+    {
+      "name": "dependency_validator.py",
+      "path": "scripts/dependency_validator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.746923"
+    },
+    {
+      "name": "agent_targeted_fixer.py",
+      "path": "scripts/agent_targeted_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.746936"
+    },
+    {
+      "name": "validate_deployment.py",
+      "path": "scripts/validate_deployment.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.746944"
+    },
+    {
+      "name": "repository_refactoring_orchestrator.py",
+      "path": "scripts/repository_refactoring_orchestrator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.746954"
+    },
+    {
+      "name": "orphaned_solution_scanner.py",
+      "path": "scripts/orphaned_solution_scanner.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.746962"
+    },
+    {
+      "name": "launch_cursor_completion.sh",
+      "path": "scripts/launch_cursor_completion.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.746969"
+    },
+    {
+      "name": "websocket_fix_monitoring_agent.py",
+      "path": "scripts/websocket_fix_monitoring_agent.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.746987"
+    },
+    {
+      "name": "integration_tester.py",
+      "path": "scripts/integration_tester.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.746995"
+    },
+    {
+      "name": "beast_mode_pdca_convergence.py",
+      "path": "scripts/beast_mode_pdca_convergence.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747002"
+    },
+    {
+      "name": "beast_mode_phase1_fix_refinement_engine.py",
+      "path": "scripts/beast_mode_phase1_fix_refinement_engine.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747010"
+    },
+    {
+      "name": "generalized_code_generator.py",
+      "path": "scripts/generalized_code_generator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747016"
+    },
+    {
+      "name": "mdc_writer.py",
+      "path": "scripts/mdc_writer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747023"
+    },
+    {
+      "name": "beast_mode_interface_governance.py",
+      "path": "scripts/beast_mode_interface_governance.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747036"
+    },
+    {
+      "name": "validate_enhanced_registry.py",
+      "path": "scripts/validate_enhanced_registry.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747043"
+    },
+    {
+      "name": "launch_headless_execution.py",
+      "path": "scripts/launch_headless_execution.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747049"
+    },
+    {
+      "name": "beast_mode_final_bidirectional_summary.py",
+      "path": "scripts/beast_mode_final_bidirectional_summary.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747057"
+    },
+    {
+      "name": "git_workflow.py",
+      "path": "scripts/git_workflow.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747064"
+    },
+    {
+      "name": "event_driven_test_runner.py",
+      "path": "scripts/event_driven_test_runner.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747071"
+    },
+    {
+      "name": "websocket_validation_suite.py",
+      "path": "scripts/websocket_validation_suite.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747077"
+    },
+    {
+      "name": "model_dimension_analyzer.py",
+      "path": "scripts/model_dimension_analyzer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747085"
+    },
+    {
+      "name": "interface_governance_hook.py",
+      "path": "scripts/interface_governance_hook.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747092"
+    },
+    {
+      "name": "auto_format_all.py",
+      "path": "scripts/auto_format_all.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747109"
+    },
+    {
+      "name": "gcp_enterprise_setup.py",
+      "path": "scripts/gcp_enterprise_setup.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747117"
+    },
+    {
+      "name": "beast_mode_final_report.py",
+      "path": "scripts/beast_mode_final_report.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747124"
+    },
+    {
+      "name": "fix_dns_records.py",
+      "path": "scripts/fix_dns_records.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747148"
+    },
+    {
+      "name": "beast_mode_focused_rdi_analysis.py",
+      "path": "scripts/beast_mode_focused_rdi_analysis.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747157"
+    },
+    {
+      "name": "safe_shell_runner.py",
+      "path": "scripts/safe_shell_runner.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747165"
+    },
+    {
+      "name": "demo_makefile_dag_orchestration.py",
+      "path": "scripts/demo_makefile_dag_orchestration.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747172"
+    },
+    {
+      "name": "emergency_compliance_fix.py",
+      "path": "scripts/emergency_compliance_fix.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747181"
+    },
+    {
+      "name": "actual_billing_analyzer.py",
+      "path": "scripts/actual_billing_analyzer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747190"
+    },
+    {
+      "name": "repository_setup_launch.py",
+      "path": "scripts/repository_setup_launch.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747197"
+    },
+    {
+      "name": "monitor-kiro-instance.sh",
+      "path": "scripts/monitor-kiro-instance.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.747204"
+    },
+    {
+      "name": "mcp_cli.py",
+      "path": "scripts/mcp_cli.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747215"
+    },
+    {
+      "name": "validate_project_model.py",
+      "path": "scripts/validate_project_model.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747222"
+    },
+    {
+      "name": "final_95_percent_compliance_report.py",
+      "path": "scripts/final_95_percent_compliance_report.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747229"
+    },
+    {
+      "name": "launch_billing_analysis.py",
+      "path": "scripts/launch_billing_analysis.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747236"
+    },
+    {
+      "name": "infrastructure_container_orchestrator.py",
+      "path": "scripts/infrastructure_container_orchestrator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747243"
+    },
+    {
+      "name": "repository_discovery_background_launch.sh",
+      "path": "scripts/repository_discovery_background_launch.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.747349"
+    },
+    {
+      "name": "documentation_index_prelaunch_check_v2.py",
+      "path": "scripts/documentation_index_prelaunch_check_v2.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747356"
+    },
+    {
+      "name": "pre_test_model_check.py",
+      "path": "scripts/pre_test_model_check.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747363"
+    },
+    {
+      "name": "deploy_docker.py",
+      "path": "scripts/deploy_docker.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747370"
+    },
+    {
+      "name": "stop_simone_mcp.sh",
+      "path": "scripts/stop_simone_mcp.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.747376"
+    },
+    {
+      "name": "ai_memory_palace_cli.py",
+      "path": "scripts/ai_memory_palace_cli.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747383"
+    },
+    {
+      "name": "verify_ssl_tls.sh",
+      "path": "scripts/verify_ssl_tls.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.747394"
+    },
+    {
+      "name": "hackathon_command_center.py",
+      "path": "scripts/hackathon_command_center.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747401"
+    },
+    {
+      "name": "langgraph_billing_agents.py",
+      "path": "scripts/langgraph_billing_agents.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747408"
+    },
+    {
+      "name": "agent_third_wave_analyzer.py",
+      "path": "scripts/agent_third_wave_analyzer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747414"
+    },
+    {
+      "name": "parallel_module_fixing_orchestrator.py",
+      "path": "scripts/parallel_module_fixing_orchestrator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747421"
+    },
+    {
+      "name": "start_jaeger.py",
+      "path": "scripts/start_jaeger.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747427"
+    },
+    {
+      "name": "universal_ast_enhanced_linter_model.py",
+      "path": "scripts/universal_ast_enhanced_linter_model.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747434"
+    },
+    {
+      "name": "check_code_quality.py",
+      "path": "scripts/check_code_quality.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747441"
+    },
+    {
+      "name": "protect_competition_submission.sh",
+      "path": "scripts/protect_competition_submission.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.747447"
+    },
+    {
+      "name": "test_phase2_websocket_configuration.py",
+      "path": "scripts/test_phase2_websocket_configuration.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747454"
+    },
+    {
+      "name": "loki_chaos_enhancer.py",
+      "path": "scripts/loki_chaos_enhancer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747460"
+    },
+    {
+      "name": "start_observatory_production.py",
+      "path": "scripts/start_observatory_production.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747466"
+    },
+    {
+      "name": "bandit_integration.py",
+      "path": "scripts/bandit_integration.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747473"
+    },
+    {
+      "name": "beast_mode_rdi_analysis_engine.py",
+      "path": "scripts/beast_mode_rdi_analysis_engine.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747479"
+    },
+    {
+      "name": "fix_mcp_config.py",
+      "path": "scripts/fix_mcp_config.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747487"
+    },
+    {
+      "name": "final_production_verification.py",
+      "path": "scripts/final_production_verification.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747493"
+    },
+    {
+      "name": "repository_link_scanner.py",
+      "path": "scripts/repository_link_scanner.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747505"
+    },
+    {
+      "name": "test_production_websockets.py",
+      "path": "scripts/test_production_websockets.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747511"
+    },
+    {
+      "name": "analyze_websocket_issues.py",
+      "path": "scripts/analyze_websocket_issues.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747519"
+    },
+    {
+      "name": "documentation_index_launch.py",
+      "path": "scripts/documentation_index_launch.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747526"
+    },
+    {
+      "name": "vocabulary_projector_launch.py",
+      "path": "scripts/vocabulary_projector_launch.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747532"
+    },
+    {
+      "name": "vocabulary_projector_pre_launch_check.py",
+      "path": "scripts/vocabulary_projector_pre_launch_check.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747538"
+    },
+    {
+      "name": "simple_makefile_test_creator.py",
+      "path": "scripts/simple_makefile_test_creator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747545"
+    },
+    {
+      "name": "duet_ai_billing_checker.py",
+      "path": "scripts/duet_ai_billing_checker.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747553"
+    },
+    {
+      "name": "trigger-build.sh",
+      "path": "scripts/trigger-build.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.747560"
+    },
+    {
+      "name": "pypi_package_generator.py",
+      "path": "scripts/pypi_package_generator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747572"
+    },
+    {
+      "name": "test_model.json",
+      "path": "scripts/test_model.json",
+      "type": "unknown",
+      "discovered_at": "2025-10-01T13:23:56.747579"
+    },
+    {
+      "name": "test_registry_lifecycle.py",
+      "path": "scripts/test_registry_lifecycle.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747585"
+    },
+    {
+      "name": "repository_discovery_launch_v2.py",
+      "path": "scripts/repository_discovery_launch_v2.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747591"
+    },
+    {
+      "name": "beast_mode_final_convergence_report.py",
+      "path": "scripts/beast_mode_final_convergence_report.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747597"
+    },
+    {
+      "name": "cloudflare_dashboard_setup.py",
+      "path": "scripts/cloudflare_dashboard_setup.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747603"
+    },
+    {
+      "name": "beast_mode_registry_summary.py",
+      "path": "scripts/beast_mode_registry_summary.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747610"
+    },
+    {
+      "name": "investigate_python_parsing.py",
+      "path": "scripts/investigate_python_parsing.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747616"
+    },
+    {
+      "name": "real_time_compliance_validator.py",
+      "path": "scripts/real_time_compliance_validator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747622"
+    },
+    {
+      "name": "deploy_websocket_fix.py",
+      "path": "scripts/deploy_websocket_fix.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747629"
+    },
+    {
+      "name": "protect_branches.sh",
+      "path": "scripts/protect_branches.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.747635"
+    },
+    {
+      "name": "test_semantic_scanner.py",
+      "path": "scripts/test_semantic_scanner.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747642"
+    },
+    {
+      "name": "simple_gcp_setup.py",
+      "path": "scripts/simple_gcp_setup.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747648"
+    },
+    {
+      "name": "status_simone_mcp.sh",
+      "path": "scripts/status_simone_mcp.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.747654"
+    },
+    {
+      "name": "orchestrate_directus_integration.py",
+      "path": "scripts/orchestrate_directus_integration.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747661"
+    },
+    {
+      "name": "simple_link_checker.py",
+      "path": "scripts/simple_link_checker.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747667"
+    },
+    {
+      "name": "orchestrate_makefile_unit_tests.py",
+      "path": "scripts/orchestrate_makefile_unit_tests.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747673"
+    },
+    {
+      "name": "mdc_parser.py",
+      "path": "scripts/mdc_parser.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747679"
+    },
+    {
+      "name": "simple_websocket_test.py",
+      "path": "scripts/simple_websocket_test.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747686"
+    },
+    {
+      "name": "claude_status_tracker_20250930-130538.sh",
+      "path": "scripts/claude_status_tracker_20250930-130538.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.747692"
+    },
+    {
+      "name": "restore_tools_venv.sh",
+      "path": "scripts/restore_tools_venv.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.747698"
+    },
+    {
+      "name": "update_observatory_polling.py",
+      "path": "scripts/update_observatory_polling.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747709"
+    },
+    {
+      "name": "migrate_to_consolidated_specs.py",
+      "path": "scripts/migrate_to_consolidated_specs.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747715"
+    },
+    {
+      "name": "fix_vocabulary_alignment.py",
+      "path": "scripts/fix_vocabulary_alignment.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747726"
+    },
+    {
+      "name": "start_simone_mcp.sh",
+      "path": "scripts/start_simone_mcp.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.747732"
+    },
+    {
+      "name": "code_generation_validator.py",
+      "path": "scripts/code_generation_validator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747739"
+    },
+    {
+      "name": "repository_discovery_launch.py",
+      "path": "scripts/repository_discovery_launch.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747745"
+    },
+    {
+      "name": "start-directus.sh",
+      "path": "scripts/start-directus.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.747752"
+    },
+    {
+      "name": "repository_setup_background_launch.sh",
+      "path": "scripts/repository_setup_background_launch.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.747760"
+    },
+    {
+      "name": "targeted_size_refactoring.py",
+      "path": "scripts/targeted_size_refactoring.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747766"
+    },
+    {
+      "name": "toml_editor.py",
+      "path": "scripts/toml_editor.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747772"
+    },
+    {
+      "name": "automated_compliance_enforcement.py",
+      "path": "scripts/automated_compliance_enforcement.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747779"
+    },
+    {
+      "name": "spawn-gke-hackathon.sh",
+      "path": "scripts/spawn-gke-hackathon.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.747785"
+    },
+    {
+      "name": "observatory-daemon.py",
+      "path": "scripts/observatory-daemon.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747791"
+    },
+    {
+      "name": "deploy_observatory.py",
+      "path": "scripts/deploy_observatory.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747797"
+    },
+    {
+      "name": "ai_memory_palace_analytics.py",
+      "path": "scripts/ai_memory_palace_analytics.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747804"
+    },
+    {
+      "name": "round_trip_cli.py",
+      "path": "scripts/round_trip_cli.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747810"
+    },
+    {
+      "name": "setup_cloudflare_tunnel.py",
+      "path": "scripts/setup_cloudflare_tunnel.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747835"
+    },
+    {
+      "name": "implement_health_monitoring.py",
+      "path": "scripts/implement_health_monitoring.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747863"
+    },
+    {
+      "name": "websocket_connectivity_probe.py",
+      "path": "scripts/websocket_connectivity_probe.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747871"
+    },
+    {
+      "name": "honest_compliance_reporter.py",
+      "path": "scripts/honest_compliance_reporter.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747878"
+    },
+    {
+      "name": "verify_dns.sh",
+      "path": "scripts/verify_dns.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.747964"
+    },
+    {
+      "name": "pre_commit_validation.py",
+      "path": "scripts/pre_commit_validation.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747975"
+    },
+    {
+      "name": "websocket_performance_validator.py",
+      "path": "scripts/websocket_performance_validator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747982"
+    },
+    {
+      "name": "register_existing_interfaces.py",
+      "path": "scripts/register_existing_interfaces.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747989"
+    },
+    {
+      "name": "system_architecture_launch_v2.py",
+      "path": "scripts/system_architecture_launch_v2.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.747996"
+    },
+    {
+      "name": "beast_mode_requirements_driven_reimplementation.py",
+      "path": "scripts/beast_mode_requirements_driven_reimplementation.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748003"
+    },
+    {
+      "name": "quick_rule_validation.py",
+      "path": "scripts/quick_rule_validation.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748009"
+    },
+    {
+      "name": "beast_mode_metrics_server.py",
+      "path": "scripts/beast_mode_metrics_server.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748015"
+    },
+    {
+      "name": "call_ghostbusters_properly.py",
+      "path": "scripts/call_ghostbusters_properly.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748021"
+    },
+    {
+      "name": "deploy_anti_duplication_system.py",
+      "path": "scripts/deploy_anti_duplication_system.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748028"
+    },
+    {
+      "name": "setup-github-trigger-direct.sh",
+      "path": "scripts/setup-github-trigger-direct.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748035"
+    },
+    {
+      "name": "beast_mode_health_monitoring_final.py",
+      "path": "scripts/beast_mode_health_monitoring_final.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748041"
+    },
+    {
+      "name": "rollback_deployment.py",
+      "path": "scripts/rollback_deployment.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748052"
+    },
+    {
+      "name": "monitor_integration.py",
+      "path": "scripts/monitor_integration.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748058"
+    },
+    {
+      "name": "verify_ssl_tls_configuration.py",
+      "path": "scripts/verify_ssl_tls_configuration.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748065"
+    },
+    {
+      "name": "demo_github_discovery.py",
+      "path": "scripts/demo_github_discovery.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748071"
+    },
+    {
+      "name": "semantic_diff_engine.py",
+      "path": "scripts/semantic_diff_engine.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748077"
+    },
+    {
+      "name": "unify_reflective_module_interfaces.py",
+      "path": "scripts/unify_reflective_module_interfaces.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748084"
+    },
+    {
+      "name": "analyze_duplicate_interfaces.py",
+      "path": "scripts/analyze_duplicate_interfaces.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748092"
+    },
+    {
+      "name": "performance_benchmark.py",
+      "path": "scripts/performance_benchmark.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748099"
+    },
+    {
+      "name": "setup_directus.py",
+      "path": "scripts/setup_directus.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748105"
+    },
+    {
+      "name": "domain_operations.py",
+      "path": "scripts/domain_operations.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748111"
+    },
+    {
+      "name": "system_architecture_prelaunch_check_v2.py",
+      "path": "scripts/system_architecture_prelaunch_check_v2.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748118"
+    },
+    {
+      "name": "validate_grafana_security.py",
+      "path": "scripts/validate_grafana_security.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748124"
+    },
+    {
+      "name": "validate_backward_compatibility.py",
+      "path": "scripts/validate_backward_compatibility.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748131"
+    },
+    {
+      "name": "neo4j_round_trip_tests.py",
+      "path": "scripts/neo4j_round_trip_tests.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748137"
+    },
+    {
+      "name": "glacier_spore_system.py",
+      "path": "scripts/glacier_spore_system.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748143"
+    },
+    {
+      "name": "beast_mode_direct_fix_engine.py",
+      "path": "scripts/beast_mode_direct_fix_engine.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748149"
+    },
+    {
+      "name": "agent_syntax_fixer.py",
+      "path": "scripts/agent_syntax_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748156"
+    },
+    {
+      "name": "setup_branch_protection.py",
+      "path": "scripts/setup_branch_protection.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748162"
+    },
+    {
+      "name": "verify_document_hashes.sh",
+      "path": "scripts/verify_document_hashes.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748169"
+    },
+    {
+      "name": "ghostbusters_detail.py",
+      "path": "scripts/ghostbusters_detail.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748175"
+    },
+    {
+      "name": "security-check.sh",
+      "path": "scripts/security-check.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748182"
+    },
+    {
+      "name": "neo4j_visualizer.py",
+      "path": "scripts/neo4j_visualizer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748189"
+    },
+    {
+      "name": "spec_creation_dag_compliance_launch.py",
+      "path": "scripts/spec_creation_dag_compliance_launch.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748196"
+    },
+    {
+      "name": "comprehensive_system_health_validator.py",
+      "path": "scripts/comprehensive_system_health_validator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748203"
+    },
+    {
+      "name": "analyze_circular_deps.py",
+      "path": "scripts/analyze_circular_deps.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748209"
+    },
+    {
+      "name": "dashboard-monitor.py",
+      "path": "scripts/dashboard-monitor.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748216"
+    },
+    {
+      "name": "final_audit_report.py",
+      "path": "scripts/final_audit_report.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748222"
+    },
+    {
+      "name": "deterministic_toml_editor.py",
+      "path": "scripts/deterministic_toml_editor.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748229"
+    },
+    {
+      "name": "setup-cloud-build-trigger.sh",
+      "path": "scripts/setup-cloud-build-trigger.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748236"
+    },
+    {
+      "name": "war_room_demo.py",
+      "path": "scripts/war_room_demo.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748242"
+    },
+    {
+      "name": "configure_bot_protection.py",
+      "path": "scripts/configure_bot_protection.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748248"
+    },
+    {
+      "name": "beast_mode_dag_launcher.py",
+      "path": "scripts/beast_mode_dag_launcher.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748255"
+    },
+    {
+      "name": "analyze_enhanced_registry.py",
+      "path": "scripts/analyze_enhanced_registry.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748260"
+    },
+    {
+      "name": "pre_commit_compliance_check.py",
+      "path": "scripts/pre_commit_compliance_check.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748267"
+    },
+    {
+      "name": "development_checklist.py",
+      "path": "scripts/development_checklist.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748273"
+    },
+    {
+      "name": "websocket_connectivity_test.py",
+      "path": "scripts/websocket_connectivity_test.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748283"
+    },
+    {
+      "name": "gemini_gcp_billing_analyzer.py",
+      "path": "scripts/gemini_gcp_billing_analyzer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748295"
+    },
+    {
+      "name": "gcp_auto_setup.py",
+      "path": "scripts/gcp_auto_setup.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748308"
+    },
+    {
+      "name": "makefile_target_generator.py",
+      "path": "scripts/makefile_target_generator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748316"
+    },
+    {
+      "name": "validate_syntax.py",
+      "path": "scripts/validate_syntax.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748323"
+    },
+    {
+      "name": "deploy-spawn.sh",
+      "path": "scripts/deploy-spawn.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748330"
+    },
+    {
+      "name": "brutal_encoding_fixer.py",
+      "path": "scripts/brutal_encoding_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748337"
+    },
+    {
+      "name": "mass_launch_workers.sh",
+      "path": "scripts/mass_launch_workers.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748343"
+    },
+    {
+      "name": "deploy_distributed.py",
+      "path": "scripts/deploy_distributed.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748349"
+    },
+    {
+      "name": "quality_check.py",
+      "path": "scripts/quality_check.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748355"
+    },
+    {
+      "name": "run_second_wave_parallel_fixing.py",
+      "path": "scripts/run_second_wave_parallel_fixing.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748361"
+    },
+    {
+      "name": "generate_missing_tests.py",
+      "path": "scripts/generate_missing_tests.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748367"
+    },
+    {
+      "name": "vocabulary_projector_background_launch.sh",
+      "path": "scripts/vocabulary_projector_background_launch.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748374"
+    },
+    {
+      "name": "execute_mitigation_phase1.sh",
+      "path": "scripts/execute_mitigation_phase1.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748380"
+    },
+    {
+      "name": "agent_tool_health_fixer.py",
+      "path": "scripts/agent_tool_health_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748386"
+    },
+    {
+      "name": "simple_orphaned_scanner.py",
+      "path": "scripts/simple_orphaned_scanner.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748392"
+    },
+    {
+      "name": "robust_file_reader.py",
+      "path": "scripts/robust_file_reader.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748398"
+    },
+    {
+      "name": "beast_mode_pdca_convergence_final_report.py",
+      "path": "scripts/beast_mode_pdca_convergence_final_report.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748404"
+    },
+    {
+      "name": "start-observatory.py",
+      "path": "scripts/start-observatory.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748410"
+    },
+    {
+      "name": "enforce_make_only.sh",
+      "path": "scripts/enforce_make_only.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748416"
+    },
+    {
+      "name": "dynamic_syntax_fixer.py",
+      "path": "scripts/dynamic_syntax_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748422"
+    },
+    {
+      "name": "comprehensive_link_checker.py",
+      "path": "scripts/comprehensive_link_checker.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748428"
+    },
+    {
+      "name": "validate_module_completeness.py",
+      "path": "scripts/validate_module_completeness.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748434"
+    },
+    {
+      "name": "ghostbusters_cli.py",
+      "path": "scripts/ghostbusters_cli.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748440"
+    },
+    {
+      "name": "fix_round_trip_duplication.py",
+      "path": "scripts/fix_round_trip_duplication.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748446"
+    },
+    {
+      "name": "model_registry.json",
+      "path": "scripts/model_registry.json",
+      "type": "unknown",
+      "discovered_at": "2025-10-01T13:23:56.748453"
+    },
+    {
+      "name": "smoke_test_deployment.py",
+      "path": "scripts/smoke_test_deployment.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748459"
+    },
+    {
+      "name": "test_makefile_system.py",
+      "path": "scripts/test_makefile_system.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748465"
+    },
+    {
+      "name": "create_proper_notebook.py",
+      "path": "scripts/create_proper_notebook.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748473"
+    },
+    {
+      "name": "documentation_index_prelaunch_check.py",
+      "path": "scripts/documentation_index_prelaunch_check.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748480"
+    },
+    {
+      "name": "real_mermaid_validator.py",
+      "path": "scripts/real_mermaid_validator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748485"
+    },
+    {
+      "name": "setup-github-connection.sh",
+      "path": "scripts/setup-github-connection.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748492"
+    },
+    {
+      "name": "neo4j_poc.py",
+      "path": "scripts/neo4j_poc.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748498"
+    },
+    {
+      "name": "gcp_billing_analyzer.py",
+      "path": "scripts/gcp_billing_analyzer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748504"
+    },
+    {
+      "name": "pytest_wrapper.py",
+      "path": "scripts/pytest_wrapper.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748510"
+    },
+    {
+      "name": "fix_code_quality.py",
+      "path": "scripts/fix_code_quality.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748516"
+    },
+    {
+      "name": "fast_model_updater.py",
+      "path": "scripts/fast_model_updater.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748522"
+    },
+    {
+      "name": "repository_discovery_prelaunch_check.py",
+      "path": "scripts/repository_discovery_prelaunch_check.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748528"
+    },
+    {
+      "name": "run_third_wave_parallel_fixing.py",
+      "path": "scripts/run_third_wave_parallel_fixing.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748534"
+    },
+    {
+      "name": "test_websocket_direct.py",
+      "path": "scripts/test_websocket_direct.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748540"
+    },
+    {
+      "name": "monitor-all-kiro-instances.sh",
+      "path": "scripts/monitor-all-kiro-instances.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748547"
+    },
+    {
+      "name": "permanent_tunnel_manager.py",
+      "path": "scripts/permanent_tunnel_manager.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748553"
+    },
+    {
+      "name": "glacier_spore_models.py",
+      "path": "scripts/glacier_spore_models.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748559"
+    },
+    {
+      "name": "mdc_projector.py",
+      "path": "scripts/mdc_projector.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748565"
+    },
+    {
+      "name": "hybrid_worker_launcher.sh",
+      "path": "scripts/hybrid_worker_launcher.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748576"
+    },
+    {
+      "name": "install_anti_duplication_hooks.py",
+      "path": "scripts/install_anti_duplication_hooks.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748582"
+    },
+    {
+      "name": "simple_system_discovery.py",
+      "path": "scripts/simple_system_discovery.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748588"
+    },
+    {
+      "name": "monitor_headless_execution.py",
+      "path": "scripts/monitor_headless_execution.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748594"
+    },
+    {
+      "name": "glacier_spore_sync.py",
+      "path": "scripts/glacier_spore_sync.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748600"
+    },
+    {
+      "name": "generate_from_model.py",
+      "path": "scripts/generate_from_model.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748607"
+    },
+    {
+      "name": "separate_artifact_forge_domains.py",
+      "path": "scripts/separate_artifact_forge_domains.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748614"
+    },
+    {
+      "name": "rule_firing_identifier.py",
+      "path": "scripts/rule_firing_identifier.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748624"
+    },
+    {
+      "name": "advanced_compliance_accelerator.py",
+      "path": "scripts/advanced_compliance_accelerator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748631"
+    },
+    {
+      "name": "spec_creation_dag_compliance_prelaunch_check.py",
+      "path": "scripts/spec_creation_dag_compliance_prelaunch_check.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748637"
+    },
+    {
+      "name": "heuristic_file_type_processor.py",
+      "path": "scripts/heuristic_file_type_processor.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748643"
+    },
+    {
+      "name": "enhanced_migration_orchestrator.py",
+      "path": "scripts/enhanced_migration_orchestrator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748649"
+    },
+    {
+      "name": "agent_organization_fixer.py",
+      "path": "scripts/agent_organization_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748655"
+    },
+    {
+      "name": "run_makefile_governance_tests.py",
+      "path": "scripts/run_makefile_governance_tests.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748661"
+    },
+    {
+      "name": "systematic_compliance_improvement.py",
+      "path": "scripts/systematic_compliance_improvement.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748667"
+    },
+    {
+      "name": "beast_mode_ast_est_analysis_report.py",
+      "path": "scripts/beast_mode_ast_est_analysis_report.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748673"
+    },
+    {
+      "name": "deploy_bot_protection_whitelist.py",
+      "path": "scripts/deploy_bot_protection_whitelist.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748682"
+    },
+    {
+      "name": "configure_observatory_bot_protection.py",
+      "path": "scripts/configure_observatory_bot_protection.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748692"
+    },
+    {
+      "name": "demo_dag_orchestration.py",
+      "path": "scripts/demo_dag_orchestration.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748699"
+    },
+    {
+      "name": "ai_memory_palace_health_monitor.py",
+      "path": "scripts/ai_memory_palace_health_monitor.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748707"
+    },
+    {
+      "name": "validate_integrations.py",
+      "path": "scripts/validate_integrations.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748715"
+    },
+    {
+      "name": "debug_regex_capture.py",
+      "path": "scripts/debug_regex_capture.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748721"
+    },
+    {
+      "name": "cloudflare_dashboard_websocket_configuration.py",
+      "path": "scripts/cloudflare_dashboard_websocket_configuration.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748728"
+    },
+    {
+      "name": "test_redis_tracking.py",
+      "path": "scripts/test_redis_tracking.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748739"
+    },
+    {
+      "name": "claude_python_worker.py",
+      "path": "scripts/claude_python_worker.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748745"
+    },
+    {
+      "name": "gcp_authorization_handshake.py",
+      "path": "scripts/gcp_authorization_handshake.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748751"
+    },
+    {
+      "name": "documentation_index_launch_v2.py",
+      "path": "scripts/documentation_index_launch_v2.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748762"
+    },
+    {
+      "name": "comprehensive_github_discovery.py",
+      "path": "scripts/comprehensive_github_discovery.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748768"
+    },
+    {
+      "name": "systemic_rca_analysis.py",
+      "path": "scripts/systemic_rca_analysis.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748773"
+    },
+    {
+      "name": "repository_setup_prelaunch_check.py",
+      "path": "scripts/repository_setup_prelaunch_check.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748780"
+    },
+    {
+      "name": "semantic_orphaned_scanner.py",
+      "path": "scripts/semantic_orphaned_scanner.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748786"
+    },
+    {
+      "name": "indentation_validator.py",
+      "path": "scripts/indentation_validator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748793"
+    },
+    {
+      "name": "type_assertion_enforcer.py",
+      "path": "scripts/type_assertion_enforcer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748800"
+    },
+    {
+      "name": "beast_mode_manual_syntax_fixer.py",
+      "path": "scripts/beast_mode_manual_syntax_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748812"
+    },
+    {
+      "name": "stop-directus.sh",
+      "path": "scripts/stop-directus.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748819"
+    },
+    {
+      "name": "launch-kiro-worktree.sh",
+      "path": "scripts/launch-kiro-worktree.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748825"
+    },
+    {
+      "name": "generate_production_readiness_report.py",
+      "path": "scripts/generate_production_readiness_report.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748832"
+    },
+    {
+      "name": "prepare_parallel_execution_claude.py",
+      "path": "scripts/prepare_parallel_execution_claude.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748838"
+    },
+    {
+      "name": "ontology_vocabulary_bridge.py",
+      "path": "scripts/ontology_vocabulary_bridge.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748844"
+    },
+    {
+      "name": "make_first_check.py",
+      "path": "scripts/make_first_check.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748849"
+    },
+    {
+      "name": "beast_mode_health_monitoring_simple.py",
+      "path": "scripts/beast_mode_health_monitoring_simple.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748860"
+    },
+    {
+      "name": "gcp_quick_start.py",
+      "path": "scripts/gcp_quick_start.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748867"
+    },
+    {
+      "name": "mdc-linter.py",
+      "path": "scripts/mdc-linter.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748873"
+    },
+    {
+      "name": "fix_rm_interfaces_final.py",
+      "path": "scripts/fix_rm_interfaces_final.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748879"
+    },
+    {
+      "name": "beast_mode_cli.py",
+      "path": "scripts/beast_mode_cli.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748886"
+    },
+    {
+      "name": "hybrid_ai_worker.py",
+      "path": "scripts/hybrid_ai_worker.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748892"
+    },
+    {
+      "name": "commit_and_push.py",
+      "path": "scripts/commit_and_push.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748897"
+    },
+    {
+      "name": "launch_websocket_fix_monitoring.sh",
+      "path": "scripts/launch_websocket_fix_monitoring.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748904"
+    },
+    {
+      "name": "simple_calculator.py",
+      "path": "scripts/simple_calculator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748910"
+    },
+    {
+      "name": "discord_poster.py",
+      "path": "scripts/discord_poster.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748920"
+    },
+    {
+      "name": "start-prometheus.sh",
+      "path": "scripts/start-prometheus.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748927"
+    },
+    {
+      "name": "dns_cleanup_audit.py",
+      "path": "scripts/dns_cleanup_audit.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748933"
+    },
+    {
+      "name": "websocket_monitoring.py",
+      "path": "scripts/websocket_monitoring.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748939"
+    },
+    {
+      "name": "fix_test_indentation.py",
+      "path": "scripts/fix_test_indentation.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748950"
+    },
+    {
+      "name": "continuous_compliance_monitor.py",
+      "path": "scripts/continuous_compliance_monitor.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748956"
+    },
+    {
+      "name": "module_detection_system.py",
+      "path": "scripts/module_detection_system.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748962"
+    },
+    {
+      "name": "system_architecture_background_launch_v2.sh",
+      "path": "scripts/system_architecture_background_launch_v2.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.748969"
+    },
+    {
+      "name": "simple_websocket_validator.py",
+      "path": "scripts/simple_websocket_validator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748975"
+    },
+    {
+      "name": "beast_mode_health_monitoring.py",
+      "path": "scripts/beast_mode_health_monitoring.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748980"
+    },
+    {
+      "name": "documentation_index_launch_v2_tracked.py",
+      "path": "scripts/documentation_index_launch_v2_tracked.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748987"
+    },
+    {
+      "name": "mdc_editor.py",
+      "path": "scripts/mdc_editor.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748993"
+    },
+    {
+      "name": "distributed_security_scanner.py",
+      "path": "scripts/distributed_security_scanner.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.748999"
+    },
+    {
+      "name": "deploy_ai_memory_palace.py",
+      "path": "scripts/deploy_ai_memory_palace.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749005"
+    },
+    {
+      "name": "pre_commit_documentation_check.py",
+      "path": "scripts/pre_commit_documentation_check.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749035"
+    },
+    {
+      "name": "implement_remaining_rm_interfaces.py",
+      "path": "scripts/implement_remaining_rm_interfaces.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749041"
+    },
+    {
+      "name": "model.py",
+      "path": "scripts/model.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749047"
+    },
+    {
+      "name": "beast_mode_precision_fix_engine.py",
+      "path": "scripts/beast_mode_precision_fix_engine.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749071"
+    },
+    {
+      "name": "run_parallel_module_fixing.py",
+      "path": "scripts/run_parallel_module_fixing.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749081"
+    },
+    {
+      "name": "ai_memory_palace_server.py",
+      "path": "scripts/ai_memory_palace_server.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749088"
+    },
+    {
+      "name": "one_liner_linter.py",
+      "path": "scripts/one_liner_linter.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749095"
+    },
+    {
+      "name": "beast_mode_design_synchronizer.py",
+      "path": "scripts/beast_mode_design_synchronizer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749102"
+    },
+    {
+      "name": "deploy_single_machine.py",
+      "path": "scripts/deploy_single_machine.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749108"
+    },
+    {
+      "name": "beast_mode_15min_scale.py",
+      "path": "scripts/beast_mode_15min_scale.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749115"
+    },
+    {
+      "name": "permanent_corrective_actions.py",
+      "path": "scripts/permanent_corrective_actions.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749124"
+    },
+    {
+      "name": "fix_mypy_type_errors_systematic.py",
+      "path": "scripts/fix_mypy_type_errors_systematic.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749130"
+    },
+    {
+      "name": "beast_mode_comprehensive_test_summary.py",
+      "path": "scripts/beast_mode_comprehensive_test_summary.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749136"
+    },
+    {
+      "name": "convert_to_beast_mode.py",
+      "path": "scripts/convert_to_beast_mode.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749142"
+    },
+    {
+      "name": "beast_mode_resource_monitor.py",
+      "path": "scripts/beast_mode_resource_monitor.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749148"
+    },
+    {
+      "name": "deploy_ssl_tls_fix.py",
+      "path": "scripts/deploy_ssl_tls_fix.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749154"
+    },
+    {
+      "name": "pdca_phase_6_simple.py",
+      "path": "scripts/pdca_phase_6_simple.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749161"
+    },
+    {
+      "name": "agent_compliance_fixer.py",
+      "path": "scripts/agent_compliance_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749169"
+    },
+    {
+      "name": "targeted_compliance_fix.py",
+      "path": "scripts/targeted_compliance_fix.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749175"
+    },
+    {
+      "name": "enhanced_interface_registry.py",
+      "path": "scripts/enhanced_interface_registry.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749181"
+    },
+    {
+      "name": "gcp_billing_daily_reporter.py",
+      "path": "scripts/gcp_billing_daily_reporter.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749187"
+    },
+    {
+      "name": "system_architecture_launch_v2_tracked.py",
+      "path": "scripts/system_architecture_launch_v2_tracked.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749194"
+    },
+    {
+      "name": "test_functional_equivalence.py",
+      "path": "scripts/test_functional_equivalence.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749200"
+    },
+    {
+      "name": "focused_link_checker.py",
+      "path": "scripts/focused_link_checker.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749206"
+    },
+    {
+      "name": "deploy-container.sh",
+      "path": "scripts/deploy-container.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749213"
+    },
+    {
+      "name": "comprehensive_error_analyzer.py",
+      "path": "scripts/comprehensive_error_analyzer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749219"
+    },
+    {
+      "name": "debug_regex.py",
+      "path": "scripts/debug_regex.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749225"
+    },
+    {
+      "name": "beast_mode_bidirectional_cycle_validator.py",
+      "path": "scripts/beast_mode_bidirectional_cycle_validator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749230"
+    },
+    {
+      "name": "cli_parser.py",
+      "path": "scripts/cli_parser.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749236"
+    },
+    {
+      "name": "simple_ssl_tls_verifier.py",
+      "path": "scripts/simple_ssl_tls_verifier.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749243"
+    },
+    {
+      "name": "hackathon_ops_dashboard.py",
+      "path": "scripts/hackathon_ops_dashboard.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749249"
+    },
+    {
+      "name": "improved_spec_matcher.py",
+      "path": "scripts/improved_spec_matcher.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749256"
+    },
+    {
+      "name": "monitor_ssl_propagation.py",
+      "path": "scripts/monitor_ssl_propagation.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749272"
+    },
+    {
+      "name": "rm_compliance_validator.py",
+      "path": "scripts/rm_compliance_validator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749283"
+    },
+    {
+      "name": "start-monitoring.sh",
+      "path": "scripts/start-monitoring.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749290"
+    },
+    {
+      "name": "schema_manager.js",
+      "path": "scripts/schema_manager.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.749297"
+    },
+    {
+      "name": "agent_documentation_fixer.py",
+      "path": "scripts/agent_documentation_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749303"
+    },
+    {
+      "name": "migrate_subprocess_to_secure_shell.py",
+      "path": "scripts/migrate_subprocess_to_secure_shell.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749309"
+    },
+    {
+      "name": "beast_mode_upstream_requirements_updater.py",
+      "path": "scripts/beast_mode_upstream_requirements_updater.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749315"
+    },
+    {
+      "name": "validate_task_completion.sh",
+      "path": "scripts/validate_task_completion.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749329"
+    },
+    {
+      "name": "flake8_wrapper.sh",
+      "path": "scripts/flake8_wrapper.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749335"
+    },
+    {
+      "name": "websocket_master_validator.py",
+      "path": "scripts/websocket_master_validator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749341"
+    },
+    {
+      "name": "validate_makefile_targets.py",
+      "path": "scripts/validate_makefile_targets.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749348"
+    },
+    {
+      "name": "crud_operations.py",
+      "path": "scripts/crud_operations.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749354"
+    },
+    {
+      "name": "monitor_workers.sh",
+      "path": "scripts/monitor_workers.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749360"
+    },
+    {
+      "name": "ghostbusters_file_type_processor.py",
+      "path": "scripts/ghostbusters_file_type_processor.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749366"
+    },
+    {
+      "name": "git_aliases.sh",
+      "path": "scripts/git_aliases.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749372"
+    },
+    {
+      "name": "repository_discovery_launch_v2_tracked.py",
+      "path": "scripts/repository_discovery_launch_v2_tracked.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749378"
+    },
+    {
+      "name": "systo_generator.py",
+      "path": "scripts/systo_generator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749384"
+    },
+    {
+      "name": "test_websocket_fix_monitoring.py",
+      "path": "scripts/test_websocket_fix_monitoring.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749395"
+    },
+    {
+      "name": "migrate_ai_consultation_database.py",
+      "path": "scripts/migrate_ai_consultation_database.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749401"
+    },
+    {
+      "name": "enforce_make_only_venv.sh",
+      "path": "scripts/enforce_make_only_venv.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749407"
+    },
+    {
+      "name": "production_deployment.py",
+      "path": "scripts/production_deployment.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749414"
+    },
+    {
+      "name": "comprehensive_security_scanner.py",
+      "path": "scripts/comprehensive_security_scanner.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749420"
+    },
+    {
+      "name": "cursor_parallel_execution_20250930-130036.sh",
+      "path": "scripts/cursor_parallel_execution_20250930-130036.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749432"
+    },
+    {
+      "name": "neo4j_pypi_generator.py",
+      "path": "scripts/neo4j_pypi_generator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749438"
+    },
+    {
+      "name": "pre_commit_preprocessor.py",
+      "path": "scripts/pre_commit_preprocessor.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749443"
+    },
+    {
+      "name": "consolidate_duplicate_interfaces.py",
+      "path": "scripts/consolidate_duplicate_interfaces.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749449"
+    },
+    {
+      "name": "ast_enhanced_linter_model.py",
+      "path": "scripts/ast_enhanced_linter_model.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749455"
+    },
+    {
+      "name": "production_websocket_tester.py",
+      "path": "scripts/production_websocket_tester.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749461"
+    },
+    {
+      "name": "phase2_cloudflare_websocket_configuration.py",
+      "path": "scripts/phase2_cloudflare_websocket_configuration.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749468"
+    },
+    {
+      "name": "background_governance_scheduler.py",
+      "path": "scripts/background_governance_scheduler.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749479"
+    },
+    {
+      "name": "integration_test_runner.py",
+      "path": "scripts/integration_test_runner.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749486"
+    },
+    {
+      "name": "repository_refactoring_engine.py",
+      "path": "scripts/repository_refactoring_engine.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749493"
+    },
+    {
+      "name": "test_websocket_connectivity.py",
+      "path": "scripts/test_websocket_connectivity.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749498"
+    },
+    {
+      "name": "run_live_smoke_test.sh",
+      "path": "scripts/run_live_smoke_test.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749505"
+    },
+    {
+      "name": "websocket_fix_phase1.py",
+      "path": "scripts/websocket_fix_phase1.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749510"
+    },
+    {
+      "name": "stable_tunnel.py",
+      "path": "scripts/stable_tunnel.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749520"
+    },
+    {
+      "name": "prepare_parallel_execution_practical.py",
+      "path": "scripts/prepare_parallel_execution_practical.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749527"
+    },
+    {
+      "name": "prepare_spec.py",
+      "path": "scripts/prepare_spec.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749533"
+    },
+    {
+      "name": "test_abstract_factory_round_trip.py",
+      "path": "scripts/test_abstract_factory_round_trip.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749539"
+    },
+    {
+      "name": "spec_creation_dag_compliance_background_launch.sh",
+      "path": "scripts/spec_creation_dag_compliance_background_launch.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749545"
+    },
+    {
+      "name": "vocabulary_projector_dag_tasks.py",
+      "path": "scripts/vocabulary_projector_dag_tasks.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749551"
+    },
+    {
+      "name": "auto_dns_cleanup.py",
+      "path": "scripts/auto_dns_cleanup.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749557"
+    },
+    {
+      "name": "setup-github-2ndgen.sh",
+      "path": "scripts/setup-github-2ndgen.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749563"
+    },
+    {
+      "name": "final_compliance_status_report.py",
+      "path": "scripts/final_compliance_status_report.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749569"
+    },
+    {
+      "name": "tunnel_diagnostic.py",
+      "path": "scripts/tunnel_diagnostic.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749575"
+    },
+    {
+      "name": "deploy_cloud_workflow.py",
+      "path": "scripts/deploy_cloud_workflow.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749581"
+    },
+    {
+      "name": "kill-kiro-instance.sh",
+      "path": "scripts/kill-kiro-instance.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749588"
+    },
+    {
+      "name": "auto_dns_updater.py",
+      "path": "scripts/auto_dns_updater.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749594"
+    },
+    {
+      "name": "validate_security_compliance.py",
+      "path": "scripts/validate_security_compliance.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749600"
+    },
+    {
+      "name": "simple_domain_expansion.py",
+      "path": "scripts/simple_domain_expansion.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749606"
+    },
+    {
+      "name": "setup_permanent_domain.py",
+      "path": "scripts/setup_permanent_domain.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749612"
+    },
+    {
+      "name": "beast_mode_final_forward_engineering_summary.py",
+      "path": "scripts/beast_mode_final_forward_engineering_summary.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749618"
+    },
+    {
+      "name": "mypy_wrapper.sh",
+      "path": "scripts/mypy_wrapper.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749624"
+    },
+    {
+      "name": "migrate_results_storage_database.py",
+      "path": "scripts/migrate_results_storage_database.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749630"
+    },
+    {
+      "name": "beast_mode_rm_interface.py",
+      "path": "scripts/beast_mode_rm_interface.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749636"
+    },
+    {
+      "name": "gcp_unified_setup.py",
+      "path": "scripts/gcp_unified_setup.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749642"
+    },
+    {
+      "name": "beast_mode_targeted_convergence.py",
+      "path": "scripts/beast_mode_targeted_convergence.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749648"
+    },
+    {
+      "name": "update_round_trip_progress.py",
+      "path": "scripts/update_round_trip_progress.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749654"
+    },
+    {
+      "name": "launch_gemini_analysis.py",
+      "path": "scripts/launch_gemini_analysis.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749667"
+    },
+    {
+      "name": "setup_systo.sh",
+      "path": "scripts/setup_systo.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749673"
+    },
+    {
+      "name": "run_observatory.py",
+      "path": "scripts/run_observatory.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749679"
+    },
+    {
+      "name": "websocket_integration_tester.py",
+      "path": "scripts/websocket_integration_tester.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749685"
+    },
+    {
+      "name": "enable_cloudflare_websocket_support.py",
+      "path": "scripts/enable_cloudflare_websocket_support.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749691"
+    },
+    {
+      "name": "enhanced_hackathon_demo.py",
+      "path": "scripts/enhanced_hackathon_demo.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749697"
+    },
+    {
+      "name": "install_observatory_service.py",
+      "path": "scripts/install_observatory_service.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749703"
+    },
+    {
+      "name": "beast_mode_full_compliance_spread_report.py",
+      "path": "scripts/beast_mode_full_compliance_spread_report.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749709"
+    },
+    {
+      "name": "launch_dashboard.py",
+      "path": "scripts/launch_dashboard.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749715"
+    },
+    {
+      "name": "fix_indentation_errors.py",
+      "path": "scripts/fix_indentation_errors.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749720"
+    },
+    {
+      "name": "stop-monitoring.sh",
+      "path": "scripts/stop-monitoring.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749726"
+    },
+    {
+      "name": "analysis_control.py",
+      "path": "scripts/analysis_control.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749733"
+    },
+    {
+      "name": "gcp_state_manager.py",
+      "path": "scripts/gcp_state_manager.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749738"
+    },
+    {
+      "name": "cypher_validator.py",
+      "path": "scripts/cypher_validator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749744"
+    },
+    {
+      "name": "fix_mypy_issues.py",
+      "path": "scripts/fix_mypy_issues.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749749"
+    },
+    {
+      "name": "model_dimension_analyzer_model.json",
+      "path": "scripts/model_dimension_analyzer_model.json",
+      "type": "unknown",
+      "discovered_at": "2025-10-01T13:23:56.749756"
+    },
+    {
+      "name": "websocket_diagnostic.py",
+      "path": "scripts/websocket_diagnostic.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749762"
+    },
+    {
+      "name": "coordinate_workers.sh",
+      "path": "scripts/coordinate_workers.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749768"
+    },
+    {
+      "name": "generalized_code_generator_model.json",
+      "path": "scripts/generalized_code_generator_model.json",
+      "type": "unknown",
+      "discovered_at": "2025-10-01T13:23:56.749777"
+    },
+    {
+      "name": "establish_continuous_monitoring.py",
+      "path": "scripts/establish_continuous_monitoring.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749783"
+    },
+    {
+      "name": "run_live_smoke_test_direct.sh",
+      "path": "scripts/run_live_smoke_test_direct.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749789"
+    },
+    {
+      "name": "fix_mermaid_syntax.py",
+      "path": "scripts/fix_mermaid_syntax.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749799"
+    },
+    {
+      "name": "code_generation_templates.py",
+      "path": "scripts/code_generation_templates.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749805"
+    },
+    {
+      "name": "beast_mode_final_success_report.py",
+      "path": "scripts/beast_mode_final_success_report.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749811"
+    },
+    {
+      "name": "observatory_launcher.sh",
+      "path": "scripts/observatory_launcher.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749817"
+    },
+    {
+      "name": "beast_mode_requirements_fidelity_tester.py",
+      "path": "scripts/beast_mode_requirements_fidelity_tester.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749828"
+    },
+    {
+      "name": "agent_testing_fixer.py",
+      "path": "scripts/agent_testing_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749834"
+    },
+    {
+      "name": "safe_model_update.py",
+      "path": "scripts/safe_model_update.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749839"
+    },
+    {
+      "name": "rm_compliance_cli.py",
+      "path": "scripts/rm_compliance_cli.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749845"
+    },
+    {
+      "name": "monitor.sh",
+      "path": "scripts/monitor.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749851"
+    },
+    {
+      "name": "whiskey_mode_demo.py",
+      "path": "scripts/whiskey_mode_demo.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749857"
+    },
+    {
+      "name": "deploy.sh",
+      "path": "scripts/deploy.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749864"
+    },
+    {
+      "name": "comprehensive_interface_audit.py",
+      "path": "scripts/comprehensive_interface_audit.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749870"
+    },
+    {
+      "name": "fix_subprocess_vulnerabilities.py",
+      "path": "scripts/fix_subprocess_vulnerabilities.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749876"
+    },
+    {
+      "name": "analyze_round_trip_hairball.py",
+      "path": "scripts/analyze_round_trip_hairball.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749886"
+    },
+    {
+      "name": "prepare_parallel_execution_cursor.py",
+      "path": "scripts/prepare_parallel_execution_cursor.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749892"
+    },
+    {
+      "name": "complete_rm_interface_beast.py",
+      "path": "scripts/complete_rm_interface_beast.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749898"
+    },
+    {
+      "name": "op_api_key_manager.py",
+      "path": "scripts/op_api_key_manager.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749903"
+    },
+    {
+      "name": "repository_discovery_background_launch_v2.sh",
+      "path": "scripts/repository_discovery_background_launch_v2.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749910"
+    },
+    {
+      "name": "agent_observability_fixer.py",
+      "path": "scripts/agent_observability_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749915"
+    },
+    {
+      "name": "deep_error_analysis_and_fix.py",
+      "path": "scripts/deep_error_analysis_and_fix.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749921"
+    },
+    {
+      "name": "radical_cleanup.py",
+      "path": "scripts/radical_cleanup.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749928"
+    },
+    {
+      "name": "ast_enhanced_linter.py",
+      "path": "scripts/ast_enhanced_linter.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749934"
+    },
+    {
+      "name": "analyze_requirements_overlaps.py",
+      "path": "scripts/analyze_requirements_overlaps.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749940"
+    },
+    {
+      "name": "beast_mode_lessons_learned_analysis.py",
+      "path": "scripts/beast_mode_lessons_learned_analysis.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749946"
+    },
+    {
+      "name": "agent_import_resolver_fixer.py",
+      "path": "scripts/agent_import_resolver_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749951"
+    },
+    {
+      "name": "beast_mode_aggressive_requirements_reimplementation.py",
+      "path": "scripts/beast_mode_aggressive_requirements_reimplementation.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749957"
+    },
+    {
+      "name": "beast_mode_backward_pass_as_built_integrator.py",
+      "path": "scripts/beast_mode_backward_pass_as_built_integrator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749963"
+    },
+    {
+      "name": "prevention_framework_manager.py",
+      "path": "scripts/prevention_framework_manager.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749969"
+    },
+    {
+      "name": "check_model_conformance.py",
+      "path": "scripts/check_model_conformance.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749975"
+    },
+    {
+      "name": "implement_rm_interfaces.py",
+      "path": "scripts/implement_rm_interfaces.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749980"
+    },
+    {
+      "name": "deploy-ghostbusters-gcp.sh",
+      "path": "scripts/deploy-ghostbusters-gcp.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749986"
+    },
+    {
+      "name": "ssl_tls_full_strict_deployment.sh",
+      "path": "scripts/ssl_tls_full_strict_deployment.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.749992"
+    },
+    {
+      "name": "advanced_neo4j_integration.py",
+      "path": "scripts/advanced_neo4j_integration.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.749998"
+    },
+    {
+      "name": "setup-develop-trigger.sh",
+      "path": "scripts/setup-develop-trigger.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.750004"
+    },
+    {
+      "name": "fix_rm_syntax_errors.py",
+      "path": "scripts/fix_rm_syntax_errors.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750010"
+    },
+    {
+      "name": "generate_module_clis.py",
+      "path": "scripts/generate_module_clis.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750016"
+    },
+    {
+      "name": "enhanced_module_modeling_system.py",
+      "path": "scripts/enhanced_module_modeling_system.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750022"
+    },
+    {
+      "name": "run_live_smoke_test_1password.sh",
+      "path": "scripts/run_live_smoke_test_1password.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.750028"
+    },
+    {
+      "name": "identify_rm_interface_gaps.py",
+      "path": "scripts/identify_rm_interface_gaps.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750034"
+    },
+    {
+      "name": "beast_mode_optimal_convergence_engine.py",
+      "path": "scripts/beast_mode_optimal_convergence_engine.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750040"
+    },
+    {
+      "name": "beast_mode_implementation_updater.py",
+      "path": "scripts/beast_mode_implementation_updater.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750046"
+    },
+    {
+      "name": "ssh_key_manager_cli.py",
+      "path": "scripts/ssh_key_manager_cli.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750061"
+    },
+    {
+      "name": "model_operations.py",
+      "path": "scripts/model_operations.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750074"
+    },
+    {
+      "name": "infrastructure_governance_orchestrator.py",
+      "path": "scripts/infrastructure_governance_orchestrator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750080"
+    },
+    {
+      "name": "real_time_monitoring_dashboard.py",
+      "path": "scripts/real_time_monitoring_dashboard.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750087"
+    },
+    {
+      "name": "debug_pep8_detection.py",
+      "path": "scripts/debug_pep8_detection.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750093"
+    },
+    {
+      "name": "comprehensive_websocket_endpoint_tester.py",
+      "path": "scripts/comprehensive_websocket_endpoint_tester.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750100"
+    },
+    {
+      "name": "scrub_all_subprojects.py",
+      "path": "scripts/scrub_all_subprojects.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750106"
+    },
+    {
+      "name": "infrastructure_task_dag_validator.py",
+      "path": "scripts/infrastructure_task_dag_validator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750112"
+    },
+    {
+      "name": "monitor_all_workers.sh",
+      "path": "scripts/monitor_all_workers.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.750119"
+    },
+    {
+      "name": "validate_bot_protection_whitelist.py",
+      "path": "scripts/validate_bot_protection_whitelist.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750127"
+    },
+    {
+      "name": "self_validation_protocol.py",
+      "path": "scripts/self_validation_protocol.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750133"
+    },
+    {
+      "name": "regex_generator_fixer.py",
+      "path": "scripts/regex_generator_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750139"
+    },
+    {
+      "name": "agent_ast_syntax_fixer.py",
+      "path": "scripts/agent_ast_syntax_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750145"
+    },
+    {
+      "name": "registry_integration_beast.py",
+      "path": "scripts/registry_integration_beast.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750151"
+    },
+    {
+      "name": "beast_mode_final_95_percent_push.py",
+      "path": "scripts/beast_mode_final_95_percent_push.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750157"
+    },
+    {
+      "name": "test_fixed_round_trip.py",
+      "path": "scripts/test_fixed_round_trip.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750163"
+    },
+    {
+      "name": "comprehensive_module_fixer.py",
+      "path": "scripts/comprehensive_module_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750169"
+    },
+    {
+      "name": "recursive_linter_improver.py",
+      "path": "scripts/recursive_linter_improver.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750176"
+    },
+    {
+      "name": "validate_syntax_and_finalize.py",
+      "path": "scripts/validate_syntax_and_finalize.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750182"
+    },
+    {
+      "name": "run_visual_regression_tests.py",
+      "path": "scripts/run_visual_regression_tests.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750188"
+    },
+    {
+      "name": "ci_activity_models.py",
+      "path": "scripts/ci_activity_models.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750194"
+    },
+    {
+      "name": "refactoring_validator.py",
+      "path": "scripts/refactoring_validator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750200"
+    },
+    {
+      "name": "pre_commit_auto_fix.py",
+      "path": "scripts/pre_commit_auto_fix.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750206"
+    },
+    {
+      "name": "mermaid_generator.py",
+      "path": "scripts/mermaid_generator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750212"
+    },
+    {
+      "name": "gcp_credits_setup.py",
+      "path": "scripts/gcp_credits_setup.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750218"
+    },
+    {
+      "name": "beast_mode_final_hybrid_report.py",
+      "path": "scripts/beast_mode_final_hybrid_report.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750224"
+    },
+    {
+      "name": "repository_discovery_prelaunch_check_v2.py",
+      "path": "scripts/repository_discovery_prelaunch_check_v2.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750231"
+    },
+    {
+      "name": "backlog_cli.js",
+      "path": "scripts/backlog_cli.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.750237"
+    },
+    {
+      "name": "configure_github_pat.py",
+      "path": "scripts/configure_github_pat.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750243"
+    },
+    {
+      "name": "glacier_schema_discovery.py",
+      "path": "scripts/glacier_schema_discovery.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750249"
+    },
+    {
+      "name": "verify_document_hashes_simple.sh",
+      "path": "scripts/verify_document_hashes_simple.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.750255"
+    },
+    {
+      "name": "regenerate_mdc_files.py",
+      "path": "scripts/regenerate_mdc_files.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750260"
+    },
+    {
+      "name": "systematic_syntax_fixer.py",
+      "path": "scripts/systematic_syntax_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750266"
+    },
+    {
+      "name": "chart_js_liberation_day.py",
+      "path": "scripts/chart_js_liberation_day.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750272"
+    },
+    {
+      "name": "rca_cli.py",
+      "path": "scripts/rca_cli.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750278"
+    },
+    {
+      "name": "beast_mode_pr_process_analysis.py",
+      "path": "scripts/beast_mode_pr_process_analysis.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750288"
+    },
+    {
+      "name": "graph_ml_integration.py",
+      "path": "scripts/graph_ml_integration.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750294"
+    },
+    {
+      "name": "seed-submodule.sh",
+      "path": "scripts/seed-submodule.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.750300"
+    },
+    {
+      "name": "comprehensive_deployment_monitor.py",
+      "path": "scripts/comprehensive_deployment_monitor.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750306"
+    },
+    {
+      "name": "makefile_safety_validator.py",
+      "path": "scripts/makefile_safety_validator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750313"
+    },
+    {
+      "name": "beast_mode_95_percent_compliance_target.py",
+      "path": "scripts/beast_mode_95_percent_compliance_target.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750319"
+    },
+    {
+      "name": "multi_modal_dashboard.py",
+      "path": "scripts/multi_modal_dashboard.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750325"
+    },
+    {
+      "name": "mcp_client.js",
+      "path": "scripts/mcp_client.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.750338"
+    },
+    {
+      "name": "fast_model_updater_jq.py",
+      "path": "scripts/fast_model_updater_jq.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750344"
+    },
+    {
+      "name": "test_ontology.py",
+      "path": "scripts/test_ontology.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750350"
+    },
+    {
+      "name": "run_makefile_test_orchestration.py",
+      "path": "scripts/run_makefile_test_orchestration.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750356"
+    },
+    {
+      "name": "system_architecture_wiring_diagram_implementation.py",
+      "path": "scripts/system_architecture_wiring_diagram_implementation.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750363"
+    },
+    {
+      "name": "pdca_phase_6_final_push.py",
+      "path": "scripts/pdca_phase_6_final_push.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750375"
+    },
+    {
+      "name": "restore_tools.sh",
+      "path": "scripts/restore_tools.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.750381"
+    },
+    {
+      "name": "expand_domain_vocabulary.py",
+      "path": "scripts/expand_domain_vocabulary.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750388"
+    },
+    {
+      "name": "start-directus-fixed.sh",
+      "path": "scripts/start-directus-fixed.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.750394"
+    },
+    {
+      "name": "health_monitoring_beast.py",
+      "path": "scripts/health_monitoring_beast.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750400"
+    },
+    {
+      "name": "rm_ddd_assessment.py",
+      "path": "scripts/rm_ddd_assessment.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750406"
+    },
+    {
+      "name": "rule-compliance-check.sh",
+      "path": "scripts/rule-compliance-check.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.750412"
+    },
+    {
+      "name": "black_wrapper.sh",
+      "path": "scripts/black_wrapper.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.750419"
+    },
+    {
+      "name": "ghostbusters_check.py",
+      "path": "scripts/ghostbusters_check.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750425"
+    },
+    {
+      "name": "notebook_model.py",
+      "path": "scripts/notebook_model.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750430"
+    },
+    {
+      "name": "chaos_semantic_diff_demo.py",
+      "path": "scripts/chaos_semantic_diff_demo.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750436"
+    },
+    {
+      "name": "beast_mode_enhanced_ast_est_engine.py",
+      "path": "scripts/beast_mode_enhanced_ast_est_engine.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750442"
+    },
+    {
+      "name": "test_mcp_connection.py",
+      "path": "scripts/test_mcp_connection.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750448"
+    },
+    {
+      "name": "makefile_system_discovery.py",
+      "path": "scripts/makefile_system_discovery.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750454"
+    },
+    {
+      "name": "beast_mode_rm_implementation.py",
+      "path": "scripts/beast_mode_rm_implementation.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750460"
+    },
+    {
+      "name": "execution_tracker_cli.py",
+      "path": "scripts/execution_tracker_cli.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750472"
+    },
+    {
+      "name": "test_gemini_auth.py",
+      "path": "scripts/test_gemini_auth.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750479"
+    },
+    {
+      "name": "cursor_status_tracker_20250930-130036.sh",
+      "path": "scripts/cursor_status_tracker_20250930-130036.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.750485"
+    },
+    {
+      "name": "discover_apis_once.py",
+      "path": "scripts/discover_apis_once.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750491"
+    },
+    {
+      "name": "beast_mode_registry_integration.py",
+      "path": "scripts/beast_mode_registry_integration.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750497"
+    },
+    {
+      "name": "call_ghostbusters_encoding_issue.py",
+      "path": "scripts/call_ghostbusters_encoding_issue.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750503"
+    },
+    {
+      "name": "rollback_manager.py",
+      "path": "scripts/rollback_manager.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750509"
+    },
+    {
+      "name": "install_cli.py",
+      "path": "scripts/install_cli.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750515"
+    },
+    {
+      "name": "execute_beast_mode_task.py",
+      "path": "scripts/execute_beast_mode_task.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750538"
+    },
+    {
+      "name": "agent_general_fixer.py",
+      "path": "scripts/agent_general_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750544"
+    },
+    {
+      "name": "enforce_round_trip.py",
+      "path": "scripts/enforce_round_trip.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750576"
+    },
+    {
+      "name": "makefile_performance_optimizer.py",
+      "path": "scripts/makefile_performance_optimizer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750583"
+    },
+    {
+      "name": "fix_missing_modules.py",
+      "path": "scripts/fix_missing_modules.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750589"
+    },
+    {
+      "name": "comprehensive_websocket_validation_suite.py",
+      "path": "scripts/comprehensive_websocket_validation_suite.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750595"
+    },
+    {
+      "name": "full_compliance_spread.py",
+      "path": "scripts/full_compliance_spread.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750601"
+    },
+    {
+      "name": "fix_part_imports.py",
+      "path": "scripts/fix_part_imports.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750607"
+    },
+    {
+      "name": "hackathon_quick_start.sh",
+      "path": "scripts/hackathon_quick_start.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.750615"
+    },
+    {
+      "name": "simple_ontology_bridge.py",
+      "path": "scripts/simple_ontology_bridge.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750621"
+    },
+    {
+      "name": "documentation_index_background_launch.sh",
+      "path": "scripts/documentation_index_background_launch.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.750628"
+    },
+    {
+      "name": "websocket_endpoint_validation.py",
+      "path": "scripts/websocket_endpoint_validation.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750634"
+    },
+    {
+      "name": "refactoring_executor.py",
+      "path": "scripts/refactoring_executor.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750640"
+    },
+    {
+      "name": "status.py",
+      "path": "scripts/status.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750646"
+    },
+    {
+      "name": "release-the-hounds.py",
+      "path": "scripts/release-the-hounds.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750652"
+    },
+    {
+      "name": "pytest_wrapper.sh",
+      "path": "scripts/pytest_wrapper.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.750658"
+    },
+    {
+      "name": "validate_mcp_config.py",
+      "path": "scripts/validate_mcp_config.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750664"
+    },
+    {
+      "name": "fix_mermaid_syntax_properly.py",
+      "path": "scripts/fix_mermaid_syntax_properly.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750670"
+    },
+    {
+      "name": "spec_implementation_validator.py",
+      "path": "scripts/spec_implementation_validator.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750676"
+    },
+    {
+      "name": "beast_mode_incremental_improvement_system.py",
+      "path": "scripts/beast_mode_incremental_improvement_system.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750682"
+    },
+    {
+      "name": "beast_mode_final_compliance.py",
+      "path": "scripts/beast_mode_final_compliance.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750688"
+    },
+    {
+      "name": "test_bandit_integration.py",
+      "path": "scripts/test_bandit_integration.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750694"
+    },
+    {
+      "name": "verify_ssl_tls_full_strict.py",
+      "path": "scripts/verify_ssl_tls_full_strict.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750700"
+    },
+    {
+      "name": "import_historical_metrics.py",
+      "path": "scripts/import_historical_metrics.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750705"
+    },
+    {
+      "name": "monitor_jupyter_logs.py",
+      "path": "scripts/monitor_jupyter_logs.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750711"
+    },
+    {
+      "name": "model_driven_test_recovery.py",
+      "path": "scripts/model_driven_test_recovery.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750717"
+    },
+    {
+      "name": "beast_mode_manual_fixer.py",
+      "path": "scripts/beast_mode_manual_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750723"
+    },
+    {
+      "name": "beast_mode_aggressive_compliance_spread.py",
+      "path": "scripts/beast_mode_aggressive_compliance_spread.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750729"
+    },
+    {
+      "name": "focused_repo_link_checker.py",
+      "path": "scripts/focused_repo_link_checker.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750735"
+    },
+    {
+      "name": "simple_war_room.py",
+      "path": "scripts/simple_war_room.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750741"
+    },
+    {
+      "name": "gcp_credits_explanation.py",
+      "path": "scripts/gcp_credits_explanation.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.750746"
+    },
+    {
+      "name": "test_model_traceability_migration_template.py",
+      "path": "scripts/migration_templates/test_model_traceability_migration_template.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.751303"
+    },
+    {
+      "name": "intelligent_linter_system_migration_template.py",
+      "path": "scripts/migration_templates/intelligent_linter_system_migration_template.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.751310"
+    },
+    {
+      "name": "test_simple_equivalence_migration_template.py",
+      "path": "scripts/migration_templates/test_simple_equivalence_migration_template.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.751316"
+    },
+    {
+      "name": "test_projected_equivalence_migration_template.py",
+      "path": "scripts/migration_templates/test_projected_equivalence_migration_template.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.751324"
+    },
+    {
+      "name": "enhanced_ghostbusters_migration_template.py",
+      "path": "scripts/migration_templates/enhanced_ghostbusters_migration_template.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.751331"
+    },
+    {
+      "name": "tool_discovery_migration_template.py",
+      "path": "scripts/migration_templates/tool_discovery_migration_template.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.751338"
+    },
+    {
+      "name": "linter_api_integration_migration_template.py",
+      "path": "scripts/migration_templates/linter_api_integration_migration_template.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.751344"
+    },
+    {
+      "name": "quality_model_migration_template.py",
+      "path": "scripts/migration_templates/quality_model_migration_template.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.751350"
+    },
+    {
+      "name": "task_1_1_core_discovery_system.py",
+      "path": "scripts/tasks/task_1_1_core_discovery_system.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.751424"
+    },
+    {
+      "name": "cli_implementation.py",
+      "path": "scripts/tasks/cli_implementation.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.751432"
+    },
+    {
+      "name": "error_handling.py",
+      "path": "scripts/tasks/error_handling.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.751438"
+    },
+    {
+      "name": "vocabulary_converter.py",
+      "path": "scripts/tasks/vocabulary_converter.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.751445"
+    },
+    {
+      "name": "package-lock.json",
+      "path": "scripts/json-maintenance/package-lock.json",
+      "type": "unknown",
+      "discovered_at": "2025-10-01T13:23:56.751505"
+    },
+    {
+      "name": "package.json",
+      "path": "scripts/json-maintenance/package.json",
+      "type": "unknown",
+      "discovered_at": "2025-10-01T13:23:56.751511"
+    },
+    {
+      "name": ".package-lock.json",
+      "path": "scripts/json-maintenance/node_modules/.package-lock.json",
+      "type": "unknown",
+      "discovered_at": "2025-10-01T13:23:56.751613"
+    },
+    {
+      "name": "standalone.js",
+      "path": "scripts/json-maintenance/node_modules/prettier/standalone.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.752016"
+    },
+    {
+      "name": "package.json",
+      "path": "scripts/json-maintenance/node_modules/prettier/package.json",
+      "type": "unknown",
+      "discovered_at": "2025-10-01T13:23:56.752046"
+    },
+    {
+      "name": "doc.js",
+      "path": "scripts/json-maintenance/node_modules/prettier/doc.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.752077"
+    },
+    {
+      "name": "html.js",
+      "path": "scripts/json-maintenance/node_modules/prettier/plugins/html.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.752447"
+    },
+    {
+      "name": "glimmer.js",
+      "path": "scripts/json-maintenance/node_modules/prettier/plugins/glimmer.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.752455"
+    },
+    {
+      "name": "postcss.js",
+      "path": "scripts/json-maintenance/node_modules/prettier/plugins/postcss.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.752462"
+    },
+    {
+      "name": "typescript.js",
+      "path": "scripts/json-maintenance/node_modules/prettier/plugins/typescript.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.752479"
+    },
+    {
+      "name": "flow.js",
+      "path": "scripts/json-maintenance/node_modules/prettier/plugins/flow.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.752495"
+    },
+    {
+      "name": "graphql.js",
+      "path": "scripts/json-maintenance/node_modules/prettier/plugins/graphql.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.752507"
+    },
+    {
+      "name": "meriyah.js",
+      "path": "scripts/json-maintenance/node_modules/prettier/plugins/meriyah.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.752525"
+    },
+    {
+      "name": "angular.js",
+      "path": "scripts/json-maintenance/node_modules/prettier/plugins/angular.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.752847"
+    },
+    {
+      "name": "acorn.js",
+      "path": "scripts/json-maintenance/node_modules/prettier/plugins/acorn.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.753063"
+    },
+    {
+      "name": "babel.js",
+      "path": "scripts/json-maintenance/node_modules/prettier/plugins/babel.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.753169"
+    },
+    {
+      "name": "yaml.js",
+      "path": "scripts/json-maintenance/node_modules/prettier/plugins/yaml.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.753203"
+    },
+    {
+      "name": "markdown.js",
+      "path": "scripts/json-maintenance/node_modules/prettier/plugins/markdown.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.753261"
+    },
+    {
+      "name": "estree.js",
+      "path": "scripts/json-maintenance/node_modules/prettier/plugins/estree.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.753281"
+    },
+    {
+      "name": "index.js",
+      "path": "scripts/json-maintenance/node_modules/jsonfile/index.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.753437"
+    },
+    {
+      "name": "package.json",
+      "path": "scripts/json-maintenance/node_modules/jsonfile/package.json",
+      "type": "unknown",
+      "discovered_at": "2025-10-01T13:23:56.753450"
+    },
+    {
+      "name": "utils.js",
+      "path": "scripts/json-maintenance/node_modules/jsonfile/utils.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.753456"
+    },
+    {
+      "name": "index.js",
+      "path": "scripts/json-maintenance/node_modules/universalify/index.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.753511"
+    },
+    {
+      "name": "package.json",
+      "path": "scripts/json-maintenance/node_modules/universalify/package.json",
+      "type": "unknown",
+      "discovered_at": "2025-10-01T13:23:56.753523"
+    },
+    {
+      "name": "package.json",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/package.json",
+      "type": "unknown",
+      "discovered_at": "2025-10-01T13:23:56.753687"
+    },
+    {
+      "name": "index.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/index.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.753772"
+    },
+    {
+      "name": "move-sync.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/move/move-sync.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.754027"
+    },
+    {
+      "name": "index.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/move/index.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.754037"
+    },
+    {
+      "name": "move.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/move/move.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.754052"
+    },
+    {
+      "name": "link.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/ensure/link.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.754539"
+    },
+    {
+      "name": "index.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/ensure/index.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.754566"
+    },
+    {
+      "name": "symlink.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/ensure/symlink.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.754646"
+    },
+    {
+      "name": "file.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/ensure/file.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.754677"
+    },
+    {
+      "name": "symlink-paths.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/ensure/symlink-paths.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.754736"
+    },
+    {
+      "name": "symlink-type.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/ensure/symlink-type.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.754767"
+    },
+    {
+      "name": "index.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/remove/index.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755198"
+    },
+    {
+      "name": "index.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/empty/index.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755260"
+    },
+    {
+      "name": "index.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/path-exists/index.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755310"
+    },
+    {
+      "name": "utimes.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/util/utimes.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755360"
+    },
+    {
+      "name": "stat.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/util/stat.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755369"
+    },
+    {
+      "name": "make-dir.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/mkdirs/make-dir.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755418"
+    },
+    {
+      "name": "index.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/mkdirs/index.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755425"
+    },
+    {
+      "name": "utils.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/mkdirs/utils.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755432"
+    },
+    {
+      "name": "output-json.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/json/output-json.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755485"
+    },
+    {
+      "name": "index.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/json/index.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755492"
+    },
+    {
+      "name": "output-json-sync.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/json/output-json-sync.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755500"
+    },
+    {
+      "name": "jsonfile.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/json/jsonfile.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755508"
+    },
+    {
+      "name": "copy.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/copy/copy.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755559"
+    },
+    {
+      "name": "index.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/copy/index.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755566"
+    },
+    {
+      "name": "copy-sync.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/copy/copy-sync.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755575"
+    },
+    {
+      "name": "index.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/fs/index.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755623"
+    },
+    {
+      "name": "index.js",
+      "path": "scripts/json-maintenance/node_modules/fs-extra/lib/output-file/index.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755669"
+    },
+    {
+      "name": "polyfills.js",
+      "path": "scripts/json-maintenance/node_modules/graceful-fs/polyfills.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755727"
+    },
+    {
+      "name": "graceful-fs.js",
+      "path": "scripts/json-maintenance/node_modules/graceful-fs/graceful-fs.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755739"
+    },
+    {
+      "name": "package.json",
+      "path": "scripts/json-maintenance/node_modules/graceful-fs/package.json",
+      "type": "unknown",
+      "discovered_at": "2025-10-01T13:23:56.755747"
+    },
+    {
+      "name": "clone.js",
+      "path": "scripts/json-maintenance/node_modules/graceful-fs/clone.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755754"
+    },
+    {
+      "name": "legacy-streams.js",
+      "path": "scripts/json-maintenance/node_modules/graceful-fs/legacy-streams.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755761"
+    },
+    {
+      "name": "json-recovery.js",
+      "path": "scripts/json-maintenance/src/json-recovery.js",
+      "type": "javascript",
+      "discovered_at": "2025-10-01T13:23:56.755812"
+    },
+    {
+      "name": "pep8_fstring_style_fixer.py",
+      "path": "scripts/archive/pep8_fstring_style_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.755865"
+    },
+    {
+      "name": "ast_based_fstring_fixer.py",
+      "path": "scripts/archive/ast_based_fstring_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.755872"
+    },
+    {
+      "name": "simple_direct_fstring_fixer.py",
+      "path": "scripts/archive/simple_direct_fstring_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.755879"
+    },
+    {
+      "name": "test_actual_broken_fstring.py",
+      "path": "scripts/archive/test_actual_broken_fstring.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.755887"
+    },
+    {
+      "name": "working_fstring_fixer.py",
+      "path": "scripts/archive/working_fstring_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.755894"
+    },
+    {
+      "name": "simple_fstring_fixer.py",
+      "path": "scripts/archive/simple_fstring_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.755901"
+    },
+    {
+      "name": "proper_fstring_fixer.py",
+      "path": "scripts/archive/proper_fstring_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.755908"
+    },
+    {
+      "name": "deterministic_fstring_fixer.py",
+      "path": "scripts/archive/deterministic_fstring_fixer.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.755914"
+    },
+    {
+      "name": "copilot_review_automation.py",
+      "path": "scripts/github_integration/copilot_review_automation.py",
+      "type": "python",
+      "discovered_at": "2025-10-01T13:23:56.756027"
+    },
+    {
+      "name": "task_3_4.sh",
+      "path": "scripts/cursor_tasks_20250930-130036/task_3_4.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.756099"
+    },
+    {
+      "name": "task_1_6.sh",
+      "path": "scripts/cursor_tasks_20250930-130036/task_1_6.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.756107"
+    },
+    {
+      "name": "task_2_1.sh",
+      "path": "scripts/cursor_tasks_20250930-130036/task_2_1.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.756115"
+    },
+    {
+      "name": "task_3_1.sh",
+      "path": "scripts/cursor_tasks_20250930-130036/task_3_1.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.756122"
+    },
+    {
+      "name": "task_2_4.sh",
+      "path": "scripts/cursor_tasks_20250930-130036/task_2_4.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.756129"
+    },
+    {
+      "name": "task_3_2.sh",
+      "path": "scripts/cursor_tasks_20250930-130036/task_3_2.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.756135"
+    },
+    {
+      "name": "task_1_4.sh",
+      "path": "scripts/cursor_tasks_20250930-130036/task_1_4.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.756142"
+    },
+    {
+      "name": "task_2_3.sh",
+      "path": "scripts/cursor_tasks_20250930-130036/task_2_3.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.756148"
+    },
+    {
+      "name": "task_3_3.sh",
+      "path": "scripts/cursor_tasks_20250930-130036/task_3_3.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.756156"
+    },
+    {
+      "name": "task_2_2.sh",
+      "path": "scripts/cursor_tasks_20250930-130036/task_2_2.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.756169"
+    },
+    {
+      "name": "macos_service_template.sh",
+      "path": "scripts/templates/macos_service_template.sh",
+      "type": "bash",
+      "discovered_at": "2025-10-01T13:23:56.756281"
+    },
+    {
+      "name": "Makefile",
+      "path": "Makefile",
+      "type": "makefile",
+      "discovered_at": "2025-10-01T13:23:56.756546"
+    },
+    {
+      "name": "release-the-hounds.yml",
+      "path": ".github/workflows/release-the-hounds.yml",
+      "type": "yaml",
+      "discovered_at": "2025-10-01T13:23:56.756707"
+    },
+    {
+      "name": "compliance-validation.yml",
+      "path": ".github/workflows/compliance-validation.yml",
+      "type": "yaml",
+      "discovered_at": "2025-10-01T13:23:56.756721"
+    },
+    {
+      "name": "observatory-testing.yml",
+      "path": ".github/workflows/observatory-testing.yml",
+      "type": "yaml",
+      "discovered_at": "2025-10-01T13:23:56.756731"
+    },
+    {
+      "name": "syntax-validation.yml",
+      "path": ".github/workflows/syntax-validation.yml",
+      "type": "yaml",
+      "discovered_at": "2025-10-01T13:23:56.756740"
+    },
+    {
+      "name": "test-hounds.yml",
+      "path": ".github/workflows/test-hounds.yml",
+      "type": "yaml",
+      "discovered_at": "2025-10-01T13:23:56.756748"
+    },
+    {
+      "name": "compliance-enforcement.yml",
+      "path": ".github/workflows/compliance-enforcement.yml",
+      "type": "yaml",
+      "discovered_at": "2025-10-01T13:23:56.756756"
+    },
+    {
+      "name": "deploy-error-pages.yml",
+      "path": ".github/workflows/deploy-error-pages.yml",
+      "type": "yaml",
+      "discovered_at": "2025-10-01T13:23:56.756763"
+    },
+    {
+      "name": "ci.yml",
+      "path": ".github/workflows/ci.yml",
+      "type": "yaml",
+      "discovered_at": "2025-10-01T13:23:56.756771"
+    },
+    {
+      "name": "docker-compose.yml",
+      "path": "docker-compose.yml",
+      "type": "yaml",
+      "discovered_at": "2025-10-01T13:23:56.756819"
+    }
+  ],
+  "summary": {
+    "total_services": 6,
+    "healthy_services": 6,
+    "websocket_endpoints": 4,
+    "automation_scripts": 632
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "evidence_id": "843cff82-94e0-4ad1-90e1-11c5fddfef5b",
+  "timestamp": "2025-09-27T05:09:24.611409",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.611398",
+    "data_type": "dict"
+  },
+  "integrity_hash": "dcbf7ceb45b03024744153046e023dd7d03e609ef129564bbce207b77154a4f2",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/interpreter/core/archived_server_1.py",
+    "file_size": 6525,
+    "line_count": 163,
+    "route_analysis": {
+      "total_routes": 3,
+      "websocket_routes": [
+        "/"
+      ],
+      "http_routes": [
+        "/chat",
+        "/test"
+      ],
+      "route_handlers": {
+        "/chat": "stream_endpoint",
+        "/test": "test_ui",
+        "/": "i_test"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "socket"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.611390"
+  }
+}

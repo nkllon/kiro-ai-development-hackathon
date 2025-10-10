@@ -1,0 +1,20 @@
+{
+  "evidence_id": "6a412090-1143-4cfc-aecb-f2384b54a24b",
+  "timestamp": "2025-09-27T04:35:03.682119",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.682095",
+    "data_type": "dict"
+  },
+  "integrity_hash": "dd5c0ebc714d2f1f2e91c58b54fb63b6650d2b32fcb82a05bd845bede787fced",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/openai_files_endpoints/files_endpoints.py",
+    "file_size": 34130,
+    "line_count": 991,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.682088"
+  }
+}

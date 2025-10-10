@@ -1,0 +1,132 @@
+{
+  "timestamp": "2025-10-04T14:08:34.712766",
+  "tests": {
+    "Local Health endpoint": {
+      "status": "fail",
+      "details": "HTTPConnectionPool(host='localhost', port=8888): Max retries exceeded with url: /health (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x10a199160>: Failed to establish a new connection: [Errno 61] Connection refused'))",
+      "duration": 0.0044939517974853516,
+      "timestamp": "2025-10-04T14:08:34.717282"
+    },
+    "Local Readiness endpoint": {
+      "status": "fail",
+      "details": "HTTPConnectionPool(host='localhost', port=8888): Max retries exceeded with url: /ready (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x10a199b50>: Failed to establish a new connection: [Errno 61] Connection refused'))",
+      "duration": 0.0007901191711425781,
+      "timestamp": "2025-10-04T14:08:34.718084"
+    },
+    "Local Metrics endpoint": {
+      "status": "fail",
+      "details": "HTTPConnectionPool(host='localhost', port=8888): Max retries exceeded with url: /metrics (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x10a1ea550>: Failed to establish a new connection: [Errno 61] Connection refused'))",
+      "duration": 0.0006930828094482422,
+      "timestamp": "2025-10-04T14:08:34.718785"
+    },
+    "Local Dashboard endpoint": {
+      "status": "fail",
+      "details": "HTTPConnectionPool(host='localhost', port=8888): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x10a130400>: Failed to establish a new connection: [Errno 61] Connection refused'))",
+      "duration": 0.0009143352508544922,
+      "timestamp": "2025-10-04T14:08:34.719705"
+    },
+    "External Health endpoint": {
+      "status": "fail",
+      "details": "Status 530",
+      "duration": 0.09984683990478516,
+      "timestamp": "2025-10-04T14:08:34.819572"
+    },
+    "External Dashboard endpoint": {
+      "status": "fail",
+      "details": "Status 530",
+      "duration": 0.12851500511169434,
+      "timestamp": "2025-10-04T14:08:34.948109"
+    },
+    "Data Directory metrics": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T14:08:34.948469"
+    },
+    "Data Directory dashboards": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T14:08:34.948481"
+    },
+    "Data Directory logs": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T14:08:34.948489"
+    },
+    "Data Directory config": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T14:08:34.948497"
+    },
+    "Data Write Permissions": {
+      "status": "pass",
+      "details": "Can write to data directories",
+      "duration": 0,
+      "timestamp": "2025-10-04T14:08:34.948905"
+    },
+    "Process Running": {
+      "status": "pass",
+      "details": "Observatory process found (PIDs: 46011)",
+      "duration": 0,
+      "timestamp": "2025-10-04T14:08:34.963287"
+    },
+    "Process Resources PID 46011": {
+      "status": "pass",
+      "details": "46011   0.0  0.4   0:00.47",
+      "duration": 0,
+      "timestamp": "2025-10-04T14:08:34.966648"
+    },
+    "Tunnel Process": {
+      "status": "fail",
+      "details": "No Cloudflare tunnel process found",
+      "duration": 0,
+      "timestamp": "2025-10-04T14:08:34.982329"
+    },
+    "Performance /health": {
+      "status": "fail",
+      "details": "Avg response time: 2.00s (target: <1.0s)",
+      "duration": 0,
+      "timestamp": "2025-10-04T14:08:34.995653"
+    },
+    "Performance /metrics": {
+      "status": "fail",
+      "details": "Avg response time: 3.00s (target: <2.0s)",
+      "duration": 0,
+      "timestamp": "2025-10-04T14:08:35.006534"
+    },
+    "Performance /": {
+      "status": "fail",
+      "details": "Avg response time: 4.00s (target: <3.0s)",
+      "duration": 0,
+      "timestamp": "2025-10-04T14:08:35.015980"
+    },
+    "WebSocket /ws/observatory": {
+      "status": "fail",
+      "details": "create_connection() got an unexpected keyword argument 'timeout'",
+      "duration": 0.05886220932006836,
+      "timestamp": "2025-10-04T14:08:35.074876"
+    },
+    "WebSocket /ws/emoji-rain": {
+      "status": "fail",
+      "details": "create_connection() got an unexpected keyword argument 'timeout'",
+      "duration": 0.0017368793487548828,
+      "timestamp": "2025-10-04T14:08:35.076643"
+    },
+    "WebSocket /ws/anomalies": {
+      "status": "fail",
+      "details": "create_connection() got an unexpected keyword argument 'timeout'",
+      "duration": 0.008797883987426758,
+      "timestamp": "2025-10-04T14:08:35.085461"
+    }
+  },
+  "summary": {
+    "total_tests": 20,
+    "passed_tests": 7,
+    "failed_tests": 13,
+    "success_rate": 35.0,
+    "overall_status": "fail"
+  }
+}

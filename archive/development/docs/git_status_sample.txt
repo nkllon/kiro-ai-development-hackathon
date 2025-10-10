@@ -1,0 +1,5 @@
+ M .kiro/specs/claude-code-redis-task-queue/tasks.md
+ M HUNG_SHELL_DETECTOR.py
+ M setup.py
+?? .github/workflows/ci.yml
+?? .github/workflows/release-the-hounds.yml

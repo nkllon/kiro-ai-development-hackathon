@@ -1,0 +1,57 @@
+{
+  "evidence_id": "f1b79043-3af7-47d0-89a7-936103adfef4",
+  "timestamp": "2025-09-27T05:09:24.714284",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.714256",
+    "data_type": "dict"
+  },
+  "integrity_hash": "8219e013c036aef4f123f5f4ab205e6bd63e0f2f54a0eb46eec35d1c95366de1",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/management_endpoints/internal_user_endpoints.py",
+    "file_size": 73468,
+    "line_count": 1972,
+    "route_analysis": {
+      "total_routes": 10,
+      "websocket_routes": [],
+      "http_routes": [
+        "/user/new",
+        "/user/available_roles",
+        "/user/info",
+        "/user/update",
+        "/user/bulk_update",
+        "/user/list",
+        "/user/delete",
+        "/user/filter/ui",
+        "/user/daily/activity",
+        "/user/daily/activity/aggregated"
+      ],
+      "route_handlers": {
+        "/user/new": "new_user",
+        "/user/available_roles": "ui_get_available_role",
+        "/user/info": "user_info",
+        "/user/update": "user_update",
+        "/user/bulk_update": "bulk_user_update",
+        "/user/list": "get_users",
+        "/user/delete": "delete_user",
+        "/user/filter/ui": "ui_view_users",
+        "/user/daily/activity": "get_user_daily_activity",
+        "/user/daily/activity/aggregated": "get_user_daily_activity_aggregated"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "fastapi.Request",
+        "fastapi.Header",
+        "fastapi.HTTPException",
+        "fastapi.status",
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.714209"
+  }
+}

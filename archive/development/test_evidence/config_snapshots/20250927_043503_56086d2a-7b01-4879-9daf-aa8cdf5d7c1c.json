@@ -1,0 +1,20 @@
+{
+  "evidence_id": "56086d2a-7b01-4879-9daf-aa8cdf5d7c1c",
+  "timestamp": "2025-09-27T04:35:03.479292",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.479245",
+    "data_type": "dict"
+  },
+  "integrity_hash": "694ec4e7e0911894d045c0ff988f4c8951acd5519ccb066d3177d9f18cfe6b6a",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/auth/handle_jwt.py",
+    "file_size": 43362,
+    "line_count": 1232,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.479230"
+  }
+}

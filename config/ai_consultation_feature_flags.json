@@ -1,0 +1,33 @@
+{
+  "flags": {
+    "ai_consultation_enabled": false,
+    "doctor_status_display": false,
+    "real_time_chat": false,
+    "chat_cost_display": false,
+    "chat_session_management": false,
+    "query_queue": false,
+    "queue_status_display": false,
+    "batch_processing": false,
+    "email_notifications": false,
+    "email_preference_storage": false,
+    "cost_monitoring": true,
+    "cost_analytics": true,
+    "budget_enforcement": true,
+    "results_storage": false,
+    "knowledge_base_search": false,
+    "similar_query_detection": false,
+    "observatory_context": true,
+    "metrics_access": true,
+    "alerts_access": true,
+    "websocket_broadcasting": true,
+    "redis_persistence": true,
+    "doctor_status_management": true,
+    "cost_tracking": true,
+    "queue_processing": false,
+    "request_preprocessing": true,
+    "circuit_breakers": true,
+    "visual_regression_testing": true,
+    "auto_rollback": true
+  },
+  "user_flags": {}
+}

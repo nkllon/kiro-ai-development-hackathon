@@ -1,0 +1,10 @@
+# Beast Mode AI Development Framework - Documentation Dependencies
+# Install with: pip install -r requirements-docs.txt
+
+# Include core dependencies
+-r requirements.txt
+
+# Documentation tools
+myst-parser>=2.0.0
+sphinx-rtd-theme>=1.3.0
+sphinx>=7.1.2

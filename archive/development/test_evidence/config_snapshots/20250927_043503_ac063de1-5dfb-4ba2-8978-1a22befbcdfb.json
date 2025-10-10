@@ -1,0 +1,20 @@
+{
+  "evidence_id": "ac063de1-5dfb-4ba2-8978-1a22befbcdfb",
+  "timestamp": "2025-09-27T04:35:03.403087",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.403081",
+    "data_type": "dict"
+  },
+  "integrity_hash": "4060d69a8195d3dc0c1b626d5e8a86310b9db7ee7b20d115bf36ad69688e97c2",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/custom_auth_auto.py",
+    "file_size": 855,
+    "line_count": 32,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.403080"
+  }
+}

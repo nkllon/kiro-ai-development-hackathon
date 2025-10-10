@@ -1,0 +1,1 @@
+"""System Architecture Generation module."""

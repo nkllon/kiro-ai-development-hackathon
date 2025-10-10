@@ -1,0 +1,73 @@
+{
+  "alerting": true,
+  "backend": true,
+  "dependencies": {
+    "grafanaDependency": ">=8.0.0",
+    "grafanaVersion": "8.x.x",
+    "plugins": []
+  },
+  "executable": "redis-datasource",
+  "id": "redis-datasource",
+  "includes": [
+    {
+      "name": "Redis Overview",
+      "path": "dashboards/redis.json",
+      "type": "dashboard"
+    },
+    {
+      "name": "Redis Streaming v8",
+      "path": "dashboards/redis-streaming-v8.json",
+      "type": "dashboard"
+    }
+  ],
+  "info": {
+    "author": {
+      "name": "RedisGrafana",
+      "url": "https://redisgrafana.github.io"
+    },
+    "description": "Allows to connect to any Redis database On-Premises and in the Cloud.",
+    "keywords": ["redis", "timeseries", "backend", "plugin"],
+    "links": [
+      {
+        "name": "Website",
+        "url": "https://redisgrafana.github.io"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/RedisGrafana/grafana-redis-datasource/blob/master/LICENSE"
+      }
+    ],
+    "logos": {
+      "large": "img/logo.svg",
+      "small": "img/logo.svg"
+    },
+    "screenshots": [
+      {
+        "name": "Dashboard",
+        "path": "img/redis-dashboard.png"
+      },
+      {
+        "name": "Streaming Dashboard",
+        "path": "img/redis-streaming.png"
+      },
+      {
+        "name": "Datasource",
+        "path": "img/datasource.png"
+      },
+      {
+        "name": "Query",
+        "path": "img/query.png"
+      },
+      {
+        "name": "Variables",
+        "path": "img/variables.png"
+      }
+    ],
+    "updated": "2023-07-12",
+    "version": "2.2.0"
+  },
+  "metrics": true,
+  "name": "Redis",
+  "streaming": true,
+  "type": "datasource"
+}

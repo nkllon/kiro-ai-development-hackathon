@@ -1,0 +1,1256 @@
+{
+  "summary": {
+    "total_tests": 5,
+    "passed": 5,
+    "partial": 0,
+    "failed": 0,
+    "success_rate": "100.0%",
+    "overall_status": "PASS"
+  },
+  "test_results": [
+    {
+      "test": "Component Health Status Reporting",
+      "status": "PASS",
+      "details": {
+        "total_components": 5,
+        "healthy_components": 5,
+        "component_health": {
+          "DashboardEngine": {
+            "status": "healthy",
+            "healthy": true,
+            "details": {
+              "status": "healthy",
+              "active_components": 0,
+              "active_streams": 0,
+              "observatory_connected": false
+            }
+          },
+          "AnimationEngine": {
+            "status": "initializing",
+            "healthy": true,
+            "details": {
+              "status": "initializing",
+              "gpu_available": false,
+              "active_animations": 0,
+              "performance_ok": true
+            }
+          },
+          "PersonalityEngine": {
+            "status": "initializing",
+            "healthy": true,
+            "details": {
+              "status": "initializing",
+              "active_contexts": 0,
+              "current_personality": "professional",
+              "current_theme": "professional",
+              "transition_count": 0,
+              "theme_changes": 0,
+              "achievements_tracked": 0,
+              "users_with_preferences": 0,
+              "total_user_interactions": 0,
+              "emotional_state": {
+                "team_stress": 0.5,
+                "team_morale": 0.7
+              }
+            }
+          },
+          "AttentionManager": {
+            "status": "initializing",
+            "healthy": true,
+            "details": {
+              "status": "initializing",
+              "attention_events": 0,
+              "attention_budget": 1.0,
+              "current_focus": null,
+              "focus_sessions": 0,
+              "disclosed_information": 0,
+              "disclosure_rules": 1,
+              "observatory_integration": "inactive"
+            }
+          },
+          "InteractionEngine": {
+            "status": "initializing",
+            "healthy": true,
+            "details": {
+              "status": "initializing",
+              "active_sessions": 0,
+              "collaboration_sessions": 0,
+              "total_interactions": 0,
+              "accessibility_enabled": false,
+              "keyboard_navigation": true,
+              "multimodal_capabilities": 3,
+              "mobile_optimization": false,
+              "responsive_design": false,
+              "components": {
+                "interaction_handler": "active",
+                "accessibility_provider": "active",
+                "multimodal_interface": "active",
+                "collaboration_manager": "active",
+                "mobile_adapter": "active"
+              }
+            }
+          }
+        }
+      },
+      "requirement": "28.1, 28.2"
+    },
+    {
+      "test": "Health Endpoint Functionality",
+      "status": "PASS",
+      "details": {
+        "main_health_has_engagement": true,
+        "required_fields_present": true,
+        "engagement_data": {
+          "status": "healthy",
+          "insights_broadcasted": 0,
+          "last_broadcast": "2025-10-02T11:12:32.486228",
+          "active_websockets": 0,
+          "storyteller_healthy": true,
+          "data_bridge_running": true
+        },
+        "engagement_endpoints": {
+          "/api/engagement/status": {
+            "status": 200,
+            "accessible": true,
+            "data": {
+              "status": "success",
+              "data": {
+                "integration_running": true,
+                "insights_broadcasted": 0,
+                "last_broadcast": "2025-10-02T11:12:32.486228",
+                "data_bridge": {
+                  "running": true,
+                  "metrics_processed": 0,
+                  "patterns_discovered": 0,
+                  "last_update": "2025-10-02T11:12:32.486219",
+                  "recent_metrics_count": 0,
+                  "recent_costs_count": 0,
+                  "recent_events_count": 0,
+                  "redis_connected": true,
+                  "storyteller_active": false
+                },
+                "storyteller": {
+                  "status": "healthy",
+                  "metrics_tracked": 1,
+                  "active_patterns": 0,
+                  "pattern_detectors": 2,
+                  "total_data_points": 5
+                },
+                "websockets": {
+                  "active_connections": 0,
+                  "total_messages_sent": 0,
+                  "connection_metadata": {}
+                }
+              },
+              "timestamp": "2025-10-02T11:15:06.964721"
+            }
+          },
+          "/api/engagement/insights": {
+            "status": 200,
+            "accessible": true,
+            "data": {
+              "status": "success",
+              "data": {
+                "summary": "\ud83c\udfb5 Everything was bebopping along smoothly - all systems in harmony, no drama to report. Sometimes the best story is no story! \u2728",
+                "story_arc": "",
+                "patterns": [],
+                "metrics_analyzed": 1,
+                "total_data_points": 5,
+                "analysis_timestamp": "2025-10-02T11:15:06.966160",
+                "drama_level": "PEACEFUL_TIMES",
+                "bridge_status": {
+                  "running": true,
+                  "metrics_processed": 0,
+                  "patterns_discovered": 0,
+                  "last_update": "2025-10-02T11:12:32.486219",
+                  "recent_metrics_count": 0,
+                  "recent_costs_count": 0,
+                  "recent_events_count": 0,
+                  "redis_connected": true,
+                  "storyteller_active": false
+                },
+                "data_sources": {
+                  "metrics": 0,
+                  "costs": 0,
+                  "events": 0
+                }
+              },
+              "timestamp": "2025-10-02T11:15:06.966234"
+            }
+          }
+        }
+      },
+      "requirement": "28.3, 28.4"
+    },
+    {
+      "test": "Engagement Metrics Collection",
+      "status": "PASS",
+      "details": {
+        "prometheus_metrics_found": 0,
+        "engagement_metrics_sample": [],
+        "observatory_has_metrics": true,
+        "metrics_data_keys": [
+          "observatory_uptime_seconds",
+          "events_processed_total",
+          "insights_generated_total",
+          "active_connections",
+          "memory_usage_mb"
+        ]
+      },
+      "requirement": "28.4, 28.5"
+    },
+    {
+      "test": "Health Status Accuracy",
+      "status": "PASS",
+      "details": {
+        "health_checks": [
+          {
+            "check": 1,
+            "timestamp": "2025-10-02T11:15:06.976221",
+            "overall_status": "healthy",
+            "engagement_status": "healthy",
+            "storyteller_healthy": true,
+            "data_bridge_running": true
+          },
+          {
+            "check": 2,
+            "timestamp": "2025-10-02T11:15:08.419215",
+            "overall_status": "healthy",
+            "engagement_status": "healthy",
+            "storyteller_healthy": true,
+            "data_bridge_running": true
+          },
+          {
+            "check": 3,
+            "timestamp": "2025-10-02T11:15:11.448078",
+            "overall_status": "healthy",
+            "engagement_status": "healthy",
+            "storyteller_healthy": true,
+            "data_bridge_running": true
+          }
+        ],
+        "consistent_status": true,
+        "valid_status": true,
+        "unique_statuses": [
+          "healthy"
+        ]
+      },
+      "requirement": "28.1, 28.2, 28.3"
+    },
+    {
+      "test": "System Observability",
+      "status": "PASS",
+      "details": {
+        "observability_score": "1.00",
+        "accessible_endpoints": 3,
+        "total_endpoints": 3,
+        "endpoint_tests": {
+          "observations": {
+            "status": 200,
+            "accessible": true,
+            "data": [
+              {
+                "timestamp": "2025-10-02T11:15:14.534417",
+                "module": "ObservatoryServer",
+                "event_type": "info",
+                "message": "Observatory observation system initialized \ud83c\udfac",
+                "emoji": "\ud83c\udfac",
+                "severity": "info",
+                "context": {
+                  "connected_clients": 0,
+                  "correlation_id": "init_1759425314.534504"
+                }
+              }
+            ]
+          },
+          "metrics_components": {
+            "status": 200,
+            "accessible": true,
+            "data": {
+              "discovered_components": {
+                "beast_mode.ai_memory_palace.ContextEngine": {
+                  "module_path": "beast_mode.ai_memory_palace",
+                  "class_name": "ContextEngine",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.566656"
+                },
+                "beast_mode.ai_memory_palace.ContextManager": {
+                  "module_path": "beast_mode.ai_memory_palace",
+                  "class_name": "ContextManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.566669"
+                },
+                "beast_mode.ai_memory_palace.ContextRegistry": {
+                  "module_path": "beast_mode.ai_memory_palace",
+                  "class_name": "ContextRegistry",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.566671"
+                },
+                "beast_mode.ai_memory_palace.ContextValidator": {
+                  "module_path": "beast_mode.ai_memory_palace",
+                  "class_name": "ContextValidator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.566673"
+                },
+                "beast_mode.ai_memory_palace.context_engine.BeastlyModule": {
+                  "module_path": "beast_mode.ai_memory_palace.context_engine",
+                  "class_name": "BeastlyModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.575763"
+                },
+                "beast_mode.ai_memory_palace.context_engine.ContextEngine": {
+                  "module_path": "beast_mode.ai_memory_palace.context_engine",
+                  "class_name": "ContextEngine",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.575777"
+                },
+                "beast_mode.ai_memory_palace.context_manager.BeastlyModule": {
+                  "module_path": "beast_mode.ai_memory_palace.context_manager",
+                  "class_name": "BeastlyModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.575864"
+                },
+                "beast_mode.ai_memory_palace.context_manager.ContextEngine": {
+                  "module_path": "beast_mode.ai_memory_palace.context_manager",
+                  "class_name": "ContextEngine",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.575867"
+                },
+                "beast_mode.ai_memory_palace.context_manager.ContextManager": {
+                  "module_path": "beast_mode.ai_memory_palace.context_manager",
+                  "class_name": "ContextManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.575876"
+                },
+                "beast_mode.ai_memory_palace.context_manager.ContextRegistry": {
+                  "module_path": "beast_mode.ai_memory_palace.context_manager",
+                  "class_name": "ContextRegistry",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.575878"
+                },
+                "beast_mode.ai_memory_palace.context_manager.ContextValidator": {
+                  "module_path": "beast_mode.ai_memory_palace.context_manager",
+                  "class_name": "ContextValidator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.575885"
+                },
+                "beast_mode.ai_memory_palace.context_registry.BeastlyModule": {
+                  "module_path": "beast_mode.ai_memory_palace.context_registry",
+                  "class_name": "BeastlyModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.576056"
+                },
+                "beast_mode.ai_memory_palace.context_registry.ContextRegistry": {
+                  "module_path": "beast_mode.ai_memory_palace.context_registry",
+                  "class_name": "ContextRegistry",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.576059"
+                },
+                "beast_mode.ai_memory_palace.context_validator.BeastlyModule": {
+                  "module_path": "beast_mode.ai_memory_palace.context_validator",
+                  "class_name": "BeastlyModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.576268"
+                },
+                "beast_mode.ai_memory_palace.context_validator.ContextValidator": {
+                  "module_path": "beast_mode.ai_memory_palace.context_validator",
+                  "class_name": "ContextValidator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.576278"
+                },
+                "beast_mode.ai_memory_palace.developer_tools.BeastlyModule": {
+                  "module_path": "beast_mode.ai_memory_palace.developer_tools",
+                  "class_name": "BeastlyModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.578650"
+                },
+                "beast_mode.ai_memory_palace.developer_tools.ContextDebugger": {
+                  "module_path": "beast_mode.ai_memory_palace.developer_tools",
+                  "class_name": "ContextDebugger",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.578693"
+                },
+                "beast_mode.ai_memory_palace.developer_tools.ContextInspector": {
+                  "module_path": "beast_mode.ai_memory_palace.developer_tools",
+                  "class_name": "ContextInspector",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.578713"
+                },
+                "beast_mode.ai_memory_palace.developer_tools.ContextManager": {
+                  "module_path": "beast_mode.ai_memory_palace.developer_tools",
+                  "class_name": "ContextManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.578717"
+                },
+                "beast_mode.ai_memory_palace.developer_tools.ContextRegistry": {
+                  "module_path": "beast_mode.ai_memory_palace.developer_tools",
+                  "class_name": "ContextRegistry",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.578725"
+                },
+                "beast_mode.ai_memory_palace.developer_tools.ContextValidator": {
+                  "module_path": "beast_mode.ai_memory_palace.developer_tools",
+                  "class_name": "ContextValidator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.578727"
+                },
+                "beast_mode.ai_memory_palace.multi_project_manager.BeastlyModule": {
+                  "module_path": "beast_mode.ai_memory_palace.multi_project_manager",
+                  "class_name": "BeastlyModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.579974"
+                },
+                "beast_mode.ai_memory_palace.multi_project_manager.ContextManager": {
+                  "module_path": "beast_mode.ai_memory_palace.multi_project_manager",
+                  "class_name": "ContextManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.579984"
+                },
+                "beast_mode.ai_memory_palace.multi_project_manager.ContextRegistry": {
+                  "module_path": "beast_mode.ai_memory_palace.multi_project_manager",
+                  "class_name": "ContextRegistry",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.580001"
+                },
+                "beast_mode.ai_memory_palace.multi_project_manager.ContextSecurityManager": {
+                  "module_path": "beast_mode.ai_memory_palace.multi_project_manager",
+                  "class_name": "ContextSecurityManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.580024"
+                },
+                "beast_mode.ai_memory_palace.multi_project_manager.MultiProjectContextManager": {
+                  "module_path": "beast_mode.ai_memory_palace.multi_project_manager",
+                  "class_name": "MultiProjectContextManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.580031"
+                },
+                "beast_mode.ai_memory_palace.multi_project_manager.ProjectDetector": {
+                  "module_path": "beast_mode.ai_memory_palace.multi_project_manager",
+                  "class_name": "ProjectDetector",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.580037"
+                },
+                "beast_mode.ai_memory_palace.security.BeastlyModule": {
+                  "module_path": "beast_mode.ai_memory_palace.security",
+                  "class_name": "BeastlyModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.580115"
+                },
+                "beast_mode.ai_memory_palace.security.ContextSecurityManager": {
+                  "module_path": "beast_mode.ai_memory_palace.security",
+                  "class_name": "ContextSecurityManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.580121"
+                },
+                "beast_mode.ai_memory_palace.session_manager.BeastlyModule": {
+                  "module_path": "beast_mode.ai_memory_palace.session_manager",
+                  "class_name": "BeastlyModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.581652"
+                },
+                "beast_mode.ai_memory_palace.session_manager.ContextEngine": {
+                  "module_path": "beast_mode.ai_memory_palace.session_manager",
+                  "class_name": "ContextEngine",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.581664"
+                },
+                "beast_mode.ai_memory_palace.session_manager.ContextObservatoryIntegration": {
+                  "module_path": "beast_mode.ai_memory_palace.session_manager",
+                  "class_name": "ContextObservatoryIntegration",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.581670"
+                },
+                "beast_mode.ai_memory_palace.session_manager.ContextRegistry": {
+                  "module_path": "beast_mode.ai_memory_palace.session_manager",
+                  "class_name": "ContextRegistry",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.581673"
+                },
+                "beast_mode.ai_memory_palace.session_manager.ContextValidator": {
+                  "module_path": "beast_mode.ai_memory_palace.session_manager",
+                  "class_name": "ContextValidator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.581677"
+                },
+                "beast_mode.ai_memory_palace.session_manager.SessionManager": {
+                  "module_path": "beast_mode.ai_memory_palace.session_manager",
+                  "class_name": "SessionManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.581684"
+                },
+                "beast_mode.ai_memory_palace.tracing_integration.BeastlyModule": {
+                  "module_path": "beast_mode.ai_memory_palace.tracing_integration",
+                  "class_name": "BeastlyModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.584342"
+                },
+                "beast_mode.ai_memory_palace.tracing_integration.ContextTracingIntegration": {
+                  "module_path": "beast_mode.ai_memory_palace.tracing_integration",
+                  "class_name": "ContextTracingIntegration",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.584356"
+                },
+                "beast_mode.core.ReflectiveModule": {
+                  "module_path": "beast_mode.core",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.590568"
+                },
+                "beast_mode.core.ast_validated_module.ASTValidatedModule": {
+                  "module_path": "beast_mode.core.ast_validated_module",
+                  "class_name": "ASTValidatedModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.593637"
+                },
+                "beast_mode.core.ast_validated_module.ReflectiveModule": {
+                  "module_path": "beast_mode.core.ast_validated_module",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.593654"
+                },
+                "beast_mode.core.beastly_module.BeastlyModule": {
+                  "module_path": "beast_mode.core.beastly_module",
+                  "class_name": "BeastlyModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.594167"
+                },
+                "beast_mode.core.beastly_module.ReflectiveModule": {
+                  "module_path": "beast_mode.core.beastly_module",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.594195"
+                },
+                "beast_mode.core.pdca_models.ReflectiveModule": {
+                  "module_path": "beast_mode.core.pdca_models",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.609713"
+                },
+                "beast_mode.core.pdca_orchestrator_core.ReflectiveModule": {
+                  "module_path": "beast_mode.core.pdca_orchestrator_core",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.611845"
+                },
+                "beast_mode.core.pdca_orchestrator_core.SystematicPDCAOrchestrator": {
+                  "module_path": "beast_mode.core.pdca_orchestrator_core",
+                  "class_name": "SystematicPDCAOrchestrator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.611855"
+                },
+                "beast_mode.core.reflective_module.ReflectiveModule": {
+                  "module_path": "beast_mode.core.reflective_module",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.617450"
+                },
+                "beast_mode.core.syntax_fixed_module.ReflectiveModule": {
+                  "module_path": "beast_mode.core.syntax_fixed_module",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.617978"
+                },
+                "beast_mode.core.syntax_fixed_module.SyntaxFixedModule": {
+                  "module_path": "beast_mode.core.syntax_fixed_module",
+                  "class_name": "SyntaxFixedModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.617981"
+                },
+                "beast_mode.directus_cms.api.APIConfigurator": {
+                  "module_path": "beast_mode.directus_cms.api",
+                  "class_name": "APIConfigurator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.621296"
+                },
+                "beast_mode.directus_cms.api.GraphQLManager": {
+                  "module_path": "beast_mode.directus_cms.api",
+                  "class_name": "GraphQLManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.621304"
+                },
+                "beast_mode.directus_cms.api.RESTAPIManager": {
+                  "module_path": "beast_mode.directus_cms.api",
+                  "class_name": "RESTAPIManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.621306"
+                },
+                "beast_mode.directus_cms.api.configurator.APIConfigurator": {
+                  "module_path": "beast_mode.directus_cms.api.configurator",
+                  "class_name": "APIConfigurator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.621446"
+                },
+                "beast_mode.directus_cms.api.configurator.GraphQLManager": {
+                  "module_path": "beast_mode.directus_cms.api.configurator",
+                  "class_name": "GraphQLManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.621457"
+                },
+                "beast_mode.directus_cms.api.configurator.RESTAPIManager": {
+                  "module_path": "beast_mode.directus_cms.api.configurator",
+                  "class_name": "RESTAPIManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.621465"
+                },
+                "beast_mode.directus_cms.api.configurator.ReflectiveModule": {
+                  "module_path": "beast_mode.directus_cms.api.configurator",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.621468"
+                },
+                "beast_mode.directus_cms.api.graphql_config.GraphQLManager": {
+                  "module_path": "beast_mode.directus_cms.api.graphql_config",
+                  "class_name": "GraphQLManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.621504"
+                },
+                "beast_mode.directus_cms.api.graphql_config.ReflectiveModule": {
+                  "module_path": "beast_mode.directus_cms.api.graphql_config",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.621510"
+                },
+                "beast_mode.directus_cms.api.rest_config.RESTAPIManager": {
+                  "module_path": "beast_mode.directus_cms.api.rest_config",
+                  "class_name": "RESTAPIManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.621543"
+                },
+                "beast_mode.directus_cms.api.rest_config.ReflectiveModule": {
+                  "module_path": "beast_mode.directus_cms.api.rest_config",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.621546"
+                },
+                "beast_mode.directus_cms.data_populator.DataPopulator": {
+                  "module_path": "beast_mode.directus_cms.data_populator",
+                  "class_name": "DataPopulator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.625611"
+                },
+                "beast_mode.directus_cms.data_populator.ReflectiveModule": {
+                  "module_path": "beast_mode.directus_cms.data_populator",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.625622"
+                },
+                "beast_mode.directus_cms.data_populator.SchemaManager": {
+                  "module_path": "beast_mode.directus_cms.data_populator",
+                  "class_name": "SchemaManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.625624"
+                },
+                "beast_mode.directus_cms.directus_client.BeastlyModule": {
+                  "module_path": "beast_mode.directus_cms.directus_client",
+                  "class_name": "BeastlyModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.708115"
+                },
+                "beast_mode.directus_cms.directus_client.DirectusClient": {
+                  "module_path": "beast_mode.directus_cms.directus_client",
+                  "class_name": "DirectusClient",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.708148"
+                },
+                "beast_mode.directus_cms.error_prevention.APIErrorHandler": {
+                  "module_path": "beast_mode.directus_cms.error_prevention",
+                  "class_name": "APIErrorHandler",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.712448"
+                },
+                "beast_mode.directus_cms.error_prevention.AuthenticationValidator": {
+                  "module_path": "beast_mode.directus_cms.error_prevention",
+                  "class_name": "AuthenticationValidator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.712460"
+                },
+                "beast_mode.directus_cms.error_prevention.ErrorPreventionOrchestrator": {
+                  "module_path": "beast_mode.directus_cms.error_prevention",
+                  "class_name": "ErrorPreventionOrchestrator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.712463"
+                },
+                "beast_mode.directus_cms.error_prevention.SchemaConsistencyValidator": {
+                  "module_path": "beast_mode.directus_cms.error_prevention",
+                  "class_name": "SchemaConsistencyValidator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.712466"
+                },
+                "beast_mode.directus_cms.error_prevention.api_handler.APIErrorHandler": {
+                  "module_path": "beast_mode.directus_cms.error_prevention.api_handler",
+                  "class_name": "APIErrorHandler",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.712665"
+                },
+                "beast_mode.directus_cms.error_prevention.api_handler.ReflectiveModule": {
+                  "module_path": "beast_mode.directus_cms.error_prevention.api_handler",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.712672"
+                },
+                "beast_mode.directus_cms.error_prevention.auth_validator.AuthenticationValidator": {
+                  "module_path": "beast_mode.directus_cms.error_prevention.auth_validator",
+                  "class_name": "AuthenticationValidator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.712693"
+                },
+                "beast_mode.directus_cms.error_prevention.auth_validator.ReflectiveModule": {
+                  "module_path": "beast_mode.directus_cms.error_prevention.auth_validator",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.712697"
+                },
+                "beast_mode.directus_cms.error_prevention.error_prevention.APIErrorHandler": {
+                  "module_path": "beast_mode.directus_cms.error_prevention.error_prevention",
+                  "class_name": "APIErrorHandler",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.712714"
+                },
+                "beast_mode.directus_cms.error_prevention.error_prevention.AuthenticationValidator": {
+                  "module_path": "beast_mode.directus_cms.error_prevention.error_prevention",
+                  "class_name": "AuthenticationValidator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.712715"
+                },
+                "beast_mode.directus_cms.error_prevention.error_prevention.ErrorPreventionOrchestrator": {
+                  "module_path": "beast_mode.directus_cms.error_prevention.error_prevention",
+                  "class_name": "ErrorPreventionOrchestrator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.712717"
+                },
+                "beast_mode.directus_cms.error_prevention.error_prevention.ReflectiveModule": {
+                  "module_path": "beast_mode.directus_cms.error_prevention.error_prevention",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.712720"
+                },
+                "beast_mode.directus_cms.error_prevention.error_prevention.SchemaConsistencyValidator": {
+                  "module_path": "beast_mode.directus_cms.error_prevention.error_prevention",
+                  "class_name": "SchemaConsistencyValidator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.712721"
+                },
+                "beast_mode.directus_cms.error_prevention.schema_validator.ReflectiveModule": {
+                  "module_path": "beast_mode.directus_cms.error_prevention.schema_validator",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.712737"
+                },
+                "beast_mode.directus_cms.error_prevention.schema_validator.SchemaConsistencyValidator": {
+                  "module_path": "beast_mode.directus_cms.error_prevention.schema_validator",
+                  "class_name": "SchemaConsistencyValidator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.712739"
+                },
+                "beast_mode.directus_cms.population.DataPopulationOrchestrator": {
+                  "module_path": "beast_mode.directus_cms.population",
+                  "class_name": "DataPopulationOrchestrator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.715513"
+                },
+                "beast_mode.directus_cms.population.SpecificationImporter": {
+                  "module_path": "beast_mode.directus_cms.population",
+                  "class_name": "SpecificationImporter",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.715520"
+                },
+                "beast_mode.directus_cms.population.orchestrator.DataPopulationOrchestrator": {
+                  "module_path": "beast_mode.directus_cms.population.orchestrator",
+                  "class_name": "DataPopulationOrchestrator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.715607"
+                },
+                "beast_mode.directus_cms.population.orchestrator.ReflectiveModule": {
+                  "module_path": "beast_mode.directus_cms.population.orchestrator",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.715612"
+                },
+                "beast_mode.directus_cms.population.orchestrator.SpecificationImporter": {
+                  "module_path": "beast_mode.directus_cms.population.orchestrator",
+                  "class_name": "SpecificationImporter",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.715614"
+                },
+                "beast_mode.directus_cms.population.spec_importer.ReflectiveModule": {
+                  "module_path": "beast_mode.directus_cms.population.spec_importer",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.715637"
+                },
+                "beast_mode.directus_cms.population.spec_importer.SpecificationImporter": {
+                  "module_path": "beast_mode.directus_cms.population.spec_importer",
+                  "class_name": "SpecificationImporter",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.715639"
+                },
+                "beast_mode.directus_cms.schema_manager.ReflectiveModule": {
+                  "module_path": "beast_mode.directus_cms.schema_manager",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.716947"
+                },
+                "beast_mode.directus_cms.schema_manager.SchemaManager": {
+                  "module_path": "beast_mode.directus_cms.schema_manager",
+                  "class_name": "SchemaManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.716951"
+                },
+                "beast_mode.directus_cms.ui.NavigationManager": {
+                  "module_path": "beast_mode.directus_cms.ui",
+                  "class_name": "NavigationManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.719587"
+                },
+                "beast_mode.directus_cms.ui.RelationshipDisplayManager": {
+                  "module_path": "beast_mode.directus_cms.ui",
+                  "class_name": "RelationshipDisplayManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.719646"
+                },
+                "beast_mode.directus_cms.ui.UIConfigurator": {
+                  "module_path": "beast_mode.directus_cms.ui",
+                  "class_name": "UIConfigurator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.719710"
+                },
+                "beast_mode.directus_cms.ui.configurator.NavigationManager": {
+                  "module_path": "beast_mode.directus_cms.ui.configurator",
+                  "class_name": "NavigationManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.720498"
+                },
+                "beast_mode.directus_cms.ui.configurator.ReflectiveModule": {
+                  "module_path": "beast_mode.directus_cms.ui.configurator",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.720503"
+                },
+                "beast_mode.directus_cms.ui.configurator.RelationshipDisplayManager": {
+                  "module_path": "beast_mode.directus_cms.ui.configurator",
+                  "class_name": "RelationshipDisplayManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.720504"
+                },
+                "beast_mode.directus_cms.ui.configurator.UIConfigurator": {
+                  "module_path": "beast_mode.directus_cms.ui.configurator",
+                  "class_name": "UIConfigurator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.720506"
+                },
+                "beast_mode.directus_cms.ui.navigation.NavigationManager": {
+                  "module_path": "beast_mode.directus_cms.ui.navigation",
+                  "class_name": "NavigationManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.720528"
+                },
+                "beast_mode.directus_cms.ui.navigation.ReflectiveModule": {
+                  "module_path": "beast_mode.directus_cms.ui.navigation",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.720530"
+                },
+                "beast_mode.directus_cms.ui.relationship_display.ReflectiveModule": {
+                  "module_path": "beast_mode.directus_cms.ui.relationship_display",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.720549"
+                },
+                "beast_mode.directus_cms.ui.relationship_display.RelationshipDisplayManager": {
+                  "module_path": "beast_mode.directus_cms.ui.relationship_display",
+                  "class_name": "RelationshipDisplayManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:32.720550"
+                },
+                "beast_mode.mcp_integrations.GoogleCalendarMCPServer": {
+                  "module_path": "beast_mode.mcp_integrations",
+                  "class_name": "GoogleCalendarMCPServer",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.360905"
+                },
+                "beast_mode.mcp_integrations.google_calendar.CalendarOperationsHandler": {
+                  "module_path": "beast_mode.mcp_integrations.google_calendar",
+                  "class_name": "CalendarOperationsHandler",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.361379"
+                },
+                "beast_mode.mcp_integrations.google_calendar.GoogleAuthManager": {
+                  "module_path": "beast_mode.mcp_integrations.google_calendar",
+                  "class_name": "GoogleAuthManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.361392"
+                },
+                "beast_mode.mcp_integrations.google_calendar.GoogleCalendarMCPServer": {
+                  "module_path": "beast_mode.mcp_integrations.google_calendar",
+                  "class_name": "GoogleCalendarMCPServer",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.361397"
+                },
+                "beast_mode.mcp_integrations.google_calendar.ReflectiveModule": {
+                  "module_path": "beast_mode.mcp_integrations.google_calendar",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.361405"
+                },
+                "beast_mode.mcp_integrations.google_calendar.auth_manager.GoogleAuthManager": {
+                  "module_path": "beast_mode.mcp_integrations.google_calendar.auth_manager",
+                  "class_name": "GoogleAuthManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.361700"
+                },
+                "beast_mode.mcp_integrations.google_calendar.auth_manager.GoogleCalendarReflectiveModule": {
+                  "module_path": "beast_mode.mcp_integrations.google_calendar.auth_manager",
+                  "class_name": "GoogleCalendarReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.361713"
+                },
+                "beast_mode.mcp_integrations.google_calendar.base.GoogleCalendarReflectiveModule": {
+                  "module_path": "beast_mode.mcp_integrations.google_calendar.base",
+                  "class_name": "GoogleCalendarReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.361918"
+                },
+                "beast_mode.mcp_integrations.google_calendar.base.ReflectiveModule": {
+                  "module_path": "beast_mode.mcp_integrations.google_calendar.base",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.361942"
+                },
+                "beast_mode.mcp_integrations.google_calendar.main.CalendarOperationsHandler": {
+                  "module_path": "beast_mode.mcp_integrations.google_calendar.main",
+                  "class_name": "CalendarOperationsHandler",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.364148"
+                },
+                "beast_mode.mcp_integrations.google_calendar.main.GoogleAuthManager": {
+                  "module_path": "beast_mode.mcp_integrations.google_calendar.main",
+                  "class_name": "GoogleAuthManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.364160"
+                },
+                "beast_mode.mcp_integrations.google_calendar.main.GoogleCalendarMCPServer": {
+                  "module_path": "beast_mode.mcp_integrations.google_calendar.main",
+                  "class_name": "GoogleCalendarMCPServer",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.364167"
+                },
+                "beast_mode.mcp_integrations.google_calendar.operations_handler.CalendarOperationsHandler": {
+                  "module_path": "beast_mode.mcp_integrations.google_calendar.operations_handler",
+                  "class_name": "CalendarOperationsHandler",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.364834"
+                },
+                "beast_mode.mcp_integrations.google_calendar.operations_handler.GoogleCalendarReflectiveModule": {
+                  "module_path": "beast_mode.mcp_integrations.google_calendar.operations_handler",
+                  "class_name": "GoogleCalendarReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.364845"
+                },
+                "beast_mode.mcp_integrations.google_calendar.server.GoogleCalendarMCPServer": {
+                  "module_path": "beast_mode.mcp_integrations.google_calendar.server",
+                  "class_name": "GoogleCalendarMCPServer",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.364965"
+                },
+                "beast_mode.mcp_integrations.google_calendar.server.GoogleCalendarReflectiveModule": {
+                  "module_path": "beast_mode.mcp_integrations.google_calendar.server",
+                  "class_name": "GoogleCalendarReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.364968"
+                },
+                "beast_mode.messaging.redis_foundation.RedisFoundation": {
+                  "module_path": "beast_mode.messaging.redis_foundation",
+                  "class_name": "RedisFoundation",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.521417"
+                },
+                "beast_mode.messaging.redis_foundation.ReflectiveModule": {
+                  "module_path": "beast_mode.messaging.redis_foundation",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:33.521447"
+                },
+                "beast_mode.orchestration.DAGValidator": {
+                  "module_path": "beast_mode.orchestration",
+                  "class_name": "DAGValidator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:34.195319"
+                },
+                "beast_mode.orchestration.IndependentTaskExecutor": {
+                  "module_path": "beast_mode.orchestration",
+                  "class_name": "IndependentTaskExecutor",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:34.195335"
+                },
+                "beast_mode.orchestration.ParallelOrchestrator": {
+                  "module_path": "beast_mode.orchestration",
+                  "class_name": "ParallelOrchestrator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:34.195342"
+                },
+                "beast_mode.orchestration.dag_validator.BeastlyModule": {
+                  "module_path": "beast_mode.orchestration.dag_validator",
+                  "class_name": "BeastlyModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:34.195522"
+                },
+                "beast_mode.orchestration.dag_validator.DAGValidator": {
+                  "module_path": "beast_mode.orchestration.dag_validator",
+                  "class_name": "DAGValidator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:34.195527"
+                },
+                "beast_mode.orchestration.independent_task_executor.BeastlyModule": {
+                  "module_path": "beast_mode.orchestration.independent_task_executor",
+                  "class_name": "BeastlyModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:34.195575"
+                },
+                "beast_mode.orchestration.independent_task_executor.IndependentTaskExecutor": {
+                  "module_path": "beast_mode.orchestration.independent_task_executor",
+                  "class_name": "IndependentTaskExecutor",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:34.195582"
+                },
+                "beast_mode.orchestration.parallel_orchestrator.BeastlyModule": {
+                  "module_path": "beast_mode.orchestration.parallel_orchestrator",
+                  "class_name": "BeastlyModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:34.195626"
+                },
+                "beast_mode.orchestration.parallel_orchestrator.DAGValidator": {
+                  "module_path": "beast_mode.orchestration.parallel_orchestrator",
+                  "class_name": "DAGValidator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:34.195630"
+                },
+                "beast_mode.orchestration.parallel_orchestrator.IndependentTaskExecutor": {
+                  "module_path": "beast_mode.orchestration.parallel_orchestrator",
+                  "class_name": "IndependentTaskExecutor",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:34.195637"
+                },
+                "beast_mode.orchestration.parallel_orchestrator.ParallelOrchestrator": {
+                  "module_path": "beast_mode.orchestration.parallel_orchestrator",
+                  "class_name": "ParallelOrchestrator",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:34.195643"
+                },
+                "beast_mode.orchestration.task_parser.BeastlyModule": {
+                  "module_path": "beast_mode.orchestration.task_parser",
+                  "class_name": "BeastlyModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:34.196840"
+                },
+                "beast_mode.orchestration.task_parser.TaskParser": {
+                  "module_path": "beast_mode.orchestration.task_parser",
+                  "class_name": "TaskParser",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:34.196848"
+                },
+                "beast_mode.task_queue.TaskQueueManager": {
+                  "module_path": "beast_mode.task_queue",
+                  "class_name": "TaskQueueManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:34.260988"
+                },
+                "beast_mode.task_queue.task_queue_manager.ReflectiveModule": {
+                  "module_path": "beast_mode.task_queue.task_queue_manager",
+                  "class_name": "ReflectiveModule",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:34.268248"
+                },
+                "beast_mode.task_queue.task_queue_manager.TaskQueueManager": {
+                  "module_path": "beast_mode.task_queue.task_queue_manager",
+                  "class_name": "TaskQueueManager",
+                  "component_type": "ReflectiveModule",
+                  "is_reflective": true,
+                  "last_seen": "2025-10-02T11:12:34.268289"
+                }
+              },
+              "collection_stats": {
+                "uptime_seconds": 162.00278997421265,
+                "discovered_components": 133,
+                "metrics_collected": 2394,
+                "collection_errors": 0,
+                "last_collection_duration_ms": 72.49879837036133,
+                "collection_rate_per_second": 14.777523278340288,
+                "error_rate_percent": 0.0
+              }
+            }
+          },
+          "analytics": {
+            "status": 200,
+            "accessible": true,
+            "data": {
+              "current_window": {
+                "coordination_health_score": 1.0,
+                "component_count": 2,
+                "healthy_components": 8,
+                "warning_components": 0,
+                "error_components": 0,
+                "total_cost": 0.0,
+                "llm_calls": 0,
+                "avg_cost_per_call": 0.0,
+                "error_rate_percent": 0.0,
+                "avg_response_time_ms": 0.0
+              },
+              "insights": [],
+              "analytics_stats": {
+                "uptime_seconds": 160.26080465316772,
+                "metrics_processed": 19,
+                "insights_generated": 0,
+                "processing_errors": 0,
+                "processing_rate_per_second": 0.1185567490511439,
+                "time_windows_stored": 19,
+                "recent_metrics_count": 19,
+                "recent_costs_count": 0,
+                "active_insights": 0
+              }
+            }
+          }
+        }
+      },
+      "requirement": "28.5"
+    }
+  ],
+  "requirements_coverage": {
+    "28.1": "Engagement component health status reporting",
+    "28.2": "Component status accuracy and consistency",
+    "28.3": "Health endpoint functionality and data structure",
+    "28.4": "Engagement metrics collection and availability",
+    "28.5": "System observability and monitoring capabilities"
+  }
+}

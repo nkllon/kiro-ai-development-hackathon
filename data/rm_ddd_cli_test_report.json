@@ -1,0 +1,30 @@
+{
+  "summary": {
+    "total_tests": 1,
+    "passed_tests": 0,
+    "failed_tests": 1,
+    "success_rate": 0.0,
+    "total_execution_time": 0.41686129570007324
+  },
+  "component_results": {
+    "AgentLifecycleManager": {
+      "passed": 0,
+      "failed": 1,
+      "total": 1
+    }
+  },
+  "requirements_coverage": {
+    "1.1": {
+      "tested": 1,
+      "passed": 0
+    }
+  },
+  "failed_tests": [
+    {
+      "test_id": "ALM_001",
+      "component": "AgentLifecycleManager",
+      "requirement": "1.1",
+      "error": "2025-09-25 16:02:36,105 - prometheus_exporter - INFO - Using new daemon-based monitoring system\n2025-09-25 16:02:36,105 - prometheus_exporter - INFO - Daemon-based metrics initialized\n2025-09-25 16:02:36,105 - prometheus_exporter - INFO - Metrics export started\n2025-09-25 16:02:36,105 - prometheus_exporter - INFO - Using daemon HTTP server, not starting local server\nTraceback (most recent call last):\n  File \"/Users/lou/kiro-2/kiro-ai-development-hackathon/./src/multi_perspective_ghostbusters/agent_lifecycle_manager.py\", line 290, in <module>\n    main()\n  File \"/Users/lou/kiro-2/kiro-ai-development-hackathon/./src/multi_perspective_ghostbusters/agent_lifecycle_manager.py\", line 276, in main\n    print(f\"Context: {manager.bounded_context.name}\")\nAttributeError: 'AgentLifecycleManager' object has no attribute 'bounded_context'\n"
+    }
+  ]
+}

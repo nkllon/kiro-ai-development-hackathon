@@ -1,0 +1,25 @@
+apiVersion: 1
+
+datasources:
+  - name: Local Prometheus
+    type: prometheus
+    access: proxy
+    url: http://observatory-prometheus:9090
+    isDefault: false
+    editable: true
+    
+  - name: Central Prometheus
+    type: prometheus
+    access: proxy
+    url: http://${CENTRAL_PROMETHEUS_HOST:-vonnegut}:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      timeInterval: "15s"
+      
+  - name: Redis
+    type: redis-datasource
+    access: proxy
+    url: redis://${REDIS_HOST:-vonnegut}:${REDIS_PORT:-6379}
+    database: 2
+    editable: true

@@ -1,0 +1,41 @@
+{
+  "evidence_id": "739a6982-8082-4389-8342-18736a4737f3",
+  "timestamp": "2025-09-27T04:27:13.056989",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.056982",
+    "data_type": "dict"
+  },
+  "integrity_hash": "e4a46cd6f51340b2bead86fcd083716f90d7ac98aaf849a2cc77848e3a64d341",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/fastapi/datastructures.py",
+    "file_size": 5766,
+    "line_count": 205,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "starlette.datastructures.Address",
+        "starlette.datastructures.URL",
+        "fastapi._compat.PYDANTIC_V2",
+        "starlette.datastructures",
+        "starlette.datastructures.State",
+        "fastapi._compat.GetJsonSchemaHandler",
+        "fastapi._compat.with_info_plain_validator_function",
+        "starlette.datastructures.UploadFile",
+        "starlette.datastructures.QueryParams",
+        "starlette.datastructures.FormData",
+        "starlette.datastructures.Headers",
+        "fastapi._compat.CoreSchema",
+        "fastapi._compat.JsonSchemaValue",
+        "fastapi._compat"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.056975"
+  }
+}

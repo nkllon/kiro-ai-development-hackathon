@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Performance Chart Debug</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <h1>Performance Chart Debug</h1>
+    <canvas id="performanceChart" width="400" height="200"></canvas>
+    <div id="status">Initializing...</div>
+    
+    <script>
+        console.log('🔍 Starting performance chart debug...');
+        
+        // Test API call first
+        async function testAPI() {
+            try {
+                console.log('🔍 Testing API call...');
+                const response = await fetch('http://localhost:8888/api/dashboard/all-data');
+                const data = await response.json();
+                console.log('✅ API Response:', data);
+                
+                if (data.metrics) {
+                    console.log('✅ Metrics found:', data.metrics);
+                    document.getElementById('status').innerHTML = `
+                        <p>✅ API Working</p>
+                        <p>Response Time: ${data.metrics.responseTime}ms</p>
+                        <p>Error Rate: ${data.metrics.errorRate}%</p>
+                        <p>Throughput: ${data.metrics.throughput} ops/sec</p>
+                    `;
+                    return data;
+                } else {
+                    console.error('❌ No metrics in response');
+                    document.getElementById('status').innerHTML = '❌ No metrics in API response';
+                }
+            } catch (error) {
+                console.error('❌ API Error:', error);
+                document.getElementById('status').innerHTML = `❌ API Error: ${error.message}`;
+            }
+        }
+        
+        // Test Chart.js
+        async function testChart() {
+            try {
+                console.log('🔍 Testing Chart.js...');
+                
+                if (typeof Chart === 'undefined') {
+                    throw new Error('Chart.js not loaded');
+                }
+                
+                const canvas = document.getElementById('performanceChart');
+                if (!canvas) {
+                    throw new Error('Canvas not found');
+                }
+                
+                const chart = new Chart(canvas, {
+                    type: 'line',
+                    data: {
+                        labels: ['Test'],
+                        datasets: [{
+                            label: 'Test Data',
+                            data: [100],
+                            borderColor: '#3498db'
+                        }]
+                    },
+                    options: {
+                        responsive: true
+                    }
+                });
+                
+                console.log('✅ Chart created successfully');
+                document.getElementById('status').innerHTML += '<br>✅ Chart.js Working';
+                
+            } catch (error) {
+                console.error('❌ Chart Error:', error);
+                document.getElementById('status').innerHTML += `<br>❌ Chart Error: ${error.message}`;
+            }
+        }
+        
+        // Run tests
+        window.addEventListener('load', async () => {
+            await testAPI();
+            await testChart();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "evidence_id": "50e99516-681a-49e5-ba3b-5751e742c698",
+  "timestamp": "2025-09-27T04:27:13.218331",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.218322",
+    "data_type": "dict"
+  },
+  "integrity_hash": "cdbce230b9b8cb9ee2f4474d99262d391d468b7d0601869272a3cb1896ad90ce",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_hooks/model_armor/model_armor.py",
+    "file_size": 21499,
+    "line_count": 568,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi",
+        "fastapi.HTTPException"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.218308"
+  }
+}

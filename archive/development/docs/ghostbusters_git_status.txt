@@ -1,0 +1,7 @@
+?? .kiro/specs/ghostbusters-productivity-triage/
+?? ghostbusters_domain_triage.txt
+?? ghostbusters_git_status.txt
+?? ghostbusters_phase1_report.txt
+?? ghostbusters_test_validation.txt
+?? src/beast_mode/ghostbusters/productivity_triage/
+?? tests/unit/beast_mode/ghostbusters/

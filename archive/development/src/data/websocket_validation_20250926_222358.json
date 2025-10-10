@@ -1,0 +1,61 @@
+{
+  "timestamp": "2025-09-26T22:23:58.835368",
+  "domain": "observatory.nkllon.com",
+  "upgrade_tests": [
+    {
+      "endpoint": "/ws/emoji-rain",
+      "response_time": 0.43338489532470703,
+      "status_code": "404",
+      "success": false,
+      "error": null
+    },
+    {
+      "endpoint": "/ws/observatory",
+      "response_time": 0.4325830936431885,
+      "status_code": "404",
+      "success": false,
+      "error": null
+    },
+    {
+      "endpoint": "/ws/anomalies",
+      "response_time": 0.2911531925201416,
+      "status_code": "404",
+      "success": false,
+      "error": null
+    },
+    {
+      "endpoint": "/ws/doctor-status",
+      "response_time": 0.35675597190856934,
+      "status_code": "404",
+      "success": false,
+      "error": null
+    }
+  ],
+  "connection_tests": [
+    {
+      "endpoint": "/ws/emoji-rain",
+      "connection_time": 2.6793220043182373,
+      "success": true,
+      "error": null
+    },
+    {
+      "endpoint": "/ws/observatory",
+      "connection_time": 2.692776918411255,
+      "success": true,
+      "error": null
+    },
+    {
+      "endpoint": "/ws/anomalies",
+      "connection_time": 2.5554280281066895,
+      "success": true,
+      "error": null
+    },
+    {
+      "endpoint": "/ws/doctor-status",
+      "connection_time": 2.6204161643981934,
+      "success": true,
+      "error": null
+    }
+  ],
+  "overall_status": "partially_functional"
+}

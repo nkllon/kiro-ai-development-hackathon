@@ -647,6 +647,7 @@ def load_scenario_from_json(file_path: str) -> FailureScenario:
         expected_priority_order=data["expected_priority_order"],
         expected_categories=data["expected_categories"],
         context=data["context"]
+    )
 
     def get_interface_metadata(self):
         """Get interface metadata for registry."""

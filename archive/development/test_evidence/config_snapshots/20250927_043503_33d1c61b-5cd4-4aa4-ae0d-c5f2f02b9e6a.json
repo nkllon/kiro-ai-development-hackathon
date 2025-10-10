@@ -1,0 +1,20 @@
+{
+  "evidence_id": "33d1c61b-5cd4-4aa4-ae0d-c5f2f02b9e6a",
+  "timestamp": "2025-09-27T04:35:03.797132",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.797126",
+    "data_type": "dict"
+  },
+  "integrity_hash": "8d056b4377273e5c20f2e24e7c62729ad28214f93b578eb18e985f689ff4fea6",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/discovery_endpoints/ui_discovery_endpoints.py",
+    "file_size": 636,
+    "line_count": 22,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.797124"
+  }
+}

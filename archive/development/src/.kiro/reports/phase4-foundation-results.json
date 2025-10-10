@@ -1,0 +1,20 @@
+{
+  "status": "complete",
+  "specs_processed": 2,
+  "successful": 2,
+  "total_tasks_generated": 30,
+  "results": [
+    {
+      "spec_name": "beast-mode-rebuild",
+      "success": true,
+      "tasks_generated": 15,
+      "error": null
+    },
+    {
+      "spec_name": "subprocess-safety-requirements",
+      "success": true,
+      "tasks_generated": 15,
+      "error": null
+    }
+  ]
+}

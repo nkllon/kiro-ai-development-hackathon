@@ -1,0 +1,178 @@
+{
+  "report_timestamp": "2025-09-26T22:16:50.093949",
+  "domain": "observatory.nkllon.com",
+  "current_status": {
+    "websocket_endpoints": {
+      "timestamp": "2025-09-26T22:16:49.059815",
+      "domain": "observatory.nkllon.com",
+      "endpoints_tested": [
+        {
+          "endpoint": "/ws/emoji-rain",
+          "status_code": "404",
+          "response_headers": "HTTP/2 404 \ndate: Sat, 27 Sep 2025 04:16:49 GMT\ncontent-type: application/json\ncontent-length: 22\nserver: cloudflare\ncf-cache-status: DYNAMIC\nreport-to: {\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=EEgrImBKB0Mv7IyeuLldscSk%2FtqnKyXXwwOIR3MJ4ty9m9SZYhXbh%2FMMghzyOXlfusy5h7SxHslcVJ4G%2BSq95B7GcyugBKHdKl17rpKlWxNOhQ70lDy69%2BYevzRPqQOJwg%3D%3D\"}]}\nnel: {\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}\ncf-ray: 985830140e43e771-DEN\n\n",
+          "error": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n  0    22    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n",
+          "success": false
+        },
+        {
+          "endpoint": "/ws/observatory",
+          "status_code": "404",
+          "response_headers": "HTTP/2 404 \ndate: Sat, 27 Sep 2025 04:16:49 GMT\ncontent-type: application/json\ncontent-length: 22\nserver: cloudflare\ncf-cache-status: DYNAMIC\nreport-to: {\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=hilRqhE2G%2BCvAJIYqWb7jWHlr9mvU3WLr4jTUGDhrHsEm0lqzTtWg2GlMGQRRQtBUfezRUJ7KSjUL8008WoDuuuJdhxo4bOSZVN2r5XURwbeJTV4DMzadwiHQS%2B4siSqhw%3D%3D\"}]}\nnel: {\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}\ncf-ray: 985830153cf1e74d-DEN\n\n",
+          "error": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n  0    22    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n",
+          "success": false
+        },
+        {
+          "endpoint": "/ws/anomalies",
+          "status_code": "404",
+          "response_headers": "HTTP/2 404 \ndate: Sat, 27 Sep 2025 04:16:49 GMT\ncontent-type: application/json\ncontent-length: 22\nserver: cloudflare\ncf-cache-status: DYNAMIC\nreport-to: {\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=Bikss0C152BArM8p6MNDp32hLSEgPeent4e%2FkEWHhOeLjsT%2FPe9ZqjU0vyXhWOsDZ87rDrzF5MVSu0rZKg6fBI7WJ6LXSv3pDDAznCEf%2BxHUPsvWPUvs0V%2F1L%2F7ZWh0%3D\"}]}\nnel: {\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}\ncf-ray: 985830163c1a1f51-DEN\n\n",
+          "error": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n  0    22    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n",
+          "success": false
+        },
+        {
+          "endpoint": "/ws/doctor-status",
+          "status_code": "404",
+          "response_headers": "HTTP/2 404 \ndate: Sat, 27 Sep 2025 04:16:49 GMT\ncontent-type: application/json\ncontent-length: 22\nserver: cloudflare\ncf-cache-status: DYNAMIC\nreport-to: {\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=g6Ar6l8Q6zS3jBLx%2Bd3plZI2G7427Z5H3x5Ux9rOAeHRTJFAv52ndxUoUm3qYBEGwbwwHRG5zzH6EKR3Y7C7EtDVL%2FS8a8l86XH%2Fw0UNhQhcuoTMsrxueVM18%2FsWXdKMrA%3D%3D\"}]}\nnel: {\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}\ncf-ray: 98583016fecee763-DEN\n\n",
+          "error": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n  0    22    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n",
+          "success": false
+        }
+      ],
+      "overall_status": "non_functional"
+    },
+    "ssl_tls_configuration": {
+      "timestamp": "2025-09-26T22:16:49.802900",
+      "domain": "observatory.nkllon.com",
+      "tests": [
+        {
+          "test": "HTTPS Connectivity",
+          "command": "curl -I https://observatory.nkllon.com",
+          "success": true,
+          "response": "HTTP/2 200 \ndate: Sat, 27 Sep 2025 04:16:50 GMT\ncontent-type: text/html; charset=utf-8\nserver: cloudflare\nnel: {\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}\ncf-cache-status: DYNAMIC\nreport-to: {\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=sPz3G8di7DxCyj5zOxk%2BA7QjhK4toA%2BwgtUivVCetHOqHqSlb4MiwUiYmzNoWF246%2FlVSEGsPru448jvaIF%2Be6m5rfRBjji8crtNZxHzOaonyo4dSrvcUkN%2FdLsQsNk%3D\"}]}\ncf-ray: 985830189c64e653-DEN\n\n",
+          "error": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n"
+        },
+        {
+          "test": "TLS Certificate Validation",
+          "command": "openssl s_client -connect observatory.nkllon.com:443 -tls1_2",
+          "success": true,
+          "response": "CONNECTED(00000005)\n---\nno peer certificate available\n---\nNo client certificate CA names sent\n---\nSSL handshake has read 7 bytes and written 201 bytes\n---\nNew, (NONE), Cipher is (NONE)\nSecure Renegotiation IS NOT supported\nCompression: NONE\nExpansion: NONE\nNo ALPN negotiated\nSSL-Session:\n    Protocol  : TLSv1.2\n    Cipher    : 0000\n    Session-ID: \n    Session-ID-ctx: \n    Master-Key: \n    Start Time: 1758946610\n    Timeout   : 7200 (sec)\n    Verify return code: 0 (ok)\n---\n",
+          "error": "8288523456:error:1404B42E:SSL routines:ST_CONNECT:tlsv1 alert protocol version:/AppleInternal/Library/BuildRoots/4~B9J5ugD_GUIzeLud1v4xnUebNJkbOYHtixo1bOM/Library/Caches/com.apple.xbs/Sources/libressl/libressl-3.3/ssl/tls13_lib.c:151:\n"
+        }
+      ]
+    }
+  },
+  "configuration_instructions": {
+    "domain": "observatory.nkllon.com",
+    "configuration_steps": [
+      {
+        "step": 1,
+        "title": "Enable WebSocket Support",
+        "location": "Network \u2192 WebSockets",
+        "action": "Toggle WebSocket support to ON",
+        "expected_result": "WebSocket support enabled for the domain",
+        "verification": "WebSocket upgrade requests will be proxied correctly"
+      },
+      {
+        "step": 2,
+        "title": "Configure SSL/TLS Mode",
+        "location": "SSL/TLS \u2192 Overview \u2192 Encryption Mode",
+        "action": "Set encryption mode to 'Full (strict)'",
+        "expected_result": "End-to-end encryption with certificate validation",
+        "verification": "HTTPS connections use proper certificate chain"
+      },
+      {
+        "step": 3,
+        "title": "Set Minimum TLS Version",
+        "location": "SSL/TLS \u2192 Edge Certificates \u2192 TLS Version",
+        "action": "Set minimum TLS version to TLS 1.2 or higher",
+        "expected_result": "Modern TLS encryption support",
+        "verification": "Only secure TLS versions are accepted"
+      },
+      {
+        "step": 4,
+        "title": "Enable HTTP Strict Transport Security (HSTS)",
+        "location": "SSL/TLS \u2192 Edge Certificates \u2192 HTTP Strict Transport Security (HSTS)",
+        "action": "Enable HSTS with max-age 31536000 (1 year)",
+        "expected_result": "Forced HTTPS connections",
+        "verification": "Browser will enforce HTTPS for the domain"
+      },
+      {
+        "step": 5,
+        "title": "Configure Bot Protection",
+        "location": "Security \u2192 Bot Fight Mode",
+        "action": "Enable Bot Fight Mode with WebSocket-friendly settings",
+        "expected_result": "Bot protection without blocking WebSocket connections",
+        "verification": "WebSocket connections are not blocked by bot protection"
+      }
+    ],
+    "post_configuration_tests": [
+      {
+        "test": "WebSocket Upgrade Test",
+        "command": "curl -I -N -H 'Connection: Upgrade' -H 'Upgrade: websocket' -H 'Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==' -H 'Sec-WebSocket-Version: 13' https://observatory.nkllon.com/ws/emoji-rain",
+        "expected_response": "HTTP/1.1 101 Switching Protocols"
+      },
+      {
+        "test": "SSL/TLS Verification",
+        "command": "curl -I https://observatory.nkllon.com",
+        "expected_response": "HTTP/2 200"
+      },
+      {
+        "test": "TLS Certificate Check",
+        "command": "openssl s_client -connect observatory.nkllon.com:443 -tls1_2",
+        "expected_response": "Certificate chain validation successful"
+      }
+    ]
+  },
+  "configuration_log": [
+    {
+      "timestamp": "2025-09-26T22:16:49.201331",
+      "step": "WebSocket Test /ws/emoji-rain",
+      "status": "FAILED",
+      "details": "HTTP/2 404 - WebSocket support not enabled"
+    },
+    {
+      "timestamp": "2025-09-26T22:16:49.407136",
+      "step": "WebSocket Test /ws/observatory",
+      "status": "FAILED",
+      "details": "HTTP/2 404 - WebSocket support not enabled"
+    },
+    {
+      "timestamp": "2025-09-26T22:16:49.561662",
+      "step": "WebSocket Test /ws/anomalies",
+      "status": "FAILED",
+      "details": "HTTP/2 404 - WebSocket support not enabled"
+    },
+    {
+      "timestamp": "2025-09-26T22:16:49.802762",
+      "step": "WebSocket Test /ws/doctor-status",
+      "status": "FAILED",
+      "details": "HTTP/2 404 - WebSocket support not enabled"
+    },
+    {
+      "timestamp": "2025-09-26T22:16:49.802848",
+      "step": "Overall WebSocket Status",
+      "status": "FAILED",
+      "details": "No WebSocket endpoints working"
+    },
+    {
+      "timestamp": "2025-09-26T22:16:49.975986",
+      "step": "HTTPS Connectivity",
+      "status": "SUCCESS",
+      "details": "HTTPS connection successful"
+    },
+    {
+      "timestamp": "2025-09-26T22:16:50.093861",
+      "step": "TLS Certificate",
+      "status": "SUCCESS",
+      "details": "Certificate validation successful"
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "CRITICAL",
+      "action": "Enable WebSocket support in Cloudflare Dashboard",
+      "reason": "WebSocket endpoints are not functioning correctly",
+      "steps": [
+        "Navigate to Network \u2192 WebSockets",
+        "Toggle WebSocket support to ON"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "User-Agent": "Observatory-Internal/1.0 (WebSocket-Fallback)",
+  "X-Observatory-Client": "internal-polling",
+  "X-Requested-With": "XMLHttpRequest",
+  "Accept": "application/json",
+  "Cache-Control": "no-cache",
+  "X-Polling-Reason": "websocket-fallback",
+  "X-Observatory-Version": "1.0.0",
+  "X-Observatory-Session": "internal-session"
+}

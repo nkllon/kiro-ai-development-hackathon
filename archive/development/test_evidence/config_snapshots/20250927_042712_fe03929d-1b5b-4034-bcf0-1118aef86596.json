@@ -1,0 +1,48 @@
+{
+  "evidence_id": "fe03929d-1b5b-4034-bcf0-1118aef86596",
+  "timestamp": "2025-09-27T04:27:12.835083",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.835075",
+    "data_type": "dict"
+  },
+  "integrity_hash": "c1aa078d2b1772c2afb55837d5e6be431fdf9a39ca0b850d690445527fc2b4df",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/prompts/prompt_endpoints.py",
+    "file_size": 22356,
+    "line_count": 663,
+    "route_analysis": {
+      "total_routes": 8,
+      "websocket_routes": [],
+      "http_routes": [
+        "/prompts/list",
+        "/prompts/{prompt_id}",
+        "/prompts/{prompt_id}/info",
+        "/prompts",
+        "/prompts/{prompt_id}",
+        "/prompts/{prompt_id}",
+        "/prompts/{prompt_id}",
+        "/utils/dotprompt_json_converter"
+      ],
+      "route_handlers": {
+        "/prompts/list": "list_prompts",
+        "/prompts/{prompt_id}": "patch_prompt",
+        "/prompts/{prompt_id}/info": "get_prompt_info",
+        "/prompts": "create_prompt",
+        "/utils/dotprompt_json_converter": "convert_prompt_file_to_json"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi.UploadFile",
+        "fastapi.File",
+        "fastapi",
+        "fastapi.HTTPException"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.835061"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "evidence_id": "db96e026-deeb-4591-ab6f-8d7d0f800777",
+  "timestamp": "2025-09-27T04:35:03.608318",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.608308",
+    "data_type": "dict"
+  },
+  "integrity_hash": "7de9510674faa3593d401bade473405f42ee5332d1457a714663971132024604",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_hooks/aporia_ai/aporia_ai.py",
+    "file_size": 7848,
+    "line_count": 241,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.608306"
+  }
+}

@@ -1,0 +1,219 @@
+# DAG Orchestration Production Configuration
+# ==========================================
+
+# Core orchestration settings
+orchestration:
+  max_workers: 8
+  execution_strategy: "ADAPTIVE"  # PARALLEL, SEQUENTIAL, ADAPTIVE, CONSERVATIVE
+  default_timeout: 3600  # seconds
+  retry_count: 3
+  
+# Resource management
+resources:
+  limits:
+    max_cpu_percent: 80
+    max_memory_percent: 75
+    max_disk_io_mbps: 100
+    max_network_mbps: 50
+    max_concurrent_tasks: 12
+  
+  monitoring:
+    check_interval: 30  # seconds
+    cleanup_interval: 300  # seconds
+    memory_cleanup_threshold: 70  # percent
+    
+# Redis configuration
+redis:
+  url: "redis://redis.production.local:6379"
+  password: "${REDIS_PASSWORD}"  # Use environment variable
+  timeout: 30
+  retry_attempts: 3
+  persistence: true
+  cluster_mode: false
+  
+# LLM provider configuration
+llm:
+  cost_budget: 100.0  # dollars
+  budget_alert_threshold: 0.8  # 80% of budget
+  
+  providers:
+    cursor:
+      enabled: true
+      priority: 1
+      cost_model: "subscription"
+      max_concurrent: 4
+      timeout: 300
+      
+    claude:
+      enabled: true
+      priority: 2
+      cost_model: "pay_per_token"
+      cost_per_token: 0.015
+      max_concurrent: 2
+      timeout: 600
+      rate_limit_delay: 1.0
+      
+    kiro:
+      enabled: true
+      priority: 3
+      cost_model: "subscription"
+      max_concurrent: 3
+      timeout: 300
+      
+  fallback:
+    enable_simulation: true
+    simulation_delay: 2.0
+    
+# Monitoring and observability
+monitoring:
+  prometheus:
+    enabled: true
+    port: 9090
+    metrics_path: "/metrics"
+    
+  health_checks:
+    enabled: true
+    port: 8888
+    endpoints:
+      health: "/health"
+      ready: "/ready"
+      status: "/status"
+    
+  logging:
+    level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+    format: "structured"  # structured, simple
+    correlation_ids: true
+    log_rotation: true
+    max_log_size_mb: 100
+    backup_count: 5
+    
+# Security configuration
+security:
+  authentication:
+    enabled: true
+    api_key_required: true
+    api_key_header: "X-API-Key"
+    
+  tls:
+    enabled: true
+    cert_file: "/etc/ssl/certs/dag-orchestration.crt"
+    key_file: "/etc/ssl/private/dag-orchestration.key"
+    
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 100
+    burst_size: 20
+    
+# Database configuration (for execution history)
+database:
+  type: "postgresql"  # sqlite, postgresql, mysql
+  url: "postgresql://dag_user:${DB_PASSWORD}@db.production.local:5432/dag_orchestration"
+  pool_size: 10
+  max_overflow: 20
+  echo: false  # Set to true for SQL debugging
+  
+# Backup configuration
+backup:
+  enabled: true
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  retention_days: 30
+  storage:
+    type: "s3"  # local, s3, gcs
+    bucket: "dag-orchestration-backups"
+    prefix: "production/"
+    
+# Integration settings
+integrations:
+  docker:
+    enabled: true
+    default_image: "ubuntu:20.04"
+    network_mode: "bridge"
+    cleanup_containers: true
+    
+  kubernetes:
+    enabled: false
+    namespace: "dag-orchestration"
+    service_account: "dag-orchestrator"
+    
+  ci_cd:
+    github_actions: true
+    webhook_secret: "${GITHUB_WEBHOOK_SECRET}"
+    
+# Alerting configuration
+alerting:
+  enabled: true
+  
+  channels:
+    slack:
+      enabled: true
+      webhook_url: "${SLACK_WEBHOOK_URL}"
+      channel: "#dag-orchestration-alerts"
+      
+    email:
+      enabled: true
+      smtp_server: "smtp.company.com"
+      smtp_port: 587
+      username: "${SMTP_USERNAME}"
+      password: "${SMTP_PASSWORD}"
+      recipients:
+        - "devops@company.com"
+        - "oncall@company.com"
+        
+    pagerduty:
+      enabled: true
+      integration_key: "${PAGERDUTY_INTEGRATION_KEY}"
+      
+  rules:
+    high_failure_rate:
+      threshold: 0.1  # 10% failure rate
+      duration: "5m"
+      severity: "warning"
+      
+    system_down:
+      threshold: 0  # Any health check failure
+      duration: "1m"
+      severity: "critical"
+      
+    high_cost:
+      threshold: 50.0  # $50 per hour
+      duration: "1h"
+      severity: "warning"
+      
+    resource_exhaustion:
+      cpu_threshold: 90  # percent
+      memory_threshold: 85  # percent
+      duration: "5m"
+      severity: "critical"
+      
+# Performance tuning
+performance:
+  task_batching:
+    enabled: true
+    batch_size: 5
+    batch_timeout: 60
+    
+  caching:
+    enabled: true
+    llm_response_cache: true
+    cache_ttl: 3600  # seconds
+    max_cache_size_mb: 500
+    
+  optimization:
+    auto_scaling: true
+    worker_adjustment_interval: 300  # seconds
+    performance_monitoring: true
+    
+# Development and debugging
+development:
+  debug_mode: false
+  profiling_enabled: false
+  test_mode: false
+  mock_llm_responses: false
+  
+# Feature flags
+features:
+  multi_modal_execution: true
+  cost_optimization: true
+  adaptive_scheduling: true
+  distributed_coordination: true
+  advanced_monitoring: true

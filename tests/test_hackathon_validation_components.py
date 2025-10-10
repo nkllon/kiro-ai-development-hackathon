@@ -271,7 +271,9 @@ def dangerous_function(user_input):
     subprocess.call(user_input, shell=True)
 
     # Hardcoded secrets
-    api_key = "sk-1234567890abcdef"
+    api_key = os.getenv("OPENAI_API_KEY", "")
+    if not api_key:
+        raise ValueError("OPENAI_API_KEY environment variable is required")
     password = "super_secret_password"
 
     return result

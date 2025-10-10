@@ -53,12 +53,12 @@ class DAGTaskExecutor(ReflectiveModule):
         self.module_id = "DAGTaskExecutor"
         self._config = config or {}
         self._logger = logging.getLogger(f"beast_mode.task_dag.{self.__class__.__name__}")
-        
+
         # Initialize parser
         self._parser = HierarchicalTaskParser(config)
         self._current_dag: Optional[TaskDAG] = None
         self._current_file_path: Optional[str] = None
-        
+
         # Task status mapping for file updates
         self._status_chars = {
             TaskStatus.NOT_STARTED: ' ',
@@ -67,8 +67,12 @@ class DAGTaskExecutor(ReflectiveModule):
             TaskStatus.FAILED: '!',
             TaskStatus.BLOCKED: '#'
         }
-        
-        self._logger.info(f"DAGTaskExecutor initialized")
+
+        # LLM execution mode configuration
+        self._execution_mode = self._config.get('execution_mode', 'traditional')  # 'traditional' or 'hybrid'
+        self._hybrid_executor = None
+
+        self._logger.info(f"DAGTaskExecutor initialized with execution_mode={self._execution_mode}")
     
     def get_module_info(self) -> Dict[str, Any]:
         """Get module information - RDI Compliant"""
@@ -340,3 +344,80 @@ class DAGTaskExecutor(ReflectiveModule):
                     })
         
         return ready_tasks
+
+    def execute_task_with_llm(self, task: HierarchicalTask, spec_path: str) -> Dict[str, Any]:
+        """
+        Execute task using hybrid LLM workflow (DeepSeek + Claude)
+
+        Args:
+            task: Task to execute
+            spec_path: Path to spec directory containing requirements.md and design.md
+
+        Returns:
+            Execution result with generated code and metadata
+        """
+        with self.trace_operation("execute_task_with_llm") as trace:
+            try:
+                # Lazy import hybrid executor
+                if self._hybrid_executor is None:
+                    from src.hybrid_code_generator import run_code_generation
+                    self._hybrid_executor = run_code_generation
+
+                # Load spec context
+                spec_requirements = self._load_spec_requirements(spec_path)
+
+                # Execute hybrid workflow
+                result = self._hybrid_executor(
+                    task_description=task.title,
+                    spec_requirements=spec_requirements
+                )
+
+                trace.output_result = {
+                    'task_id': task.task_id,
+                    'iterations': result.get('iteration_count', 0),
+                    'approval_status': result.get('approval_status', 'unknown'),
+                    'code_length': len(result.get('final_code', ''))
+                }
+
+                self._logger.info(f"Hybrid LLM execution complete for task {task.number}: {result.get('approval_status')}")
+
+                return {
+                    'success': True,
+                    'task_id': task.task_id,
+                    'generated_code': result.get('final_code', result.get('generated_code', '')),
+                    'review_feedback': result.get('review_feedback', ''),
+                    'approval_status': result.get('approval_status', 'unknown'),
+                    'iterations': result.get('iteration_count', 0)
+                }
+
+            except Exception as e:
+                self._logger.error(f"Hybrid LLM execution failed for task {task.task_id}: {e}")
+                trace.output_result = {'success': False, 'error': str(e)}
+                return {
+                    'success': False,
+                    'task_id': task.task_id,
+                    'error': str(e)
+                }
+
+    def _load_spec_requirements(self, spec_path: str) -> str:
+        """Load requirements and design context from spec directory"""
+        try:
+            from pathlib import Path
+            spec_dir = Path(spec_path)
+
+            requirements_file = spec_dir / "requirements.md"
+            design_file = spec_dir / "design.md"
+
+            context_parts = []
+
+            if requirements_file.exists():
+                context_parts.append(f"## Requirements\n{requirements_file.read_text()}")
+
+            if design_file.exists():
+                context_parts.append(f"## Design\n{design_file.read_text()}")
+
+            return "\n\n".join(context_parts) if context_parts else "Follow Python best practices"
+
+        except Exception as e:
+            self._logger.warning(f"Failed to load spec requirements: {e}")
+            return "Follow Python best practices"

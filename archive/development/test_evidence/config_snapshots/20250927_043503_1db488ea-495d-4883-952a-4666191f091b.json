@@ -1,0 +1,20 @@
+{
+  "evidence_id": "1db488ea-495d-4883-952a-4666191f091b",
+  "timestamp": "2025-09-27T04:35:03.809784",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.809777",
+    "data_type": "dict"
+  },
+  "integrity_hash": "25be1f554f36ac1beba15f384554739bde8850a0baae9d77e59c4c2360d19091",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/fastapi/security/open_id_connect_url.py",
+    "file_size": 2722,
+    "line_count": 85,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.809775"
+  }
+}

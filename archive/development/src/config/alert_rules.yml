@@ -1,0 +1,265 @@
+# MSP SSL Chaos Tamer - Prometheus Alert Rules
+# Comprehensive alerting for certificate management operations
+
+groups:
+- name: msp_ssl_certificate_alerts
+  rules:
+  # Certificate expiration alerts
+  - alert: CertificateExpiringSoon
+    expr: msp_ssl_certificate_expiry_days < 30 and msp_ssl_certificate_expiry_days > 0
+    for: 5m
+    labels:
+      severity: warning
+      category: certificate_lifecycle
+      msp_priority: medium
+    annotations:
+      summary: "Certificate expiring soon for {{ $labels.domain }}"
+      description: "Certificate for domain {{ $labels.domain }} (client: {{ $labels.client_id }}) expires in {{ $value }} days. Renewal should be initiated soon."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/certificate-expiry"
+      dashboard_url: "https://grafana.your-domain.com/d/certificates/certificate-overview?var-domain={{ $labels.domain }}"
+
+  - alert: CertificateExpiringCritical
+    expr: msp_ssl_certificate_expiry_days < 7 and msp_ssl_certificate_expiry_days > 0
+    for: 1m
+    labels:
+      severity: critical
+      category: certificate_lifecycle
+      msp_priority: high
+    annotations:
+      summary: "Certificate expiring very soon for {{ $labels.domain }}"
+      description: "URGENT: Certificate for domain {{ $labels.domain }} (client: {{ $labels.client_id }}) expires in {{ $value }} days. Immediate action required!"
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/emergency-renewal"
+      dashboard_url: "https://grafana.your-domain.com/d/certificates/certificate-overview?var-domain={{ $labels.domain }}"
+
+  - alert: CertificateExpired
+    expr: msp_ssl_certificate_expiry_days < 0
+    for: 0m
+    labels:
+      severity: critical
+      category: certificate_lifecycle
+      msp_priority: critical
+    annotations:
+      summary: "Certificate EXPIRED for {{ $labels.domain }}"
+      description: "CRITICAL: Certificate for domain {{ $labels.domain }} (client: {{ $labels.client_id }}) has expired {{ $value | abs }} days ago. Service may be impacted!"
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/expired-certificate"
+      dashboard_url: "https://grafana.your-domain.com/d/certificates/certificate-overview?var-domain={{ $labels.domain }}"
+
+- name: msp_ssl_renewal_alerts
+  rules:
+  # Certificate renewal alerts
+  - alert: CertificateRenewalFailed
+    expr: increase(msp_ssl_renewal_failures_total[1h]) > 0
+    for: 0m
+    labels:
+      severity: critical
+      category: certificate_operations
+      msp_priority: high
+    annotations:
+      summary: "Certificate renewal failed for {{ $labels.domain }}"
+      description: "Failed to renew certificate for domain {{ $labels.domain }} (client: {{ $labels.client_id }}, CA: {{ $labels.ca_provider }}). Error: {{ $labels.error_type }}"
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/renewal-failure"
+      dashboard_url: "https://grafana.your-domain.com/d/renewals/renewal-operations?var-domain={{ $labels.domain }}"
+
+  - alert: CertificateRenewalRetryExhausted
+    expr: msp_ssl_renewal_retry_count > 3
+    for: 5m
+    labels:
+      severity: critical
+      category: certificate_operations
+      msp_priority: critical
+    annotations:
+      summary: "Certificate renewal retry limit exceeded for {{ $labels.domain }}"
+      description: "Certificate renewal for {{ $labels.domain }} has failed {{ $value }} times. Manual intervention required."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/manual-renewal"
+
+  - alert: RenewalQueueBacklog
+    expr: msp_ssl_renewal_queue_size > 50
+    for: 10m
+    labels:
+      severity: warning
+      category: system_performance
+      msp_priority: medium
+    annotations:
+      summary: "Large renewal queue backlog detected"
+      description: "Renewal queue has {{ $value }} pending certificates. System may be overloaded or experiencing issues."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/queue-management"
+
+- name: msp_ssl_ca_provider_alerts
+  rules:
+  # Certificate Authority provider alerts
+  - alert: CAProviderDown
+    expr: msp_ssl_ca_provider_health == 0
+    for: 2m
+    labels:
+      severity: critical
+      category: external_dependency
+      msp_priority: high
+    annotations:
+      summary: "Certificate Authority {{ $labels.ca_provider }} is down"
+      description: "CA provider {{ $labels.ca_provider }} is not responding to health checks. Certificate operations may be impacted."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/ca-provider-issues"
+
+  - alert: CAProviderRateLimitApproaching
+    expr: msp_ssl_ca_rate_limit_usage > 0.8
+    for: 5m
+    labels:
+      severity: warning
+      category: external_dependency
+      msp_priority: medium
+    annotations:
+      summary: "CA provider {{ $labels.ca_provider }} rate limit approaching"
+      description: "Rate limit usage for {{ $labels.ca_provider }} is at {{ $value | humanizePercentage }}. Consider throttling requests."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/rate-limit-management"
+
+  - alert: CAProviderRateLimitExceeded
+    expr: msp_ssl_ca_rate_limit_exceeded_total > 0
+    for: 1m
+    labels:
+      severity: critical
+      category: external_dependency
+      msp_priority: high
+    annotations:
+      summary: "CA provider {{ $labels.ca_provider }} rate limit exceeded"
+      description: "Rate limit exceeded for {{ $labels.ca_provider }}. Certificate operations are being throttled."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/rate-limit-exceeded"
+
+- name: msp_ssl_system_alerts
+  rules:
+  # System health alerts
+  - alert: MSPSSLTamerDown
+    expr: up{job="msp-ssl-tamer"} == 0
+    for: 1m
+    labels:
+      severity: critical
+      category: system_health
+      msp_priority: critical
+    annotations:
+      summary: "MSP SSL Chaos Tamer is down"
+      description: "MSP SSL Chaos Tamer application is not responding. All certificate operations are impacted."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/application-down"
+
+  - alert: HighErrorRate
+    expr: rate(msp_ssl_errors_total[5m]) > 0.1
+    for: 5m
+    labels:
+      severity: warning
+      category: system_performance
+      msp_priority: medium
+    annotations:
+      summary: "High error rate detected"
+      description: "Error rate is {{ $value | humanize }} errors per second over the last 5 minutes."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/high-error-rate"
+
+  - alert: DatabaseConnectionIssues
+    expr: msp_ssl_database_connection_errors_total > 0
+    for: 2m
+    labels:
+      severity: critical
+      category: system_health
+      msp_priority: high
+    annotations:
+      summary: "Database connection issues detected"
+      description: "Database connection errors detected. Certificate data may not be accessible."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/database-issues"
+
+  - alert: HighMemoryUsage
+    expr: (process_resident_memory_bytes{job="msp-ssl-tamer"} / 1024 / 1024) > 1024
+    for: 10m
+    labels:
+      severity: warning
+      category: system_performance
+      msp_priority: low
+    annotations:
+      summary: "High memory usage detected"
+      description: "MSP SSL Tamer is using {{ $value | humanize }}MB of memory."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/memory-usage"
+
+  - alert: DiskSpaceLow
+    expr: (node_filesystem_avail_bytes{mountpoint="/app/data"} / node_filesystem_size_bytes{mountpoint="/app/data"}) < 0.1
+    for: 5m
+    labels:
+      severity: warning
+      category: system_resources
+      msp_priority: medium
+    annotations:
+      summary: "Low disk space on data volume"
+      description: "Data volume has less than 10% free space remaining."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/disk-space"
+
+- name: msp_ssl_business_alerts
+  rules:
+  # Business logic alerts
+  - alert: ClientCertificateInventoryEmpty
+    expr: msp_ssl_client_certificate_count == 0
+    for: 30m
+    labels:
+      severity: warning
+      category: business_logic
+      msp_priority: low
+    annotations:
+      summary: "Client {{ $labels.client_id }} has no certificates"
+      description: "Client {{ $labels.client_id }} has no certificates in inventory. This may indicate a configuration issue."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/empty-inventory"
+
+  - alert: UnusualRenewalActivity
+    expr: rate(msp_ssl_renewals_total[1h]) > 10
+    for: 15m
+    labels:
+      severity: warning
+      category: business_logic
+      msp_priority: medium
+    annotations:
+      summary: "Unusual certificate renewal activity detected"
+      description: "Certificate renewal rate is {{ $value | humanize }} per hour, which is unusually high."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/unusual-activity"
+
+  - alert: CertificateValidationFailures
+    expr: increase(msp_ssl_certificate_validation_failures_total[1h]) > 5
+    for: 5m
+    labels:
+      severity: warning
+      category: certificate_operations
+      msp_priority: medium
+    annotations:
+      summary: "Multiple certificate validation failures"
+      description: "{{ $value }} certificate validation failures in the last hour."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/validation-failures"
+
+- name: msp_ssl_security_alerts
+  rules:
+  # Security-related alerts
+  - alert: UnauthorizedAccessAttempt
+    expr: increase(msp_ssl_auth_failures_total[5m]) > 10
+    for: 1m
+    labels:
+      severity: warning
+      category: security
+      msp_priority: high
+    annotations:
+      summary: "Multiple authentication failures detected"
+      description: "{{ $value }} authentication failures from {{ $labels.source_ip }} in the last 5 minutes."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/security-incident"
+
+  - alert: SuspiciousAPIActivity
+    expr: rate(msp_ssl_api_requests_total{status_code=~"4..|5.."}[5m]) > 1
+    for: 5m
+    labels:
+      severity: warning
+      category: security
+      msp_priority: medium
+    annotations:
+      summary: "High rate of API errors detected"
+      description: "High rate of API errors ({{ $value | humanize }} per second) may indicate malicious activity."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/api-security"
+
+  - alert: CertificateRevocationSpike
+    expr: increase(msp_ssl_revocations_total[1h]) > 5
+    for: 5m
+    labels:
+      severity: warning
+      category: security
+      msp_priority: high
+    annotations:
+      summary: "Unusual certificate revocation activity"
+      description: "{{ $value }} certificates revoked in the last hour, which is unusually high."
+      runbook_url: "https://docs.msp-ssl-tamer.com/runbooks/revocation-spike"

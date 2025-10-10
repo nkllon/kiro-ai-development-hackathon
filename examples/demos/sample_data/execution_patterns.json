@@ -1,0 +1,186 @@
+{
+  "description": "Sample execution patterns for AI Memory Palace demonstration",
+  "patterns": [
+    {
+      "execution_id": "data_proc_001",
+      "pattern_data": {
+        "task_type": "data_processing",
+        "parallel_workers": 4,
+        "data_size_mb": 150,
+        "complexity": "medium",
+        "input_format": "csv",
+        "output_format": "parquet"
+      },
+      "performance_metrics": {
+        "execution_time_seconds": 45.2,
+        "memory_usage_mb": 512,
+        "cpu_utilization": 0.75,
+        "parallelization_efficiency": 2.8,
+        "resource_utilization": 0.65,
+        "throughput_mb_per_sec": 3.32
+      }
+    },
+    {
+      "execution_id": "data_proc_002",
+      "pattern_data": {
+        "task_type": "data_processing",
+        "parallel_workers": 8,
+        "data_size_mb": 300,
+        "complexity": "high",
+        "input_format": "json",
+        "output_format": "parquet"
+      },
+      "performance_metrics": {
+        "execution_time_seconds": 62.1,
+        "memory_usage_mb": 1024,
+        "cpu_utilization": 0.85,
+        "parallelization_efficiency": 1.2,
+        "resource_utilization": 0.90,
+        "throughput_mb_per_sec": 4.83
+      }
+    },
+    {
+      "execution_id": "ml_train_001",
+      "pattern_data": {
+        "task_type": "ml_training",
+        "parallel_workers": 2,
+        "data_size_mb": 500,
+        "complexity": "high",
+        "model_type": "neural_network",
+        "epochs": 100
+      },
+      "performance_metrics": {
+        "execution_time_seconds": 180.5,
+        "memory_usage_mb": 2048,
+        "cpu_utilization": 0.95,
+        "parallelization_efficiency": 1.8,
+        "resource_utilization": 0.85,
+        "training_accuracy": 0.94
+      }
+    },
+    {
+      "execution_id": "web_scrape_001",
+      "pattern_data": {
+        "task_type": "web_scraping",
+        "parallel_workers": 6,
+        "data_size_mb": 50,
+        "complexity": "low",
+        "target_sites": 10,
+        "rate_limit_ms": 1000
+      },
+      "performance_metrics": {
+        "execution_time_seconds": 120.0,
+        "memory_usage_mb": 256,
+        "cpu_utilization": 0.45,
+        "parallelization_efficiency": 4.2,
+        "resource_utilization": 0.35,
+        "pages_per_second": 2.5
+      }
+    },
+    {
+      "execution_id": "data_proc_003",
+      "pattern_data": {
+        "task_type": "data_processing",
+        "parallel_workers": 12,
+        "data_size_mb": 800,
+        "complexity": "high",
+        "input_format": "xml",
+        "output_format": "json"
+      },
+      "performance_metrics": {
+        "execution_time_seconds": 95.3,
+        "memory_usage_mb": 1536,
+        "cpu_utilization": 0.88,
+        "parallelization_efficiency": 0.9,
+        "resource_utilization": 0.95,
+        "throughput_mb_per_sec": 8.39
+      }
+    },
+    {
+      "execution_id": "ml_inference_001",
+      "pattern_data": {
+        "task_type": "ml_inference",
+        "parallel_workers": 4,
+        "data_size_mb": 200,
+        "complexity": "medium",
+        "model_type": "transformer",
+        "batch_size": 32
+      },
+      "performance_metrics": {
+        "execution_time_seconds": 25.8,
+        "memory_usage_mb": 768,
+        "cpu_utilization": 0.70,
+        "parallelization_efficiency": 3.1,
+        "resource_utilization": 0.60,
+        "predictions_per_second": 124.0
+      }
+    },
+    {
+      "execution_id": "etl_pipeline_001",
+      "pattern_data": {
+        "task_type": "etl_pipeline",
+        "parallel_workers": 8,
+        "data_size_mb": 1200,
+        "complexity": "high",
+        "source_systems": 5,
+        "transformation_steps": 12
+      },
+      "performance_metrics": {
+        "execution_time_seconds": 240.7,
+        "memory_usage_mb": 2560,
+        "cpu_utilization": 0.82,
+        "parallelization_efficiency": 1.5,
+        "resource_utilization": 0.88,
+        "records_per_second": 2500.0
+      }
+    },
+    {
+      "execution_id": "image_proc_001",
+      "pattern_data": {
+        "task_type": "image_processing",
+        "parallel_workers": 6,
+        "data_size_mb": 400,
+        "complexity": "medium",
+        "image_count": 1000,
+        "operations": ["resize", "filter", "compress"]
+      },
+      "performance_metrics": {
+        "execution_time_seconds": 78.4,
+        "memory_usage_mb": 1024,
+        "cpu_utilization": 0.78,
+        "parallelization_efficiency": 2.3,
+        "resource_utilization": 0.72,
+        "images_per_second": 12.8
+      }
+    }
+  ],
+  "optimization_insights": [
+    {
+      "pattern_type": "data_processing",
+      "insights": [
+        "Optimal worker count for CSV processing: 4-6 workers",
+        "JSON processing benefits from higher parallelization",
+        "Memory usage scales linearly with data size",
+        "Parquet output format provides better compression"
+      ]
+    },
+    {
+      "pattern_type": "ml_training",
+      "insights": [
+        "GPU acceleration recommended for neural networks",
+        "Batch size affects memory usage significantly",
+        "Early stopping can reduce training time",
+        "Model checkpointing prevents data loss"
+      ]
+    },
+    {
+      "pattern_type": "web_scraping",
+      "insights": [
+        "Rate limiting prevents IP blocking",
+        "Parallel requests improve throughput",
+        "Error handling crucial for reliability",
+        "Caching reduces redundant requests"
+      ]
+    }
+  ]
+}

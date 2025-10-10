@@ -1,0 +1,250 @@
+name: Security Scanning
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run comprehensive security scans daily at 3 AM UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    # Allow manual triggering
+
+jobs:
+  credential-scan:
+    name: Credential Scanning
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for comprehensive scanning
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install security tools
+      run: |
+        pip install detect-secrets truffleHog3
+    
+    - name: Run detect-secrets baseline check
+      run: |
+        detect-secrets scan --all-files --baseline .secrets.baseline
+    
+    - name: Run comprehensive credential scan
+      run: |
+        # Scan for various credential patterns
+        python -c "
+        import os
+        import re
+        import json
+        from pathlib import Path
+        
+        # Credential patterns to detect
+        patterns = {
+            'api_key': r'(?i)(api[_-]?key|apikey)\s*[:=]\s*['\"]?([a-zA-Z0-9_-]{20,})['\"]?',
+            'password': r'(?i)(password|passwd|pwd)\s*[:=]\s*['\"]?([^'\"\\s]{8,})['\"]?',
+            'token': r'(?i)(token|auth[_-]?token)\s*[:=]\s*['\"]?([a-zA-Z0-9_-]{20,})['\"]?',
+            'secret': r'(?i)(secret|secret[_-]?key)\s*[:=]\s*['\"]?([a-zA-Z0-9_-]{20,})['\"]?',
+            'private_key': r'-----BEGIN [A-Z ]+PRIVATE KEY-----',
+            'aws_key': r'AKIA[0-9A-Z]{16}',
+            'github_token': r'ghp_[0-9a-zA-Z]{36}',
+            'slack_token': r'xox[baprs]-[0-9a-zA-Z-]{10,}',
+        }
+        
+        findings = []
+        for root, dirs, files in os.walk('.'):
+            # Skip .git and other irrelevant directories
+            dirs[:] = [d for d in dirs if not d.startswith('.git')]
+            
+            for file in files:
+                if file.endswith(('.py', '.yml', '.yaml', '.json', '.env', '.sh', '.md')):
+                    filepath = os.path.join(root, file)
+                    try:
+                        with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                            content = f.read()
+                            for pattern_name, pattern in patterns.items():
+                                matches = re.finditer(pattern, content, re.MULTILINE)
+                                for match in matches:
+                                    line_num = content[:match.start()].count('\\n') + 1
+                                    findings.append({
+                                        'file': filepath,
+                                        'line': line_num,
+                                        'type': pattern_name,
+                                        'match': match.group(0)[:50] + '...' if len(match.group(0)) > 50 else match.group(0)
+                                    })
+                    except Exception as e:
+                        print(f'Error scanning {filepath}: {e}')
+        
+        if findings:
+            print('⚠️  Potential credentials found:')
+            for finding in findings:
+                print(f'  {finding[\"file\"]}:{finding[\"line\"]} - {finding[\"type\"]}: {finding[\"match\"]}')
+            exit(1)
+        else:
+            print('✅ No hardcoded credentials detected')
+        "
+    
+    - name: Check for environment variable usage
+      run: |
+        # Verify that credential-related code uses environment variables
+        python -c "
+        import os
+        import re
+        from pathlib import Path
+        
+        violations = []
+        for py_file in Path('.').rglob('*.py'):
+            if '.git' in str(py_file) or '__pycache__' in str(py_file):
+                continue
+                
+            try:
+                content = py_file.read_text(encoding='utf-8', errors='ignore')
+                
+                # Check for hardcoded credential patterns
+                hardcoded_patterns = [
+                    r'password\s*=\s*['\"][^'\"]+['\"]',
+                    r'api_key\s*=\s*['\"][^'\"]+['\"]',
+                    r'secret\s*=\s*['\"][^'\"]+['\"]',
+                    r'token\s*=\s*['\"][^'\"]+['\"]',
+                ]
+                
+                for pattern in hardcoded_patterns:
+                    matches = re.finditer(pattern, content, re.IGNORECASE)
+                    for match in matches:
+                        line_num = content[:match.start()].count('\\n') + 1
+                        violations.append(f'{py_file}:{line_num} - {match.group(0)}')
+        
+        if violations:
+            print('❌ Hardcoded credentials found:')
+            for violation in violations:
+                print(f'  {violation}')
+            exit(1)
+        else:
+            print('✅ All credential usage follows environment variable patterns')
+        "
+
+  dependency-scan:
+    name: Dependency Security Scan
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install security tools
+      run: |
+        pip install safety pip-audit
+    
+    - name: Run Safety check
+      run: |
+        safety check --json --output safety-report.json || true
+        if [ -f safety-report.json ]; then
+          echo "Safety scan completed. Report:"
+          cat safety-report.json | python -m json.tool
+        fi
+    
+    - name: Run pip-audit
+      run: |
+        pip-audit --format=json --output=pip-audit-report.json || true
+        if [ -f pip-audit-report.json ]; then
+          echo "Pip-audit scan completed. Report:"
+          cat pip-audit-report.json | python -m json.tool
+        fi
+    
+    - name: Upload security reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: dependency-security-reports
+        path: |
+          safety-report.json
+          pip-audit-report.json
+
+  code-security-scan:
+    name: Code Security Analysis
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install security tools
+      run: |
+        pip install bandit semgrep
+    
+    - name: Run Bandit security scan
+      run: |
+        bandit -r src/ -f json -o bandit-report.json || true
+        if [ -f bandit-report.json ]; then
+          echo "Bandit scan completed. High/Medium severity issues:"
+          cat bandit-report.json | python -c "
+          import json, sys
+          data = json.load(sys.stdin)
+          high_med = [r for r in data.get('results', []) if r.get('issue_severity') in ['HIGH', 'MEDIUM']]
+          if high_med:
+              print(f'Found {len(high_med)} high/medium severity issues:')
+              for issue in high_med:
+                  print(f'  {issue[\"filename\"]}:{issue[\"line_number\"]} - {issue[\"test_name\"]}: {issue[\"issue_text\"]}')
+              sys.exit(1)
+          else:
+              print('No high/medium severity security issues found')
+          "
+        fi
+    
+    - name: Run Semgrep security scan
+      run: |
+        semgrep --config=auto --json --output=semgrep-report.json src/ || true
+        if [ -f semgrep-report.json ]; then
+          echo "Semgrep scan completed. Critical/High severity issues:"
+          cat semgrep-report.json | python -c "
+          import json, sys
+          data = json.load(sys.stdin)
+          critical_high = [r for r in data.get('results', []) if r.get('extra', {}).get('severity') in ['ERROR', 'WARNING']]
+          if critical_high:
+              print(f'Found {len(critical_high)} critical/high severity issues:')
+              for issue in critical_high:
+                  print(f'  {issue[\"path\"]}:{issue[\"start\"][\"line\"]} - {issue[\"check_id\"]}: {issue[\"extra\"][\"message\"]}')
+              sys.exit(1)
+          else:
+              print('No critical/high severity security issues found')
+          "
+        fi
+    
+    - name: Upload security reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: code-security-reports
+        path: |
+          bandit-report.json
+          semgrep-report.json
+
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-latest
+    needs: [credential-scan, dependency-scan, code-security-scan]
+    if: always()
+    steps:
+    - name: Security scan summary
+      run: |
+        echo "## Security Scan Summary"
+        echo "- Credential Scan: ${{ needs.credential-scan.result }}"
+        echo "- Dependency Scan: ${{ needs.dependency-scan.result }}"
+        echo "- Code Security Scan: ${{ needs.code-security-scan.result }}"
+        
+        if [[ "${{ needs.credential-scan.result }}" == "success" && "${{ needs.dependency-scan.result }}" == "success" && "${{ needs.code-security-scan.result }}" == "success" ]]; then
+          echo "✅ All security scans passed!"
+        else
+          echo "❌ Some security scans failed. Please review the reports."
+          exit 1
+        fi

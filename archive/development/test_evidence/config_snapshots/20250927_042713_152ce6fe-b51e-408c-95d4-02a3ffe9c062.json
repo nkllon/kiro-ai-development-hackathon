@@ -1,0 +1,28 @@
+{
+  "evidence_id": "152ce6fe-b51e-408c-95d4-02a3ffe9c062",
+  "timestamp": "2025-09-27T04:27:13.059701",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.059691",
+    "data_type": "dict"
+  },
+  "integrity_hash": "9a0f84ded8815ac2b42c3f11c617ae145a082962aee9a620a6a6aa01ce4814b5",
+  "data": {
+    "file_path": "./docs/hackathon/devpost/demo_devpost_integration.py",
+    "file_size": 18542,
+    "line_count": 523,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.059679"
+  }
+}

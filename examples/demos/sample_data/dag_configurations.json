@@ -1,0 +1,573 @@
+{
+  "description": "Sample DAG configurations for orchestration demonstration",
+  "configurations": [
+    {
+      "name": "conservative_config",
+      "description": "Balanced approach with moderate parallelism",
+      "config": {
+        "max_workers": 4,
+        "execution_strategy": "conservative",
+        "scheduling_strategy": "adaptive",
+        "enable_prefire_testing": true,
+        "enable_continuous_monitoring": true,
+        "timeout_seconds": 300
+      },
+      "use_cases": [
+        "Production workloads",
+        "Resource-constrained environments",
+        "Mixed task types with varying resource requirements"
+      ]
+    },
+    {
+      "name": "aggressive_config",
+      "description": "Maximum parallelism for high-performance scenarios",
+      "config": {
+        "max_workers": 12,
+        "execution_strategy": "aggressive",
+        "scheduling_strategy": "critical_path",
+        "enable_prefire_testing": true,
+        "enable_continuous_monitoring": true,
+        "timeout_seconds": 600
+      },
+      "use_cases": [
+        "High-performance computing",
+        "Batch processing workloads",
+        "Time-critical operations"
+      ]
+    },
+    {
+      "name": "sequential_config",
+      "description": "Sequential execution for debugging and testing",
+      "config": {
+        "max_workers": 1,
+        "execution_strategy": "sequential",
+        "scheduling_strategy": "fifo",
+        "enable_prefire_testing": false,
+        "enable_continuous_monitoring": false,
+        "timeout_seconds": 120
+      },
+      "use_cases": [
+        "Debugging and development",
+        "Resource-limited environments",
+        "Simple task chains"
+      ]
+    },
+    {
+      "name": "priority_optimized_config",
+      "description": "Priority-based scheduling for mixed workloads",
+      "config": {
+        "max_workers": 6,
+        "execution_strategy": "conservative",
+        "scheduling_strategy": "priority",
+        "enable_prefire_testing": true,
+        "enable_continuous_monitoring": true,
+        "timeout_seconds": 450
+      },
+      "use_cases": [
+        "Mixed priority workloads",
+        "SLA-driven processing",
+        "Business-critical task prioritization"
+      ]
+    },
+    {
+      "name": "resource_aware_config",
+      "description": "Resource-optimized scheduling for efficient utilization",
+      "config": {
+        "max_workers": 8,
+        "execution_strategy": "conservative",
+        "scheduling_strategy": "resource_aware",
+        "enable_prefire_testing": true,
+        "enable_continuous_monitoring": true,
+        "timeout_seconds": 360
+      },
+      "use_cases": [
+        "Resource optimization",
+        "Cost-sensitive environments",
+        "Heterogeneous task workloads"
+      ]
+    }
+  ],
+  "sample_dags": [
+    {
+      "name": "data_processing_pipeline",
+      "description": "Complete data processing pipeline with validation",
+      "tasks": [
+        {
+          "task_id": "data_ingestion",
+          "name": "Data Ingestion",
+          "dependencies": [],
+          "priority": 10,
+          "estimated_duration": 2.0,
+          "resource_requirements": {
+            "cpu": 2,
+            "memory": "1GB",
+            "weight": 2.0
+          },
+          "task_type": "data_processing"
+        },
+        {
+          "task_id": "data_validation",
+          "name": "Data Validation",
+          "dependencies": ["data_ingestion"],
+          "priority": 9,
+          "estimated_duration": 1.0,
+          "resource_requirements": {
+            "cpu": 1,
+            "memory": "512MB",
+            "weight": 1.0
+          },
+          "task_type": "validation"
+        },
+        {
+          "task_id": "data_transformation",
+          "name": "Data Transformation",
+          "dependencies": ["data_validation"],
+          "priority": 8,
+          "estimated_duration": 3.0,
+          "resource_requirements": {
+            "cpu": 4,
+            "memory": "2GB",
+            "weight": 3.0
+          },
+          "task_type": "data_processing"
+        },
+        {
+          "task_id": "quality_check",
+          "name": "Quality Check",
+          "dependencies": ["data_transformation"],
+          "priority": 7,
+          "estimated_duration": 1.5,
+          "resource_requirements": {
+            "cpu": 2,
+            "memory": "1GB",
+            "weight": 1.5
+          },
+          "task_type": "validation"
+        },
+        {
+          "task_id": "data_export",
+          "name": "Data Export",
+          "dependencies": ["quality_check"],
+          "priority": 6,
+          "estimated_duration": 1.0,
+          "resource_requirements": {
+            "cpu": 1,
+            "memory": "512MB",
+            "weight": 1.0
+          },
+          "task_type": "file_processing"
+        }
+      ],
+      "expected_metrics": {
+        "total_duration_sequential": 8.5,
+        "total_duration_parallel": 8.5,
+        "critical_path_length": 8.5,
+        "parallelization_potential": 1.0
+      }
+    },
+    {
+      "name": "ml_training_workflow",
+      "description": "Machine learning training and deployment workflow",
+      "tasks": [
+        {
+          "task_id": "data_preparation",
+          "name": "Data Preparation",
+          "dependencies": [],
+          "priority": 10,
+          "estimated_duration": 2.5,
+          "resource_requirements": {
+            "cpu": 2,
+            "memory": "1GB",
+            "weight": 2.0
+          },
+          "task_type": "data_processing"
+        },
+        {
+          "task_id": "feature_engineering",
+          "name": "Feature Engineering",
+          "dependencies": ["data_preparation"],
+          "priority": 9,
+          "estimated_duration": 3.0,
+          "resource_requirements": {
+            "cpu": 4,
+            "memory": "2GB",
+            "weight": 3.0
+          },
+          "task_type": "data_processing"
+        },
+        {
+          "task_id": "model_training",
+          "name": "Model Training",
+          "dependencies": ["feature_engineering"],
+          "priority": 10,
+          "estimated_duration": 8.0,
+          "resource_requirements": {
+            "cpu": 8,
+            "memory": "4GB",
+            "weight": 5.0
+          },
+          "task_type": "ml_training"
+        },
+        {
+          "task_id": "model_validation",
+          "name": "Model Validation",
+          "dependencies": ["model_training"],
+          "priority": 8,
+          "estimated_duration": 2.0,
+          "resource_requirements": {
+            "cpu": 2,
+            "memory": "1GB",
+            "weight": 2.0
+          },
+          "task_type": "validation"
+        },
+        {
+          "task_id": "hyperparameter_tuning",
+          "name": "Hyperparameter Tuning",
+          "dependencies": ["model_training"],
+          "priority": 7,
+          "estimated_duration": 5.0,
+          "resource_requirements": {
+            "cpu": 6,
+            "memory": "3GB",
+            "weight": 4.0
+          },
+          "task_type": "ml_training"
+        },
+        {
+          "task_id": "model_evaluation",
+          "name": "Model Evaluation",
+          "dependencies": ["model_validation", "hyperparameter_tuning"],
+          "priority": 8,
+          "estimated_duration": 1.5,
+          "resource_requirements": {
+            "cpu": 2,
+            "memory": "1GB",
+            "weight": 1.5
+          },
+          "task_type": "validation"
+        },
+        {
+          "task_id": "model_deployment",
+          "name": "Model Deployment",
+          "dependencies": ["model_evaluation"],
+          "priority": 9,
+          "estimated_duration": 2.0,
+          "resource_requirements": {
+            "cpu": 2,
+            "memory": "1GB",
+            "weight": 2.0
+          },
+          "task_type": "deployment"
+        }
+      ],
+      "expected_metrics": {
+        "total_duration_sequential": 24.0,
+        "total_duration_parallel": 17.0,
+        "critical_path_length": 17.0,
+        "parallelization_potential": 1.41
+      }
+    },
+    {
+      "name": "web_scraping_pipeline",
+      "description": "Web scraping and content processing pipeline",
+      "tasks": [
+        {
+          "task_id": "url_discovery",
+          "name": "URL Discovery",
+          "dependencies": [],
+          "priority": 10,
+          "estimated_duration": 1.0,
+          "resource_requirements": {
+            "cpu": 1,
+            "memory": "256MB",
+            "weight": 0.5
+          },
+          "task_type": "api_call"
+        },
+        {
+          "task_id": "content_scraping_1",
+          "name": "Content Scraping Batch 1",
+          "dependencies": ["url_discovery"],
+          "priority": 9,
+          "estimated_duration": 4.0,
+          "resource_requirements": {
+            "cpu": 2,
+            "memory": "512MB",
+            "weight": 2.0
+          },
+          "task_type": "api_call"
+        },
+        {
+          "task_id": "content_scraping_2",
+          "name": "Content Scraping Batch 2",
+          "dependencies": ["url_discovery"],
+          "priority": 9,
+          "estimated_duration": 4.0,
+          "resource_requirements": {
+            "cpu": 2,
+            "memory": "512MB",
+            "weight": 2.0
+          },
+          "task_type": "api_call"
+        },
+        {
+          "task_id": "content_parsing",
+          "name": "Content Parsing",
+          "dependencies": ["content_scraping_1", "content_scraping_2"],
+          "priority": 8,
+          "estimated_duration": 3.0,
+          "resource_requirements": {
+            "cpu": 4,
+            "memory": "1GB",
+            "weight": 3.0
+          },
+          "task_type": "data_processing"
+        },
+        {
+          "task_id": "duplicate_detection",
+          "name": "Duplicate Detection",
+          "dependencies": ["content_parsing"],
+          "priority": 7,
+          "estimated_duration": 2.0,
+          "resource_requirements": {
+            "cpu": 2,
+            "memory": "1GB",
+            "weight": 2.0
+          },
+          "task_type": "data_processing"
+        },
+        {
+          "task_id": "content_classification",
+          "name": "Content Classification",
+          "dependencies": ["duplicate_detection"],
+          "priority": 6,
+          "estimated_duration": 3.5,
+          "resource_requirements": {
+            "cpu": 4,
+            "memory": "2GB",
+            "weight": 3.5
+          },
+          "task_type": "ml_inference"
+        },
+        {
+          "task_id": "sentiment_analysis",
+          "name": "Sentiment Analysis",
+          "dependencies": ["duplicate_detection"],
+          "priority": 6,
+          "estimated_duration": 2.5,
+          "resource_requirements": {
+            "cpu": 2,
+            "memory": "1GB",
+            "weight": 2.0
+          },
+          "task_type": "ml_inference"
+        },
+        {
+          "task_id": "data_storage",
+          "name": "Data Storage",
+          "dependencies": ["content_classification", "sentiment_analysis"],
+          "priority": 8,
+          "estimated_duration": 1.0,
+          "resource_requirements": {
+            "cpu": 1,
+            "memory": "512MB",
+            "weight": 1.0
+          },
+          "task_type": "file_processing"
+        }
+      ],
+      "expected_metrics": {
+        "total_duration_sequential": 21.0,
+        "total_duration_parallel": 12.5,
+        "critical_path_length": 12.5,
+        "parallelization_potential": 1.68
+      }
+    },
+    {
+      "name": "etl_complex_pipeline",
+      "description": "Complex ETL pipeline with multiple sources and transformations",
+      "tasks": [
+        {
+          "task_id": "extract_database_1",
+          "name": "Extract Database 1",
+          "dependencies": [],
+          "priority": 10,
+          "estimated_duration": 2.0,
+          "resource_requirements": {
+            "cpu": 1,
+            "memory": "512MB",
+            "weight": 1.0
+          },
+          "task_type": "database_operation"
+        },
+        {
+          "task_id": "extract_database_2",
+          "name": "Extract Database 2",
+          "dependencies": [],
+          "priority": 10,
+          "estimated_duration": 3.0,
+          "resource_requirements": {
+            "cpu": 1,
+            "memory": "512MB",
+            "weight": 1.0
+          },
+          "task_type": "database_operation"
+        },
+        {
+          "task_id": "extract_api_source",
+          "name": "Extract API Source",
+          "dependencies": [],
+          "priority": 9,
+          "estimated_duration": 2.5,
+          "resource_requirements": {
+            "cpu": 1,
+            "memory": "256MB",
+            "weight": 0.5
+          },
+          "task_type": "api_call"
+        },
+        {
+          "task_id": "extract_file_source",
+          "name": "Extract File Source",
+          "dependencies": [],
+          "priority": 9,
+          "estimated_duration": 1.5,
+          "resource_requirements": {
+            "cpu": 1,
+            "memory": "512MB",
+            "weight": 1.0
+          },
+          "task_type": "file_processing"
+        },
+        {
+          "task_id": "transform_database_data",
+          "name": "Transform Database Data",
+          "dependencies": ["extract_database_1", "extract_database_2"],
+          "priority": 8,
+          "estimated_duration": 4.0,
+          "resource_requirements": {
+            "cpu": 4,
+            "memory": "2GB",
+            "weight": 3.0
+          },
+          "task_type": "data_processing"
+        },
+        {
+          "task_id": "transform_external_data",
+          "name": "Transform External Data",
+          "dependencies": ["extract_api_source", "extract_file_source"],
+          "priority": 8,
+          "estimated_duration": 3.0,
+          "resource_requirements": {
+            "cpu": 2,
+            "memory": "1GB",
+            "weight": 2.0
+          },
+          "task_type": "data_processing"
+        },
+        {
+          "task_id": "data_quality_check",
+          "name": "Data Quality Check",
+          "dependencies": ["transform_database_data", "transform_external_data"],
+          "priority": 7,
+          "estimated_duration": 2.0,
+          "resource_requirements": {
+            "cpu": 2,
+            "memory": "1GB",
+            "weight": 1.5
+          },
+          "task_type": "validation"
+        },
+        {
+          "task_id": "data_enrichment",
+          "name": "Data Enrichment",
+          "dependencies": ["data_quality_check"],
+          "priority": 6,
+          "estimated_duration": 3.5,
+          "resource_requirements": {
+            "cpu": 3,
+            "memory": "1.5GB",
+            "weight": 2.5
+          },
+          "task_type": "data_processing"
+        },
+        {
+          "task_id": "load_data_warehouse",
+          "name": "Load Data Warehouse",
+          "dependencies": ["data_enrichment"],
+          "priority": 9,
+          "estimated_duration": 2.5,
+          "resource_requirements": {
+            "cpu": 2,
+            "memory": "1GB",
+            "weight": 2.0
+          },
+          "task_type": "database_operation"
+        },
+        {
+          "task_id": "update_search_index",
+          "name": "Update Search Index",
+          "dependencies": ["data_enrichment"],
+          "priority": 7,
+          "estimated_duration": 1.5,
+          "resource_requirements": {
+            "cpu": 2,
+            "memory": "512MB",
+            "weight": 1.5
+          },
+          "task_type": "indexing"
+        },
+        {
+          "task_id": "generate_reports",
+          "name": "Generate Reports",
+          "dependencies": ["load_data_warehouse", "update_search_index"],
+          "priority": 5,
+          "estimated_duration": 1.0,
+          "resource_requirements": {
+            "cpu": 1,
+            "memory": "256MB",
+            "weight": 0.5
+          },
+          "task_type": "reporting"
+        }
+      ],
+      "expected_metrics": {
+        "total_duration_sequential": 27.0,
+        "total_duration_parallel": 15.5,
+        "critical_path_length": 15.5,
+        "parallelization_potential": 1.74
+      }
+    }
+  ],
+  "performance_benchmarks": {
+    "small_dag": {
+      "task_count": 5,
+      "expected_duration_sequential": 8.5,
+      "expected_duration_parallel_4_workers": 8.5,
+      "expected_duration_parallel_8_workers": 8.5,
+      "parallelization_efficiency": 1.0
+    },
+    "medium_dag": {
+      "task_count": 8,
+      "expected_duration_sequential": 21.0,
+      "expected_duration_parallel_4_workers": 14.0,
+      "expected_duration_parallel_8_workers": 12.5,
+      "parallelization_efficiency": 1.68
+    },
+    "large_dag": {
+      "task_count": 11,
+      "expected_duration_sequential": 27.0,
+      "expected_duration_parallel_4_workers": 18.0,
+      "expected_duration_parallel_8_workers": 15.5,
+      "parallelization_efficiency": 1.74
+    },
+    "complex_dag": {
+      "task_count": 7,
+      "expected_duration_sequential": 24.0,
+      "expected_duration_parallel_4_workers": 19.0,
+      "expected_duration_parallel_8_workers": 17.0,
+      "parallelization_efficiency": 1.41
+    }
+  }
+}

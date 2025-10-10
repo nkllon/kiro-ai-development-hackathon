@@ -1,0 +1,132 @@
+{
+  "timestamp": "2025-10-04T18:26:01.981835",
+  "tests": {
+    "Local Health endpoint": {
+      "status": "fail",
+      "details": "HTTPConnectionPool(host='localhost', port=8888): Max retries exceeded with url: /health (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x10a785130>: Failed to establish a new connection: [Errno 61] Connection refused'))",
+      "duration": 0.005852222442626953,
+      "timestamp": "2025-10-04T18:26:01.987815"
+    },
+    "Local Readiness endpoint": {
+      "status": "fail",
+      "details": "HTTPConnectionPool(host='localhost', port=8888): Max retries exceeded with url: /ready (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x10a785b20>: Failed to establish a new connection: [Errno 61] Connection refused'))",
+      "duration": 0.0010251998901367188,
+      "timestamp": "2025-10-04T18:26:01.988866"
+    },
+    "Local Metrics endpoint": {
+      "status": "fail",
+      "details": "HTTPConnectionPool(host='localhost', port=8888): Max retries exceeded with url: /metrics (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x10a7d5520>: Failed to establish a new connection: [Errno 61] Connection refused'))",
+      "duration": 0.0011861324310302734,
+      "timestamp": "2025-10-04T18:26:01.990071"
+    },
+    "Local Dashboard endpoint": {
+      "status": "fail",
+      "details": "HTTPConnectionPool(host='localhost', port=8888): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x10a71eee0>: Failed to establish a new connection: [Errno 61] Connection refused'))",
+      "duration": 0.0008249282836914062,
+      "timestamp": "2025-10-04T18:26:01.990911"
+    },
+    "External Health endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 0.3449239730834961,
+      "timestamp": "2025-10-04T18:26:02.335864"
+    },
+    "External Dashboard endpoint": {
+      "status": "pass",
+      "details": "Status 200",
+      "duration": 0.5398669242858887,
+      "timestamp": "2025-10-04T18:26:02.875757"
+    },
+    "Data Directory metrics": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T18:26:02.876390"
+    },
+    "Data Directory dashboards": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T18:26:02.876408"
+    },
+    "Data Directory logs": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T18:26:02.876452"
+    },
+    "Data Directory config": {
+      "status": "pass",
+      "details": "Directory exists and is accessible",
+      "duration": 0,
+      "timestamp": "2025-10-04T18:26:02.876471"
+    },
+    "Data Write Permissions": {
+      "status": "pass",
+      "details": "Can write to data directories",
+      "duration": 0,
+      "timestamp": "2025-10-04T18:26:02.877352"
+    },
+    "Process Running": {
+      "status": "fail",
+      "details": "No Observatory process found",
+      "duration": 0,
+      "timestamp": "2025-10-04T18:26:02.894026"
+    },
+    "Tunnel Process": {
+      "status": "fail",
+      "details": "No Cloudflare tunnel process found",
+      "duration": 0,
+      "timestamp": "2025-10-04T18:26:02.906700"
+    },
+    "Performance /health": {
+      "status": "fail",
+      "details": "Avg response time: 2.00s (target: <1.0s)",
+      "duration": 0,
+      "timestamp": "2025-10-04T18:26:02.911412"
+    },
+    "Performance /metrics": {
+      "status": "fail",
+      "details": "Avg response time: 3.00s (target: <2.0s)",
+      "duration": 0,
+      "timestamp": "2025-10-04T18:26:02.915313"
+    },
+    "Performance /": {
+      "status": "fail",
+      "details": "Avg response time: 4.00s (target: <3.0s)",
+      "duration": 0,
+      "timestamp": "2025-10-04T18:26:02.923995"
+    },
+    "WebSocket /ws/observatory": {
+      "status": "fail",
+      "details": "Multiple exceptions: [Errno 61] Connect call failed ('::1', 8888, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8888)",
+      "duration": 0.016192197799682617,
+      "timestamp": "2025-10-04T18:26:02.940221"
+    },
+    "WebSocket /ws/emoji-rain": {
+      "status": "fail",
+      "details": "Multiple exceptions: [Errno 61] Connect call failed ('::1', 8888, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8888)",
+      "duration": 0.0006577968597412109,
+      "timestamp": "2025-10-04T18:26:02.940905"
+    },
+    "WebSocket /ws/anomalies": {
+      "status": "fail",
+      "details": "Multiple exceptions: [Errno 61] Connect call failed ('::1', 8888, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8888)",
+      "duration": 0.0007748603820800781,
+      "timestamp": "2025-10-04T18:26:02.941692"
+    },
+    "WebSocket /ws/doctor-status": {
+      "status": "fail",
+      "details": "Multiple exceptions: [Errno 61] Connect call failed ('::1', 8888, 0, 0), [Errno 61] Connect call failed ('127.0.0.1', 8888)",
+      "duration": 0.0011303424835205078,
+      "timestamp": "2025-10-04T18:26:02.942854"
+    }
+  },
+  "summary": {
+    "total_tests": 20,
+    "passed_tests": 7,
+    "failed_tests": 13,
+    "success_rate": 35.0,
+    "overall_status": "fail"
+  }
+}

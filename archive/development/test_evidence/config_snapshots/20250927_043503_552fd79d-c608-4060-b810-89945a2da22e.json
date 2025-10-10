@@ -1,0 +1,20 @@
+{
+  "evidence_id": "552fd79d-c608-4060-b810-89945a2da22e",
+  "timestamp": "2025-09-27T04:35:03.585958",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.585947",
+    "data_type": "dict"
+  },
+  "integrity_hash": "7b39fb715c55c56b8286bb828ab2c530b3b9293cc86ffa35040129d51fe49a18",
+  "data": {
+    "file_path": "./docs/hackathon/devpost/demo_devpost_integration.py",
+    "file_size": 18542,
+    "line_count": 523,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.585943"
+  }
+}

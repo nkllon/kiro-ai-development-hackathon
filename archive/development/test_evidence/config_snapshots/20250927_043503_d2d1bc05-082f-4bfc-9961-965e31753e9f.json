@@ -1,0 +1,20 @@
+{
+  "evidence_id": "d2d1bc05-082f-4bfc-9961-965e31753e9f",
+  "timestamp": "2025-09-27T04:35:03.758048",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.758026",
+    "data_type": "dict"
+  },
+  "integrity_hash": "413121214c0dfd2f64ee44897de12a127c9819b8a30f9cf2af48bd44c0a5bcc3",
+  "data": {
+    "file_path": "./src/rc1/migration/backups/demo_devpost_integration_20250916_132012.py",
+    "file_size": 18542,
+    "line_count": 523,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.758018"
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "timestamp": "2025-01-27T13:14:30Z",
+  "base_url": "http://localhost:8888",
+  "tests": {
+    "server_health": {
+      "status": "PASS",
+      "details": "Server is running and healthy",
+      "health_data": {
+        "status": "healthy",
+        "timestamp": "2025-09-27T07:18:29.541624",
+        "observatory": {
+          "status": "healthy",
+          "health_score": 1.0,
+          "uptime_seconds": 15.443045
+        },
+        "emoji_rain": {
+          "active": true,
+          "active_effects": 0,
+          "total_particles": 0,
+          "connected_clients": 0
+        }
+      }
+    },
+    "openapi_schema": {
+      "status": "FAIL",
+      "details": "Found 0 WebSocket endpoints in schema",
+      "websocket_paths": [],
+      "total_paths": 26,
+      "all_paths": [
+        "/",
+        "/health",
+        "/healthemoji-rain",
+        "/api/observatory/status",
+        "/api/emoji-rain/stats",
+        "/api/emoji-rain/effects",
+        "/api/doctor/status",
+        "/api/doctor/toggle",
+        "/api/emoji-rain/trigger",
+        "/api/emoji-rain/achievement",
+        "/api/emoji-rain/event-types",
+        "/api/debug/emoji-engine",
+        "/api/metrics/components",
+        "/api/metrics/collection-stats",
+        "/api/costs/overview",
+        "/api/costs/track-call",
+        "/api/costs/providers",
+        "/api/analytics/current",
+        "/api/analytics/stats",
+        "/api/analytics/health",
+        "/api/anomalies/active",
+        "/api/anomalies/stats",
+        "/api/anomalies/health",
+        "/api/anomalies/resolve/{anomaly_id}",
+        "/api/anomalies/false-positive/{anomaly_id}",
+        "/api/dashboard/all-data"
+      ]
+    },
+    "websocket_upgrade": {
+      "/ws/emoji-rain": {
+        "status": "FAIL",
+        "details": "WebSocket upgrade failed - 400 Bad Request",
+        "response": "HTTP/1.1 400 Bad Request\nDate: Sat, 27 Sep 2025 13:18:29 GMT\nContent-Length: 108\nContent-Type: text/plain\nConnection: close\n\n",
+        "error": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n  0   108    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n"
+      },
+      "/ws/observatory": {
+        "status": "FAIL",
+        "details": "WebSocket upgrade failed - 400 Bad Request",
+        "response": "HTTP/1.1 400 Bad Request\nDate: Sat, 27 Sep 2025 13:18:29 GMT\nContent-Length: 108\nContent-Type: text/plain\nConnection: close\n\n",
+        "error": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n  0   108    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n"
+      },
+      "/ws/anomalies": {
+        "status": "FAIL",
+        "details": "WebSocket upgrade failed - 400 Bad Request",
+        "response": "HTTP/1.1 400 Bad Request\nDate: Sat, 27 Sep 2025 13:18:29 GMT\nContent-Length: 108\nContent-Type: text/plain\nConnection: close\n\n",
+        "error": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n  0   108    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n"
+      },
+      "/ws/doctor-status": {
+        "status": "FAIL",
+        "details": "WebSocket upgrade failed - 400 Bad Request",
+        "response": "HTTP/1.1 400 Bad Request\nDate: Sat, 27 Sep 2025 13:18:29 GMT\nContent-Length: 108\nContent-Type: text/plain\nConnection: close\n\n",
+        "error": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n  0   108    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n"
+      }
+    },
+    "websocket_endpoints": {
+      "/ws/emoji-rain": {
+        "status": "PASS",
+        "details": "WebSocket connection successful",
+        "response": "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=\r\ndate: Sat, 27 Sep 2025 13:18:28 GMT\r\nserver: uvicorn",
+        "connection_type": "direct_socket"
+      },
+      "/ws/observatory": {
+        "status": "PASS",
+        "details": "WebSocket connection successful",
+        "response": "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=\r\ndate: Sat, 27 Sep 2025 13:18:28 GMT\r\nserver: uvicorn",
+        "connection_type": "direct_socket"
+      },
+      "/ws/anomalies": {
+        "status": "PASS",
+        "details": "WebSocket connection successful",
+        "response": "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=\r\ndate: Sat, 27 Sep 2025 13:18:28 GMT\r\nserver: uvicorn",
+        "connection_type": "direct_socket"
+      },
+      "/ws/doctor-status": {
+        "status": "PASS",
+        "details": "WebSocket connection successful",
+        "response": "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=\r\ndate: Sat, 27 Sep 2025 13:18:28 GMT\r\nserver: uvicorn",
+        "connection_type": "direct_socket"
+      }
+    }
+  },
+  "summary": {
+    "overall_status": "FAIL",
+    "issues_found": [
+      "No WebSocket endpoints found in OpenAPI schema",
+      "WebSocket upgrade failed for 4 endpoints"
+    ],
+    "recommendations": [
+      "WebSocket endpoints are not properly registered in FastAPI",
+      "Check WebSocket endpoint registration in _setup_websockets() method"
+    ]
+  }
+}

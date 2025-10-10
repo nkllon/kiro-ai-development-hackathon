@@ -1,0 +1,131 @@
+{
+  "execution_id": "llm-dag-20250930-160652",
+  "llm_provider": "kiro",
+  "total_tasks": 5,
+  "completed_tasks": 5,
+  "failed_tasks": 0,
+  "tasks": {
+    "1.1_project_structure_setup": {
+      "task_id": "1.1_project_structure_setup",
+      "status": "completed",
+      "exit_code": 0,
+      "duration_seconds": 0.293883,
+      "output": "Reading from stdin via: /var/folders/cj/jy2bc_mx2yn030n_jwgcrrmr0000gn/T/code-stdin-aGu\n",
+      "error": "",
+      "prompt_file": "logs/llm-dag/llm-dag-20250930-160652/1.1_project_structure_setup-prompt.txt",
+      "output_file": "logs/llm-dag/llm-dag-20250930-160652/1.1_project_structure_setup-output.txt",
+      "llm_provider": "kiro",
+      "output_analysis": {
+        "length": 88,
+        "has_code": false,
+        "code_blocks": 0,
+        "has_imports": true,
+        "has_classes": false,
+        "has_functions": false,
+        "mentions_reflective_module": false,
+        "mentions_beast_mode": false,
+        "has_error_handling": false,
+        "has_logging": false,
+        "quality_score": 0.0
+      }
+    },
+    "1.2_observatory_websocket_integration": {
+      "task_id": "1.2_observatory_websocket_integration",
+      "status": "completed",
+      "exit_code": 0,
+      "duration_seconds": 0.363995,
+      "output": "Reading from stdin via: /var/folders/cj/jy2bc_mx2yn030n_jwgcrrmr0000gn/T/code-stdin-CiA\n",
+      "error": "",
+      "prompt_file": "logs/llm-dag/llm-dag-20250930-160652/1.2_observatory_websocket_integration-prompt.txt",
+      "output_file": "logs/llm-dag/llm-dag-20250930-160652/1.2_observatory_websocket_integration-output.txt",
+      "llm_provider": "kiro",
+      "output_analysis": {
+        "length": 88,
+        "has_code": false,
+        "code_blocks": 0,
+        "has_imports": true,
+        "has_classes": false,
+        "has_functions": false,
+        "mentions_reflective_module": false,
+        "mentions_beast_mode": false,
+        "has_error_handling": false,
+        "has_logging": false,
+        "quality_score": 0.0
+      }
+    },
+    "1.3_service_discovery_scanner": {
+      "task_id": "1.3_service_discovery_scanner",
+      "status": "completed",
+      "exit_code": 0,
+      "duration_seconds": 0.458396,
+      "output": "Reading from stdin via: /var/folders/cj/jy2bc_mx2yn030n_jwgcrrmr0000gn/T/code-stdin-PAd\n",
+      "error": "",
+      "prompt_file": "logs/llm-dag/llm-dag-20250930-160652/1.3_service_discovery_scanner-prompt.txt",
+      "output_file": "logs/llm-dag/llm-dag-20250930-160652/1.3_service_discovery_scanner-output.txt",
+      "llm_provider": "kiro",
+      "output_analysis": {
+        "length": 88,
+        "has_code": false,
+        "code_blocks": 0,
+        "has_imports": true,
+        "has_classes": false,
+        "has_functions": false,
+        "mentions_reflective_module": false,
+        "mentions_beast_mode": false,
+        "has_error_handling": false,
+        "has_logging": false,
+        "quality_score": 0.0
+      }
+    },
+    "2.1_dag_dependency_analysis": {
+      "task_id": "2.1_dag_dependency_analysis",
+      "status": "completed",
+      "exit_code": 0,
+      "duration_seconds": 0.286844,
+      "output": "Reading from stdin via: /var/folders/cj/jy2bc_mx2yn030n_jwgcrrmr0000gn/T/code-stdin-Nuu\n",
+      "error": "",
+      "prompt_file": "logs/llm-dag/llm-dag-20250930-160652/2.1_dag_dependency_analysis-prompt.txt",
+      "output_file": "logs/llm-dag/llm-dag-20250930-160652/2.1_dag_dependency_analysis-output.txt",
+      "llm_provider": "kiro",
+      "output_analysis": {
+        "length": 88,
+        "has_code": false,
+        "code_blocks": 0,
+        "has_imports": true,
+        "has_classes": false,
+        "has_functions": false,
+        "mentions_reflective_module": false,
+        "mentions_beast_mode": false,
+        "has_error_handling": false,
+        "has_logging": false,
+        "quality_score": 0.0
+      }
+    },
+    "2.2_data_flow_mapping": {
+      "task_id": "2.2_data_flow_mapping",
+      "status": "completed",
+      "exit_code": 0,
+      "duration_seconds": 0.243652,
+      "output": "Reading from stdin via: /var/folders/cj/jy2bc_mx2yn030n_jwgcrrmr0000gn/T/code-stdin-iF6\n",
+      "error": "",
+      "prompt_file": "logs/llm-dag/llm-dag-20250930-160652/2.2_data_flow_mapping-prompt.txt",
+      "output_file": "logs/llm-dag/llm-dag-20250930-160652/2.2_data_flow_mapping-output.txt",
+      "llm_provider": "kiro",
+      "output_analysis": {
+        "length": 88,
+        "has_code": false,
+        "code_blocks": 0,
+        "has_imports": true,
+        "has_classes": false,
+        "has_functions": false,
+        "mentions_reflective_module": false,
+        "mentions_beast_mode": false,
+        "has_error_handling": false,
+        "has_logging": false,
+        "quality_score": 0.0
+      }
+    }
+  },
+  "log_directory": "logs/llm-dag/llm-dag-20250930-160652",
+  "timestamp": "2025-09-30T16:06:53.768805"
+}

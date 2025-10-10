@@ -1,0 +1,16 @@
+# Redis Configuration for Beast Mode
+# Add this to your ~/.env file
+
+REDIS_PASSWORD=beastmode2025
+BEAST_MODE_REDIS_PASSWORD=beastmode2025
+
+# Redis connection details
+REDIS_HOST=192.168.1.119
+REDIS_PORT=6379
+
+# Environment identification
+DEVELOPMENT=true
+# PRODUCTION=true  # Uncomment for production
+
+# Beast Mode settings
+BEAST_MODE_ENV=development

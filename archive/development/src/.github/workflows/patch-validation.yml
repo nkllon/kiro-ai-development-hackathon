@@ -1,0 +1,56 @@
+
+name: Technical Debt Patch Validation
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ main, develop ]
+
+jobs:
+  patch-validation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch full history for comparison
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Validate patch annotations
+      run: |
+        python -m technical_debt_patch_annotation.integration.cicd_integration validate-annotations .
+    
+    - name: Check debt thresholds
+      run: |
+        python -m technical_debt_patch_annotation.integration.cicd_integration check-thresholds .
+    
+    - name: Generate PR impact report
+      if: github.event_name == 'pull_request'
+      run: |
+        python -m technical_debt_patch_annotation.integration.cicd_integration pr-report . --base-branch ${{ github.base_ref }} --head-branch ${{ github.head_ref }}
+    
+    - name: Comment PR with report
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          if (fs.existsSync('patch_impact_report.md')) {
+            const report = fs.readFileSync('patch_impact_report.md', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: report
+            });
+          }

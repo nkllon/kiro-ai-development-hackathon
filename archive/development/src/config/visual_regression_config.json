@@ -1,0 +1,85 @@
+{
+  "testing": {
+    "enabled": true,
+    "headless": true,
+    "viewport_sizes": [
+      [1920, 1080],
+      [1366, 768],
+      [1024, 768]
+    ],
+    "wait_timeout": 30,
+    "screenshot_delay": 2,
+    "parallel_tests": true,
+    "max_workers": 3
+  },
+  "comparison": {
+    "similarity_threshold": 0.95,
+    "pixel_threshold": 100,
+    "diff_amplification": 3,
+    "hotspot_min_area": 100,
+    "max_hotspots": 10
+  },
+  "rollback": {
+    "enabled": true,
+    "threshold": "major",
+    "critical_threshold": 1,
+    "major_threshold": 2,
+    "auto_disable_features": true,
+    "rollback_timeout": 30
+  },
+  "storage": {
+    "baseline_dir": "tests/visual_regression/baselines",
+    "output_dir": "tests/visual_regression/results",
+    "diff_dir": "tests/visual_regression/diffs",
+    "retention_days": 30
+  },
+  "observatory_tests": [
+    {
+      "test_id": "dashboard_main",
+      "path": "/",
+      "wait_for": ".dashboard-container",
+      "description": "Main Observatory dashboard"
+    },
+    {
+      "test_id": "metrics_view",
+      "path": "/metrics",
+      "wait_for": ".metrics-container",
+      "description": "Metrics visualization page"
+    },
+    {
+      "test_id": "alerts_view",
+      "path": "/alerts",
+      "wait_for": ".alerts-container",
+      "description": "Alerts management page"
+    },
+    {
+      "test_id": "system_health",
+      "path": "/health",
+      "wait_for": ".health-status",
+      "description": "System health overview"
+    }
+  ],
+  "ai_consultation_tests": [
+    {
+      "test_id": "doctor_status_indicator",
+      "path": "/",
+      "wait_for": ".doctor-status",
+      "description": "Doctor Is In/Out status indicator",
+      "feature_flag": "doctor_status_display"
+    },
+    {
+      "test_id": "chat_interface",
+      "path": "/",
+      "wait_for": ".chat-interface",
+      "description": "Real-time chat interface",
+      "feature_flag": "real_time_chat"
+    },
+    {
+      "test_id": "queue_interface",
+      "path": "/",
+      "wait_for": ".queue-interface",
+      "description": "Query queue interface",
+      "feature_flag": "query_queue"
+    }
+  ]
+}

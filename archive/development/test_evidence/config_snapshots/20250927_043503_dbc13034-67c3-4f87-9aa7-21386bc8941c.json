@@ -1,0 +1,20 @@
+{
+  "evidence_id": "dbc13034-67c3-4f87-9aa7-21386bc8941c",
+  "timestamp": "2025-09-27T04:35:03.742752",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.742746",
+    "data_type": "dict"
+  },
+  "integrity_hash": "1aeaaf1a7e0ab4e326be7063e38b934d8e7594f5bf151409f8774054ccc74f8b",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/llms/bedrock/count_tokens/handler.py",
+    "file_size": 4248,
+    "line_count": 124,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.742745"
+  }
+}

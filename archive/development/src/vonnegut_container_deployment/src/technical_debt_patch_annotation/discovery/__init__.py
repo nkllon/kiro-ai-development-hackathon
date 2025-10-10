@@ -1,0 +1,1 @@
+"""Patch discovery and scanning components."""

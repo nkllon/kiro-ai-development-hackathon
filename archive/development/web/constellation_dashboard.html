@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constellation Execution Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #58a6ff;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-running { background: #1f6feb; color: #fff; }
+        .status-completed { background: #238636; color: #fff; }
+        .status-failed { background: #da3633; color: #fff; }
+        .status-pending { background: #8b949e; color: #fff; }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 20px;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #8b949e;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 24px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1f6feb, #58a6ff);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .section {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #58a6ff;
+        }
+
+        .prompt-list {
+            list-style: none;
+        }
+
+        .prompt-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prompt-name {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            font-size: 13px;
+        }
+
+        .prompt-meta {
+            font-size: 12px;
+            color: #8b949e;
+        }
+
+        .event-feed {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .event-item {
+            padding: 8px;
+            margin-bottom: 4px;
+            background: #0d1117;
+            border-left: 3px solid #58a6ff;
+            font-size: 13px;
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+
+        .event-timestamp {
+            color: #8b949e;
+            font-size: 11px;
+        }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #8b949e;
+        }
+
+        .status-dot.connected { background: #3fb950; animation: pulse 2s infinite; }
+        .status-dot.disconnected { background: #f85149; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .flex-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0d1117;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #30363d;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #484f58;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="flex-row">
+                <div>
+                    <h1>🚀 Constellation Execution Dashboard</h1>
+                    <div style="margin-top: 10px;">
+                        <span id="execution-id" style="font-size: 14px; color: #8b949e;">Connecting...</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="connection-status">
+                        <span class="status-dot" id="connection-dot"></span>
+                        <span id="connection-text">Connecting...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-bar" style="width: 0%;">0%</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="stat-total">0</div>
+                <div class="stat-label">Total Prompts</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-completed" style="color: #3fb950;">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-running" style="color: #58a6ff;">0</div>
+                <div class="stat-label">Running</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-pending" style="color: #8b949e;">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-failed" style="color: #f85149;">0</div>
+                <div class="stat-label">Failed</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🔄 Currently Running</div>
+            <ul class="prompt-list" id="running-list">
+                <li style="color: #8b949e; padding: 20px; text-align: center;">No prompts running</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <div class="section-title">📰 Recent Events</div>
+            <div class="event-feed" id="event-feed">
+                <div style="color: #8b949e; padding: 20px; text-align: center;">Waiting for events...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const WS_URL = 'ws://localhost:8765';
+        let ws = null;
+        let reconnectAttempts = 0;
+        const maxReconnectAttempts = 5;
+        const recentEvents = [];
+        const maxEvents = 20;
+
+        function connect() {
+            ws = new WebSocket(WS_URL);
+
+            ws.onopen = () => {
+                console.log('Connected to WebSocket server');
+                reconnectAttempts = 0;
+                updateConnectionStatus(true);
+
+                // Request initial status
+                ws.send(JSON.stringify({ type: 'get_status' }));
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    handleMessage(data);
+                } catch (e) {
+                    console.error('Failed to parse message:', e);
+                }
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
+
+            ws.onclose = () => {
+                console.log('Disconnected from WebSocket server');
+                updateConnectionStatus(false);
+
+                // Attempt to reconnect
+                if (reconnectAttempts < maxReconnectAttempts) {
+                    reconnectAttempts++;
+                    const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
+                    console.log(`Reconnecting in ${delay}ms (attempt ${reconnectAttempts}/${maxReconnectAttempts})`);
+                    setTimeout(connect, delay);
+                }
+            };
+        }
+
+        function handleMessage(data) {
+            const type = data.type;
+
+            if (type === 'status_update') {
+                updateDashboard(data.data);
+            } else if (type === 'prompt_update') {
+                addEvent(`📝 ${data.prompt_name}: ${data.status}`);
+            } else if (type === 'prompt_started' || type === 'prompt_completed' || type === 'prompt_failed' || type === 'execution_started') {
+                addEvent(`🔔 ${data.message}`);
+            } else if (type === 'heartbeat') {
+                updateStats(data.stats);
+            }
+        }
+
+        function updateDashboard(status) {
+            // Update execution ID
+            document.getElementById('execution-id').textContent = `Execution: ${status.execution_id}`;
+
+            const prompts = status.prompts || {};
+            const total = Object.keys(prompts).length;
+            let pending = 0, running = 0, completed = 0, failed = 0;
+
+            // Collect recent events from status if event feed is empty
+            if (recentEvents.length === 0) {
+                const events = [];
+                for (const [name, info] of Object.entries(prompts)) {
+                    if (info.status === 'completed' && info.completed_at) {
+                        events.push({
+                            timestamp: info.completed_at,
+                            message: `✅ Completed ${name} (${info.duration_min || 0} min)`
+                        });
+                    } else if (info.status === 'failed' && info.started_at) {
+                        events.push({
+                            timestamp: info.started_at,
+                            message: `❌ Failed ${name}`
+                        });
+                    } else if (info.status === 'running' && info.started_at) {
+                        events.push({
+                            timestamp: info.started_at,
+                            message: `🔄 Started ${name}`
+                        });
+                    }
+                }
+                // Sort by timestamp descending and take last 10
+                events.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                recentEvents.push(...events.slice(0, 10));
+                // Render the event feed
+                renderEventFeed();
+            }
+
+            for (const [name, info] of Object.entries(prompts)) {
+                if (info.status === 'pending') pending++;
+                else if (info.status === 'running') running++;
+                else if (info.status === 'completed') completed++;
+                else if (info.status === 'failed') failed++;
+            }
+
+            // Update stats
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-completed').textContent = completed;
+            document.getElementById('stat-running').textContent = running;
+            document.getElementById('stat-pending').textContent = pending;
+            document.getElementById('stat-failed').textContent = failed;
+
+            // Update progress bar
+            const progress = total > 0 ? ((completed + failed) / total * 100) : 0;
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = `${progress}%`;
+            progressBar.textContent = `${progress.toFixed(1)}%`;
+
+            // Update running list
+            const runningList = document.getElementById('running-list');
+            const runningPrompts = Object.entries(prompts).filter(([_, info]) => info.status === 'running');
+
+            if (runningPrompts.length === 0) {
+                runningList.innerHTML = '<li style="color: #8b949e; padding: 20px; text-align: center;">No prompts running</li>';
+            } else {
+                runningList.innerHTML = runningPrompts.map(([name, info]) => {
+                    const startedAt = info.started_at ? new Date(info.started_at) : null;
+                    const elapsed = startedAt ? ((Date.now() - startedAt.getTime()) / 60000).toFixed(1) : '0.0';
+                    return `
+                        <li class="prompt-item">
+                            <span class="prompt-name">${name}</span>
+                            <span class="prompt-meta">${info.agent_id || 'N/A'} • ${elapsed} min</span>
+                        </li>
+                    `;
+                }).join('');
+            }
+        }
+
+        function updateStats(stats) {
+            document.getElementById('stat-total').textContent = stats.total || 0;
+            document.getElementById('stat-completed').textContent = stats.completed || 0;
+            document.getElementById('stat-running').textContent = stats.running || 0;
+            document.getElementById('stat-pending').textContent = stats.pending || 0;
+            document.getElementById('stat-failed').textContent = stats.failed || 0;
+
+            const progress = stats.progress_percent || 0;
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = `${progress}%`;
+            progressBar.textContent = `${progress.toFixed(1)}%`;
+        }
+
+        function renderEventFeed() {
+            const eventFeed = document.getElementById('event-feed');
+            if (recentEvents.length === 0) {
+                eventFeed.innerHTML = '<div style="color: #8b949e; padding: 20px; text-align: center;">No recent events</div>';
+            } else {
+                eventFeed.innerHTML = recentEvents.map(event => `
+                    <div class="event-item">
+                        <div class="event-timestamp">${new Date(event.timestamp).toLocaleTimeString()}</div>
+                        <div>${event.message}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function addEvent(message) {
+            const timestamp = new Date().toISOString();
+            recentEvents.unshift({ timestamp, message });
+
+            if (recentEvents.length > maxEvents) {
+                recentEvents.pop();
+            }
+
+            renderEventFeed();
+        }
+
+        function updateConnectionStatus(connected) {
+            const dot = document.getElementById('connection-dot');
+            const text = document.getElementById('connection-text');
+
+            if (connected) {
+                dot.classList.add('connected');
+                dot.classList.remove('disconnected');
+                text.textContent = 'Connected';
+            } else {
+                dot.classList.remove('connected');
+                dot.classList.add('disconnected');
+                text.textContent = 'Disconnected';
+            }
+        }
+
+        // Initialize connection
+        connect();
+    </script>
+</body>
+</html>

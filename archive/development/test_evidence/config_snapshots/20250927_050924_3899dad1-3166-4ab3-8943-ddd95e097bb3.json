@@ -1,0 +1,29 @@
+{
+  "evidence_id": "3899dad1-3166-4ab3-8943-ddd95e097bb3",
+  "timestamp": "2025-09-27T05:09:24.071343",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.071329",
+    "data_type": "dict"
+  },
+  "integrity_hash": "72a5450a4dce2489ee2189ba699d4a6f0eef4976cc9a9bdb9539409b0bc7fc38",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/hooks/azure_content_safety.py",
+    "file_size": 5640,
+    "line_count": 157,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.HTTPException",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.071319"
+  }
+}

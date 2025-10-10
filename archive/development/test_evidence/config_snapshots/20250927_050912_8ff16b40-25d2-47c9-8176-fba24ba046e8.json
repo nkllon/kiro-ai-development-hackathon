@@ -1,0 +1,46 @@
+{
+  "evidence_id": "8ff16b40-25d2-47c9-8176-fba24ba046e8",
+  "timestamp": "2025-09-27T05:09:12.231977",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:12.231956",
+    "data_type": "dict"
+  },
+  "integrity_hash": "e20ab52766ed92e8531db1447a109c61bbebca27cec9477a7a205892217bda1c",
+  "data": {
+    "file_path": "/var/folders/cj/jy2bc_mx2yn030n_jwgcrrmr0000gn/T/tmpvca4triz.py",
+    "file_size": 1439,
+    "line_count": 53,
+    "route_analysis": {
+      "total_routes": 4,
+      "websocket_routes": [
+        "/ws/chat",
+        "/ws/notifications"
+      ],
+      "http_routes": [
+        "/api/health",
+        "/api/info"
+      ],
+      "route_handlers": {
+        "/ws/chat": "websocket_chat",
+        "/ws/notifications": "websocket_notifications",
+        "/api/health": "health_check",
+        "/api/info": "get_info"
+      },
+      "middleware_count": 1,
+      "dependencies": [
+        "asyncio",
+        "uvicorn",
+        "fastapi.middleware.cors",
+        "fastapi.WebSocket",
+        "fastapi.middleware.cors.CORSMiddleware",
+        "fastapi.WebSocketDisconnect",
+        "fastapi.FastAPI",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:12.231941"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "validation_timestamp": "2025-10-01T13:25:11.895677",
+  "constraints": {
+    "Directus CMS": {
+      "status": "available",
+      "endpoint": "http://localhost:8055/server/ping",
+      "last_validated": "2025-10-01T13:25:11.934017",
+      "error_message": null,
+      "fallback_strategy": "File-based configuration storage",
+      "impact_description": "Configuration management degraded to read-only mode"
+    },
+    "Redis Primary": {
+      "status": "unavailable",
+      "endpoint": "192.168.1.119:6379",
+      "last_validated": "2025-10-01T13:25:11.940373",
+      "error_message": null,
+      "fallback_strategy": "Automatic failover to localhost:6380",
+      "impact_description": "Coordination features continue with fallback Redis"
+    },
+    "Redis Fallback": {
+      "status": "available",
+      "endpoint": "localhost:6380",
+      "last_validated": "2025-10-01T13:25:11.945874",
+      "error_message": null,
+      "fallback_strategy": "Local file-based coordination",
+      "impact_description": "Coordination features degraded to local mode"
+    },
+    "Observatory Server": {
+      "status": "available",
+      "endpoint": "http://localhost:8888/health",
+      "last_validated": "2025-10-01T13:25:11.948720",
+      "error_message": null,
+      "fallback_strategy": "Static configuration discovery",
+      "impact_description": "Real-time metrics documentation incomplete"
+    }
+  },
+  "fallbacks_activated": [
+    "Redis Primary"
+  ],
+  "overall_status": "partial_available"
+}

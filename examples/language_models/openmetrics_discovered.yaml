@@ -1,0 +1,561 @@
+domain: devops
+name: OpenMetrics Reference Implementation
+description: Language model generated from OpenMetrics specification analysis
+version: 1.0.0
+terminology:
+  counter_metric:
+    technical_name: counter_metric
+    business_name: Cumulative count of events or operations
+    description: 'OpenMetrics concept: Cumulative count of events or operations'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061669'
+    updated_at: '2025-09-25T05:21:29.061671'
+  http_requests_total:
+    technical_name: http_requests_total
+    business_name: HTTP Requests
+    description: 'OpenMetrics concept: HTTP Requests'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061672'
+    updated_at: '2025-09-25T05:21:29.061673'
+  errors_total:
+    technical_name: errors_total
+    business_name: Errors
+    description: 'OpenMetrics concept: Errors'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061674'
+    updated_at: '2025-09-25T05:21:29.061675'
+  bytes_processed_total:
+    technical_name: bytes_processed_total
+    business_name: Bytes Processed
+    description: 'OpenMetrics concept: Bytes Processed'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061676'
+    updated_at: '2025-09-25T05:21:29.061677'
+  gauge_metric:
+    technical_name: gauge_metric
+    business_name: Current state or level measurement
+    description: 'OpenMetrics concept: Current state or level measurement'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061678'
+    updated_at: '2025-09-25T05:21:29.061679'
+  memory_usage_bytes:
+    technical_name: memory_usage_bytes
+    business_name: Memory Usage
+    description: 'OpenMetrics concept: Memory Usage'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061680'
+    updated_at: '2025-09-25T05:21:29.061681'
+  temperature_celsius:
+    technical_name: temperature_celsius
+    business_name: Temperature Celsius
+    description: 'OpenMetrics concept: Temperature Celsius'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061682'
+    updated_at: '2025-09-25T05:21:29.061683'
+  queue_size:
+    technical_name: queue_size
+    business_name: Queue Size
+    description: 'OpenMetrics concept: Queue Size'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061684'
+    updated_at: '2025-09-25T05:21:29.061685'
+  histogram_metric:
+    technical_name: histogram_metric
+    business_name: Distribution of measurements over time
+    description: 'OpenMetrics concept: Distribution of measurements over time'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061686'
+    updated_at: '2025-09-25T05:21:29.061687'
+  http_request_duration_seconds:
+    technical_name: http_request_duration_seconds
+    business_name: HTTP Request Duration
+    description: 'OpenMetrics concept: HTTP Request Duration'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061735'
+    updated_at: '2025-09-25T05:21:29.061736'
+  response_size_bytes:
+    technical_name: response_size_bytes
+    business_name: Response Size
+    description: 'OpenMetrics concept: Response Size'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061738'
+    updated_at: '2025-09-25T05:21:29.061739'
+  summary_metric:
+    technical_name: summary_metric
+    business_name: Statistical summary of measurements
+    description: 'OpenMetrics concept: Statistical summary of measurements'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061740'
+    updated_at: '2025-09-25T05:21:29.061741'
+  rpc_duration_seconds:
+    technical_name: rpc_duration_seconds
+    business_name: RPC Duration
+    description: 'OpenMetrics concept: RPC Duration'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061742'
+    updated_at: '2025-09-25T05:21:29.061742'
+  request_size_bytes:
+    technical_name: request_size_bytes
+    business_name: Request Size
+    description: 'OpenMetrics concept: Request Size'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061743'
+    updated_at: '2025-09-25T05:21:29.061744'
+  exposition_format:
+    technical_name: exposition_format
+    business_name: Metric Export Format
+    description: 'OpenMetrics concept: Metric Export Format'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061745'
+    updated_at: '2025-09-25T05:21:29.061746'
+  metric_family:
+    technical_name: metric_family
+    business_name: Related Metric Group
+    description: 'OpenMetrics concept: Related Metric Group'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061747'
+    updated_at: '2025-09-25T05:21:29.061748'
+  sample:
+    technical_name: sample
+    business_name: Metric Data Point
+    description: 'OpenMetrics concept: Metric Data Point'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061749'
+    updated_at: '2025-09-25T05:21:29.061749'
+  timestamp:
+    technical_name: timestamp
+    business_name: Measurement Time
+    description: 'OpenMetrics concept: Measurement Time'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061750'
+    updated_at: '2025-09-25T05:21:29.061751'
+  label:
+    technical_name: label
+    business_name: Metric Dimension
+    description: 'OpenMetrics concept: Metric Dimension'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061752'
+    updated_at: '2025-09-25T05:21:29.061753'
+  help_text:
+    technical_name: help_text
+    business_name: Metric Description
+    description: 'OpenMetrics concept: Metric Description'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061754'
+    updated_at: '2025-09-25T05:21:29.061754'
+  quantile:
+    technical_name: quantile
+    business_name: Statistical Percentile
+    description: 'OpenMetrics concept: Statistical Percentile'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061756'
+    updated_at: '2025-09-25T05:21:29.061756'
+  bucket:
+    technical_name: bucket
+    business_name: Distribution Range
+    description: 'OpenMetrics concept: Distribution Range'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061757'
+    updated_at: '2025-09-25T05:21:29.061758'
+  le:
+    technical_name: le
+    business_name: Less Than or Equal To
+    description: 'OpenMetrics concept: Less Than or Equal To'
+    context: Monitoring and observability
+    domain: devops
+    synonyms: []
+    related_terms: []
+    examples:
+    - Used in OpenMetrics exposition format
+    created_at: '2025-09-25T05:21:29.061759'
+    updated_at: '2025-09-25T05:21:29.061760'
+concepts:
+  http_requests_total:
+    name: http_requests_total
+    definition: Cumulative count of events or operations - Monotonically increasing
+      counter
+    domain: devops
+    properties:
+      openmetrics_type: counter
+      labels:
+      - instance
+      - job
+      - method
+      - status
+      - handler
+      exposition_format: OpenMetrics text format
+    business_rules: []
+    calculation_logic: null
+    metric_type: counter
+    unit: total
+    normal_range: null
+    alert_thresholds: null
+    relationships: []
+    created_at: '2025-09-25T05:21:29.061766'
+    updated_at: '2025-09-25T05:21:29.061767'
+  errors_total:
+    name: errors_total
+    definition: Cumulative count of events or operations - Monotonically increasing
+      counter
+    domain: devops
+    properties:
+      openmetrics_type: counter
+      labels:
+      - instance
+      - job
+      exposition_format: OpenMetrics text format
+    business_rules: []
+    calculation_logic: null
+    metric_type: counter
+    unit: total
+    normal_range: null
+    alert_thresholds: null
+    relationships: []
+    created_at: '2025-09-25T05:21:29.061770'
+    updated_at: '2025-09-25T05:21:29.061771'
+  bytes_processed_total:
+    name: bytes_processed_total
+    definition: Cumulative count of events or operations - Monotonically increasing
+      counter
+    domain: devops
+    properties:
+      openmetrics_type: counter
+      labels:
+      - instance
+      - job
+      exposition_format: OpenMetrics text format
+    business_rules: []
+    calculation_logic: null
+    metric_type: counter
+    unit: total
+    normal_range: null
+    alert_thresholds: null
+    relationships: []
+    created_at: '2025-09-25T05:21:29.061774'
+    updated_at: '2025-09-25T05:21:29.061774'
+  memory_usage_bytes:
+    name: memory_usage_bytes
+    definition: Current state or level measurement - Value that can go up and down
+    domain: devops
+    properties:
+      openmetrics_type: gauge
+      labels:
+      - instance
+      - job
+      exposition_format: OpenMetrics text format
+    business_rules: []
+    calculation_logic: null
+    metric_type: gauge
+    unit: bytes
+    normal_range: null
+    alert_thresholds: null
+    relationships: []
+    created_at: '2025-09-25T05:21:29.061777'
+    updated_at: '2025-09-25T05:21:29.061778'
+  temperature_celsius:
+    name: temperature_celsius
+    definition: Current state or level measurement - Value that can go up and down
+    domain: devops
+    properties:
+      openmetrics_type: gauge
+      labels:
+      - instance
+      - job
+      exposition_format: OpenMetrics text format
+    business_rules: []
+    calculation_logic: null
+    metric_type: gauge
+    unit: celsius
+    normal_range: null
+    alert_thresholds: null
+    relationships: []
+    created_at: '2025-09-25T05:21:29.061780'
+    updated_at: '2025-09-25T05:21:29.061781'
+  queue_size:
+    name: queue_size
+    definition: Current state or level measurement - Value that can go up and down
+    domain: devops
+    properties:
+      openmetrics_type: gauge
+      labels:
+      - instance
+      - job
+      - queue_name
+      - priority
+      exposition_format: OpenMetrics text format
+    business_rules: []
+    calculation_logic: null
+    metric_type: gauge
+    unit: unknown
+    normal_range: null
+    alert_thresholds: null
+    relationships: []
+    created_at: '2025-09-25T05:21:29.061784'
+    updated_at: '2025-09-25T05:21:29.061784'
+  http_request_duration_seconds:
+    name: http_request_duration_seconds
+    definition: Distribution of measurements over time - Cumulative frequency of observations
+      in buckets
+    domain: devops
+    properties:
+      openmetrics_type: histogram
+      labels:
+      - instance
+      - job
+      - method
+      - status
+      - handler
+      exposition_format: OpenMetrics text format
+    business_rules: []
+    calculation_logic: null
+    metric_type: histogram
+    unit: seconds
+    normal_range: null
+    alert_thresholds: null
+    relationships: []
+    created_at: '2025-09-25T05:21:29.061787'
+    updated_at: '2025-09-25T05:21:29.061788'
+  response_size_bytes:
+    name: response_size_bytes
+    definition: Distribution of measurements over time - Cumulative frequency of observations
+      in buckets
+    domain: devops
+    properties:
+      openmetrics_type: histogram
+      labels:
+      - instance
+      - job
+      exposition_format: OpenMetrics text format
+    business_rules: []
+    calculation_logic: null
+    metric_type: histogram
+    unit: bytes
+    normal_range: null
+    alert_thresholds: null
+    relationships: []
+    created_at: '2025-09-25T05:21:29.061790'
+    updated_at: '2025-09-25T05:21:29.061791'
+  rpc_duration_seconds:
+    name: rpc_duration_seconds
+    definition: Statistical summary of measurements - Quantiles of observations over
+      sliding time window
+    domain: devops
+    properties:
+      openmetrics_type: summary
+      labels:
+      - instance
+      - job
+      - service
+      - method
+      - status
+      exposition_format: OpenMetrics text format
+    business_rules: []
+    calculation_logic: null
+    metric_type: summary
+    unit: seconds
+    normal_range: null
+    alert_thresholds: null
+    relationships: []
+    created_at: '2025-09-25T05:21:29.061794'
+    updated_at: '2025-09-25T05:21:29.061794'
+  request_size_bytes:
+    name: request_size_bytes
+    definition: Statistical summary of measurements - Quantiles of observations over
+      sliding time window
+    domain: devops
+    properties:
+      openmetrics_type: summary
+      labels:
+      - instance
+      - job
+      exposition_format: OpenMetrics text format
+    business_rules: []
+    calculation_logic: null
+    metric_type: summary
+    unit: bytes
+    normal_range: null
+    alert_thresholds: null
+    relationships: []
+    created_at: '2025-09-25T05:21:29.061797'
+    updated_at: '2025-09-25T05:21:29.061798'
+aggregation_rules:
+  request_rate:
+    rule_id: 2507f7a8-d1aa-4247-9d16-16f21a5e66d7
+    metric_name: request_rate
+    source_metrics:
+    - http_requests_total
+    aggregation_function: calculated
+    window_size_seconds: 300
+    calculation_logic: rate(http_requests_total[5m])
+    business_context: Calculate per-second rate of HTTP requests
+    domain: devops
+    created_at: '2025-09-25T05:21:29.061808'
+  error_ratio:
+    rule_id: 0d2c9b96-4548-4abd-96fb-fd31b959945a
+    metric_name: error_ratio
+    source_metrics:
+    - http_requests_total
+    - http_errors_total
+    aggregation_function: calculated
+    window_size_seconds: 300
+    calculation_logic: http_errors_total / http_requests_total
+    business_context: Calculate error rate as ratio of failed to total requests
+    domain: devops
+    created_at: '2025-09-25T05:21:29.061817'
+display_preferences:
+  chart_colors:
+    counter: '#1f77b4'
+    gauge: '#ff7f0e'
+    histogram: '#2ca02c'
+    summary: '#d62728'
+  label_formats:
+    counter: '{metric_name}_total'
+    gauge: '{metric_name}'
+    histogram: '{metric_name}_bucket'
+    summary: '{metric_name}_quantile'
+  unit_displays:
+    seconds: s
+    bytes: B
+    total: total
+    ratio: ratio
+  dashboard_layout: {}
+  alert_formats: {}
+metadata:
+  source: OpenMetrics Specification 1.0.0
+  discovery_method: Specification Analysis
+  discovery_timestamp: '2025-09-25T05:21:29.061613'
+  patterns_identified:
+  - Use counters for monotonically increasing values
+  - Use gauges for values that can go up and down
+  - Include units in metric names for clarity
+  - Use consistent label naming across metrics
+  - Provide meaningful help text for all metrics
+  - Follow base unit conventions (seconds, bytes)
+  - Use histograms for latency and size distributions
+  - Include standard labels (instance, job) for infrastructure metrics
+  - Avoid high cardinality labels to prevent performance issues
+  - Use summary metrics for pre-calculated quantiles
+  business_concepts:
+  - System Performance Monitoring
+  - Application Health Tracking
+  - Resource Utilization Measurement
+  - Error Rate Monitoring
+  - Latency Distribution Analysis
+  - Throughput Measurement
+  - Capacity Planning Metrics
+  - Service Level Indicators
+  - Operational Metrics
+  - Business Metrics
+  reference_implementation: true
+created_at: '2025-09-25T05:21:29.061664'
+updated_at: '2025-09-25T05:21:29.061818'

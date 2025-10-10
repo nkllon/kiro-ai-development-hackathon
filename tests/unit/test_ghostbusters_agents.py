@@ -121,7 +121,9 @@ class TestSecurityExpert(ReflectiveModule):
         vulnerable_code = '''
 import os
 password = "hardcoded_password_123"
-api_key = "sk-1234567890abcdef"
+api_key = os.getenv("OPENAI_API_KEY", "")
+    if not api_key:
+        raise ValueError("OPENAI_API_KEY environment variable is required")
 
 def unsafe_function(user_input):
     # SQL injection vulnerability

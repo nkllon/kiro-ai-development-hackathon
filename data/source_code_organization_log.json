@@ -1,0 +1,458 @@
+{
+  "timestamp": "2025-10-06T15:51:10.967103",
+  "operations": [
+    {
+      "action": "archive",
+      "source": "src/.claude",
+      "target": "archive/development/src/.claude",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/.cursor",
+      "target": "archive/development/src/.cursor",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/.github",
+      "target": "archive/development/src/.github",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/.kiro",
+      "target": "archive/development/src/.kiro",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/.make-tasks",
+      "target": "archive/development/src/.make-tasks",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/.simone",
+      "target": "archive/development/src/.simone",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/.task_execution",
+      "target": "archive/development/src/.task_execution",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/.vscode",
+      "target": "archive/development/src/.vscode",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/~",
+      "target": "archive/development/src/~",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/audit_reports",
+      "target": "archive/development/src/audit_reports",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/beast_mode_metrics",
+      "target": "archive/development/src/beast_mode_metrics",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/cloudflare",
+      "target": "archive/development/src/cloudflare",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/config",
+      "target": "archive/development/src/config",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/data",
+      "target": "archive/development/src/data",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/demo_project",
+      "target": "archive/development/src/demo_project",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/demo_spores",
+      "target": "archive/development/src/demo_spores",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/deployment",
+      "target": "archive/development/src/deployment",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/docker-migration-backup-20251003_161735",
+      "target": "archive/development/src/docker-migration-backup-20251003_161735",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/empirical_data",
+      "target": "archive/development/src/empirical_data",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/generated_docs",
+      "target": "archive/development/src/generated_docs",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/logs",
+      "target": "archive/development/src/logs",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/monitoring",
+      "target": "archive/development/src/monitoring",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/nginx",
+      "target": "archive/development/src/nginx",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/observatory_data",
+      "target": "archive/development/src/observatory_data",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/packer-systo-python",
+      "target": "archive/development/src/packer-systo-python",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/patterns",
+      "target": "archive/development/src/patterns",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/poe_deployment_20251004_152642",
+      "target": "archive/development/src/poe_deployment_20251004_152642",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/prompts",
+      "target": "archive/development/src/prompts",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/reports",
+      "target": "archive/development/src/reports",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/static",
+      "target": "archive/development/src/static",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/templates",
+      "target": "archive/development/src/templates",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/vonnegut_container_deployment",
+      "target": "archive/development/src/vonnegut_container_deployment",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/vonnegut_deployment",
+      "target": "archive/development/src/vonnegut_deployment",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/vonnegut_deployment_package",
+      "target": "archive/development/src/vonnegut_deployment_package",
+      "type": "directory"
+    },
+    {
+      "action": "archive",
+      "source": "src/.DS_Store",
+      "target": "archive/development/src/.DS_Store",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "src/.env.directus",
+      "target": "archive/development/src/.env.directus",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "src/.gitguardian.yaml",
+      "target": "archive/development/src/.gitguardian.yaml",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "src/.gitlab-ci-patch-validation.yml",
+      "target": "archive/development/src/.gitlab-ci-patch-validation.yml",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "src/file_organization_log.json",
+      "target": "archive/development/src/file_organization_log.json",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "src/websocket_fix_monitoring_config.yml",
+      "target": "archive/development/src/websocket_fix_monitoring_config.yml",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "src/cloudflare-tunnel-config-websocket.yml",
+      "target": "archive/development/src/cloudflare-tunnel-config-websocket.yml",
+      "type": "file"
+    },
+    {
+      "action": "archive",
+      "source": "src/cloudflared-config-poe.yml",
+      "target": "archive/development/src/cloudflared-config-poe.yml",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/advanced_migration_planner.py",
+      "target": "src/tools/advanced_migration_planner.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/advanced_uml_viewer.py",
+      "target": "src/tools/advanced_uml_viewer.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/cli_safety_linter.py",
+      "target": "src/tools/cli_safety_linter.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/comprehensive_migration_planner.py",
+      "target": "src/tools/comprehensive_migration_planner.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/documentation_index_generator.py",
+      "target": "src/tools/documentation_index_generator.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/domain_diagram_generator.py",
+      "target": "src/tools/domain_diagram_generator.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/emergency_cli_fix.py",
+      "target": "src/tools/emergency_cli_fix.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/ghostbusters_plan_validator.py",
+      "target": "src/tools/ghostbusters_plan_validator.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/ghostbusters_root_cleanup_system.py",
+      "target": "src/tools/ghostbusters_root_cleanup_system.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/health_dashboard.py",
+      "target": "src/tools/health_dashboard.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/makefile_system_implementation.py",
+      "target": "src/tools/makefile_system_implementation.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/makefile_system_model.py",
+      "target": "src/tools/makefile_system_model.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/migration_graph_generator.py",
+      "target": "src/tools/migration_graph_generator.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/multi_dimensional_vocabulary_projector.py",
+      "target": "src/tools/multi_dimensional_vocabulary_projector.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/random_test_runner.py",
+      "target": "src/tools/random_test_runner.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/registry_dashboard.py",
+      "target": "src/tools/registry_dashboard.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/root_cleanup_planner.py",
+      "target": "src/tools/root_cleanup_planner.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/safe_shell_wrapper.py",
+      "target": "src/tools/safe_shell_wrapper.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/shell_command_fix.py",
+      "target": "src/tools/shell_command_fix.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/targeted_test_runner.py",
+      "target": "src/tools/targeted_test_runner.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/test_migration_executor.py",
+      "target": "src/tools/test_migration_executor.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/ubiquitous_language_generator.py",
+      "target": "src/tools/ubiquitous_language_generator.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/uml_diagram_viewer.py",
+      "target": "src/tools/uml_diagram_viewer.py",
+      "type": "file"
+    },
+    {
+      "action": "move",
+      "source": "src/uml_documentation_system.py",
+      "target": "src/tools/uml_documentation_system.py",
+      "type": "file"
+    },
+    {
+      "action": "remove_empty",
+      "source": "src/beast_mode/mcp_integrations/google_calendar/base",
+      "type": "directory"
+    },
+    {
+      "action": "remove_empty",
+      "source": "src/observatory_infrastructure/configuration",
+      "type": "directory"
+    },
+    {
+      "action": "remove_empty",
+      "source": "src/observatory_infrastructure/health_monitoring",
+      "type": "directory"
+    },
+    {
+      "action": "remove_empty",
+      "source": "src/cms_platform/config",
+      "type": "directory"
+    },
+    {
+      "action": "remove_empty",
+      "source": "src/cms_platform/tests",
+      "type": "directory"
+    },
+    {
+      "action": "remove_empty",
+      "source": "src/cms_platform/extensions",
+      "type": "directory"
+    },
+    {
+      "action": "remove_empty",
+      "source": "src/runtime_state_registry/parsers",
+      "type": "directory"
+    },
+    {
+      "action": "remove_empty",
+      "source": "src/runtime_state_registry/cli",
+      "type": "directory"
+    },
+    {
+      "action": "remove_empty",
+      "source": "src/runtime_state_registry/query",
+      "type": "directory"
+    },
+    {
+      "action": "remove_empty",
+      "source": "src/unified_dag_registry",
+      "type": "directory"
+    }
+  ],
+  "summary": {
+    "directories_archived": 34,
+    "files_archived": 8,
+    "files_moved": 24,
+    "empty_dirs_removed": 10,
+    "total_operations": 76
+  }
+}

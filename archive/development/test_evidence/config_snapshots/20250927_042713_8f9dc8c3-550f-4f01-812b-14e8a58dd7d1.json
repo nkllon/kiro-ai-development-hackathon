@@ -1,0 +1,42 @@
+{
+  "evidence_id": "8f9dc8c3-550f-4f01-812b-14e8a58dd7d1",
+  "timestamp": "2025-09-27T04:27:13.035964",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.035955",
+    "data_type": "dict"
+  },
+  "integrity_hash": "ea83baf90e48ec00f199ed82688f2e621550ffda444375a38d6fd5eb81e73a89",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/vector_store_endpoints/endpoints.py",
+    "file_size": 5734,
+    "line_count": 166,
+    "route_analysis": {
+      "total_routes": 4,
+      "websocket_routes": [],
+      "http_routes": [
+        "/v1/vector_stores/{vector_store_id}/search",
+        "/vector_stores/{vector_store_id}/search",
+        "/v1/vector_stores",
+        "/vector_stores"
+      ],
+      "route_handlers": {
+        "/v1/vector_stores/{vector_store_id}/search": "vector_store_search",
+        "/vector_stores/{vector_store_id}/search": "vector_store_search",
+        "/v1/vector_stores": "vector_store_create",
+        "/vector_stores": "vector_store_create"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.Depends",
+        "fastapi.Response",
+        "fastapi.APIRouter",
+        "fastapi.Request",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.035949"
+  }
+}

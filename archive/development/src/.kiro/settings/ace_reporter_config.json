@@ -1,0 +1,22 @@
+{
+  "deployment_mode": "enhanced",
+  "feature_flags": {
+    "ai_memory_palace_integration": false,
+    "multi_channel_delivery": false,
+    "enhanced_context": true,
+    "spec_progress_monitoring": true,
+    "directus_persistence": false
+  },
+  "rollback_settings": {
+    "auto_rollback_on_error": true,
+    "health_check_interval_seconds": 30,
+    "error_threshold": 3,
+    "performance_threshold_ms": 5000
+  },
+  "deployment_metadata": {
+    "last_updated": "2025-09-29T13:21:18.123801",
+    "deployed_by": "ace_reporter_factory",
+    "deployment_version": "2.0.0",
+    "emergency_rollback": true
+  }
+}

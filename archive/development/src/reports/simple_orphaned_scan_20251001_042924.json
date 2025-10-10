@@ -1,0 +1,564 @@
+{
+  "scan_timestamp": "2025-10-01T04:29:24.709547",
+  "total_implementations": 0,
+  "total_specifications": 79,
+  "orphaned_solutions": 0,
+  "coverage_percentage": 0.0,
+  "implementations": [],
+  "specifications": [
+    {
+      "name": "observatory-editorial-intelligence",
+      "path": ".kiro/specs/observatory-editorial-intelligence",
+      "has_requirements": true,
+      "has_design": false,
+      "has_tasks": false
+    },
+    {
+      "name": "observatory-live-coordination-feed",
+      "path": ".kiro/specs/observatory-live-coordination-feed",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "observatory-social-authentication",
+      "path": ".kiro/specs/observatory-social-authentication",
+      "has_requirements": true,
+      "has_design": false,
+      "has_tasks": false
+    },
+    {
+      "name": "reflective-module-architecture-consolidation",
+      "path": ".kiro/specs/reflective-module-architecture-consolidation",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "directus-reconciliation-systematic",
+      "path": ".kiro/specs/directus-reconciliation-systematic",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "websocket-implementation-validation",
+      "path": ".kiro/specs/websocket-implementation-validation",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "clean-chart-update-architecture",
+      "path": ".kiro/specs/clean-chart-update-architecture",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "beast-mode-rebuild",
+      "path": ".kiro/specs/beast-mode-rebuild",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": false
+    },
+    {
+      "name": "repository-content-discovery-indexing",
+      "path": ".kiro/specs/repository-content-discovery-indexing",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "emoji-rain-system",
+      "path": ".kiro/specs/emoji-rain-system",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "observatory-server-deployment-fix",
+      "path": ".kiro/specs/observatory-server-deployment-fix",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "spec-mode-framework",
+      "path": ".kiro/specs/spec-mode-framework",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "makefile-syntax-repair-governance",
+      "path": ".kiro/specs/makefile-syntax-repair-governance",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "directus-cms-systematic-implementation",
+      "path": ".kiro/specs/directus-cms-systematic-implementation",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": false
+    },
+    {
+      "name": "multi-perspective-ghostbusters",
+      "path": ".kiro/specs/multi-perspective-ghostbusters",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "competitive-launch-strategy",
+      "path": ".kiro/specs/competitive-launch-strategy",
+      "has_requirements": false,
+      "has_design": false,
+      "has_tasks": true
+    },
+    {
+      "name": "release-v1-master-consolidation",
+      "path": ".kiro/specs/release-v1-master-consolidation",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "observatory-security-review",
+      "path": ".kiro/specs/observatory-security-review",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "observatory-token-tracking-chart",
+      "path": ".kiro/specs/observatory-token-tracking-chart",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "beast-mode-system-documentation",
+      "path": ".kiro/specs/beast-mode-system-documentation",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "google-calendar-mcp-integration",
+      "path": ".kiro/specs/google-calendar-mcp-integration",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "doctor-is-in-ai-consultation",
+      "path": ".kiro/specs/doctor-is-in-ai-consultation",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "msp-ssl-integration-governance",
+      "path": ".kiro/specs/msp-ssl-integration-governance",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "spec-framework",
+      "path": ".kiro/specs/spec-framework",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "dag-orchestrated-parallel-execution",
+      "path": ".kiro/specs/dag-orchestrated-parallel-execution",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "release-the-hounds-execution",
+      "path": ".kiro/specs/release-the-hounds-execution",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "comprehensive-makefile-system",
+      "path": ".kiro/specs/comprehensive-makefile-system",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "claude-code-redis-task-queue",
+      "path": ".kiro/specs/claude-code-redis-task-queue",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "spec-consistency-reconciliation",
+      "path": ".kiro/specs/spec-consistency-reconciliation",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "ai-memory-palace-beastly-migration",
+      "path": ".kiro/specs/ai-memory-palace-beastly-migration",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "ghostbusters-productivity-triage",
+      "path": ".kiro/specs/ghostbusters-productivity-triage",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "practical-repository-cleanup",
+      "path": ".kiro/specs/practical-repository-cleanup",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "information-exhaust-preservation",
+      "path": ".kiro/specs/information-exhaust-preservation",
+      "has_requirements": true,
+      "has_design": false,
+      "has_tasks": false
+    },
+    {
+      "name": "repository-discovery-resumption",
+      "path": ".kiro/specs/repository-discovery-resumption",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "google-calendar-mcp-quota-project-fix",
+      "path": ".kiro/specs/google-calendar-mcp-quota-project-fix",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "directus-ui-configuration",
+      "path": ".kiro/specs/directus-ui-configuration",
+      "has_requirements": true,
+      "has_design": false,
+      "has_tasks": false
+    },
+    {
+      "name": "reflective-coordinator-system",
+      "path": ".kiro/specs/reflective-coordinator-system",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": false
+    },
+    {
+      "name": "directus-schema-design",
+      "path": ".kiro/specs/directus-schema-design",
+      "has_requirements": true,
+      "has_design": false,
+      "has_tasks": false
+    },
+    {
+      "name": "directus-cms-setup",
+      "path": ".kiro/specs/directus-cms-setup",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "spec-theater-remediation",
+      "path": ".kiro/specs/spec-theater-remediation",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "observatory-system-recovery",
+      "path": ".kiro/specs/observatory-system-recovery",
+      "has_requirements": true,
+      "has_design": false,
+      "has_tasks": false
+    },
+    {
+      "name": "cloudflare-custom-error-pages",
+      "path": ".kiro/specs/cloudflare-custom-error-pages",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "ace-reporter-ai-memory-palace-integration",
+      "path": ".kiro/specs/ace-reporter-ai-memory-palace-integration",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "artifact-classification-transfer-learning",
+      "path": ".kiro/specs/artifact-classification-transfer-learning",
+      "has_requirements": true,
+      "has_design": false,
+      "has_tasks": false
+    },
+    {
+      "name": "ubiquitous-language-monitoring-platform",
+      "path": ".kiro/specs/ubiquitous-language-monitoring-platform",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "cloudflare-websocket-tunnel-fix",
+      "path": ".kiro/specs/cloudflare-websocket-tunnel-fix",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "beast-mode-interface-governance",
+      "path": ".kiro/specs/beast-mode-interface-governance",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "ai-coordination-meta-programming",
+      "path": ".kiro/specs/ai-coordination-meta-programming",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "discord-community-monitoring",
+      "path": ".kiro/specs/discord-community-monitoring",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "observatory-health-chart-implementation",
+      "path": ".kiro/specs/observatory-health-chart-implementation",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "decentralized-ai-coordination-network",
+      "path": ".kiro/specs/decentralized-ai-coordination-network",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "observatory-emergency-repair",
+      "path": ".kiro/specs/observatory-emergency-repair",
+      "has_requirements": true,
+      "has_design": false,
+      "has_tasks": false
+    },
+    {
+      "name": "devpost-hackathon-integration",
+      "path": ".kiro/specs/devpost-hackathon-integration",
+      "has_requirements": false,
+      "has_design": false,
+      "has_tasks": false
+    },
+    {
+      "name": "mcp-server-configuration-standardization",
+      "path": ".kiro/specs/mcp-server-configuration-standardization",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "observatory-deployment-procedures",
+      "path": ".kiro/specs/observatory-deployment-procedures",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "anti-duplication-system",
+      "path": ".kiro/specs/anti-duplication-system",
+      "has_requirements": true,
+      "has_design": false,
+      "has_tasks": false
+    },
+    {
+      "name": "universal-artifact-classification",
+      "path": ".kiro/specs/universal-artifact-classification",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "observatory-cloudflare-infrastructure-governance",
+      "path": ".kiro/specs/observatory-cloudflare-infrastructure-governance",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "prometheus-monitoring-system-repair",
+      "path": ".kiro/specs/prometheus-monitoring-system-repair",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "beast-mode-coordination-observatory",
+      "path": ".kiro/specs/beast-mode-coordination-observatory",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "meta-observatory-streaming",
+      "path": ".kiro/specs/meta-observatory-streaming",
+      "has_requirements": true,
+      "has_design": false,
+      "has_tasks": false
+    },
+    {
+      "name": "directus-ai-memory-palace-integration",
+      "path": ".kiro/specs/directus-ai-memory-palace-integration",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "system-architecture-wiring-diagram",
+      "path": ".kiro/specs/system-architecture-wiring-diagram",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "discord-bot-framework-oss",
+      "path": ".kiro/specs/discord-bot-framework-oss",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "repository-synchronization-cleanup",
+      "path": ".kiro/specs/repository-synchronization-cleanup",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "beast-mode-reliability-requirements",
+      "path": ".kiro/specs/beast-mode-reliability-requirements",
+      "has_requirements": true,
+      "has_design": false,
+      "has_tasks": false
+    },
+    {
+      "name": "discord-bot-integration-fix",
+      "path": ".kiro/specs/discord-bot-integration-fix",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "spec-scrub-rdi-consistency",
+      "path": ".kiro/specs/spec-scrub-rdi-consistency",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "meta-monitoring-experiment",
+      "path": ".kiro/specs/meta-monitoring-experiment",
+      "has_requirements": true,
+      "has_design": false,
+      "has_tasks": false
+    },
+    {
+      "name": "subprocess-safety-requirements",
+      "path": ".kiro/specs/subprocess-safety-requirements",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": false
+    },
+    {
+      "name": "agent-control-governance",
+      "path": ".kiro/specs/agent-control-governance",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "bot-defense-command-center",
+      "path": ".kiro/specs/bot-defense-command-center",
+      "has_requirements": false,
+      "has_design": false,
+      "has_tasks": true
+    },
+    {
+      "name": "mcp-development-framework",
+      "path": ".kiro/specs/mcp-development-framework",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "msp-ssl-chaos-tamer",
+      "path": ".kiro/specs/msp-ssl-chaos-tamer",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "directus-data-population",
+      "path": ".kiro/specs/directus-data-population",
+      "has_requirements": true,
+      "has_design": false,
+      "has_tasks": false
+    },
+    {
+      "name": "ai-memory-palace",
+      "path": ".kiro/specs/ai-memory-palace",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "observatory-data-discovery",
+      "path": ".kiro/specs/observatory-data-discovery",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "artifact-driven-beast-mode",
+      "path": ".kiro/specs/artifact-driven-beast-mode",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    },
+    {
+      "name": "observatory-performance-chart",
+      "path": ".kiro/specs/observatory-performance-chart",
+      "has_requirements": true,
+      "has_design": true,
+      "has_tasks": true
+    }
+  ],
+  "orphaned": []
+}

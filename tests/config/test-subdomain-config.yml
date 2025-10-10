@@ -1,0 +1,49 @@
+tunnel: d1e53e43-033f-4994-8f46-c83962ae3785
+credentials-file: /Users/lou/.cloudflared/d1e53e43-033f-4994-8f46-c83962ae3785.json
+
+ingress:
+  - hostname: observatory.nkllon.com
+    service: http://localhost:8888
+    originRequest:
+      httpHostHeader: localhost:8888
+      noTLSVerify: false
+      connectTimeout: 30s
+      tlsTimeout: 10s
+      tcpKeepAlive: 30s
+      keepAliveConnections: 10
+      keepAliveTimeout: 1m30s
+  - hostname: observatory-container.nkllon.com  
+    service: http://localhost:8889
+    originRequest:
+      httpHostHeader: localhost:8889
+      noTLSVerify: false
+      connectTimeout: 30s
+      tlsTimeout: 10s
+      tcpKeepAlive: 30s
+      keepAliveConnections: 10
+      keepAliveTimeout: 1m30s
+  # TEST: New subdomain for validation
+  - hostname: test.observatory.nkllon.com
+    service: http://localhost:8080
+    originRequest:
+      httpHostHeader: localhost:8080
+      noTLSVerify: false
+      connectTimeout: 30s
+      tlsTimeout: 10s
+  # PRODUCTION: Grafana subdomain
+  - hostname: grafana.observatory.nkllon.com
+    service: http://localhost:3000
+    originRequest:
+      httpHostHeader: localhost:3000
+      noTLSVerify: false
+      connectTimeout: 30s
+      tlsTimeout: 10s
+  # PRODUCTION: Prometheus subdomain  
+  - hostname: prometheus.observatory.nkllon.com
+    service: http://localhost:9090
+    originRequest:
+      httpHostHeader: localhost:9090
+      noTLSVerify: false
+      connectTimeout: 30s
+      tlsTimeout: 10s
+  - service: http_status:404

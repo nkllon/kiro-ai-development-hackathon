@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Observatory - Minor Lab Incident 🧪</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            max-width: 900px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 50px 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 100px rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Lab scene with animated elements */
+        .lab-scene {
+            position: relative;
+            margin: 0 auto 30px;
+            width: 300px;
+            height: 200px;
+        }
+
+        /* Lab rat character */
+        .lab-rat {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 80px;
+            animation: shake 0.5s infinite, hop 2s infinite;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(-50%) rotate(-2deg); }
+            50% { transform: translateX(-50%) rotate(2deg); }
+        }
+
+        @keyframes hop {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        /* Frazzled hair effect */
+        .hair {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+            animation: frazzle 0.3s infinite;
+        }
+
+        @keyframes frazzle {
+            0%, 100% { transform: translateX(-50%) rotate(-5deg) scale(1); }
+            50% { transform: translateX(-50%) rotate(5deg) scale(1.1); }
+        }
+
+        /* Smoke puffs */
+        .smoke {
+            position: absolute;
+            font-size: 30px;
+            opacity: 0;
+            animation: smokeRise 3s infinite;
+        }
+
+        .smoke1 { left: 20%; animation-delay: 0s; }
+        .smoke2 { left: 40%; animation-delay: 1s; }
+        .smoke3 { left: 60%; animation-delay: 2s; }
+        .smoke4 { left: 80%; animation-delay: 0.5s; }
+
+        @keyframes smokeRise {
+            0% {
+                bottom: 30px;
+                opacity: 0;
+                transform: translateX(0) scale(0.5);
+            }
+            50% {
+                opacity: 0.7;
+            }
+            100% {
+                bottom: 150px;
+                opacity: 0;
+                transform: translateX(20px) scale(1.5);
+            }
+        }
+
+        /* Sparks */
+        .spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffeb3b;
+            border-radius: 50%;
+            animation: sparkle 1.5s infinite;
+            box-shadow: 0 0 10px #ffeb3b;
+        }
+
+        .spark1 { top: 40%; left: 30%; animation-delay: 0s; }
+        .spark2 { top: 50%; right: 30%; animation-delay: 0.3s; }
+        .spark3 { top: 60%; left: 40%; animation-delay: 0.6s; }
+        .spark4 { top: 45%; right: 35%; animation-delay: 0.9s; }
+
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+        }
+
+        /* Beakers and lab equipment */
+        .lab-equipment {
+            position: absolute;
+            bottom: 10px;
+            font-size: 40px;
+            opacity: 0.8;
+            animation: wobble 2s infinite;
+        }
+
+        .beaker-left { left: 10%; }
+        .beaker-right { right: 10%; animation-delay: 1s; }
+
+        @keyframes wobble {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+
+        /* Alert badge */
+        .alert-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 4px 25px rgba(255, 107, 107, 0.6);
+            }
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #00d4ff 0%, #00a8cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .tagline {
+            font-size: 20px;
+            margin-bottom: 24px;
+            color: #ff9800;
+            font-weight: 600;
+        }
+
+        .message {
+            font-size: 18px;
+            margin-bottom: 24px;
+            color: #b0b0b0;
+            line-height: 1.8;
+        }
+
+        .disclaimer {
+            font-size: 16px;
+            color: #4caf50;
+            font-style: italic;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .info-card:hover {
+            border-color: rgba(0, 212, 255, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .info-card h3 {
+            font-size: 18px;
+            color: #00d4ff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card .icon {
+            font-size: 24px;
+        }
+
+        .info-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-card li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            font-size: 15px;
+        }
+
+        .info-card li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #00d4ff;
+        }
+
+        .status-bar {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 152, 0, 0.3);
+        }
+
+        .status-bar h3 {
+            color: #ff9800;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .status-text {
+            font-family: 'Courier New', monospace;
+            color: #4caf50;
+            font-size: 14px;
+        }
+
+        /* Auto-refresh countdown */
+        .countdown {
+            font-size: 14px;
+            color: #00d4ff;
+            margin-top: 15px;
+        }
+
+        .countdown-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff9800;
+        }
+
+        /* Action buttons */
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            color: #0f0c29;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .transparency-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .transparency-section h2 {
+            font-size: 20px;
+            color: #00d4ff;
+            margin-bottom: 15px;
+        }
+
+        .tech-details {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            text-align: left;
+            color: #4caf50;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        .tech-details .key {
+            color: #ff9800;
+        }
+
+        .tech-details .value {
+            color: #00d4ff;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            color: #808080;
+        }
+
+        .footer a {
+            color: #00d4ff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #00fff7;
+            text-decoration: underline;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin: 5px;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .tagline {
+                font-size: 18px;
+            }
+
+            .message {
+                font-size: 16px;
+            }
+
+            .lab-scene {
+                width: 250px;
+                height: 180px;
+            }
+
+            .lab-rat {
+                font-size: 60px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Loading spinner for retry */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner.active {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated particles background -->
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <!-- Lab scene with animated elements -->
+        <div class="lab-scene">
+            <!-- Smoke puffs -->
+            <div class="smoke smoke1">💨</div>
+            <div class="smoke smoke2">💨</div>
+            <div class="smoke smoke3">💨</div>
+            <div class="smoke smoke4">💨</div>
+
+            <!-- Sparks -->
+            <div class="spark spark1"></div>
+            <div class="spark spark2"></div>
+            <div class="spark spark3"></div>
+            <div class="spark spark4"></div>
+
+            <!-- Lab equipment -->
+            <div class="lab-equipment beaker-left">🧪</div>
+            <div class="lab-equipment beaker-right">⚗️</div>
+
+            <!-- Lab rat character -->
+            <div class="lab-rat">
+                <div class="hair">⚡</div>
+                🐭
+            </div>
+        </div>
+
+        <div class="alert-badge">🔬 Minor Lab Incident</div>
+
+        <h1>Observatory Temporarily Down</h1>
+        <p class="tagline">We'll Be Back Shortly!</p>
+
+        <p class="message">
+            Our observability lab experienced a minor incident. The team has been alerted
+            and our lab technicians are working to restore all systems. Please stand by!
+        </p>
+
+        <div class="disclaimer">
+            🐭 <strong>Important:</strong> No lab animals were harmed in this incident.
+        </div>
+
+        <!-- Status information -->
+        <div class="status-bar">
+            <h3>🔄 Current Status</h3>
+            <p class="status-text">
+                &gt; System Status: TUNNEL_DISCONNECTED<br>
+                &gt; Error Code: 1033<br>
+                &gt; Recovery: IN_PROGRESS<br>
+                &gt; Lab Safety: ALL_CLEAR ✓
+            </p>
+            <div class="countdown">
+                Auto-retry in: <span class="countdown-number" id="countdown">30</span>s
+            </div>
+        </div>
+
+        <!-- Information cards -->
+        <div class="info-grid">
+            <div class="info-card">
+                <h3><span class="icon">🎯</span> What You Can Do</h3>
+                <ul>
+                    <li>Refresh this page in a moment</li>
+                    <li>Check our GitHub for updates</li>
+                    <li>Join our Discord community</li>
+                    <li>Review our documentation</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3><span class="icon">🔭</span> About Observatory</h3>
+                <ul>
+                    <li>Real-time system monitoring</li>
+                    <li>WebSocket-powered dashboards</li>
+                    <li>Prometheus + Grafana integration</li>
+                    <li>Beast Mode Observability™</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3><span class="icon">📊</span> Our Services</h3>
+                <ul>
+                    <li>Observatory Dashboard (Main)</li>
+                    <li>Grafana Visualizations</li>
+                    <li>Prometheus Metrics</li>
+                    <li>AI Memory Palace</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="actions">
+            <a href="javascript:void(0)" onclick="retryConnection()" class="btn btn-primary">
+                <span id="retry-text">🔄 Retry Now</span>
+                <span class="spinner" id="retry-spinner"></span>
+            </a>
+            <a href="https://github.com/nkllon/kiro-ai-development-hackathon" class="btn btn-secondary">
+                📚 Documentation
+            </a>
+            <a href="mailto:support@nkllon.com" class="btn btn-secondary">
+                💬 Contact Support
+            </a>
+        </div>
+
+        <!-- Transparency section -->
+        <div class="transparency-section">
+            <h2>🔍 Full Transparency (We're Very Open Here)</h2>
+
+            <div class="tech-details">
+::CLOUDFLARE_ERROR_1000S_BOX::
+
+<span class="key">incident_type:</span> <span class="value">cloudflare_tunnel_disconnection</span>
+<span class="key">error_code:</span> <span class="value">1033</span>
+<span class="key">affected_services:</span>
+  - <span class="value">observatory.nkllon.com</span> (Main Dashboard)
+  - <span class="value">grafana.observatory.nkllon.com</span> (Visualizations)
+  - <span class="value">prometheus.observatory.nkllon.com</span> (Metrics)
+<span class="key">tunnel_id:</span> <span class="value">d1e53e43-033f-4994-8f46-c83962ae3785</span>
+<span class="key">backend_services:</span> <span class="value">192.168.1.101:8888/9090/3000</span>
+<span class="key">data_safety:</span> <span class="value">✓ ALL_DATA_SAFE</span>
+<span class="key">estimated_recovery:</span> <span class="value">Monitoring in real-time</span>
+<span class="key">last_healthy:</span> <span class="value" id="timestamp">Calculating...</span>
+            </div>
+
+            <p style="margin-top: 20px;">
+                <span class="badge">🎯 ReflectiveModule Architecture</span>
+                <span class="badge">🚀 Beast Mode Framework</span>
+                <span class="badge">📡 WebSocket-Powered</span>
+                <span class="badge">🔒 Enterprise-Grade</span>
+                <span class="badge">🌐 Cloudflare Edge</span>
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-links">
+                <a href="https://github.com/nkllon/kiro-ai-development-hackathon">🐙 GitHub</a>
+                <span style="color: #333;">|</span>
+                <a href="https://github.com/nkllon/kiro-ai-development-hackathon/issues">🐛 Report Issue</a>
+                <span style="color: #333;">|</span>
+                <a href="mailto:support@nkllon.com">📧 Support</a>
+                <span style="color: #333;">|</span>
+                <a href="https://discord.gg/your-server">💬 Discord</a>
+            </div>
+            <p style="margin-top: 15px;">
+                <strong>Observatory</strong> - Beast Mode Observability Framework
+            </p>
+            <p style="font-size: 12px; margin-top: 10px; color: #666;">
+                Built with 🔭 by the Kiro AI Team | Powered by Cloudflare Tunnels
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Generate floating particles
+        function createParticles() {
+            const particles = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = (Math.random() * 4 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particles.appendChild(particle);
+            }
+        }
+
+        // Countdown timer for auto-refresh
+        let countdown = 30;
+        function updateCountdown() {
+            const countdownElement = document.getElementById('countdown');
+            if (countdown > 0) {
+                countdown--;
+                countdownElement.textContent = countdown;
+            } else {
+                // Auto-retry
+                window.location.reload();
+            }
+        }
+
+        // Retry connection with visual feedback
+        function retryConnection() {
+            const retryText = document.getElementById('retry-text');
+            const spinner = document.getElementById('retry-spinner');
+
+            retryText.textContent = 'Retrying...';
+            spinner.classList.add('active');
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        }
+
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            const timestamp = now.toISOString();
+            document.getElementById('timestamp').textContent = timestamp;
+        }
+
+        // Initialize
+        createParticles();
+        updateTimestamp();
+        setInterval(updateCountdown, 1000);
+
+        // Easter egg: Konami code for extra fun
+        let konamiCode = [];
+        const konamiPattern = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.key);
+            if (konamiCode.length > konamiPattern.length) {
+                konamiCode.shift();
+            }
+            if (JSON.stringify(konamiCode) === JSON.stringify(konamiPattern)) {
+                document.querySelector('.lab-rat').style.transform = 'translateX(-50%) scale(2) rotate(720deg)';
+                document.querySelector('.lab-rat').style.transition = 'all 2s ease';
+                setTimeout(() => {
+                    alert('🎉 You found the secret! The lab rat thanks you! 🐭');
+                    document.querySelector('.lab-rat').style.transform = 'translateX(-50%) scale(1) rotate(0deg)';
+                }, 2000);
+            }
+        });
+
+        // Space bar to retry (because why not)
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                retryConnection();
+            }
+        });
+    </script>
+</body>
+</html>

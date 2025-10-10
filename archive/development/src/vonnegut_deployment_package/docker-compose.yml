@@ -1,0 +1,67 @@
+services:
+  cloudflare-tunnel:
+    command:
+    - tunnel
+    - --config
+    - /etc/cloudflared/config.yml
+    - run
+    container_name: cloudflare-tunnel
+    depends_on:
+    - observatory-app
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    volumes:
+    - ./cloudflared-config.yml:/etc/cloudflared/config.yml:ro
+    - ./tunnel-credentials.json:/etc/cloudflared/credentials.json:ro
+  observatory-app:
+    build: .
+    container_name: observatory-app
+    depends_on:
+    - observatory-redis
+    - observatory-prometheus
+    environment:
+      PROMETHEUS_URL: http://observatory-prometheus:9090
+      REDIS_HOST: observatory-redis
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    ports:
+    - 8888:8888
+    restart: unless-stopped
+    volumes:
+    - ./observatory_data:/app/observatory_data
+    - ./logs:/app/logs
+  observatory-grafana:
+    container_name: observatory-grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    image: grafana/grafana:latest
+    ports:
+    - 3000:3000
+    restart: unless-stopped
+    volumes:
+    - grafana-storage:/var/lib/grafana
+  observatory-prometheus:
+    container_name: observatory-prometheus
+    image: prom/prometheus:latest
+    ports:
+    - 9090:9090
+    restart: unless-stopped
+    volumes:
+    - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    - prometheus-data:/prometheus
+  observatory-redis:
+    command:
+    - redis-server
+    - --requirepass
+    - ${REDIS_PASSWORD}
+    container_name: observatory-redis
+    image: redis:7-alpine
+    ports:
+    - 6379:6379
+    restart: unless-stopped
+    volumes:
+    - redis-data:/data
+version: '3.8'
+volumes:
+  grafana-storage: {}
+  prometheus-data: {}
+  redis-data: {}

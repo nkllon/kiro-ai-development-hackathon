@@ -1,0 +1,105 @@
+{
+  "timestamp": "2025-10-06 20:54:34",
+  "system_info": {
+    "cpu_count": 10,
+    "memory_gb": 16.0,
+    "python_version": "3.9.6",
+    "platform": "darwin",
+    "architecture": "arm64"
+  },
+  "system_validation": {
+    "meets_minimum": true,
+    "meets_recommended": true,
+    "issues": [],
+    "recommendations": []
+  },
+  "performance_thresholds": {
+    "max_startup_time": 10.0,
+    "max_execution_time": 60.0,
+    "max_memory_usage": 2048,
+    "max_cpu_usage": 80.0
+  },
+  "example_results": [
+    {
+      "name": "Quick Start Demo",
+      "execution_time": 2.5646679401397705,
+      "memory_usage_mb": 11.625,
+      "cpu_usage_percent": 17.7,
+      "startup_time": 2.5613629817962646,
+      "success": true,
+      "error_message": null,
+      "resource_requirements": {
+        "min_memory_mb": 13.95,
+        "expected_runtime": 60,
+        "description": "Basic framework demonstration"
+      }
+    },
+    {
+      "name": "AI Memory Palace Demo",
+      "execution_time": 5.436876058578491,
+      "memory_usage_mb": 60.546875,
+      "cpu_usage_percent": 83.5,
+      "startup_time": 5.471456050872803,
+      "success": true,
+      "error_message": null,
+      "resource_requirements": {
+        "min_memory_mb": 72.65625,
+        "expected_runtime": 120,
+        "description": "AI Memory Palace functionality demo"
+      }
+    },
+    {
+      "name": "DAG Orchestration Demo",
+      "execution_time": 6.048088788986206,
+      "memory_usage_mb": 34.6875,
+      "cpu_usage_percent": 77.3,
+      "startup_time": 6.13360595703125,
+      "success": true,
+      "error_message": null,
+      "resource_requirements": {
+        "min_memory_mb": 41.625,
+        "expected_runtime": 180,
+        "description": "DAG orchestration capabilities demo"
+      }
+    },
+    {
+      "name": "ReflectiveModule Demo",
+      "execution_time": 9.208645820617676,
+      "memory_usage_mb": 28.828125,
+      "cpu_usage_percent": 43.0,
+      "startup_time": 11.564878940582275,
+      "success": false,
+      "error_message": "2025-10-06 20:54:25,228 - prometheus_exporter - INFO - Using new daemon-based monitoring system\n2025-10-06 20:54:25,228 - prometheus_exporter - INFO - Daemon-based metrics initialized\n2025-10-06 20:54:25,228 - prometheus_exporter - INFO - Metrics export started\n2025-10-06 20:54:25,228 - prometheus_exporter - INFO - Using daemon HTTP server, not starting local server\nFailed to register in Redis: 'SampleDataProcessor' object has no attribute 'module_id'\nFailed to register in Redis: 'SampleAPIService' object has no attribute 'module_id'\nTraceback (most recent call last):\n  File \"/Users/lou/kiro-2/kiro-ai-development-hackathon/examples/demos/reflective_module_demo.py\", line 741, in run_comprehensive_demo\n    self.demonstrate_cli_interface()\n  File \"/Users/lou/kiro-2/kiro-ai-development-hackathon/examples/demos/reflective_module_demo.py\", line 695, in demonstrate_cli_interface\n    print(f\"   \ud83c\udfe5 Health: {cli_interface['health_status']}\")\nKeyError: 'health_status'\n",
+      "resource_requirements": {
+        "min_memory_mb": 34.59375,
+        "expected_runtime": 90,
+        "description": "ReflectiveModule pattern demonstration"
+      }
+    }
+  ],
+  "performance_summary": {
+    "total_examples": 4,
+    "successful_examples": 3,
+    "failed_examples": 1,
+    "average_execution_time": 4.683210929234822,
+    "average_memory_usage": 35.619791666666664,
+    "max_memory_usage": 60.546875,
+    "max_execution_time": 6.048088788986206
+  },
+  "threshold_violations": [],
+  "optimizations": [
+    "Create and use a virtual environment to isolate dependencies",
+    "Close unnecessary applications to free up resources",
+    "Ensure stable internet connection for downloading dependencies",
+    "Consider using SSD storage for better I/O performance",
+    "Run examples in a clean environment without other heavy processes"
+  ],
+  "recommendations": [
+    "\ud83d\udd27 Fix 1 failing examples before public release",
+    "\ud83d\udcda Document system requirements in README",
+    "\ud83d\ude80 Create quick start guide with 5-minute example",
+    "\ud83d\udd0d Add performance monitoring to examples",
+    "\ud83d\udcca Include performance benchmarks in documentation"
+  ],
+  "overall_assessment": "\u274c FAIL - Only 3/4 examples working (75%)"
+}

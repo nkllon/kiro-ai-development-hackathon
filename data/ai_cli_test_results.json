@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-09-28T08:11:32.069965",
+  "tests": {
+    "openai_cli": {
+      "status": "failed",
+      "output": "",
+      "error": "Traceback (most recent call last):\n  File \"/Users/lou/kiro-2/kiro-ai-development-hackathon/.venv/bin/openai\", line 8, in <module>\n    sys.exit(main())\n  File \"/Users/lou/kiro-2/kiro-ai-development-hackathon/.venv/lib/python3.9/site-packages/openai/cli/_cli.py\", line 128, in main\n    _main()\n  File \"/Users/lou/kiro-2/kiro-ai-development-hackathon/.venv/lib/python3.9/site-packages/openai/cli/_cli.py\", line 208, in _main\n    parsed.func(\n  File \"/Users/lou/kiro-2/kiro-ai-development-hackathon/.venv/lib/python3.9/site-packages/openai/cli/_api/chat/completions.py\", line 122, in create\n    return CLIChatCompletion._create(cast(CompletionCreateParamsNonStreaming, params))\n  File \"/Users/lou/kiro-2/kiro-ai-development-hackathon/.venv/lib/python3.9/site-packages/openai/cli/_api/chat/completions.py\", line 126, in _create\n    completion = get_client().chat.completions.create(**params)\n  File \"/Users/lou/kiro-2/kiro-ai-development-hackathon/.venv/lib/python3.9/site-packages/openai/cli/_utils.py\", line 24, in get_client\n    return _load_client()\n  File \"/Users/lou/kiro-2/kiro-ai-development-hackathon/.venv/lib/python3.9/site-packages/openai/__init__.py\", line 351, in _load_client\n    _client = _ModuleClient(\n  File \"/Users/lou/kiro-2/kiro-ai-development-hackathon/.venv/lib/python3.9/site-packages/openai/_client.py\", line 135, in __init__\n    raise OpenAIError(\nopenai.OpenAIError: The api_key client option must be set either by passing api_key to the client or by setting the OPENAI_API_KEY environment variable\n"
+    },
+    "gemini_python": {
+      "status": "no_key",
+      "output": null,
+      "error": "No API key found"
+    },
+    "anthropic_python": {
+      "status": "error",
+      "output": null,
+      "error": "__init__() got an unexpected keyword argument 'proxies'"
+    }
+  }
+}

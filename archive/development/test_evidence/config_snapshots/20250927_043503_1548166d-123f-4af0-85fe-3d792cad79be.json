@@ -1,0 +1,20 @@
+{
+  "evidence_id": "1548166d-123f-4af0-85fe-3d792cad79be",
+  "timestamp": "2025-09-27T04:35:03.857263",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.857240",
+    "data_type": "dict"
+  },
+  "integrity_hash": "599f942822296bc74b2ead96afe95219988f17468753ae3ba73089ea6f18feec",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/pass_through_endpoints/llm_passthrough_endpoints.py",
+    "file_size": 40965,
+    "line_count": 1230,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.857232"
+  }
+}

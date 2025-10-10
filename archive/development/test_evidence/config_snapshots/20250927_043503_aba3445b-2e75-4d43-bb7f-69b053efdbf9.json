@@ -1,0 +1,20 @@
+{
+  "evidence_id": "aba3445b-2e75-4d43-bb7f-69b053efdbf9",
+  "timestamp": "2025-09-27T04:35:03.770445",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.770423",
+    "data_type": "dict"
+  },
+  "integrity_hash": "f96597ce0ad128adf110be233e23f8019f6ab7a95f434bce937e858627f34424",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/fastapi/security/oauth2.py",
+    "file_size": 22036,
+    "line_count": 654,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.770416"
+  }
+}

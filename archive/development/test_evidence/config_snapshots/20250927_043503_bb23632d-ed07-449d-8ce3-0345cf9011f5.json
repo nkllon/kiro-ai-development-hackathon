@@ -1,0 +1,20 @@
+{
+  "evidence_id": "bb23632d-ed07-449d-8ce3-0345cf9011f5",
+  "timestamp": "2025-09-27T04:35:03.767223",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.767210",
+    "data_type": "dict"
+  },
+  "integrity_hash": "f7e1f790ba0f37c12241c827876e330583a57b81db13b396d8547e27478afb95",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/hooks/prompt_injection_detection.py",
+    "file_size": 10489,
+    "line_count": 283,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.767203"
+  }
+}

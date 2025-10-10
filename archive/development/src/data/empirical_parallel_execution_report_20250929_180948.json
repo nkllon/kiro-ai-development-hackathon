@@ -1,0 +1,75 @@
+{
+  "suite_summary": {
+    "total_test_scenarios": 4,
+    "successful_scenarios": 4,
+    "suite_execution_time": 1.808694839477539,
+    "total_tasks_across_all_tests": 35,
+    "total_successful_tasks": 32,
+    "overall_success_rate": 0.9142857142857143,
+    "average_parallelization_efficiency": 0.9895074279391797,
+    "timestamp": "2025-09-29T18:09:48.047171"
+  },
+  "individual_test_results": [
+    {
+      "test_name": "simple_parallel_execution",
+      "total_tasks": 10,
+      "successful_tasks": 10,
+      "execution_time": 0.2840158939361572,
+      "total_task_time": 0.7050590000000001,
+      "parallelization_efficiency": 2.4824631827065544,
+      "success_rate": 1.0,
+      "timestamp": "2025-09-29T18:09:46.522611"
+    },
+    {
+      "test_name": "dependency_chain_execution",
+      "total_tasks": 8,
+      "successful_tasks": 8,
+      "execution_time": 0.8115918636322021,
+      "total_task_time": 0.21151699999999996,
+      "parallelization_efficiency": 0.26061991190174794,
+      "success_rate": 1.0,
+      "timestamp": "2025-09-29T18:09:47.334680"
+    },
+    {
+      "test_name": "complex_dag_execution",
+      "total_tasks": 10,
+      "successful_tasks": 10,
+      "execution_time": 0.4043757915496826,
+      "total_task_time": 0.491295,
+      "parallelization_efficiency": 1.2149466171484162,
+      "success_rate": 1.0,
+      "dag_layers": 4,
+      "max_parallel_tasks": 4,
+      "timestamp": "2025-09-29T18:09:47.739216"
+    },
+    {
+      "test_name": "failure_isolation",
+      "total_tasks": 7,
+      "successful_tasks": 4,
+      "failed_tasks": 1,
+      "skipped_tasks": 2,
+      "execution_time": 0.3078498840332031,
+      "isolation_effectiveness": 0.8571428571428571,
+      "timestamp": "2025-09-29T18:09:48.047139"
+    }
+  ],
+  "engine_statistics": {
+    "total_executions": 4,
+    "successful_executions": 3,
+    "failed_executions": 1,
+    "success_rate": 0.75,
+    "total_tasks_executed": 35,
+    "average_tasks_per_execution": 8.75,
+    "current_execution_active": false,
+    "executor_configuration": {
+      "max_workers": 8,
+      "execution_strategy": "conservative",
+      "executor_active": true
+    }
+  },
+  "empirical_insights": {
+    "parallel_execution_effectiveness": false,
+    "failure_isolation_working": true,
+    "dependency_management_functional": true
+  }
+}

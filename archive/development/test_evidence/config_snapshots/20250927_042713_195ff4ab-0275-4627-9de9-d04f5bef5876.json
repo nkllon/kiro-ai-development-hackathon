@@ -1,0 +1,28 @@
+{
+  "evidence_id": "195ff4ab-0275-4627-9de9-d04f5bef5876",
+  "timestamp": "2025-09-27T04:27:13.052892",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.052880",
+    "data_type": "dict"
+  },
+  "integrity_hash": "4d0b7de2cb84704b8203d0fa50837c1783d20047f124468bde9f9f44679b14e1",
+  "data": {
+    "file_path": "./src/rc1/migration/backups/demo_devpost_integration_20250916_132012.py",
+    "file_size": 18542,
+    "line_count": 523,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.052865"
+  }
+}

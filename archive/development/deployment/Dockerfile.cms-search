@@ -1,0 +1,40 @@
+# CMS Search Service Dockerfile
+FROM python:3.11-slim
+
+LABEL maintainer="Beast Mode Framework"
+LABEL description="CMS Search Service with Elasticsearch integration"
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first for better caching
+COPY requirements-cms-search.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements-cms-search.txt
+
+# Copy application code
+COPY src/cms_search/ ./src/cms_search/
+COPY src/rm_ddd/ ./src/rm_ddd/
+
+# Create necessary directories
+RUN mkdir -p /app/logs /app/data
+
+# Set Python path
+ENV PYTHONPATH=/app
+
+# Expose port
+EXPOSE 8056
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8056/health || exit 1
+
+# Run the search service
+CMD ["python", "-m", "src.cms_search.main"]

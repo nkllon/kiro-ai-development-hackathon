@@ -1,0 +1,30 @@
+{
+  "evidence_id": "03a628dd-cc19-4fe7-b438-f65ba94b3f52",
+  "timestamp": "2025-09-27T05:09:24.218697",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.218672",
+    "data_type": "dict"
+  },
+  "integrity_hash": "fdd99c30cabe28ec89d2250fa15de0547f6ecc719ff57542072b786089fb5f0e",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/hooks/parallel_request_limiter.py",
+    "file_size": 35467,
+    "line_count": 870,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "asyncio",
+        "fastapi.HTTPException",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.218642"
+  }
+}

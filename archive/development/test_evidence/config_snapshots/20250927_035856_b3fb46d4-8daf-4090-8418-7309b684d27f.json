@@ -1,0 +1,26 @@
+{
+  "evidence_id": "b3fb46d4-8daf-4090-8418-7309b684d27f",
+  "timestamp": "2025-09-27T03:58:56.236603",
+  "evidence_type": "config_snapshot",
+  "source_test": "endpoint_analysis_configuration",
+  "metadata": {
+    "config_type": "endpoint_analysis",
+    "snapshot_timestamp": "2025-09-27T03:58:56.236556",
+    "data_type": "dict"
+  },
+  "integrity_hash": "9c4d619677bee1ba4ca52f4b71b56cbc6d1d4c223c96f926870fae62c61d060f",
+  "data": {
+    "total_endpoints": 3,
+    "successful_endpoints": 0,
+    "failed_endpoints": 3,
+    "websocket_upgrades": 0,
+    "success_rate": 0.0,
+    "websocket_upgrade_rate": 0.0,
+    "average_response_time": 0.1756597359975179,
+    "status_code_distribution": {
+      "101": 1,
+      "403": 2
+    },
+    "common_errors": []
+  }
+}

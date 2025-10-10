@@ -1,0 +1,14 @@
+{
+  "scan_timestamp": "2025-10-03T16:21:34.469221",
+  "directory": "deployment/",
+  "total_files_scanned": 58,
+  "violations_found": 1,
+  "violations": [
+    {
+      "file_path": "deployment/local/grafana-login.html",
+      "category": "log_files",
+      "pattern": "log/",
+      "detected_at": "2025-10-03T16:21:34.468747"
+    }
+  ]
+}

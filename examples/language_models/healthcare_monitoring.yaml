@@ -1,0 +1,125 @@
+domain: healthcare
+name: Hospital Operations
+description: Language model for hospital monitoring and operations
+version: 1.0.0
+created_at: '2024-09-24T17:45:00'
+updated_at: '2024-09-24T17:45:00'
+
+terminology:
+  bed_occupancy_rate:
+    technical_name: bed_occupancy_rate
+    business_name: Bed Occupancy Rate
+    description: Percentage of hospital beds currently occupied by patients
+    context: Capacity management and resource planning
+    domain: healthcare
+    synonyms:
+      - Bed Utilization
+      - Census Rate
+    related_terms: []
+    examples:
+      - 85% bed occupancy indicates high capacity utilization
+    created_at: '2024-09-24T17:45:00'
+    updated_at: '2024-09-24T17:45:00'
+  
+  patient_throughput:
+    technical_name: patient_throughput
+    business_name: Patient Throughput
+    description: Rate of patient admissions and discharges per time period
+    context: Patient flow management
+    domain: healthcare
+    synonyms:
+      - Patient Flow
+      - Admission Rate
+    related_terms: []
+    examples:
+      - 12 patients/hour throughput during peak hours
+    created_at: '2024-09-24T17:45:00'
+    updated_at: '2024-09-24T17:45:00'
+  
+  adverse_events_count:
+    technical_name: adverse_events_count
+    business_name: Patient Safety Events
+    description: Number of adverse events affecting patient safety
+    context: Quality and safety monitoring
+    domain: healthcare
+    synonyms:
+      - Safety Incidents
+      - Quality Events
+    related_terms: []
+    examples:
+      - Zero adverse events is the target for patient safety
+    created_at: '2024-09-24T17:45:00'
+    updated_at: '2024-09-24T17:45:00'
+
+concepts:
+  patient_safety_score:
+    name: patient_safety_score
+    definition: Composite score measuring overall patient safety performance
+    domain: healthcare
+    properties: {}
+    business_rules:
+      - Score must be calculated daily
+      - Adverse events reduce score by severity weight
+      - Perfect safety score is 100
+    calculation_logic: 100 - (adverse_events_weight * severity_multiplier)
+    metric_type: gauge
+    unit: score (0-100)
+    normal_range:
+      min: 85
+      max: 100
+    alert_thresholds:
+      warning: 80
+      critical: 70
+    relationships: []
+    created_at: '2024-09-24T17:45:00'
+    updated_at: '2024-09-24T17:45:00'
+
+aggregation_rules:
+  avg_bed_occupancy:
+    rule_id: healthcare-bed-occupancy-001
+    metric_name: avg_bed_occupancy
+    source_metrics:
+      - occupied_beds
+      - total_beds
+    aggregation_function: calculated
+    window_size_seconds: 3600
+    calculation_logic: (occupied_beds / total_beds) * 100
+    business_context: Average bed occupancy rate over time window
+    domain: healthcare
+    created_at: '2024-09-24T17:45:00'
+
+display_preferences:
+  chart_colors:
+    bed_occupancy_rate: '#2E86AB'
+    patient_throughput: '#A23B72'
+    adverse_events_count: '#F18F01'
+  label_formats:
+    bed_occupancy_rate: 'Bed Occupancy: {value}%'
+    patient_throughput: 'Patient Flow: {value}/hr'
+    adverse_events_count: 'Safety Events: {value}'
+  unit_displays:
+    bed_occupancy_rate: '%'
+    patient_throughput: 'patients/hour'
+    adverse_events_count: 'events'
+  dashboard_layout:
+    primary_metrics:
+      - bed_occupancy_rate
+      - patient_throughput
+    safety_metrics:
+      - adverse_events_count
+      - patient_safety_score
+  alert_formats:
+    bed_occupancy_rate: 'Bed occupancy {status}: {value}% (threshold: {threshold}%)'
+    adverse_events_count: 'Patient safety alert: {value} events detected'
+
+metadata:
+  industry: healthcare
+  use_case: hospital_operations
+  compliance_requirements:
+    - HIPAA
+    - Joint Commission
+  stakeholders:
+    - Chief Medical Officer
+    - Director of Nursing
+    - Quality Manager
+    - Bed Management Team

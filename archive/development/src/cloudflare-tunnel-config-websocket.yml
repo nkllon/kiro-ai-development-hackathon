@@ -1,0 +1,29 @@
+# Updated Cloudflare Tunnel Configuration with WebSocket Support
+# Replace your current ~/.cloudflared/config.yml with this configuration
+
+tunnel: d1e53e43-033f-4994-8f46-c83962ae3785
+credentials-file: /Users/lou/.cloudflared/d1e53e43-033f-4994-8f46-c83962ae3785.json
+
+# WebSocket-specific configuration
+ingress:
+  # Main domain with WebSocket support
+  - hostname: observatory.nkllon.com
+    service: http://localhost:8888
+    originRequest:
+      # WebSocket-specific settings
+      httpHostHeader: observatory.nkllon.com
+      # Enable WebSocket support
+      noTLSVerify: false
+      # Increase timeout for WebSocket connections
+      connectTimeout: 30s
+      tlsTimeout: 10s
+      tcpKeepAlive: 30s
+      # Disable compression for WebSocket frames
+      disableChunkedEncoding: false
+      
+  # Catch-all rule
+  - service: http_status:404
+
+# Global tunnel settings for WebSocket optimization
+retries: 5
+gracePeriod: 30s

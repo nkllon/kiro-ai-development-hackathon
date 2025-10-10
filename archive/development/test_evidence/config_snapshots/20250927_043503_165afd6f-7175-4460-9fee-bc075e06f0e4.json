@@ -1,0 +1,20 @@
+{
+  "evidence_id": "165afd6f-7175-4460-9fee-bc075e06f0e4",
+  "timestamp": "2025-09-27T04:35:03.437544",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.437538",
+    "data_type": "dict"
+  },
+  "integrity_hash": "d42c232a381b720c35dcc9b674663fc0eeba3375f7661933c3c9a4d9d4015bec",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/hooks/max_budget_limiter.py",
+    "file_size": 1637,
+    "line_count": 50,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.437536"
+  }
+}

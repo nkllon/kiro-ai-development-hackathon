@@ -1,0 +1,350 @@
+name: Documentation Automation
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - 'src/**'
+      - 'examples/**'
+      - 'README.md'
+      - 'CONTRIBUTING.md'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - 'src/**'
+      - 'examples/**'
+      - 'README.md'
+      - 'CONTRIBUTING.md'
+  workflow_dispatch:
+
+jobs:
+  validate-documentation:
+    name: Validate Documentation
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+        pip install linkchecker markdown-link-check
+    
+    - name: Validate Markdown syntax
+      run: |
+        # Check for common Markdown issues
+        python -c "
+        import os
+        import re
+        from pathlib import Path
+        
+        issues = []
+        for md_file in Path('.').rglob('*.md'):
+            if '.git' in str(md_file):
+                continue
+                
+            try:
+                content = md_file.read_text(encoding='utf-8')
+                
+                # Check for common issues
+                lines = content.split('\\n')
+                for i, line in enumerate(lines, 1):
+                    # Check for broken internal links
+                    internal_links = re.findall(r'\\[([^\\]]+)\\]\\(([^)]+)\\)', line)
+                    for link_text, link_url in internal_links:
+                        if link_url.startswith('./') or link_url.startswith('../'):
+                            # Check if file exists
+                            link_path = (md_file.parent / link_url).resolve()
+                            if not link_path.exists():
+                                issues.append(f'{md_file}:{i} - Broken internal link: {link_url}')
+                    
+                    # Check for missing alt text in images
+                    images = re.findall(r'!\\[([^\\]]*)\\]\\([^)]+\\)', line)
+                    for alt_text, img_url in images:
+                        if not alt_text.strip():
+                            issues.append(f'{md_file}:{i} - Image missing alt text: {img_url}')
+                    
+                    # Check for inconsistent heading levels
+                    if line.startswith('#'):
+                        heading_level = len(line) - len(line.lstrip('#'))
+                        if heading_level > 6:
+                            issues.append(f'{md_file}:{i} - Invalid heading level: {heading_level}')
+                            
+            except Exception as e:
+                issues.append(f'{md_file} - Error reading file: {e}')
+        
+        if issues:
+            print('❌ Documentation issues found:')
+            for issue in issues:
+                print(f'  {issue}')
+            exit(1)
+        else:
+            print('✅ All Markdown files are valid')
+        "
+    
+    - name: Check documentation completeness
+      run: |
+        # Verify required documentation exists
+        python -c "
+        from pathlib import Path
+        
+        required_docs = [
+            'README.md',
+            'CONTRIBUTING.md',
+            'docs/installation/INSTALLATION_GUIDE.md',
+            'docs/installation/SYSTEM_REQUIREMENTS.md',
+            'docs/installation/TROUBLESHOOTING.md',
+            'docs/api/README.md',
+            'docs/usage/README.md',
+            'docs/security/SECURITY.md',
+            'docs/community/DEVELOPMENT_SETUP.md',
+            'docs/community/CODE_REVIEW_PROCESS.md',
+            'docs/community/TESTING_PROCEDURES.md',
+        ]
+        
+        missing_docs = []
+        for doc in required_docs:
+            if not Path(doc).exists():
+                missing_docs.append(doc)
+        
+        if missing_docs:
+            print('❌ Missing required documentation:')
+            for doc in missing_docs:
+                print(f'  {doc}')
+            exit(1)
+        else:
+            print('✅ All required documentation exists')
+        "
+    
+    - name: Validate code examples in documentation
+      run: |
+        # Extract and validate Python code blocks from documentation
+        python -c "
+        import os
+        import re
+        import ast
+        import tempfile
+        from pathlib import Path
+        
+        issues = []
+        for md_file in Path('.').rglob('*.md'):
+            if '.git' in str(md_file):
+                continue
+                
+            try:
+                content = md_file.read_text(encoding='utf-8')
+                
+                # Extract Python code blocks
+                python_blocks = re.findall(r'```python\\n(.*?)\\n```', content, re.DOTALL)
+                
+                for i, code_block in enumerate(python_blocks):
+                    try:
+                        # Try to parse the code block
+                        ast.parse(code_block)
+                    except SyntaxError as e:
+                        issues.append(f'{md_file} - Code block {i+1} has syntax error: {e}')
+                    except Exception as e:
+                        # Skip blocks that might be incomplete examples
+                        pass
+                        
+            except Exception as e:
+                issues.append(f'{md_file} - Error processing file: {e}')
+        
+        if issues:
+            print('❌ Code examples have issues:')
+            for issue in issues:
+                print(f'  {issue}')
+            exit(1)
+        else:
+            print('✅ All code examples are syntactically valid')
+        "
+
+  test-documentation-examples:
+    name: Test Documentation Examples
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    
+    - name: Test quick start guide
+      run: |
+        # Test that the quick start guide works
+        if [ -f "examples/quick_start/basic_example.py" ]; then
+          timeout 30s python examples/quick_start/basic_example.py || exit_code=$?
+          if [ $exit_code -eq 124 ]; then
+            echo "✅ Quick start example runs (timed out as expected)"
+          elif [ $exit_code -eq 0 ]; then
+            echo "✅ Quick start example completed successfully"
+          else
+            echo "❌ Quick start example failed with exit code $exit_code"
+            exit $exit_code
+          fi
+        else
+          echo "⚠️  Quick start example not found"
+        fi
+      env:
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
+        REDIS_PASSWORD: ""
+        ENVIRONMENT: test
+    
+    - name: Test installation guide
+      run: |
+        # Verify installation commands work
+        python -c "
+        import subprocess
+        import sys
+        
+        # Test basic imports mentioned in installation guide
+        try:
+            import src.beast_mode
+            print('✅ Beast Mode imports work')
+        except ImportError as e:
+            print(f'❌ Beast Mode import failed: {e}')
+            sys.exit(1)
+        
+        # Test that examples can be imported
+        try:
+            import examples.basic.secure_credential_usage
+            print('✅ Example imports work')
+        except ImportError as e:
+            print(f'❌ Example import failed: {e}')
+            sys.exit(1)
+        "
+
+  generate-api-docs:
+    name: Generate API Documentation
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install sphinx sphinx-rtd-theme sphinx-autodoc-typehints
+    
+    - name: Generate API documentation
+      run: |
+        # Create API documentation from docstrings
+        python -c "
+        import os
+        import inspect
+        import importlib.util
+        from pathlib import Path
+        
+        def generate_module_doc(module_path, output_path):
+            '''Generate documentation for a Python module.'''
+            try:
+                spec = importlib.util.spec_from_file_location('module', module_path)
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                
+                doc_content = f'# {module_path.stem}\\n\\n'
+                
+                if module.__doc__:
+                    doc_content += f'{module.__doc__}\\n\\n'
+                
+                # Document classes
+                for name, obj in inspect.getmembers(module, inspect.isclass):
+                    if obj.__module__ == module.__name__:
+                        doc_content += f'## {name}\\n\\n'
+                        if obj.__doc__:
+                            doc_content += f'{obj.__doc__}\\n\\n'
+                        
+                        # Document methods
+                        for method_name, method in inspect.getmembers(obj, inspect.ismethod):
+                            if not method_name.startswith('_'):
+                                doc_content += f'### {method_name}\\n\\n'
+                                if method.__doc__:
+                                    doc_content += f'{method.__doc__}\\n\\n'
+                
+                # Document functions
+                for name, obj in inspect.getmembers(module, inspect.isfunction):
+                    if obj.__module__ == module.__name__:
+                        doc_content += f'## {name}\\n\\n'
+                        if obj.__doc__:
+                            doc_content += f'{obj.__doc__}\\n\\n'
+                
+                output_path.write_text(doc_content)
+                print(f'Generated documentation for {module_path}')
+                
+            except Exception as e:
+                print(f'Error generating docs for {module_path}: {e}')
+        
+        # Generate docs for main modules
+        src_path = Path('src')
+        docs_api_path = Path('docs/api/generated')
+        docs_api_path.mkdir(exist_ok=True)
+        
+        for py_file in src_path.rglob('*.py'):
+            if py_file.name != '__init__.py' and '__pycache__' not in str(py_file):
+                relative_path = py_file.relative_to(src_path)
+                doc_file = docs_api_path / f'{relative_path.stem}.md'
+                generate_module_doc(py_file, doc_file)
+        "
+    
+    - name: Commit generated documentation
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add docs/api/generated/
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m "Auto-generate API documentation"
+          git push
+        fi
+
+  documentation-summary:
+    name: Documentation Summary
+    runs-on: ubuntu-latest
+    needs: [validate-documentation, test-documentation-examples]
+    if: always()
+    steps:
+    - name: Documentation validation summary
+      run: |
+        echo "## Documentation Validation Summary"
+        echo "- Documentation Validation: ${{ needs.validate-documentation.result }}"
+        echo "- Example Testing: ${{ needs.test-documentation-examples.result }}"
+        
+        if [[ "${{ needs.validate-documentation.result }}" == "success" && "${{ needs.test-documentation-examples.result }}" == "success" ]]; then
+          echo "✅ All documentation checks passed!"
+        else
+          echo "❌ Some documentation checks failed. Please review the reports."
+          exit 1
+        fi

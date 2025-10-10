@@ -1,0 +1,20 @@
+{
+  "evidence_id": "77fb329f-23c0-46e3-841e-d773adab837b",
+  "timestamp": "2025-09-27T04:35:03.548939",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.548910",
+    "data_type": "dict"
+  },
+  "integrity_hash": "4f04f288802a16ddf36a3137e93aaf5c6beeafb8a9f3185104f9cb5056076250",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_hooks/bedrock_guardrails.py",
+    "file_size": 40393,
+    "line_count": 1027,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.548899"
+  }
+}

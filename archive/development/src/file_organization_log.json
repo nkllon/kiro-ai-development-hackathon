@@ -1,0 +1,2030 @@
+{
+  "timestamp": "2025-10-06T13:58:08.809880",
+  "results": {
+    "operations_executed": {
+      "delete": 89,
+      "archive": 0,
+      "move": 199
+    },
+    "total_size_freed_mb": 86.92604923248291,
+    "operations_planned": 288
+  },
+  "operations": [
+    {
+      "operation": "move",
+      "source_path": "CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251001-140718.json",
+      "target_path": "data/CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251001-140718.json",
+      "reason": "Better organization",
+      "size_mb": 0.02219676971435547
+    },
+    {
+      "operation": "move",
+      "source_path": "mcp-filesystem-config.toml",
+      "target_path": "config/mcp-filesystem-config.toml",
+      "reason": "Better organization",
+      "size_mb": 0.0005044937133789062
+    },
+    {
+      "operation": "delete",
+      "source_path": "cloudflare_tunnel.pid",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 4.76837158203125e-06
+    },
+    {
+      "operation": "delete",
+      "source_path": "kiro_hackathon_final_20250915_001808.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.3222427368164062
+    },
+    {
+      "operation": "delete",
+      "source_path": "edit_attempt_1757910926.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1872806549072266
+    },
+    {
+      "operation": "delete",
+      "source_path": "after_tab_1_20250915_014012.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2651090621948242
+    },
+    {
+      "operation": "move",
+      "source_path": "CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251003-062335.json",
+      "target_path": "data/CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251003-062335.json",
+      "reason": "Better organization",
+      "size_mb": 0.01123046875
+    },
+    {
+      "operation": "move",
+      "source_path": "test_results_summary.md",
+      "target_path": "docs/test_results_summary.md",
+      "reason": "Better organization",
+      "size_mb": 0.007755279541015625
+    },
+    {
+      "operation": "move",
+      "source_path": "KIRO_DAG_EXECUTION_REPORT_kiro-dag-20250930-155836.json",
+      "target_path": "data/KIRO_DAG_EXECUTION_REPORT_kiro-dag-20250930-155836.json",
+      "reason": "Better organization",
+      "size_mb": 0.001888275146484375
+    },
+    {
+      "operation": "move",
+      "source_path": "bulk_archive_documents.sh",
+      "target_path": "scripts/bulk_archive_documents.sh",
+      "reason": "Better organization",
+      "size_mb": 0.005069732666015625
+    },
+    {
+      "operation": "move",
+      "source_path": "dag_task_2_failure_investigation_report.json",
+      "target_path": "data/dag_task_2_failure_investigation_report.json",
+      "reason": "Better organization",
+      "size_mb": 20.78641986846924
+    },
+    {
+      "operation": "delete",
+      "source_path": "edit_attempt_1757910933.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1880254745483398
+    },
+    {
+      "operation": "move",
+      "source_path": "dag_orchestration_integration_validation_20251002_132445.json",
+      "target_path": "data/dag_orchestration_integration_validation_20251002_132445.json",
+      "reason": "Better organization",
+      "size_mb": 0.009334564208984375
+    },
+    {
+      "operation": "move",
+      "source_path": "observatory_validation_report_20251004_150752.json",
+      "target_path": "data/observatory_validation_report_20251004_150752.json",
+      "reason": "Better organization",
+      "size_mb": 0.0038909912109375
+    },
+    {
+      "operation": "delete",
+      "source_path": "kiro_submission_create_page_20250914_235644.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.242924690246582
+    },
+    {
+      "operation": "move",
+      "source_path": "DAG_TASK_FAILURE_INVESTIGATION_SUMMARY.md",
+      "target_path": "docs/DAG_TASK_FAILURE_INVESTIGATION_SUMMARY.md",
+      "reason": "Better organization",
+      "size_mb": 0.007907867431640625
+    },
+    {
+      "operation": "delete",
+      "source_path": "kiro_submission_form_final_20250915_002034.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.256978988647461
+    },
+    {
+      "operation": "move",
+      "source_path": "cloudflare_websocket_configuration_report_20250926_221650.json",
+      "target_path": "data/cloudflare_websocket_configuration_report_20250926_221650.json",
+      "reason": "Better organization",
+      "size_mb": 0.010472297668457031
+    },
+    {
+      "operation": "move",
+      "source_path": "start_vonnegut_daemon.sh",
+      "target_path": "scripts/start_vonnegut_daemon.sh",
+      "reason": "Better organization",
+      "size_mb": 0.0006570816040039062
+    },
+    {
+      "operation": "move",
+      "source_path": "engagement_integration_test_report.json",
+      "target_path": "data/engagement_integration_test_report.json",
+      "reason": "Better organization",
+      "size_mb": 0.004467964172363281
+    },
+    {
+      "operation": "delete",
+      "source_path": "edit_attempt_1757910931.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1877965927124023
+    },
+    {
+      "operation": "move",
+      "source_path": "CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251003-062745.json",
+      "target_path": "data/CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251003-062745.json",
+      "reason": "Better organization",
+      "size_mb": 0.011231422424316406
+    },
+    {
+      "operation": "move",
+      "source_path": "setup_public_observatory.sh",
+      "target_path": "scripts/setup_public_observatory.sh",
+      "reason": "Better organization",
+      "size_mb": 0.0010290145874023438
+    },
+    {
+      "operation": "move",
+      "source_path": "Dockerfile.vonnegut",
+      "target_path": "deployment/Dockerfile.vonnegut",
+      "reason": "Better organization",
+      "size_mb": 0.0008945465087890625
+    },
+    {
+      "operation": "move",
+      "source_path": "websocket_health_monitoring_completion.json",
+      "target_path": "data/websocket_health_monitoring_completion.json",
+      "reason": "Better organization",
+      "size_mb": 0.00510406494140625
+    },
+    {
+      "operation": "delete",
+      "source_path": "current_page_state.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.046039581298828125
+    },
+    {
+      "operation": "delete",
+      "source_path": "battle_20250914_215637.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2223234176635742
+    },
+    {
+      "operation": "delete",
+      "source_path": "edit_attempt_1757910924.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1845970153808594
+    },
+    {
+      "operation": "move",
+      "source_path": "agent_control_governance_execution_results_fixed.json",
+      "target_path": "data/agent_control_governance_execution_results_fixed.json",
+      "reason": "Better organization",
+      "size_mb": 9.1552734375e-05
+    },
+    {
+      "operation": "move",
+      "source_path": "TASK_2_1_COMPLETION_REPORT.json",
+      "target_path": "data/TASK_2_1_COMPLETION_REPORT.json",
+      "reason": "Better organization",
+      "size_mb": 0.00136566162109375
+    },
+    {
+      "operation": "move",
+      "source_path": "cms_architecture_validation_results.json",
+      "target_path": "data/cms_architecture_validation_results.json",
+      "reason": "Better organization",
+      "size_mb": 0.0027208328247070312
+    },
+    {
+      "operation": "delete",
+      "source_path": "screenshot_step4_kiro_clicked_20250915_015337.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.3031044006347656
+    },
+    {
+      "operation": "delete",
+      "source_path": "current_state_manual.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2611103057861328
+    },
+    {
+      "operation": "move",
+      "source_path": "ghostbusters_cleanup.sh",
+      "target_path": "scripts/ghostbusters_cleanup.sh",
+      "reason": "Better organization",
+      "size_mb": 0.02018260955810547
+    },
+    {
+      "operation": "move",
+      "source_path": "switchover_to_poe.sh",
+      "target_path": "scripts/switchover_to_poe.sh",
+      "reason": "Better organization",
+      "size_mb": 0.0009002685546875
+    },
+    {
+      "operation": "move",
+      "source_path": "docker-compose.jaeger.yml",
+      "target_path": "deployment/docker-compose.jaeger.yml",
+      "reason": "Better organization",
+      "size_mb": 0.0007171630859375
+    },
+    {
+      "operation": "move",
+      "source_path": "websocket_diagnostic_results.json",
+      "target_path": "data/websocket_diagnostic_results.json",
+      "reason": "Better organization",
+      "size_mb": 0.005803108215332031
+    },
+    {
+      "operation": "delete",
+      "source_path": "alt_submissions_1757910950.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1844568252563477
+    },
+    {
+      "operation": "move",
+      "source_path": "directus_interface_export.json",
+      "target_path": "data/directus_interface_export.json",
+      "reason": "Better organization",
+      "size_mb": 0.008764266967773438
+    },
+    {
+      "operation": "delete",
+      "source_path": "kiro_edit_page_20250914_235605.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1945819854736328
+    },
+    {
+      "operation": "delete",
+      "source_path": "page_0_0.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.04868793487548828
+    },
+    {
+      "operation": "delete",
+      "source_path": ".DS_Store",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.025394439697265625
+    },
+    {
+      "operation": "move",
+      "source_path": "comprehensive_solution_summary.md",
+      "target_path": "docs/comprehensive_solution_summary.md",
+      "reason": "Better organization",
+      "size_mb": 0.006903648376464844
+    },
+    {
+      "operation": "move",
+      "source_path": "TASK_2_2_COMPLETION_REPORT.json",
+      "target_path": "data/TASK_2_2_COMPLETION_REPORT.json",
+      "reason": "Better organization",
+      "size_mb": 0.0014600753784179688
+    },
+    {
+      "operation": "delete",
+      "source_path": "page_0_1.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.09730243682861328
+    },
+    {
+      "operation": "move",
+      "source_path": "cms_implementation_completion_plan_20251005_182146.md",
+      "target_path": "docs/cms_implementation_completion_plan_20251005_182146.md",
+      "reason": "Better organization",
+      "size_mb": 0.006961822509765625
+    },
+    {
+      "operation": "move",
+      "source_path": "coordination_assessment_report_20250127.md",
+      "target_path": "docs/coordination_assessment_report_20250127.md",
+      "reason": "Better organization",
+      "size_mb": 0.007867813110351562
+    },
+    {
+      "operation": "move",
+      "source_path": "coverage_integration.json",
+      "target_path": "data/coverage_integration.json",
+      "reason": "Better organization",
+      "size_mb": 0.15819263458251953
+    },
+    {
+      "operation": "delete",
+      "source_path": "kiro_edit_page_current_20250915_000356.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1891307830810547
+    },
+    {
+      "operation": "delete",
+      "source_path": "alt_submissions_1757910945.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.5659065246582031
+    },
+    {
+      "operation": "delete",
+      "source_path": "cursor_position_20250915_011915.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2335214614868164
+    },
+    {
+      "operation": "move",
+      "source_path": "docker-compose.directus.yml",
+      "target_path": "deployment/docker-compose.directus.yml",
+      "reason": "Better organization",
+      "size_mb": 0.003086090087890625
+    },
+    {
+      "operation": "move",
+      "source_path": "scheduler_empirical_report_20250929_181344.json",
+      "target_path": "data/scheduler_empirical_report_20250929_181344.json",
+      "reason": "Better organization",
+      "size_mb": 1.9073486328125e-06
+    },
+    {
+      "operation": "move",
+      "source_path": "dag_orchestration_test_results_20250930_065445.json",
+      "target_path": "data/dag_orchestration_test_results_20250930_065445.json",
+      "reason": "Better organization",
+      "size_mb": 0.0007562637329101562
+    },
+    {
+      "operation": "move",
+      "source_path": "redis_validation_report_20251002_081726.json",
+      "target_path": "data/redis_validation_report_20251002_081726.json",
+      "reason": "Better organization",
+      "size_mb": 0.0015897750854492188
+    },
+    {
+      "operation": "move",
+      "source_path": "coordination_recovery_plan_20250127.md",
+      "target_path": "docs/coordination_recovery_plan_20250127.md",
+      "reason": "Better organization",
+      "size_mb": 0.013272285461425781
+    },
+    {
+      "operation": "move",
+      "source_path": "deployment_auditor_dag_specification.json",
+      "target_path": "data/deployment_auditor_dag_specification.json",
+      "reason": "Better organization",
+      "size_mb": 0.016289710998535156
+    },
+    {
+      "operation": "delete",
+      "source_path": "my_projects_20250915_023413.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.20511245727539062
+    },
+    {
+      "operation": "delete",
+      "source_path": "after_project_details_save.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.11377906799316406
+    },
+    {
+      "operation": "move",
+      "source_path": "test-subdomain-config.yml",
+      "target_path": "config/test-subdomain-config.yml",
+      "reason": "Better organization",
+      "size_mb": 0.0014209747314453125
+    },
+    {
+      "operation": "move",
+      "source_path": "observatory_validation_report_20251004_150753.json",
+      "target_path": "data/observatory_validation_report_20251004_150753.json",
+      "reason": "Better organization",
+      "size_mb": 0.0038928985595703125
+    },
+    {
+      "operation": "move",
+      "source_path": "token.json",
+      "target_path": "data/token.json",
+      "reason": "Better organization",
+      "size_mb": 0.00038433074951171875
+    },
+    {
+      "operation": "move",
+      "source_path": "empirical_parallel_execution_report_20250929_180948.json",
+      "target_path": "data/empirical_parallel_execution_report_20250929_180948.json",
+      "reason": "Better organization",
+      "size_mb": 0.0021991729736328125
+    },
+    {
+      "operation": "delete",
+      "source_path": "blind_interrogation_20250914_220837.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.0708131790161133
+    },
+    {
+      "operation": "move",
+      "source_path": "DAG_ORCHESTRATION_READY.md",
+      "target_path": "docs/DAG_ORCHESTRATION_READY.md",
+      "reason": "Better organization",
+      "size_mb": 0.004328727722167969
+    },
+    {
+      "operation": "delete",
+      "source_path": "my_projects_status_20250915_023925.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.20330524444580078
+    },
+    {
+      "operation": "move",
+      "source_path": "task_2_3_completion_report_20251003_101758.json",
+      "target_path": "data/task_2_3_completion_report_20251003_101758.json",
+      "reason": "Better organization",
+      "size_mb": 0.13103961944580078
+    },
+    {
+      "operation": "move",
+      "source_path": "constellation_test_completion_summary.md",
+      "target_path": "docs/constellation_test_completion_summary.md",
+      "reason": "Better organization",
+      "size_mb": 0.004557609558105469
+    },
+    {
+      "operation": "move",
+      "source_path": "service-inventory.json",
+      "target_path": "data/service-inventory.json",
+      "reason": "Better organization",
+      "size_mb": 0.00708770751953125
+    },
+    {
+      "operation": "move",
+      "source_path": "engagement_health_monitoring_test_report.json",
+      "target_path": "data/engagement_health_monitoring_test_report.json",
+      "reason": "Better organization",
+      "size_mb": 0.059683799743652344
+    },
+    {
+      "operation": "delete",
+      "source_path": "after_10_tabs_20250915_014320.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2162609100341797
+    },
+    {
+      "operation": "move",
+      "source_path": "deployment-config.yml",
+      "target_path": "config/deployment-config.yml",
+      "reason": "Better organization",
+      "size_mb": 0.0020456314086914062
+    },
+    {
+      "operation": "move",
+      "source_path": "coordination_completion_summary.md",
+      "target_path": "docs/coordination_completion_summary.md",
+      "reason": "Better organization",
+      "size_mb": 0.0053882598876953125
+    },
+    {
+      "operation": "move",
+      "source_path": "observatory_final_deployment_report_20251004_141509.json",
+      "target_path": "data/observatory_final_deployment_report_20251004_141509.json",
+      "reason": "Better organization",
+      "size_mb": 0.0068187713623046875
+    },
+    {
+      "operation": "move",
+      "source_path": "websocket_validation_20250926_225005.json",
+      "target_path": "data/websocket_validation_20250926_225005.json",
+      "reason": "Better organization",
+      "size_mb": 0.001331329345703125
+    },
+    {
+      "operation": "delete",
+      "source_path": "alt_submissions_1757910952.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1878671646118164
+    },
+    {
+      "operation": "move",
+      "source_path": "setup_archiving.sh",
+      "target_path": "scripts/setup_archiving.sh",
+      "reason": "Better organization",
+      "size_mb": 0.0006074905395507812
+    },
+    {
+      "operation": "delete",
+      "source_path": "edit_attempt_1757910922.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1874589920043945
+    },
+    {
+      "operation": "move",
+      "source_path": "task_2_3_completion_status_20251003_101758.json",
+      "target_path": "data/task_2_3_completion_status_20251003_101758.json",
+      "reason": "Better organization",
+      "size_mb": 0.0010519027709960938
+    },
+    {
+      "operation": "move",
+      "source_path": "live_fire_monitoring_data.json",
+      "target_path": "data/live_fire_monitoring_data.json",
+      "reason": "Better organization",
+      "size_mb": 0.00406646728515625
+    },
+    {
+      "operation": "move",
+      "source_path": ".pre-commit-config.yaml",
+      "target_path": "config/.pre-commit-config.yaml",
+      "reason": "Better organization",
+      "size_mb": 0.0024700164794921875
+    },
+    {
+      "operation": "move",
+      "source_path": "Dockerfile.test-reflective",
+      "target_path": "deployment/Dockerfile.test-reflective",
+      "reason": "Better organization",
+      "size_mb": 0.000415802001953125
+    },
+    {
+      "operation": "move",
+      "source_path": "dag_orchestrated_parallel_execution_tasks.json",
+      "target_path": "data/dag_orchestrated_parallel_execution_tasks.json",
+      "reason": "Better organization",
+      "size_mb": 0.011219024658203125
+    },
+    {
+      "operation": "delete",
+      "source_path": "after_20_tabs_20250915_014329.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2257881164550781
+    },
+    {
+      "operation": "delete",
+      "source_path": "find_existing_project_1757912175.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2913532257080078
+    },
+    {
+      "operation": "move",
+      "source_path": "get-site-back-up.sh",
+      "target_path": "scripts/get-site-back-up.sh",
+      "reason": "Better organization",
+      "size_mb": 0.0005779266357421875
+    },
+    {
+      "operation": "move",
+      "source_path": "observatory_validation_report_20251004_153637.json",
+      "target_path": "data/observatory_validation_report_20251004_153637.json",
+      "reason": "Better organization",
+      "size_mb": 0.0040264129638671875
+    },
+    {
+      "operation": "move",
+      "source_path": "rollback_to_vonnegut.sh",
+      "target_path": "scripts/rollback_to_vonnegut.sh",
+      "reason": "Better organization",
+      "size_mb": 0.000690460205078125
+    },
+    {
+      "operation": "move",
+      "source_path": "README_constellation_orchestrator.md",
+      "target_path": "docs/README_constellation_orchestrator.md",
+      "reason": "Better organization",
+      "size_mb": 0.012942314147949219
+    },
+    {
+      "operation": "move",
+      "source_path": "coordination_monitor_execution_report.md",
+      "target_path": "docs/coordination_monitor_execution_report.md",
+      "reason": "Better organization",
+      "size_mb": 0.0068759918212890625
+    },
+    {
+      "operation": "move",
+      "source_path": "websocket_validation_20250926_222358.json",
+      "target_path": "data/websocket_validation_20250926_222358.json",
+      "reason": "Better organization",
+      "size_mb": 0.0013284683227539062
+    },
+    {
+      "operation": "delete",
+      "source_path": "final_submit_after_20250915_023925.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.772674560546875
+    },
+    {
+      "operation": "move",
+      "source_path": "task_7_1_completion_log.json",
+      "target_path": "data/task_7_1_completion_log.json",
+      "reason": "Better organization",
+      "size_mb": 0.0024271011352539062
+    },
+    {
+      "operation": "delete",
+      "source_path": "screenshot_step1_chrome_focused_20250915_015326.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.3028478622436523
+    },
+    {
+      "operation": "delete",
+      "source_path": "screenshot_step3_kiro_found_20250915_015333.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2350988388061523
+    },
+    {
+      "operation": "move",
+      "source_path": "LANGGRAPH_NOTEBOOK_SUMMARY.md",
+      "target_path": "docs/LANGGRAPH_NOTEBOOK_SUMMARY.md",
+      "reason": "Better organization",
+      "size_mb": 0.010129928588867188
+    },
+    {
+      "operation": "move",
+      "source_path": "prometheus_updated.yml",
+      "target_path": "config/prometheus_updated.yml",
+      "reason": "Better organization",
+      "size_mb": 0.0017366409301757812
+    },
+    {
+      "operation": "move",
+      "source_path": "observatory_validation_report_20251004_150514.json",
+      "target_path": "data/observatory_validation_report_20251004_150514.json",
+      "reason": "Better organization",
+      "size_mb": 0.004779815673828125
+    },
+    {
+      "operation": "move",
+      "source_path": "websocket_validation_20250926_222339.json",
+      "target_path": "data/websocket_validation_20250926_222339.json",
+      "reason": "Better organization",
+      "size_mb": 0.0015096664428710938
+    },
+    {
+      "operation": "move",
+      "source_path": "NOTEBOOK_ENHANCEMENT_SUMMARY.md",
+      "target_path": "docs/NOTEBOOK_ENHANCEMENT_SUMMARY.md",
+      "reason": "Better organization",
+      "size_mb": 0.008576393127441406
+    },
+    {
+      "operation": "move",
+      "source_path": "websocket_integration_20250926_222452.json",
+      "target_path": "data/websocket_integration_20250926_222452.json",
+      "reason": "Better organization",
+      "size_mb": 0.0011911392211914062
+    },
+    {
+      "operation": "move",
+      "source_path": "system_architecture_dag_status_20251001-140718.json",
+      "target_path": "data/system_architecture_dag_status_20251001-140718.json",
+      "reason": "Better organization",
+      "size_mb": 0.0018796920776367188
+    },
+    {
+      "operation": "delete",
+      "source_path": "kiro_hackathon_current_page_20250914_235553.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.3082590103149414
+    },
+    {
+      "operation": "move",
+      "source_path": "CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20250930-160652.json",
+      "target_path": "data/CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20250930-160652.json",
+      "reason": "Better organization",
+      "size_mb": 0.004642486572265625
+    },
+    {
+      "operation": "move",
+      "source_path": "prometheus_current.yml",
+      "target_path": "config/prometheus_current.yml",
+      "reason": "Better organization",
+      "size_mb": 0.0024461746215820312
+    },
+    {
+      "operation": "move",
+      "source_path": "redis_env_profile.sh",
+      "target_path": "scripts/redis_env_profile.sh",
+      "reason": "Better organization",
+      "size_mb": 0.000335693359375
+    },
+    {
+      "operation": "delete",
+      "source_path": "kiro_submission_form_20250915_000256.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2530536651611328
+    },
+    {
+      "operation": "move",
+      "source_path": "auto_archive.sh",
+      "target_path": "scripts/auto_archive.sh",
+      "reason": "Better organization",
+      "size_mb": 0.00634002685546875
+    },
+    {
+      "operation": "move",
+      "source_path": "observatory_validation_report_20251004_153617.json",
+      "target_path": "data/observatory_validation_report_20251004_153617.json",
+      "reason": "Better organization",
+      "size_mb": 0.004126548767089844
+    },
+    {
+      "operation": "move",
+      "source_path": "docker-compose.local-dev.yml",
+      "target_path": "deployment/docker-compose.local-dev.yml",
+      "reason": "Better organization",
+      "size_mb": 0.00273895263671875
+    },
+    {
+      "operation": "move",
+      "source_path": "full_system_test_summary.md",
+      "target_path": "docs/full_system_test_summary.md",
+      "reason": "Better organization",
+      "size_mb": 0.004405021667480469
+    },
+    {
+      "operation": "delete",
+      "source_path": "observatory.pid",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 4.76837158203125e-06
+    },
+    {
+      "operation": "delete",
+      "source_path": "louspringer_projects_page_20250914_235713.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1908302307128906
+    },
+    {
+      "operation": "move",
+      "source_path": "Dockerfile.cms-search",
+      "target_path": "deployment/Dockerfile.cms-search",
+      "reason": "Better organization",
+      "size_mb": 0.0009031295776367188
+    },
+    {
+      "operation": "delete",
+      "source_path": "incognito_public_20250915_031727.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.7072725296020508
+    },
+    {
+      "operation": "delete",
+      "source_path": "kiro_edit_page_current_20250915_000244.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1887121200561523
+    },
+    {
+      "operation": "move",
+      "source_path": "redis_validation_report_20251002_080540.json",
+      "target_path": "data/redis_validation_report_20251002_080540.json",
+      "reason": "Better organization",
+      "size_mb": 0.0015897750854492188
+    },
+    {
+      "operation": "move",
+      "source_path": "Dockerfile.cms-repo-sync",
+      "target_path": "deployment/Dockerfile.cms-repo-sync",
+      "reason": "Better organization",
+      "size_mb": 0.0009365081787109375
+    },
+    {
+      "operation": "move",
+      "source_path": "LAUNCH_INSTRUCTIONS.md",
+      "target_path": "docs/LAUNCH_INSTRUCTIONS.md",
+      "reason": "Better organization",
+      "size_mb": 0.0050258636474609375
+    },
+    {
+      "operation": "delete",
+      "source_path": "after_edit_project_click.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.1207132339477539
+    },
+    {
+      "operation": "move",
+      "source_path": "deploy-to-vonnegut.sh",
+      "target_path": "scripts/deploy-to-vonnegut.sh",
+      "reason": "Better organization",
+      "size_mb": 0.0019750595092773438
+    },
+    {
+      "operation": "delete",
+      "source_path": "after_keyboard_search.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.186326026916504
+    },
+    {
+      "operation": "move",
+      "source_path": "grafana-public-config.ini",
+      "target_path": "config/grafana-public-config.ini",
+      "reason": "Better organization",
+      "size_mb": 0.0007419586181640625
+    },
+    {
+      "operation": "move",
+      "source_path": "deploy_on_poe.sh",
+      "target_path": "scripts/deploy_on_poe.sh",
+      "reason": "Better organization",
+      "size_mb": 0.0012197494506835938
+    },
+    {
+      "operation": "move",
+      "source_path": "task_5_1_completion_log.json",
+      "target_path": "data/task_5_1_completion_log.json",
+      "reason": "Better organization",
+      "size_mb": 0.0005397796630859375
+    },
+    {
+      "operation": "delete",
+      "source_path": "beast_mode_current_state_20250914_213256.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.9538955688476562
+    },
+    {
+      "operation": "move",
+      "source_path": "cloudflare_websocket_configuration_report_20250926_225032.json",
+      "target_path": "data/cloudflare_websocket_configuration_report_20250926_225032.json",
+      "reason": "Better organization",
+      "size_mb": 0.010384559631347656
+    },
+    {
+      "operation": "move",
+      "source_path": "system_architecture_dag_status_20250930-164354.json",
+      "target_path": "data/system_architecture_dag_status_20250930-164354.json",
+      "reason": "Better organization",
+      "size_mb": 0.0018796920776367188
+    },
+    {
+      "operation": "move",
+      "source_path": "CMS_TASK_AUDIT_COMPREHENSIVE_REPORT.md",
+      "target_path": "docs/CMS_TASK_AUDIT_COMPREHENSIVE_REPORT.md",
+      "reason": "Better organization",
+      "size_mb": 0.009064674377441406
+    },
+    {
+      "operation": "move",
+      "source_path": "COORDINATION_MONITOR_COMPLETION_SUMMARY.md",
+      "target_path": "docs/COORDINATION_MONITOR_COMPLETION_SUMMARY.md",
+      "reason": "Better organization",
+      "size_mb": 0.0068759918212890625
+    },
+    {
+      "operation": "move",
+      "source_path": "websocket_integration_20250926_225027.json",
+      "target_path": "data/websocket_integration_20250926_225027.json",
+      "reason": "Better organization",
+      "size_mb": 0.0011911392211914062
+    },
+    {
+      "operation": "move",
+      "source_path": "websocket_test_report.json",
+      "target_path": "data/websocket_test_report.json",
+      "reason": "Better organization",
+      "size_mb": 0.07039928436279297
+    },
+    {
+      "operation": "move",
+      "source_path": "websocket_test_final_report.json",
+      "target_path": "data/websocket_test_final_report.json",
+      "reason": "Better organization",
+      "size_mb": 0.006455421447753906
+    },
+    {
+      "operation": "delete",
+      "source_path": "current_position_20250915_012051.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2152099609375
+    },
+    {
+      "operation": "move",
+      "source_path": "system-health-report-20251005_184659.md",
+      "target_path": "docs/system-health-report-20251005_184659.md",
+      "reason": "Better organization",
+      "size_mb": 0.006781578063964844
+    },
+    {
+      "operation": "move",
+      "source_path": "auto_registration_test_report.md",
+      "target_path": "docs/auto_registration_test_report.md",
+      "reason": "Better organization",
+      "size_mb": 0.0053157806396484375
+    },
+    {
+      "operation": "move",
+      "source_path": "cloudflare-config.yaml",
+      "target_path": "config/cloudflare-config.yaml",
+      "reason": "Better organization",
+      "size_mb": 0.0030584335327148438
+    },
+    {
+      "operation": "delete",
+      "source_path": "devpost_page_1757961645.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.12457656860351562
+    },
+    {
+      "operation": "move",
+      "source_path": "implementation_complete_summary.md",
+      "target_path": "docs/implementation_complete_summary.md",
+      "reason": "Better organization",
+      "size_mb": 0.00565338134765625
+    },
+    {
+      "operation": "delete",
+      "source_path": "after_tab_4_20250915_014113.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2718629837036133
+    },
+    {
+      "operation": "move",
+      "source_path": "websocket_integration_20250926_222408.json",
+      "target_path": "data/websocket_integration_20250926_222408.json",
+      "reason": "Better organization",
+      "size_mb": 0.0013074874877929688
+    },
+    {
+      "operation": "move",
+      "source_path": "dag_orchestration_integration_validation_20251002_132527.json",
+      "target_path": "data/dag_orchestration_integration_validation_20251002_132527.json",
+      "reason": "Better organization",
+      "size_mb": 0.009350776672363281
+    },
+    {
+      "operation": "move",
+      "source_path": "scheduler_empirical_report_20250929_181414.json",
+      "target_path": "data/scheduler_empirical_report_20250929_181414.json",
+      "reason": "Better organization",
+      "size_mb": 0.013463020324707031
+    },
+    {
+      "operation": "move",
+      "source_path": "observatory_cleanup_report.json",
+      "target_path": "data/observatory_cleanup_report.json",
+      "reason": "Better organization",
+      "size_mb": 0.0016527175903320312
+    },
+    {
+      "operation": "move",
+      "source_path": "setup_gigabyte_hunting.sh",
+      "target_path": "scripts/setup_gigabyte_hunting.sh",
+      "reason": "Better organization",
+      "size_mb": 0.0010166168212890625
+    },
+    {
+      "operation": "move",
+      "source_path": "websocket-test-commands.sh",
+      "target_path": "scripts/websocket-test-commands.sh",
+      "reason": "Better organization",
+      "size_mb": 0.0027399063110351562
+    },
+    {
+      "operation": "move",
+      "source_path": "system_architecture_dag_status_20251001-131614.json",
+      "target_path": "data/system_architecture_dag_status_20251001-131614.json",
+      "reason": "Better organization",
+      "size_mb": 0.0018796920776367188
+    },
+    {
+      "operation": "delete",
+      "source_path": "finalization_verify_before_20250915_023229.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.18445110321044922
+    },
+    {
+      "operation": "move",
+      "source_path": "DAG_ORCHESTRATION_PROP.md",
+      "target_path": "docs/DAG_ORCHESTRATION_PROP.md",
+      "reason": "Better organization",
+      "size_mb": 0.0
+    },
+    {
+      "operation": "delete",
+      "source_path": "after_submit.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.1384429931640625
+    },
+    {
+      "operation": "move",
+      "source_path": "CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251003-063404.json",
+      "target_path": "data/CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251003-063404.json",
+      "reason": "Better organization",
+      "size_mb": 0.011260032653808594
+    },
+    {
+      "operation": "delete",
+      "source_path": "before_submit.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.1384429931640625
+    },
+    {
+      "operation": "move",
+      "source_path": "observatory_dependency_governance_validation_report.json",
+      "target_path": "data/observatory_dependency_governance_validation_report.json",
+      "reason": "Better organization",
+      "size_mb": 0.00030422210693359375
+    },
+    {
+      "operation": "move",
+      "source_path": "CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251001-142023.json",
+      "target_path": "data/CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251001-142023.json",
+      "reason": "Better organization",
+      "size_mb": 0.0010042190551757812
+    },
+    {
+      "operation": "delete",
+      "source_path": "current_state_20250915_012824.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2359962463378906
+    },
+    {
+      "operation": "delete",
+      "source_path": "after_tab_5_20250915_014120.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2675504684448242
+    },
+    {
+      "operation": "move",
+      "source_path": "observatory_validation_report_20251004_182023.json",
+      "target_path": "data/observatory_validation_report_20251004_182023.json",
+      "reason": "Better organization",
+      "size_mb": 0.005251884460449219
+    },
+    {
+      "operation": "move",
+      "source_path": "production_websocket_validation_results.json",
+      "target_path": "data/production_websocket_validation_results.json",
+      "reason": "Better organization",
+      "size_mb": 0.004311561584472656
+    },
+    {
+      "operation": "move",
+      "source_path": "pre_migration_validation.json",
+      "target_path": "data/pre_migration_validation.json",
+      "reason": "Better organization",
+      "size_mb": 0.0005521774291992188
+    },
+    {
+      "operation": "move",
+      "source_path": "agent_control_governance_execution_results_final.json",
+      "target_path": "data/agent_control_governance_execution_results_final.json",
+      "reason": "Better organization",
+      "size_mb": 0.0006399154663085938
+    },
+    {
+      "operation": "delete",
+      "source_path": "screenshot_step5_my_projects_search_20250915_015338.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.3046178817749023
+    },
+    {
+      "operation": "move",
+      "source_path": "TASK_2_2_COMPLETION_LOG.json",
+      "target_path": "data/TASK_2_2_COMPLETION_LOG.json",
+      "reason": "Better organization",
+      "size_mb": 0.0026073455810546875
+    },
+    {
+      "operation": "move",
+      "source_path": "docker-compose.cms-enhanced.yml",
+      "target_path": "deployment/docker-compose.cms-enhanced.yml",
+      "reason": "Better organization",
+      "size_mb": 0.006609916687011719
+    },
+    {
+      "operation": "move",
+      "source_path": "docker-entrypoint.sh",
+      "target_path": "scripts/docker-entrypoint.sh",
+      "reason": "Better organization",
+      "size_mb": 0.0011034011840820312
+    },
+    {
+      "operation": "move",
+      "source_path": "system_architecture_dag_status_20250930-155631.json",
+      "target_path": "data/system_architecture_dag_status_20250930-155631.json",
+      "reason": "Better organization",
+      "size_mb": 0.0018796920776367188
+    },
+    {
+      "operation": "delete",
+      "source_path": "screenshot_beast_mode_deployment_20250914_212818.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 2.3057479858398438
+    },
+    {
+      "operation": "move",
+      "source_path": "tunnel_config.json",
+      "target_path": "data/tunnel_config.json",
+      "reason": "Better organization",
+      "size_mb": 0.0001220703125
+    },
+    {
+      "operation": "delete",
+      "source_path": "live_fire_testing_results_20250914_213735.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.0506820678710938
+    },
+    {
+      "operation": "move",
+      "source_path": "agent_control_governance_execution_results.json",
+      "target_path": "data/agent_control_governance_execution_results.json",
+      "reason": "Better organization",
+      "size_mb": 0.0035648345947265625
+    },
+    {
+      "operation": "move",
+      "source_path": "TASK_1_2_COMPLETION_REPORT.json",
+      "target_path": "data/TASK_1_2_COMPLETION_REPORT.json",
+      "reason": "Better organization",
+      "size_mb": 0.00112152099609375
+    },
+    {
+      "operation": "move",
+      "source_path": "cms_architecture_spec_completion_summary.md",
+      "target_path": "docs/cms_architecture_spec_completion_summary.md",
+      "reason": "Better organization",
+      "size_mb": 0.007890701293945312
+    },
+    {
+      "operation": "delete",
+      "source_path": "live_fire_test_20250914_220450.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.094466209411621
+    },
+    {
+      "operation": "move",
+      "source_path": "package-lock.json",
+      "target_path": "data/package-lock.json",
+      "reason": "Better organization",
+      "size_mb": 0.036220550537109375
+    },
+    {
+      "operation": "move",
+      "source_path": "package.json",
+      "target_path": "data/package.json",
+      "reason": "Better organization",
+      "size_mb": 0.0013523101806640625
+    },
+    {
+      "operation": "delete",
+      "source_path": "current_page_final.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1979656219482422
+    },
+    {
+      "operation": "move",
+      "source_path": "task_2_3_completion_log.json",
+      "target_path": "data/task_2_3_completion_log.json",
+      "reason": "Better organization",
+      "size_mb": 0.000728607177734375
+    },
+    {
+      "operation": "move",
+      "source_path": "docker-compose.directus-fixed.yml",
+      "target_path": "deployment/docker-compose.directus-fixed.yml",
+      "reason": "Better organization",
+      "size_mb": 0.00384521484375
+    },
+    {
+      "operation": "delete",
+      "source_path": "after_edit_click.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.297891616821289
+    },
+    {
+      "operation": "delete",
+      "source_path": "louspringer_submissions_actual_20250915_001038.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1902809143066406
+    },
+    {
+      "operation": "move",
+      "source_path": "CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20250930-165412.json",
+      "target_path": "data/CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20250930-165412.json",
+      "reason": "Better organization",
+      "size_mb": 0.022199630737304688
+    },
+    {
+      "operation": "delete",
+      "source_path": "current_page_analysis_20250914_220621.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.0608930587768555
+    },
+    {
+      "operation": "move",
+      "source_path": "CMS_ARCHITECTURE_README.md",
+      "target_path": "docs/CMS_ARCHITECTURE_README.md",
+      "reason": "Better organization",
+      "size_mb": 0.009398460388183594
+    },
+    {
+      "operation": "move",
+      "source_path": "agent_control_governance_dag_tasks.json",
+      "target_path": "data/agent_control_governance_dag_tasks.json",
+      "reason": "Better organization",
+      "size_mb": 0.027233123779296875
+    },
+    {
+      "operation": "move",
+      "source_path": "CONTRIBUTING.md",
+      "target_path": "docs/CONTRIBUTING.md",
+      "reason": "Better organization",
+      "size_mb": 0.007325172424316406
+    },
+    {
+      "operation": "move",
+      "source_path": "set_redis_environment.sh",
+      "target_path": "scripts/set_redis_environment.sh",
+      "reason": "Better organization",
+      "size_mb": 0.0008573532104492188
+    },
+    {
+      "operation": "delete",
+      "source_path": "current_page_view.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2430410385131836
+    },
+    {
+      "operation": "move",
+      "source_path": "dag_orchestration_test_results_20251001_150123.json",
+      "target_path": "data/dag_orchestration_test_results_20251001_150123.json",
+      "reason": "Better organization",
+      "size_mb": 0.0007801055908203125
+    },
+    {
+      "operation": "move",
+      "source_path": "CMS_TASK_AUDIT_FINAL_REPORT.md",
+      "target_path": "docs/CMS_TASK_AUDIT_FINAL_REPORT.md",
+      "reason": "Better organization",
+      "size_mb": 0.005541801452636719
+    },
+    {
+      "operation": "delete",
+      "source_path": "louspringer_submissions_current_20250915_000347.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1909990310668945
+    },
+    {
+      "operation": "move",
+      "source_path": "git_sync_phase1.sh",
+      "target_path": "scripts/git_sync_phase1.sh",
+      "reason": "Better organization",
+      "size_mb": 0.0007104873657226562
+    },
+    {
+      "operation": "move",
+      "source_path": "fibonacci_5d_validation_summary.json",
+      "target_path": "data/fibonacci_5d_validation_summary.json",
+      "reason": "Better organization",
+      "size_mb": 0.0063991546630859375
+    },
+    {
+      "operation": "move",
+      "source_path": "TASK_1_1_COMPLETION_REPORT.json",
+      "target_path": "data/TASK_1_1_COMPLETION_REPORT.json",
+      "reason": "Better organization",
+      "size_mb": 0.0010766983032226562
+    },
+    {
+      "operation": "move",
+      "source_path": "cms_task_audit_report_20251005_181838.json",
+      "target_path": "data/cms_task_audit_report_20251005_181838.json",
+      "reason": "Better organization",
+      "size_mb": 0.060359954833984375
+    },
+    {
+      "operation": "move",
+      "source_path": "dag_orchestration_test_results_20251001_151006.json",
+      "target_path": "data/dag_orchestration_test_results_20251001_151006.json",
+      "reason": "Better organization",
+      "size_mb": 0.0007686614990234375
+    },
+    {
+      "operation": "move",
+      "source_path": "test_production_websockets.sh",
+      "target_path": "scripts/test_production_websockets.sh",
+      "reason": "Better organization",
+      "size_mb": 0.0025386810302734375
+    },
+    {
+      "operation": "move",
+      "source_path": "websocket_deployment_script.sh",
+      "target_path": "scripts/websocket_deployment_script.sh",
+      "reason": "Better organization",
+      "size_mb": 0.005690574645996094
+    },
+    {
+      "operation": "move",
+      "source_path": "observatory_simplified_deployment_report.json",
+      "target_path": "data/observatory_simplified_deployment_report.json",
+      "reason": "Better organization",
+      "size_mb": 0.0018148422241210938
+    },
+    {
+      "operation": "delete",
+      "source_path": "current_position_20250915_014429.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.225569725036621
+    },
+    {
+      "operation": "move",
+      "source_path": "local_dns_solution_summary.md",
+      "target_path": "docs/local_dns_solution_summary.md",
+      "reason": "Better organization",
+      "size_mb": 0.007964134216308594
+    },
+    {
+      "operation": "delete",
+      "source_path": "final_submit_before_20250915_023925.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.18442440032958984
+    },
+    {
+      "operation": "move",
+      "source_path": "ai_cli_test_results.json",
+      "target_path": "data/ai_cli_test_results.json",
+      "reason": "Better organization",
+      "size_mb": 0.00188446044921875
+    },
+    {
+      "operation": "move",
+      "source_path": "CMS_PROMPT_EXECUTION_SUMMARY.md",
+      "target_path": "docs/CMS_PROMPT_EXECUTION_SUMMARY.md",
+      "reason": "Better organization",
+      "size_mb": 0.009077072143554688
+    },
+    {
+      "operation": "delete",
+      "source_path": "field_verification_20250915_013718.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2230148315429688
+    },
+    {
+      "operation": "move",
+      "source_path": "CMS_PHASE_1_COMPLETION_SUMMARY.json",
+      "target_path": "data/CMS_PHASE_1_COMPLETION_SUMMARY.json",
+      "reason": "Better organization",
+      "size_mb": 0.005379676818847656
+    },
+    {
+      "operation": "move",
+      "source_path": "ace_reporter_design_review_1759166866.json",
+      "target_path": "data/ace_reporter_design_review_1759166866.json",
+      "reason": "Better organization",
+      "size_mb": 0.0048065185546875
+    },
+    {
+      "operation": "delete",
+      "source_path": "screenshot_step2_devpost_homepage_20250915_015331.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2345571517944336
+    },
+    {
+      "operation": "move",
+      "source_path": "cms_task_audit_summary_20251005_181838.md",
+      "target_path": "docs/cms_task_audit_summary_20251005_181838.md",
+      "reason": "Better organization",
+      "size_mb": 0.005957603454589844
+    },
+    {
+      "operation": "delete",
+      "source_path": "find_existing_project_1757912178.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.9050540924072266
+    },
+    {
+      "operation": "move",
+      "source_path": "docker-compose.directus-production.yml",
+      "target_path": "deployment/docker-compose.directus-production.yml",
+      "reason": "Better organization",
+      "size_mb": 0.002002716064453125
+    },
+    {
+      "operation": "move",
+      "source_path": "KIRO_DAG_EXECUTION_REPORT_kiro-dag-20250930-100536.json",
+      "target_path": "data/KIRO_DAG_EXECUTION_REPORT_kiro-dag-20250930-100536.json",
+      "reason": "Better organization",
+      "size_mb": 0.0018863677978515625
+    },
+    {
+      "operation": "delete",
+      "source_path": "kiro_edit_page_final_20250915_001818.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2380971908569336
+    },
+    {
+      "operation": "delete",
+      "source_path": "current_chrome_window.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.0572738647460938
+    },
+    {
+      "operation": "delete",
+      "source_path": "finalization_verify_after_20250915_023229.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.18470191955566406
+    },
+    {
+      "operation": "move",
+      "source_path": "cms_implementation_completion_plan_20251005_182146.json",
+      "target_path": "data/cms_implementation_completion_plan_20251005_182146.json",
+      "reason": "Better organization",
+      "size_mb": 0.010249137878417969
+    },
+    {
+      "operation": "move",
+      "source_path": "CONSTELLATION_EXECUTION_READY.md",
+      "target_path": "docs/CONSTELLATION_EXECUTION_READY.md",
+      "reason": "Better organization",
+      "size_mb": 0.005143165588378906
+    },
+    {
+      "operation": "move",
+      "source_path": "task_6_2_completion_log.json",
+      "target_path": "data/task_6_2_completion_log.json",
+      "reason": "Better organization",
+      "size_mb": 0.001972198486328125
+    },
+    {
+      "operation": "move",
+      "source_path": "deploy-error-page.sh",
+      "target_path": "scripts/deploy-error-page.sh",
+      "reason": "Better organization",
+      "size_mb": 0.004731178283691406
+    },
+    {
+      "operation": "delete",
+      "source_path": "devpost_test_1757910627.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1641969680786133
+    },
+    {
+      "operation": "delete",
+      "source_path": "after_keyboard_nav.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2555198669433594
+    },
+    {
+      "operation": "move",
+      "source_path": "nginx.conf",
+      "target_path": "config/nginx.conf",
+      "reason": "Better organization",
+      "size_mb": 0.0013484954833984375
+    },
+    {
+      "operation": "move",
+      "source_path": "beastmaster_capture_report_20251005_185115.json",
+      "target_path": "data/beastmaster_capture_report_20251005_185115.json",
+      "reason": "Better organization",
+      "size_mb": 0.03571605682373047
+    },
+    {
+      "operation": "delete",
+      "source_path": "project_url_test_1757912086.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.9079666137695312
+    },
+    {
+      "operation": "move",
+      "source_path": "redis_validation_report_20251002_080138.json",
+      "target_path": "data/redis_validation_report_20251002_080138.json",
+      "reason": "Better organization",
+      "size_mb": 0.0011434555053710938
+    },
+    {
+      "operation": "move",
+      "source_path": "rm_ddd_cli_test_report.json",
+      "target_path": "data/rm_ddd_cli_test_report.json",
+      "reason": "Better organization",
+      "size_mb": 0.0013170242309570312
+    },
+    {
+      "operation": "move",
+      "source_path": "cleanup_root.sh",
+      "target_path": "scripts/cleanup_root.sh",
+      "reason": "Better organization",
+      "size_mb": 0.009049415588378906
+    },
+    {
+      "operation": "move",
+      "source_path": "nginx_service_isolation.conf",
+      "target_path": "config/nginx_service_isolation.conf",
+      "reason": "Better organization",
+      "size_mb": 0.00154876708984375
+    },
+    {
+      "operation": "move",
+      "source_path": "prometheus-config.env",
+      "target_path": "config/prometheus-config.env",
+      "reason": "Better organization",
+      "size_mb": 6.389617919921875e-05
+    },
+    {
+      "operation": "move",
+      "source_path": "test_automation_analysis_20251003_101540.json",
+      "target_path": "data/test_automation_analysis_20251003_101540.json",
+      "reason": "Better organization",
+      "size_mb": 0.13103961944580078
+    },
+    {
+      "operation": "move",
+      "source_path": "deployment-auditor-config.yml",
+      "target_path": "config/deployment-auditor-config.yml",
+      "reason": "Better organization",
+      "size_mb": 0.0009031295776367188
+    },
+    {
+      "operation": "move",
+      "source_path": "system-health-report-20251005_184659.json",
+      "target_path": "data/system-health-report-20251005_184659.json",
+      "reason": "Better organization",
+      "size_mb": 0.007966041564941406
+    },
+    {
+      "operation": "delete",
+      "source_path": "current_page_20250915_020117.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2675094604492188
+    },
+    {
+      "operation": "move",
+      "source_path": "setup_vonnegut_redis.sh",
+      "target_path": "scripts/setup_vonnegut_redis.sh",
+      "reason": "Better organization",
+      "size_mb": 0.0016660690307617188
+    },
+    {
+      "operation": "delete",
+      "source_path": "our_hackathons_portfolio_20250914_221141.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.7907562255859375
+    },
+    {
+      "operation": "delete",
+      "source_path": "alt_submissions_1757910948.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1870346069335938
+    },
+    {
+      "operation": "move",
+      "source_path": "KIRO_DAG_EXECUTION_REPORT_kiro-dag-20250930-100209.json",
+      "target_path": "data/KIRO_DAG_EXECUTION_REPORT_kiro-dag-20250930-100209.json",
+      "reason": "Better organization",
+      "size_mb": 0.0018863677978515625
+    },
+    {
+      "operation": "move",
+      "source_path": "coverage_unit.json",
+      "target_path": "data/coverage_unit.json",
+      "reason": "Better organization",
+      "size_mb": 0.15818309783935547
+    },
+    {
+      "operation": "move",
+      "source_path": "negotiation_breadcrumbs_neg_20250918_092536.json",
+      "target_path": "data/negotiation_breadcrumbs_neg_20250918_092536.json",
+      "reason": "Better organization",
+      "size_mb": 0.0022993087768554688
+    },
+    {
+      "operation": "move",
+      "source_path": "deployment-audit-2025-10-03.json",
+      "target_path": "data/deployment-audit-2025-10-03.json",
+      "reason": "Better organization",
+      "size_mb": 0.00031948089599609375
+    },
+    {
+      "operation": "move",
+      "source_path": "dag_orchestration_integration_validation_20251002_132308.json",
+      "target_path": "data/dag_orchestration_integration_validation_20251002_132308.json",
+      "reason": "Better organization",
+      "size_mb": 0.008629798889160156
+    },
+    {
+      "operation": "move",
+      "source_path": "CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251001-131614.json",
+      "target_path": "data/CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251001-131614.json",
+      "reason": "Better organization",
+      "size_mb": 0.0222015380859375
+    },
+    {
+      "operation": "move",
+      "source_path": "cms_architecture_dag_readiness_report.md",
+      "target_path": "docs/cms_architecture_dag_readiness_report.md",
+      "reason": "Better organization",
+      "size_mb": 0.0087738037109375
+    },
+    {
+      "operation": "move",
+      "source_path": "coordination_evidence_collection_20250127.json",
+      "target_path": "data/coordination_evidence_collection_20250127.json",
+      "reason": "Better organization",
+      "size_mb": 0.007027626037597656
+    },
+    {
+      "operation": "delete",
+      "source_path": "after_tab_3_20250915_014026.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2651872634887695
+    },
+    {
+      "operation": "move",
+      "source_path": "CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251001-143643.json",
+      "target_path": "data/CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251001-143643.json",
+      "reason": "Better organization",
+      "size_mb": 0.00027751922607421875
+    },
+    {
+      "operation": "move",
+      "source_path": "dag_execution_report_ai-memory-palace_20251005_132834.json",
+      "target_path": "data/dag_execution_report_ai-memory-palace_20251005_132834.json",
+      "reason": "Better organization",
+      "size_mb": 0.0010461807250976562
+    },
+    {
+      "operation": "move",
+      "source_path": "vocabulary_projector_pre_launch_report.json",
+      "target_path": "data/vocabulary_projector_pre_launch_report.json",
+      "reason": "Better organization",
+      "size_mb": 0.00019550323486328125
+    },
+    {
+      "operation": "move",
+      "source_path": "deployment_auditor_dag_launch_commands.md",
+      "target_path": "docs/deployment_auditor_dag_launch_commands.md",
+      "reason": "Better organization",
+      "size_mb": 0.009950637817382812
+    },
+    {
+      "operation": "delete",
+      "source_path": "kiro_hackathon_page_20250914_221653.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.10693359375
+    },
+    {
+      "operation": "delete",
+      "source_path": "after_save_continue.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.10833740234375
+    },
+    {
+      "operation": "delete",
+      "source_path": "kiro_hackathon_current_state_20250914_222214.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.111952781677246
+    },
+    {
+      "operation": "move",
+      "source_path": "phase_3_execution_plan_20251003_101722.json",
+      "target_path": "data/phase_3_execution_plan_20251003_101722.json",
+      "reason": "Better organization",
+      "size_mb": 0.00502777099609375
+    },
+    {
+      "operation": "delete",
+      "source_path": "current_screen_state.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2831506729125977
+    },
+    {
+      "operation": "delete",
+      "source_path": "louspringer_submissions_page_20250914_235704.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1911334991455078
+    },
+    {
+      "operation": "move",
+      "source_path": "TASK_1_3_COMPLETION_REPORT.json",
+      "target_path": "data/TASK_1_3_COMPLETION_REPORT.json",
+      "reason": "Better organization",
+      "size_mb": 0.0014085769653320312
+    },
+    {
+      "operation": "move",
+      "source_path": "security_cleanup_report.json",
+      "target_path": "data/security_cleanup_report.json",
+      "reason": "Better organization",
+      "size_mb": 0.008038520812988281
+    },
+    {
+      "operation": "move",
+      "source_path": "TASK_1_COMPLETION_LOG.json",
+      "target_path": "data/TASK_1_COMPLETION_LOG.json",
+      "reason": "Better organization",
+      "size_mb": 0.00162506103515625
+    },
+    {
+      "operation": "move",
+      "source_path": "poe_deployment_report_20251004_152642.json",
+      "target_path": "data/poe_deployment_report_20251004_152642.json",
+      "reason": "Better organization",
+      "size_mb": 0.003597259521484375
+    },
+    {
+      "operation": "move",
+      "source_path": "deployment_report_20251005_104520.md",
+      "target_path": "docs/deployment_report_20251005_104520.md",
+      "reason": "Better organization",
+      "size_mb": 0.0027837753295898438
+    },
+    {
+      "operation": "delete",
+      "source_path": "current_kiro_page_view.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2814483642578125
+    },
+    {
+      "operation": "move",
+      "source_path": "project_model_registry.json",
+      "target_path": "data/project_model_registry.json",
+      "reason": "Better organization",
+      "size_mb": 2.86102294921875e-06
+    },
+    {
+      "operation": "move",
+      "source_path": "system_architecture_dag_tasks.json",
+      "target_path": "data/system_architecture_dag_tasks.json",
+      "reason": "Better organization",
+      "size_mb": 0.0095672607421875
+    },
+    {
+      "operation": "move",
+      "source_path": "project_cleanup_analysis.json",
+      "target_path": "data/project_cleanup_analysis.json",
+      "reason": "Better organization",
+      "size_mb": 27.545970916748047
+    },
+    {
+      "operation": "move",
+      "source_path": "dag_orchestration_test_results_20251001_151128.json",
+      "target_path": "data/dag_orchestration_test_results_20251001_151128.json",
+      "reason": "Better organization",
+      "size_mb": 0.0007572174072265625
+    },
+    {
+      "operation": "move",
+      "source_path": "observatory_validation_report_20251004_182602.json",
+      "target_path": "data/observatory_validation_report_20251004_182602.json",
+      "reason": "Better organization",
+      "size_mb": 0.005051612854003906
+    },
+    {
+      "operation": "delete",
+      "source_path": "edit_attempt_1757910928.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1873044967651367
+    },
+    {
+      "operation": "move",
+      "source_path": "dag_orchestration_test_results_20251001_150955.json",
+      "target_path": "data/dag_orchestration_test_results_20251001_150955.json",
+      "reason": "Better organization",
+      "size_mb": 0.000774383544921875
+    },
+    {
+      "operation": "move",
+      "source_path": "healthcheck.sh",
+      "target_path": "scripts/healthcheck.sh",
+      "reason": "Better organization",
+      "size_mb": 0.0003223419189453125
+    },
+    {
+      "operation": "move",
+      "source_path": "integrated_dag_orchestration_report_20250929_181555.json",
+      "target_path": "data/integrated_dag_orchestration_report_20250929_181555.json",
+      "reason": "Better organization",
+      "size_mb": 0.011762619018554688
+    },
+    {
+      "operation": "move",
+      "source_path": "observatory_validation_report_20251004_140835.json",
+      "target_path": "data/observatory_validation_report_20251004_140835.json",
+      "reason": "Better organization",
+      "size_mb": 0.004782676696777344
+    },
+    {
+      "operation": "move",
+      "source_path": "port_conflict_resolution_summary.md",
+      "target_path": "docs/port_conflict_resolution_summary.md",
+      "reason": "Better organization",
+      "size_mb": 0.0046253204345703125
+    },
+    {
+      "operation": "move",
+      "source_path": "dag_execution_report_ai-memory-palace_20251005_130042.json",
+      "target_path": "data/dag_execution_report_ai-memory-palace_20251005_130042.json",
+      "reason": "Better organization",
+      "size_mb": 0.0010461807250976562
+    },
+    {
+      "operation": "move",
+      "source_path": "start_mitigation.sh",
+      "target_path": "scripts/start_mitigation.sh",
+      "reason": "Better organization",
+      "size_mb": 0.004681587219238281
+    },
+    {
+      "operation": "move",
+      "source_path": "comprehensive_migration.sh",
+      "target_path": "scripts/comprehensive_migration.sh",
+      "reason": "Better organization",
+      "size_mb": 6.055294990539551
+    },
+    {
+      "operation": "move",
+      "source_path": "system_architecture_dag_status_20250930-165412.json",
+      "target_path": "data/system_architecture_dag_status_20250930-165412.json",
+      "reason": "Better organization",
+      "size_mb": 0.0018796920776367188
+    },
+    {
+      "operation": "delete",
+      "source_path": "requirements.txt.tmp",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.0
+    },
+    {
+      "operation": "delete",
+      "source_path": "hackathons_page_20250914_220716.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2688045501708984
+    },
+    {
+      "operation": "move",
+      "source_path": "prometheus_grafana_verification_report.json",
+      "target_path": "data/prometheus_grafana_verification_report.json",
+      "reason": "Better organization",
+      "size_mb": 0.0015087127685546875
+    },
+    {
+      "operation": "delete",
+      "source_path": "current_page_exploration.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.1590690612792969
+    },
+    {
+      "operation": "move",
+      "source_path": "KIRO_DAG_EXECUTION_REPORT_kiro-dag-20250930-164217.json",
+      "target_path": "data/KIRO_DAG_EXECUTION_REPORT_kiro-dag-20250930-164217.json",
+      "reason": "Better organization",
+      "size_mb": 0.0018873214721679688
+    },
+    {
+      "operation": "delete",
+      "source_path": "found_project_1757912213.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.9002351760864258
+    },
+    {
+      "operation": "move",
+      "source_path": "CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251003-063337.json",
+      "target_path": "data/CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251003-063337.json",
+      "reason": "Better organization",
+      "size_mb": 0.0009965896606445312
+    },
+    {
+      "operation": "move",
+      "source_path": "system_architecture_dag_status_20250930-155909.json",
+      "target_path": "data/system_architecture_dag_status_20250930-155909.json",
+      "reason": "Better organization",
+      "size_mb": 0.0018796920776367188
+    },
+    {
+      "operation": "delete",
+      "source_path": "after_tab_2_20250915_014020.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.2648849487304688
+    },
+    {
+      "operation": "delete",
+      "source_path": "current_state_analysis.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 0.05886650085449219
+    },
+    {
+      "operation": "move",
+      "source_path": "beast_mode_dashboard.json",
+      "target_path": "data/beast_mode_dashboard.json",
+      "reason": "Better organization",
+      "size_mb": 0.005687713623046875
+    },
+    {
+      "operation": "delete",
+      "source_path": "cursor_position_after_tab_20250915_013844.png",
+      "target_path": "",
+      "reason": "Temporary/cache/backup file",
+      "size_mb": 1.271998405456543
+    },
+    {
+      "operation": "move",
+      "source_path": "CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251001-143009.json",
+      "target_path": "data/CONFIGURABLE_LLM_DAG_EXECUTION_REPORT_llm-dag-20251001-143009.json",
+      "reason": "Better organization",
+      "size_mb": 0.0010042190551757812
+    },
+    {
+      "operation": "move",
+      "source_path": "ai_memory_palace_integration_test_report.json",
+      "target_path": "data/ai_memory_palace_integration_test_report.json",
+      "reason": "Better organization",
+      "size_mb": 0.0019741058349609375
+    }
+  ]
+}

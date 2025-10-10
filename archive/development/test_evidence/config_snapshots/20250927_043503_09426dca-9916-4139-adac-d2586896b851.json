@@ -1,0 +1,20 @@
+{
+  "evidence_id": "09426dca-9916-4139-adac-d2586896b851",
+  "timestamp": "2025-09-27T04:35:03.620384",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.620330",
+    "data_type": "dict"
+  },
+  "integrity_hash": "0e4881a98a7260eae88b71f39504aec48dc290d28c5cef28540acc5c3e0d5b2b",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/fastapi/routing.py",
+    "file_size": 176533,
+    "line_count": 4447,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.620314"
+  }
+}

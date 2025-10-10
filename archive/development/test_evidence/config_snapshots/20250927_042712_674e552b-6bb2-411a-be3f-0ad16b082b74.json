@@ -1,0 +1,26 @@
+{
+  "evidence_id": "674e552b-6bb2-411a-be3f-0ad16b082b74",
+  "timestamp": "2025-09-27T04:27:12.918638",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.918623",
+    "data_type": "dict"
+  },
+  "integrity_hash": "4fe20f70ee90d1aa59d65c0d71161cd85dc46665effc22c3fb4d7d1599de1cac",
+  "data": {
+    "file_path": "./src/websocket_validation/testers/code_analysis.py",
+    "file_size": 21071,
+    "line_count": 538,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": []
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.918566"
+  }
+}

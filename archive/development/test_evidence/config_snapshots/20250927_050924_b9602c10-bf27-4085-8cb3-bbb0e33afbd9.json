@@ -1,0 +1,32 @@
+{
+  "evidence_id": "b9602c10-bf27-4085-8cb3-bbb0e33afbd9",
+  "timestamp": "2025-09-27T05:09:24.383879",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.383863",
+    "data_type": "dict"
+  },
+  "integrity_hash": "57307dab54175b15ac5b6fbd4e11034cc109d4368b72582088cb0fddf3d4181e",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/huggingface_hub/_webhooks_server.py",
+    "file_size": 15764,
+    "line_count": 389,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.Request",
+        "fastapi.responses.JSONResponse",
+        "fastapi.responses",
+        "fastapi.FastAPI",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.383846"
+  }
+}

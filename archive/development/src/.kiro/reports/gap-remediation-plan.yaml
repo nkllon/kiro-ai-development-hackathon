@@ -1,0 +1,4322 @@
+metadata:
+  generated_at: '2025-10-04T11:38:14.842748'
+  total_items: 107
+  priority_distribution:
+    critical: 61
+    high: 46
+    medium: 0
+    low: 0
+remediation_plan:
+  critical_priority:
+  - spec_name: artifact-classification-transfer-learning
+    priority: critical
+    average_score: 0.0
+    critical_dimensions: 10
+    poor_dimensions: 0
+    total_issues: 10
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: monitoring_observability
+      dimension_num: 15
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: integration_patterns
+      dimension_num: 18
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: devpost-hackathon-integration
+    priority: critical
+    average_score: 0.0
+    critical_dimensions: 10
+    poor_dimensions: 0
+    total_issues: 10
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: monitoring_observability
+      dimension_num: 15
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: integration_patterns
+      dimension_num: 18
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: meta-observatory-streaming
+    priority: critical
+    average_score: 0.0
+    critical_dimensions: 10
+    poor_dimensions: 0
+    total_issues: 10
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: monitoring_observability
+      dimension_num: 15
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: integration_patterns
+      dimension_num: 18
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: observatory-emergency-repair
+    priority: critical
+    average_score: 0.0
+    critical_dimensions: 10
+    poor_dimensions: 0
+    total_issues: 10
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: monitoring_observability
+      dimension_num: 15
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: integration_patterns
+      dimension_num: 18
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: observatory-system-recovery
+    priority: critical
+    average_score: 0.0
+    critical_dimensions: 10
+    poor_dimensions: 0
+    total_issues: 10
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: monitoring_observability
+      dimension_num: 15
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: integration_patterns
+      dimension_num: 18
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: redis-dag-registry
+    priority: critical
+    average_score: 0.0
+    critical_dimensions: 10
+    poor_dimensions: 0
+    total_issues: 10
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: monitoring_observability
+      dimension_num: 15
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: integration_patterns
+      dimension_num: 18
+      score: 0
+      rating: critical
+      gaps:
+      - No spec files available
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: directus-ui-configuration
+    priority: critical
+    average_score: 12.0
+    critical_dimensions: 6
+    poor_dimensions: 3
+    total_issues: 9
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 20
+      rating: poor
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: monitoring_observability
+      dimension_num: 15
+      score: 0
+      rating: critical
+      gaps:
+      - No metrics collection specified
+      - No logging strategy
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 0
+      rating: critical
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 0
+      rating: critical
+      gaps:
+      - No performance requirements
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: directus-data-population
+    priority: critical
+    average_score: 16.0
+    critical_dimensions: 5
+    poor_dimensions: 3
+    total_issues: 9
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 20
+      rating: poor
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: monitoring_observability
+      dimension_num: 15
+      score: 0
+      rating: critical
+      gaps:
+      - No metrics collection specified
+      - No logging strategy
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 0
+      rating: critical
+      gaps:
+      - No performance requirements
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: anti-duplication-system
+    priority: critical
+    average_score: 20.0
+    critical_dimensions: 5
+    poor_dimensions: 2
+    total_issues: 8
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 20
+      rating: poor
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 0
+      rating: critical
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: monitoring_observability
+      dimension_num: 15
+      score: 40
+      rating: moderate
+      gaps:
+      - No logging strategy
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 0
+      rating: critical
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 20
+      rating: poor
+      gaps:
+      - No performance requirements
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: directus-schema-design
+    priority: critical
+    average_score: 20.0
+    critical_dimensions: 4
+    poor_dimensions: 3
+    total_issues: 9
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 20
+      rating: poor
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: monitoring_observability
+      dimension_num: 15
+      score: 20
+      rating: poor
+      gaps:
+      - No metrics collection specified
+      - No logging strategy
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 40
+      rating: moderate
+      gaps:
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: observatory-editorial-intelligence
+    priority: critical
+    average_score: 22.0
+    critical_dimensions: 5
+    poor_dimensions: 1
+    total_issues: 7
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 0
+      rating: critical
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 0
+      rating: critical
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 40
+      rating: moderate
+      gaps:
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: information-exhaust-preservation
+    priority: critical
+    average_score: 24.0
+    critical_dimensions: 3
+    poor_dimensions: 4
+    total_issues: 8
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 0
+      rating: critical
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: monitoring_observability
+      dimension_num: 15
+      score: 40
+      rating: moderate
+      gaps:
+      - No metrics collection specified
+      - No logging strategy
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 20
+      rating: poor
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: subprocess-safety-requirements
+    priority: critical
+    average_score: 24.0
+    critical_dimensions: 5
+    poor_dimensions: 0
+    total_issues: 8
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 40
+      rating: moderate
+      gaps:
+      - No explicit unit testing strategy
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 0
+      rating: critical
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 40
+      rating: moderate
+      gaps:
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: clean-chart-update-architecture
+    priority: critical
+    average_score: 28.0
+    critical_dimensions: 4
+    poor_dimensions: 1
+    total_issues: 7
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: monitoring_observability
+      dimension_num: 15
+      score: 40
+      rating: moderate
+      gaps:
+      - No logging strategy
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: observatory-social-authentication
+    priority: critical
+    average_score: 28.0
+    critical_dimensions: 1
+    poor_dimensions: 6
+    total_issues: 7
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 20
+      rating: poor
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 20
+      rating: poor
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 20
+      rating: poor
+      gaps:
+      - No performance requirements
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: observatory-token-tracking-chart
+    priority: critical
+    average_score: 28.0
+    critical_dimensions: 3
+    poor_dimensions: 3
+    total_issues: 7
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 20
+      rating: poor
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: spec-theater-remediation
+    priority: critical
+    average_score: 28.0
+    critical_dimensions: 3
+    poor_dimensions: 3
+    total_issues: 7
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 20
+      rating: poor
+      gaps:
+      - No performance requirements
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: ai-memory-palace-beastly-migration
+    priority: critical
+    average_score: 30.0
+    critical_dimensions: 4
+    poor_dimensions: 1
+    total_issues: 6
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 40
+      rating: moderate
+      gaps:
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: meta-monitoring-experiment
+    priority: critical
+    average_score: 30.0
+    critical_dimensions: 2
+    poor_dimensions: 4
+    total_issues: 7
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 40
+      rating: moderate
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 20
+      rating: poor
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: observatory-health-chart-implementation
+    priority: critical
+    average_score: 30.0
+    critical_dimensions: 2
+    poor_dimensions: 3
+    total_issues: 7
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 20
+      rating: poor
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: monitoring_observability
+      dimension_num: 15
+      score: 40
+      rating: moderate
+      gaps:
+      - No logging strategy
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 40
+      rating: moderate
+      gaps:
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: universal-artifact-classification
+    priority: critical
+    average_score: 30.0
+    critical_dimensions: 2
+    poor_dimensions: 4
+    total_issues: 6
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 20
+      rating: poor
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 20
+      rating: poor
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: beast-mode-rebuild
+    priority: critical
+    average_score: 32.0
+    critical_dimensions: 3
+    poor_dimensions: 1
+    total_issues: 7
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 40
+      rating: moderate
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 0
+      rating: critical
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 40
+      rating: moderate
+      gaps:
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: google-calendar-mcp-quota-project-fix
+    priority: critical
+    average_score: 32.0
+    critical_dimensions: 3
+    poor_dimensions: 1
+    total_issues: 7
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: monitoring_observability
+      dimension_num: 15
+      score: 20
+      rating: poor
+      gaps:
+      - No metrics collection specified
+      - No logging strategy
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 40
+      rating: moderate
+      gaps:
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: llm-cli-discovery-and-integration
+    priority: critical
+    average_score: 32.0
+    critical_dimensions: 2
+    poor_dimensions: 4
+    total_issues: 6
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 20
+      rating: poor
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: observatory-performance-chart
+    priority: critical
+    average_score: 32.0
+    critical_dimensions: 2
+    poor_dimensions: 3
+    total_issues: 7
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 40
+      rating: moderate
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: reflective-coordinator-system
+    priority: critical
+    average_score: 32.0
+    critical_dimensions: 2
+    poor_dimensions: 3
+    total_issues: 7
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 40
+      rating: moderate
+      gaps:
+      - No explicit unit testing strategy
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: repository-discovery-resumption
+    priority: critical
+    average_score: 32.0
+    critical_dimensions: 3
+    poor_dimensions: 2
+    total_issues: 6
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: ace-reporter-ai-memory-palace-integration
+    priority: critical
+    average_score: 34.0
+    critical_dimensions: 2
+    poor_dimensions: 3
+    total_issues: 6
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 40
+      rating: moderate
+      gaps:
+      - No explicit unit testing strategy
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: directus-cms-systematic-implementation
+    priority: critical
+    average_score: 34.0
+    critical_dimensions: 2
+    poor_dimensions: 3
+    total_issues: 6
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 40
+      rating: moderate
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: example-simple-api
+    priority: critical
+    average_score: 34.0
+    critical_dimensions: 3
+    poor_dimensions: 1
+    total_issues: 5
+    issues:
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 0
+      rating: critical
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 40
+      rating: moderate
+      gaps:
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: observatory-server-deployment-fix
+    priority: critical
+    average_score: 34.0
+    critical_dimensions: 2
+    poor_dimensions: 2
+    total_issues: 7
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 40
+      rating: moderate
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 40
+      rating: moderate
+      gaps:
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: prometheus-monitoring-system-repair
+    priority: critical
+    average_score: 34.0
+    critical_dimensions: 3
+    poor_dimensions: 2
+    total_issues: 5
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: recursive-dag-orchestrated-spec-execution
+    priority: critical
+    average_score: 34.0
+    critical_dimensions: 2
+    poor_dimensions: 3
+    total_issues: 6
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 40
+      rating: moderate
+      gaps:
+      - No explicit unit testing strategy
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: bot-defense-command-center
+    priority: critical
+    average_score: 36.0
+    critical_dimensions: 2
+    poor_dimensions: 2
+    total_issues: 6
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: dag-orchestration-constellation
+    priority: critical
+    average_score: 36.0
+    critical_dimensions: 2
+    poor_dimensions: 3
+    total_issues: 5
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: observatory-data-discovery
+    priority: critical
+    average_score: 36.0
+    critical_dimensions: 1
+    poor_dimensions: 4
+    total_issues: 6
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 0
+      rating: critical
+      gaps:
+      - No governance processes defined
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: observatory-deployment-system
+    priority: critical
+    average_score: 36.0
+    critical_dimensions: 1
+    poor_dimensions: 4
+    total_issues: 6
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 40
+      rating: moderate
+      gaps:
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: artifact-driven-beast-mode
+    priority: critical
+    average_score: 38.0
+    critical_dimensions: 3
+    poor_dimensions: 1
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: usability
+      dimension_num: 21
+      score: 0
+      rating: critical
+      gaps:
+      - No usability considerations mentioned
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: beast-mode-reliability-requirements
+    priority: critical
+    average_score: 38.0
+    critical_dimensions: 1
+    poor_dimensions: 3
+    total_issues: 5
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 20
+      rating: poor
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: directus-ai-memory-palace-integration
+    priority: critical
+    average_score: 38.0
+    critical_dimensions: 1
+    poor_dimensions: 4
+    total_issues: 5
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: multi-perspective-ghostbusters
+    priority: critical
+    average_score: 38.0
+    critical_dimensions: 1
+    poor_dimensions: 3
+    total_issues: 6
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No API documentation requirements
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: observatory-security-review
+    priority: critical
+    average_score: 38.0
+    critical_dimensions: 1
+    poor_dimensions: 2
+    total_issues: 6
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 40
+      rating: moderate
+      gaps:
+      - No explicit unit testing strategy
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 40
+      rating: moderate
+      gaps:
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: prompt-file-processor-hook
+    priority: critical
+    average_score: 38.0
+    critical_dimensions: 2
+    poor_dimensions: 2
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: beast-mode-deployment-architecture
+    priority: critical
+    average_score: 40.0
+    critical_dimensions: 2
+    poor_dimensions: 1
+    total_issues: 5
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 40
+      rating: moderate
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: beast-mode-system-documentation
+    priority: critical
+    average_score: 40.0
+    critical_dimensions: 2
+    poor_dimensions: 1
+    total_issues: 4
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 20
+      rating: poor
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: claude-code-redis-task-queue
+    priority: critical
+    average_score: 40.0
+    critical_dimensions: 2
+    poor_dimensions: 2
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: discord-bot-integration-fix
+    priority: critical
+    average_score: 40.0
+    critical_dimensions: 2
+    poor_dimensions: 2
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: msp-ssl-integration-governance
+    priority: critical
+    average_score: 40.0
+    critical_dimensions: 2
+    poor_dimensions: 2
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: spec-framework
+    priority: critical
+    average_score: 40.0
+    critical_dimensions: 2
+    poor_dimensions: 2
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: spec-scrub-rdi-consistency
+    priority: critical
+    average_score: 40.0
+    critical_dimensions: 2
+    poor_dimensions: 2
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: deployment-data-auditor
+    priority: critical
+    average_score: 42.0
+    critical_dimensions: 2
+    poor_dimensions: 1
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: observatory-deployment-procedures
+    priority: critical
+    average_score: 42.0
+    critical_dimensions: 2
+    poor_dimensions: 1
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: spec-consistency-reconciliation
+    priority: critical
+    average_score: 42.0
+    critical_dimensions: 2
+    poor_dimensions: 1
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: mcp-development-framework
+    priority: critical
+    average_score: 44.0
+    critical_dimensions: 2
+    poor_dimensions: 1
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: mcp-server-configuration-standardization
+    priority: critical
+    average_score: 44.0
+    critical_dimensions: 2
+    poor_dimensions: 1
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: service-auto-start-governance
+    priority: critical
+    average_score: 44.0
+    critical_dimensions: 2
+    poor_dimensions: 1
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: spec-creation-dag-compliance
+    priority: critical
+    average_score: 44.0
+    critical_dimensions: 2
+    poor_dimensions: 1
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: technical-debt-patch-annotation-system
+    priority: critical
+    average_score: 44.0
+    critical_dimensions: 2
+    poor_dimensions: 0
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: directus-cms-setup
+    priority: critical
+    average_score: 46.0
+    critical_dimensions: 2
+    poor_dimensions: 0
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: directus-reconciliation-systematic
+    priority: critical
+    average_score: 46.0
+    critical_dimensions: 2
+    poor_dimensions: 0
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: repository-synchronization-cleanup
+    priority: critical
+    average_score: 48.0
+    critical_dimensions: 2
+    poor_dimensions: 0
+    total_issues: 2
+    issues:
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  high_priority:
+  - spec_name: async-task-lifecycle-management
+    priority: high
+    average_score: 42.0
+    critical_dimensions: 1
+    poor_dimensions: 2
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: competitive-launch-strategy
+    priority: high
+    average_score: 42.0
+    critical_dimensions: 1
+    poor_dimensions: 3
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: ghostbusters-productivity-triage
+    priority: high
+    average_score: 42.0
+    critical_dimensions: 1
+    poor_dimensions: 2
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: mcp-filesystem-server-fix
+    priority: high
+    average_score: 42.0
+    critical_dimensions: 1
+    poor_dimensions: 2
+    total_issues: 5
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 40
+      rating: moderate
+      gaps:
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: observatory-live-coordination-feed
+    priority: high
+    average_score: 42.0
+    critical_dimensions: 0
+    poor_dimensions: 3
+    total_issues: 5
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 40
+      rating: moderate
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+  - spec_name: practical-repository-cleanup
+    priority: high
+    average_score: 42.0
+    critical_dimensions: 1
+    poor_dimensions: 3
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: monitoring_observability
+      dimension_num: 15
+      score: 20
+      rating: poor
+      gaps:
+      - No metrics collection specified
+      - No logging strategy
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: agent-control-governance
+    priority: high
+    average_score: 44.0
+    critical_dimensions: 1
+    poor_dimensions: 1
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: ai-coordination-meta-programming
+    priority: high
+    average_score: 44.0
+    critical_dimensions: 1
+    poor_dimensions: 1
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No code documentation standards
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: atomic-spec-execution-pattern
+    priority: high
+    average_score: 44.0
+    critical_dimensions: 1
+    poor_dimensions: 2
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: discord-community-monitoring
+    priority: high
+    average_score: 44.0
+    critical_dimensions: 1
+    poor_dimensions: 2
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 20
+      rating: poor
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: emoji-rain-system
+    priority: high
+    average_score: 44.0
+    critical_dimensions: 0
+    poor_dimensions: 3
+    total_issues: 4
+    issues:
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: release-the-hounds-execution
+    priority: high
+    average_score: 44.0
+    critical_dimensions: 1
+    poor_dimensions: 2
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: repository-setup-and-installation
+    priority: high
+    average_score: 44.0
+    critical_dimensions: 1
+    poor_dimensions: 1
+    total_issues: 2
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: unified-dag-registry
+    priority: high
+    average_score: 44.0
+    critical_dimensions: 1
+    poor_dimensions: 2
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: websocket-implementation-validation
+    priority: high
+    average_score: 44.0
+    critical_dimensions: 1
+    poor_dimensions: 1
+    total_issues: 4
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: recovery_mechanisms
+      dimension_num: 16
+      score: 40
+      rating: moderate
+      gaps:
+      - No backup strategy
+      - No restore/rollback mechanism
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: beast-mode-coordination-observatory
+    priority: high
+    average_score: 46.0
+    critical_dimensions: 0
+    poor_dimensions: 2
+    total_issues: 2
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+  - spec_name: cloudflare-websocket-tunnel-fix
+    priority: high
+    average_score: 46.0
+    critical_dimensions: 1
+    poor_dimensions: 2
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: example-complex-system
+    priority: high
+    average_score: 46.0
+    critical_dimensions: 0
+    poor_dimensions: 3
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: usability
+      dimension_num: 21
+      score: 20
+      rating: poor
+      gaps:
+      - No accessibility requirements
+      - No error messaging guidelines
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: google-calendar-mcp-integration
+    priority: high
+    average_score: 46.0
+    critical_dimensions: 1
+    poor_dimensions: 1
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: msp-ssl-chaos-tamer
+    priority: high
+    average_score: 46.0
+    critical_dimensions: 0
+    poor_dimensions: 3
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: multi-dimensional-vocabulary-projector
+    priority: high
+    average_score: 46.0
+    critical_dimensions: 1
+    poor_dimensions: 2
+    total_issues: 3
+    issues:
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: governance_compliance
+      dimension_num: 20
+      score: 20
+      rating: poor
+      gaps:
+      - No approval workflows specified
+      - No audit trails mentioned
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: observatory-cloudflare-infrastructure-governance
+    priority: high
+    average_score: 46.0
+    critical_dimensions: 1
+    poor_dimensions: 2
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: repository-constellation
+    priority: high
+    average_score: 46.0
+    critical_dimensions: 1
+    poor_dimensions: 2
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: repository-content-discovery-indexing
+    priority: high
+    average_score: 46.0
+    critical_dimensions: 1
+    poor_dimensions: 2
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: system-health-mitigation-framework
+    priority: high
+    average_score: 46.0
+    critical_dimensions: 0
+    poor_dimensions: 3
+    total_issues: 4
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 40
+      rating: moderate
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: ubiquitous-language-monitoring-platform
+    priority: high
+    average_score: 46.0
+    critical_dimensions: 1
+    poor_dimensions: 2
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: ai-memory-palace
+    priority: high
+    average_score: 48.0
+    critical_dimensions: 0
+    poor_dimensions: 2
+    total_issues: 2
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+  - spec_name: cloudflare-custom-error-pages
+    priority: high
+    average_score: 48.0
+    critical_dimensions: 0
+    poor_dimensions: 1
+    total_issues: 3
+    issues:
+    - dimension: testing_strategy
+      dimension_num: 13
+      score: 40
+      rating: moderate
+      gaps:
+      - No explicit unit testing strategy
+      - No integration testing mentioned
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: comprehensive-makefile-system
+    priority: high
+    average_score: 48.0
+    critical_dimensions: 1
+    poor_dimensions: 1
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: decentralized-ai-coordination-network
+    priority: high
+    average_score: 48.0
+    critical_dimensions: 1
+    poor_dimensions: 1
+    total_issues: 2
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+  - spec_name: executable-patch-code-governance
+    priority: high
+    average_score: 48.0
+    critical_dimensions: 1
+    poor_dimensions: 1
+    total_issues: 3
+    issues:
+    - dimension: optimization_opportunities
+      dimension_num: 17
+      score: 40
+      rating: moderate
+      gaps:
+      - No scalability considerations
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: makefile-syntax-repair-governance
+    priority: high
+    average_score: 48.0
+    critical_dimensions: 1
+    poor_dimensions: 1
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: prepare-spec-for-execution
+    priority: high
+    average_score: 48.0
+    critical_dimensions: 1
+    poor_dimensions: 1
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: spec-consistency-governance
+    priority: high
+    average_score: 48.0
+    critical_dimensions: 1
+    poor_dimensions: 1
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: beast-mode-interface-governance
+    priority: high
+    average_score: 50.0
+    critical_dimensions: 1
+    poor_dimensions: 1
+    total_issues: 2
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: documentation-index-generator
+    priority: high
+    average_score: 50.0
+    critical_dimensions: 1
+    poor_dimensions: 1
+    total_issues: 2
+    issues:
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: llm-powered-engagement-engines
+    priority: high
+    average_score: 50.0
+    critical_dimensions: 0
+    poor_dimensions: 1
+    total_issues: 1
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+  - spec_name: reflective-module-architecture-consolidation
+    priority: high
+    average_score: 50.0
+    critical_dimensions: 1
+    poor_dimensions: 0
+    total_issues: 2
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No code documentation standards
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: spec-mode-framework
+    priority: high
+    average_score: 50.0
+    critical_dimensions: 1
+    poor_dimensions: 1
+    total_issues: 2
+    issues:
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 0
+      rating: critical
+      gaps:
+      - No innovation or novel approaches mentioned
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: system-architecture-wiring-diagram
+    priority: high
+    average_score: 50.0
+    critical_dimensions: 0
+    poor_dimensions: 2
+    total_issues: 3
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: discord-bot-framework-oss
+    priority: high
+    average_score: 52.0
+    critical_dimensions: 0
+    poor_dimensions: 1
+    total_issues: 1
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 20
+      rating: poor
+      gaps:
+      - No API documentation requirements
+      - No code documentation standards
+  - spec_name: doctor-is-in-ai-consultation
+    priority: high
+    average_score: 52.0
+    critical_dimensions: 0
+    poor_dimensions: 1
+    total_issues: 2
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No code documentation standards
+    - dimension: innovation_potential
+      dimension_num: 19
+      score: 20
+      rating: poor
+      gaps:
+      - No R&D opportunities identified
+      - No competitive advantages articulated
+  - spec_name: dag-orchestrated-parallel-execution
+    priority: high
+    average_score: 54.0
+    critical_dimensions: 1
+    poor_dimensions: 0
+    total_issues: 1
+    issues:
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 0
+      rating: critical
+      gaps:
+      - No regulatory compliance mentioned
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: live-dashboard-engagement-system
+    priority: high
+    average_score: 54.0
+    critical_dimensions: 0
+    poor_dimensions: 1
+    total_issues: 2
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No code documentation standards
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  - spec_name: cms-architecture
+    priority: high
+    average_score: 56.0
+    critical_dimensions: 0
+    poor_dimensions: 0
+    total_issues: 1
+    issues:
+    - dimension: documentation_requirements
+      dimension_num: 14
+      score: 40
+      rating: moderate
+      gaps:
+      - No code documentation standards
+  - spec_name: release-v1-master-consolidation
+    priority: high
+    average_score: 56.0
+    critical_dimensions: 0
+    poor_dimensions: 1
+    total_issues: 1
+    issues:
+    - dimension: compliance_regulations
+      dimension_num: 22
+      score: 20
+      rating: poor
+      gaps:
+      - No GDPR compliance addressed
+      - No data privacy requirements
+  medium_priority: []
+  low_priority: []

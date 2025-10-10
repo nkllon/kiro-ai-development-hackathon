@@ -1,0 +1,158 @@
+{
+  "component_info": {
+    "module_id": "ContentMetadataExtractor",
+    "name": "ContentMetadataExtractor",
+    "version": "1.0.0",
+    "description": "Systematic file metadata extraction with RM-DDD compliance",
+    "capabilities": [
+      "core_functionality",
+      "data_processing",
+      "validation",
+      "monitoring"
+    ],
+    "files_processed": 8,
+    "extraction_errors": 2,
+    "average_extraction_time_ms": 1.022625
+  },
+  "performance_metrics": {
+    "operation_count": 10,
+    "total_operation_time_ms": 8.717,
+    "average_operation_time_ms": 0.8717,
+    "error_count": 0,
+    "warning_count": 0,
+    "error_rate": 0.0,
+    "uptime_seconds": 0.079924,
+    "resource_usage": {
+      "peak_memory_mb": 24.453125,
+      "total_cpu_time_ms": 0,
+      "io_operations": 0
+    },
+    "correlation_id": "7fb3bcf2-5803-46b1-8643-dd3cd94bcd25",
+    "traces_stored": 10
+  },
+  "usage_tracking": {
+    "module_id": "ContentMetadataExtractor",
+    "tracking_period_start": "2025-09-18T11:24:15.778080",
+    "tracking_period_end": "2025-09-18T11:24:15.858007",
+    "operation_frequency": {
+      "extract_metadata": 10
+    },
+    "performance_metrics": {
+      "operation_count": 10,
+      "total_operation_time_ms": 8.717,
+      "average_operation_time_ms": 0.8717,
+      "error_count": 0,
+      "warning_count": 0,
+      "error_rate": 0.0,
+      "uptime_seconds": 0.079928,
+      "resource_usage": {
+        "peak_memory_mb": 24.453125,
+        "total_cpu_time_ms": 0,
+        "io_operations": 0
+      },
+      "correlation_id": "7fb3bcf2-5803-46b1-8643-dd3cd94bcd25",
+      "traces_stored": 10
+    },
+    "health_status": "error",
+    "capabilities_used": [
+      "core_functionality",
+      "data_processing",
+      "validation",
+      "monitoring"
+    ]
+  },
+  "health_status": {
+    "status": "healthy",
+    "score": 1.0,
+    "issues": [],
+    "uptime": 0.079764
+  },
+  "cli_interface": {
+    "commands": [
+      "enable_cli_caching",
+      "enable_prometheus_metrics",
+      "execute_cli_command",
+      "extract_batch_metadata",
+      "extract_metadata",
+      "generate_cli_help",
+      "get_capabilities",
+      "get_cli_cache_options",
+      "get_content",
+      "get_health_status",
+      "get_interface_metadata",
+      "get_module_info",
+      "get_operation_traces",
+      "get_performance_metrics",
+      "get_prometheus_metrics",
+      "get_usage_tracking",
+      "graceful_degradation",
+      "health_check",
+      "register_module",
+      "store_content",
+      "trace_operation"
+    ],
+    "capabilities": []
+  },
+  "recent_traces": [
+    {
+      "operation": "extract_metadata",
+      "duration_ms": 3.684,
+      "success": true,
+      "correlation_id": "7fb3bcf2-5803-46b1-8643-dd3cd94bcd25"
+    },
+    {
+      "operation": "extract_metadata",
+      "duration_ms": 0.319,
+      "success": true,
+      "correlation_id": "7fb3bcf2-5803-46b1-8643-dd3cd94bcd25"
+    },
+    {
+      "operation": "extract_metadata",
+      "duration_ms": 1.0410000000000001,
+      "success": true,
+      "correlation_id": "7fb3bcf2-5803-46b1-8643-dd3cd94bcd25"
+    },
+    {
+      "operation": "extract_metadata",
+      "duration_ms": 0.585,
+      "success": true,
+      "correlation_id": "7fb3bcf2-5803-46b1-8643-dd3cd94bcd25"
+    },
+    {
+      "operation": "extract_metadata",
+      "duration_ms": 0.905,
+      "success": true,
+      "correlation_id": "7fb3bcf2-5803-46b1-8643-dd3cd94bcd25"
+    },
+    {
+      "operation": "extract_metadata",
+      "duration_ms": 0.40900000000000003,
+      "success": true,
+      "correlation_id": "7fb3bcf2-5803-46b1-8643-dd3cd94bcd25"
+    },
+    {
+      "operation": "extract_metadata",
+      "duration_ms": 1.406,
+      "success": true,
+      "correlation_id": "7fb3bcf2-5803-46b1-8643-dd3cd94bcd25"
+    },
+    {
+      "operation": "extract_metadata",
+      "duration_ms": 0.26899999999999996,
+      "success": true,
+      "correlation_id": "7fb3bcf2-5803-46b1-8643-dd3cd94bcd25"
+    },
+    {
+      "operation": "extract_metadata",
+      "duration_ms": 0.05,
+      "success": true,
+      "correlation_id": "7fb3bcf2-5803-46b1-8643-dd3cd94bcd25"
+    },
+    {
+      "operation": "extract_metadata",
+      "duration_ms": 0.049,
+      "success": true,
+      "correlation_id": "7fb3bcf2-5803-46b1-8643-dd3cd94bcd25"
+    }
+  ]
+}

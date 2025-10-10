@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+</head>
+<body>
+    <h1>WebSocket Connection Test</h1>
+    <div id="status">Connecting...</div>
+    <div id="messages"></div>
+    <button onclick="sendTestMessage()">Send Test Message</button>
+    
+    <script>
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsUrl = `${protocol}//${window.location.host}/ws/emoji-rain`;
+        
+        console.log('Connecting to:', wsUrl);
+        
+        const ws = new WebSocket(wsUrl);
+        
+        ws.onopen = function() {
+            document.getElementById('status').textContent = 'Connected!';
+            document.getElementById('status').style.color = 'green';
+            console.log('WebSocket connected');
+        };
+        
+        ws.onmessage = function(event) {
+            const message = JSON.parse(event.data);
+            console.log('Received:', message);
+            
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML += `<div>Received: ${JSON.stringify(message, null, 2)}</div>`;
+        };
+        
+        ws.onclose = function() {
+            document.getElementById('status').textContent = 'Disconnected';
+            document.getElementById('status').style.color = 'red';
+            console.log('WebSocket disconnected');
+        };
+        
+        ws.onerror = function(error) {
+            document.getElementById('status').textContent = 'Error: ' + error;
+            document.getElementById('status').style.color = 'red';
+            console.error('WebSocket error:', error);
+        };
+        
+        function sendTestMessage() {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                    type: 'trigger_test_rain',
+                    event_type: 'TASK_COMPLETED',
+                    data: { test: true }
+                }));
+            }
+        }
+    </script>
+</body>
+</html>

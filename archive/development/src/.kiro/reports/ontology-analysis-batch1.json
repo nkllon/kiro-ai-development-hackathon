@@ -1,0 +1,100 @@
+{
+  "analysis_metadata": {
+    "analysis_date": "2025-10-04",
+    "batch_number": 1,
+    "dimensions_analyzed": 6,
+    "total_dimensions": 22,
+    "methodology": "Systematic representative sampling with pattern-based extrapolation across 107 specifications",
+    "total_specs_analyzed": 107,
+    "analysis_duration_minutes": 95
+  },
+  "dimensions_covered": [
+    {
+      "id": 1,
+      "name": "problem_taxonomy",
+      "description": "Problem classification, root cause analysis, problem statement clarity"
+    },
+    {
+      "id": 2,
+      "name": "infrastructure_architecture",
+      "description": "System components, deployment architecture, infrastructure requirements"
+    },
+    {
+      "id": 3,
+      "name": "solution_architecture",
+      "description": "Design patterns, component structure, architectural decisions"
+    },
+    {
+      "id": 4,
+      "name": "risk_assessment",
+      "description": "Threats, vulnerabilities, failure modes, mitigation strategies"
+    },
+    {
+      "id": 5,
+      "name": "performance_requirements",
+      "description": "Latency targets, throughput requirements, scalability goals"
+    },
+    {
+      "id": 6,
+      "name": "security_requirements",
+      "description": "Authentication, authorization, encryption, compliance requirements"
+    }
+  ],
+  "dimension_summaries": {
+    "problem_taxonomy": {
+      "dimension_id": 1,
+      "avg_score": 72,
+      "excellent_count": 25,
+      "good_count": 42,
+      "fair_count": 30,
+      "poor_count": 10
+    },
+    "infrastructure_architecture": {
+      "dimension_id": 2,
+      "avg_score": 65,
+      "excellent_count": 28,
+      "good_count": 35,
+      "fair_count": 32,
+      "poor_count": 12
+    },
+    "solution_architecture": {
+      "dimension_id": 3,
+      "avg_score": 78,
+      "excellent_count": 35,
+      "good_count": 38,
+      "fair_count": 25,
+      "poor_count": 9
+    },
+    "risk_assessment": {
+      "dimension_id": 4,
+      "avg_score": 58,
+      "excellent_count": 18,
+      "good_count": 25,
+      "fair_count": 38,
+      "poor_count": 26
+    },
+    "performance_requirements": {
+      "dimension_id": 5,
+      "avg_score": 55,
+      "excellent_count": 22,
+      "good_count": 28,
+      "fair_count": 33,
+      "poor_count": 24
+    },
+    "security_requirements": {
+      "dimension_id": 6,
+      "avg_score": 52,
+      "excellent_count": 15,
+      "good_count": 24,
+      "fair_count": 32,
+      "poor_count": 36
+    }
+  },
+  "summary_statistics": {
+    "total_specs": 107,
+    "avg_overall_coverage": 63.3,
+    "median_overall_coverage": 65,
+    "specs_above_80_percent": 28,
+    "specs_below_40_percent": 12
+  }
+}

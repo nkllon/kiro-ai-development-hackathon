@@ -1,0 +1,46 @@
+{
+  "evidence_id": "8b4c1c91-21dd-4ef1-b4ca-9a1aa08f8dc4",
+  "timestamp": "2025-09-27T05:09:24.239395",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.239385",
+    "data_type": "dict"
+  },
+  "integrity_hash": "a195153810c7afb2d7c02a4bba0c0e5de84ca16e86d1192db4382df7578894a4",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/credential_endpoints/endpoints.py",
+    "file_size": 11831,
+    "line_count": 320,
+    "route_analysis": {
+      "total_routes": 6,
+      "websocket_routes": [],
+      "http_routes": [
+        "/credentials",
+        "/credentials",
+        "/credentials/by_name/{credential_name:path}",
+        "/credentials/by_model/{model_id}",
+        "/credentials/{credential_name:path}",
+        "/credentials/{credential_name:path}"
+      ],
+      "route_handlers": {
+        "/credentials": "get_credentials",
+        "/credentials/by_name/{credential_name:path}": "get_credential",
+        "/credentials/by_model/{model_id}": "get_credential",
+        "/credentials/{credential_name:path}": "update_credential"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.Response",
+        "fastapi.Request",
+        "fastapi.HTTPException",
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi.Path",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.239374"
+  }
+}

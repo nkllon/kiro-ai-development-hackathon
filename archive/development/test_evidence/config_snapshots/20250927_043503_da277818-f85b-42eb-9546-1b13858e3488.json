@@ -1,0 +1,20 @@
+{
+  "evidence_id": "da277818-f85b-42eb-9546-1b13858e3488",
+  "timestamp": "2025-09-27T04:35:03.843141",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.843132",
+    "data_type": "dict"
+  },
+  "integrity_hash": "d89f99ac9e958699a0102a74cb48e9abb189ee6cdaf3a97125063b7aa186b590",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/fastapi/security/api_key.py",
+    "file_size": 9016,
+    "line_count": 289,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.843129"
+  }
+}

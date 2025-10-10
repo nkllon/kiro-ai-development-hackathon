@@ -1,0 +1,29 @@
+{
+  "evidence_id": "223d920e-99b1-46d1-9309-f1a7f8679117",
+  "timestamp": "2025-09-27T04:27:12.959661",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.959652",
+    "data_type": "dict"
+  },
+  "integrity_hash": "880b5ac600daf086bcae5387702bd80dcdeefdcc1e625014f7b7107d7d632a24",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_hooks/pangea/pangea.py",
+    "file_size": 11800,
+    "line_count": 332,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi",
+        "fastapi.HTTPException"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.959643"
+  }
+}

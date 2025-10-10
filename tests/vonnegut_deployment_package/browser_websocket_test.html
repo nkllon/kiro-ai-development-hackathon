@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Observatory WebSocket Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .endpoint { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .connected { background-color: #d4edda; }
+        .error { background-color: #f8d7da; }
+        .message { font-family: monospace; font-size: 12px; }
+        button { margin: 5px; padding: 5px 10px; }
+    </style>
+</head>
+<body>
+    <h1>🔭 Observatory WebSocket Test</h1>
+    <p>This page tests WebSocket connectivity through the Cloudflare tunnel.</p>
+    
+    <button onclick="testAllEndpoints()">Test All Endpoints</button>
+    <button onclick="clearResults()">Clear Results</button>
+    
+    <div id="results"></div>
+
+    <script>
+        const endpoints = [
+            'wss://observatory.nkllon.com/ws/emoji-rain',
+            'wss://observatory.nkllon.com/ws/observatory',
+            'wss://observatory.nkllon.com/ws/anomalies',
+            'wss://observatory.nkllon.com/ws/doctor-status'
+        ];
+
+        function testAllEndpoints() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<h2>Testing WebSocket Endpoints...</h2>';
+            
+            endpoints.forEach(endpoint => {
+                testEndpoint(endpoint);
+            });
+        }
+
+        function testEndpoint(url) {
+            const resultsDiv = document.getElementById('results');
+            const endpointDiv = document.createElement('div');
+            endpointDiv.className = 'endpoint';
+            endpointDiv.innerHTML = `
+                <h3>${url}</h3>
+                <div class="status">Connecting...</div>
+                <div class="messages"></div>
+            `;
+            resultsDiv.appendChild(endpointDiv);
+
+            const ws = new WebSocket(url);
+            const statusDiv = endpointDiv.querySelector('.status');
+            const messagesDiv = endpointDiv.querySelector('.messages');
+
+            ws.onopen = function() {
+                statusDiv.textContent = '✅ Connected';
+                endpointDiv.classList.add('connected');
+                
+                // Send test message
+                const testMessage = {
+                    type: 'test',
+                    timestamp: new Date().toISOString(),
+                    message: 'Browser WebSocket test'
+                };
+                ws.send(JSON.stringify(testMessage));
+                
+                messagesDiv.innerHTML += '<div class="message">📤 Sent: ' + JSON.stringify(testMessage) + '</div>';
+            };
+
+            ws.onmessage = function(event) {
+                messagesDiv.innerHTML += '<div class="message">📥 Received: ' + event.data.substring(0, 200) + '...</div>';
+            };
+
+            ws.onerror = function(error) {
+                statusDiv.textContent = '❌ Error: ' + error;
+                endpointDiv.classList.add('error');
+            };
+
+            ws.onclose = function(event) {
+                if (event.wasClean) {
+                    statusDiv.textContent += ' (Closed cleanly)';
+                } else {
+                    statusDiv.textContent += ' (Connection lost)';
+                }
+                
+                // Close connection after 5 seconds
+                setTimeout(() => {
+                    if (ws.readyState === WebSocket.OPEN) {
+                        ws.close();
+                    }
+                }, 5000);
+            };
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        // Auto-test on page load
+        window.onload = function() {
+            setTimeout(testAllEndpoints, 1000);
+        };
+    </script>
+</body>
+</html>

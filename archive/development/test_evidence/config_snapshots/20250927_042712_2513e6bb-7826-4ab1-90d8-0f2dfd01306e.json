@@ -1,0 +1,42 @@
+{
+  "evidence_id": "2513e6bb-7826-4ab1-90d8-0f2dfd01306e",
+  "timestamp": "2025-09-27T04:27:12.744934",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.744918",
+    "data_type": "dict"
+  },
+  "integrity_hash": "025ea7f514a18cb0b1ecb47c98aaac06a8aec21a91529354ae65a561eb7b7f74",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/spend_tracking/cloudzero_endpoints.py",
+    "file_size": 16302,
+    "line_count": 503,
+    "route_analysis": {
+      "total_routes": 5,
+      "websocket_routes": [],
+      "http_routes": [
+        "/cloudzero/settings",
+        "/cloudzero/settings",
+        "/cloudzero/init",
+        "/cloudzero/dry-run",
+        "/cloudzero/export"
+      ],
+      "route_handlers": {
+        "/cloudzero/settings": "update_cloudzero_settings",
+        "/cloudzero/init": "init_cloudzero_settings",
+        "/cloudzero/dry-run": "cloudzero_dry_run_export",
+        "/cloudzero/export": "cloudzero_export"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.Depends",
+        "fastapi",
+        "fastapi.HTTPException",
+        "fastapi.APIRouter"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.744903"
+  }
+}

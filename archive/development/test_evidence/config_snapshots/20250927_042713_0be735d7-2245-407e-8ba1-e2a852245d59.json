@@ -1,0 +1,29 @@
+{
+  "evidence_id": "0be735d7-2245-407e-8ba1-e2a852245d59",
+  "timestamp": "2025-09-27T04:27:13.055815",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.055776",
+    "data_type": "dict"
+  },
+  "integrity_hash": "9e6f66cb2378aa63b8d590b6bfc1ed6d3741c0124c639c62b9484eeea93c437d",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_hooks/pillar/pillar.py",
+    "file_size": 18743,
+    "line_count": 547,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi",
+        "fastapi.HTTPException"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.055747"
+  }
+}

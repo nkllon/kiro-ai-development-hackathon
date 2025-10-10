@@ -1,0 +1,20 @@
+{
+  "evidence_id": "f0986267-7b41-49e4-9d3d-971c8cfb9ad9",
+  "timestamp": "2025-09-27T04:35:03.393144",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.393136",
+    "data_type": "dict"
+  },
+  "integrity_hash": "ba123eb74be1a1e89facfdf23eee56913c04bcda7b59dacc1b44ca0bd8471ac6",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_hooks/pangea/pangea.py",
+    "file_size": 11800,
+    "line_count": 332,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.393134"
+  }
+}

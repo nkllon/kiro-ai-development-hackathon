@@ -1,0 +1,50 @@
+{
+  "evidence_id": "cfa4711e-fb49-4039-aa33-e9849bf33123",
+  "timestamp": "2025-09-27T05:09:24.689405",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T05:09:24.689380",
+    "data_type": "dict"
+  },
+  "integrity_hash": "3a14d5ce77e671c9eaaf6d6babe9076022dd5bff5d1a51558d1dd13301367d6c",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/guardrails/guardrail_endpoints.py",
+    "file_size": 33292,
+    "line_count": 973,
+    "route_analysis": {
+      "total_routes": 10,
+      "websocket_routes": [],
+      "http_routes": [
+        "/guardrails/list",
+        "/v2/guardrails/list",
+        "/guardrails",
+        "/guardrails/{guardrail_id}",
+        "/guardrails/{guardrail_id}",
+        "/guardrails/{guardrail_id}",
+        "/guardrails/{guardrail_id}",
+        "/guardrails/{guardrail_id}/info",
+        "/guardrails/ui/add_guardrail_settings",
+        "/guardrails/ui/provider_specific_params"
+      ],
+      "route_handlers": {
+        "/guardrails/list": "list_guardrails",
+        "/v2/guardrails/list": "list_guardrails_v2",
+        "/guardrails": "create_guardrail",
+        "/guardrails/{guardrail_id}": "get_guardrail_info",
+        "/guardrails/{guardrail_id}/info": "get_guardrail_info",
+        "/guardrails/ui/add_guardrail_settings": "get_guardrail_ui_settings",
+        "/guardrails/ui/provider_specific_params": "get_provider_specific_params"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.APIRouter",
+        "fastapi.HTTPException",
+        "fastapi.Depends",
+        "fastapi"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T05:09:24.689353"
+  }
+}

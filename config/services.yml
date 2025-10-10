@@ -1,0 +1,134 @@
+# Beast Mode Framework - Service Discovery Configuration
+# =====================================================
+# Auto-configuring service discovery for any deployment scenario
+# Services can be local, remote, cloud, or anywhere - tests don't need to know
+
+# Default service endpoints - will be auto-discovered and overridden
+services:
+  # Content Management System
+  directus:
+    host: localhost
+    port: 8055
+    url: http://localhost:8055
+    health_endpoint: /server/health
+    api_endpoint: /items
+    required_for_tests: false
+    
+  # Monitoring and Metrics - REQUIRED for Beast Mode
+  grafana:
+    host: localhost
+    port: 3000
+    url: http://localhost:3000
+    health_endpoint: /api/health
+    required_for_tests: true
+    
+  # Distributed Tracing
+  jaeger:
+    host: localhost
+    port: 16686
+    url: http://localhost:16686
+    health_endpoint: /
+    collector_port: 14268
+    required_for_tests: false
+    
+  # Time Series Database - REQUIRED for Beast Mode
+  prometheus:
+    host: localhost
+    port: 9090
+    url: http://localhost:9090
+    health_endpoint: /-/healthy
+    required_for_tests: true
+    
+  # Message Queue/Cache - REQUIRED for Beast Mode
+  redis:
+    host: localhost
+    port: 6379
+    required_for_tests: true
+    
+  # Database
+  postgres:
+    host: localhost
+    port: 5432
+    database: beast_mode_dev
+    required_for_tests: false
+
+# Auto-discovery configuration
+discovery:
+  # Service discovery methods in priority order
+  methods:
+    - environment_variables  # Check env vars first
+    - docker_compose        # Check running docker services
+    - kubernetes           # Check k8s services
+    - consul               # Check consul registry
+    - static_config        # Fall back to static config
+  
+  # Auto-proxy configuration for remote services
+  auto_proxy:
+    enabled: true
+    proxy_image: "nginx:alpine"
+    proxy_network: "beast-mode-network"
+    
+  # Health check configuration
+  health_checks:
+    enabled: true
+    timeout: 10
+    retries: 3
+    interval: 30
+
+# Environment-specific overrides
+environments:
+  development:
+    directus:
+      url: http://localhost:8055
+    grafana:
+      url: http://localhost:3000
+    jaeger:
+      url: http://localhost:16686
+    prometheus:
+      url: http://localhost:9090
+      
+  production:
+    directus:
+      url: http://directus:8055
+    grafana:
+      url: http://grafana:3000
+    jaeger:
+      url: http://jaeger:16686
+    prometheus:
+      url: http://prometheus:9090
+      
+  docker:
+    directus:
+      host: directus
+      url: http://directus:8055
+    grafana:
+      host: grafana
+      url: http://grafana:3000
+    jaeger:
+      host: jaeger
+      url: http://jaeger:16686
+    prometheus:
+      host: prometheus
+      url: http://prometheus:9090
+      
+  cluster:
+    # Services in cluster environment - use service discovery
+    prometheus:
+      host: ${PROMETHEUS_HOST:-prometheus}
+      port: ${PROMETHEUS_PORT:-9090}
+      url: http://${PROMETHEUS_HOST:-prometheus}:${PROMETHEUS_PORT:-9090}
+    grafana:
+      host: ${GRAFANA_HOST:-grafana}
+      port: ${GRAFANA_PORT:-3000}
+      url: http://${GRAFANA_HOST:-grafana}:${GRAFANA_PORT:-3000}
+    directus:
+      host: ${DIRECTUS_HOST:-directus}
+      port: ${DIRECTUS_PORT:-8055}
+      url: http://${DIRECTUS_HOST:-directus}:${DIRECTUS_PORT:-8055}
+    jaeger:
+      host: ${JAEGER_HOST:-jaeger}
+      port: ${JAEGER_PORT:-16686}
+      url: http://${JAEGER_HOST:-jaeger}:${JAEGER_PORT:-16686}
+    redis:
+      host: ${REDIS_HOST:-redis}
+      port: ${REDIS_PORT:-6379}

@@ -1,0 +1,37 @@
+{
+  "evidence_id": "de26836d-78c3-4815-ba6d-9ad0e7c594a9",
+  "timestamp": "2025-09-27T04:27:12.994972",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.994966",
+    "data_type": "dict"
+  },
+  "integrity_hash": "f170ee39d8eae2b8920d215c1d1c04cb30fd7de827c275df2e6614771531d32a",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/fastapi/security/open_id_connect_url.py",
+    "file_size": 2722,
+    "line_count": 85,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "starlette.requests",
+        "fastapi.security.base.SecurityBase",
+        "fastapi.openapi.models.OpenIdConnect",
+        "fastapi.security.base",
+        "starlette.exceptions",
+        "starlette.status",
+        "fastapi.openapi.models",
+        "starlette.exceptions.HTTPException",
+        "starlette.requests.Request",
+        "starlette.status.HTTP_403_FORBIDDEN"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.994961"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "timestamp": "2025-09-26T22:24:08.545282",
+  "domain": "observatory.nkllon.com",
+  "test_duration": 0.02616119384765625,
+  "endpoint_results": [
+    {
+      "endpoint": "/ws/emoji-rain",
+      "connection_successful": false,
+      "messages_sent": 0,
+      "messages_received": 0,
+      "integration_score": 0,
+      "errors": [
+        "create_connection() got an unexpected keyword argument 'timeout'"
+      ]
+    },
+    {
+      "endpoint": "/ws/observatory",
+      "connection_successful": false,
+      "messages_sent": 0,
+      "messages_received": 0,
+      "integration_score": 0,
+      "errors": [
+        "create_connection() got an unexpected keyword argument 'timeout'"
+      ]
+    },
+    {
+      "endpoint": "/ws/anomalies",
+      "connection_successful": false,
+      "messages_sent": 0,
+      "messages_received": 0,
+      "integration_score": 0,
+      "errors": [
+        "create_connection() got an unexpected keyword argument 'timeout'"
+      ]
+    },
+    {
+      "endpoint": "/ws/doctor-status",
+      "connection_successful": false,
+      "messages_sent": 0,
+      "messages_received": 0,
+      "integration_score": 0,
+      "errors": [
+        "create_connection() got an unexpected keyword argument 'timeout'"
+      ]
+    }
+  ],
+  "successful_endpoints": 0,
+  "total_endpoints": 4,
+  "average_integration_score": 0.0,
+  "overall_status": "failed"
+}

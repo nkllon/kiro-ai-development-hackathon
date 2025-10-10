@@ -1,0 +1,31 @@
+{
+  "evidence_id": "b5d78c6a-1aee-4e4c-96fc-c364686aad1c",
+  "timestamp": "2025-09-27T04:27:12.832636",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.832630",
+    "data_type": "dict"
+  },
+  "integrity_hash": "f37447cdb09d125566bd106a69b83e0f2e086f68f7f45e697647af88b122b8d1",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/_experimental/mcp_server/utils.py",
+    "file_size": 4866,
+    "line_count": 147,
+    "route_analysis": {
+      "total_routes": 0,
+      "websocket_routes": [],
+      "http_routes": [],
+      "route_handlers": {},
+      "middleware_count": 0,
+      "dependencies": [
+        "starlette.status",
+        "fastapi",
+        "fastapi.HTTPException",
+        "starlette"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.832624"
+  }
+}

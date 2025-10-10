@@ -1,0 +1,56 @@
+{
+  "evidence_id": "e1bef81f-6b57-4032-b437-c659a10e1d71",
+  "timestamp": "2025-09-27T04:27:13.116267",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:13.116255",
+    "data_type": "dict"
+  },
+  "integrity_hash": "8ca73dbbe195b9822cd98830205d8c5e2c75d26696c5aba79721d07260c821d7",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/management_endpoints/scim/scim_v2.py",
+    "file_size": 43404,
+    "line_count": 1301,
+    "route_analysis": {
+      "total_routes": 13,
+      "websocket_routes": [],
+      "http_routes": [
+        "/ServiceProviderConfig",
+        "/Users",
+        "/Users/{user_id}",
+        "/Users",
+        "/Users/{user_id}",
+        "/Users/{user_id}",
+        "/Users/{user_id}",
+        "/Groups",
+        "/Groups/{group_id}",
+        "/Groups",
+        "/Groups/{group_id}",
+        "/Groups/{group_id}",
+        "/Groups/{group_id}"
+      ],
+      "route_handlers": {
+        "/ServiceProviderConfig": "get_service_provider_config",
+        "/Users": "create_user",
+        "/Users/{user_id}": "patch_user",
+        "/Groups": "create_group",
+        "/Groups/{group_id}": "patch_group"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.Body",
+        "fastapi.Depends",
+        "fastapi.Response",
+        "fastapi.APIRouter",
+        "fastapi.Query",
+        "fastapi.Request",
+        "fastapi.Path",
+        "fastapi",
+        "fastapi.HTTPException"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:13.116229"
+  }
+}

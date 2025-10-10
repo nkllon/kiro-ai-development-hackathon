@@ -1,0 +1,499 @@
+{
+  "scan_metadata": {
+    "scan_date": "2025-10-04",
+    "total_specs_scanned": 329,
+    "total_files_with_cms_references": 76,
+    "total_files_with_data_model_references": 186,
+    "scan_keywords": [
+      "Directus",
+      "CMS",
+      "content management",
+      "content storage",
+      "data model",
+      "schema",
+      "collections",
+      "fields",
+      "relationships"
+    ]
+  },
+  "cms_dependencies": {
+    "explicit_directus_dependencies": {
+      "cms-architecture": {
+        "priority": "CRITICAL",
+        "type": "Architecture Definition",
+        "collections": [
+          "Repository content metadata",
+          "Specifications",
+          "Requirements",
+          "Design artifacts",
+          "Code files",
+          "Documentation",
+          "Analysis results",
+          "Metrics and analytics",
+          "User access logs"
+        ],
+        "requirements": [
+          "Multi-modal search capabilities",
+          "Semantic search using AI/ML",
+          "Code pattern matching",
+          "Automated content ingestion",
+          "Content lifecycle management",
+          "RESTful and GraphQL APIs",
+          "Role-based access control",
+          "Real-time subscriptions and webhooks"
+        ],
+        "stakeholders": [
+          "Developer",
+          "DevOps",
+          "CFO",
+          "CTO",
+          "Architect"
+        ],
+        "integration_requirements": [
+          "IDE plugins and extensions",
+          "CI/CD pipeline integration",
+          "Version control system hooks",
+          "Issue tracking integration",
+          "Monitoring systems (Prometheus)",
+          "Beast Mode framework integration"
+        ]
+      },
+      "directus-cms-setup": {
+        "priority": "HIGH",
+        "type": "Infrastructure Setup",
+        "collections": [
+          "documents",
+          "code_files",
+          "specifications",
+          "tasks"
+        ],
+        "requirements": [
+          "Docker Compose deployment",
+          "PostgreSQL backend",
+          "Admin user creation",
+          "Available at http://localhost:8055",
+          "REST API endpoints",
+          "GraphQL API",
+          "API token authentication",
+          "WebSocket support for real-time updates",
+          "Backup and recovery",
+          "Health check endpoints",
+          "Structured logging with correlation IDs"
+        ],
+        "security_requirements": [
+          "Environment variable credential management",
+          "get_directus_password() function usage",
+          "No hardcoded credentials",
+          "HTTPS in production",
+          "Input sanitization",
+          "Audit logs"
+        ]
+      },
+      "directus-schema-design": {
+        "priority": "HIGH",
+        "type": "Database Schema",
+        "collections": [
+          "specifications (id, name, description, status, created_date)",
+          "code_files (id, file_name, file_path, specification_id, created_date)",
+          "documents (id, title, content, specification_id, created_date)",
+          "tasks (id, title, description, specification_id, status, created_date)"
+        ],
+        "relationships": [
+          "code_files → specifications (many-to-one)",
+          "documents → specifications (many-to-one)",
+          "tasks → specifications (many-to-one)"
+        ],
+        "integrity_constraints": [
+          "Consistent INTEGER IDs (no UUID mixing)",
+          "Foreign key constraints with ON DELETE SET NULL",
+          "Proper indexes on foreign keys",
+          "Referential integrity validation"
+        ]
+      },
+      "directus-cms-systematic-implementation": {
+        "priority": "HIGH",
+        "type": "Implementation Framework",
+        "architecture_pattern": "MVC (Model-View-Controller)",
+        "collections": [
+          "Same as directus-schema-design"
+        ],
+        "requirements": [
+          "Model layer: data access, validation, business logic, referential integrity",
+          "View layer: presentation logic, UI rendering",
+          "Controller layer: request routing, input validation, coordination",
+          "Dependency injection patterns",
+          "Complete error handling and rollback",
+          "Step-by-step validation",
+          "PDCA methodology adherence"
+        ],
+        "test_data": [
+          "Integration Orchestrator Framework",
+          "AI-Driven Cursor Sharing",
+          "GPT-5 Context Calibration"
+        ]
+      },
+      "directus-ai-memory-palace-integration": {
+        "priority": "MEDIUM",
+        "type": "Service Integration",
+        "collections": [
+          "AI Memory Palace session contexts",
+          "Conversation data",
+          "Project contexts",
+          "Context metadata"
+        ],
+        "requirements": [
+          "Bidirectional synchronization with AI Memory Palace",
+          "DirectusClient as BeastlyModule",
+          "Beast Mode observability integration",
+          "Prometheus metrics emission",
+          "Jaeger distributed tracing",
+          "Structured logging with correlation IDs",
+          "Graceful degradation",
+          "Conflict resolution mechanisms"
+        ],
+        "integration_points": [
+          "AI Memory Palace storage",
+          "Beast Mode observability framework",
+          "ReflectiveModule pattern"
+        ]
+      },
+      "directus-reconciliation-systematic": {
+        "priority": "MEDIUM",
+        "type": "Data Consistency",
+        "focus": "Reconciliation between Directus and repository state",
+        "requirements": [
+          "Data synchronization validation",
+          "Conflict detection and resolution",
+          "Schema consistency checking",
+          "Relationship integrity verification"
+        ]
+      },
+      "directus-data-population": {
+        "priority": "MEDIUM",
+        "type": "Content Import",
+        "requirements": [
+          "Scan repository for markdown files",
+          "Extract metadata from frontmatter",
+          "Preserve file relationships and dependencies",
+          "Detect file system changes",
+          "Update Directus collections with new/modified content"
+        ]
+      },
+      "directus-ui-configuration": {
+        "priority": "MEDIUM",
+        "type": "User Interface",
+        "requirements": [
+          "Admin, Editor, Viewer roles",
+          "Full CRUD access for Admins",
+          "Create/update access for Editors",
+          "Read-only access for Viewers",
+          "Intuitive display templates for each collection",
+          "Relationship visualization",
+          "Dropdown selectors for relationships",
+          "Clickable navigation through related items"
+        ]
+      }
+    },
+    "implicit_cms_dependencies": {
+      "repository-content-discovery-indexing": {
+        "priority": "CRITICAL",
+        "type": "Content Intelligence",
+        "implicit_needs": [
+          "Repository content metadata storage",
+          "Specification indexing",
+          "Requirements extraction and storage",
+          "Dependency relationship tracking",
+          "Conflict and overlap detection results",
+          "Analysis artifact storage",
+          "Multi-perspective analysis results",
+          "RDI traceability data"
+        ],
+        "potential_collections": [
+          "repository_items (files, directories, metadata)",
+          "specifications (parsed from .kiro/specs)",
+          "requirements (extracted from specs)",
+          "design_elements",
+          "implementations (code references)",
+          "dependencies (spec-to-spec, spec-to-code)",
+          "conflicts (overlaps, contradictions)",
+          "analysis_results (Ghostbusters, RCA, PDCA)",
+          "operation_traces (correlation IDs, performance)"
+        ],
+        "explicit_requirement": "Requirement 30 - CMS Integration for Repository Intelligence Storage",
+        "cms_integration_requirements": [
+          "Store all discovered content and metadata in Directus",
+          "Persist all intelligence data in structured CMS collections",
+          "Use Directus APIs for querying and filtering",
+          "Update CMS records when content changes",
+          "Leverage Directus authentication, API, relationships, webhooks"
+        ],
+        "referential_integrity": [
+          "CASCADE DELETE for repository items → specs → requirements",
+          "SET NULL for analysis artifacts on item deletion",
+          "Foreign key constraints on all relationships",
+          "Correlation ID consistency for operation traces"
+        ]
+      },
+      "beast-mode-system-documentation": {
+        "priority": "HIGH",
+        "type": "Documentation Management",
+        "implicit_needs": [
+          "Documentation versioning",
+          "Cross-referencing between docs",
+          "Search across documentation",
+          "Documentation metadata (authors, dates, status)"
+        ],
+        "potential_collections": [
+          "documentation_pages",
+          "documentation_sections",
+          "cross_references",
+          "documentation_metadata"
+        ]
+      },
+      "observatory-data-discovery": {
+        "priority": "HIGH",
+        "type": "Operational Data",
+        "implicit_needs": [
+          "Module discovery results storage",
+          "Health metrics time-series data",
+          "LLM usage tracking data",
+          "System performance metrics",
+          "Error and failure logs"
+        ],
+        "potential_collections": [
+          "system_modules",
+          "health_metrics",
+          "llm_usage_logs",
+          "performance_metrics",
+          "system_errors"
+        ],
+        "data_collection": [
+          "Real-time data collection from modules",
+          "Health data aggregation",
+          "LLM cost tracking",
+          "Performance monitoring"
+        ]
+      },
+      "spec-framework": {
+        "priority": "HIGH",
+        "type": "Specification Management",
+        "implicit_needs": [
+          "Spec metadata storage",
+          "Version tracking",
+          "Spec lifecycle states",
+          "Dependency graphs"
+        ],
+        "potential_collections": [
+          "spec_metadata",
+          "spec_versions",
+          "spec_states",
+          "spec_dependencies"
+        ]
+      },
+      "dag-orchestrated-parallel-execution": {
+        "priority": "MEDIUM",
+        "type": "Execution Tracking",
+        "implicit_needs": [
+          "DAG execution history",
+          "Task status tracking",
+          "Execution metrics",
+          "Failure and recovery logs"
+        ],
+        "potential_collections": [
+          "dag_executions",
+          "task_executions",
+          "execution_metrics",
+          "execution_logs"
+        ]
+      },
+      "unified-dag-registry": {
+        "priority": "MEDIUM",
+        "type": "Registry Management",
+        "implicit_needs": [
+          "DAG definitions storage",
+          "Task definitions",
+          "Dependency relationships",
+          "Registry versioning"
+        ],
+        "potential_collections": [
+          "dag_definitions",
+          "task_definitions",
+          "dag_relationships",
+          "registry_versions"
+        ]
+      },
+      "mcp-server-configuration-standardization": {
+        "priority": "MEDIUM",
+        "type": "Configuration Management",
+        "implicit_needs": [
+          "MCP server configurations",
+          "Configuration versioning",
+          "Environment-specific configs",
+          "Configuration validation results"
+        ],
+        "potential_collections": [
+          "mcp_configurations",
+          "configuration_versions",
+          "environment_configs",
+          "validation_results"
+        ]
+      },
+      "google-calendar-mcp-integration": {
+        "priority": "LOW",
+        "type": "Integration Data",
+        "implicit_needs": [
+          "Calendar event metadata",
+          "Integration status",
+          "Sync history"
+        ],
+        "potential_collections": [
+          "calendar_events",
+          "integration_status",
+          "sync_logs"
+        ]
+      },
+      "live-dashboard-engagement-system": {
+        "priority": "MEDIUM",
+        "type": "Dashboard Data",
+        "implicit_needs": [
+          "Dashboard widget configurations",
+          "User engagement metrics",
+          "Real-time data feeds"
+        ],
+        "potential_collections": [
+          "dashboard_widgets",
+          "engagement_metrics",
+          "data_feeds"
+        ]
+      },
+      "llm-powered-engagement-engines": {
+        "priority": "MEDIUM",
+        "type": "Engagement Data",
+        "implicit_needs": [
+          "Engagement patterns",
+          "LLM interaction logs",
+          "User behavior analytics"
+        ],
+        "potential_collections": [
+          "engagement_patterns",
+          "llm_interactions",
+          "behavior_analytics"
+        ]
+      }
+    }
+  },
+  "collection_summary": {
+    "explicit_directus_collections": {
+      "core_content": [
+        "specifications",
+        "code_files",
+        "documents",
+        "tasks"
+      ],
+      "ai_memory_palace": [
+        "session_contexts",
+        "conversation_data",
+        "project_contexts"
+      ],
+      "search_and_discovery": [
+        "repository_metadata",
+        "requirements",
+        "design_artifacts",
+        "analysis_results"
+      ]
+    },
+    "implicit_collections_needed": {
+      "repository_intelligence": [
+        "repository_items",
+        "dependencies",
+        "conflicts",
+        "implementations",
+        "operation_traces"
+      ],
+      "system_operations": [
+        "system_modules",
+        "health_metrics",
+        "performance_metrics",
+        "llm_usage_logs",
+        "system_errors"
+      ],
+      "orchestration": [
+        "dag_executions",
+        "task_executions",
+        "execution_metrics",
+        "execution_logs"
+      ],
+      "configuration": [
+        "mcp_configurations",
+        "environment_configs",
+        "validation_results"
+      ]
+    },
+    "total_collections_identified": 35
+  },
+  "integration_requirements": {
+    "api_requirements": [
+      "RESTful API for all collections",
+      "GraphQL API for complex queries",
+      "WebSocket support for real-time updates",
+      "Filtering, sorting, pagination support",
+      "Relationship traversal APIs"
+    ],
+    "security_requirements": [
+      "Role-based access control (Admin, Editor, Viewer)",
+      "API token authentication",
+      "Environment variable credential management",
+      "Audit logging",
+      "Input sanitization"
+    ],
+    "performance_requirements": [
+      "API response time < 200ms for standard queries",
+      "Support 50+ concurrent users",
+      "Handle repositories with 10,000+ files",
+      "Real-time change detection < 5 seconds"
+    ],
+    "integration_points": [
+      "Beast Mode framework (ReflectiveModule pattern)",
+      "Prometheus metrics collection",
+      "Jaeger distributed tracing",
+      "Git repository synchronization",
+      "AI Memory Palace bidirectional sync",
+      "Repository Content Discovery and Indexing"
+    ]
+  },
+  "risk_analysis": {
+    "critical_risks": [
+      "Schema type mismatches (UUID vs INTEGER)",
+      "Broken foreign key relationships",
+      "Authentication failures",
+      "Data corruption and orphaned records",
+      "Performance degradation with large datasets"
+    ],
+    "mitigation_strategies": [
+      "Consistent INTEGER IDs throughout schema",
+      "Comprehensive referential integrity constraints",
+      "Step-by-step validation at each phase",
+      "Rollback capabilities for all operations",
+      "MVC architecture for maintainability",
+      "PDCA methodology for systematic implementation"
+    ]
+  },
+  "implementation_priorities": {
+    "phase_1_critical": [
+      "cms-architecture (foundation)",
+      "directus-cms-setup (infrastructure)",
+      "directus-schema-design (database)",
+      "directus-cms-systematic-implementation (core)"
+    ],
+    "phase_2_high": [
+      "repository-content-discovery-indexing (intelligence)",
+      "directus-data-population (content import)",
+      "directus-ui-configuration (user interface)"
+    ],
+    "phase_3_medium": [
+      "directus-ai-memory-palace-integration (AI integration)",
+      "directus-reconciliation-systematic (data consistency)",
+      "observatory-data-discovery (operational data)"
+    ]
+  }
+}

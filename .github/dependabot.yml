@@ -1,0 +1,108 @@
+# Dependabot Configuration for KIRO AI Development Hackathon
+# Automatically checks for dependency updates and security vulnerabilities
+
+version: 2
+updates:
+  # Python dependencies (main requirements)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "nkllon"
+    assignees:
+      - "nkllon"
+    labels:
+      - "dependencies"
+      - "python"
+      - "automated"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+      include: "scope"
+    # Group minor and patch updates together
+    groups:
+      python-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # GitHub Actions workflows
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "nkllon"
+    assignees:
+      - "nkllon"
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "automated"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+
+  # Python dependencies in packages (beast-mailbox-core)
+  - package-ecosystem: "pip"
+    directory: "/packages/beast-mailbox-core"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "nkllon"
+    labels:
+      - "dependencies"
+      - "python"
+      - "beast-mailbox-core"
+    commit-message:
+      prefix: "deps(beast-mailbox)"
+      include: "scope"
+
+  # Python dependencies in packages (cli-safety-utils)
+  - package-ecosystem: "pip"
+    directory: "/packages/cli-safety-utils"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "nkllon"
+    labels:
+      - "dependencies"
+      - "python"
+      - "cli-safety-utils"
+    commit-message:
+      prefix: "deps(cli-safety)"
+      include: "scope"
+
+  # Python dependencies in packages (repo-discovery-core)
+  - package-ecosystem: "pip"
+    directory: "/packages/repo-discovery-core"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "nkllon"
+    labels:
+      - "dependencies"
+      - "python"
+      - "repo-discovery-core"
+    commit-message:
+      prefix: "deps(repo-discovery)"
+      include: "scope"
+

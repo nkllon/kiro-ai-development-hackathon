@@ -1,0 +1,107 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#ff6b6b','secondaryColor':'#4ecdc4','tertiaryColor':'#45b7d1'}}}%%
+graph TD
+    subgraph Phase1["Phase 1: Discovery & Analysis (Day 1 - All Parallel)"]
+        P1A[1a: Constellation Inventory]
+        P1B[1b: Stakeholder Landscape]
+        P1C[1c: CMS Dependency Discovery]
+        P1D[1d: Ontology Gap Analysis]
+    end
+
+    subgraph Phase2["Phase 2: Requirements Elaboration (Days 2-4 - Layer Sequential)"]
+        P2_L0[2: Bootstrap Requirements]
+        P2_L1[2: Foundation Requirements]
+        P2_L2[2: Intelligence Requirements]
+        P2_L3[2: Application Requirements]
+    end
+
+    subgraph Phase3["Phase 3: Design Development (Days 5-7 - Layer Sequential)"]
+        P3_L0[3: Bootstrap Designs]
+        P3_L1[3: Foundation Designs]
+        P3_L2[3: Intelligence Designs]
+        P3_L3[3: Application Designs]
+    end
+
+    subgraph Phase4["Phase 4: Task Breakdown (Days 8-10 - Layer Sequential)"]
+        P4_L0[4: Bootstrap Tasks]
+        P4_L1[4: Foundation Tasks]
+        P4_L2[4: Intelligence Tasks]
+        P4_L3[4: Application Tasks]
+    end
+
+    subgraph Phase5["Phase 5: CMS Integration & Consolidation (Days 11-12 - Sequential)"]
+        P5A[5a: CMS Requirements Consolidation]
+        P5B[5b: CMS Architecture Update]
+        P5C[5c: Constellation CMS Mapping]
+        P5D[5d: Stakeholder Validation]
+    end
+
+    %% Phase 1 has no dependencies - all parallel
+
+    %% Phase 1 outputs feed Phase 2
+    P1A --> P2_L0
+    P1B --> P2_L0
+    P1C --> P2_L0
+    P1D --> P2_L0
+
+    P1A --> P2_L1
+    P1B --> P2_L1
+    P1C --> P2_L1
+    P1D --> P2_L1
+
+    P1A --> P2_L2
+    P1B --> P2_L2
+    P1C --> P2_L2
+    P1D --> P2_L2
+
+    P1A --> P2_L3
+    P1B --> P2_L3
+    P1C --> P2_L3
+    P1D --> P2_L3
+
+    %% Phase 2 layer dependencies
+    P2_L0 --> P2_L1
+    P2_L1 --> P2_L2
+    P2_L2 --> P2_L3
+
+    %% Phase 2 to Phase 3
+    P2_L0 --> P3_L0
+    P2_L1 --> P3_L1
+    P2_L2 --> P3_L2
+    P2_L3 --> P3_L3
+
+    %% Phase 3 layer dependencies
+    P3_L0 --> P3_L1
+    P3_L1 --> P3_L2
+    P3_L2 --> P3_L3
+
+    %% Phase 3 to Phase 4
+    P3_L0 --> P4_L0
+    P3_L1 --> P4_L1
+    P3_L2 --> P4_L2
+    P3_L3 --> P4_L3
+
+    %% Phase 4 layer dependencies
+    P4_L0 --> P4_L1
+    P4_L1 --> P4_L2
+    P4_L2 --> P4_L3
+
+    %% Phase 4 to Phase 5 (all layers must complete)
+    P4_L0 --> P5A
+    P4_L1 --> P5A
+    P4_L2 --> P5A
+    P4_L3 --> P5A
+
+    %% Phase 5 sequential dependencies
+    P5A --> P5B
+    P5B --> P5C
+    P5C --> P5D
+
+    %% Styling for critical path
+    classDef critical fill:#ff6b6b,stroke:#c92a2a,stroke-width:3px,color:#fff
+    classDef parallel fill:#4ecdc4,stroke:#2a9d8f,stroke-width:2px,color:#fff
+    classDef sequential fill:#45b7d1,stroke:#1a759f,stroke-width:2px,color:#fff
+
+    class P1A,P1B,P1C,P1D parallel
+    class P2_L0,P3_L0,P4_L0 critical
+    class P2_L1,P2_L2,P2_L3,P3_L1,P3_L2,P3_L3,P4_L1,P4_L2,P4_L3 sequential
+    class P5A,P5B,P5C,P5D critical

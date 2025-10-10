@@ -1,0 +1,20 @@
+{
+  "evidence_id": "417aad73-8fbb-4bc3-acd5-1c596e6a8bd5",
+  "timestamp": "2025-09-27T04:35:03.400359",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.400353",
+    "data_type": "dict"
+  },
+  "integrity_hash": "30cec9a2ca0290657277148b79aa6347d20c132fa01ea537a4efa58a7b276673",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/anthropic_endpoints/endpoints.py",
+    "file_size": 11215,
+    "line_count": 311,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.400351"
+  }
+}

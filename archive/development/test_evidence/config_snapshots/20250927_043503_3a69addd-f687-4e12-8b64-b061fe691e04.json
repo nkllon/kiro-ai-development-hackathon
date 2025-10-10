@@ -1,0 +1,20 @@
+{
+  "evidence_id": "3a69addd-f687-4e12-8b64-b061fe691e04",
+  "timestamp": "2025-09-27T04:35:03.768571",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:35:03.768561",
+    "data_type": "dict"
+  },
+  "integrity_hash": "380d03b3ea245f089f3e9d13f2675603c2b7358b25e7c296d0ee7ff3e962a47c",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/hooks/dynamic_rate_limiter_v3.py",
+    "file_size": 9002,
+    "line_count": 227,
+    "handlers_analyzed": 0,
+    "handler_analyses": [],
+    "analysis_timestamp": "2025-09-27T04:35:03.768558"
+  }
+}

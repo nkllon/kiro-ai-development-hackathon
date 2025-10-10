@@ -1,0 +1,51 @@
+{
+  "evidence_id": "81dd26e8-3486-45a2-a4cd-f173227a47ca",
+  "timestamp": "2025-09-27T04:34:47.795798",
+  "evidence_type": "config_snapshot",
+  "source_test": "websocket_handler_analysis_configuration",
+  "metadata": {
+    "config_type": "websocket_handler_analysis",
+    "snapshot_timestamp": "2025-09-27T04:34:47.795747",
+    "data_type": "dict"
+  },
+  "integrity_hash": "2e0ab688ac910fa6234d27c16659d9b797c4c022dad2429a67567cda74829195",
+  "data": {
+    "file_path": "/var/folders/cj/jy2bc_mx2yn030n_jwgcrrmr0000gn/T/tmph4e3jozr.py",
+    "file_size": 1076,
+    "line_count": 35,
+    "handlers_analyzed": 3,
+    "handler_analyses": [
+      {
+        "handler_name": "chat_handler",
+        "has_accept_logic": true,
+        "has_receive_logic": true,
+        "has_send_logic": true,
+        "has_error_handling": true,
+        "imports_websocket": true,
+        "complexity_score": 2,
+        "line_count": 12
+      },
+      {
+        "handler_name": "status_handler",
+        "has_accept_logic": true,
+        "has_receive_logic": false,
+        "has_send_logic": true,
+        "has_error_handling": true,
+        "imports_websocket": true,
+        "complexity_score": 0,
+        "line_count": 3
+      },
+      {
+        "handler_name": "broken_handler",
+        "has_accept_logic": false,
+        "has_receive_logic": false,
+        "has_send_logic": false,
+        "has_error_handling": false,
+        "imports_websocket": false,
+        "complexity_score": 0,
+        "line_count": 3
+      }
+    ],
+    "analysis_timestamp": "2025-09-27T04:34:47.795732"
+  }
+}

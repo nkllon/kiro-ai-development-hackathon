@@ -1,0 +1,60 @@
+{
+  "evidence_id": "8fbb73ad-be31-4658-8606-2eb7a18114e8",
+  "timestamp": "2025-09-27T04:27:12.823268",
+  "evidence_type": "config_snapshot",
+  "source_test": "route_analysis_configuration",
+  "metadata": {
+    "config_type": "route_analysis",
+    "snapshot_timestamp": "2025-09-27T04:27:12.823246",
+    "data_type": "dict"
+  },
+  "integrity_hash": "1a1ef44d1b3e8a6a5c45a08f220da6b1cecf29c1ecc24a4b5ff92bd75f516b17",
+  "data": {
+    "file_path": "./.venv/lib/python3.9/site-packages/litellm/proxy/ui_crud_endpoints/proxy_setting_endpoints.py",
+    "file_size": 22215,
+    "line_count": 678,
+    "route_analysis": {
+      "total_routes": 12,
+      "websocket_routes": [],
+      "http_routes": [
+        "/get/allowed_ips",
+        "/add/allowed_ip",
+        "/delete/allowed_ip",
+        "/get/internal_user_settings",
+        "/get/default_team_settings",
+        "/update/internal_user_settings",
+        "/update/default_team_settings",
+        "/get/sso_settings",
+        "/update/sso_settings",
+        "/get/ui_theme_settings",
+        "/update/ui_theme_settings",
+        "/upload/logo"
+      ],
+      "route_handlers": {
+        "/get/allowed_ips": "get_allowed_ips",
+        "/add/allowed_ip": "add_allowed_ip",
+        "/delete/allowed_ip": "delete_allowed_ip",
+        "/get/internal_user_settings": "get_internal_user_settings",
+        "/get/default_team_settings": "get_default_team_settings",
+        "/update/internal_user_settings": "update_internal_user_settings",
+        "/update/default_team_settings": "update_default_team_settings",
+        "/get/sso_settings": "get_sso_settings",
+        "/update/sso_settings": "update_sso_settings",
+        "/get/ui_theme_settings": "get_ui_theme_settings",
+        "/update/ui_theme_settings": "update_ui_theme_settings",
+        "/upload/logo": "upload_logo"
+      },
+      "middleware_count": 0,
+      "dependencies": [
+        "fastapi.Depends",
+        "fastapi.APIRouter",
+        "fastapi.UploadFile",
+        "fastapi.File",
+        "fastapi.Request",
+        "fastapi",
+        "fastapi.HTTPException"
+      ]
+    },
+    "analysis_timestamp": "2025-09-27T04:27:12.823223"
+  }
+}

@@ -1,0 +1,49 @@
+# Beast Mode Framework - Service Proxy for Remote Services
+# ========================================================
+# Creates local proxy containers that forward to remote services
+# This ensures consistent service discovery regardless of deployment
+
+version: '3.8'
+
+services:
+  # Prometheus proxy - forwards to remote Prometheus
+  prometheus-proxy:
+    image: nginx:alpine
+    container_name: beast-mode-prometheus-proxy
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/nginx/prometheus-proxy.conf:/etc/nginx/nginx.conf:ro
+    environment:
+      - PROMETHEUS_UPSTREAM=${PROMETHEUS_UPSTREAM:-192.168.1.119:9090}
+    networks:
+      - beast-mode-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Grafana proxy - forwards to remote Grafana  
+  grafana-proxy:
+    image: nginx:alpine
+    container_name: beast-mode-grafana-proxy
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config/nginx/grafana-proxy.conf:/etc/nginx/nginx.conf:ro
+    environment:
+      - GRAFANA_UPSTREAM=${GRAFANA_UPSTREAM:-192.168.1.119:3000}
+    networks:
+      - beast-mode-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  beast-mode-network:
+    external: true

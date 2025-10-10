@@ -18,7 +18,15 @@ import logging
 import uuid
 import time
 import threading
+import json
 from contextlib import contextmanager
+
+# Import tracing capabilities
+try:
+    from src.beast_mode.tracing.tracer import get_tracer
+    TRACING_AVAILABLE = True
+except ImportError:
+    TRACING_AVAILABLE = False
 
 
 class ModuleStatus(Enum):
@@ -113,6 +121,19 @@ class ReflectiveModule(ABC):
         # Initialize Prometheus metrics if enabled
         if self._enable_prometheus:
             self._initialize_prometheus_metrics()
+        
+        # PATCH_START: ReflectiveModule Redis Auto-Registration
+        # Technical Debt: Missing Redis auto-registration in base class
+        # Issue: https://github.com/project/issues/redis-registration-gap
+        # Cleanup Plan: Replace with proper service lifecycle management system
+        # Severity: HIGH - Blocks Runtime State Registry functionality
+        # Estimated Cleanup: 2 weeks after service lifecycle system implemented
+        self._enable_redis = self._should_enable_redis()
+        if self._enable_redis:
+            self._initialize_redis_registration()
+        # PATCH_END
+        
+        # Distributed tracing will be initialized on-demand
 
     @abstractmethod
     def get_module_info(self) -> Dict[str, Any]:
@@ -165,14 +186,19 @@ class ReflectiveModule(ABC):
     def _initialize_prometheus_metrics(self):
         """Initialize Prometheus metrics for this module."""
         try:
+            from src.rm_ddd.core.service_config import get_service_config
             from src.beast_mode.monitoring.prometheus_exporter import PrometheusExporter
 
+            # Get Prometheus config from central service configuration
+            service_config = get_service_config()
+            prometheus_config = service_config.get_prometheus_config()
+            
             self._prometheus_exporter = PrometheusExporter(
-                port=int(os.getenv("BEAST_MODE_PROMETHEUS_PORT", "8000")),
-                enable_http_server=True,
+                prometheus_url=prometheus_config.url,
+                enable_http_server=False,  # Don't start local server, use existing one
             )
             self._logger.info(
-                f"Prometheus metrics enabled for {self.__class__.__name__}"
+                f"Prometheus metrics enabled for {self.__class__.__name__} -> {prometheus_config.url}"
             )
         except ImportError:
             self._logger.warning(
@@ -182,6 +208,212 @@ class ReflectiveModule(ABC):
         except Exception as e:
             self._logger.error(f"Failed to initialize Prometheus metrics: {e}")
             self._enable_prometheus = False
+
+    # PATCH_START: Redis Auto-Registration Methods
+    # Technical Debt: Missing Redis integration in ReflectiveModule base class
+    def _should_enable_redis(self) -> bool:
+        """Check if Redis auto-registration should be enabled."""
+        return os.getenv("BEAST_MODE_REDIS_ENABLED", "true").lower() == "true"
+
+    def _detect_container_environment(self) -> dict:
+        """Detect if running in a container and gather environment info."""
+        container_info = {
+            "is_container": False,
+            "container_type": None,
+            "evidence": []
+        }
+        
+        # Check for Docker container indicators
+        if os.path.exists('/.dockerenv'):
+            container_info["is_container"] = True
+            container_info["container_type"] = "docker"
+            container_info["evidence"].append("/.dockerenv file exists")
+        
+        # Check for container-specific environment variables
+        if os.getenv('HOSTNAME', '').startswith(('docker-', 'k8s-')):
+            container_info["is_container"] = True
+            container_info["evidence"].append(f"Container hostname pattern: {os.getenv('HOSTNAME')}")
+        
+        # Check for Docker-specific cgroup
+        try:
+            with open('/proc/1/cgroup', 'r') as f:
+                cgroup_content = f.read()
+                if 'docker' in cgroup_content or 'containerd' in cgroup_content:
+                    container_info["is_container"] = True
+                    container_info["container_type"] = "docker"
+                    container_info["evidence"].append("Docker cgroup detected")
+        except (FileNotFoundError, PermissionError):
+            pass
+        
+        # Check for Kubernetes
+        if os.getenv('KUBERNETES_SERVICE_HOST'):
+            container_info["is_container"] = True
+            container_info["container_type"] = "kubernetes"
+            container_info["evidence"].append("Kubernetes service host detected")
+        
+        return container_info
+
+    def _resolve_redis_host(self) -> str:
+        """Smart Redis host resolution with container detection and logging."""
+        # Get explicit Redis host from environment
+        explicit_host = os.getenv('REDIS_HOST')
+        
+        # Detect container environment
+        container_info = self._detect_container_environment()
+        
+        # Log detection results
+        if container_info["is_container"]:
+            self._logger.info(f"🐳 Container environment detected: {container_info['container_type']}")
+            for evidence in container_info["evidence"]:
+                self._logger.debug(f"   Evidence: {evidence}")
+        else:
+            self._logger.info("🖥️  Host environment detected (not containerized)")
+        
+        # Resolve Redis host based on environment and explicit configuration
+        if explicit_host:
+            resolved_host = explicit_host
+            self._logger.info(f"📍 Using explicit REDIS_HOST: {resolved_host}")
+        elif container_info["is_container"]:
+            # Smart container defaults
+            if container_info["container_type"] == "docker":
+                resolved_host = "host.docker.internal"
+                self._logger.info(f"🔄 Auto-resolved for Docker container: {resolved_host}")
+            elif container_info["container_type"] == "kubernetes":
+                resolved_host = "redis-service"  # Common k8s service name
+                self._logger.info(f"☸️  Auto-resolved for Kubernetes: {resolved_host}")
+            else:
+                resolved_host = "localhost"
+                self._logger.warning(f"⚠️  Unknown container type, defaulting to: {resolved_host}")
+        else:
+            # Host environment default
+            resolved_host = "localhost"
+            self._logger.info(f"🏠 Auto-resolved for host environment: {resolved_host}")
+        
+        # Final validation and logging
+        self._logger.info(f"✅ Final Redis host resolution: {resolved_host}")
+        
+        return resolved_host
+
+    def _initialize_redis_registration(self):
+        """Initialize Redis auto-registration for this module."""
+        try:
+            import redis
+            import json
+            import threading
+            import time
+            
+            # Smart container detection and Redis host resolution
+            redis_host = self._resolve_redis_host()
+            redis_port = int(os.getenv('REDIS_PORT', '6379'))
+            redis_password = os.getenv('REDIS_PASSWORD', '')
+            
+            self._logger.info(f"Redis connection resolved: {redis_host}:{redis_port}")
+            
+            import redis.exceptions
+
+            # Connect to Redis (retry without password if AUTH not required)
+            redis_kwargs = {
+                "host": redis_host,
+                "port": redis_port,
+                "password": redis_password or None,
+                "decode_responses": True,
+            }
+            self._redis_client = redis.Redis(**redis_kwargs)
+
+            try:
+                self._redis_client.ping()
+            except redis.exceptions.AuthenticationError as auth_error:
+                if redis_password:
+                    self._logger.info("Redis rejected provided password (AUTH not required); retrying without authentication")
+                    redis_kwargs["password"] = None
+                    self._redis_client = redis.Redis(**redis_kwargs)
+                    self._redis_client.ping()
+                else:
+                    raise
+            
+            # Register this module
+            self._register_in_redis()
+            
+            # Start heartbeat
+            self._start_redis_heartbeat()
+            
+            self._logger.info(f"Redis auto-registration enabled for {self.__class__.__name__}")
+            
+        except Exception as e:
+            self._logger.warning(f"Redis auto-registration failed: {e}")
+            self._redis_client = None
+
+    def _register_in_redis(self):
+        """Register this module in Redis."""
+        if not hasattr(self, '_redis_client') or not self._redis_client:
+            return
+            
+        try:
+            module_info = self.get_module_info()
+            health_status = self.get_health_status()
+            capabilities = self.get_capabilities()
+            
+            # Create registration data
+            registration_data = {
+                "module_id": module_info.get("module_id", self.__class__.__name__),
+                "module_type": self.__class__.__name__,
+                "capabilities": [cap.value for cap in capabilities],
+                "registered_at": datetime.now().isoformat(),
+                "status": health_status.status.value,
+                "health_score": health_status.health_score,
+                "host": os.getenv('HOSTNAME', 'localhost'),
+                "pid": os.getpid(),
+                "version": module_info.get("version", "1.0.0")
+            }
+            
+            # Register in multiple Redis patterns for discoverability
+            module_id = registration_data["module_id"]
+            
+            # 1. Health key pattern (for health monitoring)
+            health_key = f"health:{module_id}"
+            self._redis_client.hset(health_key, mapping={
+                "status": str(health_status.status.value),
+                "health_score": str(health_status.health_score),
+                "last_check": datetime.now().isoformat(),
+                "uptime_seconds": str(health_status.uptime_seconds)
+            })
+            self._redis_client.expire(health_key, 300)  # 5 minute TTL
+            
+            # 2. Service registry pattern (for service discovery)
+            service_key = f"service:registry:{module_id}"
+            # Convert all values to strings for Redis
+            redis_data = {k: str(v) if not isinstance(v, str) else v for k, v in registration_data.items()}
+            redis_data["capabilities"] = json.dumps(registration_data["capabilities"])
+            self._redis_client.hset(service_key, mapping=redis_data)
+            self._redis_client.expire(service_key, 300)  # 5 minute TTL
+            
+            # 3. Active modules pattern (for Runtime State Registry)
+            active_key = "beast_mode:active_modules"
+            self._redis_client.hset(active_key, module_id, json.dumps(registration_data))
+            
+            self._logger.debug(f"Registered {module_id} in Redis")
+            
+        except Exception as e:
+            self._logger.error(f"Failed to register in Redis: {e}")
+
+    def _start_redis_heartbeat(self):
+        """Start Redis heartbeat to maintain registration."""
+        if not hasattr(self, '_redis_client') or not self._redis_client:
+            return
+            
+        def heartbeat():
+            while True:
+                try:
+                    time.sleep(60)  # Heartbeat every minute
+                    self._register_in_redis()  # Refresh registration
+                except Exception as e:
+                    self._logger.error(f"Redis heartbeat failed: {e}")
+                    break
+        
+        # Start heartbeat in background thread
+        heartbeat_thread = threading.Thread(target=heartbeat, daemon=True)
+        heartbeat_thread.start()
+    # PATCH_END
 
     def _collect_prometheus_metrics(self):
         """Collect metrics for Prometheus export."""
@@ -265,37 +497,51 @@ class ReflectiveModule(ABC):
             # Store content with metadata
             content_data = {
                 "id": content_id,
-                "collection": collection,
                 "data": data,
                 "module_id": getattr(self, "module_id", self.__class__.__name__),
                 "timestamp": datetime.now().isoformat(),
                 "version": "1.0.0"
             }
             
-            # For now, store in memory until Directus is fully configured
+            # Try to use real Directus client
+            if hasattr(self._cms_client, 'create_item'):
+                result = self._cms_client.create_item(collection, content_data)
+                if result:
+                    self._logger.info(f"Stored content {content_id} in Directus collection {collection}")
+                    return True
+                else:
+                    self._logger.warning(f"Failed to store content {content_id} in Directus, using memory fallback")
+            
+            # Fallback to memory storage
             if not hasattr(self, '_content_store'):
                 self._content_store = {}
             
             self._content_store[content_id] = content_data
-            self._logger.info(f"Stored content {content_id} in collection {collection}")
+            self._logger.info(f"Stored content {content_id} in memory collection {collection}")
             return True
             
         except Exception as e:
             self._logger.error(f"Failed to store content {content_id}: {e}")
             return False
 
-    def get_content(self, content_id: str) -> Optional[Dict[str, Any]]:
+    def get_content(self, content_id: str, collection: str = "content") -> Optional[Dict[str, Any]]:
         """Retrieve content from unified CMS."""
         try:
             # Initialize CMS connection if needed
             if not hasattr(self, '_cms_client'):
                 self._initialize_cms_client()
             
-            # For now, retrieve from memory store
+            # Try to use real Directus client
+            if hasattr(self._cms_client, 'get_items'):
+                items = self._cms_client.get_items(collection, {"filter": {"id": {"_eq": content_id}}})
+                if items:
+                    return items[0]
+            
+            # Fallback to memory store
             if hasattr(self, '_content_store') and content_id in self._content_store:
                 return self._content_store[content_id]
             
-            self._logger.warning(f"Content {content_id} not found")
+            self._logger.warning(f"Content {content_id} not found in Directus or memory")
             return None
             
         except Exception as e:
@@ -305,14 +551,30 @@ class ReflectiveModule(ABC):
     def _initialize_cms_client(self):
         """Initialize CMS client connection."""
         try:
-            # TODO: Initialize actual Directus client when available
-            # For now, use in-memory storage
-            self._cms_client = "memory_store"
-            self._logger.info("CMS client initialized (memory mode)")
+            # Initialize actual Directus client
+            from src.beast_mode.directus_cms.directus_client import DirectusClient
             
+            # Get Directus configuration from environment
+            directus_url = os.getenv("DIRECTUS_URL", "http://localhost:8055")
+            directus_token = os.getenv("DIRECTUS_TOKEN")
+            
+            self._cms_client = DirectusClient(base_url=directus_url, token=directus_token)
+            
+            # Test connection
+            if self._cms_client.health_check():
+                self._logger.info("CMS client initialized (Directus connected)")
+            else:
+                self._logger.warning("CMS client initialized (Directus not accessible, will retry)")
+            
+        except ImportError:
+            # Fallback to memory storage if DirectusClient not available
+            self._cms_client = "memory_store"
+            self._logger.warning("DirectusClient not available, using memory storage fallback")
         except Exception as e:
             self._logger.error(f"Failed to initialize CMS client: {e}")
-            self._cms_client = None
+            # Fallback to memory storage
+            self._cms_client = "memory_store"
+            self._logger.warning("Using memory storage fallback due to CMS client error")
 
     def get_cli_interface(self) -> Dict[str, Any]:
         """
@@ -766,3 +1028,141 @@ class ReflectiveModule(ABC):
             help_text += f"\nUse generate_cli_help('<command_name>') for detailed help on specific commands.\n"
             
             return help_text
+
+    def emit_observation(self, message: str, event_type: str = "info", context: Optional[Dict[str, Any]] = None, emoji: Optional[str] = None):
+        """
+        Emit an observation event for the Living Observatory Dashboard
+        
+        This method allows Beastly Modules to emit real-time observations that will
+        be displayed in the Observatory Activity Feed.
+        
+        Args:
+            message: Human-readable description of what happened
+            event_type: Type of event (info, warning, error, success, etc.)
+            context: Additional context data for the event
+            emoji: Optional emoji to display with the event
+        """
+        try:
+            # Create observation event
+            observation = {
+                "timestamp": datetime.now().isoformat(),
+                "module": getattr(self, 'module_id', self.__class__.__name__),
+                "event_type": event_type,
+                "message": message,
+                "emoji": emoji or self._get_default_emoji(event_type),
+                "severity": self._map_event_type_to_severity(event_type),
+                "context": context or {},
+                "correlation_id": self._correlation_id
+            }
+            
+            # Send to Observatory if available
+            self._send_observation_to_observatory(observation)
+            
+            # Log the observation
+            log_level = self._get_log_level_for_event_type(event_type)
+            self._logger.log(log_level, f"📰 {message} {emoji or ''}")
+            
+        except Exception as e:
+            self._logger.error(f"Failed to emit observation: {e}")
+    
+    def _get_default_emoji(self, event_type: str) -> str:
+        """Get default emoji for event type"""
+        emoji_map = {
+            'certificate_lock': '🔒',
+            'websocket_connect': '🔌',
+            'websocket_disconnect': '🔌❌',
+            'cache_invalidate': '🗑️',
+            'database_query': '🗄️',
+            'api_request': '📡',
+            'error': '❌',
+            'warning': '⚠️',
+            'info': 'ℹ️',
+            'success': '✅',
+            'performance': '⚡',
+            'security': '🛡️',
+            'deployment': '🚀',
+            'backup': '💾',
+            'maintenance': '🔧',
+            'monitoring': '👁️',
+            'default': '📊'
+        }
+        return emoji_map.get(event_type, emoji_map['default'])
+    
+    def _map_event_type_to_severity(self, event_type: str) -> str:
+        """Map event type to severity level"""
+        severity_map = {
+            'error': 'error',
+            'warning': 'warning',
+            'success': 'success',
+            'info': 'info',
+            'certificate_lock': 'info',
+            'websocket_connect': 'info',
+            'websocket_disconnect': 'info',
+            'cache_invalidate': 'info',
+            'database_query': 'info',
+            'api_request': 'info',
+            'performance': 'info',
+            'security': 'warning',
+            'deployment': 'info',
+            'backup': 'info',
+            'maintenance': 'info',
+            'monitoring': 'info'
+        }
+        return severity_map.get(event_type, 'info')
+    
+    def _get_log_level_for_event_type(self, event_type: str) -> int:
+        """Get logging level for event type"""
+        level_map = {
+            'error': logging.ERROR,
+            'warning': logging.WARNING,
+            'success': logging.INFO,
+            'info': logging.INFO
+        }
+        severity = self._map_event_type_to_severity(event_type)
+        return level_map.get(severity, logging.INFO)
+    
+    def _send_observation_to_observatory(self, observation: Dict[str, Any]):
+        """Send observation to Observatory WebSocket if available"""
+        try:
+            # Add distributed tracing if available (graceful degradation)
+            if TRACING_AVAILABLE:
+                try:
+                    tracer = get_tracer()
+                    if tracer.is_available():
+                        with tracer.trace_observation_flow(observation):
+                            self._do_send_observation(observation)
+                    else:
+                        self._do_send_observation(observation)
+                except Exception as e:
+                    # Tracing failed, continue without it
+                    self._logger.debug(f"Tracing failed, continuing without: {e}")
+                    self._do_send_observation(observation)
+            else:
+                # No tracing available, work normally
+                self._do_send_observation(observation)
+                
+        except Exception as e:
+            # Don't let observation emission break the main functionality
+            self._logger.debug(f"Could not send observation to Observatory: {e}")
+    
+    def _do_send_observation(self, observation: Dict[str, Any]):
+        """Actually send the observation"""
+        # Try to get the global Observatory observation handler
+        if hasattr(self, '_observatory_handler'):
+            self._observatory_handler.broadcast_observation(observation)
+        else:
+            # Try to import and use the global handler
+            try:
+                from src.beast_mode.observatory.observation_handler import get_global_observation_handler
+                handler = get_global_observation_handler()
+                if handler:
+                    handler.broadcast_observation(observation)
+                else:
+                    self._logger.debug("No global observation handler available")
+            except ImportError:
+                # Observatory not available, just log
+                self._logger.debug("Observatory observation handler not available")
+    
+    def set_observatory_handler(self, handler):
+        """Set the Observatory observation handler for this module"""
+        self._observatory_handler = handler
