@@ -386,4 +386,8 @@ webhook_logs/
 
 # Keep test fixtures
 !tests/fixtures/**/*
-!tests/data/**/*
+!tests/data/**/*data/token.json
+
+# Sensitive data
+data/token.json
+api_discovery_cache.json

@@ -1,0 +1,35 @@
+{
+  "enabled": true,
+  "tasks": {
+    "orphaned_solution_scan": {
+      "enabled": true,
+      "schedule": "daily",
+      "time": "02:00",
+      "priority": "high"
+    },
+    "spec_consistency_check": {
+      "enabled": true,
+      "schedule": "weekly",
+      "day": "monday",
+      "time": "03:00",
+      "priority": "medium"
+    },
+    "governance_compliance_audit": {
+      "enabled": true,
+      "schedule": "weekly",
+      "day": "friday",
+      "time": "01:00",
+      "priority": "high"
+    }
+  },
+  "notifications": {
+    "enabled": true,
+    "high_priority_threshold": 5,
+    "email_enabled": false,
+    "slack_enabled": false
+  },
+  "retention": {
+    "keep_reports_days": 30,
+    "max_reports_per_task": 10
+  }
+}

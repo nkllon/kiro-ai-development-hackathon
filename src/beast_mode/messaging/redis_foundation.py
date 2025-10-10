@@ -9,12 +9,13 @@ Requirements: 1.1, 1.2
 """
 
 import asyncio
+import json
 import logging
 import time
-from typing import Optional, Dict, Any, Callable, List
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
-import json
+from typing import Any, Callable, Dict, List, Optional
 
 try:
     import redis.asyncio as redis
@@ -23,7 +24,13 @@ except ImportError:
     REDIS_AVAILABLE = False
     redis = None
 
-from ..core.reflective_module import ReflectiveModule
+from ..core.reflective_module import (
+    GracefulDegradationResult,
+    ModuleCapability,
+    ModuleHealth,
+    ModuleStatus,
+    ReflectiveModule,
+)
 
 
 class ConnectionStatus(str, Enum):
@@ -58,14 +65,15 @@ class RedisFoundation(ReflectiveModule):
 
     def __init__(self, config: Optional[RedisConfig] = None):
         """Initialize Redis foundation with configuration."""
-        super().__init__("RedisFoundation")
         self.config = config or RedisConfig()
-        self.connection_pool: Optional[redis.ConnectionPool] = None
-        self.client: Optional[redis.Redis] = None
         self.status = ConnectionStatus.DISCONNECTED
         self.last_health_check = 0.0
         self.reconnect_attempts = 0
         self.subscribers: Dict[str, List[Callable]] = {}
+        self.module_id = "RedisFoundation"
+        super().__init__()
+        self.connection_pool: Optional[redis.ConnectionPool] = None
+        self.client: Optional[redis.Redis] = None
         self.logger = logging.getLogger(__name__)
 
         if not REDIS_AVAILABLE:
@@ -295,31 +303,71 @@ class RedisFoundation(ReflectiveModule):
             self.logger.error(f"Error during Redis shutdown: {str(e)}")
 
     # ReflectiveModule interface
-    def get_health_status(self) -> Dict[str, Any]:
-        """Get health status for Beast Mode monitoring."""
+    def get_module_info(self) -> Dict[str, Any]:
+        """Provide module metadata for registration."""
         return {
-            "module": "RedisFoundation",
-            "status": self.status.value,
-            "healthy": self.status == ConnectionStatus.CONNECTED,
-            "last_health_check": self.last_health_check,
-            "reconnect_attempts": self.reconnect_attempts,
-            "active_subscriptions": len(self.subscribers),
+            "module_id": self.module_id,
+            "redis_host": self.config.host,
+            "redis_port": self.config.port,
+            "redis_db": self.config.db,
             "redis_available": REDIS_AVAILABLE,
         }
 
-    def get_capabilities(self) -> List[str]:
+    def get_health_status(self) -> ModuleHealth:
+        """Get health status for Beast Mode monitoring."""
+        status_map = {
+            ConnectionStatus.CONNECTED: ModuleStatus.HEALTHY,
+            ConnectionStatus.CONNECTING: ModuleStatus.WARNING,
+            ConnectionStatus.RECONNECTING: ModuleStatus.WARNING,
+            ConnectionStatus.DISCONNECTED: ModuleStatus.ERROR,
+            ConnectionStatus.FAILED: ModuleStatus.ERROR,
+        }
+        module_status = status_map.get(self.status, ModuleStatus.UNKNOWN)
+        issues: List[str] = []
+        if not REDIS_AVAILABLE:
+            issues.append("redis_library_missing")
+        if self.status != ConnectionStatus.CONNECTED:
+            issues.append(f"connection_{self.status.value}")
+
+        uptime_seconds = (datetime.now() - getattr(self, "_start_time", datetime.now())).total_seconds()
+        return ModuleHealth(
+            module_id=self.module_id,
+            status=module_status,
+            health_score=1.0 if module_status == ModuleStatus.HEALTHY else 0.4,
+            issues=issues,
+            last_check=datetime.now(),
+            uptime_seconds=uptime_seconds,
+            error_count=self._error_count if hasattr(self, "_error_count") else 0,
+            warning_count=len(issues),
+        )
+
+    def get_capabilities(self) -> List[ModuleCapability]:
         """Get Redis foundation capabilities."""
         capabilities = [
-            "redis_pubsub",
-            "connection_management",
-            "health_monitoring",
-            "automatic_reconnection",
+            ModuleCapability.CORE_FUNCTIONALITY,
+            ModuleCapability.MONITORING,
+            ModuleCapability.VALIDATION,
         ]
 
         if REDIS_AVAILABLE:
-            capabilities.append("redis_client")
+            capabilities.append(ModuleCapability.DATA_PROCESSING)
 
         return capabilities
+
+    def graceful_degradation(self) -> GracefulDegradationResult:
+        """Graceful degradation strategy when Redis becomes unavailable."""
+        degraded = [
+            ModuleCapability.CORE_FUNCTIONALITY,
+            ModuleCapability.DATA_PROCESSING,
+        ]
+        remaining = [ModuleCapability.MONITORING]
+
+        return GracefulDegradationResult(
+            success=False,
+            degraded_capabilities=degraded,
+            remaining_capabilities=remaining,
+            error_message="Redis connection unavailable; pub/sub disabled",
+        )
 
     def _get_primary_responsibility(self) -> str:
         """Get primary responsibility for this module."""

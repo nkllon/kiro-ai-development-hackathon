@@ -1,6 +1,6 @@
 [project]
 name = "beast-mailbox-core"
-version = "0.1.0"
+version = "0.2.0"
 description = "Redis-backed mailbox utilities from Beast Mode"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -10,7 +10,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/nkllon/kiro-ai-development-hackathon"
+Homepage = "https://github.com/nkllon/beast-mailbox-core"
+Repository = "https://github.com/nkllon/beast-mailbox-core"
 
 [project.scripts]
 beast-mailbox-service = "beast_mailbox_core.cli:run_service"

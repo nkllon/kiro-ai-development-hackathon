@@ -7,12 +7,16 @@ import asyncio
 import json
 import logging
 from dataclasses import dataclass, field
+from datetime import datetime
 from typing import Any, Awaitable, Callable, Dict, List, Optional
 from uuid import uuid4
 
 from .redis_foundation import RedisFoundation, RedisConfig
 from src.rm_ddd.core.unified_reflective_module import (
     GracefulDegradationResult,
+    ModuleCapability,
+    ModuleHealth,
+    ModuleStatus,
     ReflectiveModule,
 )
 
@@ -39,8 +43,12 @@ class MailboxMessage:
         }
 
     @classmethod
-    def from_redis_fields(cls, fields: Dict[bytes, bytes]) -> "MailboxMessage":
-        decoded = {k.decode(): v.decode() for k, v in fields.items()}
+    def from_redis_fields(cls, fields: Dict[Any, Any]) -> "MailboxMessage":
+        decoded: Dict[str, str] = {}
+        for key, value in fields.items():
+            decoded_key = key.decode() if isinstance(key, bytes) else str(key)
+            decoded_value = value.decode() if isinstance(value, bytes) else str(value)
+            decoded[decoded_key] = decoded_value
         payload = json.loads(decoded.get("payload", "{}"))
         return cls(
             message_id=decoded.get("message_id", str(uuid4())),
@@ -63,17 +71,18 @@ class RedisMailboxService(ReflectiveModule):
         redis_config: Optional[RedisConfig] = None,
         poll_interval: float = 2.0,
     ):
-        super().__init__()
         self.module_id = f"mailbox_service:{agent_id}"
         self.agent_id = agent_id
-        self.redis = RedisFoundation(redis_config)
+        self._redis_config = redis_config or RedisConfig()
+        self._handlers: List[Callable[[MailboxMessage], Awaitable[None]]] = []
+        self._running = False
+        super().__init__()
+        self.redis = RedisFoundation(self._redis_config)
         self.poll_interval = poll_interval
         self.logger = logging.getLogger(f"mailbox.{agent_id}")
         self._consumer_group = f"{agent_id}:group"
         self._consumer_name = f"{agent_id}:{uuid4().hex[:6]}"
         self._processing_task: Optional[asyncio.Task] = None
-        self._handlers: List[Callable[[MailboxMessage], Awaitable[None]]] = []
-        self._running = False
 
     @property
     def inbox_stream(self) -> str:
@@ -204,27 +213,50 @@ class RedisMailboxService(ReflectiveModule):
         return {
             "module_id": self.module_id,
             "agent_id": self.agent_id,
-            "redis_host": getattr(self.redis.config, "host", "unknown"),
-            "redis_port": getattr(self.redis.config, "port", "unknown"),
+            "redis_host": getattr(self._redis_config, "host", "unknown"),
+            "redis_port": getattr(self._redis_config, "port", "unknown"),
         }
 
-    def get_capabilities(self) -> List[str]:
-        return ["mailbox", "redis_streams", "durable_delivery"]
+    def get_capabilities(self) -> List[ModuleCapability]:
+        return [
+            ModuleCapability.CORE_FUNCTIONALITY,
+            ModuleCapability.DATA_PROCESSING,
+            ModuleCapability.MONITORING,
+        ]
 
-    def get_health_status(self) -> Dict[str, Any]:
-        return {
-            "module": self.module_id,
-            "running": self._running,
-            "handler_count": len(self._handlers),
-            "connection_status": getattr(self.redis, "status", None).value
-            if getattr(self.redis, "status", None)
-            else "unknown",
-        }
+    def get_health_status(self) -> ModuleHealth:
+        redis_foundation = getattr(self, "redis", None)
+        redis_status = getattr(redis_foundation, "status", None)
+        is_running = (
+            self._running
+            and redis_status is not None
+            and getattr(redis_status, "value", "") == "connected"
+        )
+        status = ModuleStatus.HEALTHY if is_running else ModuleStatus.WARNING
+        issues: List[str] = []
+        if not self._running:
+            issues.append("mailbox_not_running")
+        if redis_status is None:
+            issues.append("redis_status_unknown")
+        elif redis_status.value != "connected":
+            issues.append(f"redis_{redis_status.value}")
+
+        uptime_seconds = (datetime.now() - getattr(self, "_start_time", datetime.now())).total_seconds()
+        return ModuleHealth(
+            module_id=self.module_id,
+            status=status,
+            health_score=1.0 if status == ModuleStatus.HEALTHY else 0.5,
+            issues=issues,
+            last_check=datetime.now(),
+            uptime_seconds=uptime_seconds,
+            error_count=0,
+            warning_count=len(issues),
+        )
 
     def graceful_degradation(self) -> GracefulDegradationResult:
         return GracefulDegradationResult(
             success=True,
-            degraded_capabilities=["mailbox"],
-            remaining_capabilities=[],
+            degraded_capabilities=[ModuleCapability.CORE_FUNCTIONALITY],
+            remaining_capabilities=[ModuleCapability.MONITORING],
             error_message="Redis mailbox operating in degraded mode",
         )

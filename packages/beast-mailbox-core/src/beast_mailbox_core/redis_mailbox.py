@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import time
 from dataclasses import dataclass, field
 from typing import Any, Awaitable, Callable, Dict, List, Optional
 from uuid import uuid4
@@ -34,7 +35,7 @@ class MailboxMessage:
     recipient: str
     payload: Dict[str, Any]
     message_type: str = "direct_message"
-    timestamp: float = field(default_factory=lambda: asyncio.get_event_loop().time())
+    timestamp: float = field(default_factory=lambda: time.time())
 
     def to_redis_fields(self) -> Dict[str, str]:
         return {
@@ -190,4 +191,3 @@ class RedisMailboxService:
                 await handler(message)
             except Exception as exc:
                 self.logger.exception("Mailbox handler failed: %s", exc)
-
