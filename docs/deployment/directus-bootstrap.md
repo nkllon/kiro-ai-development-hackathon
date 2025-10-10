@@ -17,13 +17,13 @@ docker ps --format '{{.Names}} {{.Image}}' | grep postgres || true
 
 ## 3. Bootstrap via `make install`
 ```bash
-make INSTALL_ARGS="--bootstrap-stack" install
+make INSTALL_ARGS="--bootstrap-directus" install
 ```
-This ensures Docker is present, seeds `.env` with common passwords, and starts the stack in compose.
+This ensures Docker/Compose are available, then starts the Directus/Postgres stack defined in `deployment/directus/docker-compose.yml`.
 
 ## 4. Manual Start (if needed)
 ```bash
-docker compose up -d directus postgres
+docker compose -f deployment/directus/docker-compose.yml up -d
 python scripts/directus/bootstrap_admin.py --email admin@example.com --password beastmode2025  # TODO: replace with actual helper
 ```
 

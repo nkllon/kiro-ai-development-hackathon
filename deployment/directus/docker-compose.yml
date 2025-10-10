@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  directus-postgres:
+    image: postgres:14-alpine
+    container_name: directus-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DIRECTUS_DB_NAME:-directus_beast_mode}
+      POSTGRES_USER: ${DIRECTUS_DB_USER:-directus}
+      POSTGRES_PASSWORD: ${DIRECTUS_DB_PASSWORD:-directus_secure_password}
+    volumes:
+      - directus_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DIRECTUS_DB_USER:-directus} -d ${DIRECTUS_DB_NAME:-directus_beast_mode}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - directus_network
+
+  directus:
+    image: directus/directus:10.8
+    container_name: directus-app
+    restart: unless-stopped
+    depends_on:
+      directus-postgres:
+        condition: service_healthy
+    environment:
+      KEY: ${DIRECTUS_KEY:-directus-beast-mode-key}
+      SECRET: ${DIRECTUS_SECRET:-directus-beast-mode-secret}
+      DB_CLIENT: postgres
+      DB_HOST: directus-postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DIRECTUS_DB_NAME:-directus_beast_mode}
+      DB_USER: ${DIRECTUS_DB_USER:-directus}
+      DB_PASSWORD: ${DIRECTUS_DB_PASSWORD:-directus_secure_password}
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL:-admin@example.com}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD:-ChangeMe123!}
+      PUBLIC_URL: ${DIRECTUS_PUBLIC_URL:-http://localhost:8055}
+      REDIS: ${DIRECTUS_REDIS_URL:-redis://192.168.1.119:6379}
+    ports:
+      - "8055:8055"
+    volumes:
+      - directus_uploads:/directus/uploads
+      - directus_extensions:/directus/extensions
+    networks:
+      - directus_network
+
+volumes:
+  directus_postgres_data:
+  directus_uploads:
+  directus_extensions:
+
+networks:
+  directus_network:
+    driver: bridge

@@ -68,6 +68,7 @@ make quick-start
 The installer script exposed through `make install` accepts additional options via `INSTALL_ARGS`:
 
 - `--bootstrap-stack` – automatically run `docker compose up -d` after installation (requires Docker)
+- `--bootstrap-directus` – start the Directus/Postgres stack defined in `deployment/directus/`
 - `--dev` – install `requirements-dev.txt` inside the created virtual environment
 - `--with-demo` – execute the quick start demo when installation completes
 - `--install-docker` – attempt to install Docker/Compose on supported Linux distributions (requires sudo)

@@ -17,6 +17,7 @@ REDIS_DEFAULT_PORT="6379"
 PROJECT_NAME="Beast Mode AI Development Framework"
 
 BOOTSTRAP_STACK=false
+BOOTSTRAP_DIRECTUS=false
 INSTALL_DOCKER=false
 NON_INTERACTIVE=false
 DOCKER_AVAILABLE=false
@@ -48,6 +49,7 @@ Usage: ./install.sh [options]
 
 Options:
   --bootstrap-stack        Start the Docker stack (docker compose up -d) after installation
+  --bootstrap-directus     Start the Directus/Postgres stack defined in deployment/directus/
   --install-docker         Attempt Docker/Compose installation when missing (Linux only, requires sudo)
   --non-interactive        Suppress guidance prompts; fail fast if prerequisites missing
   --with-demo              Run the quick start demo after installation completes
@@ -60,6 +62,9 @@ parse_args() {
         case "$1" in
             --bootstrap-stack|--with-stack|--start-stack)
                 BOOTSTRAP_STACK=true
+                ;;
+            --bootstrap-directus)
+                BOOTSTRAP_DIRECTUS=true
                 ;;
             --install-docker)
                 INSTALL_DOCKER=true
@@ -203,6 +208,27 @@ bootstrap_observatory_stack() {
     log_info "Starting Observatory stack via Docker..."
     $COMPOSE_CMD up -d --build
     log_success "Observatory stack started."
+}
+
+bootstrap_directus_stack() {
+    if [[ "$BOOTSTRAP_DIRECTUS" != true ]]; then
+        return 0
+    fi
+
+    if [[ "$DOCKER_AVAILABLE" != true ]] || [[ -z "$COMPOSE_CMD" ]]; then
+        log_error "Cannot bootstrap Directus stack: Docker/Compose unavailable."
+        return 0
+    fi
+
+    local compose_file="$PROJECT_ROOT/deployment/directus/docker-compose.yml"
+    if [[ ! -f "$compose_file" ]]; then
+        log_error "Directus compose file not found at $compose_file"
+        return 1
+    fi
+
+    log_info "Starting Directus stack using $compose_file ..."
+    $COMPOSE_CMD -f "$compose_file" up -d
+    log_success "Directus stack started (default port 8055)."
 }
 
 install_dev_dependencies() {
@@ -607,6 +633,7 @@ main() {
     ensure_docker_available
     ensure_compose_command
     bootstrap_observatory_stack
+    bootstrap_directus_stack
     install_dev_dependencies
     
     # Optional: run quick start

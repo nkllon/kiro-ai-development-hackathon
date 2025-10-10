@@ -24,10 +24,12 @@ Transform your AI development workflow in under 2 minutes:
 git clone https://github.com/your-org/beast-mode-ai-framework.git
 cd beast-mode-ai-framework
 
-# 2. One-command setup (adds venv, Redis config, optional Docker stack)
+# 2. One-command setup (adds venv, Redis config, optional Docker services)
 make install
 # To bootstrap the Observatory Docker stack automatically:
 # make INSTALL_ARGS="--bootstrap-stack" install
+# To bootstrap Directus/Postgres as well:
+# make INSTALL_ARGS="--bootstrap-directus" install
 
 # 3. Run your first Beast Mode agent
 python examples/quick_start_demo.py

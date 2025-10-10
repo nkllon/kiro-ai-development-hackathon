@@ -11,7 +11,10 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 from uuid import uuid4
 
 from .redis_foundation import RedisFoundation, RedisConfig
-from ..rm_ddd.core.unified_reflective_module import ReflectiveModule
+from src.rm_ddd.core.unified_reflective_module import (
+    GracefulDegradationResult,
+    ReflectiveModule,
+)
 
 
 @dataclass
@@ -165,6 +168,11 @@ class RedisMailboxService(ReflectiveModule):
                     continue
 
                 for stream_name, messages in response:
+                    self.logger.debug(
+                        "Redis mailbox received %d messages from %s",
+                        len(messages),
+                        stream_name,
+                    )
                     for message_id, fields in messages:
                         mailbox_message = MailboxMessage.from_redis_fields(fields)
                         await self._dispatch(mailbox_message)
@@ -189,3 +197,34 @@ class RedisMailboxService(ReflectiveModule):
             except Exception as exc:
                 self.logger.exception("Mailbox handler failed: %s", exc)
 
+    # ------------------------------------------------------------------
+    # ReflectiveModule interface
+    # ------------------------------------------------------------------
+    def get_module_info(self) -> Dict[str, Any]:
+        return {
+            "module_id": self.module_id,
+            "agent_id": self.agent_id,
+            "redis_host": getattr(self.redis.config, "host", "unknown"),
+            "redis_port": getattr(self.redis.config, "port", "unknown"),
+        }
+
+    def get_capabilities(self) -> List[str]:
+        return ["mailbox", "redis_streams", "durable_delivery"]
+
+    def get_health_status(self) -> Dict[str, Any]:
+        return {
+            "module": self.module_id,
+            "running": self._running,
+            "handler_count": len(self._handlers),
+            "connection_status": getattr(self.redis, "status", None).value
+            if getattr(self.redis, "status", None)
+            else "unknown",
+        }
+
+    def graceful_degradation(self) -> GracefulDegradationResult:
+        return GracefulDegradationResult(
+            success=True,
+            degraded_capabilities=["mailbox"],
+            remaining_capabilities=[],
+            error_message="Redis mailbox operating in degraded mode",
+        )
