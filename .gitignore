@@ -170,3 +170,9 @@ secrets/
 local_config.py
 .env.local
 observatory.pid
+
+# System and IDE exclusions
+**/.DS_Store
+.AppleDouble
+.LSOverride
+*.pyc
